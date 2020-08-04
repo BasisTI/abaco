@@ -247,7 +247,7 @@ public class TipoEquipeResource {
      */
     @GetMapping("/_search/tipo-equipes")
     @Timed
-    public ResponseEntity<List<TipoEquipe>> searchTipoEquipes(@RequestParam(defaultValue = "*") String query, @RequestParam String order, @RequestParam(name = "page") int pageNumber, @RequestParam int size, @RequestParam(defaultValue = "id") String sort) throws URISyntaxException {
+    public ResponseEntity<List<TipoEquipe>> searchTipoEquipes(@RequestParam(defaultValue = "*") String query, @RequestParam(defaultValue = "ASC", required = false) String order, @RequestParam(name = "page") int pageNumber, @RequestParam int size, @RequestParam(defaultValue = "id") String sort) throws URISyntaxException {
         log.debug("REST request to search for a page of TipoEquipes for query {}", query);
 
         Sort.Direction sortOrder = PageUtils.getSortDirection(order);

@@ -1,23 +1,29 @@
 package br.com.basis.abaco.web.rest;
 
-import static org.elasticsearch.index.query.QueryBuilders.multiMatchQuery;
-import static org.elasticsearch.index.query.QueryBuilders.queryStringQuery;
-
-import java.io.ByteArrayOutputStream;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
-
-import javax.transaction.Transactional;
-import javax.validation.Valid;
-
+import br.com.basis.abaco.domain.FuncaoDados;
+import br.com.basis.abaco.domain.FuncaoDadosVersionavel;
+import br.com.basis.abaco.domain.Modulo;
+import br.com.basis.abaco.domain.Organizacao;
+import br.com.basis.abaco.domain.Sistema;
+import br.com.basis.abaco.repository.FuncaoDadosRepository;
+import br.com.basis.abaco.repository.FuncaoDadosVersionavelRepository;
+import br.com.basis.abaco.repository.SistemaRepository;
+import br.com.basis.abaco.repository.search.SistemaSearchRepository;
 import br.com.basis.abaco.security.AuthoritiesConstants;
-import org.elasticsearch.index.query.QueryBuilder;
-import org.elasticsearch.index.query.QueryBuilders;
+import br.com.basis.abaco.service.SistemaService;
+import br.com.basis.abaco.service.dto.SistemaDropdownDTO;
+import br.com.basis.abaco.service.exception.RelatorioException;
+import br.com.basis.abaco.service.relatorio.RelatorioSistemaColunas;
+import br.com.basis.abaco.utils.AbacoUtil;
+import br.com.basis.abaco.utils.PageUtils;
+import br.com.basis.abaco.web.rest.util.HeaderUtil;
+import br.com.basis.abaco.web.rest.util.PaginationUtil;
+import br.com.basis.dynamicexports.service.DynamicExportsService;
+import br.com.basis.dynamicexports.util.DynamicExporter;
+import com.codahale.metrics.annotation.Timed;
+import io.github.jhipster.web.util.ResponseUtil;
+import net.sf.dynamicreports.report.exception.DRException;
+import net.sf.jasperreports.engine.JRException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.InputStreamResource;
@@ -41,30 +47,18 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.codahale.metrics.annotation.Timed;
+import javax.transaction.Transactional;
+import javax.validation.Valid;
+import java.io.ByteArrayOutputStream;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 
-import br.com.basis.abaco.domain.FuncaoDados;
-import br.com.basis.abaco.domain.FuncaoDadosVersionavel;
-import br.com.basis.abaco.domain.Modulo;
-import br.com.basis.abaco.domain.Organizacao;
-import br.com.basis.abaco.domain.Sistema;
-import br.com.basis.abaco.repository.FuncaoDadosRepository;
-import br.com.basis.abaco.repository.FuncaoDadosVersionavelRepository;
-import br.com.basis.abaco.repository.SistemaRepository;
-import br.com.basis.abaco.repository.search.SistemaSearchRepository;
-import br.com.basis.abaco.service.SistemaService;
-import br.com.basis.abaco.service.dto.SistemaDropdownDTO;
-import br.com.basis.abaco.service.exception.RelatorioException;
-import br.com.basis.abaco.service.relatorio.RelatorioSistemaColunas;
-import br.com.basis.abaco.utils.AbacoUtil;
-import br.com.basis.abaco.utils.PageUtils;
-import br.com.basis.abaco.web.rest.util.HeaderUtil;
-import br.com.basis.abaco.web.rest.util.PaginationUtil;
-import br.com.basis.dynamicexports.service.DynamicExportsService;
-import br.com.basis.dynamicexports.util.DynamicExporter;
-import io.github.jhipster.web.util.ResponseUtil;
-import net.sf.dynamicreports.report.exception.DRException;
-import net.sf.jasperreports.engine.JRException;
+import static org.elasticsearch.index.query.QueryBuilders.*;
 
 @RestController
 @RequestMapping("/api")
@@ -228,7 +222,7 @@ public class SistemaResource {
     @GetMapping("/_search/sistemas")
     @Timed
     public ResponseEntity<List<Sistema>> searchSistemas(@RequestParam(defaultValue = "*") String query,
-                                                        @RequestParam String order, @RequestParam(name = PAGE) int pageNumber, @RequestParam int size,
+                                                        @RequestParam (defaultValue = "ASC", required = false)String order, @RequestParam(name = PAGE) int pageNumber, @RequestParam int size,
                                                         @RequestParam(defaultValue = "id") String sort) throws URISyntaxException {
         log.debug(DBG_MSG_SIS, query);
         Sort.Direction sortOrder = PageUtils.getSortDirection(order);

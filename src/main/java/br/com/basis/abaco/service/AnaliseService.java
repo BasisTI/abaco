@@ -94,7 +94,7 @@ public class AnaliseService extends BaseService {
         mustTermQuery(sistema, qb, "sistema.id");
         mustMatchPhaseQuery(metodo, qb, "metodoContagem");
         mustTermQuery(organizacao, qb, ORGANIZACAO_ID);
-        if (!identificador.isEmpty()) {
+        if (!StringUtils.isEmptyString((identificador))) {
             BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery()
                 .should(QueryBuilders.matchPhraseQuery("numeroOs", identificador))
                 .should(QueryBuilders.matchPhraseQuery("identificadorAnalise", identificador));

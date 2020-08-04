@@ -73,6 +73,14 @@ public class FaseService {
         return repository.findPage(filter, page);
     }
 
+    public Page<Fase> list(String nome,Pageable page) {
+        if(nome!= null && !(nome.isEmpty())){
+            return repository.findByNomeContains(nome, page);
+        }else{
+            return repository.findAll(page);
+        }
+    }
+
     public ByteArrayOutputStream getRelatorioBAOS(String tipoRelatorio, FaseFiltroDTO filter, Pageable pageable) {
         Page<FaseDTO> fasePage = repository.findPage(filter, pageable);
         return RelatorioUtil.getRelatorioBAOS(tipoRelatorio, fasePage, dynamicExportsService, new RelatorioFaseColunas());
@@ -81,7 +89,7 @@ public class FaseService {
     public Fase findOne(Long id) {
         return repository.findOne(id);
     }
-    
+
     public List<DropdownDTO> getDropdown() {
         return repository.getDropdown();
     }

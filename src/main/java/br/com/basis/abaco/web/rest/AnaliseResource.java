@@ -383,7 +383,7 @@ public class AnaliseResource {
     @GetMapping(value = "/analise/exportacao/{tipoRelatorio}", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
     @Timed
     public ResponseEntity<InputStreamResource> gerarRelatorioExportacao(@PathVariable String tipoRelatorio,
-                                                                        @RequestParam(defaultValue = "ASC") String order,
+                                                                        @RequestParam(defaultValue = "ASC", required = false) String order,
                                                                         @RequestParam(defaultValue = "0", name = PAGE) int pageNumber,
                                                                         @RequestParam(defaultValue = "20") int size,
                                                                         @RequestParam(defaultValue = "id") String sort,
@@ -410,7 +410,7 @@ public class AnaliseResource {
 
     @GetMapping("/analises")
     @Timed
-    public ResponseEntity<List<AnaliseDTO>> getAllAnalisesEquipes(@RequestParam(defaultValue = "ASC") String order,
+    public ResponseEntity<List<AnaliseDTO>> getAllAnalisesEquipes(@RequestParam(defaultValue = "ASC", required = false) String order,
                                                                   @RequestParam(defaultValue = "0", name = PAGE) int pageNumber,
                                                                   @RequestParam(defaultValue = "20") int size,
                                                                   @RequestParam(defaultValue = "id") String sort,

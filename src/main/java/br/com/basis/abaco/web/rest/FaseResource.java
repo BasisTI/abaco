@@ -2,10 +2,11 @@ package br.com.basis.abaco.web.rest;
 
 import br.com.basis.abaco.domain.novo.Fase;
 import br.com.basis.abaco.service.FaseService;
-import br.com.basis.abaco.service.dto.novo.DropdownDTO;
 import br.com.basis.abaco.service.dto.FaseDTO;
 import br.com.basis.abaco.service.dto.filter.FaseFiltroDTO;
+import br.com.basis.abaco.service.dto.novo.DropdownDTO;
 import br.com.basis.abaco.service.exception.RelatorioException;
+import br.com.basis.abaco.utils.PageUtils;
 import br.com.basis.dynamicexports.util.DynamicExporter;
 import com.codahale.metrics.annotation.Timed;
 import io.github.jhipster.web.util.ResponseUtil;
@@ -15,7 +16,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -26,6 +29,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.ByteArrayOutputStream;
@@ -40,6 +44,22 @@ public class FaseResource {
     private final Logger log = LoggerFactory.getLogger(FaseResource.class);
 
     private final FaseService service;
+
+
+    @GetMapping("/fases")
+    @Timed
+    @Secured({"ROLE_ADMIN", "ROLE_USER", "ROLE_GESTOR"})
+    public ResponseEntity<Page<Fase>> list(@RequestParam(defaultValue = "ASC") String order,
+                                              @RequestParam(defaultValue = "0", name = "page") int pageNumber,
+                                              @RequestParam(defaultValue = "20") int size,
+                                              @RequestParam(defaultValue = "id") String sort,
+                                              @RequestParam(required = false) String nome) {
+        log.debug("REST request to search Fases for query {}", nome);
+        Sort.Direction sortOrder = PageUtils.getSortDirection(order);
+        Pageable pageable = new PageRequest(pageNumber, size, sortOrder, sort);
+        Page<Fase> page = service.list(nome, pageable);
+        return new ResponseEntity<Page<Fase>>(page, HttpStatus.OK);
+    }
 
     @PostMapping("/fases")
     @Timed
@@ -57,7 +77,7 @@ public class FaseResource {
         Fase fase = service.findOne(id);
         return ResponseUtil.wrapOrNotFound(Optional.ofNullable(fase));
     }
-    
+
     @GetMapping("/fases/dropdown")
     @Timed
     public ResponseEntity<List<DropdownDTO>> getDropdown() {

@@ -22,7 +22,9 @@ public interface FaseRepository extends JpaRepository<Fase, Long> {
                     "LOWER( CAST(CONCAT('%', :#{#filtro.nome}, '%') AS text) )" +
             ")")
     Page<FaseDTO> findPage(@Param("filtro") FaseFiltroDTO filtro, Pageable page);
-    
+
+    Page<Fase> findByNomeContains(String nome, Pageable page);
+
     @Query("SELECT new br.com.basis.abaco.service.dto.novo.DropdownDTO(f.id, f.nome) FROM Fase f")
     List<DropdownDTO> getDropdown();
 }

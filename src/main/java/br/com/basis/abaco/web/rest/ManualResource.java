@@ -318,7 +318,12 @@ public class ManualResource {
      */
     @GetMapping("/_search/manual")
     @Timed
-    public ResponseEntity<List<Manual>> searchManuals(@RequestParam(defaultValue = "*") String query, @RequestParam String order, @RequestParam(name="page") int pageNumber, @RequestParam int size, @RequestParam(defaultValue="id") String sort) throws URISyntaxException {
+    public ResponseEntity<List<Manual>> searchManuals(
+        @RequestParam(defaultValue = "*") String query,
+        @RequestParam(defaultValue = "ASC")String order,
+        @RequestParam(name="page") int pageNumber,
+        @RequestParam int size,
+        @RequestParam(defaultValue="id", required = false) String sort) throws URISyntaxException {
         log.debug("REST request to search Manuals for query {}", query);
         Sort.Direction sortOrder = PageUtils.getSortDirection(order);
 
