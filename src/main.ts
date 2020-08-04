@@ -9,8 +9,8 @@ if (environment.production) {
     enableProdMode();
 }
 
-bootstrapSecurity(environment.auth, () => {
+// bootstrapSecurity(environment.auth, () => {
     platformBrowserDynamic()
         .bootstrapModule(AppModule)
         .catch(err => console.log(err));
-});
+// });

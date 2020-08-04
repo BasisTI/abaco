@@ -32,7 +32,10 @@ import { FuncaoDadosModule } from './funcao-dados/funcao-dados.module';
 import { FuncaoTransacaoModule } from './funcao-transacao/funcao-transacao.module';
 import { BaselineModule } from './baseline/baseline.module';
 import { SenhaModule } from './senha/senha.module';
+import { DashboardModule } from './dashboard/dashboard.module';
+import { RouterModule } from '@angular/router';
 import { LoginModule } from './login/login.module';
+import { PesquisarFuncaoTransacaoModule } from './pesquisar-ft/pesquisar-ft.module';
 
 @NgModule({
     declarations: [
@@ -74,11 +77,15 @@ import { LoginModule } from './login/login.module';
         BaselineModule,
         SenhaModule,
         LoginModule,
+        DashboardModule,
+        PesquisarFuncaoTransacaoModule,
+        
     ],
     providers: [
         { provide: LocationStrategy, useClass: HashLocationStrategy },
         UploadService,
     ],
-    bootstrap: [AppComponent]
+    bootstrap: [AppComponent],
+    exports:[RouterModule]
 })
 export class AppModule { }

@@ -60,7 +60,7 @@ export class AnaliseFormComponent implements OnInit {
     fatoresAjuste: SelectItem[] = [];
     equipeResponsavel: TipoEquipe[] = [];
     lstfuncaoDadosDto: FuncaoDados[];
-    nomeManual = this.getLabel('Analise.SelecioneUmContrato');
+    nomeManual = this.getLabel('Selecione um contrato');
     manual: Manual;
     manuais: Manual[] = [];
     users: User[] = [];

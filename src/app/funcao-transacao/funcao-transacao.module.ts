@@ -14,6 +14,7 @@ import { funcaoTransacaoRoute } from './funcao-transacao.route';
 import { RouterModule } from '@angular/router';
 import { SharedModule } from '../shared/shared.module';
 import { ConfirmationService } from 'primeng';
+import { PesquisarFuncaoTransacaoModule } from '../pesquisar-ft/pesquisar-ft.module';
 
 @NgModule({
     imports: [
@@ -28,6 +29,9 @@ import { ConfirmationService } from 'primeng';
         AbacoDerChipsModule,
         SharedModule,
         RouterModule.forRoot(funcaoTransacaoRoute, {useHash: true}),
+        PesquisarFuncaoTransacaoModule,
+
+        
     ],
   declarations: [
     FuncaoTransacaoFormComponent

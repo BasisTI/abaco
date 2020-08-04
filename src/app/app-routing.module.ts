@@ -13,6 +13,7 @@ const routes: Routes = [
   { path: 'diario-erros', component: DiarioErrosComponent, data: { breadcrumb: 'Diário de Erros'} },
   { path: 'login-success', component: LoginSuccessComponent },
   { path: 'indexador', component: IndexadorComponent, data: { breadcrumb: 'Reindexar'} },
+  { path: 'login', component: LoginComponent},
 ];
 
 @NgModule({

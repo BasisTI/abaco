@@ -5,7 +5,8 @@ import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { SecurityModule, AuthorizationService } from '@nuvem/angular-base';
 import { SharedModule } from '../shared/shared.module';
-import { LoginComponent, loginRoute, LoginService } from './';
+import { LoginComponent, LoginService } from './';
+import { loginRoute } from './login.route';
 
 
 @NgModule({

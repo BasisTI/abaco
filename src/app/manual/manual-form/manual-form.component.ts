@@ -260,7 +260,7 @@ export class ManualFormComponent implements OnInit, OnDestroy {
     }
 
     datatableClick(event: DatatableClickEvent) {
-        debugger;
+        
         if (!event.selection) {
             return;
         }
@@ -276,7 +276,7 @@ export class ManualFormComponent implements OnInit, OnDestroy {
     }
 
     adjustFactorDatatableClick(event: DatatableClickEvent) {
-        debugger;
+        
         if (!event.selection) {
             return;
         }

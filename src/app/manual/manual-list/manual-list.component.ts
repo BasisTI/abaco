@@ -48,7 +48,7 @@ export class ManualListComponent implements OnInit {
     }
 
     public onRowDblclick(event: DatatableClickEvent) {
-        debugger;
+        
         if (event.selection.nodeName === 'TD') {
             this.abrirEditar(event.selection);
         } else if (event.selection.parentNode.nodeName === 'TD') {

@@ -145,7 +145,7 @@ export class SistemaFormComponent implements OnInit, OnDestroy {
     }
 
     private moduleCanBeDeleted() {
-        debugger;
+        
         let isDeletationValid = true;
 
         if (this.sistema.funcionalidades) {

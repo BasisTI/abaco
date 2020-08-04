@@ -196,15 +196,6 @@
                         </div>
                     </div>
 
-                    <!-- DIALOG: COPIAR FUNÇÕES DE TRANSAÇÃO -->
-                    <div *ngIf="analise && analise.organizacao" >
-                        <p-dialog [header]="this.getLabel('Clonar funções de transação')"
-                                  [(visible)]="display" [width]="1200" [closable]="false">
-                            <app-pesquisar-ft></app-pesquisar-ft>
-                        </p-dialog>
-                    </div>
-
-                    <!-- &lt;!&ndash; DIALOG: ADICIONAR E EDITAR FUNÇÃO DE DADOS &ndash;&gt;-->
                     <p-dialog
                             [closable]="false"
                             [(visible)]="showDialog"
@@ -449,4 +440,10 @@
         <app-white-button buttonLabel="Copiar para Evidência" buttonIcon="ui-icon-add"(click)="copyToEvidence()"></app-white-button>
     </p-footer>
 </p-dialog>
+ <!-- DIALOG: COPIAR FUNÇÕES DE TRANSAÇÃO -->
+ <div *ngIf="analise && analise.organizacao" >
+    <p-dialog [header]="this.getLabel('Importa funções de Transação')" [(visible)]="display" [width]="800" [closable]="false">
+        <app-pesquisar-ft></app-pesquisar-ft>
+    </p-dialog>
+</div>
 

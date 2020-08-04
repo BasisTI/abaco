@@ -336,7 +336,7 @@ export class OrganizacaoFormComponent implements OnInit, OnDestroy {
     }
 
     comfirmarExcluirManualNovo() {
-        debugger;
+        
         this.confirmationService.confirm({
             message:'Tem certeza que deseja excluir o manual '+ this.manualContratoEdt.manual.nome +' ?',
             accept: () => {

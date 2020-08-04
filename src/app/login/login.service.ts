@@ -1,8 +1,7 @@
 import { Injectable } from '@angular/core';
 import { environment } from '../../environments/environment';
-import { HttpGenericErrorService } from '@nuvem/angular-base';
-import { Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
 
 @Injectable()
 export class LoginService {
@@ -15,7 +14,7 @@ export class LoginService {
 
     login(username: string, password: string): Observable<any> {
         const credential = { username: username, password: password };
-        return this.http.post<any>(this.authUrl, credential);
+        return this.http.post(this.authUrl, credential);
     }
 
     logout(): Observable<any> {
