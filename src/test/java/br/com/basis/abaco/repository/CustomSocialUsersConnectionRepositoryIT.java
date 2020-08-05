@@ -32,7 +32,7 @@ import static org.junit.Assert.*;
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = AbacoApp.class)
 @Transactional
-public class CustomSocialUsersConnectionRepositoryIntTest {
+public class CustomSocialUsersConnectionRepositoryIT {
 
     private ConnectionFactoryRegistry connectionFactoryRegistry;
 

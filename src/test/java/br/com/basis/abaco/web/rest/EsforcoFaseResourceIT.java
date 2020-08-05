@@ -42,7 +42,7 @@ import br.com.basis.abaco.web.rest.errors.ExceptionTranslator;
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = AbacoApp.class)
-public class EsforcoFaseResourceIntTest {
+public class EsforcoFaseResourceIT {
 
     private static final BigDecimal DEFAULT_ESFORCO = new BigDecimal(1);
     private static final BigDecimal UPDATED_ESFORCO = new BigDecimal(2);

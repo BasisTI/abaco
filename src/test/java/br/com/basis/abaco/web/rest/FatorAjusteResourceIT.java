@@ -39,7 +39,7 @@ import br.com.basis.abaco.domain.enumeration.ImpactoFatorAjuste;
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = AbacoApp.class)
-public class FatorAjusteResourceIntTest {
+public class FatorAjusteResourceIT {
 
     private static final String DEFAULT_NOME = "AAAAAAAAAA";
     private static final String UPDATED_NOME = "BBBBBBBBBB";

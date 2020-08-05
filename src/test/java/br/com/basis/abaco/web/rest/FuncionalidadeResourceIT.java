@@ -42,7 +42,7 @@ import br.com.basis.abaco.web.rest.errors.ExceptionTranslator;
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = AbacoApp.class)
-public class FuncionalidadeResourceIntTest {
+public class FuncionalidadeResourceIT {
 
     private static final String DEFAULT_NOME = "AAAAAAAAAA";
     private static final String UPDATED_NOME = "BBBBBBBBBB";

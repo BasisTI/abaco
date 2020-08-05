@@ -37,7 +37,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = AbacoApp.class)
-public class UserResourceIntTest {
+public class UserResourceIT {
 
     @Autowired
     private UserRepository userRepository;

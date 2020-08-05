@@ -38,7 +38,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = AbacoApp.class)
-public class ContratoResourceIntTest {
+public class ContratoResourceIT {
 
     private static final String DEFAULT_NUMERO_CONTRATO = "AAAAAAAAAA";
     private static final String UPDATED_NUMERO_CONTRATO = "BBBBBBBBBB";

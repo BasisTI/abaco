@@ -303,7 +303,7 @@ public class RelatorioAnaliseRest {
         parametro.put("PFTOTAL", analise.getPfTotal());
         if(analise.getMetodoContagem().equals(MetodoContagem.ESTIMADA)){
             parametro.put("PFESCOPESCREEP", calcularScopeCreep(analise.getAdjustPFTotal(), this.fatorEstimado));
-        }else if(analise.getMetodoContagem().equals(MetodoContagem.ESTIMADA)) {
+        }else if(analise.getMetodoContagem().equals(MetodoContagem.INDICATIVA)) {
             parametro.put("PFESCOPESCREEP", calcularScopeCreep(analise.getAdjustPFTotal(), this.fatorIndicativa));
         }
         parametro.put("AJUSTESPF", calcularPFsAjustado(analise.getPfTotal(), analise.getAdjustPFTotal()));

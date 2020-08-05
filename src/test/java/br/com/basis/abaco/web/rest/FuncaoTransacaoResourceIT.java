@@ -44,7 +44,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = AbacoApp.class)
-public class FuncaoTransacaoResourceIntTest {
+public class FuncaoTransacaoResourceIT {
 
     private static final TipoFuncaoTransacao DEFAULT_TIPO = TipoFuncaoTransacao.EE;
     private static final TipoFuncaoTransacao UPDATED_TIPO = TipoFuncaoTransacao.SE;

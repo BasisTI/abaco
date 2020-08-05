@@ -45,7 +45,7 @@ import br.com.basis.dynamicexports.service.DynamicExportsService;
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = AbacoApp.class)
-public class SistemaResourceIntTest {
+public class SistemaResourceIT {
 
     private static final String DEFAULT_SIGLA = "AAAAAAAAAA";
     private static final String UPDATED_SIGLA = "BBBBBBBBBB";

@@ -28,7 +28,7 @@ import static org.assertj.core.api.Assertions.*;
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = AbacoApp.class)
 @Transactional
-public class UserServiceIntTest {
+public class UserServiceIT {
 
     @Autowired
     private UserRepository userRepository;

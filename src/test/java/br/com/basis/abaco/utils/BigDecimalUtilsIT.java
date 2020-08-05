@@ -6,7 +6,7 @@ import java.math.BigDecimal;
 
 import org.junit.Test;
 
-public class BigDecimalUtilsTest {
+public class BigDecimalUtilsIT {
 
     @Test
     public void shouldReturnTheFloatingPointValueUnchaged() {
@@ -14,12 +14,12 @@ public class BigDecimalUtilsTest {
         BigDecimal result = BigDecimalUtils.toAtLeastOneFixedPoint(floatingPointValue);
         assertThat(result).isEqualTo(floatingPointValue);
     }
-    
+
     @Test
     public void shouldReturnTheIntegerValueWithOneFixedPoint() {
         BigDecimal integerValue = new BigDecimal(2);
         BigDecimal result = BigDecimalUtils.toAtLeastOneFixedPoint(integerValue);
         assertThat(result.doubleValue()).isEqualTo(2.0);
     }
-    
+
 }

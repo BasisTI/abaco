@@ -46,7 +46,7 @@ import br.com.basis.abaco.web.rest.errors.ExceptionTranslator;
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = AbacoApp.class)
-public class FuncaoDadosResourceIntTest {
+public class FuncaoDadosResourceIT {
 
     private static final TipoFuncaoDados DEFAULT_TIPO = TipoFuncaoDados.ALI;
     private static final TipoFuncaoDados UPDATED_TIPO = TipoFuncaoDados.AIE;

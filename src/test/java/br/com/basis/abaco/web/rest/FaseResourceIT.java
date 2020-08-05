@@ -49,14 +49,14 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest(classes = AbacoApp.class)
 @Transactional
 @WithMockUser
-public class FaseResourceIntTest {
+public class FaseResourceIT {
 
     private static final String DEFAULT_NOME = "AAAAAAAAAA";
     private static final String UPDATED_NOME = "BBBBBBBBBB";
 
     @Autowired
     private FaseService service;
-    
+
     @Autowired
     private MappingJackson2HttpMessageConverter jacksonMessageConverter;
 
@@ -71,14 +71,14 @@ public class FaseResourceIntTest {
 
     @Autowired
     private FaseRepository repository;
-    
+
     @Autowired
     private EsforcoFaseResource esforcoFaseResource;
 
     private MockMvc mockMvc;
 
     private static final String RESOURCE = "/api/fases";
-    
+
     private static final String RESOURCE_PAGE = "/api/fases/page";
 
     @Before
@@ -110,16 +110,16 @@ public class FaseResourceIntTest {
             ).andExpect(status().isOk()).andReturn().getResponse().getContentAsString()
         , FaseDTO.class);
     }
-    
+
     public FaseDTO persistDTO() throws Exception {
         postDTO(buildDTO());
         FaseFiltroDTO filtro = new FaseFiltroDTO();
-    
+
         Page<FaseDTO> fases = findPage(filtro);
-    
+
         return fases.getContent().get(0);
     }
-    
+
     private Page<FaseDTO> findPage(FaseFiltroDTO filtro) throws Exception {
         return jacksonMessageConverter.getObjectMapper().readValue(
             mockMvc.perform(
@@ -130,7 +130,7 @@ public class FaseResourceIntTest {
             , new TypeReference<CustomPageImpl<FaseDTO>>() {
             });
     }
-    
+
     @Test
     public void createAndFind() throws Exception {
 
@@ -139,9 +139,9 @@ public class FaseResourceIntTest {
         postDTO(dto);
 
         FaseFiltroDTO filtro = new FaseFiltroDTO();
-    
+
         Page<FaseDTO> fases = findPage(filtro);
-    
+
         dto = fases.getContent().get(0);
 
         dto = getDTO(dto.getId());
@@ -206,16 +206,16 @@ public class FaseResourceIntTest {
         // TODO REMOVER MOCK QUANDO ESFORÇO FASE ESTIVER INTEGRADA CORRETAMENTE
         EsforcoFase esforcoFase = new EsforcoFase();
         esforcoFase.setEsforco(new BigDecimal(10));
-    
+
         // TODO Necessario pois o existem duas entidades fase, adaptar quando Esforço Fase for refeito
         Fase fase = new Fase();
         fase.setId(faseDTO.getId());
         fase.setNome(faseDTO.getNome());
-        
+
         esforcoFase.setFase(fase);
-        
+
         esforcoFaseResource.createEsforcoFase(esforcoFase);
-        
+
         mockMvc.perform(MockMvcRequestBuilders.delete(RESOURCE + "/{id}", faseDTO.getId())
             .accept(TestUtil.APPLICATION_JSON_UTF8))
             .andExpect(status().isBadRequest());
@@ -243,15 +243,15 @@ public class FaseResourceIntTest {
             .andExpect(jsonPath("$.content.[*].nome").value(hasItem(DEFAULT_NOME)))
             .andExpect(jsonPath("$.content.[*].nome").value(hasItem(UPDATED_NOME)));
     }
-    
+
     @Test
     public void getDropdown() throws Exception {
         postDTO(buildDTO());
-    
+
         FaseDTO faseDTO2 = buildDTO();
         faseDTO2.setNome(UPDATED_NOME);
         postDTO(faseDTO2);
-    
+
         mockMvc.perform(
                 get(RESOURCE + "/dropdown")
             ).andExpect(status().isOk())
@@ -290,9 +290,9 @@ public class FaseResourceIntTest {
         FaseDTO dto2 = buildDTO();
         dto2.setNome(UPDATED_NOME);
         postDTO(dto2);
-    
+
         FaseFiltroDTO filtro = new FaseFiltroDTO();
-    
+
         mockMvc.perform(
             post(RESOURCE_PAGE)
                 .contentType(TestUtil.APPLICATION_JSON_UTF8)
@@ -309,9 +309,9 @@ public class FaseResourceIntTest {
         postDTO(buildDTO());
 
         FaseFiltroDTO filtro = new FaseFiltroDTO();
-        
+
         filtro.setNome(DEFAULT_NOME);
-        
+
         mockMvc.perform(
                 post(RESOURCE + "/exportacao/pdf")
                     .contentType(TestUtil.APPLICATION_JSON_UTF8)

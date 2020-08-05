@@ -38,7 +38,7 @@ import static org.mockito.Mockito.when;
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = AbacoApp.class)
 @Transactional
-public class SocialServiceIntTest {
+public class SocialServiceIT {
 
     @Autowired
     private AuthorityRepository authorityRepository;

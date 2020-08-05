@@ -48,7 +48,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = AbacoApp.class)
-public class AnaliseResourceIntTest {
+public class AnaliseResourceIT {
 
     private static final String DEFAULT_NUMERO_OS = "AAAAAAAAAA";
     private static final String UPDATED_NUMERO_OS = "BBBBBBBBBB";

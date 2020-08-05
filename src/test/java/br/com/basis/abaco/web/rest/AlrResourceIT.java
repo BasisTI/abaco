@@ -36,7 +36,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = AbacoApp.class)
-public class AlrResourceIntTest {
+public class AlrResourceIT {
 
     @Autowired
     private AlrRepository alrRepository;
