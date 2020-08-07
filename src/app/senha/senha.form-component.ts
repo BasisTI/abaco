@@ -14,25 +14,20 @@ import { SenhaService } from './senha.service';
 })
 export class SenhaFormComponent implements OnInit, OnDestroy {
 
-    private oldPassword: string;
-    private newPassword: string;
-    private newPasswordConfirm: string;
+    public oldPassword: string;
+    public newPassword: string;
+    public newPasswordConfirm: string;
     private url: string;
 
     authenticated = false;
 
-    private routeSub: Subscription;
-    private urlSub: Subscription;
     private login: string;
 
     constructor(
-        private route: ActivatedRoute,
         private router: Router,
         private senhaService: SenhaService,
         private authService: AuthenticationService<User>,
         private loginService: LoginService,
-        private http: HttpClient,
-        private zone: NgZone,
         private pageNotificationService: PageNotificationService,
     ) {
     }
