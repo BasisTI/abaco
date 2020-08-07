@@ -6,7 +6,7 @@ import { FatorAjusteService } from '../fator-ajuste.service';
 
 
 @Component({
-  selector: 'jhi-fator-ajuste-list',
+  selector: 'app-fator-ajuste-list',
   templateUrl: './fator-ajuste-list.component.html'
 })
 export class FatorAjusteListComponent {
@@ -22,8 +22,7 @@ export class FatorAjusteListComponent {
   ) { }
 
   getLabel(label) {
-    let str: any;
-    return str;
+    return label;
   }
 
   datatableClick(event: DatatableClickEvent) {
@@ -45,7 +44,7 @@ export class FatorAjusteListComponent {
 
   confirmDelete(id: any) {
     this.confirmationService.confirm({
-      message: this.getLabel('Global.Mensagens.CertezaExcluirRegistro'),
+      message: this.getLabel('Tem certeza que deseja excluir o registro?'),
       accept: () => {
         this.fatorAjusteService.delete(id).subscribe(() => {
           this.datatable.refresh(undefined);

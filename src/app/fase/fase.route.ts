@@ -17,13 +17,13 @@ export const FaseRoute: Routes = [
     data: { breadcrumb: 'Fase'} 
   },
   {
-    path: 'fase/:id',
+    path: 'fase/:id/edit',
     component: FaseFormComponent,
     canActivate: [AuthGuard],
     data: { breadcrumb: 'Fase'} 
   },
   {
-    path: 'fase/:id/view',
+    path: 'fase/:id',
     component: FaseDetailComponent,
     canActivate: [AuthGuard],
     data: { breadcrumb: 'Fase'} 

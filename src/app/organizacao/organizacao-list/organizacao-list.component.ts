@@ -85,7 +85,7 @@ export class OrganizacaoListComponent implements OnInit {
 
   confirmDelete(id: any) {
     this.confirmationService.confirm({
-      message: this.getLabel('Global.Mensagens.CertezaExcluirRegistro'),
+      message: this.getLabel('Tem certeza que deseja excluir o registro?'),
       accept: () => {
         this.organizacaoService.delete(id).subscribe(() => {
           this.pageNotificationService.addDeleteMsg();

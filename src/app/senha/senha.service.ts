@@ -22,16 +22,16 @@ getLabel(label) {
 changePassword(newPassword: string): Observable < any > {
     return this.http.post(this.changeUrl, newPassword).pipe(catchError((error: any) => {
             if (error.status === 403) {
-                this.pageNotificationService.addErrorMessage(this.getLabel('Global.Mensagens.VoceNaoPossuiPermissao'));
+                this.pageNotificationService.addErrorMessage(this.getLabel('Você não possui permissão!'));
                 return Observable.throw(new Error(error.status));
             }
         }));
 }
 
-getLogin(): Observable <string> {
-    return this.http.get<string>(`api/authenticate`).pipe(catchError((error: any) => {
+getLogin(): Observable <any> {
+    return this.http.request('GET', 'api/authenticate', {responseType: 'text'}).pipe(catchError((error: any) => {
         if (error.status === 403) {
-            this.pageNotificationService.addErrorMessage(this.getLabel('VoceNaoPossuiPermissao'));
+            this.pageNotificationService.addErrorMessage(this.getLabel('Você não possui permissão!'));
             return Observable.throw(new Error(error.status));
         }
     }));

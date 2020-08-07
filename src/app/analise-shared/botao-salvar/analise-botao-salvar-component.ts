@@ -40,13 +40,13 @@ export class AnaliseBotaoSalvarComponent implements OnDestroy {
     this.motivosBotaoDesabilitado.clear();
     // TODO complementar. hoje é só uma prova de conceito
     if (_.isEmpty(this.analise.organizacao)) {
-      this.motivosBotaoDesabilitado.add(this.getLabel('Analise.Analise.Mensagens.msgSelecioneOrganizacao'));
+      this.motivosBotaoDesabilitado.add(this.getLabel('- Selecione uma Organização'));
     }
     if (_.isEmpty(this.analise.equipeResponsavel)) {
-      this.motivosBotaoDesabilitado.add(this.getLabel('Analise.Analise.Mensagens.msgSelecioneEquipeResponsavel'));
+      this.motivosBotaoDesabilitado.add(this.getLabel('- Selecione uma Equipe Responsável'));
     }
     if (_.isEmpty(this.analise.sistema)) {
-      this.motivosBotaoDesabilitado.add(this.getLabel('Analise.Analise.Mensagens.msgSelecioneSistema'));
+      this.motivosBotaoDesabilitado.add(this.getLabel('- Selecione um Sistema'));
     }
     return _.isEmpty(this.motivosBotaoDesabilitado);
   }

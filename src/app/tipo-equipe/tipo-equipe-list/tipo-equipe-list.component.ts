@@ -90,17 +90,17 @@ export class TipoEquipeListComponent {
 
   public confirmDelete(id: any) {
     this.confirmationService.confirm({
-      message: this.getLabel('Global.Mensagens.CertezaExcluirRegistro'),
+      message: this.getLabel('Tem certeza que deseja excluir o registro?'),
       accept: () => {
         this.tipoEquipeService.delete(id).subscribe(() => {
           this.recarregarDataTable();
           this.pageNotificationService.addDeleteMsg();
         }, error => {
           if (error.status === 403) {
-            this.pageNotificationService.addErrorMessage(this.getLabel('Global.Mensagens.VoceNaoPossuiPermissao'));
+            this.pageNotificationService.addErrorMessage(this.getLabel('Você não possui permissão!'));
           }
           if (error.status === 500) {
-            this.pageNotificationService.addErrorMessage(this.getLabel('Cadastros.TipoEquipe.Mensagens.msgFalhaExcluirRegistro'));
+            this.pageNotificationService.addErrorMessage(this.getLabel('Falha ao excluir registro, verifique se a equipe não está vinculada a algum usuário!'));
           }
         });
       }

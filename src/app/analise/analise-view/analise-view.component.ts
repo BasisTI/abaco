@@ -20,7 +20,7 @@ import { MessageUtil } from 'src/app/util/message.util';
 
 
 @Component({
-    selector: 'jhi-analise-view',
+    selector: 'app-analise-view',
     templateUrl: './analise-view.component.html'
 })
 export class AnaliseViewComponent implements OnInit {
@@ -165,7 +165,9 @@ export class AnaliseViewComponent implements OnInit {
     }
 
     getGarantia(): any {
-        this.diasGarantia !== undefined ? (this.diasGarantia = this.analise.contrato.diasDeGarantia) : undefined ;
+        if (this.diasGarantia !== undefined) {
+            this.diasGarantia = this.analise.contrato.diasDeGarantia;
+        }
     }
 
     listOrganizacoes() {

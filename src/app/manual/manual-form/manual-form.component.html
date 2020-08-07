@@ -224,6 +224,7 @@
                                     [rows]="20"
                                     [value]="manual.esforcoFases"
                                     id="idTabelaEsforcoFaseFormManual"
+                                    disableView="true"
                                     sortOrder="1"
                                     (buttonClick)="datatableClick($event)"
                                     disableClone="true">
@@ -263,6 +264,7 @@
                                 id="idTabelaDeflatorFormManual"
                                 sortOrder="1"
                                 (buttonClick)="adjustFactorDatatableClick($event)"
+                                disableView="true"
                                 disableClone="true" >
                                 <p-column header="Codigo" field="codigo">
                                     <ng-template let-col let-fatoresAjuste="rowData" pTemplate="body">
@@ -659,7 +661,7 @@
                     </div>
                 </p-dialog>
                 <!-- Inicio Dialog Edit Fator Ajuste -->
-                <p-confirmDialog [header]="this.getLabel('Global.Mensagens.Confirmacao')" #dialog>
+                <p-confirmDialog [header]="this.getLabel('Confirmação')" #dialog>
                     <p-footer>
                         <app-white-button [buttonLabel]="'Nao' " id="idBtnNaoFormManual" buttonIcon="fa-close"
                                           (click)="dialog.reject()"></app-white-button>

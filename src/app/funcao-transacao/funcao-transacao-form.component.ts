@@ -1,27 +1,27 @@
-import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output, QueryList, ViewChildren } from "@angular/core";
-import { ActivatedRoute, Router } from "@angular/router";
-import { DatatableClickEvent, DatatableComponent, PageNotificationService } from "@nuvem/primeng-components";
-import { ConfirmationService, Editor, SelectItem } from "primeng";
-import { forkJoin, Observable, Subscription } from "rxjs";
-import { ResumoFuncoes, CalculadoraTransacao } from "src/app/analise-shared";
-import { DerChipItem } from "src/app/analise-shared/der-chips/der-chip-item";
-import { FatorAjuste } from "src/app/fator-ajuste";
-import { Funcionalidade } from "src/app/funcionalidade";
-import { FuncaoTransacao, TipoFuncaoTransacao } from ".";
-import { FuncaoDadosService } from "../funcao-dados/funcao-dados.service";
-import { FuncaoTransacaoService } from "./funcao-transacao.service";
-import { ParseResult, DerTextParser } from "src/app/analise-shared/der-text/der-text-parser";
-import { AnaliseSharedDataService } from "src/app/shared/analise-shared-data.service";
-import { AnaliseService } from "../analise/analise.service";
-import { Analise } from "../analise/analise.model";
-import { MessageUtil } from "src/app/util/message.util";
-import { DerChipConverter } from "src/app/analise-shared/der-chips/der-chip-converter";
-import { Der } from "src/app/der/der.model";
-import { Modulo } from "src/app/modulo";
-import { AnaliseReferenciavel } from "src/app/analise-shared/analise-referenciavel";
-import { FatorAjusteLabelGenerator } from "src/app/shared/fator-ajuste-label-generator";
-import { Manual } from "src/app/manual";
-import { isEmpty } from "rxjs/operators";
+import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output, QueryList, ViewChildren } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import { DatatableClickEvent, DatatableComponent, PageNotificationService } from '@nuvem/primeng-components';
+import { ConfirmationService, Editor, SelectItem } from 'primeng';
+import { forkJoin, Observable, Subscription } from 'rxjs';
+import { ResumoFuncoes, CalculadoraTransacao } from 'src/app/analise-shared';
+import { DerChipItem } from 'src/app/analise-shared/der-chips/der-chip-item';
+import { FatorAjuste } from 'src/app/fator-ajuste';
+import { Funcionalidade } from 'src/app/funcionalidade';
+import { FuncaoTransacao, TipoFuncaoTransacao } from '.';
+import { FuncaoDadosService } from '../funcao-dados/funcao-dados.service';
+import { FuncaoTransacaoService } from './funcao-transacao.service';
+import { ParseResult, DerTextParser } from 'src/app/analise-shared/der-text/der-text-parser';
+import { AnaliseSharedDataService } from 'src/app/shared/analise-shared-data.service';
+import { AnaliseService } from '../analise/analise.service';
+import { Analise } from '../analise/analise.model';
+import { MessageUtil } from 'src/app/util/message.util';
+import { DerChipConverter } from 'src/app/analise-shared/der-chips/der-chip-converter';
+import { Der } from 'src/app/der/der.model';
+import { Modulo } from 'src/app/modulo';
+import { AnaliseReferenciavel } from 'src/app/analise-shared/analise-referenciavel';
+import { FatorAjusteLabelGenerator } from 'src/app/shared/fator-ajuste-label-generator';
+import { Manual } from 'src/app/manual';
+import { isEmpty } from 'rxjs/operators';
 
 @Component({
     selector: 'app-analise-funcao-transacao',
@@ -30,9 +30,7 @@ import { isEmpty } from "rxjs/operators";
 })
 export class FuncaoTransacaoFormComponent implements OnInit {
 
-
     faS: FatorAjuste[] = [];
-
     textHeader: string;
     @Input() isView: boolean;
     isEdit: boolean;
@@ -48,8 +46,8 @@ export class FuncaoTransacaoFormComponent implements OnInit {
     windowHeightDialog: any;
     windowWidthDialog: any;
     impactos: string[];
-    displayDescriptionDeflator: boolean = false;
-    display: boolean = false;
+    displayDescriptionDeflator = false;
+    display = false;
     moduloCache: Funcionalidade;
     dersChips: DerChipItem[];
     alrsChips: DerChipItem[];
@@ -57,11 +55,8 @@ export class FuncaoTransacaoFormComponent implements OnInit {
     fatoresAjuste: SelectItem[] = [];
     funcoesTransacaoList: FuncaoTransacao[] = [];
     FuncaoTransacaoEditar: FuncaoTransacao = new FuncaoTransacao();
-
     translateSubscriptions: Subscription[] = [];
-
     defaultSort = [{field: 'funcionalidade.nome', order: 1}];
-
     impacto: SelectItem[] = [
         {label: 'Inclusão', value: 'INCLUSAO'},
         {label: 'Alteração', value: 'ALTERACAO'},
@@ -69,11 +64,10 @@ export class FuncaoTransacaoFormComponent implements OnInit {
         {label: 'Conversão', value: 'CONVERSAO'},
         {label: 'Outros', value: 'ITENS_NAO_MENSURAVEIS'}
     ];
-
     baselineResultados: any[] = [];
-
     classificacoes: SelectItem[] = [];
-
+    // Carregar Referencial
+    disableAba: boolean ;
     @Output()
     valueChange: EventEmitter<string> = new EventEmitter<string>();
     parseResult: ParseResult;
@@ -82,11 +76,10 @@ export class FuncaoTransacaoFormComponent implements OnInit {
     label: string;
     showMultiplos = false;
     @Input() properties: Editor;
-    @Input() uploadImagem: boolean = true;
-    @Input() criacaoTabela: boolean = true;
-
+    @Input() uploadImagem = true;
+    @Input() criacaoTabela = true;
     @ViewChildren(DatatableComponent) tables: QueryList<DatatableComponent>;
-
+    viewFuncaoTransacao = false;
 
     public isDisabled = false;
 
@@ -158,7 +151,7 @@ export class FuncaoTransacaoFormComponent implements OnInit {
             this.isView = params['view'] !== undefined;
             this.funcaoTransacaoService.getVwFuncaoTransacaoByIdAnalise(this.idAnalise).subscribe(value => {
                 this.funcoesTransacoes = value;
-                if(!this.isView){
+                if (!this.isView) {
                     this.analiseService.find(this.idAnalise).subscribe(analise => {
                         this.analise = analise;
                         this.analiseSharedDataService.analise = analise;
@@ -323,7 +316,7 @@ export class FuncaoTransacaoFormComponent implements OnInit {
     }
 
     public buttonSaveEdit() {
-        if(!(this.currentFuncaoTransacao.sustantation)){
+        if (!(this.currentFuncaoTransacao.sustantation)) {
             this.currentFuncaoTransacao.sustantation = document.querySelector('.ql-editor').innerHTML;
         }
         if (this.isEdit) {
@@ -338,9 +331,9 @@ export class FuncaoTransacaoFormComponent implements OnInit {
     }
 
     multiplos(): boolean {
-            let lstFuncaotransacao:FuncaoTransacao[] = [];
-            let lstFuncaotransacaoToSave: Observable<Boolean>[] = [];
-            let lstFuncaotransacaoWithExist: Observable<Boolean>[] = [];
+            const lstFuncaotransacao: FuncaoTransacao[] = [];
+            const lstFuncaotransacaoToSave: Observable<Boolean>[] = [];
+            const lstFuncaotransacaoWithExist: Observable<Boolean>[] = [];
             let retorno: boolean = !this.verifyDataRequire();
             this.desconverterChips();
             this.verificarModulo();
@@ -360,22 +353,22 @@ export class FuncaoTransacaoFormComponent implements OnInit {
                 lstFuncaotransacao.push(funcaoTransacaoMultp);
             }
             forkJoin(lstFuncaotransacaoWithExist).subscribe(respFind => {
-                for(let value of  respFind){
+                for (const value of  respFind) {
                     if (value) {
                         this.pageNotificationService.addErrorMessage(this.getLabel('Global.Mensagens.RegistroCadastrado'));
                         retorno = false;
                         break;
                     }
                 }
-                if(retorno){
-                    lstFuncaotransacao.forEach( funcaoTransacaoMultp =>{
+                if (retorno) {
+                    lstFuncaotransacao.forEach( funcaoTransacaoMultp => {
                         lstFuncaotransacaoToSave.push(this.funcaoTransacaoService.create(funcaoTransacaoMultp, this.analise.id));
                     });
 
                     forkJoin(lstFuncaotransacaoToSave).subscribe(respCreate => {
                         respCreate.forEach((funcaoDados) => {
                             this.pageNotificationService.addCreateMsg(funcaoDados['name']);
-                            let funcaoDadosTable: FuncaoTransacao = new FuncaoTransacao().copyFromJSON(funcaoDados);
+                            const funcaoDadosTable: FuncaoTransacao = new FuncaoTransacao().copyFromJSON(funcaoDados);
                             funcaoDadosTable.funcionalidade = funcaoTransacaoCalculada.funcionalidade;
                             this.setFields(funcaoDadosTable);
                             this.funcoesTransacoes.push(funcaoDadosTable);
@@ -383,10 +376,10 @@ export class FuncaoTransacaoFormComponent implements OnInit {
                         this.fecharDialog();
                         this.estadoInicial();
                         this.resetarEstadoPosSalvar();
-                        this.analiseService.updateSomaPf(this.analise.id).subscribe()
+                        this.analiseService.updateSomaPf(this.analise.id).subscribe();
                         return true;
                     });
-                }else{
+                } else {
                     return false;
                 }
             });
@@ -542,7 +535,7 @@ export class FuncaoTransacaoFormComponent implements OnInit {
                                 this.fecharDialog();
                                 this.resetarEstadoPosSalvar();
                                 this.estadoInicial();
-                                this.analiseService.updateSomaPf(this.analise.id).subscribe()
+                                this.analiseService.updateSomaPf(this.analise.id).subscribe();
                                 return retorno;
                             });
                         } else {
@@ -656,7 +649,7 @@ export class FuncaoTransacaoFormComponent implements OnInit {
                         this.funcoesTransacoes.push(funcaoTransacaoCalculada);
                         this.resetarEstadoPosSalvar();
                         this.fecharDialog();
-                        this.analiseService.updateSomaPf(this.analise.id).subscribe()
+                        this.analiseService.updateSomaPf(this.analise.id).subscribe();
                         this.pageNotificationService
                             .addSuccessMessage(`${this.getLabel('Função de Transação')}
                 '${funcaoTransacaoCalculada.name}' ${this.getLabel(' alterada com sucesso')}`);
@@ -752,6 +745,10 @@ export class FuncaoTransacaoFormComponent implements OnInit {
             case 'filter':
                 this.display = true;
                 break;
+            case 'view':
+                this.viewFuncaoTransacao = true;
+                this.prepararParaVisualizar(funcaoTransacaoSelecionada);
+                break;
         }
     }
 
@@ -806,10 +803,10 @@ export class FuncaoTransacaoFormComponent implements OnInit {
     private carregarFatorDeAjusteNaEdicao(funcaoSelecionada: FuncaoTransacao) {
         this.inicializaFatoresAjuste(this.manual);
         if (funcaoSelecionada.fatorAjuste !== undefined) {
-            const item : SelectItem = this.fatoresAjuste.find(item => {
-                 return item.value && funcaoSelecionada.fatorAjuste.id === item.value['id'];
+            const item: SelectItem = this.fatoresAjuste.find( selectItem => {
+                 return selectItem.value && funcaoSelecionada.fatorAjuste.id === selectItem.value['id'];
             });
-            if(item && item.value){
+            if (item && item.value) {
                 funcaoSelecionada.fatorAjuste = item.value;
             }
         }
@@ -823,9 +820,6 @@ export class FuncaoTransacaoFormComponent implements OnInit {
 
     moduloSelected(modulo: Modulo) {
     }
-
-    // Carregar Referencial
-    disableAba: any;
 
     private loadReference(referenciaveis: AnaliseReferenciavel[],
                           strValues: string[]): DerChipItem[] {
@@ -863,7 +857,7 @@ export class FuncaoTransacaoFormComponent implements OnInit {
                         funcaoTransacao.id !== funcaoTransacaoSelecionada.id
                     ));
                     this.pageNotificationService.addDeleteMsg(funcaoTransacaoSelecionada.name);
-                    this.analiseService.updateSomaPf(this.analise.id).subscribe()
+                    this.analiseService.updateSomaPf(this.analise.id).subscribe();
                 });
             }
         });
@@ -964,17 +958,24 @@ export class FuncaoTransacaoFormComponent implements OnInit {
     }
 
     showDeflator() {
-        if(this.currentFuncaoTransacao.fatorAjuste){
+        if (this.currentFuncaoTransacao.fatorAjuste) {
             this.displayDescriptionDeflator = true;
         }
     }
-    copyToEvidence(){
-        if(this.currentFuncaoTransacao.sustantation){
-            this.currentFuncaoTransacao.sustantation = this.currentFuncaoTransacao.sustantation + this.currentFuncaoTransacao.fatorAjuste.descricao;
-        }else{
+    copyToEvidence() {
+        if (this.currentFuncaoTransacao.sustantation) {
+            this.currentFuncaoTransacao.sustantation =
+                    this.currentFuncaoTransacao.sustantation +
+                    this.currentFuncaoTransacao.fatorAjuste.descricao;
+        } else {
             this.currentFuncaoTransacao.sustantation = this.currentFuncaoTransacao.fatorAjuste.descricao;
         }
         this.displayDescriptionDeflator = false;
+    }
+    private prepararParaVisualizar(funcaoTransacaoSelecionada: FuncaoTransacao) {
+        this.funcaoTransacaoService.getById(funcaoTransacaoSelecionada.id).subscribe(funcaoTransacao => {
+            this.currentFuncaoTransacao = funcaoTransacao;
+        });
     }
 
 }

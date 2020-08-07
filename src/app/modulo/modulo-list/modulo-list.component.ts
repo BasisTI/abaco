@@ -46,7 +46,7 @@ export class ModuloListComponent {
 
   confirmDelete(id: any) {
     this.confirmationService.confirm({
-      message: this.getLabel('Global.Mensagens.CertezaExcluirRegistro'),
+      message: this.getLabel('Tem certeza que deseja excluir o registro?'),
       accept: () => {
         this.moduloService.delete(id).subscribe(() => {
           this.datatable.refresh(undefined);

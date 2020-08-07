@@ -325,20 +325,43 @@
                                 </div>
                                 <p-fieldset [legend]="this.getLabel('Fases')" [toggleable]="true" [collapsed]="true">
                                     <div class="ui-g-12 ui-md-12 ui-sm-12" style="margin-bottom: 05px">
-                                        <basis-datatable
+                                        <p-table
                                                 dataKey="id"
+                                                [rowHover]="true"
                                                 [emptyMessage]="this.getLabel('Selecione um Contrato para escolher Fases')"
                                                 [value]="esforcoFases"
                                                 id="idTabelaFases"
+                                                [resizableColumns]="true"
                                                 [(selection)]="analise.esforcoFases">
-                                            <p-header>Fases</p-header>
-                                            <p-column selectionMode="multiple" [style]="{'width':'15%'}"></p-column>
-                                            <p-column [header]="this.getLabel('Nome')" field="fase.nome"></p-column>
-                                            <p-column [header]="this.getLabel('Esforço')" field="esforco"></p-column>
-                                            <p-footer *ngIf="analise.contrato">
-                                                {{this.getLabel('Total')}} {{ totalEsforcoFases() }}%
-                                            </p-footer>
-                                        </basis-datatable>
+                                            <ng-template pTemplate="caption">
+                                                Fase
+                                            </ng-template>]
+                                            <ng-template pTemplate="header">
+                                                <tr>
+                                                    <th style="text-align:left"><p-tableHeaderCheckbox></p-tableHeaderCheckbox></th>
+                                                    <th pSortableColumn="fase.nome">Nome <p-sortIcon></p-sortIcon></th>
+                                                    <th pSortableColumn="esforco">Esforço <p-sortIcon></p-sortIcon></th>
+                                                </tr>
+                                            </ng-template>
+                                            <ng-template pTemplate="body" let-esforcoFase>
+                                                <tr class="ui-selectable-row">
+                                                    <td >
+                                                        <p-tableCheckbox [value]="esforcoFase"></p-tableCheckbox>
+                                                    </td>
+                                                    <td>
+                                                        {{esforcoFase.fase.nome}}
+                                                    </td>
+                                                    <td>
+                                                        {{esforcoFase.esforco}}%
+                                                    </td>
+                                                </tr>
+                                            </ng-template>
+                                            <ng-template pTemplate="footer">
+                                                <tr>
+                                                    <td colspan="3" style="text-align:center">{{this.getLabel('Total')}} {{ totalEsforcoFases() }}%</td>
+                                                </tr>
+                                            </ng-template>
+                                        </p-table>
                                     </div>
                                 </p-fieldset>
                                 <div class="ui-g-12 ui-md-12 ui-sm-12" style="margin-bottom: 05px">

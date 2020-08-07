@@ -49,7 +49,7 @@ export class UserService {
                 this.handlerUserExistsError(error.headers);
                 return Observable.throw(new Error(error.status));
             case 403:
-                this.pageNotificationService.addErrorMessage(this.getLabel('Global.Mensagens.SemPermissaoAcao'));
+                this.pageNotificationService.addErrorMessage(this.getLabel('Você não possui permissão para esta ação.'));
                 return Observable.throw(new Error(error.status));
         }
     }
@@ -57,13 +57,13 @@ export class UserService {
     private handlerUserExistsError(header: Headers) {
         switch (header.get('x-abacoapp-error')) {
             case 'error.userexists':
-                this.pageNotificationService.addErrorMessage(this.getLabel('Usuario.UsuarioExistente'));
+                this.pageNotificationService.addErrorMessage(this.getLabel('Este usuário já existe.'));
                 break;
             case 'error.emailexists':
-                this.pageNotificationService.addErrorMessage(this.getLabel('Usuario.EmailCadastrado'));
+                this.pageNotificationService.addErrorMessage(this.getLabel('Este endereço de e-mail já está cadastrado'));
                 break;
             case 'error.fullnameexists':
-                this.pageNotificationService.addErrorMessage(this.getLabel('Usuario.NomeEmUso'));
+                this.pageNotificationService.addErrorMessage(this.getLabel('Este nome de usuário já está sendo usado.'));
                 break;
         }
     }

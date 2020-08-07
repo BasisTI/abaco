@@ -81,7 +81,6 @@
         <basis-datatable
             type="server"
             [url]="searchUrl"
-            (dblclick)="onRowDblclick($event)"
             (buttonClick)="datatableClick($event)"
             id="idTabelaComponentSistema"
             [rows]="20"
@@ -111,9 +110,9 @@
 
 </div>
 
-<p-confirmDialog [header]="this.getLabel('Global.Mensagens.Confirmacao')" #dialog>
+<p-confirmDialog [header]="this.getLabel('Confirmação')" #dialog>
   <p-footer>
-    <button type="button" id="idNaoDeleteComponentSistema" pButton icon="fa-close" [label]="this.getLabel('Nao')" (click)="dialog.reject()"></button>
-    <button type="button" id="idSimDeleteComponentSistema" pButton icon="fa-check" [label]="this.getLabel('Sim')" (click)="dialog.accept()"></button>
+    <button type="button" pButton icon="fa-close" [label]="this.getLabel('Não')" (click)="dialog.reject()"></button>
+    <button type="button" pButton icon="fa-check" [label]="this.getLabel('Sim')" (click)="dialog.accept()"></button>
   </p-footer>
 </p-confirmDialog>

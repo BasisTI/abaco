@@ -14,7 +14,7 @@ import { Subscription } from 'rxjs';
 import { AnaliseService } from '../analise.service';
 
 @Component({
-    selector: 'jhi-analise',
+    selector: 'app-analise',
     templateUrl: './analise-list.component.html',
     providers: [GrupoService, ConfirmationService]
 })
@@ -62,7 +62,7 @@ export class AnaliseListComponent implements OnInit {
     showDialogAnaliseCloneTipoEquipe = false;
     showDialogAnaliseBlock = false;
     mostrarDialog = false;
-    enableTable:boolean = false;
+    enableTable: Boolean = false;
 
     constructor(
         private router: Router,
@@ -202,7 +202,7 @@ export class AnaliseListComponent implements OnInit {
         switch (event.button) {
             case 'edit':
                 if (event.selection.bloqueiaAnalise) {
-                    this.pageNotificationService.addErrorMessage("Você não pode editar uma análise bloqueada!");
+                    this.pageNotificationService.addErrorMessage('Você não pode editar uma análise bloqueada!');
                     return;
                 }
                 this.router.navigate(['/analise', event.selection.id, 'edit']);
@@ -305,7 +305,7 @@ export class AnaliseListComponent implements OnInit {
                 .concat(this.analiseSelecionada.identificadorAnalise),
             accept: () => {
                 this.analiseService.clonarAnalise(id).subscribe(response => {
-                    this.router.navigate(['/analise', response.id, 'edit',{clone:true}]);
+                    this.router.navigate(['/analise', response.id, 'edit', { clone : true}]);
                 });
             }
         });
@@ -317,8 +317,10 @@ export class AnaliseListComponent implements OnInit {
             this.pageNotificationService.addErrorMessage(this.getLabel('Você não pode excluir uma análise bloqueada'));
             return;
         }
-        const tipoEquipe = this.tipoEquipesLoggedUser.find(tipoEquipe => tipoEquipe.id === this.analiseSelecionada.equipeResponsavel['id']);
-        if(tipoEquipe){
+        const canDelete = this.tipoEquipesLoggedUser.find(
+                (tipoEquipeResponsave) =>  tipoEquipeResponsave.id === this.analiseSelecionada.equipeResponsavel['id']
+        );
+        if (canDelete) {
             this.confirmationService.confirm({
                 message: this.getLabel('Tem certeza que deseja excluir o registro ').concat(analise.identificadorAnalise).concat('?'),
                 accept: () => {
@@ -329,8 +331,9 @@ export class AnaliseListComponent implements OnInit {
                     });
                 }
             });
-        }else{
-            this.pageNotificationService.addErrorMessage(this.getLabel('Somente membros da equipe responsável podem excluir esta análise!'));
+        } else {
+            this.pageNotificationService.addErrorMessage(
+                this.getLabel('Somente membros da equipe responsável podem excluir esta análise!'));
             return;
         }
     }
@@ -348,17 +351,16 @@ export class AnaliseListComponent implements OnInit {
     }
 
     public selectAnalise() {
-        if(this.datatable && this.datatable.selectedRow){
+        if (this.datatable && this.datatable.selectedRow) {
             this.inicial = true;
             this.analiseSelecionada = this.datatable.selectedRow;
-            this.blocked =this.datatable.selectedRow.bloqueiaAnalise;
+            this.blocked = this.datatable.selectedRow.bloqueiaAnalise;
         }
     }
 
     public recarregarDataTable() {
-        if(this.datatable){
-            this.datatable.url = this.userAnaliseUrl;
-            this.datatable.reset();
+        if (this.datatable) {
+            this.datatable.refresh(this.changeUrl());
         }
     }
 
@@ -389,7 +391,8 @@ export class AnaliseListComponent implements OnInit {
     public changeUrl() {
 
         let querySearch = '';
-        querySearch = querySearch.concat((this.searchGroup.identificadorAnalise) ? `?identificador=*${this.searchGroup.identificadorAnalise}*&` : '&');
+        querySearch = querySearch.concat((this.searchGroup.identificadorAnalise) ?
+            `identificador=*${this.searchGroup.identificadorAnalise}*&` : '');
 
         querySearch = querySearch.concat((this.searchGroup.sistema && this.searchGroup.sistema.id) ?
             `sistema=${this.searchGroup.sistema.id}&` : '');
@@ -405,16 +408,14 @@ export class AnaliseListComponent implements OnInit {
         querySearch = querySearch.concat((this.searchGroup.usuario && this.searchGroup.usuario.id) ?
             `usuario=${this.searchGroup.usuario.id}&` : '');
 
-        querySearch = (querySearch === '?') ? '' : querySearch;
+        querySearch = (querySearch === '') ? '' : '&' + querySearch;
 
         querySearch = (querySearch.endsWith('&')) ? querySearch.slice(0, -1) : querySearch;
-
         return querySearch;
     }
 
     public performSearch() {
         this.enableTable = true ;
-        this.userAnaliseUrl = this.grupoService.grupoUrl + this.changeUrl();
         this.recarregarDataTable();
     }
 
@@ -440,15 +441,15 @@ export class AnaliseListComponent implements OnInit {
                     this.pageNotificationService.addErrorMessage(this.getLabel('Somente membros da equipe responsável podem excluir esta análise!'));
                 }
             }
-        }, 
+        },
         err => {
-            this.pageNotificationService.addErrorMessage(this.getLabel('Somente membros da equipe responsável podem excluir esta análise!'));
-            
+            this.pageNotificationService.addErrorMessage(
+                this.getLabel('Somente membros da equipe responsável podem excluir esta análise!'));
         });
     }
 
     public alterAnaliseBlock() {
-        if(this.analiseTemp && this.analiseTemp.dataHomologacao){
+        if (this.analiseTemp && this.analiseTemp.dataHomologacao) {
             const copy = this.analiseTemp.toJSONState();
             this.analiseService.block(copy).subscribe(() => {
                 const nome = this.analiseTemp.identificadorAnalise;
@@ -501,7 +502,6 @@ export class AnaliseListComponent implements OnInit {
                             this.equipeShare.push(entity);
                         });
                     }
-                    
                 });
         });
 

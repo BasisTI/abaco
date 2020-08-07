@@ -3,9 +3,9 @@ export const environment = {
     apiUrl: '/api',
     auth: {
         baseUrl: '',
-        authUrl: '/login/cas',
-        loginUrl: '/login/cas',
-        logoutUrl: '/cas/logout',
+        authUrl: '/login/',
+        loginUrl: '/#/login',
+        logoutUrl: '/#/logout',
         detailsUrl: '/api/user/details',
         tokenValidationUrl: '/api/token/validate',
         storage: localStorage,

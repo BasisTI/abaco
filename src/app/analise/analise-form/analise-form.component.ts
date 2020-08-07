@@ -64,6 +64,7 @@ export class AnaliseFormComponent implements OnInit {
     manual: Manual;
     manuais: Manual[] = [];
     users: User[] = [];
+    usersDropDown: User[] = [];
     manuaisCombo: SelectItem[] = [];
 
     showFuncaoDados: Boolean = false;
@@ -387,11 +388,10 @@ export class AnaliseFormComponent implements OnInit {
         }
     }
     disabledTipoContagemEdit() {
-        if (this.canEditMetodo){
+        if (this.canEditMetodo) {
             return false;
         } else {
             return true;
-
         }
     }
 
@@ -642,13 +642,16 @@ export class AnaliseFormComponent implements OnInit {
     private populaComboUsers() {
         if (this.analise.id) {
             this.userService.getAllUsers(this.analise.organizacao, this.analise.equipeResponsavel).subscribe(usuarios => {
+                usuarios.forEach(usuario => {
+                    this.usersDropDown.push(new User().copyFromJSON(usuario));
+                });
                 if (this.users && this.users.length > 0) {
                     this.users = _.clone(this.analise.users);
-                    this.users = this.users.concat(usuarios.filter(user => {
+                    this.users = this.users.concat(this.usersDropDown.filter(user => {
                         return !this.analise.users.some(usuario => user.id === usuario.id);
                     }));
                 } else {
-                    this.users = usuarios;
+                    this.users = this.usersDropDown;
                 }
                 if (this.analise.users && this.analise.users.length === 0) {
                     const user = _.find(this.users, {id: this.loggedUser.id});

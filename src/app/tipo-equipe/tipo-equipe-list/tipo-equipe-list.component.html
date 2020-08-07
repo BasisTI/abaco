@@ -39,10 +39,11 @@
           
         </div>
 
-        <basis-datatable [url]="searchUrl" 
+        <basis-datatable
+          [url]="searchUrl" 
           (buttonClick)="datatableClick($event)" 
-          (dblclick)="onRowDblclick($event)"
-          [rows]="20" [rowsPerPageOptions]="rowsPerPageOptions"
+          [rows]="20"
+          [rowsPerPageOptions]="rowsPerPageOptions"
           [showPaginationFooter]="true" 
           #datatable>
 
@@ -73,7 +74,7 @@
 
 <p-confirmDialog header="Confirmação" #dialog>
   <p-footer>
-    <button type="button" pButton icon="fa-close" [label]="this.getLabel('Global.Botoes.Nao')" (click)="dialog.reject()"></button>
-    <button type="button" pButton icon="fa-check" [label]="this.getLabel('Global.Botoes.Sim')" (click)="dialog.accept()"></button>
+    <button type="button" pButton icon="fa-close" [label]="this.getLabel('Não')" (click)="dialog.reject()"></button>
+    <button type="button" pButton icon="fa-check" [label]="this.getLabel('Sim')" (click)="dialog.accept()"></button>
   </p-footer>
 </p-confirmDialog>

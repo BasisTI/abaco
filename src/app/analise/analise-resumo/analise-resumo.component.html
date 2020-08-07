@@ -15,6 +15,7 @@
                         <div class="ui-g-12 ui-md-12 ui-sm-12">
                           <h2>Complexidade</h2>
                           <basis-datatable
+                              type="memory"
                               [value]="linhaResumo"
                               [paginator]="false"
                               disableEdit="true"
@@ -82,26 +83,26 @@
               </app-white-button>
             </div>
             <div class="ui-g-2 ui-md-2 ui-sm-12">
-              <app-green-button *ngIf="!this.isView"
+              <app-green-button 
                       [buttonLabel]="this.getLabel('Gerar Relatório Excel')"
                       (click)="geraRelatorioExcelBrowser()">
               </app-green-button>
             </div>
             <div class="ui-g-2 ui-md-2 ui-sm-12">
-              <app-gray-button *ngIf="!this.isView"
+              <app-gray-button 
                       [buttonLabel]="this.getLabel('Gerar Relatório')"
                       (click)="geraRelatorioPdfDetalhadoBrowser()">
               </app-gray-button>
             </div>
             <div class="ui-g-2 ui-md-2 ui-sm-12">
               <app-red-button *ngIf="!this.isView"
-                      [buttonLabel]="this.getLabel('Bloquear Analise')"
+                      [buttonLabel]="this.getLabel('Bloquear Análise')"
                       (click)="bloquearAnalise()">
               </app-red-button>
             </div>
             <div class="ui-g-2 ui-md-2 ui-sm-12">
               <app-blue-button *ngIf="!this.isView"
-                      [buttonLabel]="this.getLabel('Compartilhar Analise')"
+                      [buttonLabel]="this.getLabel('Compartilhar Análise')"
                       (click)="openCompartilharDialog()">
               </app-blue-button>
             </div>
@@ -109,9 +110,10 @@
       </div>
     </p-tabPanel>
 </p-tabView>
-<p-dialog [header]="this.getLabel('CompartilharAnalise')" [(visible)]="mostrarDialog"
+<p-dialog [header]="this.getLabel('Compartilhar Análise')" [(visible)]="mostrarDialog"
           [modal]="true" (onHide)="limparSelecaoCompartilhar()" *ngIf="equipeShare">
     <basis-datatable
+            type="memory"
             [(value)]="equipeShare"
             [(selection)]="selectedEquipes"
             dataKey="equipeId">
@@ -133,14 +135,14 @@
         </p-column>
     </basis-datatable>
 
-    <app-green-button [buttonLabel]="'Adicionar'" (click)="salvarCompartilhar()"
-                      style="float:right; margin-top: 5px"></app-green-button>
+    <app-green-button [buttonLabel]="'Adicionar'" (click)="salvarCompartilhar()"  style="float:right; margin-top: 5px"></app-green-button>
     <br/>
     <br/>
 
     <hr/>
     <h3>Compartilhada com:</h3>
-    <basis-datatable
+    <basis-datatable 
+            type="memory"
             *ngIf="analise && analise.compartilhadas"
             [(value)]="analise.compartilhadas"
             selectionMode="single"
@@ -164,11 +166,9 @@
     <app-red-button [buttonLabel]="this.getLabel('Remover')" (click)="deletarCompartilhar()"
                     style="float:right; margin-top: 5px"></app-red-button>
 </p-dialog>
-<p-confirmDialog [header]="this.getLabel('Global.Mensagens.Confirmacao')" #dialog>
+<p-confirmDialog [header]="this.getLabel('Confirmação')" #dialog>
     <p-footer>
-        <button type="button" pButton icon="fa-close" [label]="'Não'"
-                (click)="dialog.reject()"></button>
-        <button type="button" pButton icon="fa-check" [label]="'Sim'"
-                (click)="dialog.accept()"></button>
+        <button type="button" pButton icon="fa-close" [label]="'Não'" (click)="dialog.reject()"></button>
+        <button type="button" pButton icon="fa-check" [label]="'Sim'" (click)="dialog.accept()"></button>
     </p-footer>
 </p-confirmDialog>

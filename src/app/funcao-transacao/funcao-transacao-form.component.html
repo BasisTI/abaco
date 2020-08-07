@@ -201,7 +201,7 @@
                             [(visible)]="showDialog"
                             [(header)]="textHeader"
                             [contentStyle]="{'height': ['windowHeightDialog']}"
-                            [width]="[windowWidthDialog]">
+                            [style]="{width: '80vw'}">
 
                         <app-analise-modulo-funcionalidade
                                 [erroModulo]="erroModulo" [isFuncaoDados]="false"
@@ -428,22 +428,116 @@
 <!-- Dialog confirmação deleção -->
 <p-confirmDialog [header]="this.getLabel('Confirmacao')" #dialog>
     <p-footer>
-        <button type="button" pButton icon="fa-close" [label]="'Não'"
-                (click)="dialog.reject()"></button>
-        <button type="button" pButton icon="fa-check" [label]="'Sim'"
-                (click)="dialog.accept()"></button>
+        <button type="button" pButton icon="fa-close" [label]="'Não'"  (click)="dialog.reject()"></button>
+        <button type="button" pButton icon="fa-check" [label]="'Sim'"   (click)="dialog.accept()"></button>
     </p-footer>
 </p-confirmDialog>
-<p-dialog [header]="this.getLabel('Descrição')" [(visible)]="displayDescriptionDeflator" [width]="400" *ngIf="currentFuncaoTransacao.fatorAjuste">
+<p-dialog [header]="this.getLabel('Descrição')" [(visible)]="displayDescriptionDeflator" [style]="{width: '60vw'}" *ngIf="currentFuncaoTransacao.fatorAjuste">
     {{currentFuncaoTransacao.fatorAjuste.descricao}}
-    <p-footer>
+    <p-footer *ngIf="!viewFuncaoTransacao">
         <app-white-button buttonLabel="Copiar para Evidência" buttonIcon="ui-icon-add"(click)="copyToEvidence()"></app-white-button>
     </p-footer>
 </p-dialog>
  <!-- DIALOG: COPIAR FUNÇÕES DE TRANSAÇÃO -->
  <div *ngIf="analise && analise.organizacao" >
-    <p-dialog [header]="this.getLabel('Importa funções de Transação')" [(visible)]="display" [width]="800" [closable]="false">
+    <p-dialog [header]="this.getLabel('Importa funções de Transação')" [(visible)]="display" [style]="{width: '80vw'}" [closable]="false">
         <app-pesquisar-ft></app-pesquisar-ft>
     </p-dialog>
 </div>
-
+<p-dialog header="Visualizar Função de Dados" [(visible)]="viewFuncaoTransacao" [responsive]="true" [style]="{width: '80vw'}" >
+    <div *ngIf="currentFuncaoTransacao && currentFuncaoTransacao.funcionalidade">
+         <div class="ui-g">
+             <div class="ui-md-6 ui-sm-12">
+                 <label><b>Modulo: </b></label>
+                 {{currentFuncaoTransacao.funcionalidade.modulo.nome}}
+             </div>
+             <div class="ui-md-6 ui-sm-12">
+                 <label><b>Funcionalidade: </b></label>
+                 {{currentFuncaoTransacao.funcionalidade.nome}}
+             </div>
+        </div>
+        <div class="ui-g">
+             <div class="ui-md-6 ui-sm-12">
+                 <label><b>Nome: </b></label>
+                 {{currentFuncaoTransacao.name}}
+             </div>
+             <div class="ui-md-6 ui-sm-12">
+                 <label><b>Classificação: </b></label>
+                 {{currentFuncaoTransacao.tipo}}
+             </div>
+         </div>
+         <div class="ui-g">
+             <div class="ui-md-6 ui-sm-12">
+                 <label><b>Complexidade: </b></label>
+                 {{currentFuncaoTransacao.complexidade}}
+             </div>
+             <div class="ui-md-6 ui-sm-12">
+                 <div>
+                     <label><b>Deflator: </b></label>
+                     {{currentFuncaoTransacao.fatorAjuste.origem}} - {{currentFuncaoTransacao.fatorAjuste.codigo}} - {{currentFuncaoTransacao.fatorAjuste.nome}} - {{currentFuncaoTransacao.fatorAjuste.fator}} {{ currentFuncaoTransacao.fatorAjuste.tipoAjuste === 'PERCENTUAL'? '%' : 'pf'}} 
+                 </div>
+                 <div>
+                     <app-blue-button
+                            buttonIcon="ui-icon-info-outline"
+                            (click)="showDeflator()">
+                    </app-blue-button>
+                 </div>
+             </div>
+         </div>
+         <div class="ui-g">
+             <div class="ui-md-6 ui-sm-12">
+                 <div class="ui-12">
+                     <label><b>FTR (AR) : </b></label>
+                 </div >
+                 <p-chips [(ngModel)]="currentFuncaoTransacao.alrs" disabled >
+                     <ng-template let-item pTemplate="item">
+                         {{item && item.nome ? item.nome : item.valor }}
+                     </ng-template>
+                 </p-chips>
+             </div>
+             <div class="ui-md-6 ui-sm-12">
+                 <div class="ui-12">
+                     <label><b>DER (TD): </b></label>
+                 </div >
+                 <p-chips class="ui-12" [(ngModel)]="currentFuncaoTransacao.ders" disabled>
+                     <ng-template let-item pTemplate="item">
+                         {{item && item.nome ? item.nome : item.valor }}
+                     </ng-template>
+                 </p-chips>
+             </div>
+         </div>
+         <div class="ui-g">
+             <div class="ui-md-6 ui-sm-12">
+                 <label><b>PF Total: </b></label>
+                 {{currentFuncaoTransacao.grossPF}}
+             </div>
+             <div class="ui-md-6 ui-sm-12">
+                 <label><b>PF Ajustado: </b></label>
+                 {{currentFuncaoTransacao.pf}}
+             </div>
+         </div>
+         <div class="ui-md-12 ui-sm-12">
+             <label><b>Evidência: </b></label>
+             <div class="ui-g-12 ui-md-12 ui-sm-12">
+                 <span class="md-inputfield">
+                     <p-editor
+                             [rows]="3"
+                             id="idEvidenciaFormFuncaoDados"
+                             [style]="{'height':'auto'}"
+                             [readonly]="true"
+                             pInputTextarea name="funcaoDadosSustentacao"
+                             [(ngModel)]="currentFuncaoTransacao.sustantation">
+                     </p-editor>
+                 </span>
+             </div>
+         </div>
+     </div> 
+     <p-footer>
+         <div class="ui-g ui-md-12 ui-sm-12" style="justify-content: flex-end">
+             <div class="ui-md-3 ui-sm-12">
+                 <app-white-button [buttonLabel]="'Fechar'" (click)="viewFuncaoDados=false" ></app-white-button>
+             </div>
+         </div>
+     </p-footer>
+ </p-dialog>
+ 

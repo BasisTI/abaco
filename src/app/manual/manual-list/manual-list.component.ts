@@ -8,13 +8,12 @@ import { ManualService } from '../manual.service';
 import { ElasticQuery } from 'src/app/shared/elastic-query';
 
 @Component({
-    selector: 'jhi-manual',
+    selector: 'app-manual',
     templateUrl: './manual-list.component.html',
     providers: [ManualService, ConfirmationService]
 })
 export class ManualListComponent implements OnInit {
 
-    // @BlockUI() blockUI: NgBlockUI;
     @ViewChild(DatatableComponent) datatable: DatatableComponent;
 
     searchUrl: string = this.manualService.searchUrl;
@@ -24,7 +23,7 @@ export class ManualListComponent implements OnInit {
     mostrarDialogClonar: boolean;
     rowsPerPageOptions: number[] = [5, 10, 20];
     myform: FormGroup;
-    nomeValido: boolean = false;
+    nomeValido = false;
 
     constructor(
         private router: Router,
@@ -37,7 +36,7 @@ export class ManualListComponent implements OnInit {
 
     public ngOnInit() {
         this.mostrarDialogClonar = false;
-        if(this.datatable){
+        if (this.datatable) {
             this.datatable.pDatatableComponent.onRowSelect.subscribe((event) => {
                 this.manualSelecionado = new Manual().copyFromJSON(event.data);
             });
@@ -48,7 +47,6 @@ export class ManualListComponent implements OnInit {
     }
 
     public onRowDblclick(event: DatatableClickEvent) {
-        
         if (event.selection.nodeName === 'TD') {
             this.abrirEditar(event.selection);
         } else if (event.selection.parentNode.nodeName === 'TD') {
@@ -58,17 +56,17 @@ export class ManualListComponent implements OnInit {
 
     clonarTooltip() {
         if (!this.manualSelecionado.id) {
-            return "Selecione um registro para clonar";
+            return 'Selecione um registro para clonar';
         }
-        return "Clonar";
+        return 'Clonar';
     }
 
     abrirEditar(manual: Manual) {
-        this.router.navigate(['/manual', manual.id,'edit']);
+        this.router.navigate(['/manual', manual.id, 'edit']);
     }
 
     abrirVisualizar(manual: Manual) {
-        this.router.navigate(['/manual', manual.id,'view']);
+        this.router.navigate(['/manual', manual.id, 'view']);
     }
 
     public fecharDialogClonar() {
@@ -79,7 +77,7 @@ export class ManualListComponent implements OnInit {
     public clonar() {
         if (this.nomeDoManualClonado !== undefined) {
             this.nomeValido = false;
-            var manual:Manual = Manual.convertManualJsonToObject(this.manualSelecionado);
+            const manual: Manual = Manual.convertManualJsonToObject(this.manualSelecionado);
             const manualClonado: Manual = manual.clone();
             manualClonado.id = undefined;
             manualClonado.nome = this.nomeDoManualClonado;
@@ -91,7 +89,9 @@ export class ManualListComponent implements OnInit {
             }
 
             this.manualService.create(manualClonado).subscribe((manualSalvo: Manual) => {
-                this.pageNotificationService.addSuccessMessage('Manual' + manualSalvo.nome + ' clonado a partir do manual' + this.manualSelecionado.nome + ' com sucesso!');
+                this.pageNotificationService.addSuccessMessage(
+                    'Manual' + manualSalvo.nome + ' clonado a partir do manual' + this.manualSelecionado.nome + ' com sucesso!'
+                    );
                 this.fecharDialogClonar();
                 this.recarregarDataTable();
             });
@@ -108,13 +108,13 @@ export class ManualListComponent implements OnInit {
 
     public confirmDelete(manual: Manual) {
         this.confirmationService.confirm({
-            message:'Tem certeza que deseja excluir o registro?',
-            accept: () => {                
+            message: 'Tem certeza que deseja excluir o registro?',
+            accept: () => {
                 this.manualService.delete(manual.id).subscribe(() => {
                     this.recarregarDataTable();
                     this.pageNotificationService.addSuccessMessage('Registro excluído com sucesso!');
-                }, error=> {
-                    if (error.status === 500){
+                }, error => {
+                    if (error.status === 500) {
                     }
                 }
                 );
@@ -126,33 +126,33 @@ export class ManualListComponent implements OnInit {
         this.datatable.refresh(this.elasticQuery.query);
     }
 
-    public search(){
+    public search() {
         this.datatable.refresh(this.elasticQuery.query);
     }
-    onClick(event: DatatableClickEvent){
-        switch(event.button) { 
-            case 'edit': { 
+    onClick(event: DatatableClickEvent) {
+        switch (event.button) {
+            case 'edit': {
                     this.abrirEditar(event.selection);
-                break; 
+                break;
             }
-            case 'view': { 
+            case 'view': {
                     this.abrirVisualizar(event.selection);
-                break; 
+                break;
 
             }
-            case 'delete': { 
+            case 'delete': {
                 this.confirmDelete(event.selection);
-                break; 
+                break;
             }
-            case 'clone': { 
+            case 'clone': {
                     this.manualSelecionado.id = event.selection.id;
                     this.manualSelecionado = event.selection;
                     this.mostrarDialogClonar = true;
-                break; 
-            }  
-            default: { 
-               break; 
-            } 
-         } 
+                break;
+            }
+            default: {
+               break;
+            }
+         }
     }
 }

@@ -17,16 +17,20 @@
                                 </div>
                             </div>
 
-                            <div>
-                                <basis-datatable type="memory" [disableDelete]="this.isView" [disableEdit]="this.isView"
-                                                      [disableClone]="this.isView" [disableCrud]="this.isView"
-                                                      [showCrud]="true"
-                                                      [value]="this.funcoesDados" id="idTabelaFuncaoDados"
-                                                      (buttonClick)="datatableClick($event)"
-                                                      (selectRow)="selectRow($event)"
-                                                      (dblclick)="onRowDblclick($event)"
-                                                      [responsive]="true" scrollable="true" scrollWidth="100%">
-
+                            <div *ngIf="funcoesDados">
+                                <basis-datatable
+                                            type="memory" 
+                                            id="idTabelaFuncaoDados"
+                                            [disableDelete]="this.isView"
+                                            [disableEdit]="this.isView"
+                                            [disableClone]="this.isView"
+                                            [disableCrud]="this.isView"
+                                            [showCrud]="true"
+                                            [value]="funcoesDados"
+                                            (buttonClick)="datatableClick($event)"
+                                            [paginator]="false"
+                                            [scrollable]="true"
+                                            >
                                         <basis-datatable-button
                                             name="crud"
                                             *ngIf="!isView"
@@ -418,18 +422,110 @@
 </p-tabView>
 
 <!-- Dialog confirmação deleção -->
-<p-confirmDialog [header]="this.getLabel('Global.Mensagens.Confirmacao')" #dialog>
+<p-confirmDialog [header]="this.getLabel('Confirmação')" #dialog>
     <p-footer>
-        <button type="button" pButton icon="fa-close" [label]="'Nao'"
-                (click)="dialog.reject()"></button>
-        <button type="button" pButton icon="fa-check" [label]="'Sim' "
-                (click)="dialog.accept()"></button>
+        <button type="button" pButton icon="fa-close" label="Não" (click)="dialog.reject()"></button>
+        <button type="button" pButton icon="fa-check" label="Sim" (click)="dialog.accept()"></button>
     </p-footer>
 </p-confirmDialog>
-<p-dialog [header]="this.getLabel('Descrição')" [(visible)]="displayDescriptionDeflator" *ngIf="seletedFuncaoDados.fatorAjuste">
+<p-dialog [header]="this.getLabel('Descrição')" [(visible)]="displayDescriptionDeflator" [style]="{width: '50vw'}" *ngIf="seletedFuncaoDados.fatorAjuste">
     {{seletedFuncaoDados.fatorAjuste.descricao}}
-    <p-footer>
+    <p-footer *ngIf="!viewFuncaoDados" >
         <app-white-button buttonLabel="Copiar para Evidência" buttonIcon="ui-icon-add"(click)="copyToEvidence()"></app-white-button>
+    </p-footer>
+</p-dialog>
+<p-dialog header="Visualizar Função de Dados" [(visible)]="viewFuncaoDados" [responsive]="true" [style]="{width: '80vw'}" >
+   <div *ngIf="seletedFuncaoDados && seletedFuncaoDados.funcionalidade">
+        <div class="ui-g">
+            <div class="ui-md-6 ui-sm-12">
+                <label><b>Modulo: </b></label>
+                {{seletedFuncaoDados.funcionalidade.modulo.nome}}
+            </div>
+            <div class="ui-md-6 ui-sm-12">
+                <label><b>Funcionalidade: </b></label>
+                {{seletedFuncaoDados.funcionalidade.nome}}
+            </div>
+       </div>
+       <div class="ui-g">
+            <div class="ui-md-6 ui-sm-12">
+                <label><b>Nome: </b></label>
+                {{seletedFuncaoDados.name}}
+            </div>
+            <div class="ui-md-6 ui-sm-12">
+                <label><b>Classificação: </b></label>
+                {{seletedFuncaoDados.tipo}}
+            </div>
+        </div>
+        <div class="ui-g">
+            <div class="ui-md-6 ui-sm-12">
+                <label><b>Complexidade: </b></label>
+                {{seletedFuncaoDados.complexidade}}
+            </div>
+            <div class="ui-md-6 ui-sm-12">
+                <label><b>Deflator: </b></label>
+                <div>{{seletedFuncaoDados.fatorAjuste.origem}} - {{seletedFuncaoDados.fatorAjuste.codigo}} - {{seletedFuncaoDados.fatorAjuste.nome}} - {{seletedFuncaoDados.fatorAjuste.fator}} {{ seletedFuncaoDados.fatorAjuste.tipoAjuste === 'PERCENTUAL'? '%' : 'pf'}} </div>
+                <div class="ui-g-1 ui-md-1 ui-sm-1" >
+                    <app-blue-button
+                            buttonIcon="ui-icon-info-outline"
+                            (click)="showDeflator()">
+                    </app-blue-button>
+                </div>  
+            </div>
+        </div>
+        <div class="ui-g">
+            <div class="ui-md-6 ui-sm-12">
+                <div class="ui-12">
+                    <label><b>RLR (TR): </b></label>
+                </div >
+                <p-chips [(ngModel)]="seletedFuncaoDados.rlrs" disabled >
+                    <ng-template let-item pTemplate="item">
+                        {{item && item.nome ? item.nome : item.valor }}
+                    </ng-template>
+                </p-chips>
+            </div>
+            <div class="ui-md-6 ui-sm-12">
+                <div class="ui-12">
+                     <label><b>DER (TD): </b></label>
+                </div >
+                <p-chips class="ui-12" [(ngModel)]="seletedFuncaoDados.ders" disabled>
+                    <ng-template let-item pTemplate="item">
+                        {{item && item.nome ? item.nome : item.valor }}
+                    </ng-template>
+                </p-chips>
+            </div>
+        </div>
+        <div class="ui-g">
+            <div class="ui-md-6 ui-sm-12">
+                <label><b>PF Total: </b></label>
+                {{seletedFuncaoDados.grossPF}}
+            </div>
+            <div class="ui-md-6 ui-sm-12">
+                <label><b>PF Ajustado: </b></label>
+                {{seletedFuncaoDados.pf}}
+            </div>
+        </div>
+        <div class="ui-md-12 ui-sm-12">
+            <label><b>Evidência: </b></label>
+            <div class="ui-g-12 ui-md-12 ui-sm-12">
+                <span class="md-inputfield">
+                    <p-editor
+                            [rows]="3"
+                            id="idEvidenciaFormFuncaoDados"
+                            [style]="{'height':'auto'}"
+                            [readonly]="true"
+                            pInputTextarea name="funcaoDadosSustentacao"
+                            [(ngModel)]="seletedFuncaoDados.sustantation">
+                    </p-editor>
+                </span>
+            </div>
+        </div>
+    </div> 
+    <p-footer>
+        <div class="ui-g ui-md-12 ui-sm-12" style="justify-content: flex-end">
+            <div class="ui-md-3 ui-sm-12">
+                <app-white-button [buttonLabel]="'Fechar'" (click)="viewFuncaoDados=false" ></app-white-button>
+            </div>
+        </div>
     </p-footer>
 </p-dialog>
 

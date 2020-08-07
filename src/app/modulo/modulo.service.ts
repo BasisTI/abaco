@@ -25,7 +25,7 @@ export class ModuloService {
     const moduloToBeCreated = this.linkToSistema(copy, sistemaId);
     return this.http.post<Modulo>(this.resourceUrl, moduloToBeCreated).pipe(catchError((error: any) => {
       if (error.status === 403) {
-        this.pageNotificationService.addErrorMessage(this.getLabel('Global.Mensagens.VoceNaoPossuiPermissao'));
+        this.pageNotificationService.addErrorMessage(this.getLabel('Você não possui permissão!'));
         return Observable.throw(new Error(error.status));
       }
     }));
@@ -42,7 +42,7 @@ export class ModuloService {
     const copy = this.convert(modulo);
     return this.http.put<Modulo>(this.resourceUrl, copy).pipe(catchError((error: any) => {
       if (error.status === 403) {
-        this.pageNotificationService.addErrorMessage(this.getLabel('Global.Mensagens.VoceNaoPossuiPermissao'));
+        this.pageNotificationService.addErrorMessage(this.getLabel('Você não possui permissão!'));
         return Observable.throw(new Error(error.status));
       }
     }));
@@ -51,7 +51,7 @@ export class ModuloService {
   find(id: number): Observable<Modulo> {
     return this.http.get<Modulo>(`${this.resourceUrl}/${id}`).pipe(catchError((error: any) => {
       if (error.status === 403) {
-        this.pageNotificationService.addErrorMessage(this.getLabel('Global.Mensagens.VoceNaoPossuiPermissao'));
+        this.pageNotificationService.addErrorMessage(this.getLabel('Você não possui permissão!'));
         return Observable.throw(new Error(error.status));
       }
     }));
@@ -61,7 +61,7 @@ export class ModuloService {
     const options = createRequestOption(req);
     return this.http.get<ResponseWrapper>(this.resourceUrl).pipe(catchError((error: any) => {
       if (error.status === 403) {
-        this.pageNotificationService.addErrorMessage(this.getLabel('Global.Mensagens.VoceNaoPossuiPermissao'));
+        this.pageNotificationService.addErrorMessage(this.getLabel('Você não possui permissão!'));
         return Observable.throw(new Error(error.status));
       }
     }));
@@ -70,7 +70,7 @@ export class ModuloService {
   delete(id: number): Observable<Response> {
     return this.http.delete<Response>(`${this.resourceUrl}/${id}`).pipe(catchError((error: any) => {
       if (error.status === 403) {
-        this.pageNotificationService.addErrorMessage(this.getLabel('Global.Mensagens.VoceNaoPossuiPermissao'));
+        this.pageNotificationService.addErrorMessage(this.getLabel('Você não possui permissão!'));
         return Observable.throw(new Error(error.status));
       }
     }));
@@ -79,7 +79,7 @@ export class ModuloService {
   findByFuncionalidade(id: number): Observable<Modulo> {
     return this.http.get<Modulo>(`${this.resourceUrl}/funcionalidade/${id}`).pipe(catchError((error: any) => {
       if (error.status === 403) {
-        this.pageNotificationService.addErrorMessage(this.getLabel('Global.Mensagens.VoceNaoPossuiPermissao'));
+        this.pageNotificationService.addErrorMessage(this.getLabel('Você não possui permissão!'));
         return Observable.throw(new Error(error.status));
       }
     }));

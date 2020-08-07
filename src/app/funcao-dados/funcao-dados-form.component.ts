@@ -1,14 +1,4 @@
-import {
-    AfterViewInit,
-    ChangeDetectorRef,
-    Component,
-    EventEmitter,
-    Input,
-    OnInit,
-    Output,
-    QueryList,
-    ViewChildren
-} from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output, QueryList, ViewChildren} from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Column, DatatableClickEvent, DatatableComponent, DatatableModule, PageNotificationService } from '@nuvem/primeng-components';
 import * as _ from 'lodash';
@@ -44,7 +34,7 @@ import { FuncaoDadosService } from './funcao-dados.service';
 @Component({
     selector: 'app-analise-funcao-dados',
     templateUrl: './funcao-dados-form.component.html',
-    providers:[ConfirmationService]
+    providers: [ConfirmationService]
 })
 export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
 
@@ -56,13 +46,10 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
     label: string;
     @Input() uploadImagem = true;
     @Input() criacaoTabela = true;
-
     @ViewChildren(DatatableModule) tables: QueryList<DatatableComponent>;
 
     public isDisabled = false;
-
     faS: FatorAjuste[] = [];
-
     textHeader: string;
     @Input() isView: boolean;
     isEdit: boolean;
@@ -78,10 +65,8 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
     showMultiplos = false;
     sugestoesAutoComplete: string[] = [];
     impactos: string[];
-
     windowHeightDialog: any;
     windowWidthDialog: any;
-
     moduloCache: Funcionalidade;
     dersChips: DerChipItem[] = [];
     rlrsChips: DerChipItem[] = [];
@@ -94,9 +79,8 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
     baselineResults: any[] = [];
     funcoesDadosList: FuncaoDados[] = [];
     funcaoDadosEditar: FuncaoDados = new FuncaoDados();
-
     translateSubscriptions: Subscription[] = [];
-
+    viewFuncaoDados = false;
     impacto: SelectItem[] = [
         {label: 'Inclusão', value: 'INCLUSAO'},
         {label: 'Alteração', value: 'ALTERACAO'},
@@ -122,9 +106,9 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
     public erroTD: boolean;
     public erroUnitario: boolean;
     public erroDeflator: boolean;
-    public displayDescriptionDeflator: boolean = false;
+    public displayDescriptionDeflator = false;
     public funcoesDados: FuncaoDados[];
-
+    public disableAba = false;
     private analise: Analise;
     public seletedFuncaoDados: FuncaoDados = new FuncaoDados();
 
@@ -152,7 +136,7 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
             this.isView = params['view'] !== undefined;
             this.funcaoDadosService.getVWFuncaoDadosByIdAnalise(this.idAnalise).subscribe(value => {
                 this.funcoesDados = value;
-                if(!this.isView){
+                if (!this.isView) {
                     this.analiseService.find(this.idAnalise).subscribe(analise => {
                         this.analise = analise;
                         this.disableAba = this.analise.metodoContagem === MessageUtil.INDICATIVA;
@@ -358,7 +342,7 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
     }
 
     public buttonSaveEdit() {
-        if(!(this.seletedFuncaoDados.sustantation)){
+        if (!(this.seletedFuncaoDados.sustantation)) {
             this.seletedFuncaoDados.sustantation = document.querySelector('.ql-editor').innerHTML;
         }
         if (this.isEdit) {
@@ -366,7 +350,6 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
         } else {
             if (this.showMultiplos) {
                 this.multiplos();
-              
             } else {
                 this.adicionar();
             }
@@ -500,9 +483,9 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
     }
 
     multiplos(): Boolean {
-        let lstFuncaoDados: FuncaoDados[] = [];
-        let lstFuncaoDadosToSave: Observable<any>[] = [];
-        let lstFuncaoDadosWithExist: Observable<Boolean>[] = [];
+        const lstFuncaoDados: FuncaoDados[] = [];
+        const lstFuncaoDadosToSave: Observable<any>[] = [];
+        const lstFuncaoDadosWithExist: Observable<Boolean>[] = [];
         let retorno: boolean = !this.verifyDataRequire();
         this.desconverterChips();
         this.verificarModulo();
@@ -522,7 +505,7 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
             lstFuncaoDados.push(funcaoDadosMultp);
         }
         forkJoin(lstFuncaoDadosWithExist).subscribe(listExistWithName => {
-            for(let value of listExistWithName){
+            for (const value of listExistWithName) {
                 if (value) {
                     this.pageNotificationService.addErrorMessage(this.getLabel('Global.Mensagens.RegistroCadastrado'));
                     retorno = false;
@@ -530,7 +513,7 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
                 }
 
             }
-            if(retorno){
+            if (retorno) {
                 this.fecharDialog();
                 this.estadoInicial();
                 this.resetarEstadoPosSalvar();
@@ -538,19 +521,19 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
                     lstFuncaoDadosToSave.push(
                         this.funcaoDadosService.create(funcaoDadosMultp, this.analise.id)
                         );
-                })
+                });
                 forkJoin(lstFuncaoDadosToSave).subscribe(respCreate => {
                     respCreate.forEach((funcaoDados) => {
                         this.pageNotificationService.addCreateMsg(funcaoDados.name);
-                        let funcaoDadosTable: FuncaoDados = new FuncaoDados().copyFromJSON(funcaoDados);
+                        const funcaoDadosTable: FuncaoDados = new FuncaoDados().copyFromJSON(funcaoDados);
                         funcaoDadosTable.funcionalidade = funcaoDadosCalculada.funcionalidade;
                         this.setFields(funcaoDadosTable);
                         this.funcoesDados.push(funcaoDadosTable);
                     });
-                    this.analiseService.updateSomaPf(this.analise.id).subscribe()
+                    this.analiseService.updateSomaPf(this.analise.id).subscribe();
                     return true;
                 });
-            }else{
+            } else {
                 return false;
             }
         });
@@ -591,17 +574,19 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
                 this.seletedFuncaoDados.funcionalidade.id,
                 this.seletedFuncaoDados.funcionalidade.modulo.id).subscribe(value => {
                 if (value === false) {
-                    this.funcaoDadosService.create(funcaoDadosCalculada, this.analise.id).subscribe((funcaoDados) => {
-                        this.pageNotificationService.addCreateMsg(funcaoDadosCalculada.name);
-                        funcaoDadosCalculada.id = funcaoDados.id;
-                        this.setFields(funcaoDadosCalculada);
-                        this.funcoesDados.push(funcaoDadosCalculada);
-                        this.fecharDialog();
-                        this.atualizaResumo();
-                        this.estadoInicial();
-                        this.resetarEstadoPosSalvar();
-                        this.analiseService.updateSomaPf(this.analise.id).subscribe(()=>{})
-                    });
+                    this.funcaoDadosService.create(funcaoDadosCalculada, this.analise.id).subscribe(
+                        (funcaoDados) => {
+                            this.pageNotificationService.addCreateMsg(funcaoDadosCalculada.name);
+                            funcaoDadosCalculada.id = funcaoDados.id;
+                            this.setFields(funcaoDadosCalculada);
+                            this.funcoesDados.push(funcaoDadosCalculada);
+                            this.fecharDialog();
+                            this.atualizaResumo();
+                            this.estadoInicial();
+                            this.resetarEstadoPosSalvar();
+                            this.analiseService.updateSomaPf(this.analise.id).subscribe();
+                        }
+                    );
                 } else {
                     this.pageNotificationService.addErrorMessage(this.getLabel('Global.Mensagens.RegistroCadastrado'));
                 }
@@ -708,7 +693,7 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
                         this.pageNotificationService.addSuccessMessage(`${this.getLabel('Cadastros.FuncaoDados.Mensagens.msgFuncaoDados')}
                 '${funcaoDadosCalculada.name}' ${this.getLabel(' alterada com sucesso')}`);
                         this.fecharDialog();
-                        this.analiseService.updateSomaPf(this.analise.id).subscribe(()=>{})
+                        this.analiseService.updateSomaPf(this.analise.id).subscribe();
                     });
                 });
         }
@@ -803,6 +788,11 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
                 break;
             case 'crud':
                 this.createCrud(funcaoDadosSelecionada);
+                break;
+            case 'view':
+                this.viewFuncaoDados = true;
+                this.prepararParaVisualizar(funcaoDadosSelecionada);
+                break;
         }
     }
 
@@ -818,7 +808,7 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
                         this.pageNotificationService.addCreateMsg(funcaoTransacaoAtual.name);
                         this.resetarEstadoPosSalvar();
                         this.estadoInicial();
-                        this.analiseService.updateSomaPf(this.analise.id).subscribe(()=>{})
+                        this.analiseService.updateSomaPf(this.analise.id).subscribe();
                     });
                 } else {
                     this.pageNotificationService.addErrorMessage('CRUD já cadastrado!');
@@ -838,9 +828,9 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
     }
 
     private createCrud(funcaoDadosSelecionada) {
-        let lstFuncaoTransacaoCrud: FuncaoTransacao[] = [];
-        let lstFuncaoTransacaoToVerify: Observable<any>[] = [];
-        let lstFuncaoTransacaoToInclud: Observable<any>[] = [];
+        const lstFuncaoTransacaoCrud: FuncaoTransacao[] = [];
+        const lstFuncaoTransacaoToVerify: Observable<any>[] = [];
+        const lstFuncaoTransacaoToInclud: Observable<any>[] = [];
         this.funcaoDadosService.getById(funcaoDadosSelecionada.id).subscribe(funcaoDados => {
             this.crud.forEach(element => {
                 lstFuncaoTransacaoCrud.push(this.gerarFuncaoTransacao(element, funcaoDados));
@@ -853,11 +843,10 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
                         funcaoTransacaoAtual.funcionalidade.id,
                         funcaoTransacaoAtual.funcionalidade.modulo.id)
                     );
-                    
             });
             forkJoin(lstFuncaoTransacaoToVerify).subscribe(lstFuncaoTranscao => {
-                let index=0;
-                for(let existFuncaoTranasacao of lstFuncaoTranscao){
+                let index = 0;
+                for (const existFuncaoTranasacao of lstFuncaoTranscao) {
                     if (!existFuncaoTranasacao) {
                         lstFuncaoTransacaoToInclud.push(
                             this.funcaoTransacaoService.create(lstFuncaoTransacaoCrud[index], this.analise.id)
@@ -873,9 +862,9 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
                             this.pageNotificationService.addCreateMsg(funcoesTransacoes['name']);
                             this.resetarEstadoPosSalvar();
                             this.estadoInicial();
-                            this.analiseService.updateSomaPf(this.analise.id).subscribe(()=>{})
-                    })
-                })
+                            this.analiseService.updateSomaPf(this.analise.id).subscribe();
+                    });
+                });
             });
         });
     }
@@ -955,10 +944,10 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
     private carregarFatorDeAjusteNaEdicao(funcaoSelecionada: FuncaoDados) {
         this.inicializaFatoresAjuste(this.analise.manual);
         if (funcaoSelecionada.fatorAjuste !== undefined) {
-            const item : SelectItem = this.fatoresAjuste.find(item => {
-                return item.value && funcaoSelecionada.fatorAjuste.id === item.value['id'];
+            const item: SelectItem = this.fatoresAjuste.find(selectItem => {
+                return selectItem.value && funcaoSelecionada.fatorAjuste.id === selectItem.value['id'];
             });
-            if(item && item.value){
+            if (item && item.value) {
                 funcaoSelecionada.fatorAjuste = item.value;
             }
         }
@@ -976,8 +965,6 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
 
     moduloSelected(modulo: Modulo) {
     }
-
-    disableAba: Boolean = false;
 
     // Carregar Referencial
     private loadReference(referenciaveis: AnaliseReferenciavel[],
@@ -1012,7 +999,7 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
                 this.funcaoDadosService.delete(funcaoDadosSelecionada.id).subscribe(value => {
                     this.funcoesDados = this.funcoesDados.filter((funcaoDados) => (funcaoDados.id !== funcaoDadosSelecionada.id));
                     this.pageNotificationService.addDeleteMsg(funcaoDadosSelecionada.name);
-                    this.analiseService.updateSomaPf(this.analise.id).subscribe(()=>{})
+                    this.analiseService.updateSomaPf(this.analise.id).subscribe();
                 });
             }
         });
@@ -1122,16 +1109,22 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
         this.router.navigate(link);
     }
     showDeflator() {
-        if(this.seletedFuncaoDados.fatorAjuste){
+        if (this.seletedFuncaoDados.fatorAjuste) {
             this.displayDescriptionDeflator = true;
         }
     }
-    copyToEvidence(){
-        if(this.seletedFuncaoDados.sustantation){
+    copyToEvidence() {
+        if (this.seletedFuncaoDados.sustantation) {
             this.seletedFuncaoDados.sustantation = this.seletedFuncaoDados.sustantation + this.seletedFuncaoDados.fatorAjuste.descricao;
-        }else{
+        } else {
             this.seletedFuncaoDados.sustantation = this.seletedFuncaoDados.fatorAjuste.descricao;
         }
         this.displayDescriptionDeflator = false;
+    }
+    private prepararParaVisualizar(funcaoDadosSelecionada: FuncaoDados) {
+        this.funcaoDadosService.getById(funcaoDadosSelecionada.id)
+        .subscribe(funcaoDados => {
+            this.seletedFuncaoDados = funcaoDados;
+        });
     }
 }

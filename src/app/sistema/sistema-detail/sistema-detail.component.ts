@@ -31,7 +31,7 @@ export class SistemaDetailComponent implements OnInit, OnDestroy {
 
   load(id) {
     this.sistemaService.find(id).subscribe((sistema) => {
-      this.sistema = sistema;
+      this.sistema = Sistema.fromJSON(sistema)
     });
   }
 

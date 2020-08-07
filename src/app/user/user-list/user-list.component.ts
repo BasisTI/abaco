@@ -151,7 +151,7 @@ export class UserListComponent implements OnInit {
 
     confirmDelete(user: User) {
         this.confirmationService.confirm({
-            message: this.getLabel('Global.Mensagens.CertezaExcluirRegistro'),
+            message: this.getLabel('Tem certeza que deseja excluir o registro?'),
             accept: () => {
                 this.userService.delete(user).subscribe(() => {
                     this.datatable.refresh(this.query);

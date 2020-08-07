@@ -27,7 +27,7 @@ import { SharedModule } from '../shared/shared.module';
     DatatableModule,
     DatatableModule,
     AbacoButtonsModule,
-    SharedModule
+    SharedModule,
   ],
   declarations: [
     UserListComponent,

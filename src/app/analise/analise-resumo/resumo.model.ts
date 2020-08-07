@@ -19,7 +19,7 @@ export class Resumo {
             media: number,
             alta: number,
             inm: number,
-            tipo: String){
+            tipo: String) {
                 this.pfAjustada = pfAjustada;
                 this.pfTotal = pfTotal;
                 this.quantidadeTipo = quantidadeTipo;
@@ -32,17 +32,15 @@ export class Resumo {
 
         }
 
-     static addTotalLine(lstResumo : Resumo[]): Resumo[] {
-        let pfAjustada: number = 0;
-        let pfTotal: number = 0;
-        let quantidadeTipo: number = 0;
-        let sem: number = 0;
-        let baixa: number = 0;
-        let media: number = 0;
-        let alta: number = 0;
-        let inm: number = 0;
-        
-        
+     static addTotalLine(lstResumo: Resumo[]): Resumo[] {
+        let pfAjustada = 0;
+        let pfTotal = 0;
+        let quantidadeTipo = 0;
+        let sem = 0;
+        let baixa = 0;
+        let media = 0;
+        let alta = 0;
+        let inm = 0;
         lstResumo.forEach(
             resumo => {
                 pfAjustada =  Number(resumo.pfAjustada) + pfAjustada;
@@ -56,13 +54,23 @@ export class Resumo {
             }
         );
 
-        let totalResumo:Resumo = new Resumo( pfAjustada, pfTotal, quantidadeTipo, sem, baixa, media, alta, inm, 'Total').clone();
+        const totalResumo: Resumo = new Resumo( pfAjustada, pfTotal, quantidadeTipo, sem, baixa, media, alta, inm, 'Total').clone();
         lstResumo.push(totalResumo);
         return lstResumo;
     }
 
     clone(): Resumo {
-        return new Resumo( this.pfAjustada, this.pfTotal, this.quantidadeTipo, this.sem, this.baixa, this.media, this.alta, this.inm, this.tipo);
+        return new Resumo(
+            this.pfAjustada,
+            this.pfTotal,
+            this.quantidadeTipo,
+            this.sem,
+            this.baixa,
+            this.media,
+            this.alta,
+            this.inm,
+            this.tipo
+        );
     }
 
 }

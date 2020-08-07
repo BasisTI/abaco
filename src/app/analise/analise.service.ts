@@ -6,7 +6,7 @@ import {TipoEquipe} from '../tipo-equipe';
 import { Resumo } from './analise-resumo/resumo.model';
 import { HttpClient } from '@angular/common/http';
 import { PageNotificationService } from '@nuvem/primeng-components';
-import { Observable, forkJoin } from 'rxjs';
+import { Observable, forkJoin, pipe } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { HttpGenericErrorService } from '@nuvem/angular-base';
 import { ResponseWrapper, createRequestOption } from '../shared';
@@ -60,7 +60,7 @@ export class AnaliseService {
         const copy = this.convert(analise);
         return this.http.post<Analise>(this.resourceUrl, copy).pipe(catchError((error: any) => {
             if (error.status === 403) {
-                this.pageNotificationService.addErrorMessage(this.getLabel('Global.Mensagens.VoceNaoPossuiPermissao'));
+                this.pageNotificationService.addErrorMessage(this.getLabel('Você não possui permissão!'));
                 return Observable.throw(new Error(error.status));
             }
         }));
@@ -89,7 +89,7 @@ export class AnaliseService {
         const copy = this.convert(analise);
         return this.http.put<Analise>(this.resourceUrl, copy).pipe(catchError((error: any) => {
             if (error.status === 403) {
-                this.pageNotificationService.addErrorMessage(this.getLabel('Global.Mensagens.VoceNaoPossuiPermissao'));
+                this.pageNotificationService.addErrorMessage(this.getLabel('Você não possui permissão!'));
                 return Observable.throw(new Error(error.status));
             }
         }));
@@ -108,7 +108,7 @@ export class AnaliseService {
                     break;
                 }
                 case 403: {
-                    this.pageNotificationService.addErrorMessage(this.getLabel('Global.Mensagens.VoceNaoPossuiPermissao'));
+                    this.pageNotificationService.addErrorMessage(this.getLabel('Você não possui permissão!'));
                     break;
                 }
             }
@@ -121,21 +121,19 @@ export class AnaliseService {
     }
 
     public geraRelatorioPdfBrowser(id: number): Observable<string> {
-    //     this.http.get(`${this.relatoriosUrl}/${id}`, {
-    //         method: RequestMethod.Get,
-    //         responseType: ResponseContentType.Blob,
-    //     }).subscribe(
-    //         (response) => {
-    //             const mediaType = 'application/pdf';
-    //             const blob = new Blob([response.blob()], {type: mediaType});
-    //             const fileURL = window.URL.createObjectURL(blob);
-    //             const anchor = document.createElement('a');
-    //             anchor.download = 'analise.pdf';
-    //             anchor.href = fileURL;
-    //             window.open(fileURL, '_blank', '');
-    //             this.blockUI.stop();
-    //             return null;
-    //         });
+        this.http.request('get', `${this.relatoriosUrl}/${id}`, {
+            responseType: 'blob',
+        }).subscribe(
+            (response) => {
+                const mediaType = 'application/pdf';
+                const blob = new Blob([response], {type: mediaType});
+                const fileURL = window.URL.createObjectURL(blob);
+                const anchor = document.createElement('a');
+                anchor.download = 'analise.pdf';
+                anchor.href = fileURL;
+                window.open(fileURL, '_blank', '');
+                return null;
+            });
         return null;
     }
 
@@ -143,28 +141,25 @@ export class AnaliseService {
      *
      */
     public geraRelatorioPdfDetalhadoBrowser(id: Number): Observable<string> {
-    //     this.http.get(`${this.relatoriosDetalhadoUrl}/${id}`, {
-    //         method: RequestMethod.Get,
-    //         responseType: ResponseContentType.Blob,
-    //     }).catch((error: any) => {
-    //         if (error.status === 500) {
-    //             this.pageNotificationService.addErrorMessage(this.getLabel('Analise.Analise.Mensagens.ErroGerarRelatorio'));
-    //             this.blockUI.stop();
-    //             return Observable.throw(new Error(error.status));
-    //         }
-    //     }).subscribe(
-    //         (response) => {
-    //             const mediaType = 'application/pdf';
-    //             const blob = new Blob([response.blob()], {type: mediaType});
-    //             const fileURL = window.URL.createObjectURL(blob);
-    //             const anchor = document.createElement('a');
-    //             anchor.download = 'analise.pdf';
-    //             anchor.href = fileURL;
-    //             document.body.appendChild(anchor);
-    //             anchor.click();
-    //             this.blockUI.stop();
-    //             return null;
-    //         });
+        this.http.request('get', `${this.relatoriosDetalhadoUrl}/${id}`, {
+            responseType: 'blob',
+        }).pipe(catchError((error: any) => {
+            if (error.status === 500) {
+                this.pageNotificationService.addErrorMessage(this.getLabel('Analise.Analise.Mensagens.ErroGerarRelatorio'));
+                return Observable.throw(new Error(error.status));
+            }
+        })).subscribe(
+            (response) => {
+                const mediaType = 'application/pdf';
+                const blob = new Blob([response], {type: mediaType});
+                const fileURL = window.URL.createObjectURL(blob);
+                const anchor = document.createElement('a');
+                anchor.download = 'analise.pdf';
+                anchor.href = fileURL;
+                document.body.appendChild(anchor);
+                anchor.click();
+                return null;
+            });
         return null;
     }
 
@@ -172,30 +167,25 @@ export class AnaliseService {
      *
      */
     public gerarRelatorioExcel(id: Number): Observable<string> {
-    //     this.blockUI.start(this.getLabel('Analise.Analise.Mensagens.GerandoRelatorio'));
-    //     this.http.get(`${this.relatorioExcelUrl}/${id}`, {
-    //         method: RequestMethod.Get,
-    //         responseType: ResponseContentType.Blob,
-    //     }).catch((error: any) => {
-    //         this.blockUI.stop();
-    //         if (error.status === 500) {
-    //             this.pageNotificationService.addErrorMessage(this.getLabel('Analise.Analise.Mensagens.ErroGerarRelatorio'));
-    //             this.blockUI.stop();
-    //             return Observable.throw(new Error(error.status));
-    //         }
-    //     }).subscribe(
-    //         (response) => {
-    //             const mediaType = 'application/vnd.ms-excel';
-    //             const blob = new Blob([response.blob()], {type: mediaType});
-    //             const fileURL = window.URL.createObjectURL(blob);
-    //             const anchor = document.createElement('a');
-    //             anchor.download = 'analise.xls';
-    //             anchor.href = fileURL;
-    //             document.body.appendChild(anchor);
-    //             anchor.click();
-    //             this.blockUI.stop();
-    //             return null;
-    //         });
+        this.http.request('get',`${this.relatorioExcelUrl}/${id}`, {
+            responseType: 'blob',
+        }).pipe(catchError((error: any) => {
+            if (error.status === 500) {
+                this.pageNotificationService.addErrorMessage(this.getLabel('Analise.Analise.Mensagens.ErroGerarRelatorio'));
+                return Observable.throw(new Error(error.status));
+            }
+        })).subscribe(
+            (response) => {
+                const mediaType = 'application/vnd.ms-excel';
+                const blob = new Blob([response], {type: mediaType});
+                const fileURL = window.URL.createObjectURL(blob);
+                const anchor = document.createElement('a');
+                anchor.download = 'analise.xls';
+                anchor.href = fileURL;
+                document.body.appendChild(anchor);
+                anchor.click();
+                return null;
+            });
         return null;
     }
 
@@ -203,22 +193,19 @@ export class AnaliseService {
      *
      */
     public geraBaselinePdfBrowser(): Observable<string> {
-    //     this.blockUI.start(this.getLabel('Analise.Analise.Mensagens.GerandoRelatorio'));
-    //     this.http.get(`${this.relatoriosBaselineUrl}`, {
-    //         method: RequestMethod.Get,
-    //         responseType: ResponseContentType.Blob,
-    //     }).subscribe(
-    //         (response) => {
-    //             const mediaType = 'application/pdf';
-    //             const blob = new Blob([response.blob()], {type: mediaType});
-    //             const fileURL = window.URL.createObjectURL(blob);
-    //             const anchor = document.createElement('a');
-    //             anchor.download = 'analise.pdf';
-    //             anchor.href = fileURL;
-    //             window.open(fileURL, '_blank', '');
-    //             this.blockUI.stop();
-    //             return null;
-    //         });
+        this.http.request('get', `${this.relatoriosBaselineUrl}`, {
+            responseType: 'blob',
+        }).subscribe(
+            (response) => {
+                const mediaType = 'application/pdf';
+                const blob = new Blob([response], {type: mediaType});
+                const fileURL = window.URL.createObjectURL(blob);
+                const anchor = document.createElement('a');
+                anchor.download = 'analise.pdf';
+                anchor.href = fileURL;
+                window.open(fileURL, '_blank', '');
+                return null;
+            });
         return null;
     }
 
@@ -228,30 +215,25 @@ export class AnaliseService {
      * @returns
      */
     public gerarRelatorioContagem(idAnalise: number): Observable<string> {
-        // this.blockUI.start(this.getLabel('Analise.Analise.Mensagens.GerandoRelatorio'));
-        // this.http.get(`${this.relatorioContagemUrl}/${idAnalise}`, {
-        //     method: RequestMethod.Get,
-        //     responseType: ResponseContentType.Blob,
-        // }).catch((error: any) => {
-        //     this.blockUI.stop();
-        //     if (error.status === 500) {
-        //         this.pageNotificationService.addErrorMessage(this.getLabel('Analise.Analise.Mensagens.ErroGerarRelatorio'));
-        //         this.blockUI.stop();
-        //         return Observable.throw(new Error(error.status));
-        //     }
-        // }).subscribe(
-        //     (response) => {
-        //         const mediaType = 'application/pdf';
-        //         const blob = new Blob([response.blob()], {type: mediaType});
-        //         const fileURL = window.URL.createObjectURL(blob);
-        //         const anchor = document.createElement('a');
-        //         anchor.download = 'analise_contagem.pdf';
-        //         anchor.href = fileURL;
-        //         document.body.appendChild(anchor);
-        //         anchor.click();
-        //         this.blockUI.stop();
-        //         return null;
-            // });
+        this.http.request('get',`${this.relatorioContagemUrl}/${idAnalise}`, {
+            responseType: 'blob',
+        }).pipe(catchError((error: any) => {
+            if (error.status === 500) {
+                this.pageNotificationService.addErrorMessage(this.getLabel('Analise.Analise.Mensagens.ErroGerarRelatorio'));
+                return Observable.throw(new Error(error.status));
+            }
+        })).subscribe(
+            (response) => {
+                const mediaType = 'application/pdf';
+                const blob = new Blob([response], {type: mediaType});
+                const fileURL = window.URL.createObjectURL(blob);
+                const anchor = document.createElement('a');
+                anchor.download = 'analise_contagem.pdf';
+                anchor.href = fileURL;
+                document.body.appendChild(anchor);
+                anchor.click();
+                return null;
+            });
         return null;
     }
 
@@ -298,7 +280,7 @@ export class AnaliseService {
         return this.http.get<ResponseWrapper>(this.resourceUrl).pipe(
             catchError((error: any) => {
                 if (error.status === 403) {
-                    this.pageNotificationService.addErrorMessage(this.getLabel('Global.Mensagens.VoceNaoPossuiPermissao'));
+                    this.pageNotificationService.addErrorMessage(this.getLabel('Você não possui permissão!'));
                     return Observable.throw(new Error(error.status));
                 }
             }));
@@ -308,7 +290,7 @@ export class AnaliseService {
         return this.http.delete<Response>(`${this.resourceUrl}/${id}`).pipe(
             catchError((error: any) => {
                 if (error.status === 403) {
-                    this.pageNotificationService.addErrorMessage(this.getLabel('Global.Mensagens.VoceNaoPossuiPermissao'));
+                    this.pageNotificationService.addErrorMessage(this.getLabel('Você não possui permissão!'));
                     return Observable.throw(new Error(error.status));
                 }
             }
@@ -338,7 +320,7 @@ export class AnaliseService {
     }
 
     private convert(analise: Analise): Analise {
-        return analise.toJSONState();
+        return analise;
     }
 findAllCompartilhadaByAnalise(analiseId: number): Observable<AnaliseShareEquipe[]> {
         const url = `${this.findCompartilhadaByAnaliseUrl}/${analiseId}`;
@@ -357,7 +339,7 @@ findAllCompartilhadaByAnalise(analiseId: number): Observable<AnaliseShareEquipe[
     deletarCompartilhar(id: number): Observable<Response> {
         return this.http.delete<Response>(`${this.resourceUrl}/compartilhar/delete/${id}`).pipe(catchError((error: any) => {
             if (error.status === 403) {
-                this.pageNotificationService.addErrorMessage(this.getLabel('Global.Mensagens.VoceNaoPossuiPermissao'));
+                this.pageNotificationService.addErrorMessage(this.getLabel('Você não possui permissão!'));
                 return Observable.throw(new Error(error.status));
             }
         }));
@@ -367,22 +349,22 @@ findAllCompartilhadaByAnalise(analiseId: number): Observable<AnaliseShareEquipe[
         const copy = compartilhada;
         return this.http.put(`${this.resourceUrl}/compartilhar/viewonly/${copy.id}`, copy).pipe(catchError((error: any) => {
             if (error.status === 403) {
-                this.pageNotificationService.addErrorMessage(this.getLabel('Global.Mensagens.VoceNaoPossuiPermissao'));
+                this.pageNotificationService.addErrorMessage(this.getLabel('Você não possui permissão!'));
                 return Observable.throw(new Error(error.status));
             }
         }));
     }
 
-    updateSomaPf(analiseId:number): Observable<Response> {
+    updateSomaPf(analiseId: number): Observable<Response> {
         const url = `${this.resourceUrl}/update-pf/${analiseId}`;
         return this.http.get<Response>(url);
     }
 
-    getResumo(analiseId:Number): Observable<Resumo[]>{
+    getResumo(analiseId: Number): Observable<Resumo[]>{
         return this.http.get<Resumo[]>(`${this.resourceResumoUrl}/${analiseId}`,).pipe(
         catchError((error: any) => {
             if (error.status === 403) {
-                this.pageNotificationService.addErrorMessage(this.getLabel('Global.Mensagens.VoceNaoPossuiPermissao'));
+                this.pageNotificationService.addErrorMessage(this.getLabel('Você não possui permissão!'));
                 return Observable.throw(new Error(error.status));
             }
         }));

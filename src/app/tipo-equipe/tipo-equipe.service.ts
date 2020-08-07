@@ -33,7 +33,7 @@ export class TipoEquipeService {
         return this.http.post(this.resourceUrl, copy).pipe(
         catchError((error: any) => {
             if (error.status === 403) {
-                this.pageNotificationService.addErrorMessage(this.getLabel('Global.Mensagens.VoceNaoPossuiPermissao'));
+                this.pageNotificationService.addErrorMessage(this.getLabel('Você não possui permissão!'));
                 return Observable.throw(new Error(error.status));
             }
         }));
@@ -44,7 +44,7 @@ export class TipoEquipeService {
         return this.http.put(this.resourceUrl, copy).pipe(
             catchError((error: any) => {
                 if (error.status === 403) {
-                    this.pageNotificationService.addErrorMessage(this.getLabel('Global.Mensagens.VoceNaoPossuiPermissao'));
+                    this.pageNotificationService.addErrorMessage(this.getLabel('Você não possui permissão!'));
                     return Observable.throw(new Error(error.status));
                 }
             }));
@@ -54,7 +54,7 @@ export class TipoEquipeService {
         return this.http.get(`${this.resourceUrl}/${id}`).pipe(
             catchError((error: any) => {
                 if (error.status === 403) {
-                    this.pageNotificationService.addErrorMessage(this.getLabel('Global.Mensagens.VoceNaoPossuiPermissao'));
+                    this.pageNotificationService.addErrorMessage(this.getLabel('Você não possui permissão!'));
                     return Observable.throw(new Error(error.status));
                 }
             }));
@@ -64,7 +64,7 @@ export class TipoEquipeService {
         return this.http.get<ResponseWrapper>(url).pipe(
             catchError((error: any) => {
                 if (error.status === 403) {
-                    this.pageNotificationService.addErrorMessage(this.getLabel('Global.Mensagens.VoceNaoPossuiPermissao'));
+                    this.pageNotificationService.addErrorMessage(this.getLabel('Você não possui permissão!'));
                     return Observable.throw(new Error(error.status));
                 }
             }));
@@ -75,7 +75,7 @@ export class TipoEquipeService {
         return this.http.get<TipoEquipe[]>(url).pipe(
             catchError((error: any) => {
                 if (error.status === 403) {
-                    this.pageNotificationService.addErrorMessage(this.getLabel('Global.Mensagens.VoceNaoPossuiPermissao'));
+                    this.pageNotificationService.addErrorMessage(this.getLabel('Você não possui permissão!'));
                     return Observable.throw(new Error(error.status));
                 }
             }));
@@ -86,7 +86,7 @@ export class TipoEquipeService {
         return this.http.get<TipoEquipe[]>(url).pipe(
             catchError((error: any) => {
                 if (error.status === 403) {
-                    this.pageNotificationService.addErrorMessage(this.getLabel('Global.Mensagens.VoceNaoPossuiPermissao'));
+                    this.pageNotificationService.addErrorMessage(this.getLabel('Você não possui permissão!'));
                     return Observable.throw(new Error(error.status));
                 }
             }));
@@ -97,7 +97,7 @@ export class TipoEquipeService {
         return this.http.get<any[]>(url).pipe(
         catchError((error: any) => {
             if (error.status === 403) {
-                this.pageNotificationService.addErrorMessage(this.getLabel('Global.Mensagens.VoceNaoPossuiPermissao'));
+                this.pageNotificationService.addErrorMessage(this.getLabel('Você não possui permissão!'));
                 return Observable.throw(new Error(error.status));
             }
         }));
@@ -106,7 +106,7 @@ export class TipoEquipeService {
         return this.http.get<TipoEquipe[]>(this.resourceUrl + '/drop-down').pipe(
             catchError((error: any) => {
                 if (error.status === 403) {
-                    this.pageNotificationService.addErrorMessage(this.getLabel('Global.Mensagens.VoceNaoPossuiPermissao'));
+                    this.pageNotificationService.addErrorMessage(this.getLabel('Você não possui permissão!'));
                     return Observable.throw(new Error(error.status));
                 }
             }));
@@ -116,7 +116,7 @@ export class TipoEquipeService {
         return this.http.get<TipoEquipe[]>(this.resourceUrl + '/user').pipe(
         catchError((error: any) => {
             if (error.status === 403) {
-                this.pageNotificationService.addErrorMessage(this.getLabel('Global.Mensagens.VoceNaoPossuiPermissao'));
+                this.pageNotificationService.addErrorMessage(this.getLabel('Você não possui permissão!'));
                 return Observable.throw(new Error(error.status));
             }
         }));
@@ -127,7 +127,7 @@ export class TipoEquipeService {
         return this.http.get<TipoEquipe[]>(this.resourceUrl + '/active-user').pipe(
             catchError((error: any) => {
                 if (error.status === 403) {
-                    this.pageNotificationService.addErrorMessage(this.getLabel('Global.Mensagens.VoceNaoPossuiPermissao'));
+                    this.pageNotificationService.addErrorMessage(this.getLabel('Você não possui permissão!'));
                     return Observable.throw(new Error(error.status));
                 }
             }));

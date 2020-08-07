@@ -37,7 +37,6 @@
                             [filter]="true"
                             [options]="usuariosOptions"
                             optionLabel="nome"
-                            
                             [(ngModel)]="searchGroup.usuario"
                             placeholder="Usuários" >
                     </p-dropdown>
@@ -50,7 +49,6 @@
                             [filter]="true"
                             [options]="organizations"
                             optionLabel="nome"
-                            
                             [(ngModel)]="searchGroup.organizacao"
                             placeholder="Organização">
                     </p-dropdown>
@@ -72,7 +70,6 @@
                             [options]="metsContagens"
                             id="idMetodoContagemComponentAnalise"
                             [(ngModel)]="searchGroup.metodoContagem"
-                            
                             placeholder="Método de contagem">
                     </p-dropdown>
                 </div>
@@ -80,7 +77,6 @@
             <div class="ui-g">
                 <div class="ui-g ui-md-12" >
                     <div class="ui-g ui-md-12" style="justify-content: center; margin-bottom: 25px; margin-top: 25px">
-                        
                         <div class="ui-g-2 ui-md-2 ui-sm-12">
                             <app-white-button
                             buttonLabel="Limpar Pesquisa"
@@ -89,7 +85,6 @@
                             (click)="limparPesquisa()">
                         </app-white-button>
                     </div>
-                    
                     <div class="ui-g-2 ui-md-2 ui-sm-12">
                         <app-blue-button
                             buttonLabel="Pesquisar"
@@ -98,7 +93,6 @@
                             (click)="performSearch()">
                         </app-blue-button>
                     </div>
-                    
                     <div class="ui-g-2 ui-md-2 ui-sm-12">
                         <app-green-button
                             buttonLabel="Novo"
@@ -109,7 +103,7 @@
                     </div>
                 </div>
             </div>
-            <div *ngIf="enableTable">
+            <div>
                         <basis-datatable
                                 type="server"
                                 [url]="userAnaliseUrl"
@@ -121,9 +115,62 @@
                                 [showPaginationFooter]="true"
                                 (click) = "selectAnalise()"
                                 resizableColumns="true"
+                                [showVisibleColumnsControl]="true"
                                 #datatable
                                 >
 
+                            <p-column header="Organização" field="organizacao.nome"[sortable]="true" filterType="select" [filter]="true">
+                                <ng-template let-col let-analise="rowData" pTemplate="body">
+                                    {{ analise.organizacao.nome}}
+                                </ng-template>
+                            </p-column>
+                            <p-column header="Identificador Analise" field="identificadorAnalise" [sortable]="true"></p-column>
+                            <p-column header="Número Os." field="numeroOs" [sortable]="true"></p-column>
+                            <p-column header="Equipe" field="equipeResponsavel.nome" [sortable]="true">
+                                <ng-template let-col let-analise="rowData" pTemplate="body">
+                                    {{ analise.equipeResponsavel.nome}}
+                                </ng-template>
+                            </p-column>
+                            <p-column header="Sistema" field="sistema.nome" [sortable]="true">
+                                <ng-template let-col let-analise="rowData" pTemplate="body">
+                                    {{ analise.sistema.nome}}
+                                </ng-template>
+                            </p-column>
+                            <p-column header="Metodo Contagem" field="metodoContagem" [sortable]="true"></p-column>
+                            <p-column header="PF Total" field="pfTotal" [sortable]="true">
+                                <ng-template let-col let-analise="rowData" pTemplate="body">
+                                    {{ analise.pfTotal > 0 ? analise.pfTotal : 0 | number: '00.00'}}
+                                </ng-template>
+                            </p-column>
+                            <p-column header="PF Ajustado" field="adjustPFTotal" [sortable]="true">
+                                <ng-template let-col let-analise="rowData" pTemplate="body">
+                                    {{ analise.adjustPFTotal > 0 ? analise.adjustPFTotal : 0 | number: '00.00'}}
+                                </ng-template>
+                            </p-column>
+                            <p-column header="Data criação" field="dataCriacaoOrdemServico"
+                                    [sortable]="true">
+                                <ng-template let-col let-analise="rowData"
+                                            pTemplate="body">
+                                    {{ analise.dataCriacaoOrdemServico | date: 'dd/MM/y - HH:mm' }}
+                                </ng-template>
+                            </p-column>
+                            <p-column header="Bloqueado" field="bloqueiaAnalise" [sortable]="true">
+                                <ng-template let-col let-analise="rowData" pTemplate="body">
+                                    {{ analise.bloqueiaAnalise ? 'Sim' : 'Não' }}
+                                </ng-template>
+                            </p-column>
+                            <p-column header="Clonada" field="clonadaParaEquipe" [sortable]="true">
+                                <ng-template let-col let-analise="rowData" pTemplate="body">
+                                    {{ analise.clonadaParaEquipe ? 'Sim' : 'Não' }}
+                                </ng-template>
+                            </p-column>
+                            <p-column header="Usuários" field="users" [sortable]="false">
+                                <ng-template let-col let-row="rowData" pTemplate="body">
+                                    <li *ngFor="let user of row.users">
+                                        {{ user.firstName }}
+                                    </li>
+                                </ng-template>
+                            </p-column>
                             <basis-datatable-button
                                     *ngIf="blocked"
                                     name="desbloquear"
@@ -187,60 +234,6 @@
                                     disabled="desabilitarBotaoRelatorio()"
                                     class="ui-button-success">
                             </basis-datatable-button>
-
-
-                            <p-column header="Organização" field="organizacao.nome" [sortable]="true">
-                                <ng-template let-col let-analise="rowData" pTemplate="body">
-                                    {{ analise.organizacao.nome}}
-                                </ng-template>
-                            </p-column>
-                            <p-column header="Identificador Analise" field="identificadorAnalise" [sortable]="true"></p-column>
-                            <p-column header="Número Os." field="numeroOs" [sortable]="true"></p-column>
-                            <p-column header="Equipe" field="equipeResponsavel.nome" [sortable]="true">
-                                <ng-template let-col let-analise="rowData" pTemplate="body">
-                                    {{ analise.equipeResponsavel.nome}}
-                                </ng-template>
-                            </p-column>
-                            <p-column header="Sistema" field="sistema.nome" [sortable]="true">
-                                <ng-template let-col let-analise="rowData" pTemplate="body">
-                                    {{ analise.sistema.nome}}
-                                </ng-template>
-                            </p-column>
-                            <p-column header="Metodo Contagem" field="metodoContagem" [sortable]="true"></p-column>
-                            <p-column header="PF Total" field="pfTotal" [sortable]="true">
-                                <ng-template let-col let-analise="rowData" pTemplate="body">
-                                    {{ analise.pfTotal > 0 ? analise.pfTotal : 0 | number: '00.00'}}
-                                </ng-template>
-                            </p-column>
-                            <p-column header="PF Ajustado" field="adjustPFTotal" [sortable]="true">
-                                <ng-template let-col let-analise="rowData" pTemplate="body">
-                                    {{ analise.adjustPFTotal > 0 ? analise.adjustPFTotal : 0 | number: '00.00'}}
-                                </ng-template>
-                            </p-column>
-                            <p-column header="Data criação" field="dataCriacaoOrdemServico"
-                                    [sortable]="true">
-                                <ng-template let-col let-analise="rowData"
-                                            pTemplate="body">
-                                    {{ analise.dataCriacaoOrdemServico | date: 'dd/MM/y - HH:mm' }}
-                                </ng-template>
-                            </p-column>
-                            <p-column header="Bloqueado" field="bloqueiaAnalise" [sortable]="true">
-                                <ng-template let-col let-analise="rowData" pTemplate="body">
-                                    {{ analise.bloqueado ? 'Sim' : 'Não' }}
-                                </ng-template>
-                            </p-column>
-                            <p-column header="Clonada para equipe" field="clonadaParaEquipe" [sortable]="true">
-                                <ng-template let-col let-analise="rowData" pTemplate="body">
-                                    {{ analise.bloqueado ? 'Sim' : 'Não' }}
-                                </ng-template>
-                            </p-column>
-                            <p-column header="Usuários" field="users" [sortable]="false">
-                                <ng-template let-col let-row="rowData" pTemplate="body">
-                                    <li *ngFor="let user of row.users">
-                                        {{ user.firstName }}
-                                    </li>
-                                </ng-template>
-                            </p-column>
                         </basis-datatable>
                         
                         <div class="ui-g-12 ui-md-2">
@@ -324,7 +317,7 @@
     <app-red-button buttonLabel="Remover" (click)="deletarCompartilhar()"
                     style="float:right; margin-top: 5px"></app-red-button>
 </p-dialog>
-<p-dialog header="Clonar para equipe" [(visible)]="showDialogAnaliseCloneTipoEquipe" [width]="500" [minHeight]="300" [modal]="true" >
+<p-dialog header="Clonar para equipe" [(visible)]="showDialogAnaliseCloneTipoEquipe" [style]="{width: '50vw'}" [minHeight]="300" [modal]="true" >
     <div style="min-height:300px">
         <div class="ui-g" >
             <div class="ui-g-12 ui-md-12 ui-sm-12">
@@ -334,16 +327,15 @@
                         [options]="tipoEquipesToClone"
                         optionLabel="nome"
                         id="idCloneToTipoEquipe"
-                        
                         [(ngModel)]="equipeToClone"
-                        placeholder="Mensagens.msgSelecioneEquipeResponsavel">
+                        placeholder="- Selecione uma Equipe Responsável">
                 </p-dropdown>
             </div>
         </div>
         <app-green-button buttonLabel="Adicionar" (click)="cloneAnaliseToEquipe()" style="float:right; margin-top: 5px"></app-green-button>
     </div>
 </p-dialog>
-<p-dialog header="Tem certeza que deseja bloquear o registro ?" [(visible)]="showDialogAnaliseBlock" [width]="410" [minHeight]="500" [modal]="true" >
+<p-dialog header="Tem certeza que deseja bloquear o registro ?" [(visible)]="showDialogAnaliseBlock" [style]="{width: '50vw'}" [minHeight]="500" [modal]="true" >
     <div *ngIf="analiseTemp && analiseTemp">
         <div class="ui-g-12 ui-md-12 ui-sm-12 ui-label" style="margin-bottom: 05px; margin-top: 05px; min-height:350px;" >
                 <label>Data Homologação</label>

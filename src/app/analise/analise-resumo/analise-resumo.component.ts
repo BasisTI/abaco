@@ -80,7 +80,7 @@ export class AnaliseResumoComponent implements OnInit {
             this.isView = params['view'] !== undefined;
             this.idAnalise = params['id'];
             if (this.idAnalise) {
-                if(!this.isView){
+                if (!this.isView) {
                     this.analiseService.find(this.idAnalise).subscribe(analise => {
                         this.analiseSharedDataService.analise = analise;
                         this.analise = analise;
@@ -90,16 +90,25 @@ export class AnaliseResumoComponent implements OnInit {
                         this.esforcoFases = this.analiseSharedDataService.analise.esforcoFases;
                         this.pfTotal = analise.pfTotal;
                         this.pfAjustada = analise.adjustPFTotal;
-                        this.analiseService.getResumo(this.idAnalise).subscribe(res =>{
-                        const jsonResponse = res;
-                            let lstResumo: Resumo[] = [];
-                            jsonResponse.forEach(
-                                elem => {
-                                    let rsm: Resumo = new Resumo( elem.pfAjustada, elem.pfTotal, elem.quantidadeTipo, elem.sem, elem.baixa, elem.media, elem.alta, elem.inm, elem.tipo).clone();
-                                    lstResumo.push(rsm);
-                            });
-                            this.linhaResumo = lstResumo;
-                            this.linhaResumo = Resumo.addTotalLine(this.linhaResumo);
+                        this.analiseService.getResumo(this.idAnalise)
+                        .subscribe(res => {
+                            const jsonResponse = res;
+                                const lstResumo: Resumo[] = [];
+                                jsonResponse.forEach(
+                                    elem => {
+                                        lstResumo.push( new Resumo(
+                                            elem.pfAjustada,
+                                            elem.pfTotal,
+                                            elem.quantidadeTipo,
+                                            elem.sem,
+                                            elem.baixa,
+                                            elem.media, elem.alta,
+                                            elem.inm,
+                                            elem.tipo
+                                        ).clone());
+                                });
+                                this.linhaResumo = lstResumo;
+                                this.linhaResumo = Resumo.addTotalLine(this.linhaResumo);
                         });
                     },
                         err => {
@@ -107,17 +116,18 @@ export class AnaliseResumoComponent implements OnInit {
                                 this.getLabel('Você não tem permissão para editar esta análise, redirecionando para a tela de visualização...')
                             );
                     });
-                }else {
+                } else {
                     this.analiseService.findView(this.idAnalise).subscribe(analise => {
                         this.analiseSharedDataService.analise = analise;
                         this.analise = analise;
                         this.pfTotal = analise.pfTotal;
                         this.pfAjustada = analise.adjustPFTotal;
                         this.disableAba = analise.metodoContagem === MessageUtil.INDICATIVA;
-                        this.analiseService.getResumo(this.idAnalise).subscribe(res =>{
-                            this.linhaResumo = res;
-                            this.linhaResumo = Resumo.addTotalLine(this.linhaResumo);
-                        });
+                        this.analiseService.getResumo(this.idAnalise)
+                            .subscribe(res => {
+                                this.linhaResumo = res;
+                                this.linhaResumo = Resumo.addTotalLine(this.linhaResumo);
+                            });
                     },
                         err => {
                             this.pageNotificationService.addErrorMessage(
@@ -127,7 +137,6 @@ export class AnaliseResumoComponent implements OnInit {
 
                 }
             }
-            
         });
     }
 
@@ -150,21 +159,21 @@ export class AnaliseResumoComponent implements OnInit {
             case 0:
                 if (this.isView) {
                     link = ['/analise/' + this.idAnalise + '/view'];
-                }else {
+                } else {
                     link = ['/analise/' + this.idAnalise + '/edit'];
                 }
                 break;
             case 1:
                 if (this.isView) {
                     link = ['/analise/' + this.idAnalise + '/funcao-dados/view'];
-                }else {
+                } else {
                     link = ['/analise/' + this.idAnalise + '/funcao-dados'];
                 }
                 break;
             case 2:
                 if (this.isView) {
                     link = ['/analise/' + this.idAnalise + '/funcao-transacao/view'];
-                }else {
+                } else {
                     link = ['/analise/' + this.idAnalise + '/funcao-transacao'];
                 }
                 break;
@@ -206,7 +215,8 @@ export class AnaliseResumoComponent implements OnInit {
                                     );
                                 } else {
                                     this.pageNotificationService
-                                        .addErrorMessage(this.getLabel('Somente membros da equipe responsável podem bloquear esta análise!'));
+                                        .addErrorMessage(
+                                            this.getLabel('Somente membros da equipe responsável podem bloquear esta análise!'));
                                 }
                             }
                         }

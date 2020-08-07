@@ -16,6 +16,7 @@ import {
 import { FuncaoDadosModule } from '../funcao-dados/funcao-dados.module';
 import { FuncaoTransacaoModule } from '../funcao-transacao/funcao-transacao.module';
 import { AnaliseResumoComponent } from './analise-resumo/analise-resumo.component';
+import { TableModule } from 'primeng';
 
 
 
@@ -33,6 +34,7 @@ import { AnaliseResumoComponent } from './analise-resumo/analise-resumo.componen
         AbacoAnaliseBotaoSalvarModule,
         FieldsetModule,
         SharedModule,
+        TableModule,
     ],
     declarations: [
         AnaliseListComponent,
