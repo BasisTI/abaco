@@ -202,7 +202,7 @@ public class UserResource {
     @Timed
     @Secured({AuthoritiesConstants.ADMIN, AuthoritiesConstants.GESTOR})
     public ResponseEntity<List<User>> search(@RequestParam (defaultValue = "ASC", required = false)String order,
-                                             @RequestParam(name = "page") int pageNumber,
+                                             @RequestParam(name = "page", defaultValue = "0" ,required = false) int pageNumber,
                                              @RequestParam int size,
                                              @RequestParam(value = "nome", required = false) String nome,
                                              @RequestParam(value = "login", required = false) String login,
