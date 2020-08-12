@@ -406,7 +406,7 @@ class AnaliseCopyFromJSON {
     }
 
     private converteEsforcoFases() {
-        if (this._json.esforcoFases){
+        if (this._json.esforcoFases) {
             this._analiseConverted.esforcoFases = this._json.esforcoFases
                 .map(efJSON => new EsforcoFase().copyFromJSON(efJSON));
         }

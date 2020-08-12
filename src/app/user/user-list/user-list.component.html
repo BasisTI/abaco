@@ -1,117 +1,23 @@
+
 <div class="ui-g ui-fluid">
-    <div class="ui-g-12">
+
+    <div class="ui-g-12 ui-md-12 ui-sm-12">
+
         <div class="card card-w-title">
-            <h1 >Usuários</h1>
+
             <div class="ui-g">
-                <div class="ui-g-4 ui-md-4 ui-sm-12">
-                <span class="md-inputfield" style="margin-bottom: 5px">
-                  <input
-                          type="text"
-                          pInputText class="ui-inputtext"
-                          name="filtroUser"
-                          [(ngModel)]="searchParams.fullName"
-                          (keyup.enter)="performSearch()"
-                          #filter
-                          maxlength="50">
-                <label>Nome</label>
-                </span>
+                <div class="ui-g ui-md-6">
+                    <h1>Usuários</h1>
                 </div>
-
-                <div class="ui-g-4 ui-md-4 ui-sm-12">
-                <span class="md-inputfield" style="margin-bottom: 5px">
-                  <input
-                          type="text"
-                          pInputText class="ui-inputtext"
-                          name="filtroUser"
-                          [(ngModel)]="searchParams.login"
-                          (keyup.enter)="performSearch()"
-                          #filter
-                          maxlength="50"/>
-                  <label >Login</label>
-                </span>
+                <div class="ui-g ui-md-6" style="justify-content: flex-end;">
+                    <app-green-button
+                        buttonLabel="Novo"
+                        id="idBtnNovoComponentAnalise"
+                        buttonIcon="ui-icon-add"
+                        routerLink="new">
+                    </app-green-button>
                 </div>
-
-                <div class="ui-g-4 ui-md-4 ui-sm-12">
-                <span class="md-inputfield" style="margin-bottom: 5px">
-                  <input
-                          type="text"
-                          pInputText class="ui-inputtext"
-                          name="filtroUser"
-                          [(ngModel)]="searchParams.email"
-                          (keyup.enter)="performSearch()"
-                          #filter
-                          maxlength="100"/>
-                  <label >E-mail</label>
-                </span>
-                </div>
-            </div>
-            <div class="ui-g">
-
-                <div class="ui-g-4 ui-md-4 ui-sm-12">
-                    <p-dropdown
-                            [filter]="true"
-                            [options]="organizations"
-                            optionLabel="nome"
-                            [(ngModel)]="searchParams.organizacao"
-                            
-                            (keyup.enter)="performSearch()"
-                            placeholder="Organização">
-                    </p-dropdown>
-                </div>
-
-                <div class="ui-g-4 ui-md-4 ui-sm-12">
-                    <p-dropdown
-                            [filter]="true"
-                            [options]="authorities"
-                            optionLabel="description"
-                            [(ngModel)]="searchParams.profile"
-                            
-                            (keyup.enter)="performSearch()"
-                            placeholder="Perfil">
-                    </p-dropdown>
-                </div>
-
-                <div class="ui-g-4 ui-md-4 ui-sm-12">
-                    <p-dropdown
-                            [filter]="true"
-                            [options]="teams"
-                            optionLabel="nome"
-                            
-                            [(ngModel)]="searchParams.team"
-                            (keyup.enter)="performSearch()"
-                            placeholder="Equipe">
-                    </p-dropdown>
-                </div>
-
-            </div>
-            <div class="ui-g">
-                <div class="ui-g ui-md-12" style="justify-content: center; margin-bottom: 25px; margin-top: 25px">
-                    <div class="ui-g-2 ui-md-2 ui-sm-12">
-                        <app-white-button
-                                [buttonLabel]="'Limpar Pesquisa'"
-                                buttonIcon="ui-icon-clear-all"
-                                (click)="limparPesquisa()">
-                        </app-white-button>
-                    </div>
-
-                    <div class="ui-g-2 ui-md-2 ui-sm-12">
-                        <app-blue-button
-                                [buttonLabel]="'Pesquisar'"
-                                buttonIcon="ui-icon-search"
-                                (click)="performSearch()">
-                        </app-blue-button>
-                    </div>
-
-                    <div class="ui-g-2 ui-md-2 ui-sm-12">
-                        <app-green-button
-                                [buttonLabel]="'Novo'"
-                                routerLink="/admin/user/new"
-                                buttonIcon="ui-icon-add">
-                        </app-green-button>
-                    </div>
-
-                </div>
-                <div class="ui-g-12 ui-md-12" style="padding: 0;">
+            <div>
                     <basis-datatable
                             [url]="searchUrl"
                             (dblclick)="onRowDblclick($event)"
@@ -119,6 +25,9 @@
                             [rows]="20"
                             [rowsPerPageOptions]="rowsPerPageOptions"
                             [showPaginationFooter]="true"
+                            [customFilterOptions]="customOptions"
+                            [filterOnColumn]="true"
+                            [showVisibleColumnsControl]="true"
                             #datatable>
 
                         <p-column header="Nome" field="firstName" [style]="{width:'15%'}" [sortable]="true">
@@ -127,7 +36,7 @@
                             </ng-template>
                         </p-column>
 
-                        <p-column header="Login" field="login" [sortable]="true"></p-column>
+                        <p-column header="Login" field="login" [editable]="false" [sortable]="true" ></p-column>
 
                         <p-column
                                 header="E-mail"
@@ -136,20 +45,15 @@
                                 [sortable]="true">
                         </p-column>
 
-                        <p-column
-                                header="Organização"
-                                [style]="{'word-wrap':'break-word', 'width': '17.5%'}"
-                                [sortable]="true">
-                            <ng-template let-col let-row="rowData" pTemplate="body">
+                        <p-column header="Organização" field="organizacao.nome" [sortable]="false" filterType="select">
+                            <ng-template let-col let-row="rowData" pTemplate="body" >
                                 <li *ngFor="let org of row.organizacoes">
                                     {{ org.nome }}
                                 </li>
                             </ng-template>
                         </p-column>
 
-                        <p-column
-                                header="Perfil"
-                                [sortable]="true">
+                        <p-column header="Perfil" field="perfil" [sortable]="false" filterType="select">
                             <ng-template let-col let-row="rowData" pTemplate="body">
                                 <li *ngFor="let perfil of row.authorities">
                                     {{ perfil.description }}
@@ -157,7 +61,7 @@
                             </ng-template>
                         </p-column>
 
-                        <p-column header="Equipe" [style]="{width:'15%'}" [sortable]="true">
+                        <p-column header="Equipe" field="equipe" [style]="{width:'15%'}" [sortable]="false" filterType="select">
                             <ng-template let-col let-row="rowData" pTemplate="body">
                                 <li *ngFor="let equipe of row.tipoEquipes">
                                     {{ equipe.nome }}
@@ -165,8 +69,7 @@
                             </ng-template>
                         </p-column>
 
-                        <p-column header="Ativo" field="activated"
-                                  [style]="{width:'6.5%'}" [sortable]="true">
+                        <p-column header="Ativo" field="activated" [style]="{width:'6.5%'}" [sortable]="true" filterType="">
                             <ng-template let-col let-user="rowData" pTemplate="body">
                                 {{ user.activated ? 'Sim' : (user.activated != null ? 'Não' : null ) }}
                             </ng-template>

@@ -25,7 +25,7 @@ export class BaselineComponent implements OnInit {
     nomeSistemas: Array<Sistema>;
     sistema?: Sistema = new Sistema();
     urlBaseline: string;
-    enableTable:boolean = false ; 
+    enableTable:boolean = false ;
 
     constructor(
         private router: Router,

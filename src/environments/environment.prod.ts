@@ -1,16 +1,15 @@
 export const environment = {
-    production: true,
     apiUrl: '/api',
     auth: {
-        baseUrl: '',
-        authUrl: '/login/',
-        loginUrl: '/#/login',
-        logoutUrl: '/#/logout',
         detailsUrl: '/api/user/details',
+        loginUrl: '/#/login',
+        logoutUrl: '/',
+        userStorage: localStorage,
+        userStorageIndex: 'user',
+        publicUrls: ['/api/authenticate'],
+        baseUrl: '',
         tokenValidationUrl: '/api/token/validate',
         storage: localStorage,
-        tokenStorageIndex: 'token',
-        userStorageIndex: 'user',
-        loginSuccessRoute: ''
+        loginSuccessRoute: '/#/login-success'
     }
 };

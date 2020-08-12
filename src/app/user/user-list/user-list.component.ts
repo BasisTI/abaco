@@ -9,9 +9,9 @@ import { UserService } from '../user.service';
 import { User } from '../user.model';
 
 @Component({
-    selector: 'jhi-user',
+    selector: 'app-user',
     templateUrl: './user-list.component.html',
-    providers:[ConfirmationService]
+    providers: [ConfirmationService]
 })
 export class UserListComponent implements OnInit {
 
@@ -22,6 +22,8 @@ export class UserListComponent implements OnInit {
     usuarioSelecionado: User;
 
     rowsPerPageOptions: number[] = [5, 10, 20];
+
+    customOptions: Object = {};
 
     searchParams: any = {
         fullName: undefined,
@@ -55,7 +57,7 @@ export class UserListComponent implements OnInit {
         this.recuperarAutorizacoes();
         this.recuperarEquipe();
         this.query = this.changeUrl();
-        if(this.datatable){
+        if (this.datatable) {
 
             this.datatable.pDatatableComponent.onRowSelect.subscribe((event) => {
                 this.usuarioSelecionado = event.data;
@@ -69,17 +71,19 @@ export class UserListComponent implements OnInit {
     recuperarOrganizacoes() {
         this.organizacaoService.dropDown().subscribe(response => {
             this.organizations = response;
-            const emptyOrg = new Organizacao();
-            this.organizations.unshift(emptyOrg);
+            this.customOptions['organizacao.nome'] = response.map((item) => {
+                return {label: item.nome, value: item.id};
+              });
         });
     }
 
     recuperarAutorizacoes() {
         this.userService.authorities().subscribe(response => {
             this.authorities = response;
-            const emptyProfile = new Authority();
-            this.authorities.push(emptyProfile);
             this.popularNomesAuthorities();
+            this.customOptions['perfil'] = this.authorities.map((item) => {
+                return {label: item.description, value: item.name};
+              });
         });
     }
 
@@ -87,7 +91,9 @@ export class UserListComponent implements OnInit {
         this.tipoEquipeService.dropDown().subscribe(response => {
             this.teams = response;
             const emptyTeam = new TipoEquipe();
-            this.teams.push(emptyTeam);
+            this.customOptions['equipe'] = response.map((item) => {
+                return {label: item.nome, value: item.id};
+              });
         });
     }
 

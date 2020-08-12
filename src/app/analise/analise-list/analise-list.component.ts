@@ -1,17 +1,17 @@
-import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
-import {Router} from '@angular/router';
-import {ConfirmationService} from 'primeng';
-import { DatatableComponent, PageNotificationService, DatatableClickEvent } from '@nuvem/primeng-components';
-import { Analise } from '../analise.model';
-import { GrupoService } from '../grupo/grupo.service';
-import { SearchGroup } from '../grupo/grupo.model';
-import { Sistema, SistemaService } from 'src/app/sistema';
-import { User, UserService } from 'src/app/user';
-import { Organizacao, OrganizacaoService } from 'src/app/organizacao';
-import { TipoEquipe, TipoEquipeService } from 'src/app/tipo-equipe';
-import { AnaliseShareEquipe } from '../analise-share-equipe.model';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { Router } from '@angular/router';
+import { DatatableClickEvent, DatatableComponent, PageNotificationService } from '@nuvem/primeng-components';
+import { ConfirmationService, SelectItem } from 'primeng';
 import { Subscription } from 'rxjs';
+import { Organizacao, OrganizacaoService } from 'src/app/organizacao';
+import { Sistema, SistemaService } from 'src/app/sistema';
+import { TipoEquipe, TipoEquipeService } from 'src/app/tipo-equipe';
+import { User, UserService } from 'src/app/user';
+import { AnaliseShareEquipe } from '../analise-share-equipe.model';
+import { Analise } from '../analise.model';
 import { AnaliseService } from '../analise.service';
+import { SearchGroup } from '../grupo/grupo.model';
+import { GrupoService } from '../grupo/grupo.service';
 
 @Component({
     selector: 'app-analise',
@@ -28,6 +28,7 @@ export class AnaliseListComponent implements OnInit {
 
     rowsPerPageOptions: number[] = [5, 10, 20, 50, 100];
 
+    customOptions: Object = {};
     analiseSelecionada: any = new Analise();
     analiseTableSelecionada: Analise = new Analise();
     searchGroup: SearchGroup = new SearchGroup();
@@ -51,18 +52,17 @@ export class AnaliseListComponent implements OnInit {
     translateSusbscriptions: Subscription[] = [];
 
     metsContagens = [
-        {label: undefined, value: undefined},
-        {label: 'DETALHADA', value: 'DETALHADA'},
-        {label: 'INDICATIVA', value: 'INDICATIVA'},
-        {label: 'ESTIMADA', value: 'ESTIMADA'}
+        {label: 'Detalhada', value: 'DETALHADA'},
+        {label: 'Indicativa', value: 'INDICATIVA'},
+        {label: 'Estimada', value: 'ESTIMADA'}
     ];
-
     blocked;
     inicial: boolean;
     showDialogAnaliseCloneTipoEquipe = false;
     showDialogAnaliseBlock = false;
     mostrarDialog = false;
     enableTable: Boolean = false;
+    notLoadFilterTable = false;
 
     constructor(
         private router: Router,
@@ -81,7 +81,6 @@ export class AnaliseListComponent implements OnInit {
     public ngOnInit() {
         this.userAnaliseUrl = this.grupoService.grupoUrl + this.changeUrl();
         this.estadoInicial();
-        this.traduzirmetsContagens();
     }
 
     getLabel(label) {
@@ -94,6 +93,7 @@ export class AnaliseListComponent implements OnInit {
         this.recuperarEquipe();
         this.recuperarSistema();
         this.recuperarUsuarios();
+        this.customOptions['metodoContagem'] = this.metsContagens;
         this.inicial = false;
     }
 
@@ -165,22 +165,27 @@ export class AnaliseListComponent implements OnInit {
     recuperarOrganizacoes() {
         this.organizacaoService.dropDown().subscribe(response => {
             this.organizations = response;
-            const emptyOrg = new Organizacao();
-            this.organizations.unshift(emptyOrg);
+            this.customOptions['organizacao.nome'] = response.map((item) => {
+                return {label: item.nome, value: item.id};
+              });
         });
     }
 
     recuperarSistema() {
         this.sistemaService.dropDown().subscribe(response => {
             this.nomeSistemas = response;
-            const emptySystem = new Sistema();
-            this.nomeSistemas.unshift(emptySystem);
+            this.customOptions['sistema.nome'] = response.map((item) => {
+                return {label: item.nome, value: item.id};
+              });
         });
     }
 
     recuperarUsuarios() {
         this.usuarioService.dropDown().subscribe(response => {
             this.usuariosOptions = this.usuarioService.convertUsersFromServer(response);
+            this.customOptions['users'] = response.map((item) => {
+                return {label: item.firstName + ' ' + item.lastName , value: item.id};
+              });
         });
     }
 
@@ -191,6 +196,9 @@ export class AnaliseListComponent implements OnInit {
             this.tipoEquipesToClone.unshift(emptyTeam);
             this.tipoEquipeService.dropDownByUser().subscribe(res => {
                 this.teams = res;
+                this.customOptions['equipeResponsavel.nome'] = res.map((item) => {
+                    return {label: item.nome, value: item.id};
+                  });
             });
         });
     }
