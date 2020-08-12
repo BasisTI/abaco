@@ -28,7 +28,8 @@ import io.swagger.annotations.ApiParam;
 import net.sf.dynamicreports.report.exception.DRException;
 import net.sf.jasperreports.engine.JRException;
 import org.elasticsearch.index.query.BoolQueryBuilder;
-import org.elasticsearch.index.query.QueryBuilders;
+import org.elasticsearch.search.sort.FieldSortBuilder;
+import org.elasticsearch.search.sort.SortOrder;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -62,8 +63,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import static org.elasticsearch.index.query.QueryBuilders.multiMatchQuery;
-import static org.elasticsearch.index.query.QueryBuilders.queryStringQuery;
+import static org.elasticsearch.index.query.QueryBuilders.*;
 
 @RestController
 @RequestMapping("/api")
@@ -207,15 +207,15 @@ public class UserResource {
                                              @RequestParam(value = "nome", required = false) String nome,
                                              @RequestParam(value = "login", required = false) String login,
                                              @RequestParam(value = "email", required = false) String email,
-                                             @RequestParam(value = "organizacao", required = false) String organizacao,
-                                             @RequestParam(value = "perfil", required = false) String perfil,
-                                             @RequestParam(value = "equipe", required = false) String equipe,
+                                             @RequestParam(value = "organizacao", required = false) Long[] organizacao,
+                                             @RequestParam(value = "perfil", required = false) String[] perfil,
+                                             @RequestParam(value = "equipe", required = false) Long[] equipe,
                                              @RequestParam(defaultValue = "id") String sort) throws URISyntaxException {
         Sort.Direction sortOrder = PageUtils.getSortDirection(order);
         Pageable pageable = new PageRequest(pageNumber, size, sortOrder, sort);
-        BoolQueryBuilder qb = QueryBuilders.boolQuery();
-        userService.bindFilterSearch(nome, login, email, organizacao, perfil, equipe, qb);
-        SearchQuery searchQuery = new NativeSearchQueryBuilder().withQuery(qb).withPageable(pageable).build();
+        FieldSortBuilder sortBuilder = new FieldSortBuilder(sort).order(SortOrder.ASC);
+        BoolQueryBuilder qb = userService.bindFilterSearch(nome, login, email, organizacao, perfil, equipe);
+        SearchQuery searchQuery = new NativeSearchQueryBuilder().withQuery(qb).withPageable(pageable).withSort(sortBuilder).build();
         Page<User> page = userSearchRepository.search(searchQuery);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page,"/api/_search/users");
         return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);

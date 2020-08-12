@@ -110,6 +110,7 @@ public class User extends AbstractAuditingEntity implements Serializable, Report
             @JoinColumn(name = "authority_name", referencedColumnName = "name")})
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     @BatchSize(size = 20)
+    @Field(type = FieldType.Nested, index = FieldIndex.not_analyzed)
     private Set<Authority> authorities = new HashSet<>();
 
     @Field(type = FieldType.Nested)

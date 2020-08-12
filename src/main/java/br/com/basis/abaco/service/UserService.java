@@ -13,6 +13,7 @@ import br.com.basis.abaco.service.dto.UserDTO;
 import br.com.basis.abaco.service.dto.UserEditDTO;
 import br.com.basis.abaco.service.util.RandomUtil;
 import org.elasticsearch.index.query.BoolQueryBuilder;
+import org.elasticsearch.index.query.QueryBuilders;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,6 +30,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+
+import static org.elasticsearch.index.query.QueryBuilders.*;
 
 /**
  * Service class for managing users.
@@ -295,13 +298,42 @@ public class UserService extends BaseService {
         return userRepository.findOneWithAuthoritiesByLogin(SecurityUtils.getCurrentUserLogin()).orElse(null);
     }
 
-    public void bindFilterSearch(String nome, String login, String email, String organizacao, String perfil, String equipeId, BoolQueryBuilder qb) {
+    public BoolQueryBuilder bindFilterSearch(String nome, String login, String email, Long [] organizacao, String[] perfil, Long[] equipeId) {
+        BoolQueryBuilder qb = new BoolQueryBuilder();
         mustMatchFuzzyQuery(nome, qb, "firstName");
         mustMatchFuzzyQuery(login, qb, "login");
         mustMatchFuzzyQuery(email, qb, "email");
-        mustNestedTermQuery(organizacao, qb, "id", "organizacoes");
-        mustMatchPhaseQuery(perfil, qb, "authorities.name");
-        mustNestedTermQuery(equipeId, qb, "id", "tipoEquipes");
+        if(organizacao != null && organizacao.length > 0 ){
+            BoolQueryBuilder boolQueryBuilderOrganizacao = QueryBuilders.boolQuery()
+            .must(
+                nestedQuery(
+                    "organizacoes",
+                    boolQuery().must(QueryBuilders.termsQuery("organizacoes.id", organizacao))
+                )
+            );
+            qb.must(boolQueryBuilderOrganizacao);
+        }
+        if(perfil != null && perfil.length > 0 ){
+            BoolQueryBuilder boolQueryBuilderOrganizacao = QueryBuilders.boolQuery()
+                .must(
+                    nestedQuery(
+                        "authorities",
+                        boolQuery().must(QueryBuilders.termsQuery("authorities.name", perfil))
+                    )
+                );
+            qb.must(boolQueryBuilderOrganizacao);
+        }
+        if(equipeId != null && equipeId.length > 0 ){
+            BoolQueryBuilder boolQueryBuilderOrganizacao = QueryBuilders.boolQuery()
+                .must(
+                    nestedQuery(
+                        "tipoEquipes",
+                        boolQuery().must(QueryBuilders.termsQuery("tipoEquipes.id", equipeId))
+                    )
+                );
+            qb.must(boolQueryBuilderOrganizacao);
+        }
+        return qb;
     }
 
     public Long getLoggedUserId() {

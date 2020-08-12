@@ -74,6 +74,7 @@ public class Analise implements Serializable, ReportObject {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "metodo_contagem")
+    @Field(index = FieldIndex.not_analyzed, type = FieldType.String)
     private MetodoContagem metodoContagem;
 
     @Column(name = "valor_ajuste", precision = 10, scale = 4)

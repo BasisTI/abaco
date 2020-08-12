@@ -2,6 +2,9 @@ package br.com.basis.abaco.domain;
 
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.springframework.data.elasticsearch.annotations.Field;
+import org.springframework.data.elasticsearch.annotations.FieldIndex;
+import org.springframework.data.elasticsearch.annotations.FieldType;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -26,6 +29,7 @@ public class Authority implements Serializable {
     @Size(min = 0, max = 50)
     @Id
     @Column(length = 50)
+    @Field(index = FieldIndex.not_analyzed, type = FieldType.String)
     private String name;
 
     @NotNull

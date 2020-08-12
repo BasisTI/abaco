@@ -5,6 +5,7 @@ import br.com.basis.abaco.domain.Compartilhada;
 import br.com.basis.abaco.domain.TipoEquipe;
 import br.com.basis.abaco.domain.UploadedFile;
 import br.com.basis.abaco.domain.User;
+import br.com.basis.abaco.domain.enumeration.MetodoContagem;
 import br.com.basis.abaco.domain.enumeration.TipoRelatorio;
 import br.com.basis.abaco.reports.rest.RelatorioAnaliseRest;
 import br.com.basis.abaco.repository.AnaliseRepository;
@@ -388,11 +389,11 @@ public class AnaliseResource {
                                                                         @RequestParam(defaultValue = "20") int size,
                                                                         @RequestParam(defaultValue = "id") String sort,
                                                                         @RequestParam(value = "identificador", required = false) String identificador,
-                                                                        @RequestParam(value = "sistema", required = false) String sistema,
-                                                                        @RequestParam(value = "metodo", required = false) String metodo,
-                                                                        @RequestParam(value = "organizacao", required = false) String organizacao,
-                                                                        @RequestParam(value = "equipe", required = false) String equipe,
-                                                                        @RequestParam(value = "usuario", required = false) String usuario) throws RelatorioException {
+                                                                        @RequestParam(value = "sistema", required = false) Set<Long> sistema,
+                                                                        @RequestParam(value = "metodo", required = false) Set<MetodoContagem> metodo,
+                                                                        @RequestParam(value = "organizacao", required = false) Set<Long> organizacao,
+                                                                        @RequestParam(value = "equipe", required = false) Set<Long> equipe,
+                                                                        @RequestParam(value = "usuario", required = false) Set<Long> usuario) throws RelatorioException {
         ByteArrayOutputStream byteArrayOutputStream;
         try {
             Pageable pageable = dynamicExportsService.obterPageableMaximoExportacao();
@@ -414,12 +415,12 @@ public class AnaliseResource {
                                                                   @RequestParam(defaultValue = "0", name = PAGE) int pageNumber,
                                                                   @RequestParam(defaultValue = "20") int size,
                                                                   @RequestParam(defaultValue = "id") String sort,
-                                                                  @RequestParam(value = "identificador", required = false) String identificador,
-                                                                  @RequestParam(value = "sistema", required = false) String sistema,
-                                                                  @RequestParam(value = "metodo", required = false) String metodo,
-                                                                  @RequestParam(value = "organizacao", required = false) String organizacao,
-                                                                  @RequestParam(value = "equipe", required = false) String equipe,
-                                                                  @RequestParam(value = "usuario", required = false) String usuario)
+                                                                  @RequestParam(value = "identificadorAnalise", required = false) String identificador,
+                                                                  @RequestParam(value = "sistema", required = false) Set<Long> sistema,
+                                                                  @RequestParam(value = "metodoContagem", required = false) Set<MetodoContagem> metodo,
+                                                                  @RequestParam(value = "organizacao", required = false) Set<Long> organizacao,
+                                                                  @RequestParam(value = "equipe", required = false)Set<Long> equipe,
+                                                                  @RequestParam(value = "usuario", required = false) Set<Long> usuario)
         throws URISyntaxException {
         Sort.Direction sortOrder = PageUtils.getSortDirection(order);
         Pageable pageable = new PageRequest(pageNumber, size, sortOrder, sort);

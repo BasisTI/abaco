@@ -14,6 +14,7 @@ import br.com.basis.abaco.domain.Sistema;
 import br.com.basis.abaco.domain.TipoEquipe;
 import br.com.basis.abaco.domain.User;
 import br.com.basis.abaco.domain.VwAnaliseSomaPf;
+import br.com.basis.abaco.domain.enumeration.MetodoContagem;
 import br.com.basis.abaco.repository.AnaliseRepository;
 import br.com.basis.abaco.repository.CompartilhadaRepository;
 import br.com.basis.abaco.repository.FuncaoDadosRepository;
@@ -34,7 +35,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
@@ -90,36 +90,45 @@ public class AnaliseService extends BaseService {
         this.vwAnaliseSomaPfRepository = vwAnaliseSomaPfRepository;
     }
 
-    public void bindFilterSearch(String identificador, String sistema, String metodo, String organizacao, String equipe, String usuario, Set<Long> equipesIds, Set<Long> organizacoes, BoolQueryBuilder qb) {
-        mustTermQuery(sistema, qb, "sistema.id");
-        mustMatchPhaseQuery(metodo, qb, "metodoContagem");
-        mustTermQuery(organizacao, qb, ORGANIZACAO_ID);
+    public void bindFilterSearch(String identificador, Set<Long> sistema, Set<MetodoContagem> metodo, Set<Long> usuario, Set<Long> equipesIds, Set<Long> organizacoes, BoolQueryBuilder qb) {
         if (!StringUtils.isEmptyString((identificador))) {
             BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery()
                 .should(QueryBuilders.matchPhraseQuery("numeroOs", identificador))
                 .should(QueryBuilders.matchPhraseQuery("identificadorAnalise", identificador));
             qb.must(boolQueryBuilder);
         }
-        if (!StringUtils.isEmptyString((equipe))) {
-            BoolQueryBuilder boolQueryBuilderEdquipe = QueryBuilders.boolQuery()
-                .must(QueryBuilders.termsQuery(EQUIPE_RESPONSAVEL_ID, equipe))
-                .must(QueryBuilders.termsQuery(ORGANIZACAO_ID, organizacoes));
-            BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery()
-                .should(boolQueryBuilderEdquipe);
-            qb.must(boolQueryBuilder);
-        } else if (equipesIds != null && equipesIds.size() > 0) {
+       if (equipesIds != null && equipesIds.size() > 0) {
             BoolQueryBuilder boolQueryBuilderEdquipe = QueryBuilders.boolQuery()
                 .must(QueryBuilders.termsQuery(EQUIPE_RESPONSAVEL_ID, equipesIds))
                 .must(QueryBuilders.termsQuery(ORGANIZACAO_ID, organizacoes));
-            BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery()
+
+           BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery()
                 .should(boolQueryBuilderEdquipe)
                 .should(QueryBuilders.termsQuery(COMPARTILHADAS_EQUIPE_ID, equipesIds));
-            qb.must(boolQueryBuilder);
-        }
-        if (!StringUtils.isEmptyString((usuario))) {
-            qb.must(nestedQuery("users", QueryBuilders.boolQuery().should(QueryBuilders.termQuery("users.id", usuario))));
-        }
 
+           qb.must(boolQueryBuilder);
+           if(sistema != null  && sistema.size() > 0){
+               BoolQueryBuilder boolQueryBuilderSistema = QueryBuilders.boolQuery()
+                   .must(QueryBuilders.termsQuery("sistema.id", sistema));
+               qb.must(boolQueryBuilderSistema);
+           }
+           if(metodo != null && metodo.size() > 0){
+               BoolQueryBuilder boolQueryBuilderSistema = QueryBuilders.boolQuery()
+                   .must(QueryBuilders.termsQuery("metodoContagem", metodo));
+               qb.must(boolQueryBuilderSistema);
+           }
+           if (usuario!= null && usuario.size() > 0) {
+               BoolQueryBuilder queryBuilderUsers = QueryBuilders.boolQuery()
+                   .must(
+                       nestedQuery(
+                           "users",
+                            boolQuery().must(QueryBuilders.termsQuery("users.id", usuario)
+                            )
+                       )
+                   );
+               qb.must(queryBuilderUsers);
+           }
+       }
     }
 
     private Set<Long> getIdEquipes(User user) {
@@ -350,12 +359,12 @@ public class AnaliseService extends BaseService {
         analise.setEsforcoFases(analiseUpdate.getEsforcoFases());
     }
 
-    public BoolQueryBuilder getBoolQueryBuilder(@RequestParam(value = "identificador", required = false) String identificador, @RequestParam(value = "sistema", required = false) String sistema, @RequestParam(value = "metodo", required = false) String metodo, @RequestParam(value = "organizacao", required = false) String organizacao, @RequestParam(value = "equipe", required = false) String equipe, @RequestParam(value = "usuario", required = false) String usuario) {
+    public BoolQueryBuilder getBoolQueryBuilder( String identificador, Set<Long> sistema, Set<MetodoContagem> metodo, Set<Long> organizacao, Set<Long> equipe, Set<Long> usuario) {
         User user = userSearchRepository.findByLogin(SecurityUtils.getCurrentUserLogin());
-        Set<Long> equipesIds = getIdEquipes(user);
-        Set<Long> organicoesIds = getIdOrganizacoes(user);
+        Set<Long> equipesIds = (equipe != null && equipe.size() > 0 )? equipe : getIdEquipes(user);
+        Set<Long> organicoesIds = (organizacao != null && organizacao.size() >0 )? organizacao :getIdOrganizacoes(user);
         BoolQueryBuilder qb = QueryBuilders.boolQuery();
-        bindFilterSearch(identificador, sistema, metodo, organizacao, equipe, usuario, equipesIds, organicoesIds, qb);
+        bindFilterSearch(identificador, sistema, metodo, usuario, equipesIds, organicoesIds, qb);
         return qb;
     }
 
