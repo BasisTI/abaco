@@ -392,8 +392,8 @@ public class AnaliseResource {
                                                                         @RequestParam(value = "sistema", required = false) Set<Long> sistema,
                                                                         @RequestParam(value = "metodo", required = false) Set<MetodoContagem> metodo,
                                                                         @RequestParam(value = "organizacao", required = false) Set<Long> organizacao,
-                                                                        @RequestParam(value = "equipe", required = false) Set<Long> equipe,
-                                                                        @RequestParam(value = "usuario", required = false) Set<Long> usuario) throws RelatorioException {
+                                                                        @RequestParam(value = "equipeResponsavel", required = false) Set<Long> equipe,
+                                                                        @RequestParam(value = "users", required = false) Set<Long> usuario) throws RelatorioException {
         ByteArrayOutputStream byteArrayOutputStream;
         try {
             Pageable pageable = dynamicExportsService.obterPageableMaximoExportacao();
