@@ -8,6 +8,7 @@ import { ElasticQuery } from 'src/app/shared/elastic-query';
 import { DatatableComponent, DatatableClickEvent } from '@nuvem/primeng-components';
 import { ResponseWrapper } from 'src/app/shared';
 import { ConfirmationService } from 'primeng';
+import { BaselineSintetico } from '../baseline-sintetico.model';
 
 @Component({
     // tslint:disable-next-line:component-selector
@@ -25,7 +26,8 @@ export class BaselineComponent implements OnInit {
     nomeSistemas: Array<Sistema>;
     sistema?: Sistema = new Sistema();
     urlBaseline: string;
-    enableTable:boolean = false ;
+    enableTable = false ;
+    lstBasilineSintetico: BaselineSintetico[];
 
     constructor(
         private router: Router,
@@ -42,12 +44,11 @@ export class BaselineComponent implements OnInit {
 
     ngOnInit(): void {
         this.recuperarSistema();
-       
     }
 
     public carregarDataTable() {
-        this.baselineService.allBaselineSintetico(this.sistema).subscribe((res: ResponseWrapper) => {
-            this.datatable.value = res.json;
+        this.baselineService.allBaselineSintetico(this.sistema).subscribe((res) => {
+            this.datatable.value = res;
             this.datatable.reset();
             this.datatable.pDatatableComponent.onRowSelect.subscribe((event) => {
                 this.selecionada = false;
@@ -73,7 +74,7 @@ export class BaselineComponent implements OnInit {
     }
 
     public geraBaselinePdfBrowser(id) {
-        // this.baselineService.geraBaselinePdfBrowser(id);
+        this.baselineService.geraBaselinePdfBrowser(id);
     }
     recuperarSistema() {
         this.sistemaService.dropDown().subscribe(response => {
@@ -97,21 +98,21 @@ export class BaselineComponent implements OnInit {
 
     public performSearch() {
         this.enableTable = true ;
-        this.urlBaseline = this.baselineService.sinteticosUrl + this.changeUrl();
+        this.baselineService.allBaselineSintetico(this.sistema).subscribe((res) => {
+            this.lstBasilineSintetico = res;
+
+        });
         this.recarregarDataTable();
     }
 
 
     public limparPesquisa() {
         this.sistema = undefined;
-        this.urlBaseline = this.baselineService.sinteticosUrl + this.changeUrl();
         this.enableTable = false;
-        this.recarregarDataTable();
     }
-    
     public recarregarDataTable() {
-        if(this.datatable){
-            this.datatable.url = this.urlBaseline;
+        if (this.datatable) {
+            this.datatable.filterParams['sistema'] = this.sistema.id;
             this.datatable.reset();
         }
     }
@@ -119,8 +120,7 @@ export class BaselineComponent implements OnInit {
         this.confirmationService.confirm({
             message: this.getLabel('Desejar atualizar a Baseline dos Sistemas?'),
             accept: () => {
-                this.indexadorService.reindexar(this.indexList).subscribe(()=>{
-                });
+                this.indexadorService.reindexar(this.indexList).subscribe();
             }
         });
     }

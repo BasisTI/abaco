@@ -2,7 +2,7 @@
     <div class="ui-g-12 ui-md-12 ui-sm-12">
         <div class="card card-w-title">
 
-            <h1 translate="Analise.Baseline.FuncoesDados">Funções de Dados</h1>
+            <h1>Funções de Dados</h1>
             <div class="ui-g">
                 <div class="ui-g">
                     <basis-datatable
@@ -14,14 +14,14 @@
                             [rowsPerPageOptions]="rowsPerPageOptionsFD"
                             [showPaginationFooter]="true"
                             #datatableFD>
-                            <p-column [header]="this.getLabel('Analise.Baseline.Modulo')"  field="nomeModulo" [sortable]="true"></p-column>
-                            <p-column [header]="this.getLabel('Analise.Baseline.Funcionalidade')" field="nomeFuncionalidade" [sortable]="true"></p-column>
-                            <p-column [header]="this.getLabel('Analise.Baseline.Nome')" field="name" [sortable]="true"></p-column>
-                            <p-column [header]="this.getLabel('Analise.Baseline.Classif')" field="classificacao" [sortable]="true"></p-column>
-                            <p-column [header]="this.getLabel('Analise.Baseline.RLR')" field="rlralr" [sortable]="true"></p-column>
-                            <p-column [header]="this.getLabel('Analise.Baseline.DER')" field="der" [sortable]="true"></p-column>
-                            <p-column [header]="this.getLabel('Analise.Baseline.Complexidade')" field="complexidade" [sortable]="true"></p-column>
-                            <p-column [header]="this.getLabel('Analise.Baseline.PF')" field="pf" [sortable]="true"></p-column>
+                            <p-column [header]="this.getLabel('Modulo')"  field="nomeModulo" [sortable]="true"></p-column>
+                            <p-column [header]="this.getLabel('Funcionalidade')" field="nomeFuncionalidade" [sortable]="true"></p-column>
+                            <p-column [header]="this.getLabel('Nome')" field="name" [sortable]="true"></p-column>
+                            <p-column [header]="this.getLabel('Classif')" field="classificacao" [sortable]="true"></p-column>
+                            <p-column [header]="this.getLabel('RLR')" field="rlralr" [sortable]="true"></p-column>
+                            <p-column [header]="this.getLabel('DER')" field="der" [sortable]="true"></p-column>
+                            <p-column [header]="this.getLabel('Complexidade')" field="complexidade" [sortable]="true"></p-column>
+                            <p-column [header]="this.getLabel('PF')" field="pf" [sortable]="true"></p-column>
                     </basis-datatable>
                 </div>
             </div>

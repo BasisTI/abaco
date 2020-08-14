@@ -23,12 +23,12 @@ export class BaselineService {
     constructor(private http: HttpClient) {
     }
 
-    allBaselineSintetico(sistema : Sistema): Observable<ResponseWrapper> {
+    allBaselineSintetico(sistema: Sistema): Observable<BaselineSintetico[]> {
         let url = `${this.sinteticosUrl}`;
-        if(sistema && sistema.id){
+        if (sistema && sistema.id) {
             url = url + '?idSistema=' + sistema.id.valueOf();
         }
-        return this.http.get<ResponseWrapper>(url);
+        return this.http.get<BaselineSintetico[]>(url);
     }
 
     getSistemaSintetico(id: number): Observable<BaselineSintetico> {
@@ -103,22 +103,21 @@ export class BaselineService {
     /**
    *
    */
-//   public geraBaselinePdfBrowser(id: number): Observable<string> {
-//     this.http.get(`${this.relatoriosBaselineUrl}${id}`, {
-//     method: RequestMethod.Get,
-//     responseType: ResponseContentType.Blob,
-//   }).subscribe(
-//       (response) => {
-//         const mediaType = 'application/pdf';
-//         const blob = new Blob([response.blob()], {type: mediaType});
-//         const fileURL = window.URL.createObjectURL(blob);
-//         const anchor = document.createElement('a');
-//         anchor.download = 'analise.pdf';
-//         anchor.href = fileURL;
-//         window.open(fileURL, '_blank', '');
-//         return null;
-//       });
-//       return null;
-//   }
+  public geraBaselinePdfBrowser(id: number): Observable<string> {
+    this.http.request('get', `${this.relatoriosBaselineUrl}${id}`, {
+    responseType: 'blob',
+  }).subscribe( 
+      (response) => {
+        const mediaType = 'application/pdf';
+        const blob = new Blob([response], {type: mediaType});
+        const fileURL = window.URL.createObjectURL(blob);
+        const anchor = document.createElement('a');
+        anchor.download = 'analise.pdf';
+        anchor.href = fileURL;
+        window.open(fileURL, '_blank', '');
+        return null;
+      });
+      return null;
+  }
 
 }

@@ -46,16 +46,13 @@
                     <div class="ui-g">
                         <div *ngIf="enableTable">
                             <basis-datatable
-                                    type="server"
-                                    [scrollable]="true"
-                                    [style]="{width:'500px'}"
-                                    [url]="urlBaseline"
+                                    type="memory"
+                                    [value]="lstBasilineSintetico"
                                     (buttonClick)="datatableClick($event)"
                                     [rows]="20"
                                     [disableDelete]="true"
                                     [disableEdit]="true"
                                     [rowsPerPageOptions]="rowsPerPageOptions"
-                                    [showPaginationFooter]="true"
                                     #datatable>
 
                                 <basis-datatable-button
@@ -65,11 +62,7 @@
                                     disabled="selecionada">
                                 </basis-datatable-button>
 
-                                <p-column [header]="this.getLabel('Nome')" field="nome" [sortable]="true">
-                                    <ng-template let-linhaResumo="rowData" pTemplate="body">
-                                      {{ linhaResumo.nome}}
-                                    </ng-template>
-                                </p-column>
+                                <p-column [header]="this.getLabel('Nome')" field="nome" [sortable]="true"></p-column>
                                 <p-column [header]="this.getLabel('Sigla')" field="sigla" [sortable]="true"></p-column>
                                 <p-column [header]="this.getLabel('NumeroOcorrencia')" field="numeroocorrencia" [sortable]="true"></p-column>
                                 <p-column [header]="this.getLabel('PontosFuncao')" field="sum" [sortable]="true"></p-column>

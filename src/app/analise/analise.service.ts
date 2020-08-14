@@ -275,9 +275,9 @@ export class AnaliseService {
     tratarErro(erro: string, id: number) {
     }
 
-    public query(req?: any): Observable<ResponseWrapper> {
+    public query(req?: any): Observable<any> {
         const options = createRequestOption(req);
-        return this.http.get<ResponseWrapper>(this.resourceUrl).pipe(
+        return this.http.get<any>(this.resourceUrl).pipe(
             catchError((error: any) => {
                 if (error.status === 403) {
                     this.pageNotificationService.addErrorMessage(this.getLabel('Você não possui permissão!'));
@@ -322,7 +322,7 @@ export class AnaliseService {
     private convert(analise: Analise): Analise {
         return analise;
     }
-findAllCompartilhadaByAnalise(analiseId: number): Observable<AnaliseShareEquipe[]> {
+    findAllCompartilhadaByAnalise(analiseId: number): Observable<AnaliseShareEquipe[]> {
         const url = `${this.findCompartilhadaByAnaliseUrl}/${analiseId}`;
         return this.http.get<AnaliseShareEquipe[]>(url);
     }

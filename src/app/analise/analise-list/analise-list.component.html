@@ -4,34 +4,127 @@
 
         <div class="card card-w-title">
 
+            <h1 >Análise</h1>
+
             <div class="ui-g">
-                <div class="ui-g ui-md-6">
-                    <h1>Análise</h1>
+                <div class="ui-g-4 ui-md-4 ui-sm-12">
+                    <span class="md-inputfield">
+                        <input
+                              type="text"
+                              pInputText class="ui-inputtext"
+                              [(ngModel)]="searchGroup.identificadorAnalise"
+                              (keyup.enter)="performSearch()"
+                              id="idIdentificadorComponentAnalise"
+                              maxlength="50">
+                        <label>Identificador</label>
+                    </span>
                 </div>
-                <div class="ui-g ui-md-6" style="justify-content: right;">
-                    <app-green-button
-                        buttonLabel="Novo"
-                        id="idBtnNovoComponentAnalise"
-                        buttonIcon="ui-icon-add"
-                        routerLink="new">
-                    </app-green-button>
+
+                <div class="ui-g-4 ui-md-4 ui-sm-12">
+                    <p-dropdown
+                            [filter]="true"
+                            [options]="nomeSistemas"
+                            optionLabel="nome"
+                            id="idNomeSistemaComponentAnalise"
+                            [(ngModel)]="searchGroup.sistema"
+                            [autoWidth]="false"
+                            [placeholder]="this.getLabel('Sistema')">
+                    </p-dropdown>
                 </div>
-            <div>
+                <div class="ui-g-4 ui-md-4 ui-sm-12">
+                    <p-dropdown
+                            id="idUsuarioFiltrotAnalise"
+                            [filter]="true"
+                            [options]="usuariosOptions"
+                            optionLabel="nome"
+                            [autoWidth]="false"
+                            [(ngModel)]="searchGroup.usuario"
+                            [placeholder]="this.getLabel('Usuarios')" >
+                    </p-dropdown>
+                </div>
+            </div>
+            <div class="ui-g">
+
+                <div class="ui-g-4 ui-md-4 ui-sm-12">
+                    <p-dropdown
+                            id="idOrganizacaoComponentAnalise"
+                            [filter]="true"
+                            [options]="organizations"
+                            optionLabel="nome"
+                            [autoWidth]="false"
+                            [(ngModel)]="searchGroup.organizacao"
+                            [placeholder]="this.getLabel('Organização')">
+                    </p-dropdown>
+                </div>
+
+                <div class="ui-g-4 ui-md-4 ui-sm-12">
+                    <p-dropdown
+                            [filter]="true"
+                            [options]="teams"
+                            optionLabel="nome"
+                            id="idTimeComponentAnalise"
+                            [autoWidth]="false"
+                            [(ngModel)]="searchGroup.equipe"
+                            [placeholder]="this.getLabel('Equipe')">
+                    </p-dropdown>
+                </div>
+                <div class="ui-g-4 ui-md-4 ui-sm-12">
+                    <p-dropdown
+                            [filter]="true"
+                            [options]="metsContagens"
+                            id="idMetodoContagemComponentAnalise"
+                            [(ngModel)]="searchGroup.metodoContagem"
+                            [autoWidth]="false"
+                            [placeholder]="this.getLabel('Metodo de contagem')">
+                    </p-dropdown>
+                </div>
+            </div>
+
+            <div class="ui-g">
+
+                <div class="ui-g ui-md-12" style="justify-content: center; margin-bottom: 25px; margin-top: 25px">
+
+                    <div class="ui-g-2 ui-md-2 ui-sm-12">
+                        <app-white-button
+                                [buttonLabel]="'Limpar pesquisa' "
+                                id="idBtnLimparPesquisaComponentAnalise"
+                                buttonIcon="ui-icon-clear-all"
+                                (click)="limparPesquisa()">
+                        </app-white-button>
+                    </div>
+
+                    <div class="ui-g-2 ui-md-2 ui-sm-12">
+                        <app-blue-button
+                                [buttonLabel]="'Pesquisar' "
+                                id="idBtnPesquisarComponentAnalise"
+                                buttonIcon="ui-icon-search"
+                                (click)="performSearch()">
+                        </app-blue-button>
+                    </div>
+
+                    <div class="ui-g-2 ui-md-2 ui-sm-12">
+                        <app-green-button
+                                [buttonLabel]="'Novo'"
+                                id="idBtnNovoComponentAnalise"
+                                buttonIcon="ui-icon-add"
+                                routerLink="new">
+                        </app-green-button>
+                    </div>
+                </div>
+                <div>
                 <basis-datatable
                         type="server"
                         [url]="userAnaliseUrl"
                         (dblclick)="onRowDblclick($event)"
                         (buttonClick)="datatableClick($event)"
+                        (finishedLoading)="setParamsLoad()"
                         [rows]="20"
                         id="idTabelaComponentAnalise"
                         [rowsPerPageOptions]="rowsPerPageOptions"
-                        [showPaginationFooter]="true"
                         (click) = "selectAnalise()"
-                        resizableColumns="true"
-                        [customFilterOptions]="customOptions"
                         [showVisibleColumnsControl]="true"
-                        [filterOnColumn]="true"
-                        
+                        [enableScroll]="true"
+                        [scrollHeight]="'500px'"
                         #datatable>
 
                     <p-column header="Organização" field="organizacao.nome" [sortable]="true" filterType="select" [filter]="true">
@@ -42,16 +135,6 @@
                     <p-column header="Identificador Analise" field="identificadorAnalise" [sortable]="true" ></p-column>
                     <p-column header="Número Os." field="numeroOs" [sortable]="true"></p-column>
                     <p-column header="Equipe" field="equipeResponsavel.nome" [sortable]="true" filterType="select" [filter]="true">
-                        <ng-template let-col let-row="rowData" pTemplate="input">
-                            <div class="ui-g form-group">
-                                <div class="ui-md-12">
-                                    <span class="md-inputfield">
-                                        <p-dropdown [options]="customOptions['equipeResponsavel.nome']" [(ngModel)]="row['name']" [style]="{'width':'100%'}"></p-dropdown>
-                                        <label>Email</label>
-                                    </span>
-                                </div>
-                            </div>
-                        </ng-template>
                         <ng-template let-col let-analise="rowData" pTemplate="body">
                             {{ analise.equipeResponsavel.nome}}
                         </ng-template>

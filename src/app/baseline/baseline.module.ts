@@ -5,7 +5,6 @@ import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { DatatableModule } from '@nuvem/primeng-components';
 import { AbacoButtonsModule } from '../components/abaco-buttons/abaco-buttons.module';
-import { SharedModule } from '../shared/shared.module';
 import {
     BaselineComponent,
     BaselineFuncaoDadosComponent,
@@ -15,6 +14,7 @@ import {
 } from './';
 import { BaselineComplexidadeComponent } from './analitico/complexidade/baseline-complexidade.component';
 import { BaselineImpactoComponent } from './analitico/impacto/baseline-impacto.component';
+import { SharedModule } from '../shared/shared.module';
 
 
 

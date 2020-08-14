@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { DatatableClickEvent, DatatableComponent, PageNotificationService } from '@nuvem/primeng-components';
-import { ConfirmationService, SelectItem } from 'primeng';
+import { ConfirmationService, LazyLoadEvent } from 'primeng';
 import { Subscription } from 'rxjs';
 import { Organizacao, OrganizacaoService } from 'src/app/organizacao';
 import { Sistema, SistemaService } from 'src/app/sistema';
@@ -29,6 +29,7 @@ export class AnaliseListComponent implements OnInit {
     rowsPerPageOptions: number[] = [5, 10, 20, 50, 100];
 
     customOptions: Object = {};
+
     analiseSelecionada: any = new Analise();
     analiseTableSelecionada: Analise = new Analise();
     searchGroup: SearchGroup = new SearchGroup();
@@ -63,6 +64,7 @@ export class AnaliseListComponent implements OnInit {
     mostrarDialog = false;
     enableTable: Boolean = false;
     notLoadFilterTable = false;
+    analisesList: any[] = [];
 
     constructor(
         private router: Router,
@@ -93,8 +95,10 @@ export class AnaliseListComponent implements OnInit {
         this.recuperarEquipe();
         this.recuperarSistema();
         this.recuperarUsuarios();
+        this.searchGroup = this.loadingGroupSearch();
         this.customOptions['metodoContagem'] = this.metsContagens;
         this.inicial = false;
+        console.log(this.searchGroup);
     }
 
     getEquipesFromActiveLoggedUser() {
@@ -201,6 +205,13 @@ export class AnaliseListComponent implements OnInit {
                   });
             });
         });
+    }
+
+    loadingGroupSearch(): SearchGroup {
+        const sessionSearchGroup: SearchGroup = JSON.parse(sessionStorage.getItem('searchGroup'));
+        if (sessionSearchGroup) {
+           return sessionSearchGroup;
+        }
     }
 
     public datatableClick(event: DatatableClickEvent) {
@@ -368,7 +379,26 @@ export class AnaliseListComponent implements OnInit {
 
     public recarregarDataTable() {
         if (this.datatable) {
-            this.datatable.refresh(this.changeUrl());
+            this.datatable.filterParams = [''];
+            if (this.searchGroup && this.searchGroup.equipe &&  this.searchGroup.equipe.id) {
+                this.datatable.filterParams['equipe'] = this.searchGroup.equipe.id;
+            }
+            if (this.searchGroup && this.searchGroup.identificadorAnalise) {
+                this.datatable.filterParams['identificadorAnalise'] = this.searchGroup.identificadorAnalise;
+            }
+            if (this.searchGroup &&  this.searchGroup.metodoContagem) {
+                this.datatable.filterParams['metodoContagem'] = this.searchGroup.metodoContagem;
+            }
+            if (this.searchGroup &&  this.searchGroup.organizacao &&  this.searchGroup.organizacao.id) {
+                this.datatable.filterParams['organizacao'] = this.searchGroup.organizacao.id;
+            }
+            if (this.searchGroup && this.searchGroup.sistema && this.searchGroup.sistema.id) {
+                this.datatable.filterParams['sistema'] = this.searchGroup.sistema.id;
+            }
+            if (this.searchGroup && this.searchGroup.usuario && this.searchGroup.usuario.id) {
+                this.datatable.filterParams['usuario'] = this.searchGroup.usuario.id;
+            }
+            this.datatable.filter();
         }
     }
 
@@ -424,6 +454,7 @@ export class AnaliseListComponent implements OnInit {
 
     public performSearch() {
         this.enableTable = true ;
+        sessionStorage.setItem('searchGroup', JSON.stringify(this.searchGroup));
         this.recarregarDataTable();
     }
 
@@ -572,5 +603,8 @@ export class AnaliseListComponent implements OnInit {
                 this.idAnaliseCloneToEquipe = undefined;
             });
         }
+    }
+    public setParamsLoad() {
+        this.recarregarDataTable();
     }
 }
