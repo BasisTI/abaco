@@ -98,7 +98,6 @@ export class AnaliseListComponent implements OnInit {
         this.searchGroup = this.loadingGroupSearch();
         this.customOptions['metodoContagem'] = this.metsContagens;
         this.inicial = false;
-        console.log(this.searchGroup);
     }
 
     getEquipesFromActiveLoggedUser() {
@@ -211,6 +210,8 @@ export class AnaliseListComponent implements OnInit {
         const sessionSearchGroup: SearchGroup = JSON.parse(sessionStorage.getItem('searchGroup'));
         if (sessionSearchGroup) {
            return sessionSearchGroup;
+        } else {
+            return new SearchGroup();
         }
     }
 
