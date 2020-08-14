@@ -1,4 +1,5 @@
 export const environment = {
+    production: true,
     apiUrl: '/api',
     auth: {
         detailsUrl: '/api/user/details',
