@@ -200,12 +200,10 @@
                     <p-dialog [closable]="false" [(visible)]="showDialog" [(header)]="textHeader" [style]="{width: '80vw'}"
                               [contentStyle]="{'height': ['windowHeightDialog']}">
 
-                        <div *ngIf="analise && analise.sistema">
                             <app-analise-modulo-funcionalidade [erroModulo]="erroModulo" [isFuncaoDados]="true"
                                 (moduloSelectedEvent)="moduloSelected($event)"
                                 (funcionalidadeSelectedEvent)="functionalitySelected($event)">
                             </app-analise-modulo-funcionalidade>
-                        </div>
 
                         <div *ngIf="!isEdit">
                             <div class="ui-g" *ngIf="!showMultiplos">
