@@ -2,7 +2,7 @@ import { AfterViewInit, ChangeDetectorRef, Component, EventEmitter, Input, OnIni
 import { ActivatedRoute, Router } from '@angular/router';
 import { Column, DatatableClickEvent, DatatableComponent, DatatableModule, PageNotificationService } from '@nuvem/primeng-components';
 import * as _ from 'lodash';
-import { ConfirmationService, SelectItem } from 'primeng';
+import { ConfirmationService, SelectItem, FullCalendar } from 'primeng';
 import { forkJoin, Observable, Subscription } from 'rxjs';
 import { Alr } from '../alr/alr.model';
 import { Analise, AnaliseService } from '../analise';
@@ -906,7 +906,7 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
 
     private prepararParaEdicao(funcaoDadosSelecionada: FuncaoDados) {
         this.funcaoDadosService.getById(funcaoDadosSelecionada.id).subscribe(funcaoDados => {
-            this.seletedFuncaoDados = funcaoDados;
+            this.seletedFuncaoDados = new FuncaoDados().copyFromJSON(funcaoDados);
             if (this.seletedFuncaoDados.fatorAjuste.tipoAjuste === 'UNITARIO' && this.faS[0]) {
                 this.hideShowQuantidade = false;
             } else {

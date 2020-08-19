@@ -754,6 +754,7 @@ export class FuncaoTransacaoFormComponent implements OnInit {
 
     private prepararParaEdicao(funcaoTransacaoSelecionada: FuncaoTransacao) {
         this.funcaoTransacaoService.getById(funcaoTransacaoSelecionada.id).subscribe(funcaoTransacao => {
+            funcaoTransacao = new FuncaoTransacao().copyFromJSON(funcaoTransacao);
             this.disableTRDER();
             this.configurarDialog();
             this.currentFuncaoTransacao = funcaoTransacao;
