@@ -41,9 +41,9 @@ import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.sql.Timestamp;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -56,9 +56,9 @@ public class AnaliseService extends BaseService {
     public static final String ORGANIZACAO_ID = "organizacao.id";
     public static final String EQUIPE_RESPONSAVEL_ID = "equipeResponsavel.id";
     public static final String COMPARTILHADAS_EQUIPE_ID = "compartilhadas.equipeId";
-    private BigDecimal percent  = new BigDecimal("100");
+    private BigDecimal percent = new BigDecimal("100");
     private static final int decimalPlace = 2;
-    private final static  String EMPTY_STRING = "";
+    private final static String EMPTY_STRING = "";
 
     private final AnaliseRepository analiseRepository;
     private final AnaliseSearchRepository analiseSearchRepository;
@@ -90,45 +90,77 @@ public class AnaliseService extends BaseService {
         this.vwAnaliseSomaPfRepository = vwAnaliseSomaPfRepository;
     }
 
-    public void bindFilterSearch(String identificador, Set<Long> sistema, Set<MetodoContagem> metodo, Set<Long> usuario, Set<Long> equipesIds, Set<Long> organizacoes, BoolQueryBuilder qb) {
+    public void bindFilterSearch(String identificador, Set<Long> sistema, Set<MetodoContagem> metodo, Set<Long> usuario, Long equipesIds, Set<Long> equipesUsersId, Set<Long> organizacoes, BoolQueryBuilder qb) {
         if (!StringUtils.isEmptyString((identificador))) {
             BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery()
                 .should(QueryBuilders.matchPhraseQuery("numeroOs", identificador))
                 .should(QueryBuilders.matchPhraseQuery("identificadorAnalise", identificador));
             qb.must(boolQueryBuilder);
         }
-       if (equipesIds != null && equipesIds.size() > 0) {
-            BoolQueryBuilder boolQueryBuilderEdquipe = QueryBuilders.boolQuery()
-                .must(QueryBuilders.termsQuery(EQUIPE_RESPONSAVEL_ID, equipesIds))
+        bindFilterEquipeAndOrganizacao(equipesIds, equipesUsersId, organizacoes, qb);
+        if (sistema != null && sistema.size() > 0) {
+            BoolQueryBuilder boolQueryBuilderSistema = QueryBuilders.boolQuery()
+                .must(QueryBuilders.termsQuery("sistema.id", sistema));
+            qb.must(boolQueryBuilderSistema);
+        }
+        if (metodo != null && metodo.size() > 0) {
+            BoolQueryBuilder boolQueryBuilderSistema = QueryBuilders.boolQuery()
+                .must(QueryBuilders.termsQuery("metodoContagem", metodo));
+            qb.must(boolQueryBuilderSistema);
+        }
+        if (usuario != null && usuario.size() > 0) {
+            BoolQueryBuilder queryBuilderUsers = QueryBuilders.boolQuery()
+                .must(
+                    nestedQuery(
+                        "users",
+                        boolQuery().must(QueryBuilders.termsQuery("users.id", usuario)
+                        )
+                    )
+                );
+            qb.must(queryBuilderUsers);
+        }
+    }
+
+    private void bindFilterEquipeAndOrganizacao(Long equipesIds, Set<Long> equipesUsersId, Set<Long> organizacoes, BoolQueryBuilder qb) {
+        BoolQueryBuilder boolQueryBuilderEquipe;
+        BoolQueryBuilder boolQueryBuilderCompartilhada;
+        if (equipesIds != null && equipesIds > 0) {
+            if (equipesUsersId.contains(equipesIds)) {
+                boolQueryBuilderEquipe = QueryBuilders.boolQuery()
+                    .must(QueryBuilders.termQuery(EQUIPE_RESPONSAVEL_ID, equipesIds))
+                    .must(QueryBuilders.termsQuery(ORGANIZACAO_ID, organizacoes));
+                boolQueryBuilderCompartilhada = QueryBuilders.boolQuery()
+                    .must(QueryBuilders.termQuery(EQUIPE_RESPONSAVEL_ID, equipesIds))
+                    .must(QueryBuilders.termsQuery(COMPARTILHADAS_EQUIPE_ID, equipesUsersId))
+                    .must(QueryBuilders.termsQuery(ORGANIZACAO_ID, organizacoes));
+
+                BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery()
+                    .should(boolQueryBuilderEquipe)
+                    .should(boolQueryBuilderCompartilhada);
+                qb.must(boolQueryBuilder);
+            } else {
+                boolQueryBuilderCompartilhada = QueryBuilders.boolQuery()
+                    .must(QueryBuilders.termQuery(EQUIPE_RESPONSAVEL_ID, equipesIds))
+                    .must(QueryBuilders.termsQuery(COMPARTILHADAS_EQUIPE_ID, equipesUsersId))
+                    .must(QueryBuilders.termsQuery(ORGANIZACAO_ID, organizacoes));
+
+                BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery()
+                    .should(boolQueryBuilderCompartilhada);
+                qb.must(boolQueryBuilder);
+            }
+        } else {
+            boolQueryBuilderEquipe = QueryBuilders.boolQuery()
+                .must(QueryBuilders.termsQuery(EQUIPE_RESPONSAVEL_ID, equipesUsersId))
                 .must(QueryBuilders.termsQuery(ORGANIZACAO_ID, organizacoes));
 
-           BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery()
-                .should(boolQueryBuilderEdquipe)
-                .should(QueryBuilders.termsQuery(COMPARTILHADAS_EQUIPE_ID, equipesIds));
-
-           qb.must(boolQueryBuilder);
-           if(sistema != null  && sistema.size() > 0){
-               BoolQueryBuilder boolQueryBuilderSistema = QueryBuilders.boolQuery()
-                   .must(QueryBuilders.termsQuery("sistema.id", sistema));
-               qb.must(boolQueryBuilderSistema);
-           }
-           if(metodo != null && metodo.size() > 0){
-               BoolQueryBuilder boolQueryBuilderSistema = QueryBuilders.boolQuery()
-                   .must(QueryBuilders.termsQuery("metodoContagem", metodo));
-               qb.must(boolQueryBuilderSistema);
-           }
-           if (usuario!= null && usuario.size() > 0) {
-               BoolQueryBuilder queryBuilderUsers = QueryBuilders.boolQuery()
-                   .must(
-                       nestedQuery(
-                           "users",
-                            boolQuery().must(QueryBuilders.termsQuery("users.id", usuario)
-                            )
-                       )
-                   );
-               qb.must(queryBuilderUsers);
-           }
-       }
+            boolQueryBuilderCompartilhada = QueryBuilders.boolQuery()
+                .must(QueryBuilders.termsQuery(COMPARTILHADAS_EQUIPE_ID, equipesUsersId))
+                .must(QueryBuilders.termsQuery(ORGANIZACAO_ID, organizacoes));
+            BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery()
+                .should(boolQueryBuilderEquipe)
+                .should(boolQueryBuilderCompartilhada);
+            qb.must(boolQueryBuilder);
+        }
     }
 
     private Set<Long> getIdEquipes(User user) {
@@ -359,17 +391,17 @@ public class AnaliseService extends BaseService {
         analise.setEsforcoFases(analiseUpdate.getEsforcoFases());
     }
 
-    public BoolQueryBuilder getBoolQueryBuilder( String identificador, Set<Long> sistema, Set<MetodoContagem> metodo, Set<Long> organizacao, Set<Long> equipe, Set<Long> usuario) {
+    public BoolQueryBuilder getBoolQueryBuilder(String identificador, Set<Long> sistema, Set<MetodoContagem> metodo, Set<Long> organizacao, Long equipe, Set<Long> usuario) {
         User user = userSearchRepository.findByLogin(SecurityUtils.getCurrentUserLogin());
-        Set<Long> equipesIds = (equipe != null && equipe.size() > 0 )? equipe : getIdEquipes(user);
-        Set<Long> organicoesIds = (organizacao != null && organizacao.size() >0 )? organizacao :getIdOrganizacoes(user);
+        Set<Long> equipesIds = getIdEquipes(user);
+        Set<Long> organicoesIds = (organizacao != null && organizacao.size() > 0) ? organizacao : getIdOrganizacoes(user);
         BoolQueryBuilder qb = QueryBuilders.boolQuery();
-        bindFilterSearch(identificador, sistema, metodo, usuario, equipesIds, organicoesIds, qb);
+        bindFilterSearch(identificador, sistema, metodo, usuario, equipe, equipesIds, organicoesIds, qb);
         return qb;
     }
 
-    public void bindAnaliseCompartilhada(Set<Compartilhada> lstCompartilhadas){
-        if(lstCompartilhadas != null && lstCompartilhadas.size() > 0){
+    public void bindAnaliseCompartilhada(Set<Compartilhada> lstCompartilhadas) {
+        if (lstCompartilhadas != null && lstCompartilhadas.size() > 0) {
             long idAnalise = lstCompartilhadas.stream().findFirst().get().getAnaliseId();
             Analise analise = analiseRepository.findOne(idAnalise);
             analise.setCompartilhadas(lstCompartilhadas);
@@ -377,15 +409,16 @@ public class AnaliseService extends BaseService {
             analiseSearchRepository.save(convertToEntity(convertToDto(analise)));
         }
     }
-    public boolean permissionToEdit(User user, Analise analise){
+
+    public boolean permissionToEdit(User user, Analise analise) {
         boolean canEdit = false;
-        if(user.getOrganizacoes().contains(analise.getOrganizacao())){
-            if(user.getTipoEquipes().contains(analise.getEquipeResponsavel())){
+        if (user.getOrganizacoes().contains(analise.getOrganizacao())) {
+            if (user.getTipoEquipes().contains(analise.getEquipeResponsavel())) {
                 return true;
-            }else {
-                for (TipoEquipe tipoEquipe:user.getTipoEquipes()) {
-                    for(Compartilhada compartilhada:analise.getCompartilhadas()){
-                        if(compartilhada.getEquipeId().longValue() == tipoEquipe.getId().longValue() && !compartilhada.isViewOnly()){
+            } else {
+                for (TipoEquipe tipoEquipe : user.getTipoEquipes()) {
+                    for (Compartilhada compartilhada : analise.getCompartilhadas()) {
+                        if (compartilhada.getEquipeId().longValue() == tipoEquipe.getId().longValue() && !compartilhada.isViewOnly()) {
                             canEdit = true;
                         }
                     }
@@ -394,6 +427,7 @@ public class AnaliseService extends BaseService {
         }
         return canEdit;
     }
+
     public void updatePf(Analise analise) {
         VwAnaliseSomaPf vwAnaliseSomaPf = vwAnaliseSomaPfRepository.findByAnaliseId(analise.getId());
         BigDecimal sumFase = new BigDecimal(BigInteger.ZERO).setScale(decimalPlace);
@@ -404,10 +438,12 @@ public class AnaliseService extends BaseService {
         analise.setPfTotal(vwAnaliseSomaPf.getPfGross().setScale(decimalPlace).toString());
         analise.setAdjustPFTotal(vwAnaliseSomaPf.getPfTotal().multiply(sumFase).setScale(decimalPlace).toString());
     }
-    public Analise bindCloneAnalise(Analise analiseClone, Analise analise, User user){
-        List<User> lstUsers = new ArrayList<>();
+
+    public Analise bindCloneAnalise(Analise analiseClone, Analise analise, User user) {
+        Set<User> lstUsers = new LinkedHashSet<>();
         lstUsers.add(user);
         salvaNovaData(analiseClone);
+        analiseClone.setUsers(lstUsers);
         analiseClone.setDocumentacao(EMPTY_STRING);
         analiseClone.setFronteiras(EMPTY_STRING);
         analiseClone.setPropositoContagem(EMPTY_STRING);

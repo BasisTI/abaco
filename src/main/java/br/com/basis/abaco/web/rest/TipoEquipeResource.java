@@ -215,9 +215,10 @@ public class TipoEquipeResource {
 
     @GetMapping("/tipo-equipes/compartilhar/{idOrganizacao}/{idAnalise}/{idEquipe}")
     @Timed
-    public List<TipoEquipe> getAllTipoEquipeCompartilhavel(@PathVariable Long idOrganizacao, @PathVariable Long idAnalise, @PathVariable Long idEquipe) {
+    public List<TipoEquipeDTO> getAllTipoEquipeCompartilhavel(@PathVariable Long idOrganizacao, @PathVariable Long idAnalise, @PathVariable Long idEquipe) {
         log.debug("REST request to get all TipoEquipes");
-        return tipoEquipeRepository.findAllEquipesCompartilhaveis(idOrganizacao, idEquipe, idAnalise);
+        List<TipoEquipe> lstTipoEquipe = tipoEquipeRepository.findAllEquipesCompartilhaveis(idOrganizacao, idEquipe, idAnalise);
+        return tipoEquipeService.convert(lstTipoEquipe);
     }
 
     /**

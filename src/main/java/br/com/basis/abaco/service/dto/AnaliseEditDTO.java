@@ -1,5 +1,6 @@
 package br.com.basis.abaco.service.dto;
 
+import br.com.basis.abaco.domain.Compartilhada;
 import br.com.basis.abaco.domain.Contrato;
 import br.com.basis.abaco.domain.EsforcoFase;
 import br.com.basis.abaco.domain.FatorAjuste;
@@ -46,6 +47,7 @@ public class AnaliseEditDTO implements ReportObject {
     private FatorAjuste fatorAjuste;
     private Set<EsforcoFase> esforcoFases;
     private Manual manual;
+    private Set<Compartilhada> compartilhadas;
 
     public void setDataCriacaoOrdemServico(Timestamp dataCriacaoOrdemServico) {
         this.dataCriacaoOrdemServico = dataCriacaoOrdemServico == null ? null : new Timestamp(dataCriacaoOrdemServico.getTime());
