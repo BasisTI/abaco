@@ -45,6 +45,6 @@ export class IndexadorComponent {
     }
 
     public return() {
-        this.router.navigate(['/']);
+        this.router.navigate(['/dashboard']);
     }
 }

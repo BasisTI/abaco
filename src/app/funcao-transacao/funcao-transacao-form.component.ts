@@ -21,8 +21,7 @@ import { Modulo } from 'src/app/modulo';
 import { AnaliseReferenciavel } from 'src/app/analise-shared/analise-referenciavel';
 import { FatorAjusteLabelGenerator } from 'src/app/shared/fator-ajuste-label-generator';
 import { Manual } from 'src/app/manual';
-import { isEmpty } from 'rxjs/operators';
-
+import * as _ from 'lodash';
 @Component({
     selector: 'app-analise-funcao-transacao',
     templateUrl: './funcao-transacao-form.component.html',
@@ -864,7 +863,7 @@ export class FuncaoTransacaoFormComponent implements OnInit {
     }
 
     formataFatorAjuste(fatorAjuste: FatorAjuste): string {
-        return fatorAjuste ? FatorAjusteLabelGenerator.generate(fatorAjuste) : this.getLabel('Global.Mensagens.Nenhum');
+        return fatorAjuste ? FatorAjusteLabelGenerator.generate(fatorAjuste) : this.getLabel('Nenhum');
     }
 
     openDialog(param: boolean) {
@@ -897,7 +896,7 @@ export class FuncaoTransacaoFormComponent implements OnInit {
     private inicializaFatoresAjuste(manual: Manual) {
         if (manual.fatoresAjuste) {
             if (this.analise.manual) {
-                // this.faS = cloneDeep(this.analise.manual.fatoresAjuste);
+                this.faS = _.cloneDeep(this.analise.manual.fatoresAjuste);
                 this.faS.sort((n1, n2) => {
                     if (n1.fator < n2.fator) {
                         return 1;

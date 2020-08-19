@@ -138,6 +138,7 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
                 this.funcoesDados = value;
                 if (!this.isView) {
                     this.analiseService.find(this.idAnalise).subscribe(analise => {
+                        this.analiseSharedDataService.analise = analise;
                         this.analise = analise;
                         this.disableAba = this.analise.metodoContagem === MessageUtil.INDICATIVA;
                         this.hideShowQuantidade = true;

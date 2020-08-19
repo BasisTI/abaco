@@ -259,6 +259,13 @@ export class AnaliseResumoComponent implements OnInit {
         if (this.selectedEquipes && this.selectedEquipes.length !== 0) {
             this.analiseService.salvarCompartilhar(this.selectedEquipes).subscribe((res) => {
                 this.mostrarDialog = false;
+                this.analise.compartilhadas = this.analise.compartilhadas.concat(this.selectedEquipes);
+                this.selectedEquipes.forEach( item => {
+                    this.equipeShare = this.equipeShare.filter(
+                        compartilha => {
+                            return compartilha.id !== item.id ? true : false;
+                        });
+                });
                 this.pageNotificationService.addSuccessMessage(this.getLabel('Análise compartilhada com sucesso!'));
                 this.limparSelecaoCompartilhar();
             });
@@ -271,6 +278,10 @@ export class AnaliseResumoComponent implements OnInit {
     public deletarCompartilhar() {
         if (this.selectedToDelete && this.selectedToDelete !== null) {
             this.analiseService.deletarCompartilhar(this.selectedToDelete.id).subscribe((res) => {
+                this.analise.compartilhadas = this.analise.compartilhadas.filter(
+                    compartilha => {
+                       return compartilha.id !== this.selectedToDelete.id ? true : false;
+                    });
                 this.mostrarDialog = false;
                 this.pageNotificationService.addSuccessMessage(this.getLabel('Compartilhamento removido com sucesso!'));
                 this.limparSelecaoCompartilhar();

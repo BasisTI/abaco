@@ -194,15 +194,10 @@ export class AnaliseListComponent implements OnInit {
 
     recuperarEquipe() {
         this.tipoEquipeService.dropDown().subscribe(response => {
+            this.teams = response;
             this.tipoEquipesToClone = response;
             const emptyTeam = new TipoEquipe();
             this.tipoEquipesToClone.unshift(emptyTeam);
-            this.tipoEquipeService.dropDownByUser().subscribe(res => {
-                this.teams = res;
-                this.customOptions['equipeResponsavel.nome'] = res.map((item) => {
-                    return {label: item.nome, value: item.id};
-                  });
-            });
         });
     }
 
@@ -255,13 +250,7 @@ export class AnaliseListComponent implements OnInit {
                 this.openModalCloneAnaliseEquipe(event.selection.id);
                 break;
             case 'compartilhar':
-                if (this.checkUserAnaliseEquipes()) {
-                    this.openCompartilharDialog();
-                } else {
-                    this.pageNotificationService.addErrorMessage(
-                        this.getLabel('Somente membros da equipe responsável podem compartilhar esta análise!')
-                    );
-                }
+               this.compartilharAnalise();
                 break;
             case 'relatorioAnaliseContagem':
                 this.gerarRelatorioContagem(event.selection);
@@ -269,22 +258,44 @@ export class AnaliseListComponent implements OnInit {
         }
     }
 
-    checkUserAnaliseEquipes() {
-        let retorno = false;
-        return this.analiseService.findWithFuncaos(this.analiseSelecionada.id).subscribe((res: any) => {
-            const jsonResponse = res[0].json();
-            jsonResponse['funcaoDados'] = res[1];
-            jsonResponse['funcaoTransacaos'] = res[2];
-            this.analiseTemp = this.analiseService.convertItemFromServer(jsonResponse);
-            this.analiseTemp.createdBy = jsonResponse.createdBy;
+    compartilharAnalise() {
+        let canShared = false;
+        return this.analiseService.find(this.analiseSelecionada.id).subscribe((res) => {
+            this.analiseTemp = this.analiseService.convertItemFromServer(res);
+            debugger;
             if (this.tipoEquipesLoggedUser) {
                 this.tipoEquipesLoggedUser.forEach(equipe => {
                     if (equipe.id === this.analiseTemp.equipeResponsavel.id) {
-                        retorno = true;
+                        canShared = true;
                     }
                 });
             }
-            return retorno;
+            if (canShared) {
+                    this.equipeShare = [];
+                        this.tipoEquipeService.findAllCompartilhaveis(
+                            this.analiseTemp.organizacao.id,
+                            this.analiseSelecionada.id,
+                            this.analiseTemp.equipeResponsavel.id)
+                            .subscribe((equipes) => {
+                                if (equipes) {
+                                    equipes.forEach((equipe) => {
+                                        const entity: AnaliseShareEquipe = Object.assign(new AnaliseShareEquipe(),
+                                            {
+                                                id: undefined,
+                                                equipeId: equipe.id,
+                                                analiseId: this.analiseSelecionada.id,
+                                                viewOnly: false, nomeEquipe: equipe.nome
+                                            });
+                                        this.equipeShare.push(entity);
+                                    });
+                                }
+                                this.mostrarDialog = true;
+                            });
+            } else {
+                this.pageNotificationService.addErrorMessage(
+                    this.getLabel('Somente membros da equipe responsável podem compartilhar esta análise!')
+                );
+            }
         });
 
     }
@@ -347,6 +358,7 @@ export class AnaliseListComponent implements OnInit {
                     // this.blockUI.start(this.getLabel('Global.Mensagens.EXCLUINDO_REGISTRO'));
                     this.analiseService.delete(analise.id).subscribe(() => {
                         this.recarregarDataTable();
+                        this.datatable.filter();
                         this.pageNotificationService.addDeleteMsg(analise.identificadorAnalise);
                     });
                 }
@@ -368,6 +380,7 @@ export class AnaliseListComponent implements OnInit {
         this.userAnaliseUrl = this.grupoService.grupoUrl + this.changeUrl();
         this.enableTable = false;
         this.recarregarDataTable();
+        this.datatable.filter();
     }
 
     public selectAnalise() {
@@ -380,7 +393,7 @@ export class AnaliseListComponent implements OnInit {
 
     public recarregarDataTable() {
         if (this.datatable) {
-            this.datatable.filterParams = [''];
+            this.datatable.filterParams = [];
             if (this.searchGroup && this.searchGroup.equipe &&  this.searchGroup.equipe.id) {
                 this.datatable.filterParams['equipe'] = this.searchGroup.equipe.id;
             }
@@ -399,7 +412,6 @@ export class AnaliseListComponent implements OnInit {
             if (this.searchGroup && this.searchGroup.usuario && this.searchGroup.usuario.id) {
                 this.datatable.filterParams['usuario'] = this.searchGroup.usuario.id;
             }
-            this.datatable.filter();
         }
     }
 
@@ -457,6 +469,7 @@ export class AnaliseListComponent implements OnInit {
         this.enableTable = true ;
         sessionStorage.setItem('searchGroup', JSON.stringify(this.searchGroup));
         this.recarregarDataTable();
+        this.datatable.filter();
     }
 
     public desabilitarBotaoRelatorio(): boolean {
@@ -470,7 +483,15 @@ export class AnaliseListComponent implements OnInit {
                 this.analiseTemp.dataHomologacao  =  new Date();
                 this.showDialogAnaliseBlock = true;
             } else {
-                if (this.checkUserAnaliseEquipes()) {
+                let canBloqued = false;
+                if (this.tipoEquipesLoggedUser) {
+                    this.tipoEquipesLoggedUser.forEach(equipe => {
+                        if (equipe.id === this.analiseTemp.equipeResponsavel.id) {
+                            canBloqued = true;
+                        }
+                    });
+                }
+                if (canBloqued) {
                     this.confirmationService.confirm({
                         message: this.mensagemDialogBloquear(bloquear),
                         accept: () => {
@@ -496,6 +517,7 @@ export class AnaliseListComponent implements OnInit {
                 const bloqueado = this.analiseTemp.bloqueiaAnalise;
                 this.mensagemAnaliseBloqueada(bloqueado, nome);
                 this.recarregarDataTable();
+                this.datatable.filter();
             });
         }
     }
@@ -510,48 +532,14 @@ export class AnaliseListComponent implements OnInit {
 
     private mensagemAnaliseBloqueada(retorno: boolean, nome: string) {
         if (retorno) {
-            // this.pageNotificationService.addUnblockMsgWithName(nome);
+            this.pageNotificationService.addSuccessMessage('Registro  desbloqueado com sucesso!');
         } else {
-            // this.pageNotificationService.addBlockMsgWithName(nome);
+            this.pageNotificationService.addSuccessMessage('Registro bloqueado com sucesso!');
         }
     }
 
-
-    public openCompartilharDialog() {
-        this.equipeShare = [];
-        this.analiseService.findWithFuncaos(this.analiseSelecionada.id).subscribe((res: any) => {
-            const jsonResponse = res[0].json();
-            jsonResponse['funcaoDados'] = res[1];
-            jsonResponse['funcaoTransacaos'] = res[2];
-            this.analiseTemp = this.analiseService.convertItemFromServer(jsonResponse);
-            this.analiseTemp.createdBy = jsonResponse.createdBy;
-            this.tipoEquipeService.findAllCompartilhaveis(
-                this.analiseTemp.organizacao.id,
-                this.analiseSelecionada.id,
-                this.analiseTemp.equipeResponsavel.id)
-                .subscribe((equipes) => {
-                    if (equipes) {
-                        equipes.forEach((equipe) => {
-                            const entity: AnaliseShareEquipe = Object.assign(new AnaliseShareEquipe(),
-                                {
-                                    id: undefined,
-                                    equipeId: equipe.id,
-                                    analiseId: this.analiseSelecionada.id,
-                                    viewOnly: false, nomeEquipe: equipe.nome
-                                });
-                            this.equipeShare.push(entity);
-                        });
-                    }
-                });
-        });
-
-        this.analiseService.findAllCompartilhadaByAnalise(this.analiseSelecionada.id).subscribe((shared) => {
-            this.analiseShared = shared;
-        });
-        this.mostrarDialog = true;
-    }
-
     public salvarCompartilhar() {
+        debugger;
         if (this.selectedEquipes && this.selectedEquipes.length !== 0) {
             this.analiseService.salvarCompartilhar(this.selectedEquipes).subscribe((res) => {
                 this.mostrarDialog = false;
@@ -564,7 +552,7 @@ export class AnaliseListComponent implements OnInit {
     }
 
     public deletarCompartilhar() {
-        if (this.selectedToDelete && this.selectedToDelete !== null) {
+        if (this.selectedToDelete && this.selectedToDelete.id > 0) {
             this.analiseService.deletarCompartilhar(this.selectedToDelete.id).subscribe((res) => {
                 this.mostrarDialog = false;
                 this.pageNotificationService.addSuccessMessage(this.getLabel('Compartilhamento removido com sucesso!'));
@@ -579,6 +567,7 @@ export class AnaliseListComponent implements OnInit {
         this.recarregarDataTable();
         this.selectedEquipes = undefined;
         this.selectedToDelete = undefined;
+        this.datatable.filter();
     }
 
     public updateViewOnly() {

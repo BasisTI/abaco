@@ -246,7 +246,7 @@ export class AnaliseService {
     }
 
     public findWithFuncaos(id: number): any {
-        let analise: Analise = new Analise();
+        const analise: Analise = new Analise();
         analise.id = id;
         return forkJoin(this.http.get(`${this.resourceUrl}/${id}`),
             this.funcaoDadosService.getFuncaoDadosByAnalise(analise),
@@ -320,7 +320,7 @@ export class AnaliseService {
     }
 
     private convert(analise: Analise): Analise {
-        return analise;
+        return analise.toJSONState();
     }
     findAllCompartilhadaByAnalise(analiseId: number): Observable<AnaliseShareEquipe[]> {
         const url = `${this.findCompartilhadaByAnaliseUrl}/${analiseId}`;

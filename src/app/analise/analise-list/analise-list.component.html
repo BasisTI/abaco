@@ -262,66 +262,79 @@
     </p-footer>
 </p-confirmDialog>
 
-<p-dialog *ngIf="equipeShare" header="Compartilhar Análise"
-          [(visible)]="mostrarDialog" [modal]="true" (onHide)="limparSelecaoCompartilhar()">
-    <p-dataTable
+<p-dialog *ngIf="equipeShare" header="Compartilhar Análise" [(visible)]="mostrarDialog" [modal]="true" (onHide)="limparSelecaoCompartilhar()" [style]="{width: '50vw'}" >
+    <p-table
             [(value)]="equipeShare"
             [headerCheckboxToggleAllPages]="true"
             [(selection)]="selectedEquipes"
             dataKey="equipeId"
             emptyMessage="Nenhuma outra equipe na sua organização pode ter acesso à essa análise">
 
-        <p-column
-                selectionMode="multiple"
-                [style]="{'width':'10%'}">
-        </p-column>
-
-        <p-column
-                header="Equipe"
-                field="nomeEquipe">
-        </p-column>
-
-        <p-column
-                header="Somente Visualizar?"
-                field="viewOnly"
-                [style]="{'width':'15%'}">
-            <ng-template let-col let-equipeShare="rowData" pTemplate="body">
-                <p-toggleButton [(ngModel)]="equipeShare.viewOnly" onLabel="Sim" offLabel="Não"></p-toggleButton>
+            <ng-template pTemplate="header">
+                <tr>
+                    <th style="text-align:left; width: 50px;"><p-tableHeaderCheckbox></p-tableHeaderCheckbox></th>
+                    <th>Equipe</th>
+                    <th>Somente visualizar ?</th>
+                </tr>
             </ng-template>
-        </p-column>
-    </p-dataTable>
+            <ng-template pTemplate="body" let-equipe>
+                <tr class="ui-selectable-row">
+                    <td >
+                        <p-tableCheckbox [value]=" equipe"></p-tableCheckbox>
+                    </td>
+                    <td>
+                        {{equipe.nomeEquipe}}
+                    </td>
+                    <td>
+                        <div class="p-col-12">
+                            <p-radioButton [value]="true" label="Sim" [(ngModel)]="equipe.viewOnly">
+                            </p-radioButton>
+                        </div>
+                        <div class="p-col-12">
+                            <p-radioButton [value]="false" label="Não" [(ngModel)]="equipe.viewOnly">
+                            </p-radioButton>
+                        </div>
+                    </td>
+                </tr>
+            </ng-template>
+    </p-table>
 
-    <app-green-button buttonLabel="Adicionar" (click)="salvarCompartilhar()"
-                      style="float:right; margin-top: 5px"></app-green-button>
+    <app-green-button buttonLabel="Adicionar" (click)="salvarCompartilhar()" style="float:right; margin-top: 5px"></app-green-button>
     <br/>
     <br/>
 
     <hr/>
     <h3 >Compartilhada com:</h3>
-    <p-dataTable
+    <p-table
             [(value)]="analiseTemp.compartilhadas"
             selectionMode="single"
             [(selection)]="selectedToDelete"
             dataKey="equipeId"
             emptyMessage="Nenhuma outra equipe tem acesso a essa análise">
-        <p-column
-                header="Equipe"
-                field="nomeEquipe">
-        </p-column>
 
-        <p-column
-                header="SomenteVisualizar"
-                field="viewOnly"
-                [style]="{'width':'15%'}">
-            <ng-template let-col let-analiseTemp="rowData" pTemplate="body">
-                <p-toggleButton [(ngModel)]="analiseTemp.viewOnly" onLabel="Sim" offLabel="Não"
-                                (onChange)="updateViewOnly()"></p-toggleButton>
+            <ng-template pTemplate="header">
+                <tr>
+                    <th style="text-align:left; width: 50px;"></th>
+                    <th>Equipe</th>
+                    <th>Somente visualizar ?</th>
+                </tr>
             </ng-template>
-        </p-column>
-    </p-dataTable>
+            <ng-template pTemplate="body" let-equipe>
+                <tr class="ui-selectable-row">
+                    <td >
+                        <p-radioButton [(ngModel)]="selectedToDelete" [value]="equipe"></p-radioButton>
+                    </td>
+                    <td>
+                        {{equipe.nomeEquipe}}
+                    </td>
+                    <td>
+                        {{equipe.viewOnly? 'Sim' : 'Não'}}
+                    </td>
+                </tr>
+            </ng-template>
+    </p-table>
 
-    <app-red-button buttonLabel="Remover" (click)="deletarCompartilhar()"
-                    style="float:right; margin-top: 5px"></app-red-button>
+    <app-red-button buttonLabel="Remover" (click)="deletarCompartilhar()" style="float:right; margin-top: 5px"></app-red-button>
 </p-dialog>
 <p-dialog header="Clonar para equipe" [(visible)]="showDialogAnaliseCloneTipoEquipe" [style]="{width: '50vw'}" [minHeight]="300" [modal]="true" >
     <div style="min-height:300px">

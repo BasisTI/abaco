@@ -50,7 +50,7 @@ export class SistemaListComponent {
     }
 
     public ngOnInit() {
-        if(this.datatable){
+        if (this.datatable) {
             this.datatable.pDatatableComponent.onRowSelect.subscribe((event) => {
                 this.sistemaSelecionado = event.data;
             });
@@ -130,24 +130,23 @@ export class SistemaListComponent {
         const stringParamsArray: Array<string> = [];
         this.searchParams.sigla = this.formatFieldForSearch(this.searchParams.sigla);
         this.searchParams.nomeSistema = this.formatFieldForSearch(this.searchParams.nomeSistema);
-        if(this.searchParams.sigla !== undefined && this.searchParams.sigla !== ''){
-            if(this.searchParams.sigla.includes(' ')){
+        if (this.searchParams.sigla !== undefined && this.searchParams.sigla !== '') {
+            if (this.searchParams.sigla.includes(' ')) {
                 stringParamsArray.length > 0 ? stringParamsArray.push(' AND sigla:\"' + this.searchParams.sigla + '\"') : stringParamsArray.push('sigla:\"' + this.searchParams.sigla + '\"'); 
-            }else{
+            } else {
                 stringParamsArray.length > 0 ? stringParamsArray.push(' AND sigla:*' + this.searchParams.sigla + '*') :  stringParamsArray.push('sigla:*' + this.searchParams.sigla + '*'); 
             }
         }
-        if(this.searchParams.nomeSistema !== undefined && this.searchParams.nomeSistema !== ''){
-            if(this.searchParams.nomeSistema.includes(' ')){
+        if (this.searchParams.nomeSistema !== undefined && this.searchParams.nomeSistema !== '') {
+            if (this.searchParams.nomeSistema.includes(' ')) {
                 stringParamsArray.length > 0 ? stringParamsArray.push(' AND nome:\"' + this.searchParams.nomeSistema + '\"') : stringParamsArray.push('nome:\"' + this.searchParams.nomeSistema + '\"'); 
-            }else{
+            } else {
                 stringParamsArray.length > 0 ? stringParamsArray.push(' AND nome:*' + this.searchParams.nomeSistema + '*') :  stringParamsArray.push(this.searchParams.nomeSistema); 
             }
         }
-        if(this.searchParams.organizacao.id !== undefined && this.searchParams.organizacao.id !== ''){
+        if (this.searchParams.organizacao.id !== undefined && this.searchParams.organizacao.id !== '') {
                 stringParamsArray.length > 0 ? stringParamsArray.push(' AND organizacao.id: '+ this.searchParams.sigla ) : stringParamsArray.push(' organizacao.id:' + this.searchParams.organizacao.id); 
         }
-       
         return stringParamsArray;
     }
 
@@ -175,18 +174,17 @@ export class SistemaListComponent {
       });
     }
 
-    let concatResultString = this.createString(paramsQueue);
+    const concatResultString = this.createString(paramsQueue);
 
     return concatResultString;
   }
 
   private createString(paramsQueue: Array<String>): string {
-    let concatedString: string = '';
+    let concatedString = '';
 
-    for(let i = 0 ; i< paramsQueue.length ; i ++) {
+    for (let i = 0 ; i < paramsQueue.length ; i ++) {
       (i !== 0) ? (concatedString = concatedString + ' + ' + paramsQueue[i]) : (concatedString = concatedString + paramsQueue[0]);
     }
-    
     return concatedString;
   }
 }

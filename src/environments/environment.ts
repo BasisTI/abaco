@@ -18,5 +18,4 @@ export const environment = {
         storage: localStorage,
         loginSuccessRoute: '/#/login-success'
     }
-    
 };

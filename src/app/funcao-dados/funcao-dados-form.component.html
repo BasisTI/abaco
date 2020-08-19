@@ -197,15 +197,15 @@
                             </div>
                         </div>
                     </div> -->
-                    <p-dialog [closable]="false" [(visible)]="showDialog" [(header)]="textHeader"
-                              [contentStyle]="{'height': ['windowHeightDialog']}"
-                              >
+                    <p-dialog [closable]="false" [(visible)]="showDialog" [(header)]="textHeader" [style]="{width: '80vw'}"
+                              [contentStyle]="{'height': ['windowHeightDialog']}">
 
-
-                        <app-analise-modulo-funcionalidade [erroModulo]="erroModulo" [isFuncaoDados]="true"
-                                                           (moduloSelectedEvent)="moduloSelected($event)"
-                                                           (funcionalidadeSelectedEvent)="functionalitySelected($event)">
-                        </app-analise-modulo-funcionalidade>
+                        <div *ngIf="analise && analise.sistema">
+                            <app-analise-modulo-funcionalidade [erroModulo]="erroModulo" [isFuncaoDados]="true"
+                                (moduloSelectedEvent)="moduloSelected($event)"
+                                (funcionalidadeSelectedEvent)="functionalitySelected($event)">
+                            </app-analise-modulo-funcionalidade>
+                        </div>
 
                         <div *ngIf="!isEdit">
                             <div class="ui-g" *ngIf="!showMultiplos">
@@ -416,7 +416,7 @@
         </div>
     </p-tabPanel>
 
-    <p-tabPanel [header]="this.getLabel('Funções de transação')" [disabled]="disableAba" ></p-tabPanel>
+    <p-tabPanel [header]="this.getLabel('Funções de Transação')" [disabled]="disableAba" ></p-tabPanel>
 
     <p-tabPanel [header]="this.getLabel('Resumo')"></p-tabPanel>
 </p-tabView>

@@ -4,7 +4,7 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { SecurityModule, VersionTagModule } from '@nuvem/angular-base';
-import { BreadcrumbModule, ErrorStackModule, MenuModule, PageNotificationModule } from '@nuvem/primeng-components';
+import { BreadcrumbModule, ErrorStackModule, MenuModule, PageNotificationModule, BlockUiModule } from '@nuvem/primeng-components';
 import { environment } from '../environments/environment';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -36,7 +36,6 @@ import { DashboardModule } from './dashboard/dashboard.module';
 import { RouterModule } from '@angular/router';
 import { LoginModule } from './login/login.module';
 import { PesquisarFuncaoTransacaoModule } from './pesquisar-ft/pesquisar-ft.module';
-
 @NgModule({
     declarations: [
         AppComponent,
@@ -64,7 +63,7 @@ import { PesquisarFuncaoTransacaoModule } from './pesquisar-ft/pesquisar-ft.modu
         ManualModule,
         EsforcoFaseModule,
         OrganizacaoModule,
-        ContratoModule,        
+        ContratoModule,
         FuncionalidadeModule,
         SistemaModule,
         ModuloModule,
@@ -79,7 +78,7 @@ import { PesquisarFuncaoTransacaoModule } from './pesquisar-ft/pesquisar-ft.modu
         LoginModule,
         DashboardModule,
         PesquisarFuncaoTransacaoModule,
-        
+        BlockUiModule,
     ],
     providers: [
         { provide: LocationStrategy, useClass: HashLocationStrategy },

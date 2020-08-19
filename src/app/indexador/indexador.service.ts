@@ -20,8 +20,8 @@ export class IndexadorService {
         const url = this.urlIndexarObject + '?lstIndexadores=' + lstIndexadores.toString();
         return this.http.get(url).pipe(
             finalize(
-                () => { 
-                    this.router.navigate(['/']); 
+                () => {
+                    this.router.navigate(['/dashboard']);
             })
         );
     }

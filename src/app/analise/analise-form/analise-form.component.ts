@@ -203,6 +203,7 @@ export class AnaliseFormComponent implements OnInit {
             if (params['id']) {
                 this.isEdicao = true;
                 this.analiseService.find(params['id']).subscribe(analise => {
+                    analise = new  Analise().copyFromJSON(analise);
                     this.loadDataAnalise(analise);
                     this.disableFuncaoTrasacao = analise.metodoContagem === MessageUtil.INDICATIVA;
                     this.canEditMetodo = !(this.isEdicao) || (this.route.snapshot.paramMap.get('clone')) && this.analise.metodoContagem === MetodoContagem.ESTIMADA;
@@ -496,7 +497,11 @@ export class AnaliseFormComponent implements OnInit {
                     this.diasGarantia = this.analise.contrato.diasDeGarantia;
                 });
             } else {
-                this.subscribeToSaveResponse(this.analiseService.create(this.analise));
+                this.analiseService.create(this.analise).subscribe(res => {
+                    this.analise = res;
+                    this.pageNotificationService.addSuccessMessage(this.getLabel('Análise salva com sucesso'));
+                    this.router.navigate(['/analise', this.analise.id, 'edit']);
+                });
             }
         }
     }
@@ -506,12 +511,10 @@ export class AnaliseFormComponent implements OnInit {
         const validacaoContrato = this.analise.contrato ? true : false;
         const validacaoMetodoContagem = this.analise.metodoContagem ? true : false;
         const validacaoTipoAnallise = this.analise.tipoAnalise ? true : false;
-
         this.validacaoCampos = !(validacaoIdentificadorAnalise === true
             && validacaoContrato === true
             && validacaoMetodoContagem === true
             && validacaoTipoAnallise === true);
-
         this.enableDisableAba();
     }
 
@@ -662,10 +665,9 @@ export class AnaliseFormComponent implements OnInit {
     }
 
     private subscribeToSaveResponse(result: Observable<any>) {
-        this.saveSubscription = result.subscribe((res: Analise) => {
+        this.saveSubscription = result.subscribe((res) => {
             this.analise = res;
             this.pageNotificationService.addSuccessMessage(this.getLabel('Análise salva com sucesso'));
-
             this.router.navigate(['/analise', this.analise.id, 'edit']);
         });
     }
@@ -675,10 +677,10 @@ export class AnaliseFormComponent implements OnInit {
             if (this.analise.metodoContagem !== MetodoContagem.INDICATIVA) {
                 this.analise.funcaoTransacaos = [];
             }
-        }else{
-            if(this.analise.metodoContagem === MetodoContagem.DETALHADA){
+        } else {
+            if (this.analise.metodoContagem === MetodoContagem.DETALHADA) {
                 this.analise.enviarBaseline = true;
-            }else{
+            } else {
                 this.analise.enviarBaseline = false;
             }
 
