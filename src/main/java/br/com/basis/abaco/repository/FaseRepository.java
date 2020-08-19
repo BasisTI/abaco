@@ -16,6 +16,8 @@ public interface FaseRepository extends JpaRepository<Fase, Long> {
 
     Boolean existsByNome(String nome);
 
+    Boolean existsByNomeAndIdNot(String nome, Long id);
+
     @Query("SELECT new br.com.basis.abaco.service.dto.FaseDTO(f.id, f.nome)" +
         " FROM Fase f WHERE (:#{#filtro.id} IS NULL OR  f.id = :#{#filtro.id})" +
         " AND ( :#{#filtro.nome} IS NULL OR LOWER(f.nome) LIKE " +

@@ -53,7 +53,9 @@ public class FaseService {
     }
 
     private void validaNome(Fase fase) {
-        if (repository.existsByNome(fase.getNome())) {
+        if ((fase.getId() == null || fase.getId() == 0)  && repository.existsByNome(fase.getNome())) {
+            throw new CustomParameterizedException(ErrorConstants.FASE_CADASTRADA);
+        } else if(fase.getId() != null && fase.getId() > 0  && repository.existsByNomeAndIdNot(fase.getNome(), fase.getId())){
             throw new CustomParameterizedException(ErrorConstants.FASE_CADASTRADA);
         }
     }
