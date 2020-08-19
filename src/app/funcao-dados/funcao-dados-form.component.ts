@@ -490,6 +490,7 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
         let retorno: boolean = !this.verifyDataRequire();
         this.desconverterChips();
         this.verificarModulo();
+        this.seletedFuncaoDados = new FuncaoDados().copyFromJSON(this.seletedFuncaoDados);
         const funcaoDadosCalculada = Calculadora.calcular(this.analise.metodoContagem,
                 this.seletedFuncaoDados,
                 this.analise.contrato.manual);
@@ -684,6 +685,7 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
                 .subscribe(existFuncaoDado => {
                     this.desconverterChips();
                     this.verificarModulo();
+                    this.seletedFuncaoDados = new FuncaoDados().copyFromJSON(this.seletedFuncaoDados);
                     const funcaoDadosCalculada = Calculadora.calcular(
                         this.analise.metodoContagem, this.seletedFuncaoDados, this.analise.contrato.manual);
                     this.funcaoDadosService.update(funcaoDadosCalculada).subscribe(value => {

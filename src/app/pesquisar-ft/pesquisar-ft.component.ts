@@ -22,7 +22,6 @@ import {Router} from '@angular/router';
 import { Subscription, forkJoin, Observable } from 'rxjs';
 import { DatatableComponent, PageNotificationService } from '@nuvem/primeng-components';
 import { AnaliseSharedDataService } from '../shared/analise-shared-data.service';
-import { ResponseWrapper } from '../shared';
 
 @Component({
     selector: 'app-pesquisar-ft',
@@ -38,13 +37,13 @@ export class PesquisarFtComponent implements OnInit {
 
     query: String = '*';
 
-    modPesquisa: boolean = true;
+    modPesquisa = true;
 
-    funcPesquisa: boolean = true;
+    funcPesquisa = true;
 
-    deflaPesquisa: boolean = true;
+    deflaPesquisa = true;
 
-    hideShowQuantidade: boolean = true;
+    hideShowQuantidade = true;
 
     isEdit: boolean;
 
@@ -102,7 +101,7 @@ export class PesquisarFtComponent implements OnInit {
 
     basilineAnaliticosList: any;
 
-    erroUnitario: boolean = false;
+    erroUnitario = false;
 
     deflaPadrao: SelectItem = {label: 'Não Alterar', value: 'original-bAsis'};
 
@@ -357,7 +356,7 @@ export class PesquisarFtComponent implements OnInit {
         const saveFuncaoTransacoes: Observable<FuncaoTransacao>[] = [];
         if (!(this.novoDeflator)) {
             this.deflaPesquisa = false;
-        }else if(this.novoDeflator.tipoAjuste === 'UNITARIO'&& this.quantidadeINM <= 0 ){
+        } else if (this.novoDeflator.tipoAjuste === 'UNITARIO' && this.quantidadeINM <= 0 ) {
             this.erroUnitario = true;
         } else {
             this.erroUnitario = false;
@@ -376,9 +375,10 @@ export class PesquisarFtComponent implements OnInit {
                     });
                     if (this.novoDeflator != null) {
                         funcaoTransacaoResp.fatorAjuste = this.novoDeflator;
-                        if(this.novoDeflator.tipoAjuste === 'UNITARIO'){
+                        if (this.novoDeflator.tipoAjuste === 'UNITARIO') {
                             funcaoTransacaoResp.quantidade = this.quantidadeINM;
                         }
+                        funcaoTransacaoResp = new FuncaoTransacao().copyFromJSON(funcaoTransacaoResp);
                         funcaoTransacaoResp = CalculadoraTransacao.calcular(this.analise.metodoContagem, funcaoTransacaoResp, this.analise.manual);
                     }
                     this.validaCamposObrigatorios();

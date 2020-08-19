@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { DatatableClickEvent, DatatableComponent, PageNotificationService } from '@nuvem/primeng-components';
-import { ConfirmationService, LazyLoadEvent } from 'primeng';
+import { ConfirmationService } from 'primeng';
 import { Subscription } from 'rxjs';
 import { Organizacao, OrganizacaoService } from 'src/app/organizacao';
 import { Sistema, SistemaService } from 'src/app/sistema';
@@ -65,7 +65,7 @@ export class AnaliseListComponent implements OnInit {
     enableTable: Boolean = false;
     notLoadFilterTable = false;
     analisesList: any[] = [];
-
+    isLoadFilter = true;
     constructor(
         private router: Router,
         private confirmationService: ConfirmationService,
@@ -262,7 +262,6 @@ export class AnaliseListComponent implements OnInit {
         let canShared = false;
         return this.analiseService.find(this.analiseSelecionada.id).subscribe((res) => {
             this.analiseTemp = this.analiseService.convertItemFromServer(res);
-            debugger;
             if (this.tipoEquipesLoggedUser) {
                 this.tipoEquipesLoggedUser.forEach(equipe => {
                     if (equipe.id === this.analiseTemp.equipeResponsavel.id) {
@@ -297,7 +296,6 @@ export class AnaliseListComponent implements OnInit {
                 );
             }
         });
-
     }
 
     checkIfUserCanEdit() {
@@ -539,7 +537,6 @@ export class AnaliseListComponent implements OnInit {
     }
 
     public salvarCompartilhar() {
-        debugger;
         if (this.selectedEquipes && this.selectedEquipes.length !== 0) {
             this.analiseService.salvarCompartilhar(this.selectedEquipes).subscribe((res) => {
                 this.mostrarDialog = false;
@@ -596,5 +593,9 @@ export class AnaliseListComponent implements OnInit {
     }
     public setParamsLoad() {
         this.recarregarDataTable();
+        if (this.isLoadFilter) {
+            this.datatable.filter();
+            this.isLoadFilter = false;
+        }
     }
 }

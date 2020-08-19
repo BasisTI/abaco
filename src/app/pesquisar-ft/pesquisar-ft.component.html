@@ -53,24 +53,42 @@
     </div>
     <p-fieldset [legend]="this.getLabel('Fases')" [collapsed]="false">
         <div class="ui-g-12 ui-md-12 ui-sm-12" style="margin-bottom: 05px">
-            <basis-datatable type="memory" dataKey="id" [value]="fn" selectionMode="multiple" [disableEdit]="true" [disableView]="true" [disableDelete]="true" [(selection)]="selections" #datatable>
-                <p-column selectionMode="multiple" [style]="{'width':'5%'}" ></p-column>
-                <p-column [header]="this.getLabel('Modulo')"
-                    [style]="{'width': '25%'}">
-                    <ng-template let-nomeModulo="rowData.nomeModulo" pTemplate="body">
-                        {{ nomeModulo }}
-                    </ng-template>
-                </p-column>
-                <p-column [header]="this.getLabel('Funcionalidade')"
-                    [style]="{'width': '25%'}">
-                    <ng-template let-nomeFuncionalidade="rowData.nomeFuncionalidade" pTemplate="body">
-                        {{ nomeFuncionalidade}}
-                    </ng-template>
-                </p-column>
-                <p-column field="name" [header]="this.getLabel('Nome')" [style]="{'width': '25%'}">
-                </p-column>
-                <p-column field="classificacao" header="Classif." [style]="{'width': '10%'}"></p-column>                        
-            </basis-datatable>
+            <p-table
+                [value]="fn"
+                [(selection)]="selections" >
+                <ng-template pTemplate="caption">
+                    Função de transação
+                </ng-template>
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th style="text-align:left"><p-tableHeaderCheckbox></p-tableHeaderCheckbox></th>
+                        <th pSortableColumn="fase.nome">Modulo <p-sortIcon></p-sortIcon></th>
+                        <th pSortableColumn="fase.nome">Funcionalidade <p-sortIcon></p-sortIcon></th>
+                        <th pSortableColumn="fase.nome">Nome <p-sortIcon></p-sortIcon></th>
+                        <th pSortableColumn="esforco">classificação <p-sortIcon></p-sortIcon></th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-funcaoTransacao>
+                    <tr class="ui-selectable-row">
+                        <td >
+                            <p-tableCheckbox [value]="funcaoTransacao"></p-tableCheckbox>
+                        </td>
+                        <td>
+                            {{funcaoTransacao.nomeModulo}}
+                        </td>
+                        <td>
+                            {{funcaoTransacao.nomeFuncionalidade}}
+                        </td>
+                        <td>
+                            {{funcaoTransacao.nome}}
+                        </td>
+                        <td>
+                            {{funcaoTransacao.classificacao}}
+                        </td>
+                    </tr>
+                </ng-template>
+            </p-table>
+            
         </div>
         <div class="ui-g-12">
             <div class="ui-g-3 ui-md-4 ui-sm-6">

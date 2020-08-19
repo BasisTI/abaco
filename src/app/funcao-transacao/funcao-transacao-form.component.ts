@@ -638,6 +638,7 @@ export class FuncaoTransacaoFormComponent implements OnInit {
                 if (!existFuncaoTransacao) {
                     this.desconverterChips();
                     this.verificarModulo();
+                    this.currentFuncaoTransacao = new FuncaoTransacao().copyFromJSON(this.currentFuncaoTransacao);
                     const funcaoTransacaoCalculada = CalculadoraTransacao.calcular(
                         this.analise.metodoContagem, this.currentFuncaoTransacao, this.analise.contrato.manual);
                     this.funcaoTransacaoService.update(funcaoTransacaoCalculada).subscribe(value => {
@@ -848,7 +849,7 @@ export class FuncaoTransacaoFormComponent implements OnInit {
     confirmDelete(funcaoTransacaoSelecionada: FuncaoTransacao) {
         this.confirmationService.confirm({
             message: `${
-                this.getLabel('Cadastros.FuncaoTransacao.Mensagens.msgTemCertezaQueDesejaExcluirFuncaoDeTransacao')
+                this.getLabel('Tem certeza que deseja excluir a Função de Transação')
             } '${funcaoTransacaoSelecionada.name}'?`,
             accept: () => {
                 this.funcaoTransacaoService.delete(funcaoTransacaoSelecionada.id).subscribe(value => {

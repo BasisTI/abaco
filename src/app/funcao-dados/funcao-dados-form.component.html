@@ -30,6 +30,9 @@
                                             (buttonClick)="datatableClick($event)"
                                             [paginator]="false"
                                             [scrollable]="true"
+                                            [rows]="20"
+                                            [rowsPerPageOptions]="[20,50,100]"
+                                            [showVisibleColumnsControl]="true"
                                             >
                                         <basis-datatable-button
                                             name="crud"

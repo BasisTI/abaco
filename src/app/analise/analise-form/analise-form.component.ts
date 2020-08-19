@@ -443,7 +443,7 @@ export class AnaliseFormComponent implements OnInit {
 
     private ordenarManuais(contrato: Contrato) {
         contrato.manualContrato = contrato.manualContrato.sort((a, b): number => {
-            if(b.ativo && a.ativo){
+            if (b.ativo && a.ativo) {
 
                 if ((a.dataInicioVigencia.getTime() === b.dataInicioVigencia.getTime())) {
                     if (a.dataFimVigencia.getTime() < b.dataFimVigencia.getTime()) {
@@ -456,9 +456,9 @@ export class AnaliseFormComponent implements OnInit {
                     return -1;
                 }
                 return 1;
-            }else if(!(a.ativo) && b.ativo){
-                return 1
-            }else{
+            } else if (!(a.ativo) && b.ativo) {
+                return 1;
+            } else {
                 return -1;
             }
         });

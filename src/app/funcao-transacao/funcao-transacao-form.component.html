@@ -33,9 +33,12 @@
                                         (buttonClick)="datatableClick($event)"
                                         (selectRow)="selectRow($event)"
                                         (dblclick)="onRowDblclick($event)"
+                                        [rows]="20"
+                                        [rowsPerPageOptions]="[20,50,100]"
                                         [responsive]="true"
                                         scrollable="true"
                                         scrollWidth="100%"
+                                        [showVisibleColumnsControl]="true"
                                         [multiSortMeta]="defaultSort">
 
 
