@@ -53,11 +53,7 @@
     </div>
     <p-fieldset [legend]="this.getLabel('Fases')" [collapsed]="false">
         <div class="ui-g-12 ui-md-12 ui-sm-12" style="margin-bottom: 05px">
-            <basis-datatable type="memory" dataKey="id"
-                [value]="fn"
-                selectionMode="multiple"
-                [(selection)]="selections"
-                #datatable>
+            <basis-datatable type="memory" dataKey="id" [value]="fn" selectionMode="multiple" [disableEdit]="true" [disableView]="true" [disableDelete]="true" [(selection)]="selections" #datatable>
                 <p-column selectionMode="multiple" [style]="{'width':'5%'}" ></p-column>
                 <p-column [header]="this.getLabel('Modulo')"
                     [style]="{'width': '25%'}">
@@ -71,8 +67,7 @@
                         {{ nomeFuncionalidade}}
                     </ng-template>
                 </p-column>
-                <p-column field="name" [header]="this.getLabel('Nome')"
-                    [style]="{'width': '25%'}">
+                <p-column field="name" [header]="this.getLabel('Nome')" [style]="{'width': '25%'}">
                 </p-column>
                 <p-column field="classificacao" header="Classif." [style]="{'width': '10%'}"></p-column>                        
             </basis-datatable>

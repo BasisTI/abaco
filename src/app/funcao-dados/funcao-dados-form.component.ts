@@ -109,7 +109,7 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
     public displayDescriptionDeflator = false;
     public funcoesDados: FuncaoDados[];
     public disableAba = false;
-    private analise: Analise;
+    public analise: Analise;
     public seletedFuncaoDados: FuncaoDados = new FuncaoDados();
 
     constructor(
