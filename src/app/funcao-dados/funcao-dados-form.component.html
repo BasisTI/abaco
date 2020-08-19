@@ -32,8 +32,7 @@
                                             [scrollable]="true"
                                             [rows]="20"
                                             [rowsPerPageOptions]="[20,50,100]"
-                                            [showVisibleColumnsControl]="true"
-                                            >
+                                            [showVisibleColumnsControl]="true">
                                         <basis-datatable-button
                                             name="crud"
                                             *ngIf="!isView"
@@ -438,7 +437,7 @@
     </p-footer>
 </p-dialog>
 <p-dialog header="Visualizar Função de Dados" [(visible)]="viewFuncaoDados" [responsive]="true" [style]="{width: '80vw'}" >
-   <div *ngIf="seletedFuncaoDados && seletedFuncaoDados.funcionalidade">
+   <div *ngIf="seletedFuncaoDados && seletedFuncaoDados.funcionalidade && viewFuncaoDados">
         <div class="ui-g">
             <div class="ui-md-6 ui-sm-12">
                 <label><b>Modulo: </b></label>

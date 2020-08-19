@@ -40,7 +40,6 @@ export class FaseListComponent implements OnInit {
     }
 
     editarClickEvent(tipoFaseSelecionada: Fase){
-        
         this.router.navigate(['/fase', tipoFaseSelecionada.id, 'edit']);
     }
 
@@ -68,25 +67,24 @@ export class FaseListComponent implements OnInit {
         this.filtro = new FaseFilter();
     }
     onClick(event: DatatableClickEvent){
-        switch(event.button) { 
-            case 'edit': { 
+        switch(event.button) {
+            case 'edit': {
                 this.abrirEditar(event.selection);
-               break; 
+               break;
             }
-            case 'view': { 
+            case 'view': {
                 this.abrirVisualizar(event.selection);
-                break; 
+                break;
             }
-            case 'delete': { 
+            case 'delete': {
                 this.confirmDelete(event.selection);
-               break; 
-            } 
-            default: { 
-               break; 
-            } 
-         } 
+               break;
+            }
+            default: {
+               break;
+            }
+         }
     }
 }
- 
 
 

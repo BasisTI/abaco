@@ -447,8 +447,8 @@
         <app-pesquisar-ft></app-pesquisar-ft>
     </p-dialog>
 </div>
-<p-dialog header="Visualizar Função de Dados" [(visible)]="viewFuncaoTransacao" [responsive]="true" [style]="{width: '80vw'}" >
-    <div *ngIf="currentFuncaoTransacao && currentFuncaoTransacao.funcionalidade">
+<p-dialog header="Visualizar Função de Dados" [(visible)]="viewFuncaoTransacao"  [style]="{width: '80vw'}" >
+    <div *ngIf="currentFuncaoTransacao && currentFuncaoTransacao.funcionalidade && viewFuncaoTransacao">
          <div class="ui-g">
              <div class="ui-md-6 ui-sm-12">
                  <label><b>Modulo: </b></label>
@@ -474,7 +474,7 @@
                  <label><b>Complexidade: </b></label>
                  {{currentFuncaoTransacao.complexidade}}
              </div>
-             <div class="ui-md-6 ui-sm-12">
+             <div class="ui-md-6 ui-sm-12" >
                  <div>
                      <label><b>Deflator: </b></label>
                      {{currentFuncaoTransacao.fatorAjuste.origem}} - {{currentFuncaoTransacao.fatorAjuste.codigo}} - {{currentFuncaoTransacao.fatorAjuste.nome}} - {{currentFuncaoTransacao.fatorAjuste.fator}} {{ currentFuncaoTransacao.fatorAjuste.tipoAjuste === 'PERCENTUAL'? '%' : 'pf'}} 

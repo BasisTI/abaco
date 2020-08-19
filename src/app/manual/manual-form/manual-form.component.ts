@@ -17,7 +17,6 @@ import {FileUpload, SelectItem} from 'primeng';
     selector: 'jhi-manual-form',
     templateUrl: './manual-form.component.html',
     providers: [ManualService, ConfirmationService]
-    
 })
 export class ManualFormComponent implements OnInit, OnDestroy {
     manual: Manual;
@@ -64,8 +63,7 @@ export class ManualFormComponent implements OnInit, OnDestroy {
     }
 
     getLabel(label) {
-        let str: any;
-        return str;
+        return label;
     }
 
     ngOnInit() {
@@ -77,7 +75,7 @@ export class ManualFormComponent implements OnInit, OnDestroy {
             this.manual.esforcoFases = [];
             if (params['id']) {
                 this.manualService.find(params['id']).subscribe(manual => {
-                    this.manual = manual;
+                    this.manual = new Manual().copyFromJSON(manual);
                     this.isEdit = true;
                     if (this.manual.arquivoManualId) {
                         this.getFile();
@@ -112,7 +110,6 @@ export class ManualFormComponent implements OnInit, OnDestroy {
             }
         });
     }
-    
     private checkIfManualAlreadyExists(registeredPhases: Array<Fase>): boolean {
         let isAlreadyRegistered = false;
         if (registeredPhases) {
@@ -209,7 +206,7 @@ export class ManualFormComponent implements OnInit, OnDestroy {
     privateExibirMensagemCamposInvalidos(codErro: number) {
         switch (codErro) {
             case 1:
-                this.pageNotificationService.addErrorMessage('Campos inválidos: '+ this.getInvalidFieldsString());
+                this.pageNotificationService.addErrorMessage('Campos inválidos: ' + this.getInvalidFieldsString());
                 this.invalidFields = [];
                 return;
             case 2:
@@ -260,7 +257,6 @@ export class ManualFormComponent implements OnInit, OnDestroy {
     }
 
     datatableClick(event: DatatableClickEvent) {
-        
         if (!event.selection) {
             return;
         }
@@ -276,7 +272,6 @@ export class ManualFormComponent implements OnInit, OnDestroy {
     }
 
     adjustFactorDatatableClick(event: DatatableClickEvent) {
-        
         if (!event.selection) {
             return;
         }
@@ -372,7 +367,7 @@ export class ManualFormComponent implements OnInit, OnDestroy {
         });
         if (totalPhase > 100) {
             this.pageNotificationService.addErrorMessage('LimiteEsfocoExcedido');
-        }else if (this.checkPhaseEffortRequiredFields(this.newPhaseEffort)) {
+        } else if (this.checkPhaseEffortRequiredFields(this.newPhaseEffort)) {
             this.manual.addEsforcoFases(this.newPhaseEffort);
             this.pageNotificationService.addCreateMsg();
             this.closeDialogPhaseEffort();

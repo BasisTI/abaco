@@ -516,6 +516,7 @@ export class FuncaoTransacaoFormComponent implements OnInit {
             if (this.currentFuncaoTransacao.fatorAjuste !== undefined) {
                 this.desconverterChips();
                 this.verificarModulo();
+                this.currentFuncaoTransacao = new FuncaoTransacao().copyFromJSON(this.currentFuncaoTransacao);
                 const funcaoTransacaoCalculada: FuncaoTransacao = CalculadoraTransacao.calcular(this.analise.metodoContagem,
                     this.currentFuncaoTransacao,
                     this.analise.contrato.manual);

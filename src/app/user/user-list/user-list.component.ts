@@ -152,7 +152,10 @@ export class UserListComponent implements OnInit {
     }
 
     abrirEditar() {
-        this.router.navigate(['/admin/user', this.usuarioSelecionado.id, 'edit']);
+        const id = this.usuarioSelecionado.id;
+        if (id > 0 ) {
+            this.router.navigate(['/admin/user', id, 'edit']);
+        }
     }
 
     confirmDelete(user: User) {
@@ -225,6 +228,11 @@ export class UserListComponent implements OnInit {
         querySearch = (querySearch.endsWith('&')) ? querySearch.slice(0, -1) : querySearch;
 
         return this.userService.searchUrl + querySearch;
+    }
+    setParamsLoad() {
+        this.datatable.pDatatableComponent.onRowSelect.subscribe((event) => {
+            this.usuarioSelecionado = event.data;
+        });
     }
 
 }

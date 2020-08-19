@@ -180,64 +180,66 @@
                     <basis-datatable-button
                             *ngIf="blocked"
                             name="desbloquear"
-                            tooltip="desbloquear"
+                            [bTooltip]="datatable.selectedRow != null ? 'Desbloquear' : 'Escolha um registro para desbloquear.'"
                             icon="block"
                             (click)="bloqueiaAnalise(blocked)"
+                            [disabled]="datatable.selectedRow == null"
                             class="ui-button-success">
                     </basis-datatable-button>
 
                     <basis-datatable-button
                             *ngIf="!blocked && inicial"
                             name="bloquear"
-                            tooltip="Bloquear"
+                            [bTooltip]="datatable.selectedRow != null ? 'Bloquear' : 'Escolha um registro para bloquear.'"
                             icon="block"
                             (click)="bloqueiaAnalise(blocked)"
+                            [disabled]="datatable.selectedRow == null"
                             class="ui-button-danger">
                     </basis-datatable-button>
 
                     <basis-datatable-button
                             name="compartilhar"
-                            [tooltip]="compartilharTooltip()"
+                            [bTooltip]="compartilharTooltip()"
                             icon="share"
                             class="ui-button-info"
-                            disabled="desabilitarBotaoRelatorio()">
+                            [disabled]="datatable.selectedRow == null">
                     </basis-datatable-button>
 
                     <basis-datatable-button
                             name="clone"
-                            [tooltip]="clonarTooltip()"
+                            [bTooltip]="clonarTooltip()"
                             icon="content-copy"
-                            disabled="desabilitarBotaoRelatorio()">
+                            [disabled]="datatable.selectedRow == null">
                     </basis-datatable-button>
 
                     <basis-datatable-button
                             name="relatorioBrowserDetalhado"
-                            [tooltip]="relatorioTooltip()"
+                            [bTooltip]="relatorioTooltip()"
                             icon="description"
-                            disabled="desabilitarBotaoRelatorio()">
+                            [disabled]="datatable.selectedRow == null">
                     </basis-datatable-button>
 
                     <basis-datatable-button
                             name="relatorioExcelDetalhado"
-                            [tooltip]="relatorioExcelTooltip()"
+                            [bTooltip]="relatorioExcelTooltip()"
                             icon="description"
-                            disabled="desabilitarBotaoRelatorio()"
+                            [disabled]="datatable.selectedRow == null"
                             class="ui-button-success">
                     </basis-datatable-button>
 
                     <basis-datatable-button
                             name="relatorioAnaliseContagem"
-                            [tooltip]="relatorioContagemTooltip()"
+                            [bTooltip]="relatorioContagemTooltip()"
                             icon="description"
-                            disabled="desabilitarBotaoRelatorio()"
+                            [disabled]="datatable.selectedRow == null"
                             class="ui-button-danger">
                     </basis-datatable-button>
 
                     <basis-datatable-button
                             name="cloneParaEquipe"
-                            [tooltip]="clonarParaEquipeTooltip()"
+                            [btooltip]="clonarParaEquipeTooltip()"
                             icon="content-copy"
-                            disabled="desabilitarBotaoRelatorio()"
+                            [disabled]="datatable.selectedRow == null"
                             class="ui-button-success">
                     </basis-datatable-button>
                 </basis-datatable>

@@ -125,41 +125,41 @@ export class AnaliseListComponent implements OnInit {
     }
 
     clonarTooltip() {
-        if (!this.analiseSelecionada.id) {
+        if (!(this.datatable && this.datatable.selectedRow) ) {
             return this.getLabel('Selecione um registro para clonar');
         }
         return this.getLabel('Clonar');
     }
     clonarParaEquipeTooltip() {
-        if (!this.analiseSelecionada.id) {
+        if (!(this.datatable && this.datatable.selectedRow)) {
             return this.getLabel('Selecione um registro para clonar');
         }
-        return this.getLabel('Clonar Para Equipe');
+        return this.getLabel('Clonar para Equipe');
     }
 
     compartilharTooltip() {
-        if (!this.analiseSelecionada.id) {
+        if (!(this.datatable && this.datatable.selectedRow)) {
             return this.getLabel('Selecione um registro para compartilhar');
         }
         return this.getLabel('Compartilhar Analise');
     }
 
     relatorioTooltip() {
-        if (!this.analiseSelecionada.id) {
+        if (!(this.datatable && this.datatable.selectedRow)) {
             return this.getLabel('Selecione um registro para gerar o relatório');
         }
         return this.getLabel('Relatório Detalhado');
     }
 
     relatorioExcelTooltip() {
-        if (!this.analiseSelecionada.id) {
+        if (!(this.datatable && this.datatable.selectedRow)) {
             return this.getLabel('Selecione um registro para gerar o relatório');
         }
         return this.getLabel(' Relatório Excel');
     }
 
     relatorioContagemTooltip() {
-        if (!this.analiseSelecionada.id) {
+        if (!(this.datatable && this.datatable.selectedRow)) {
             return this.getLabel('Selecione um registro para gerar o relatório');
         }
         return this.getLabel('Relatório de Fundamentação');
@@ -471,7 +471,7 @@ export class AnaliseListComponent implements OnInit {
     }
 
     public desabilitarBotaoRelatorio(): boolean {
-        return !this.analiseSelecionada;
+        return !this.datatable;
     }
 
     public bloqueiaAnalise(bloquear: boolean) {

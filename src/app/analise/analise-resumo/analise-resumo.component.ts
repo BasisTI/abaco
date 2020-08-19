@@ -82,8 +82,8 @@ export class AnaliseResumoComponent implements OnInit {
             if (this.idAnalise) {
                 if (!this.isView) {
                     this.analiseService.find(this.idAnalise).subscribe(analise => {
-                        this.analiseSharedDataService.analise = analise;
-                        this.analise = analise;
+                        this.analiseSharedDataService.analise = new Analise().copyFromJSON(analise);
+                        this.analise =  new Analise().copyFromJSON(analise);
                         this.disableAba = analise.metodoContagem === MessageUtil.INDICATIVA;
                         this.complexidades = AnaliseSharedUtils.complexidades;
                         this.resumoTotal = this.analiseSharedDataService.analise.resumoTotal;

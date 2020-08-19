@@ -47,26 +47,25 @@ export class LoginComponent implements OnInit, OnDestroy {
   login() {
 
     if (!this.username || !this.password) {
-      this.pageNotificationService.addErrorMessage(this.getLabel('Global.Mensagens.FavorPreencherCamposObrigatorios'));
+      this.pageNotificationService.addErrorMessage(this.getLabel('Por favor preencher campos obrigatórios'));
       return;
     }
 
     if (this.password.length < 4) {
-      this.pageNotificationService.addErrorMessage(this.getLabel('Login.Mensagens.msgASenhaPrecisaTerNoMinimo4Caracteres'));
+      this.pageNotificationService.addErrorMessage(this.getLabel('A senha precisa ter no mínimo 4 caracteres!'));
       return;
     }
 
     this.loginService.login(this.username, this.password).subscribe(response => {
       this.authService.login();
       this.router.navigate(['/dashboard']);
-      
     }, error => {
       switch (error.status) {
         case 401: {
-          this.pageNotificationService.addErrorMessage(this.getLabel('Login.Mensagens.msgUsuarioOuSenhaInvalidos'));
+          this.pageNotificationService.addErrorMessage(this.getLabel('Usuário ou senha inválidos!'));
         } break;
         case 400: {
-          this.pageNotificationService.addErrorMessage(this.getLabel('Login.Mensagens.msgUsuarioOuSenhaInvalidos'));
+          this.pageNotificationService.addErrorMessage(this.getLabel('Usuário ou senha inválidos!'));
         } break;
       }
     });

@@ -22,6 +22,7 @@
                             [url]="searchUrl"
                             (dblclick)="onRowDblclick($event)"
                             (buttonClick)="datatableClick($event)"
+                            (finishedLoading)="setParamsLoad()"
                             [rows]="20"
                             [rowsPerPageOptions]="rowsPerPageOptions"
                             [showPaginationFooter]="true"

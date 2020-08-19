@@ -567,6 +567,7 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
         } else {
             this.desconverterChips();
             this.verificarModulo();
+            this.seletedFuncaoDados = new FuncaoDados().copyFromJSON(this.seletedFuncaoDados);
             const funcaoDadosCalculada = Calculadora.calcular(this.analise.metodoContagem,
                 this.seletedFuncaoDados,
                 this.analise.contrato.manual);
@@ -590,7 +591,7 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
                         }
                     );
                 } else {
-                    this.pageNotificationService.addErrorMessage(this.getLabel('Global.Mensagens.RegistroCadastrado'));
+                    this.pageNotificationService.addErrorMessage(this.getLabel('Registro Cadastrado'));
                 }
                 return retorno;
             });
@@ -759,7 +760,7 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
     recuperarNomeSelecionado(funcaoDados: FuncaoDados) {
         this.funcaoDadosService.getFuncaoDadosBaseline(funcaoDados.id)
             .subscribe((res: FuncaoDados) => {
-                this.seletedFuncaoDados = res;
+                this.seletedFuncaoDados = new FuncaoDados().copyFromJSON(res);
                 this.seletedFuncaoDados.id = null;
                 this.carregarValoresNaPaginaParaEdicao(this.seletedFuncaoDados);
                 this.disableTRDER();
@@ -924,9 +925,9 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
     // Prepara para clonar
     private prepareToClone(funcaoDadosSelecionada: FuncaoDados) {
         this.funcaoDadosService.getById(funcaoDadosSelecionada.id).subscribe(funcaoDados => {
-            this.seletedFuncaoDados = funcaoDados;
+            this.seletedFuncaoDados = new FuncaoDados().copyFromJSON(funcaoDados);
             this.seletedFuncaoDados.id = null;
-            this.seletedFuncaoDados.name = this.seletedFuncaoDados.name + this.getLabel('Cadastros.FuncaoDados.Copia');
+            this.seletedFuncaoDados.name = this.seletedFuncaoDados.name + this.getLabel('- Cópia');
             this.carregarValoresNaPaginaParaEdicao(this.seletedFuncaoDados);
             this.disableTRDER();
             this.configurarDialog();
