@@ -10,10 +10,10 @@
             </span>
         </div>
         <div class="ui-g-12 ui-md-2">
-          <button pButton type="button" [label]="this.getLabel('Global.Botoes.Pesquisar')" icon="ui-icon-search" (click)="datatable.refresh(filter.value)"></button>
+          <button pButton type="button" [label]="this.getLabel('Pesquisar')" icon="ui-icon-search" (click)="datatable.refresh(filter.value)"></button>
         </div>
         <div class="ui-g-12 ui-md-2">
-          <button pButton type="button" [label]="this.getLabel('Global.Botoes.Cadastrar')" routerLink="/funcionalidade/new" icon="ui-icon-add"></button>
+          <button pButton type="button" [label]="this.getLabel('Cadastrar')" routerLink="/funcionalidade/new" icon="ui-icon-add"></button>
         </div>
         <basis-datatable [url]="searchUrl" 
           (buttonClick)="datatableClick($event)" #datatable>
@@ -29,7 +29,7 @@
 </div>
 <p-confirmDialog [header]="this.getLabel('Confirmação')" #dialog>
   <p-footer>
-    <button type="button" pButton icon="fa-close" [label]="this.getLabel('Global.Botoes.Nao')" (click)="dialog.reject()"></button>
-    <button type="button" pButton icon="fa-check" [label]="this.getLabel('Global.Botoes.Sim')" (click)="dialog.accept()"></button>
+    <button type="button" pButton icon="fa-close" [label]="this.getLabel('Não')" (click)="dialog.reject()"></button>
+    <button type="button" pButton icon="fa-check" [label]="this.getLabel('Sim')" (click)="dialog.accept()"></button>
   </p-footer>
 </p-confirmDialog>

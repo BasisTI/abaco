@@ -31,7 +31,6 @@ import { PesquisarFuncaoTransacaoModule } from '../pesquisar-ft/pesquisar-ft.mod
         RouterModule.forRoot(funcaoTransacaoRoute, {useHash: true}),
         PesquisarFuncaoTransacaoModule,
 
-        
     ],
   declarations: [
     FuncaoTransacaoFormComponent

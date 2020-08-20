@@ -137,13 +137,13 @@ export class TipoEquipeFormComponent implements OnInit, OnDestroy {
 
   public informarNome(): string {
     if (!this.tipoEquipe.nome) {
-      return this.getLabel('Cadastros.TipoEquipe.Mensagens.msgCampoObrigatorio');
+      return this.getLabel('Campo Obrigatório.');
     }
   }
 
   public informarOrganizacao(): string {
     if (!this.tipoEquipe.organizacoes) {
-      return this.getLabel('Cadastros.TipoEquipe.Mensagens.msgCampoObrigatorio');
+      return this.getLabel('Campo Obrigatório.');
     }
   }
   public loadUserCFPS(){

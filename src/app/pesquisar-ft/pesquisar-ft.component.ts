@@ -22,6 +22,7 @@ import {Router} from '@angular/router';
 import { Subscription, forkJoin, Observable } from 'rxjs';
 import { DatatableComponent, PageNotificationService } from '@nuvem/primeng-components';
 import { AnaliseSharedDataService } from '../shared/analise-shared-data.service';
+import { BlockUiService } from '@nuvem/angular-base';
 
 @Component({
     selector: 'app-pesquisar-ft',
@@ -118,6 +119,7 @@ export class PesquisarFtComponent implements OnInit {
         private funcaoTransacaoService: FuncaoTransacaoService,
         private baselineFT: BaselineService,
         private router: Router,
+        private blockUiService: BlockUiService,
     ) {
     }
 
@@ -361,6 +363,7 @@ export class PesquisarFtComponent implements OnInit {
         } else {
             this.erroUnitario = false;
             this.deflaPesquisa = true;
+            this.blockUiService.show();
             this.selections.forEach(ft => {
                 getFuncaoTransacoes.push(this.funcaoTransacaoService.getById(ft.idfuncaodados));
             });
@@ -388,13 +391,14 @@ export class PesquisarFtComponent implements OnInit {
                 });
                forkJoin(saveFuncaoTransacoes).subscribe(
                     response => {
-                    response.forEach(() => {
-                        this.pageNotificationService.addSuccessMessage(
-                            this.isEdit ? this.getLabel('Informe o campo Identificador da Analise para continuar') :
-                                this.getLabel('Dados alterados com sucesso!'));
-                        this.diasGarantia = this.analise.contrato.diasDeGarantia;
-                    });
+                        response.forEach(() => {
+                            this.pageNotificationService.addSuccessMessage(
+                                this.isEdit ? this.getLabel('Informe o campo Identificador da Analise para continuar') :
+                                    this.getLabel('Dados alterados com sucesso!'));
+                            this.diasGarantia = this.analise.contrato.diasDeGarantia;
+                        });
                     this.analiseService.updateSomaPf(this.analise.id).subscribe();
+                    this.blockUiService.hide();
                 });
 
             });

@@ -68,7 +68,7 @@
 </div>
 
 <p-dialog 
-  [header]="this.getLabel('Analise.Analise.AdicionarMultiplos')"
+  [header]="this.getLabel('Adicionar Multiplos')"
   [(visible)]="mostrarDialogAddMultiplos"
   id="idAdicionarMultiplosComponentDerChips"
   [contentStyle]="{'overflow': 'visible'}"
@@ -81,11 +81,11 @@
         id="idAddMultiplosComponentDerChips">
       </app-analise-der-text>
         <div *ngIf="validaMultiplos"
-          class="ui-message ui-messages-error" translate="Global.Mensagens.ValoresDuplicados">
+          class="ui-message ui-messages-error">
             O campo possui valores duplicado!
         </div>
         <div *ngIf="validaMultiplosRegistrados"
-          class="ui-message ui-messages-error" translate="Global.Mensagens.RegistroCadastrado">
+          class="ui-message ui-messages-error" >
             Registro já cadastrado!
         </div>
     </div>
@@ -97,7 +97,7 @@
           type="button"
           id="idBtnCancelarComponentDerChips"
           class=" abaco-white-btn flat ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only"
-          [label]="this.getLabel('Global.Botoes.Cancelar')" 
+          [label]="this.getLabel('Cancelar')" 
           (click)="fecharDialogAddMultiplos()">
         </button>
       </div>
@@ -108,7 +108,7 @@
           type="button"
           id="idBtnAdicionarComponentDerChips"
           class="green-btn flat ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only"
-          [label]="this.getLabel('Global.Botoes.Adicionar')"
+          [label]="this.getLabel('Adicionar')"
           (click)="adicionarMultiplos()">
         </button>
       </div>
@@ -140,7 +140,7 @@
           type="button"
           id="idBtnCancelarDialogComponentDerChips"
           class=" abaco-white-btn flat ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only"
-          [label]="this.getLabel('Global.Botoes.Cancelar')"  
+          [label]="this.getLabel('Cancelar')"  
           (click)="fecharDialogEdicao()">
         </button>
       </div>
@@ -150,7 +150,7 @@
           pButton
           type="button"
           class="green-btn flat ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only"
-          [label]="this.getLabel('Global.Botoes.Editar')"
+          [label]="this.getLabel('Editar')"
           id="idBtnEditarComponentDerChips" 
           (click)="editarChip()">
         </button>

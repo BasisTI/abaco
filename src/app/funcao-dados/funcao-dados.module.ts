@@ -34,7 +34,7 @@ import { SharedModule } from '../shared/shared.module';
         SecurityModule,
         DatatableModule,
         ReactiveFormsModule,
-        SharedModule
+        SharedModule,
     ],
   declarations: [
     FuncaoDadosFormComponent

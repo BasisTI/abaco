@@ -1,11 +1,7 @@
 <div class="ui-g ui-fluid">
-
     <div class="ui-g-12 ui-md-12 ui-sm-12">
-
         <div class="card card-w-title">
-
             <h1 >Análise</h1>
-
             <div class="ui-g">
                 <div class="ui-g-4 ui-md-4 ui-sm-12">
                     <span class="md-inputfield">
@@ -19,7 +15,6 @@
                         <label>Identificador</label>
                     </span>
                 </div>
-
                 <div class="ui-g-4 ui-md-4 ui-sm-12">
                     <p-dropdown
                             [filter]="true"
@@ -44,7 +39,6 @@
                 </div>
             </div>
             <div class="ui-g">
-
                 <div class="ui-g-4 ui-md-4 ui-sm-12">
                     <p-dropdown
                             id="idOrganizacaoComponentAnalise"
@@ -56,7 +50,6 @@
                             [placeholder]="this.getLabel('Organização')">
                     </p-dropdown>
                 </div>
-
                 <div class="ui-g-4 ui-md-4 ui-sm-12">
                     <p-dropdown
                             [filter]="true"
@@ -79,11 +72,8 @@
                     </p-dropdown>
                 </div>
             </div>
-
             <div class="ui-g">
-
                 <div class="ui-g ui-md-12" style="justify-content: center; margin-bottom: 25px; margin-top: 25px">
-
                     <div class="ui-g-2 ui-md-2 ui-sm-12">
                         <app-white-button
                                 [buttonLabel]="'Limpar pesquisa' "
@@ -92,7 +82,6 @@
                                 (click)="limparPesquisa()">
                         </app-white-button>
                     </div>
-
                     <div class="ui-g-2 ui-md-2 ui-sm-12">
                         <app-blue-button
                                 [buttonLabel]="'Pesquisar' "
@@ -101,7 +90,6 @@
                                 (click)="performSearch()">
                         </app-blue-button>
                     </div>
-
                     <div class="ui-g-2 ui-md-2 ui-sm-12">
                         <app-green-button
                                 [buttonLabel]="'Novo'"
@@ -126,7 +114,6 @@
                         [enableScroll]="true"
                         [scrollHeight]="'500px'"
                         #datatable>
-
                     <p-column header="Organização" field="organizacao.nome" [sortable]="true" filterType="select" [filter]="true">
                         <ng-template let-col let-analise="rowData" pTemplate="body">
                             {{ analise.organizacao.nome}}
@@ -186,7 +173,6 @@
                             [disabled]="datatable.selectedRow == null"
                             class="ui-button-success">
                     </basis-datatable-button>
-
                     <basis-datatable-button
                             *ngIf="!blocked && inicial"
                             name="bloquear"
@@ -196,7 +182,6 @@
                             [disabled]="datatable.selectedRow == null"
                             class="ui-button-danger">
                     </basis-datatable-button>
-
                     <basis-datatable-button
                             name="compartilhar"
                             [bTooltip]="compartilharTooltip()"
@@ -204,21 +189,18 @@
                             class="ui-button-info"
                             [disabled]="datatable.selectedRow == null">
                     </basis-datatable-button>
-
                     <basis-datatable-button
                             name="clone"
                             [bTooltip]="clonarTooltip()"
                             icon="content-copy"
                             [disabled]="datatable.selectedRow == null">
                     </basis-datatable-button>
-
                     <basis-datatable-button
                             name="relatorioBrowserDetalhado"
                             [bTooltip]="relatorioTooltip()"
                             icon="description"
                             [disabled]="datatable.selectedRow == null">
                     </basis-datatable-button>
-
                     <basis-datatable-button
                             name="relatorioExcelDetalhado"
                             [bTooltip]="relatorioExcelTooltip()"
@@ -226,7 +208,6 @@
                             [disabled]="datatable.selectedRow == null"
                             class="ui-button-success">
                     </basis-datatable-button>
-
                     <basis-datatable-button
                             name="relatorioAnaliseContagem"
                             [bTooltip]="relatorioContagemTooltip()"
@@ -234,7 +215,6 @@
                             [disabled]="datatable.selectedRow == null"
                             class="ui-button-danger">
                     </basis-datatable-button>
-
                     <basis-datatable-button
                             name="cloneParaEquipe"
                             [bTooltip]="clonarParaEquipeTooltip()"
@@ -243,7 +223,6 @@
                             class="ui-button-success">
                     </basis-datatable-button>
                 </basis-datatable>
-                        
                     <div class="ui-g-12 ui-md-2">
                         <app-botoes-exportacao [query]="changeUrl()" resourceName="analise" id="idBtnExportacaoComponentAnalise"
                         fileName="analise">
@@ -263,7 +242,6 @@
                 (click)="dialog.accept()"></button>
     </p-footer>
 </p-confirmDialog>
-
 <p-dialog *ngIf="equipeShare" header="Compartilhar Análise" [(visible)]="mostrarDialog" [modal]="true" (onHide)="limparSelecaoCompartilhar()" [style]="{width: '50vw'}" >
     <p-table
             [(value)]="equipeShare"
@@ -300,7 +278,6 @@
                 </tr>
             </ng-template>
     </p-table>
-
     <app-green-button buttonLabel="Adicionar" (click)="salvarCompartilhar()" style="float:right; margin-top: 5px"></app-green-button>
     <br/>
     <br/>
@@ -313,7 +290,6 @@
             [(selection)]="selectedToDelete"
             dataKey="equipeId"
             emptyMessage="Nenhuma outra equipe tem acesso a essa análise">
-
             <ng-template pTemplate="header">
                 <tr>
                     <th style="text-align:left; width: 50px;"></th>
@@ -335,7 +311,6 @@
                 </tr>
             </ng-template>
     </p-table>
-
     <app-red-button buttonLabel="Remover" (click)="deletarCompartilhar()" style="float:right; margin-top: 5px"></app-red-button>
 </p-dialog>
 <p-dialog header="Clonar para equipe" [(visible)]="showDialogAnaliseCloneTipoEquipe" [style]="{width: '50vw'}" [minHeight]="300" [modal]="true" >
@@ -370,6 +345,10 @@
             </div>
         </div>
     </div>
-    <button type="button" pButton icon="fa-close" (click)="showDialogAnaliseBlock=false" label="Cancelar" style="float:right; margin-top: 5px"></button>
-    <button type="button" pButton icon="fa-check" (click)="alterAnaliseBlock()" label="Bloquear" style="float:right; margin-top: 5px"></button>
+    <div class="ui-g-12 ui-md-6 ui-sm-6 ui-label">
+        <button type="button" pButton icon="fa-close" (click)="showDialogAnaliseBlock=false" label="Cancelar" style="float:right; margin-top: 5px"></button>
+    </div>
+    <div class="ui-g-12 ui-md-6 ui-sm-6 ui-label">
+        <button type="button" pButton icon="fa-check" (click)="alterAnaliseBlock()" label="Bloquear" style="float:right; margin-top: 5px"></button>
+    </div>
 </p-dialog>

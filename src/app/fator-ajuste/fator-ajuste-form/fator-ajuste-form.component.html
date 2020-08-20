@@ -28,10 +28,10 @@
                   <label translate="Cadastros.FatorAjuste.Ativo">Ativo</label>
               </div>
               <div class="ui-g-12 ui-md-2">
-                <p-radioButton name="ativo" [value]="true" [label]="this.getLabel('Global.Botoes.Sim')" [(ngModel)]="fatorAjuste.ativo"></p-radioButton>
+                <p-radioButton name="ativo" [value]="true" [label]="this.getLabel('Sim')" [(ngModel)]="fatorAjuste.ativo"></p-radioButton>
               </div>
               <div class="ui-g-12 ui-md-2">
-                <p-radioButton name="ativo" [value]="false" [label]="this.getLabel('Global.Botoes.Nao')" [(ngModel)]="fatorAjuste.ativo"></p-radioButton>
+                <p-radioButton name="ativo" [value]="false" [label]="this.getLabel('Não')" [(ngModel)]="fatorAjuste.ativo"></p-radioButton>
               </div>
             </div>
           </div>
@@ -47,10 +47,10 @@
         </div>
         <div class="ui-g">
           <div class="ui-g-2">
-            <button pButton type="button" [label]="this.getLabel('Global.Botoes.Cancelar')" routerLink="/fatorAjuste"></button>
+            <button pButton type="button" [label]="this.getLabel('Cancelar')" routerLink="/fatorAjuste"></button>
           </div>
           <div class="ui-g-2">
-            <button pButton type="submit" [label]="this.getLabel('Global.Botoes.Salvar')" [disabled]="editForm.form.invalid || isSaving" ></button>
+            <button pButton type="submit" [label]="this.getLabel('Salvar')" [disabled]="editForm.form.invalid || isSaving" ></button>
           </div>
         </div>
       </form>

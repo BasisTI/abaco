@@ -1,3 +1,4 @@
+<basis-block-ui></basis-block-ui>
 <p-tabView (onChange)="handleChange($event)">
     <p-tabPanel [header]="this.getLabel('Geral')"></p-tabPanel>
 
@@ -45,7 +46,7 @@
                                         <basis-datatable-button
                                             name="clone"
                                             *ngIf="!isView"
-                                            [tooltip]="FuncaoTransacaoEditar && FuncaoTransacaoEditar.id != null ? this.getLabel('Criar Crud') : this.getLabel('Escolha um registro para criar crud.')" 
+                                            [pTooltip]="FuncaoTransacaoEditar && FuncaoTransacaoEditar.id != null ? this.getLabel('Criar Clone') : this.getLabel('Escolha um registro para criar Clone.')" 
                                             [disabled]="FuncaoTransacaoEditar.id == null"
                                             class="ui-button-dark"
                                             icon="content-copy">
@@ -56,8 +57,7 @@
                                         <basis-datatable-button
                                             name="filter"
                                             *ngIf="!isView"
-                                            tooltip="Copiar funções de transação." 
-                                            [disabled]="FuncaoTransacaoEditar.id == null"
+                                            pTooltip="Copiar funções de transação." 
                                             class="ui-button-info"
                                             icon="compare-arrows">
                                         </basis-datatable-button>
@@ -422,6 +422,15 @@
                     </p-dialog>
                     <!-- Fim Dialog adicionar função de dados  -->
                 </div>
+            </div>
+        </div>
+        <div class="ui-g ui-md-12" style="justify-content: center; margin-bottom: 05px; margin-top: 05px">
+            <div class="ui-g-12 ui-md-12 ui-lg-2" style="margin-bottom: 05px">
+                <app-white-button
+                        [buttonLabel]="'Voltar'"
+                        id="idBtnVoltarFormAnalise"
+                        routerLink="/analise">
+                </app-white-button>
             </div>
         </div>
     </p-tabPanel>

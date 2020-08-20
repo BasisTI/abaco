@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { DatatableClickEvent, DatatableComponent, PageNotificationService } from '@nuvem/primeng-components';
-import { ConfirmationService } from 'primeng';
+import { ConfirmationService, BlockUIModule } from 'primeng';
 import { Subscription } from 'rxjs';
 import { Organizacao, OrganizacaoService } from 'src/app/organizacao';
 import { Sistema, SistemaService } from 'src/app/sistema';
@@ -12,6 +12,7 @@ import { Analise } from '../analise.model';
 import { AnaliseService } from '../analise.service';
 import { SearchGroup } from '../grupo/grupo.model';
 import { GrupoService } from '../grupo/grupo.service';
+import { BlockUiService } from '@nuvem/angular-base';
 
 @Component({
     selector: 'app-analise',
@@ -77,6 +78,7 @@ export class AnaliseListComponent implements OnInit {
         private grupoService: GrupoService,
         private equipeService: TipoEquipeService,
         private usuarioService: UserService,
+        private blockUiService: BlockUiService,
     ) {
     }
 
@@ -95,8 +97,6 @@ export class AnaliseListComponent implements OnInit {
         this.recuperarEquipe();
         this.recuperarSistema();
         this.recuperarUsuarios();
-        this.searchGroup = this.loadingGroupSearch();
-        this.customOptions['metodoContagem'] = this.metsContagens;
         this.inicial = false;
     }
 
@@ -119,8 +119,10 @@ export class AnaliseListComponent implements OnInit {
     }
 
     public carregarDataTable() {
+        this.blockUiService.show();
         this.grupoService.all().subscribe((res) => {
             this.datatable.value = res.json;
+            this.blockUiService.hide();
         });
     }
 
@@ -186,9 +188,6 @@ export class AnaliseListComponent implements OnInit {
     recuperarUsuarios() {
         this.usuarioService.dropDown().subscribe(response => {
             this.usuariosOptions = this.usuarioService.convertUsersFromServer(response);
-            this.customOptions['users'] = response.map((item) => {
-                return {label: item.firstName + ' ' + item.lastName , value: item.id};
-              });
         });
     }
 
@@ -261,7 +260,7 @@ export class AnaliseListComponent implements OnInit {
     compartilharAnalise() {
         let canShared = false;
         return this.analiseService.find(this.analiseSelecionada.id).subscribe((res) => {
-            this.analiseTemp = this.analiseService.convertItemFromServer(res);
+            this.analiseTemp = new Analise().copyFromJSON(res);
             if (this.tipoEquipesLoggedUser) {
                 this.tipoEquipesLoggedUser.forEach(equipe => {
                     if (equipe.id === this.analiseTemp.equipeResponsavel.id) {
@@ -476,7 +475,7 @@ export class AnaliseListComponent implements OnInit {
 
     public bloqueiaAnalise(bloquear: boolean) {
         this.analiseService.find(this.analiseSelecionada.id).subscribe((res) => {
-            this.analiseTemp = res;
+            this.analiseTemp = new Analise().copyFromJSON(res);
             if (!this.analiseTemp.dataHomologacao && !bloquear) {
                 this.analiseTemp.dataHomologacao  =  new Date();
                 this.showDialogAnaliseBlock = true;
@@ -592,10 +591,14 @@ export class AnaliseListComponent implements OnInit {
         }
     }
     public setParamsLoad() {
-        this.recarregarDataTable();
         if (this.isLoadFilter) {
+            this.searchGroup = this.loadingGroupSearch();
+            this.searchGroup.usuario = null;
+            this.recarregarDataTable();
             this.datatable.filter();
             this.isLoadFilter = false;
+        } else {
+            this.recarregarDataTable();
         }
     }
 }

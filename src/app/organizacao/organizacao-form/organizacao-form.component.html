@@ -86,7 +86,7 @@
                             </div>
                             <div class="ui-g-1 ui-md-1 ui-sm-12">
                                 <p-radioButton name="org_ativo" id="idAtivoNaoFormOrganizacao" [value]="false"
-                                               [label]="'Nao'"
+                                               [label]="'Não'"
                                                [(ngModel)]="organizacao.ativo"></p-radioButton>
                             </div>
                         </div>
@@ -129,7 +129,7 @@
                                 </p-column>
                                 <p-column [header]="'Ativo'" field="ativo">
                                     <ng-template let-col let-contracts="rowData" pTemplate="body">
-                                        {{ contracts.ativo ?'Sim' :'Nao' }}
+                                        {{ contracts.ativo ?'Sim' :'Não' }}
                                     </ng-template>
                                 </p-column>
                             </basis-datatable>
@@ -246,7 +246,7 @@
                                 </div>
                                 <div class="ui-g-12 ui-md-2">
                                     <p-radioButton name="contrato_ativo" [value]="false"
-                                                   [label]="'Nao'"
+                                                   [label]="'Não'"
                                                    id="idAtivoNaoContratoSaveFormOrganizacao"
                                                    [(ngModel)]="ativo">
                                     </p-radioButton>
@@ -321,7 +321,7 @@
                                 <div class="ui-g-12 ui-md-2">
                                     <p-radioButton
                                             name="manual_ativo"
-                                            [value]="false" [label]="'Nao'"
+                                            [value]="false" [label]="'Não'"
                                             id="idAtivoNaoManual"
                                             [(ngModel)]="manualContratoNovo.ativo">
                                     </p-radioButton>
@@ -366,7 +366,7 @@
 
                             <p-column [header]="'Ativo'" field="ativo">
                                 <ng-template let-col let-manualContrato="rowData" pTemplate="body">
-                                    {{ manualContrato.ativo?'Sim' :'Nao' }}
+                                    {{ manualContrato.ativo?'Sim' :'Não' }}
                                 </ng-template>
                             </p-column>
                         </basis-datatable>
@@ -519,7 +519,7 @@
                             <div class="ui-g-12 ui-md-2">
                                 <p-radioButton
                                         name="manual_ativoEdt"
-                                        [value]="false" [label]="'Nao'"
+                                        [value]="false" [label]="'Não'"
                                         id="idAtivoNaoManualEdt"
                                         [(ngModel)]="manualContratoEdt.ativo">
                                 </p-radioButton>
@@ -559,7 +559,7 @@
                         </p-column>
                         <p-column [header]="'Ativo'" field="ativo">
                             <ng-template let-col let-manualContrato="rowData"
-                                         pTemplate="body">{{ manualContrato.ativo ?'Sim' :'Nao' }}</ng-template>
+                                         pTemplate="body">{{ manualContrato.ativo ?'Sim' :'Não' }}</ng-template>
                         </p-column>
                     </basis-datatable>
                 </div>

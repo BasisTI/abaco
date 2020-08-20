@@ -30,6 +30,7 @@ import { Der } from './../der/der.model';
 import { FuncaoTransacao, TipoFuncaoTransacao } from './../funcao-transacao/funcao-transacao.model';
 import { FuncaoDados } from './funcao-dados.model';
 import { FuncaoDadosService } from './funcao-dados.service';
+import { BlockUiService } from '@nuvem/angular-base';
 
 @Component({
     selector: 'app-analise-funcao-dados',
@@ -123,6 +124,7 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
         private analiseService: AnaliseService,
         private baselineService: BaselineService,
         private router: Router,
+        private blockUiService: BlockUiService,
     ) {
     }
 
@@ -132,18 +134,22 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
 
     ngOnInit() {
         this.route.params.subscribe(params => {
+            this.blockUiService.show();
             this.idAnalise = params['id'];
             this.isView = params['view'] !== undefined;
             this.funcaoDadosService.getVWFuncaoDadosByIdAnalise(this.idAnalise).subscribe(value => {
                 this.funcoesDados = value;
                 if (!this.isView) {
                     this.analiseService.find(this.idAnalise).subscribe(analise => {
+                        analise = new Analise().copyFromJSON(analise);
                         this.analiseSharedDataService.analise = analise;
                         this.analise = analise;
                         this.disableAba = this.analise.metodoContagem === MessageUtil.INDICATIVA;
                         this.hideShowQuantidade = true;
                         this.estadoInicial();
                         this.impactos = AnaliseSharedUtils.impactos;
+                        this.disableTRDER();
+                        this.blockUiService.hide();
                     });
                 }
             });
@@ -468,9 +474,9 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
 
     fatoresAjusteDropdownPlaceholder() {
         if (this.isContratoSelected()) {
-            return this.getLabel('Cadastros.FuncaoDados.Mensagens.msgSelecioneDeflator');
+            return this.getLabel('Selecione um Deflator');
         } else {
-            return this.getLabel('Cadastros.FuncaoDados.Mensagens.msgSelecioneContratoParaCarregarDeflatores');
+            return this.getLabel('Selecione um Contrato na aba Geral para carregar os Deflatores');
         }
     }
 
@@ -620,7 +626,7 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
                 this.seletedFuncaoDados.fatorAjuste === undefined) {
                 this.erroDeflator = false;
                 retorno = false;
-                this.pageNotificationService.addErrorMessage(this.getLabel('Cadastros.FuncaoDados.Mensagens.msgSelecioneDeflator'));
+                this.pageNotificationService.addErrorMessage(this.getLabel('Selecione um Deflator'));
             }
         } else {
             this.erroDeflator = true;
@@ -835,6 +841,7 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
         const lstFuncaoTransacaoCrud: FuncaoTransacao[] = [];
         const lstFuncaoTransacaoToVerify: Observable<any>[] = [];
         const lstFuncaoTransacaoToInclud: Observable<any>[] = [];
+        this.blockUiService.show();
         this.funcaoDadosService.getById(funcaoDadosSelecionada.id).subscribe(funcaoDados => {
             this.crud.forEach(element => {
                 lstFuncaoTransacaoCrud.push(this.gerarFuncaoTransacao(element, funcaoDados));
@@ -868,6 +875,7 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
                             this.estadoInicial();
                             this.analiseService.updateSomaPf(this.analise.id).subscribe();
                     });
+                    this.blockUiService.hide();
                 });
             });
         });
@@ -906,6 +914,7 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
 
 
     private prepararParaEdicao(funcaoDadosSelecionada: FuncaoDados) {
+        this.blockUiService.show();
         this.funcaoDadosService.getById(funcaoDadosSelecionada.id).subscribe(funcaoDados => {
             this.seletedFuncaoDados = new FuncaoDados().copyFromJSON(funcaoDados);
             if (this.seletedFuncaoDados.fatorAjuste.tipoAjuste === 'UNITARIO' && this.faS[0]) {
@@ -919,11 +928,13 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
             this.pageNotificationService.addInfoMessage(
                 `${this.getLabel('Alterando Função de Dados ')} '${funcaoDadosSelecionada.name}'`
             );
+            this.blockUiService.hide();
         });
     }
 
     // Prepara para clonar
     private prepareToClone(funcaoDadosSelecionada: FuncaoDados) {
+        this.blockUiService.show();
         this.funcaoDadosService.getById(funcaoDadosSelecionada.id).subscribe(funcaoDados => {
             this.seletedFuncaoDados = new FuncaoDados().copyFromJSON(funcaoDados);
             this.seletedFuncaoDados.id = null;
@@ -934,6 +945,7 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
             this.pageNotificationService.addInfoMessage(
                 `${this.getLabel('Clonando Função de Dados ')} '${funcaoDadosSelecionada.name}'`
             );
+            this.blockUiService.hide();
         });
     }
 
@@ -1126,9 +1138,11 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
         this.displayDescriptionDeflator = false;
     }
     private prepararParaVisualizar(funcaoDadosSelecionada: FuncaoDados) {
+        this.blockUiService.show();
         this.funcaoDadosService.getById(funcaoDadosSelecionada.id)
         .subscribe(funcaoDados => {
             this.seletedFuncaoDados = funcaoDados;
+            this.blockUiService.hide();
         });
     }
 }

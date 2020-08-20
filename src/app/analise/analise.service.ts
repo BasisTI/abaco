@@ -8,7 +8,7 @@ import { HttpClient } from '@angular/common/http';
 import { PageNotificationService } from '@nuvem/primeng-components';
 import { Observable, forkJoin, pipe } from 'rxjs';
 import { catchError } from 'rxjs/operators';
-import { HttpGenericErrorService } from '@nuvem/angular-base';
+import { HttpGenericErrorService, BlockUiService } from '@nuvem/angular-base';
 import { ResponseWrapper, createRequestOption } from '../shared';
 import { FuncaoDadosService } from '../funcao-dados/funcao-dados.service';
 import { FuncaoTransacaoService } from '../funcao-transacao/funcao-transacao.service';
@@ -49,6 +49,7 @@ export class AnaliseService {
         private genericService: HttpGenericErrorService,
         private funcaoDadosService: FuncaoDadosService,
         private funcaoTransacaoService: FuncaoTransacaoService,
+        private blockUiService: BlockUiService,
         ) {
     }
 
@@ -121,6 +122,7 @@ export class AnaliseService {
     }
 
     public geraRelatorioPdfBrowser(id: number): Observable<string> {
+        this.blockUiService.show();
         this.http.request('get', `${this.relatoriosUrl}/${id}`, {
             responseType: 'blob',
         }).subscribe(
@@ -132,6 +134,7 @@ export class AnaliseService {
                 anchor.download = 'analise.pdf';
                 anchor.href = fileURL;
                 window.open(fileURL, '_blank', '');
+                this.blockUiService.hide();
                 return null;
             });
         return null;
@@ -141,11 +144,13 @@ export class AnaliseService {
      *
      */
     public geraRelatorioPdfDetalhadoBrowser(id: Number): Observable<string> {
+        this.blockUiService.show();
         this.http.request('get', `${this.relatoriosDetalhadoUrl}/${id}`, {
             responseType: 'blob',
         }).pipe(catchError((error: any) => {
             if (error.status === 500) {
-                this.pageNotificationService.addErrorMessage(this.getLabel('Analise.Analise.Mensagens.ErroGerarRelatorio'));
+                this.blockUiService.hide();
+                this.pageNotificationService.addErrorMessage(this.getLabel('Erro ao gerar relatório'));
                 return Observable.throw(new Error(error.status));
             }
         })).subscribe(
@@ -158,6 +163,7 @@ export class AnaliseService {
                 anchor.href = fileURL;
                 document.body.appendChild(anchor);
                 anchor.click();
+                this.blockUiService.hide();
                 return null;
             });
         return null;
@@ -167,11 +173,13 @@ export class AnaliseService {
      *
      */
     public gerarRelatorioExcel(id: Number): Observable<string> {
+        this.blockUiService.show();
         this.http.request('get',`${this.relatorioExcelUrl}/${id}`, {
             responseType: 'blob',
         }).pipe(catchError((error: any) => {
             if (error.status === 500) {
-                this.pageNotificationService.addErrorMessage(this.getLabel('Analise.Analise.Mensagens.ErroGerarRelatorio'));
+                this.blockUiService.hide();
+                this.pageNotificationService.addErrorMessage(this.getLabel('Erro ao gerar relatório'));
                 return Observable.throw(new Error(error.status));
             }
         })).subscribe(
@@ -184,6 +192,7 @@ export class AnaliseService {
                 anchor.href = fileURL;
                 document.body.appendChild(anchor);
                 anchor.click();
+                this.blockUiService.hide();
                 return null;
             });
         return null;
@@ -193,6 +202,7 @@ export class AnaliseService {
      *
      */
     public geraBaselinePdfBrowser(): Observable<string> {
+        this.blockUiService.show();
         this.http.request('get', `${this.relatoriosBaselineUrl}`, {
             responseType: 'blob',
         }).subscribe(
@@ -204,6 +214,7 @@ export class AnaliseService {
                 anchor.download = 'analise.pdf';
                 anchor.href = fileURL;
                 window.open(fileURL, '_blank', '');
+                this.blockUiService.hide();
                 return null;
             });
         return null;
@@ -215,11 +226,13 @@ export class AnaliseService {
      * @returns
      */
     public gerarRelatorioContagem(idAnalise: number): Observable<string> {
+        this.blockUiService.show();
         this.http.request('get',`${this.relatorioContagemUrl}/${idAnalise}`, {
             responseType: 'blob',
         }).pipe(catchError((error: any) => {
             if (error.status === 500) {
-                this.pageNotificationService.addErrorMessage(this.getLabel('Analise.Analise.Mensagens.ErroGerarRelatorio'));
+                this.blockUiService.hide();
+                this.pageNotificationService.addErrorMessage(this.getLabel('Erro ao gerar relatório'));
                 return Observable.throw(new Error(error.status));
             }
         })).subscribe(
@@ -232,6 +245,7 @@ export class AnaliseService {
                 anchor.href = fileURL;
                 document.body.appendChild(anchor);
                 anchor.click();
+                this.blockUiService.hide();
                 return null;
             });
         return null;
@@ -360,7 +374,7 @@ export class AnaliseService {
         return this.http.get<Response>(url);
     }
 
-    getResumo(analiseId: Number): Observable<Resumo[]>{
+    getResumo(analiseId: Number): Observable<Resumo[]> {
         return this.http.get<Resumo[]>(`${this.resourceResumoUrl}/${analiseId}`,).pipe(
         catchError((error: any) => {
             if (error.status === 403) {

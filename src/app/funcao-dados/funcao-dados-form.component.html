@@ -1,6 +1,6 @@
+<basis-block-ui></basis-block-ui>
 <p-tabView (onChange)="handleChange($event)">
     <p-tabPanel header="Geral"></p-tabPanel>
-
     <p-tabPanel header="Funções de Dados" [selected]="true">
         <div class="ui-g ui-fluid">
             <div class="ui-g-12">
@@ -35,7 +35,7 @@
                                             [showVisibleColumnsControl]="true">
                                         <basis-datatable-button
                                             name="crud"
-                                            *ngIf="!isView"
+                                            *ngIf="!isView && !(hideElementTDTR) "
                                             [tooltip]="funcaoDadosEditar.id != null ? this.getLabel('Criar Crud') : this.getLabel('Escolha um registro para criar crud.')" 
                                             [disabled]="funcaoDadosEditar.id == null"
                                             class="ui-button-success"
@@ -45,8 +45,8 @@
                                         <basis-datatable-button
                                             name="clone"
                                             *ngIf="!isView"
-                                            [tooltip]="funcaoDadosEditar.id != null ? this.getLabel('Criar Crud') : this.getLabel('Escolha um registro para criar crud.')" 
-                                            [disabled]="funcaoDadosEditar.id == null"
+                                            [pTooltip]="funcaoDadosEditar.id != null ? this.getLabel('Criar Clone') : this.getLabel('Escolha um registro para criar Clone.')" 
+                                            [disabled]="funcaoDadosEditar.id == null "
                                             class="ui-button-dark"
                                             icon="content-copy">
                                         </basis-datatable-button>
@@ -66,7 +66,7 @@
                                     <p-column
                                             field="deflator"
                                             filter="true"
-                                            filterMatchMode="contains"S
+                                            filterMatchMode="contains"
                                             name="fatorAjusteFuncaoDadosFormComponent"
                                             id="idFatorAjusteFuncaoDadosFormComponent"
                                             [header]="this.getLabel('Deflator')"
@@ -416,6 +416,17 @@
                 </div>
             </div>
         </div>
+
+    <div class="ui-g ui-md-12"
+        style="justify-content: center; margin-bottom: 05px; margin-top: 05px">
+       <div class="ui-g-12 ui-md-12 ui-lg-2" style="margin-bottom: 05px">
+           <app-white-button
+                   [buttonLabel]="'Voltar' "
+                   id="idBtnVoltarFormAnalise"
+                   routerLink="/analise">
+           </app-white-button>
+       </div>
+   </div>
     </p-tabPanel>
 
     <p-tabPanel [header]="this.getLabel('Funções de Transação')" [disabled]="disableAba" ></p-tabPanel>

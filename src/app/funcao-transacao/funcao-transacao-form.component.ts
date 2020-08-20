@@ -22,6 +22,7 @@ import { AnaliseReferenciavel } from 'src/app/analise-shared/analise-referenciav
 import { FatorAjusteLabelGenerator } from 'src/app/shared/fator-ajuste-label-generator';
 import { Manual } from 'src/app/manual';
 import * as _ from 'lodash';
+import { BlockUiService } from '@nuvem/angular-base';
 @Component({
     selector: 'app-analise-funcao-transacao',
     templateUrl: './funcao-transacao-form.component.html',
@@ -137,6 +138,7 @@ export class FuncaoTransacaoFormComponent implements OnInit {
         private funcaoTransacaoService: FuncaoTransacaoService,
         private router: Router,
         private route: ActivatedRoute,
+        private blockUiService: BlockUiService,
     ) {
     }
 
@@ -146,6 +148,7 @@ export class FuncaoTransacaoFormComponent implements OnInit {
 
     ngOnInit() {
         this.route.params.subscribe(params => {
+            this.blockUiService.show();
             this.idAnalise = params['id'];
             this.isView = params['view'] !== undefined;
             this.funcaoTransacaoService.getVwFuncaoTransacaoByIdAnalise(this.idAnalise).subscribe(value => {
@@ -167,6 +170,7 @@ export class FuncaoTransacaoFormComponent implements OnInit {
                         if (!this.criacaoTabela) {
                             this.config.toolbar.splice(this.config.toolbar.indexOf('insertTable'));
                         }
+                        this.blockUiService.hide();
                     });
                 }
             });
@@ -399,7 +403,7 @@ export class FuncaoTransacaoFormComponent implements OnInit {
     getTextDialog() {
         this.textHeader = this.isEdit ?
             this.getLabel('Alterar Função de Transação')
-            : this.getLabel('Cadastros.FuncaoTransacao.Mensagens.msgAdicionarFuncaoDeTransacao');
+            : this.getLabel('Adicionar Função de Transação');
     }
 
 
@@ -458,7 +462,7 @@ export class FuncaoTransacaoFormComponent implements OnInit {
     }
 
     recuperarNomeSelecionado(baselineAnalitico: FuncaoTransacao) {
-
+        this.blockUiService.show();
         this.funcaoTransacaoService.getById(baselineAnalitico.id)
             .subscribe((res: FuncaoTransacao) => {
                 res.id = null;
@@ -480,6 +484,7 @@ export class FuncaoTransacaoFormComponent implements OnInit {
                 this.configurarDialog();
                 this.currentFuncaoTransacao = res;
                 this.carregarValoresNaPaginaParaEdicao(this.currentFuncaoTransacao);
+                this.blockUiService.hide();
             });
 
     }
@@ -603,7 +608,7 @@ export class FuncaoTransacaoFormComponent implements OnInit {
 
         if (this.currentFuncaoTransacao.funcionalidade === undefined) {
             this.pageNotificationService.addErrorMessage(
-                this.getLabel('Cadastros.FuncaoTransacao.Mensagens.msgSelecioneUmModuloEFuncionalidade')
+                this.getLabel('Selecione um Módulo e Funcionalidade')
             );
             retorno = false;
         }
@@ -741,7 +746,7 @@ export class FuncaoTransacaoFormComponent implements OnInit {
                 this.prepareToClone(funcaoTransacaoSelecionada);
                 this.currentFuncaoTransacao.id = undefined;
                 this.currentFuncaoTransacao.artificialId = undefined;
-                this.textHeader = this.getLabel('Cadastros.FuncaoTransacao.Mensagens.msgClonarFuncaoDeTransacao');
+                this.textHeader = this.getLabel('Clonar Função de Transação');
                 break;
             case 'filter':
                 this.display = true;
@@ -754,6 +759,7 @@ export class FuncaoTransacaoFormComponent implements OnInit {
     }
 
     private prepararParaEdicao(funcaoTransacaoSelecionada: FuncaoTransacao) {
+        this.blockUiService.show();
         this.funcaoTransacaoService.getById(funcaoTransacaoSelecionada.id).subscribe(funcaoTransacao => {
             funcaoTransacao = new FuncaoTransacao().copyFromJSON(funcaoTransacao);
             this.disableTRDER();
@@ -770,6 +776,7 @@ export class FuncaoTransacaoFormComponent implements OnInit {
             this.pageNotificationService.addInfoMessage(
                 `${this.getLabel('Alterando Função de Transação ')} '${this.currentFuncaoTransacao.name}'`
             );
+            this.blockUiService.hide();
         });
     }
 
@@ -782,6 +789,7 @@ export class FuncaoTransacaoFormComponent implements OnInit {
 
     // Prepara para clonar
     private prepareToClone(funcaoTransacaoSelecionada: FuncaoTransacao) {
+        this.blockUiService.show();
         this.funcaoTransacaoService.getById(funcaoTransacaoSelecionada.id).subscribe(funcaoTransacao => {
             this.disableTRDER();
             this.configurarDialog();
@@ -790,8 +798,9 @@ export class FuncaoTransacaoFormComponent implements OnInit {
             this.currentFuncaoTransacao.name = this.currentFuncaoTransacao.name + ' - Cópia';
             this.carregarValoresNaPaginaParaEdicao(this.currentFuncaoTransacao);
             this.pageNotificationService.addInfoMessage(
-                `${this.getLabel('Cadastros.FuncaoTransacao.Mensagens.msgClonandoFuncaoDeTransacao')} '${this.currentFuncaoTransacao.name}'`
+                `${this.getLabel('Clonando Função de Transação ')} '${this.currentFuncaoTransacao.name}'`
             );
+            this.blockUiService.hide();
         });
     }
 
@@ -975,8 +984,10 @@ export class FuncaoTransacaoFormComponent implements OnInit {
         this.displayDescriptionDeflator = false;
     }
     private prepararParaVisualizar(funcaoTransacaoSelecionada: FuncaoTransacao) {
+        this.blockUiService.show();
         this.funcaoTransacaoService.getById(funcaoTransacaoSelecionada.id).subscribe(funcaoTransacao => {
             this.currentFuncaoTransacao = funcaoTransacao;
+            this.blockUiService.hide();
         });
     }
 

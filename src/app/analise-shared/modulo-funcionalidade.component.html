@@ -19,7 +19,7 @@
                 </p-dropdown>
                 <span class="md-inputfield">
                     <div *ngIf="erroModulo"
-                    class="ui-message ui-messages-error" translate="Global.Mensagens.CampoObrigatorio">
+                    class="ui-message ui-messages-error">
                         Campo Obrigatório.
                     </div>
                 </span>
@@ -52,7 +52,7 @@
                 </p-dropdown>
                 <span class="md-inputfield">
                     <div *ngIf="erroModulo"
-                    class="ui-message ui-messages-error" translate="Global.Mensagens.CampoObrigatorio">
+                    class="ui-message ui-messages-error">
                         Campo Obrigatório.
                     </div>
                 </span>
@@ -84,7 +84,7 @@
                   [(ngModel)]="novoModulo.nome"
                   pInputText
                   (keydown.enter)="adicionarModulo()"/>
-         <label translate="Analise.Analise.Nome*">Nome *</label>
+         <label>Nome *</label>
         </span>
             </div>
         </div>
@@ -92,14 +92,14 @@
         <div class="ui-g ui-md-12" style="justify-content: flex-end">
             <div class="ui-g-2">
                 <app-white-button
-                        [buttonLabel]="this.getLabel('Global.Botoes.Cancelar')"
+                        [buttonLabel]="this.getLabel('Cancelar')"
                         (click)="fecharDialogModulo()">
                 </app-white-button>
             </div>
 
             <div class="ui-g-2">
                 <app-green-button
-                        [buttonLabel]="this.getLabel('Global.Botoes.Salvar')"
+                        [buttonLabel]="this.getLabel('Salvar')"
                         (click)="adicionarModulo()">
                 </app-green-button>
             </div>
@@ -132,10 +132,10 @@
 
         <div class="ui-g ui-md-12" style="justify-content: flex-end">
             <div class="ui-g-2">
-                <app-white-button [buttonLabel]="this.getLabel('Global.Botoes.Cancelar')" (click)="fecharDialogFuncionalidade()"></app-white-button>
+                <app-white-button [buttonLabel]="this.getLabel('Cancelar')" (click)="fecharDialogFuncionalidade()"></app-white-button>
             </div>
             <div class="ui-g-2">
-                <app-green-button [buttonLabel]="this.getLabel('Global.Botoes.Salvar')" (click)="adicionarFuncionalidade()"></app-green-button>
+                <app-green-button [buttonLabel]="this.getLabel('Salvar')" (click)="adicionarFuncionalidade()"></app-green-button>
             </div>
         </div>
     </p-dialog>

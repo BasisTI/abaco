@@ -53,14 +53,14 @@
                 <p-radioButton name="contrato_ativo" 
                   [(ngModel)]="contrato.ativo"
                   [value]="true" 
-                  [label]="this.getLabel('Global.Botoes.Sim')">
+                  [label]="this.getLabel('Sim')">
                 </p-radioButton>
               </div>
 
               <div class="ui-g-12 ui-md-2">
                 <p-radioButton name="contrato_ativo" 
                   [value]="false" 
-                  [label]="this.getLabel('Global.Botoes.Nao')"
+                  [label]="this.getLabel('Não')"
                   [(ngModel)]="contrato.ativo">
                 </p-radioButton>
               </div>
@@ -69,10 +69,10 @@
         </div>
         <div class="ui-g">
           <div class="ui-g-2">
-            <button pButton type="button" [label]="this.getLabel('Global.Botoes.Cancelar')" routerLink="/contrato"></button>
+            <button pButton type="button" [label]="this.getLabel('Cancelar')" routerLink="/contrato"></button>
           </div>
           <div class="ui-g-2">
-            <button pButton type="submit" [label]="this.getLabel('Global.Botoes.Salvar')" [disabled]="editForm.form.invalid || isSaving" ></button>
+            <button pButton type="submit" [label]="this.getLabel('Salvar')" [disabled]="editForm.form.invalid || isSaving" ></button>
           </div>
         </div>
       </form>

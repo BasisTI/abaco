@@ -19,6 +19,7 @@ import { AnaliseShareEquipe } from '../analise-share-equipe.model';
 import { Analise } from '../analise.model';
 import { AnaliseService } from '../analise.service';
 import { Resumo } from './resumo.model';
+import { BlockUiService } from '@nuvem/angular-base';
 
 @Component({
     selector: 'app-analise-resumo',
@@ -65,6 +66,7 @@ export class AnaliseResumoComponent implements OnInit {
         private organizacaoService: OrganizacaoService,
         private pageNotificationService: PageNotificationService,
         private userService: UserService,
+        private blockUiService: BlockUiService,
     ) {
     }
 
@@ -79,6 +81,7 @@ export class AnaliseResumoComponent implements OnInit {
         this.route.params.subscribe(params => {
             this.isView = params['view'] !== undefined;
             this.idAnalise = params['id'];
+            this.blockUiService.show();
             if (this.idAnalise) {
                 if (!this.isView) {
                     this.analiseService.find(this.idAnalise).subscribe(analise => {
@@ -136,6 +139,7 @@ export class AnaliseResumoComponent implements OnInit {
                     });
 
                 }
+                this.blockUiService.hide();
             }
         });
     }

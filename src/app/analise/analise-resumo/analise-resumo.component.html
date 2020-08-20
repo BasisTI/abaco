@@ -1,3 +1,4 @@
+<basis-block-ui></basis-block-ui>
 <p-tabView (onChange)="handleChange($event)" *ngIf="analise">
     <p-tabPanel [header]="this.getLabel('Geral')"></p-tabPanel>
 
@@ -22,6 +23,7 @@
                               disableView="true"
                               disableDelete="true"
                               disableClone="true"
+                              [rows]="20"
                               >
                             <p-column >
                                 <ng-template let-linhaResumo="rowData" pTemplate="body">

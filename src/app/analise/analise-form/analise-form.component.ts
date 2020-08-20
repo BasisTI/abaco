@@ -23,6 +23,7 @@ import { FuncaoDados } from '../../funcao-dados';
 import { AnaliseService } from '../analise.service';
 import { FuncaoDadosService } from '../../funcao-dados/funcao-dados.service';
 import { FuncaoTransacaoService } from '../../funcao-transacao/funcao-transacao.service';
+import { element } from 'protractor';
 
 
 @Component({
@@ -205,6 +206,11 @@ export class AnaliseFormComponent implements OnInit {
                 this.analiseService.find(params['id']).subscribe(analise => {
                     analise = new  Analise().copyFromJSON(analise);
                     this.loadDataAnalise(analise);
+                    const countEquipe =  this.tipoEquipesLoggedUser.filter(equipeRes => analise.equipeResponsavel.id === equipeRes.id);
+                    if (!(countEquipe) || countEquipe.length === 0 ) {
+                        this.pageNotificationService.addErrorMessage('Você não tem permissão para editar esta análise, redirecionando para a tela de visualização...');
+                        this.router.navigate(['/analise', analise.id, 'view']);
+                    }
                     this.disableFuncaoTrasacao = analise.metodoContagem === MessageUtil.INDICATIVA;
                     this.canEditMetodo = !(this.isEdicao) || (this.route.snapshot.paramMap.get('clone')) && this.analise.metodoContagem === MetodoContagem.ESTIMADA;
                     },
@@ -312,7 +318,7 @@ export class AnaliseFormComponent implements OnInit {
                 const label = FatorAjusteLabelGenerator.generate(fa);
                 this.fatoresAjuste.push({label, value: fa});
             });
-            this.fatoresAjuste.unshift({label: this.getLabel('Global.Mensagens.Nenhum'), value: null});
+            this.fatoresAjuste.unshift({label: this.getLabel('Nenhum'), value: null});
         }
     }
 
