@@ -432,11 +432,11 @@ public class AnaliseService extends BaseService {
         VwAnaliseSomaPf vwAnaliseSomaPf = vwAnaliseSomaPfRepository.findByAnaliseId(analise.getId());
         BigDecimal sumFase = new BigDecimal(BigInteger.ZERO).setScale(decimalPlace);
         for (EsforcoFase esforcoFase : analise.getEsforcoFases()) {
-            sumFase = sumFase.add(esforcoFase.getEsforco());
+            sumFase = sumFase.add(esforcoFase.getEsforco().setScale(decimalPlace));
         }
-        sumFase = sumFase.divide(percent);
+        sumFase = sumFase.divide(percent).setScale(decimalPlace);
         analise.setPfTotal(vwAnaliseSomaPf.getPfGross().setScale(decimalPlace).toString());
-        analise.setAdjustPFTotal(vwAnaliseSomaPf.getPfTotal().multiply(sumFase).setScale(decimalPlace).toString());
+        analise.setAdjustPFTotal(vwAnaliseSomaPf.getPfTotal().multiply(sumFase).setScale(decimalPlace, BigDecimal.ROUND_HALF_DOWN).toString());
     }
 
     public Analise bindCloneAnalise(Analise analiseClone, Analise analise, User user) {
