@@ -28,15 +28,6 @@ describe('Abaco - Cadastros Fase', function() {
         expect(page.verificarMensagemInclusão('Registro incluído com sucesso!')).toBe('OK');
     }, 300000);
 
-    // Erro duplicidade
-    // it('Cadastros Fase - Cadastrar Fase em Duplicidade', function () {
-    //     page.login();
-    //     page.navegar();
-    //     page.clicarBotao('Novo');
-    //     page.cadastrarFase('Design e Arquitetura');
-    //     expect(page.verificarMensagem('Registro já cadastrado!')).toBe('OK');
-    // });
-
     it('Cadastros Fase - Editar Fase Sem Campos Obrigatoŕios', function () {
         page.login();
         page.navegar();
@@ -52,15 +43,6 @@ describe('Abaco - Cadastros Fase', function() {
         page.cadastrarFase('Fase Teste 2');
         expect(page.verificarMensagem('Registro alterado com sucesso!')).toBe('OK');
     });
-
-    // Erro duplicidade
-    // it('Cadastros Fase - Editar Fase com Duplicidade', function () {
-    //     page.login();
-    //     page.navegar();
-    //     page.selecionarLinhaEditar('Fase Teste 2');
-    //     page.cadastrarFase('Testes');
-    //     expect(page.verificarMensagem('Registro já cadastrado!')).toBe('OK');
-    // });
 
     it('Cadastros Fase - Visualizar Fase', function () {
         page.login();

@@ -36,6 +36,5 @@ describe('Abaco - Alterar Senha', function() {
         page.navegar();
         page.preencherSenha();
         expect(page.verificarSenha('msgSenhaAlteradaComSucessoParaUsuarioadmin')).toBe('OK');
-        // expect(page.verificarSenha('Senha alterada com sucesso para o usuário admin!')).toBe('OK');
     });
 });
