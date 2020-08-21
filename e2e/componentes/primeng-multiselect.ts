@@ -13,8 +13,6 @@ export class PrimengMultiSelect extends PrimengComponent {
         css = 'div.ui-multiselect-trigger';
         this.waitToBePresentByElement(elementFinder.element(by.css(css)));
         this.clickByElement(elementFinder.element(by.css(css)));
-        css = 'div.ui-multiselect-panel[style*="display: block;"]';
-        this.waitToBePresentByElement(elementFinder.element(by.css(css)));
     }
 
     static closeByLocator(locator: Locator) {
@@ -64,7 +62,7 @@ export class PrimengMultiSelect extends PrimengComponent {
 
     static selectByElement(elementFinder: ElementFinder, values: string[]) {
         let css: string;
-        css = 'ul > li label';
+        css = 'aria-label';
         values.forEach(value => {
             // const regex = this.regex(value);
             this.waitToBeClickableByElement(elementFinder.element(by.cssContainingText(css, value)));
