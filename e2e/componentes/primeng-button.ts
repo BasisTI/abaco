@@ -21,7 +21,7 @@ export class PrimengButton extends PrimengComponent {
     }
 
     static clickByTitle(text: string) {
-        const css = `button[title="${text}"]`;
+        const css = `basis-datatable-button[ng-reflect-b-tooltip="${text}"]`;
         this.clickByLocator(by.css(css));
     }
 
