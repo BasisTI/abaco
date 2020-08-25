@@ -1,4 +1,4 @@
-import { AfterViewInit, ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output, QueryList, ViewChildren} from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output, QueryList, ViewChildren, ViewChild} from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Column, DatatableClickEvent, DatatableComponent, DatatableModule, PageNotificationService } from '@nuvem/primeng-components';
 import * as _ from 'lodash';
@@ -47,7 +47,7 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
     label: string;
     @Input() uploadImagem = true;
     @Input() criacaoTabela = true;
-    @ViewChildren(DatatableModule) tables: QueryList<DatatableComponent>;
+    @ViewChild(DatatableComponent) tables: DatatableComponent;
 
     public isDisabled = false;
     faS: FatorAjuste[] = [];
@@ -112,6 +112,7 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
     public disableAba = false;
     public analise: Analise;
     public seletedFuncaoDados: FuncaoDados = new FuncaoDados();
+    public display = false;
 
     constructor(
         private analiseSharedDataService: AnaliseSharedDataService,
@@ -187,17 +188,17 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
             return;
         }
         // este forEach rodará apenas 1 vez, devido ao @ViewChildren retornar um array
-        this.tables.forEach(table => {
-            table.columns.forEach(column => {
-                const item = this.colunasAMostrar.find(element =>
-                    (element.header === column.header)
-                );
-                column.sortField = this.getField(item.header);
-                column.filterField = this.getField(item.header);
-                this.exceptions(column, item.header);
-                column.ngAfterContentInit();
-            });
-        });
+        // this.tables.forEach(table => {
+        //     table.columns.forEach(column => {
+        //         const item = this.colunasAMostrar.find(element =>
+        //             (element.header === column.header)
+        //         );
+        //         column.sortField = this.getField(item.header);
+        //         column.filterField = this.getField(item.header);
+        //         this.exceptions(column, item.header);
+        //         column.ngAfterContentInit();
+        //     });
+        // });
     }
 
     sortColumn(event: any) {
@@ -775,7 +776,7 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
     }
 
     datatableClick(event: DatatableClickEvent) {
-        if (!event.selection) {
+        if (!(event.selection) && event.button !== 'filter') {
             return;
         }
         const funcaoDadosSelecionada: FuncaoDados = event.selection;
@@ -802,6 +803,9 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
             case 'view':
                 this.viewFuncaoDados = true;
                 this.prepararParaVisualizar(funcaoDadosSelecionada);
+                break;
+            case 'filter':
+                this.display = true;
                 break;
         }
     }
@@ -1144,5 +1148,10 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
             this.seletedFuncaoDados = funcaoDados;
             this.blockUiService.hide();
         });
+    }
+    public selectFD() {
+        if (this.tables && this.tables.selectedRow) {
+            this.funcaoDadosEditar = this.tables.selectedRow;
+        }
     }
 }

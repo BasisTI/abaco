@@ -16,8 +16,7 @@
                                     </app-green-button>
                                 </div>
                             </div>
-
-                            <div *ngIf="funcoesDados">
+                            <div >
                                 <basis-datatable
                                             type="memory" 
                                             id="idTabelaFuncaoDados"
@@ -25,167 +24,58 @@
                                             [disableEdit]="this.isView"
                                             [disableClone]="this.isView"
                                             [disableCrud]="this.isView"
-                                            [showCrud]="true"
+                                            (dblclick)="onRowDblclick($event)"
                                             [value]="funcoesDados"
+                                            [showCrud]="true"
                                             (buttonClick)="datatableClick($event)"
+                                            (click)="selectFD()"
                                             [paginator]="false"
                                             [scrollable]="true"
                                             [rows]="20"
+                                            [filterOnColumn]="true"
                                             [rowsPerPageOptions]="[20,50,100]"
-                                            [showVisibleColumnsControl]="true">
+                                            [showVisibleColumnsControl]="true"
+                                            #tables>
+
+                                        <p-column field="nomeModulo" header="Módulo" [filter]="true" [sortable]="true"></p-column>
+                                        <p-column field="nomeFuncionalidade" [filter]="true" header="Funcionalidade" [sortable]="true"></p-column>
+                                        <p-column field="name" header="Nome" [sortable]="true"></p-column> 
+                                        <p-column field="deflator" header="Deflator" [sortable]="true"></p-column>
+                                        <p-column field="tipo" header="Classificação" [sortable]="true"></p-column>
+                                        <p-column field="totalDers" header="DER (TD)" [sortable]="true" ></p-column>
+                                        <p-column field="totalRlrs" header="RLR (TR)" [sortable]="true" ></p-column>
+                                        <p-column field="complexidade" header="Complexidade" [sortable]="true" ></p-column>
+                                        <p-column field="grossPF" header="PF Bruto" [sortable]="true"></p-column>
+                                        <p-column field="pf" header="PF Líquido" [sortable]="true" ></p-column>
+                                        <p-column field="hasSustantation"  header="Possui Fundamentação ?" [sortable]="true" typefilter="">
+                                            <ng-template let-hasSustantation="rowData.hasSustantation"
+                                                                pTemplate="body">
+                                                {{ hasSustantation ? this.getLabel('Sim') : this.getLabel('Não') }}
+                                            </ng-template>
+                                        </p-column>
                                         <basis-datatable-button
-                                            name="crud"
-                                            *ngIf="!isView && !(hideElementTDTR) "
-                                            [tooltip]="funcaoDadosEditar.id != null ? this.getLabel('Criar Crud') : this.getLabel('Escolha um registro para criar crud.')" 
-                                            [disabled]="funcaoDadosEditar.id == null"
-                                            class="ui-button-success"
-                                            icon="input">
-                                        </basis-datatable-button>
-                                        
-                                        <basis-datatable-button
-                                            name="clone"
-                                            *ngIf="!isView"
-                                            [pTooltip]="funcaoDadosEditar.id != null ? this.getLabel('Criar Clone') : this.getLabel('Escolha um registro para criar Clone.')" 
-                                            [disabled]="funcaoDadosEditar.id == null "
-                                            class="ui-button-dark"
-                                            icon="content-copy">
-                                        </basis-datatable-button>
-
-                                    <p-column
-                                            field="name"
-                                            filter="true"
-                                            filterMatchMode="contains"
-                                            name="nomeFuncaoDadosFormComponent"
-                                            id="idNomeFuncaoDadosFormComponent"
-                                            [header]="this.getLabel('Nome')"
-                                            sortable="true"
-                                            (sortFunction)="sortColumn($event)"
-                                            [style]="{'width': '200px'}">
-                                    </p-column>
-
-                                    <p-column
-                                            field="deflator"
-                                            filter="true"
-                                            filterMatchMode="contains"
-                                            name="fatorAjusteFuncaoDadosFormComponent"
-                                            id="idFatorAjusteFuncaoDadosFormComponent"
-                                            [header]="this.getLabel('Deflator')"
-                                            sortable="true"
-                                            (sortFunction)="sortColumn($event)"
-                                            [style]="{'width': '200px'}">
-                                    </p-column>
-
-                                    <p-column
-                                            field="nomeModulo"
-                                            filter="true"
-                                            filterMatchMode="contains"
-                                            name="nomeModuloFuncaoDadosFormComponent"
-                                            id="idNomeModuloFuncaoDadosFormComponent"
-                                            [header]="this.getLabel('Módulo')"
-                                            sortable="true"
-                                            (sortFunction)="sortColumn($event)"
-                                            [style]="{'width': '200px'}">
-                                    </p-column>
-
-                                    <p-column
-                                            field="nomeFuncionalidade"
-                                            filter="true"
-                                            filterMatchMode="contains"
-                                            name="nomeFuncionalidadeFuncaoDadosFormComponent"
-                                            id="idNomeFuncionalidadeFuncaoDadosFormComponent"
-                                            [header]="this.getLabel('Funcionalidade')"
-                                            sortable="true"
-                                            (sortFunction)="sortColumn($event)"
-                                            [style]="{'width': '200px'}">
-                                    </p-column>
-
-                                    <p-column
-                                            field="tipo"
-                                            filter="true"
-                                            filterMatchMode="contains"
-                                            name="tipoFuncaoDadosFormComponent"
-                                            id="idTipoFuncaoDadosFormComponent"
-                                            [header]="this.getLabel('Classificação')"
-                                            sortable="true"
-                                            (sortFunction)="sortColumn($event)"
-                                            [style]="{'width': '200px'}">
-                                    </p-column>
-
-                                    <p-column
-                                            field="totalDers"
-                                            filter="true"
-                                            filterMatchMode="contains"
-                                            name="derFuncaoDadosFormComponent"
-                                            id="idDerFuncaoDadosFormComponent"
-                                            [header]="this.getLabel('DER (TD)')"
-                                            sortable="true"
-                                            (sortFunction)="sortColumn($event)"
-                                            [style]="{'width': '200px'}">
-                                    </p-column>
-
-                                    <p-column
-                                            field="totalRlrs"
-                                            filter="true"
-                                            filterMatchMode="contains"
-                                            name="rlrFuncaoDadosFormComponent"
-                                            id="idRlrFuncaoDadosFormComponent"
-                                            [header]="this.getLabel('RLR (TR)')"
-                                            sortable="true"
-                                            (sortFunction)="sortColumn($event)"
-                                            [style]="{'width': '200px'}">
-                                    </p-column>
-
-                                    <p-column
-                                            field="complexidade"
-                                            filter="true"
-                                            filterMatchMode="contains"
-                                            name="complexidadeFuncaoDadosFormComponent"
-                                            id="idComplexidadeFuncaoDadosFormComponent"
-                                            [header]="this.getLabel('Complexidade')"
-                                            sortable="true"
-                                            (sortFunction)="sortColumn($event)"
-                                            [style]="{'width': '200px'}">
-                                    </p-column>
-
-                                    <p-column
-                                            field="grossPF"
-                                            filter="true"
-                                            filterMatchMode="contains"
-                                            name="pfTotalFuncaoDadosFormComponent"
-                                            id="idPfTotalFuncaoDadosFormComponent"
-                                            [header]="this.getLabel('PF Ajustado')"
-                                            sortable="true"
-                                            (sortFunction)="sortColumn($event)"
-                                            [style]="{'width': '200px'}">
-                                    </p-column>
-
-                                    <p-column
-                                            field="pf"
-                                            filter="true"
-                                            filterMatchMode="contains"
-                                            name="pfFuncaoDadosFormComponent"
-                                            id="idPfFuncaoDadosFormComponent"
-                                            [header]="this.getLabel('PF Líquido')"
-                                            sortable="true"
-                                            (sortFunction)="sortColumn($event)"
-                                            [style]="{'width': '200px'}">
-                                    </p-column>
-
-                                    <p-column
-                                         field="hasSustantation"
-                                         filter="true"
-                                         filterMatchMode="contains"
-                                         name="sustentantionFuncaoDadosFormComponent"
-                                         id="idSustentantionFuncaoDadosFormComponent"
-                                         [header]="this.getLabel('Possui Fundamentação ?')"
-                                         sortable="true"
-                                         (sortFunction)="sortColumn($event)"
-                                         [style]="{'width': '200px'}">
-                                         <ng-template let-hasSustantation="rowData.hasSustantation"
-                                                             pTemplate="body">
-                                             {{ hasSustantation ? this.getLabel('Sim') : this.getLabel('Não') }}
-                                         </ng-template>
-                                     </p-column>
+                                        name="crud"
+                                        *ngIf="!isView && !(hideElementTDTR) "
+                                        [tooltip]="funcaoDadosEditar.id != null ? this.getLabel('Criar Crud') : this.getLabel('Escolha um registro para criar crud.')" 
+                                        [disabled]="funcaoDadosEditar.id == null"
+                                        class="ui-button-success"
+                                        icon="input">
+                                    </basis-datatable-button>
+                                    <basis-datatable-button
+                                        name="clone"
+                                        *ngIf="!isView"
+                                        [pTooltip]="funcaoDadosEditar.id != null ? this.getLabel('Criar Clone') : this.getLabel('Escolha um registro para criar Clone.')" 
+                                        [disabled]="funcaoDadosEditar.id == null "
+                                        class="ui-button-dark"
+                                        icon="content-copy">
+                                    </basis-datatable-button>
+                                    <basis-datatable-button
+                                        name="filter"
+                                        *ngIf="!isView"
+                                        pTooltip="Copiar funções de dados." 
+                                        class="ui-button-info"
+                                        icon="compare-arrows">
+                                    </basis-datatable-button>
                                 </basis-datatable>
                             </div>
                         </div>
@@ -541,4 +431,6 @@
         </div>
     </p-footer>
 </p-dialog>
-
+<p-dialog [header]="this.getLabel('Importa funções de Dados')" [(visible)]="display" [style]="{width: '80vw'}" [closable]="false">
+    <app-pesquisar-ft [isFuncaoDados]="true"></app-pesquisar-ft>
+</p-dialog>

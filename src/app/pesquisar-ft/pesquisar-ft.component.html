@@ -57,33 +57,33 @@
                 [value]="fn"
                 [(selection)]="selections" >
                 <ng-template pTemplate="caption">
-                    Função de transação
+                    {{isFuncaoDados? 'Função de dados':'Função de transação'}}
                 </ng-template>
                 <ng-template pTemplate="header">
                     <tr>
                         <th style="text-align:left"><p-tableHeaderCheckbox></p-tableHeaderCheckbox></th>
                         <th pSortableColumn="fase.nome">Modulo <p-sortIcon></p-sortIcon></th>
-                        <th pSortableColumn="fase.nome">Funcionalidade <p-sortIcon></p-sortIcon></th>
-                        <th pSortableColumn="fase.nome">Nome <p-sortIcon></p-sortIcon></th>
-                        <th pSortableColumn="esforco">classificação <p-sortIcon></p-sortIcon></th>
+                        <th pSortableColumn="fase.nomeFuncionalidade">Funcionalidade <p-sortIcon></p-sortIcon></th>
+                        <th pSortableColumn="fase.name">Nome <p-sortIcon></p-sortIcon></th>
+                        <th pSortableColumn="fase.classificacao">Classificação <p-sortIcon></p-sortIcon></th>
                     </tr>
                 </ng-template>
-                <ng-template pTemplate="body" let-funcaoTransacao>
+                <ng-template pTemplate="body" let-funcao>
                     <tr class="ui-selectable-row">
                         <td >
-                            <p-tableCheckbox [value]="funcaoTransacao"></p-tableCheckbox>
+                            <p-tableCheckbox [value]="funcao"></p-tableCheckbox>
                         </td>
                         <td>
-                            {{funcaoTransacao.nomeModulo}}
+                            {{funcao.nomeModulo}}
                         </td>
                         <td>
-                            {{funcaoTransacao.nomeFuncionalidade}}
+                            {{funcao.nomeFuncionalidade}}
                         </td>
                         <td>
-                            {{funcaoTransacao.name}}
+                            {{funcao.name}}
                         </td>
                         <td>
-                            {{funcaoTransacao.classificacao}}
+                            {{funcao.classificacao}}
                         </td>
                     </tr>
                 </ng-template>
@@ -126,7 +126,7 @@
     </div>
     <div class="ui-g-2 ui-md-2 ui-sm-12">
         <app-green-button id="idBtnPesquisarComponentSistema" buttonIcon="ui-icon-arrowstop-1-e"
-            [buttonLabel]="'Gerar'" (click)="montarFuncoesTransacao()">
+            [buttonLabel]="'Gerar'" (click)="montarFuncoes()">
         </app-green-button>
     </div>
 </div>

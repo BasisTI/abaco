@@ -16,6 +16,7 @@ import { RouterModule } from '@angular/router';
 import { funcaoDadosRoute } from './funcao-dados.route';
 import { BaselineService } from '../baseline';
 import { SharedModule } from '../shared/shared.module';
+import { PesquisarFuncaoTransacaoModule } from '../pesquisar-ft/pesquisar-ft.module';
 
 
 
@@ -35,6 +36,7 @@ import { SharedModule } from '../shared/shared.module';
         DatatableModule,
         ReactiveFormsModule,
         SharedModule,
+        PesquisarFuncaoTransacaoModule,
     ],
   declarations: [
     FuncaoDadosFormComponent

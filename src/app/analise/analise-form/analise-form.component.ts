@@ -206,8 +206,7 @@ export class AnaliseFormComponent implements OnInit {
                 this.analiseService.find(params['id']).subscribe(analise => {
                     analise = new  Analise().copyFromJSON(analise);
                     this.loadDataAnalise(analise);
-                    const countEquipe =  this.tipoEquipesLoggedUser.filter(equipeRes => analise.equipeResponsavel.id === equipeRes.id);
-                    if (!(countEquipe) || countEquipe.length === 0 ) {
+                    if (!(this.verifyCanEditAnalise(analise))) {
                         this.pageNotificationService.addErrorMessage('Você não tem permissão para editar esta análise, redirecionando para a tela de visualização...');
                         this.router.navigate(['/analise', analise.id, 'view']);
                     }
@@ -227,6 +226,23 @@ export class AnaliseFormComponent implements OnInit {
                 this.canEditMetodo = true;
             }
         });
+    }
+
+    private verifyCanEditAnalise(analise: Analise): Boolean {
+        let canEditAnalise: Boolean = false;
+        this.tipoEquipesLoggedUser.forEach(equip => {
+            if (equip.id === analise.equipeResponsavel.id) {
+                canEditAnalise =  true;
+            }
+        });
+        analise.compartilhadas.forEach(comp => {
+            this.tipoEquipesLoggedUser.forEach(equip => {
+                if (equip.id === comp.id && !(comp.viewOnly)) {
+                    canEditAnalise = true;
+                }
+            });
+        });
+        return canEditAnalise;
     }
 
     setDataHomologacao() {

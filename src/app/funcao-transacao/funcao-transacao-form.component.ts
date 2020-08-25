@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output, QueryList, ViewChildren } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DatatableClickEvent, DatatableComponent, PageNotificationService } from '@nuvem/primeng-components';
 import { ConfirmationService, Editor, SelectItem } from 'primeng';
@@ -78,7 +78,7 @@ export class FuncaoTransacaoFormComponent implements OnInit {
     @Input() properties: Editor;
     @Input() uploadImagem = true;
     @Input() criacaoTabela = true;
-    @ViewChildren(DatatableComponent) tables: QueryList<DatatableComponent>;
+    @ViewChild(DatatableComponent) tables: DatatableComponent;
     viewFuncaoTransacao = false;
 
     public isDisabled = false;
@@ -159,17 +159,11 @@ export class FuncaoTransacaoFormComponent implements OnInit {
                         this.analiseSharedDataService.analise = analise;
                         this.disableAba = this.analise.metodoContagem === MessageUtil.INDICATIVA;
                         this.hideShowQuantidade = true;
-                        this.estadoInicial();
                         this.currentFuncaoTransacao = new FuncaoTransacao();
+                        this.estadoInicial();
                         this.subscribeToAnaliseCarregada();
                         this.initClassificacoes();
                         this.estadoInicial();
-                        if (!this.uploadImagem) {
-                            this.config.toolbar.splice(this.config.toolbar.indexOf('imageUpload'));
-                        }
-                        if (!this.criacaoTabela) {
-                            this.config.toolbar.splice(this.config.toolbar.indexOf('insertTable'));
-                        }
                         this.blockUiService.hide();
                     });
                 }
@@ -989,6 +983,11 @@ export class FuncaoTransacaoFormComponent implements OnInit {
             this.currentFuncaoTransacao = funcaoTransacao;
             this.blockUiService.hide();
         });
+    }
+    public selectFT() {
+        if (this.tables && this.tables.selectedRow) {
+            this.FuncaoTransacaoEditar = this.tables.selectedRow;
+        }
     }
 
 }

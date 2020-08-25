@@ -166,4 +166,8 @@ export class FuncaoDadosService {
         const url = `${this.vwresourceUrl}/${id}`;
         return this.http.get<[]>(url);
     }
+    public getFuncaoDadosByModuloOrFuncionalidade(idModulo: Number, idFuncionalida: Number = 0 ): Observable<any[]> {
+        const url = `${this.resourceUrlPEAnalitico}funcaoDados/${idModulo}?idFuncionalidade=${idFuncionalida}`;
+        return this.http.get<[]>(url);
+    }
 }

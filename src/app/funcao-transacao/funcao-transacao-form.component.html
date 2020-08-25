@@ -1,14 +1,11 @@
 <basis-block-ui></basis-block-ui>
 <p-tabView (onChange)="handleChange($event)">
     <p-tabPanel [header]="this.getLabel('Geral')"></p-tabPanel>
-
     <p-tabPanel [header]="this.getLabel('Funções de Dados')"></p-tabPanel>
-
     <p-tabPanel [header]="this.getLabel('Funções de Transação')" [selected]="true" [disabled]="disableAba">
         <div class="ui-g ui-fluid">
             <div class="ui-g-12">
                 <div class="card card-w-title">
-
                     <div class="ui-g">
                         <div class="ui-g-12">
                             <div class="ui-g ui-md-12"
@@ -22,7 +19,6 @@
                                     </app-green-button>
                                 </div>
                             </div>
-
                             <!-- Inicio da tabela -->
                             <div>
                                 <basis-datatable
@@ -34,184 +30,61 @@
                                         (buttonClick)="datatableClick($event)"
                                         (selectRow)="selectRow($event)"
                                         (dblclick)="onRowDblclick($event)"
+                                        (click)="selectFT()"
+                                        [paginator]="false"
                                         [rows]="20"
+                                        [filterOnColumn]="true"
                                         [rowsPerPageOptions]="[20,50,100]"
-                                        [responsive]="true"
-                                        scrollable="true"
-                                        scrollWidth="100%"
                                         [showVisibleColumnsControl]="true"
-                                        [multiSortMeta]="defaultSort">
-
-
-                                        <basis-datatable-button
-                                            name="clone"
-                                            *ngIf="!isView"
-                                            [pTooltip]="FuncaoTransacaoEditar && FuncaoTransacaoEditar.id != null ? this.getLabel('Criar Clone') : this.getLabel('Escolha um registro para criar Clone.')" 
-                                            [disabled]="FuncaoTransacaoEditar.id == null"
-                                            class="ui-button-dark"
-                                            icon="content-copy">
-                                        </basis-datatable-button>
-
-
-
-                                        <basis-datatable-button
-                                            name="filter"
-                                            *ngIf="!isView"
-                                            pTooltip="Copiar funções de transação." 
-                                            class="ui-button-info"
-                                            icon="compare-arrows">
-                                        </basis-datatable-button>
-
-
-                                    <p-column
-                                            [header]="this.getLabel('Módulo')"
-                                            [style]="{'width': '200px'}"
-                                            field="nomeModulo"
-                                            sortable="custom"
-                                            filter="true"
-                                            filterMatchMode="contains"
-                                            (sortFunction)="sortColumn($event)">
+                                        #tables>
+                                    <p-column field="nomeModulo" header="Módulo" sortable="true"></p-column>
+                                    <p-column field="nomeFuncionalidade" header="Funcionalidade" sortable="true"></p-column>
+                                    <p-column field="name" header=" Nome" sortable="true"></p-column>
+                                    <p-column field="deflator" header=" Deflator" sortable="true"></p-column>
+                                    <p-column field="tipo" header=" Classificação" sortable="true"></p-column>
+                                    <p-column field="totalDers" header=" DER(TD)" sortable="true"></p-column>
+                                    <p-column field="totalAlrs" header=" FTR (AR)" sortable="true" ></p-column>
+                                    <p-column field="complexidade" header=" Complexidade" sortable="true" ></p-column>
+                                    <p-column header=" PF Bruto"   field="grossPf" filter="true">
+                                        <ng-template let-grossPF="rowData.grossPF" pTemplate="body"> {{ grossPF | number }}</ng-template>
                                     </p-column>
-
-
-                                    <p-column
-                                            [header]="this.getLabel('Funcionalidade')"
-                                            field="nomeFuncionalidade"
-                                            [style]="{'width': '200px'}"
-                                            sortable="custom"
-                                            filter="true"
-                                            filterMatchMode="contains"
-                                            (sortFunction)="sortColumn($event)">
+                                    <p-column header=" PF Liquído" field="pf"  >
+                                        <ng-template let-pf="rowData.pf" pTemplate="body"> {{ pf | number }} </ng-template>
                                     </p-column>
-
-                                    <p-column
-                                            sortable="custom"
-                                            (sortFunction)="sortColumn($event)"
-                                            field="name"
-                                            filterField="name"
-                                            filter="true"
-                                            filterMatchMode="contains"
-                                            [header]="this.getLabel('Nome')"
-                                            [style]="{'width': '200px'}">
+                                    <p-column header=" Possui Fundamentação ?" field="hasSustantation" >
+                                        <ng-template let-hasSustantation="rowData.hasSustantation" pTemplate="body"> {{ hasSustantation ? this.getLabel('Sim') : this.getLabel('Não') }}</ng-template>
                                     </p-column>
-
-                                    <p-column
-                                            [header]="this.getLabel('Deflator')"
-                                            field="deflator"
-                                            sortable="custom"
-                                            filter="true"
-                                            filterMatchMode="contains"
-                                            (sortFunction)="sortColumn($event)"
-                                            [style]="{'width': '200px'}">
-                                    </p-column>
-
-                                    <p-column
-                                            field="tipo"
-                                            filterField="tipo"
-                                            [header]="this.getLabel('Classificação')"
-                                            sortable="custom"
-                                            filter="true"
-                                            filterMatchMode="contains"
-                                            (sortFunction)="sortColumn($event)"
-                                            [style]="{'width': '200px'}">
-                                    </p-column>
-
-                                    <p-column
-                                            field="totalDers"
-                                            filter="true"
-                                            filterMatchMode="contains"
-                                            [header]="this.getLabel('DER (TD)')"
-                                            sortable="custom"
-                                            (sortFunction)="sortColumn($event)"
-                                            [style]="{'width': '200px'}">
-                                    </p-column>
-
-                                    <p-column
-                                            field="totalAlrs"
-                                            filter="true"
-                                            filterMatchMode="contains"
-                                            [header]="this.getLabel('FTR (AR)')"
-                                            sortable="custom"
-                                            (sortFunction)="sortColumn($event)"
-                                            [style]="{'width': '200px'}">
-                                    </p-column>
-
-                                    <p-column
-                                            field="complexidade"
-                                            filterField="complexidade"
-                                            [header]="this.getLabel('Complexidade')"
-                                            sortable="custom"
-                                            filter="true"
-                                            filterMatchMode="contains"
-                                            (sortFunction)="sortColumn($event)"
-                                            [style]="{'width': '200px'}">
-                                    </p-column>
-
-                                    <p-column
-                                            [header]="this.getLabel('PF Bruto')"
-                                            sortable="custom"
-                                            (sortFunction)="sortColumn($event)"
-                                            field="grossPf"
-                                            filterField="grossPF"
-                                            filter="true"
-                                            filterMatchMode="contains"
-                                            [style]="{'width': '200px'}">
-                                        <ng-template
-                                                let-grossPF="rowData.grossPF"
-                                                pTemplate="body">
-                                            {{ grossPF | number }}
-                                        </ng-template>
-                                    </p-column>
-
-                                    <p-column
-                                            [header]="this.getLabel('PF Liquído')"
-                                            sortable="custom"
-                                            (sortFunction)="sortColumn($event)"
-                                            field="pf"
-                                            filterField="pf"
-                                            filter="true"
-                                            filterMatchMode="contains"
-                                            [style]="{'width': '200px'}">
-                                        <ng-template
-                                                let-pf="rowData.pf"
-                                                pTemplate="body">
-                                            {{ pf | number }}
-                                        </ng-template>
-                                    </p-column>
-
-                                    <p-column
-                                            [header]="this.getLabel('Possui Fundamentação ?')"
-                                            sortable="custom"
-                                            (sortFunction)="sortColumn($event)"
-                                            field="hasSustantation"
-                                            filter="true"
-                                            filterMatchMode="contains"
-                                            [style]="{'width': '200px'}">
-                                        <ng-template let-hasSustantation="rowData.hasSustantation"
-                                                     pTemplate="body">
-                                            {{ hasSustantation ? this.getLabel('Sim') : this.getLabel('Não') }}
-                                        </ng-template>
-                                    </p-column>
-
+                                    <basis-datatable-button
+                                        name="clone"
+                                        *ngIf="!isView"
+                                        [pTooltip]="FuncaoTransacaoEditar && FuncaoTransacaoEditar.id != null ? this.getLabel('Criar Clone') : this.getLabel('Escolha um registro para criar Clone.')" 
+                                        [disabled]="FuncaoTransacaoEditar.id == null"
+                                        class="ui-button-dark"
+                                        icon="content-copy">
+                                    </basis-datatable-button>
+                                    <basis-datatable-button
+                                        name="filter"
+                                        *ngIf="!isView"
+                                        pTooltip="Copiar funções de transação." 
+                                        class="ui-button-info"
+                                        icon="compare-arrows">
+                                    </basis-datatable-button>
                                 </basis-datatable>
                             </div>
                             <!-- fim table -->
                         </div>
                     </div>
-
                     <p-dialog
                             [closable]="false"
                             [(visible)]="showDialog"
                             [(header)]="textHeader"
                             [contentStyle]="{'height': ['windowHeightDialog']}"
                             [style]="{width: '80vw'}">
-
                         <app-analise-modulo-funcionalidade
                                 [erroModulo]="erroModulo" [isFuncaoDados]="false"
                                 (moduloSelectedEvent)="moduloSelected($event)"
                                 (funcionalidadeSelectedEvent)="functionalitySelected($event)">
                         </app-analise-modulo-funcionalidade>
-
                         <div *ngIf="!isEdit">
                             <div class="ui-g" *ngIf="!showMultiplos">
                                 <div class="ui-g-9">
@@ -243,7 +116,6 @@
                                     </app-blue-button>
                                 </div>
                             </div>
-
                             <div class="ui-g" *ngIf="showMultiplos">
                                 <div class="ui-g-9">
                                     <label >Nomes dos
@@ -270,7 +142,6 @@
                                 </div>
                             </div>
                         </div>
-
                         <div *ngIf="isEdit">
                             <div class="ui-g">
                                 <div class="ui-g-12 ui-md-12 ui-sm-12" style="margin-bottom: 25px">
@@ -296,8 +167,7 @@
                                         (onChange)="classValida()">
                                 </p-dropdown>
                                 <span class="md-inputfield">
-                                    <div *ngIf="classInvalida" class="ui-message ui-messages-error"
-                                        >
+                                    <div *ngIf="classInvalida" class="ui-message ui-messages-error">
                                     Campo obrigatório.
                                     </div>
                                 </span>
@@ -313,8 +183,7 @@
                                         [(ngModel)]="currentFuncaoTransacao.fatorAjuste"
                                         [placeholder]="fatoresAjusteDropdownPlaceholder()"
                                         (onChange)="contratoSelecionado()"
-                                        name="fatorAjuste"
-                                        >
+                                        name="fatorAjuste" >
                                 </p-dropdown>
                                 <span class="md-inputfield">
                                     <div *ngIf="deflatorVazio" class="ui-message ui-messages-error"
