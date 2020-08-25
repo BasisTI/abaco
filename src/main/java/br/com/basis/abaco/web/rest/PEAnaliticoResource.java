@@ -3,7 +3,6 @@ package br.com.basis.abaco.web.rest;
 import br.com.basis.abaco.domain.PEAnalitico;
 import br.com.basis.abaco.repository.PEAnaliticoRepository;
 import br.com.basis.abaco.security.AuthoritiesConstants;
-import br.com.basis.abaco.service.dto.DropdownDTO;
 import br.com.basis.abaco.service.dto.DropdownFuncaoDadosDTO;
 import com.codahale.metrics.annotation.Timed;
 import org.springframework.security.access.annotation.Secured;
@@ -55,6 +54,21 @@ public class PEAnaliticoResource {
             peAnaliticos = peAnaliticoRepository.findAllByIdFuncionalidadeAndTipoOrderByName(idFuncionalidade, FUNCAO_TRANSACAO);
         } else {
             peAnaliticos = peAnaliticoRepository.findAllByIdModuloAndTipoOrderByName(idModulo, FUNCAO_TRANSACAO);
+        }
+        return peAnaliticos;
+    }
+
+
+    @GetMapping("/peanalitico/funcaoDados/{idModulo}")
+    @Timed
+    @Secured({AuthoritiesConstants.ADMIN, AuthoritiesConstants.USER, AuthoritiesConstants.GESTOR, AuthoritiesConstants.ANALISTA})
+    public Set<PEAnalitico> getFuncaoDadosyModuloOrFuncionalidade(@PathVariable Long idModulo, @RequestParam(required = false) Long idFuncionalidade) {
+        Set<PEAnalitico> peAnaliticos;
+
+        if (idFuncionalidade != null && idFuncionalidade > 0) {
+            peAnaliticos = peAnaliticoRepository.findAllByIdFuncionalidadeAndTipoOrderByName(idFuncionalidade, FUNCAO_DADOS);
+        } else {
+            peAnaliticos = peAnaliticoRepository.findAllByIdModuloAndTipoOrderByName(idModulo, FUNCAO_DADOS);
         }
         return peAnaliticos;
     }

@@ -578,6 +578,27 @@
 							</textField>
 						</jr:detailCell>
 					</jr:column>
+					<jr:column width="50" uuid="ccfb1c73-52ed-43d9-9668-c19c4a724d32">
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column10"/>
+						<jr:columnHeader style="Table_CH" height="30" rowSpan="1">
+							<staticText>
+								<reportElement x="0" y="0" width="50" height="30" isRemoveLineWhenBlank="true" uuid="42af6824-bc7c-47fb-b336-015b3c1e971d"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font isBold="true"/>
+								</textElement>
+								<text><![CDATA[Tipo]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell style="Table_TD" height="15" rowSpan="1">
+							<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+								<reportElement stretchType="RelativeToBandHeight" x="0" y="0" width="50" height="15" isRemoveLineWhenBlank="true" uuid="e59e67a6-20a0-46f8-b2aa-33a231cdd91c"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<paragraph lineSpacing="Proportional"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$F{classificacaoFd}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
 					<jr:column width="30" uuid="7a4b77b6-1b8b-4f20-b8d9-3015992ec38a">
 						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column6"/>
 						<jr:columnHeader style="Table_CH" height="30" rowSpan="1">
@@ -661,27 +682,6 @@
 									<paragraph lineSpacing="Proportional"/>
 								</textElement>
 								<textFieldExpression><![CDATA[$F{rlr}]]></textFieldExpression>
-							</textField>
-						</jr:detailCell>
-					</jr:column>
-					<jr:column width="50" uuid="ccfb1c73-52ed-43d9-9668-c19c4a724d32">
-						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column10"/>
-						<jr:columnHeader style="Table_CH" height="30" rowSpan="1">
-							<staticText>
-								<reportElement x="0" y="0" width="50" height="30" isRemoveLineWhenBlank="true" uuid="42af6824-bc7c-47fb-b336-015b3c1e971d"/>
-								<textElement textAlignment="Center" verticalAlignment="Middle">
-									<font isBold="true"/>
-								</textElement>
-								<text><![CDATA[Tipo]]></text>
-							</staticText>
-						</jr:columnHeader>
-						<jr:detailCell style="Table_TD" height="15" rowSpan="1">
-							<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-								<reportElement stretchType="RelativeToBandHeight" x="0" y="0" width="50" height="15" isRemoveLineWhenBlank="true" uuid="e59e67a6-20a0-46f8-b2aa-33a231cdd91c"/>
-								<textElement textAlignment="Center" verticalAlignment="Middle">
-									<paragraph lineSpacing="Proportional"/>
-								</textElement>
-								<textFieldExpression><![CDATA[$F{classificacaoFd}]]></textFieldExpression>
 							</textField>
 						</jr:detailCell>
 					</jr:column>
@@ -951,6 +951,30 @@
 							</textField>
 						</jr:detailCell>
 					</jr:column>
+					<jr:column width="50" uuid="52368194-b4a7-41e3-8c5c-3fa92e642342">
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column10"/>
+						<jr:columnHeader style="Table 1_CH" height="30" rowSpan="1">
+							<staticText>
+								<reportElement x="0" y="0" width="50" height="30" isRemoveLineWhenBlank="true" uuid="10d32422-f279-4306-86ac-fa9bccb12165"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font isBold="true"/>
+								</textElement>
+								<text><![CDATA[Tipo]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell style="Table 1_TD" height="15" rowSpan="1">
+							<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+								<reportElement stretchType="RelativeToBandHeight" x="0" y="0" width="50" height="15" isRemoveLineWhenBlank="true" uuid="c99b787f-2296-495b-a7aa-3ad8c20c320a">
+									<property name="net.sf.jasperreports.export.xls.wrap.text" value="true"/>
+									<property name="net.sf.jasperreports.print.keep.full.text" value="true"/>
+								</reportElement>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<paragraph lineSpacing="Proportional"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$F{classificacaoFt}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
 					<jr:column width="30" uuid="c816f07b-2625-4ceb-ae89-1d4e28a56592">
 						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column6"/>
 						<jr:columnHeader style="Table 1_CH" height="30" rowSpan="1">
@@ -1046,30 +1070,6 @@
 									<paragraph lineSpacing="Proportional"/>
 								</textElement>
 								<textFieldExpression><![CDATA[$F{ftr}]]></textFieldExpression>
-							</textField>
-						</jr:detailCell>
-					</jr:column>
-					<jr:column width="50" uuid="52368194-b4a7-41e3-8c5c-3fa92e642342">
-						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column10"/>
-						<jr:columnHeader style="Table 1_CH" height="30" rowSpan="1">
-							<staticText>
-								<reportElement x="0" y="0" width="50" height="30" isRemoveLineWhenBlank="true" uuid="10d32422-f279-4306-86ac-fa9bccb12165"/>
-								<textElement textAlignment="Center" verticalAlignment="Middle">
-									<font isBold="true"/>
-								</textElement>
-								<text><![CDATA[Tipo]]></text>
-							</staticText>
-						</jr:columnHeader>
-						<jr:detailCell style="Table 1_TD" height="15" rowSpan="1">
-							<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-								<reportElement stretchType="RelativeToBandHeight" x="0" y="0" width="50" height="15" isRemoveLineWhenBlank="true" uuid="c99b787f-2296-495b-a7aa-3ad8c20c320a">
-									<property name="net.sf.jasperreports.export.xls.wrap.text" value="true"/>
-									<property name="net.sf.jasperreports.print.keep.full.text" value="true"/>
-								</reportElement>
-								<textElement textAlignment="Center" verticalAlignment="Middle">
-									<paragraph lineSpacing="Proportional"/>
-								</textElement>
-								<textFieldExpression><![CDATA[$F{classificacaoFt}]]></textFieldExpression>
 							</textField>
 						</jr:detailCell>
 					</jr:column>

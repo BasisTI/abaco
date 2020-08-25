@@ -363,6 +363,8 @@ public class AnaliseResource {
     public @ResponseBody
     byte[] downloadRelatorioExcel(@PathVariable Long id) throws URISyntaxException, IOException, JRException {
         Analise analise = analiseService.recuperarAnalise(id);
+        analise.setFuncaoDados(funcaoDadosRepository.findByAnaliseIdOrderByFuncionalidadeModuloNomeAscFuncionalidadeNomeAscNameAsc(id));
+        analise.setFuncaoTransacaos(funcaoTransacaoRepository.findByAnaliseIdOrderByFuncionalidadeModuloNomeAscFuncionalidadeNomeAscNameAsc(id));
         relatorioAnaliseRest = new RelatorioAnaliseRest(this.response, this.request);
         Long idLogo = analise.getOrganizacao().getLogoId();
         UploadedFile uploadedFiles = new UploadedFile();
@@ -377,6 +379,8 @@ public class AnaliseResource {
     public @ResponseBody
     ResponseEntity<InputStreamResource> gerarRelatorioContagemPdf(@PathVariable Long id) throws IOException, JRException {
         Analise analise = analiseService.recuperarAnaliseContagem(id);
+        analise.setFuncaoDados(funcaoDadosRepository.findByAnaliseIdOrderByFuncionalidadeModuloNomeAscFuncionalidadeNomeAscNameAsc(id));
+        analise.setFuncaoTransacaos(funcaoTransacaoRepository.findByAnaliseIdOrderByFuncionalidadeModuloNomeAscFuncionalidadeNomeAscNameAsc(id));
         relatorioAnaliseRest = new RelatorioAnaliseRest(this.response, this.request);
         return relatorioAnaliseRest.downloadReportContagem(analise);
     }
