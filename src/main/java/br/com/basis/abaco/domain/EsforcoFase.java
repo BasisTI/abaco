@@ -1,7 +1,6 @@
 package br.com.basis.abaco.domain;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.springframework.data.elasticsearch.annotations.Document;
@@ -26,7 +25,7 @@ import java.util.Objects;
 @Entity
 @Table(name = "esforco_fase")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-@Document(indexName = "esforcofase")
+@Document(indexName = "esforco_fase")
 public class EsforcoFase implements Serializable {
 
     private static final long serialVersionUID = 1L;

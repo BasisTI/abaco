@@ -1,12 +1,25 @@
 package br.com.basis.abaco.domain;
 
 import br.com.basis.dynamicexports.pojo.ReportObject;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.Immutable;
+import org.springframework.data.elasticsearch.annotations.Document;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.Column;
+import javax.persistence.Embeddable;
 import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.validation.constraints.DecimalMax;
+import javax.validation.constraints.DecimalMin;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.math.BigDecimal;
 
@@ -15,8 +28,20 @@ import java.math.BigDecimal;
  */
 @Entity
 @Table(name = "baseline_sintetico")
+@Document(indexName = "baseline_sintetico")
 @Immutable
+@Getter
+@Setter
+@JsonInclude(JsonInclude.Include.NON_EMPTY)
+@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+@EntityListeners(AuditingEntityListener.class)
+@Embeddable
+@NoArgsConstructor
 public class BaseLineSintetico implements Serializable, ReportObject {
+
+    private static final String MINPERCENT = "0";
+    private static final String MAXPERCENT = "100";
+
 
     @Id
     @Column(name = "row_number")
@@ -40,6 +65,9 @@ public class BaseLineSintetico implements Serializable, ReportObject {
     @Column(name = "numero_ocorrencia")
     private String numeroocorrencia;
 
+    @NotNull
+    @DecimalMin(value = MINPERCENT)
+    @DecimalMax(value = MAXPERCENT)
     @Column(name = "sum", precision = 10, scale = 2)
     private BigDecimal sum;
 

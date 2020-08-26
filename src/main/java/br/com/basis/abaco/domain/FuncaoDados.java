@@ -1,5 +1,6 @@
 package br.com.basis.abaco.domain;
 
+import br.com.basis.abaco.domain.enumeration.Complexidade;
 import br.com.basis.abaco.domain.enumeration.ImpactoFatorAjuste;
 import br.com.basis.abaco.domain.enumeration.TipoFuncaoDados;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -19,6 +20,7 @@ import javax.persistence.OrderBy;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
@@ -34,7 +36,7 @@ import java.util.Set;
 @Entity
 @Table(name = "funcao_dados")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-@Document(indexName = "funcaodados")
+@Document(indexName = "funcao_dados")
 public class FuncaoDados extends FuncaoAnalise implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -59,6 +61,7 @@ public class FuncaoDados extends FuncaoAnalise implements Serializable {
     @JsonManagedReference(value = FUNCAODADOS)
     @OneToMany(mappedBy = FUNCAODADOS, cascade = CascadeType.ALL, orphanRemoval = true)
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+    @OrderBy("nome")
     private Set<Rlr> rlrs = new HashSet<>();
 
     @ManyToOne
@@ -68,20 +71,54 @@ public class FuncaoDados extends FuncaoAnalise implements Serializable {
     private List<UploadedFile> files = new ArrayList<>();
 
     @Transient
-    private Set<String> rlrValues;
+    private Set<String> rlrValues = new HashSet<>();
 
     @JsonManagedReference(value = FUNCAODADOS)
     @OneToMany(mappedBy = FUNCAODADOS, cascade = CascadeType.ALL, orphanRemoval = true)
+    @OrderBy("nome")
     private Set<Der> ders = new LinkedHashSet<>();
 
     @JsonIgnore
     @ManyToOne
     private FuncaoDadosVersionavel funcaoDadosVersionavel;
-    
+
     @Enumerated(EnumType.STRING)
-    @Column(name="impacto")
+    @Column(name = "impacto")
     private ImpactoFatorAjuste impacto;
-    
+
+    public FuncaoDados() {
+    }
+
+    public FuncaoDados(FuncaoDados funcaoDados) {
+
+        this.tipo = funcaoDados.getTipo();
+        this.funcionalidades = funcaoDados.getFuncionalidades();
+        this.retStr = funcaoDados.getRetStr();
+        this.quantidade = funcaoDados.getQuantidade();
+        this.rlrs = funcaoDados.getRlrs();
+        this.alr = funcaoDados.getAlr();
+        this.files = funcaoDados.getFiles();
+        this.ders = funcaoDados.getDers();
+        this.funcaoDadosVersionavel = funcaoDados.getFuncaoDadosVersionavel();
+        this.impacto = funcaoDados.getImpacto();
+
+    }
+
+    public void bindFuncaoDados(Complexidade complexidade, BigDecimal pf, BigDecimal grossPF, Analise analise, Funcionalidade funcionalidade, String detStr, FatorAjuste fatorAjuste, String name, String sustantation, Set<String> derValues, TipoFuncaoDados tipo, Set<Funcionalidade> funcionalidades, String retStr, Integer quantidade, Set<Rlr> rlrs, Alr alr, List<UploadedFile> files, Set<String> rlrValues, Set<Der> ders, FuncaoDadosVersionavel funcaoDadosVersionavel, ImpactoFatorAjuste impacto) {
+        this.tipo = tipo;
+        this.funcionalidades = funcionalidades == null ? null : Collections.unmodifiableSet(funcionalidades);
+        this.retStr = retStr;
+        this.quantidade = quantidade;
+        this.rlrs =  rlrs == null ? null : Collections.unmodifiableSet(rlrs);
+        this.alr = alr;
+        this.files = files == null ? null : Collections.unmodifiableList(files);
+        this.rlrValues =  rlrValues == null ? null : Collections.unmodifiableSet(rlrValues);
+        this.ders = ders == null ? null : Collections.unmodifiableSet(ders);
+        this.funcaoDadosVersionavel = funcaoDadosVersionavel;
+        this.impacto = impacto;
+        bindFuncaoAnalise(null, complexidade, pf, grossPF, analise, funcionalidade, detStr, fatorAjuste, name, sustantation, derValues, null);
+    }
+
     public TipoFuncaoDados getTipo() {
         return tipo;
     }
@@ -97,14 +134,14 @@ public class FuncaoDados extends FuncaoAnalise implements Serializable {
 
     public Set<Funcionalidade> getFuncionalidades() {
         return Optional.ofNullable(this.funcionalidades)
-            .map(lista -> new LinkedHashSet<Funcionalidade>(lista))
-            .orElse(new LinkedHashSet<Funcionalidade>());
+                .map(lista -> new LinkedHashSet<Funcionalidade>(lista))
+                .orElse(new LinkedHashSet<Funcionalidade>());
     }
 
     public FuncaoDados funcionalidades(Set<Funcionalidade> funcionalidades) {
         this.funcionalidades = Optional.ofNullable(funcionalidades)
-            .map(lista -> new LinkedHashSet<Funcionalidade>(lista))
-            .orElse(new LinkedHashSet<Funcionalidade>());
+                .map(lista -> new LinkedHashSet<Funcionalidade>(lista))
+                .orElse(new LinkedHashSet<Funcionalidade>());
         return this;
     }
 
@@ -128,20 +165,20 @@ public class FuncaoDados extends FuncaoAnalise implements Serializable {
 
     public void setFuncionalidades(Set<Funcionalidade> funcionalidades) {
         this.funcionalidades = Optional.ofNullable(funcionalidades)
-            .map(lista -> new LinkedHashSet<Funcionalidade>(lista))
-            .orElse(new LinkedHashSet<Funcionalidade>());
+                .map(lista -> new LinkedHashSet<Funcionalidade>(lista))
+                .orElse(new LinkedHashSet<Funcionalidade>());
     }
 
     public Set<Rlr> getRlrs() {
         return Optional.ofNullable(this.rlrs)
-            .map(lista -> new LinkedHashSet<Rlr>(lista))
-            .orElse(new LinkedHashSet<Rlr>());
+                .map(lista -> new LinkedHashSet<Rlr>(lista))
+                .orElse(new LinkedHashSet<Rlr>());
     }
 
     public FuncaoDados rlrs(Set<Rlr> rlrs) {
         this.rlrs = Optional.ofNullable(rlrs)
-            .map(lista -> new LinkedHashSet<Rlr>(lista))
-            .orElse(new LinkedHashSet<Rlr>());
+                .map(lista -> new LinkedHashSet<Rlr>(lista))
+                .orElse(new LinkedHashSet<Rlr>());
         return this;
     }
 
@@ -165,8 +202,8 @@ public class FuncaoDados extends FuncaoAnalise implements Serializable {
 
     public void setRlrs(Set<Rlr> rlrs) {
         this.rlrs = Optional.ofNullable(rlrs)
-            .map(lista -> new LinkedHashSet<Rlr>(lista))
-            .orElse(new LinkedHashSet<Rlr>());
+                .map(lista -> new LinkedHashSet<Rlr>(lista))
+                .orElse(new LinkedHashSet<Rlr>());
     }
 
     public Alr getAlr() {
@@ -204,7 +241,7 @@ public class FuncaoDados extends FuncaoAnalise implements Serializable {
         }
         return Objects.equals(getId(), funcaoDados.getId());
     }
-    
+
     @Override
     public int hashCode() {
         return super.hashCode();
@@ -228,8 +265,8 @@ public class FuncaoDados extends FuncaoAnalise implements Serializable {
 
     public void setRlrValues(Set<String> rlrValues) {
         this.rlrValues = Optional.ofNullable(rlrValues)
-            .map((lista) -> new HashSet<String>(lista))
-            .orElse(new HashSet<String>());
+                .map((lista) -> new HashSet<String>(lista))
+                .orElse(new HashSet<String>());
     }
 
     public Set<Der> getDers() {
@@ -238,8 +275,8 @@ public class FuncaoDados extends FuncaoAnalise implements Serializable {
 
     public void setDers(Set<Der> ders) {
         this.ders = Optional.ofNullable(ders)
-        .map(LinkedHashSet::new)
-        .orElse(new LinkedHashSet<Der>());
+                .map(LinkedHashSet::new)
+                .orElse(new LinkedHashSet<Der>());
     }
 
     public FuncaoDadosVersionavel getFuncaoDadosVersionavel() {

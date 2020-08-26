@@ -1,0 +1,5 @@
+{{- template "common.hook" . -}}
+---
+{{- template "common.gateway" (dict "context" . "gateway" .Values.abaco) -}}
+---
+{{- template "common.client" (dict "context" . "client" .Values.abacoui "gateway" .Values.abaco) -}}

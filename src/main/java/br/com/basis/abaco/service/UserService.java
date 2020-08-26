@@ -1,22 +1,5 @@
 package br.com.basis.abaco.service;
 
-import java.time.ZonedDateTime;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import br.com.basis.abaco.config.Constants;
 import br.com.basis.abaco.domain.Authority;
 import br.com.basis.abaco.domain.User;
@@ -25,15 +8,37 @@ import br.com.basis.abaco.repository.UserRepository;
 import br.com.basis.abaco.repository.search.UserSearchRepository;
 import br.com.basis.abaco.security.AuthoritiesConstants;
 import br.com.basis.abaco.security.SecurityUtils;
+import br.com.basis.abaco.service.dto.UserAnaliseDTO;
 import br.com.basis.abaco.service.dto.UserDTO;
+import br.com.basis.abaco.service.dto.UserEditDTO;
 import br.com.basis.abaco.service.util.RandomUtil;
+import org.elasticsearch.index.query.BoolQueryBuilder;
+import org.elasticsearch.index.query.QueryBuilders;
+import org.modelmapper.ModelMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.time.ZonedDateTime;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
+
+import static org.elasticsearch.index.query.QueryBuilders.*;
 
 /**
  * Service class for managing users.
  */
 @Service
 @Transactional
-public class UserService {
+public class UserService extends BaseService {
 
     private final Logger log = LoggerFactory.getLogger(UserService.class);
 
@@ -62,6 +67,7 @@ public class UserService {
             // activate given user for the registration key.
             user.setActivated(true);
             user.setActivationKey(null);
+            userRepository.save(user);
             userSearchRepository.save(user);
             log.debug("Activated user: {}", user);
             return user;
@@ -83,7 +89,7 @@ public class UserService {
     }
 
     public Optional<User> requestPasswordReset(String mail) {
-        return userRepository.findOneByEmail(mail).filter(User::getActivated).map(user -> {
+        return userRepository.findOneByEmail(mail).filter(User::isActivated).map(user -> {
             user.setResetKey(RandomUtil.generateResetKey());
             user.setResetDate(ZonedDateTime.now());
             return user;
@@ -92,28 +98,24 @@ public class UserService {
 
     public User createUser(String login, String password, String firstName, String lastName, String email,
                            String imageUrl, String langKey) {
-
         User newUser = new User();
         Authority authority = authorityRepository.findOne(AuthoritiesConstants.USER);
         Set<Authority> authorities = new HashSet<>();
         String encryptedPassword = passwordEncoder.encode(password);
         newUser.setLogin(login);
-        // new user gets initially a generated password
         newUser.setPassword(encryptedPassword);
         newUser.setFirstName(firstName);
         newUser.setLastName(lastName);
         newUser.setEmail(email);
         newUser.setImageUrl(imageUrl);
         newUser.setLangKey(langKey);
-        // new user is not active
         newUser.setActivated(false);
-        // new user gets registration key
         newUser.setActivationKey(RandomUtil.generateActivationKey());
         authorities.add(authority);
         newUser.setAuthorities(authorities);
         userRepository.save(newUser);
         userSearchRepository.save(newUser);
-        log.debug("Created Information for User: {}", newUser); return newUser;
+        return newUser;
     }
 
     public User createUser(UserDTO userDTO) {
@@ -191,7 +193,7 @@ public class UserService {
         copy.setFirstName(user.getFirstName());
         copy.setLastName(user.getLastName());
         copy.setEmail(user.getEmail());
-        copy.setActivated(user.getActivated());
+        copy.setActivated(user.isActivated());
         copy.setLangKey(user.getLangKey());
         copy.setImageUrl(user.getImageUrl());
         copy.setActivationKey(user.getActivationKey());
@@ -213,6 +215,7 @@ public class UserService {
             user.setLastName(lastName);
             user.setEmail(email);
             user.setLangKey(langKey);
+            userRepository.save(user);
             userSearchRepository.save(user);
             log.debug("Changed Information for User: {}", user);
         });
@@ -259,13 +262,23 @@ public class UserService {
     public Page<UserDTO> getAllManagedUsers(Pageable pageable) {
         return userRepository.findAllByLoginNot(pageable, Constants.ANONYMOUS_USER).map(UserDTO::new);
     }
-    
+
     @Transactional(readOnly = true)
     public List<UserDTO> getAllUsersOrgEquip(Long idOrg, Long idEquip) {
         List<User> lista = userRepository.findAllUsersOrgEquip(idOrg, idEquip);
         List<UserDTO> lst = new ArrayList<>();
-        for(int i = 0; i<lista.size(); i++){
+        for (int i = 0; i < lista.size(); i++) {
             lst.add(new UserDTO(lista.get(i)));
+        }
+        return lst;
+    }
+
+    @Transactional(readOnly = true)
+    public List<UserAnaliseDTO> getAllUserDtosOrgEquip(Long idOrg, Long idEquip) {
+        List<User> lista = userRepository.findAllUsersOrgEquip(idOrg, idEquip);
+        List<UserAnaliseDTO> lst = new ArrayList<>();
+        for (int i = 0; i < lista.size(); i++) {
+            lst.add(new ModelMapper().map(lista.get(i), UserAnaliseDTO.class));
         }
         return lst;
     }
@@ -285,24 +298,91 @@ public class UserService {
         return userRepository.findOneWithAuthoritiesByLogin(SecurityUtils.getCurrentUserLogin()).orElse(null);
     }
 
-    /**
-     * Not activated users should be automatically deleted after 3 days.
-     * <p>
-     * This is scheduled to get fired everyday, at 01:00 (am).
-     * </p>
-     */
-    @Scheduled(cron = "0 0 1 * * ?")
-    public void removeNotActivatedUsers() {
-        ZonedDateTime now = ZonedDateTime.now();
-        List<User> users = userRepository.findAllByActivatedIsFalseAndCreatedDateBefore(now.minusDays(3));
-        for (User user : users) {
-            log.debug("Deleting not activated user {}", user.getLogin());
-            userRepository.delete(user);
-            userSearchRepository.delete(user);
+    public BoolQueryBuilder bindFilterSearch(String nome, String login, String email, Long [] organizacao, String[] perfil, Long[] equipeId) {
+        BoolQueryBuilder qb = new BoolQueryBuilder();
+        mustMatchFuzzyQuery(nome, qb, "firstName");
+        mustMatchFuzzyQuery(login, qb, "login");
+        mustMatchFuzzyQuery(email, qb, "email");
+        if(organizacao != null && organizacao.length > 0 ){
+            BoolQueryBuilder boolQueryBuilderOrganizacao = QueryBuilders.boolQuery()
+            .must(
+                nestedQuery(
+                    "organizacoes",
+                    boolQuery().must(QueryBuilders.termsQuery("organizacoes.id", organizacao))
+                )
+            );
+            qb.must(boolQueryBuilderOrganizacao);
         }
+        if(perfil != null && perfil.length > 0 ){
+            BoolQueryBuilder boolQueryBuilderOrganizacao = QueryBuilders.boolQuery()
+                .must(
+                    nestedQuery(
+                        "authorities",
+                        boolQuery().must(QueryBuilders.termsQuery("authorities.name", perfil))
+                    )
+                );
+            qb.must(boolQueryBuilderOrganizacao);
+        }
+        if(equipeId != null && equipeId.length > 0 ){
+            BoolQueryBuilder boolQueryBuilderOrganizacao = QueryBuilders.boolQuery()
+                .must(
+                    nestedQuery(
+                        "tipoEquipes",
+                        boolQuery().must(QueryBuilders.termsQuery("tipoEquipes.id", equipeId))
+                    )
+                );
+            qb.must(boolQueryBuilderOrganizacao);
+        }
+        return qb;
     }
 
     public Long getLoggedUserId() {
         return userRepository.getLoggedUserId(SecurityUtils.getCurrentUserLogin());
     }
+
+    public UserEditDTO convertToDto(User user) {
+        return new ModelMapper().map(user, UserEditDTO.class);
+    }
+
+    public User convertToEntity(UserEditDTO userEditDTO) {
+        return new ModelMapper().map(userEditDTO, User.class);
+    }
+
+    public User bindUserForSaveElatiscSearch(User user){
+        return convertToEntity(convertToDto(user));
+    }
+
+    public User setUserToSave(User user) {
+        Authority adminAuth = new Authority();
+        adminAuth.setName(AuthoritiesConstants.ADMIN);
+        adminAuth.setDescription("Administrador");
+        Optional<User> oldUserdata = userRepository.findOneById(user.getId());
+        User loggedUser = getLoggedUser();
+        User userTmp = bindUser(user, oldUserdata, loggedUser);
+        User updatableUser = generateUpdatableUser(userTmp);
+        User updatedUser = userRepository.save(updatableUser);
+        return userSearchRepository.save(bindUserForSaveElatiscSearch(updatedUser));
+    }
+
+    private User bindUser(User user, Optional<User> oldUserdata, User loggedUser) {
+        User userTmp;
+        if (!loggedUser.verificarAuthority() && oldUserdata.isPresent()) {
+            String newFirstName = user.getFirstName();
+            String newLastName = user.getLastName();
+            String newEmail = user.getEmail();
+            userTmp = oldUserdata.get();
+            userTmp.setFirstName(newFirstName);
+            userTmp.setLastName(newLastName);
+            userTmp.setEmail(newEmail);
+        } else {
+            userTmp = user;
+        }
+        return userTmp;
+    }
+
+    public User getLoggedUser() {
+        String login = SecurityUtils.getCurrentUserLogin();
+        return userRepository.findOneWithAuthoritiesByLogin(login).orElse(null);
+    }
+
 }

@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+   <changeSet author="basis (generated)" id="1590496607226-1">
+       <dropView viewName="baseline_analitico"/>
+   </changeSet>
+   <changeSet author="basis (generated)" id="1590496607226-2">
+       <createView viewName="baseline_analitico">
+           SELECT row_number() OVER (ORDER BY fdt.id_funcao_dados) AS row_number,
+           fdt.tipo,
+           fdt.classificacao,
+           fdt.impacto,
+           fdt.analise_id,
+           fdt.data_homologacao_software,
+           fdt.id_sistema,
+           fdt.nome,
+           fdt.sigla,
+           fdt.name,
+           fdt.pf,
+           fdt.id_funcao_dados,
+           fdt.complexidade,
+           fdt.nome_equipe,
+           fdt.equipe_responsavel_id,
+           fdt.nome_funcionalidade,
+           fdt.nome_modulo,
+           fdt.der,
+           fdt.rlr_alr
+           FROM ( SELECT 'fd'::text AS tipo,
+           c.tipo AS classificacao,
+           c.impacto,
+           c.analise_id,
+           a.data_homologacao_software,
+           b.id AS id_sistema,
+           b.nome,
+           b.sigla,
+           c.name,
+           c.grosspf AS pf,
+           c.id AS id_funcao_dados,
+           c.complexidade,
+           f.nome AS nome_equipe,
+           a.equipe_responsavel_id,
+           fc.nome AS nome_funcionalidade,
+           m.nome AS nome_modulo,
+           ( SELECT count(d_1.id) AS count
+           FROM der d_1
+           WHERE d_1.funcao_dados_id = c.id) AS der,
+           ( SELECT count(e_1.id) AS count
+           FROM rlr e_1
+           WHERE e_1.funcao_dados_id = c.id) AS rlr_alr
+           FROM analise a
+           JOIN sistema b ON a.sistema_id = b.id
+           JOIN funcao_dados c ON c.analise_id = a.id
+           JOIN tipo_equipe f ON a.equipe_responsavel_id = f.id
+           LEFT JOIN der d ON d.funcao_dados_id = c.id
+           LEFT JOIN rlr e ON e.funcao_dados_id = c.id
+           LEFT JOIN funcionalidade fc ON c.funcionalidade_id = fc.id
+           LEFT JOIN modulo m ON fc.modulo_id = m.id
+           WHERE c.grosspf > 0::numeric AND a.data_homologacao_software IS NOT NULL AND a.data_homologacao_software = (( SELECT max(a1.data_homologacao_software) AS max
+           FROM analise a1
+           JOIN funcao_dados c1 ON c1.analise_id = a1.id AND c1.name::text = c.name::text
+           WHERE a1.bloqueado = true AND a1.id = a.id)) AND upper(a.metodo_contagem::text) = 'DETALHADA'::text AND a.bloqueado = true
+           UNION
+           SELECT 'ft'::text AS tipo,
+           c.tipo AS classificacao,
+           c.impacto,
+           c.analise_id,
+           a.data_homologacao_software,
+           b.id AS id_sistema,
+           b.nome,
+           b.sigla,
+           c.name,
+           c.grosspf AS pf,
+           c.id AS id_funcao_dados,
+           c.complexidade,
+           f.nome AS nome_equipe,
+           a.equipe_responsavel_id,
+           fc.nome AS nome_funcionalidade,
+           m.nome AS nome_modulo,
+           ( SELECT count(d.id) AS count
+           FROM der d
+           WHERE d.funcao_transacao_id = c.id) AS der,
+           ( SELECT count(e.id) AS count
+           FROM alr e
+           WHERE e.funcao_transacao_id = c.id) AS rlr_alr
+           FROM analise a
+           JOIN sistema b ON a.sistema_id = b.id
+           JOIN funcao_transacao c ON c.analise_id = a.id
+           JOIN tipo_equipe f ON a.equipe_responsavel_id = f.id
+           LEFT JOIN funcionalidade fc ON c.funcionalidade_id = fc.id
+           LEFT JOIN modulo m ON fc.modulo_id = m.id
+           WHERE c.grosspf > 0::numeric AND a.data_homologacao_software IS NOT NULL AND a.data_homologacao_software = (( SELECT max(a1.data_homologacao_software) AS max
+           FROM analise a1
+           JOIN funcao_transacao c1 ON c1.analise_id = a1.id AND c1.name::text = c.name::text
+           WHERE a1.bloqueado = true AND a1.id = a.id)) AND upper(a.metodo_contagem::text) = 'DETALHADA'::text AND a.bloqueado = true) fdt;
+       </createView>
+   </changeSet>
+</databaseChangeLog>

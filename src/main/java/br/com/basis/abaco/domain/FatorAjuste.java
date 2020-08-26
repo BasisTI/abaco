@@ -32,7 +32,7 @@ import java.util.Objects;
 @Entity
 @Table(name = "fator_ajuste")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-@Document(indexName = "fatorajuste")
+@Document(indexName = "fator_ajuste")
 public class FatorAjuste implements Serializable {
 
     private static final long serialVersionUID = 1L;

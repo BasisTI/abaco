@@ -1,0 +1,116 @@
+abacoui:
+  name: abaco-ui
+  image:
+    repository: basis-registry.basis.com.br/abaco/abaco-ui
+    tag: teste
+  replicaCount: 1
+  ingress:
+    url: "abaco.basis.com.br"
+  ports:
+    port: 80
+  imagePullSecrets:
+  - name: basis-registry
+  proxy:
+    locations:
+    - abaco
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+    kubernetes.io/tls-acme: "true"
+  tls:
+  - hosts:
+    - abaco.basis.com.br
+    secretName: abaco-cert
+
+abaco:
+  name: abaco
+  image:
+    repository: basis-registry.basis.com.br/abaco/abaco
+    tag: teste
+  replicaCount: 1
+  ports:
+    port: 8080
+  health:
+    disabled: true
+  imagePullSecrets:
+  - name: basis-registry
+  memory:
+    min: "1024"
+    max: "4096"
+  resources:
+    requests:
+      memory: "1Gi"
+      cpu: "250m"
+    limits:
+      memory: "4Gi"
+      cpu: "1000m"
+  configmap:
+    spring:
+      profiles:
+        active: "prod,swagger"
+      datasource:
+        url: jdbc:postgresql://pgsql-abaco/abaco
+        username: abaco
+        password: abaco
+      jackson:
+        serialization.write_dates_as_timestamps: false
+      data:
+        elasticsearch:
+          cluster-name: abaco
+          cluster-nodes: es-abaco-tst-client:9300
+    
+elasticsearch:
+  install: true
+  fullnameOverride: es-abaco-tst
+  image:
+    repository: "elasticsearch"
+    tag: "2.4-alpine"
+  cluster:
+    name: abaco
+  data:
+    replicas: 2
+    persistence:
+      size: 4Gi
+      storageClass: nfs-name
+    heapSize: "2g"
+    resources:
+      requests:
+        memory: "2Gi"
+        cpu: "250m"
+      limits:
+        memory: "4Gi"
+        cpu: "1000m"
+  master:
+    replicas: 2
+    persistence:
+      storageClass: nfs-name
+      size: 4Gi
+    heapSize: "2g"
+    resources:
+      requests:
+        memory: "2Gi"
+        cpu: "250m"
+      limits:
+        memory: "4Gi"
+        cpu: "1000m"
+  client:
+    replicas: 1
+    exposeTransportPort: true
+    heapSize: "2g"
+    resources:
+      requests:
+        memory: "2Gi"
+        cpu: "250m"
+      limits:
+        memory: "4Gi"
+        cpu: "1000m"
+
+postgresql:
+  install: true
+  fullnameOverride: pgsql-abaco
+  postgresqlUsername: abaco
+  postgresqlPassword: abaco
+  postgresqlDatabase: basis
+  postgresqlPostgresPassword: asdfqwerzxcv
+  persistence:
+    storageClass: nfs-name
+    size: 10Gi

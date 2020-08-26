@@ -5,72 +5,76 @@ package br.com.basis.abaco.service.dto;
  * @since 04/06/2018
  */
 public class FuncoesDTO {
-    
+
     private Long idFd;
-    
+
     private Long idFt;
-    
+
     private String fatorAjusteFd;
 
     private String fatorAjusteValor;
-    
+
     private String impactoFd;
-    
+
     private String moduloFd;
-    
+
     private String funcionalidadeFd;
-    
+
     private String nomeFd;
-    
+
     private String tipoFd;
-    
+
     private Integer totalDerFd;
-    
+
     private Integer totalRlrFd;
-    
+
     private String complexidadeFd;
-    
+
     private String rlrFd;
-    
+
     private String derFd;
-    
+
     private ComplexidadeDTO complexidadeDtoFd;
-    
+
     private ImpactoDTO impactoDtoFd;
-    
+
     private String pfTotalFd;
-    
+
     private String pfAjustadoFd;
-    
+
     private String fatorAjusteFt;
-    
+
     private String impactoFt;
-    
+
     private String moduloFt;
-    
+
     private String funcionalidadeFt;
-    
+
     private String nomeFt;
-    
+
     private String tipoFt;
-    
+
     private Integer totalDerFt;
-    
+
     private Integer totalFtrFt;
-    
+
     private String complexidadeFt;
-    
+
     private String ftrFt;
-    
+
     private String derFt;
-    
+
     private ComplexidadeDTO complexidadeDtoFt;
-    
+
     private ImpactoDTO impactoDtoFt;
-    
+
     private String pfTotalFt;
-    
+
     private String pfAjustadoFt;
+
+    private Integer identificador;
+
+    private String sustantation;
 
     public String getFatorAjusteValor() {
         return fatorAjusteValor;
@@ -89,7 +93,7 @@ public class FuncoesDTO {
     }
 
     public String getImpactoFd() {
-        if (impactoFd.equals("ITENS_NAO_MENSURAVEIS")){
+        if (impactoFd.equals("ITENS_NAO_MENSURAVEIS")) {
             return "OUTROS";
         }
         return impactoFd;
@@ -338,5 +342,20 @@ public class FuncoesDTO {
     public void setIdFt(Long idFt) {
         this.idFt = idFt;
     }
-    
+
+    public Integer getIdentificador() {
+        return identificador;
+    }
+
+    public void setIdentificador(Integer identificador) {
+        this.identificador = identificador;
+    }
+
+    public String getSustantation() {
+        return sustantation;
+    }
+
+    public void setSustantation(String sustantation) {
+        this.sustantation = sustantation;
+    }
 }

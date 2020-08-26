@@ -1,10 +1,14 @@
 package br.com.basis.abaco.service.dto;
 
+import lombok.Getter;
+import lombok.Setter;
+
 /**
  * @author eduardo.andrade
  * @since 28/06/2018
- *
  */
+@Getter
+@Setter
 public class FuncaoTransacaoDTO {
 
     private String nomeFt;
@@ -31,96 +35,12 @@ public class FuncaoTransacaoDTO {
 
     private String submodulo;
 
-    public String getFatorAjusteValor() {
-        return fatorAjusteValor;
-    }
+    private Integer identificador;
 
-    public void setFatorAjusteValor(String fatorAjusteValor) {
-        this.fatorAjusteValor = fatorAjusteValor;
-    }
+    private String sustantation;
 
-    public String getModulo() {
-        return modulo;
-    }
+    private String der;
 
-    public void setModulo(String modulo) {
-        this.modulo = modulo;
-    }
-
-    public String getSubmodulo() {
-        return submodulo;
-    }
-
-    public void setSubmodulo(String submodulo) {
-        this.submodulo = submodulo;
-    }
-
-    public String getFatorAjusteFt() { return fatorAjusteFt; }
-
-    public void setFatorAjusteFt(String fatorAjusteFt) { this.fatorAjusteFt = fatorAjusteFt; }
-
-    public String getNomeFt() {
-        return nomeFt;
-    }
-
-    public void setNomeFt(String nomeFt) {
-        this.nomeFt = nomeFt;
-    }
-
-    public String getClassificacaoFt() {
-        return classificacaoFt;
-    }
-
-    public void setClassificacaoFt(String classificacaoFt) {
-        this.classificacaoFt = classificacaoFt;
-    }
-
-    public String getImpactoFt() {
-        return impactoFt;
-    }
-
-    public void setImpactoFt(String impactoFt) {
-        this.impactoFt = impactoFt;
-    }
-
-    public String getFtrFt() {
-        return ftrFt;
-    }
-
-    public void setFtrFt(String ftrFt) {
-        this.ftrFt = ftrFt;
-    }
-
-    public String getDerFt() {
-        return derFt;
-    }
-
-    public void setDerFt(String derFt) {
-        this.derFt = derFt;
-    }
-
-    public String getComplexidadeFt() {
-        return complexidadeFt;
-    }
-
-    public void setComplexidadeFt(String complexidadeFt) {
-        this.complexidadeFt = complexidadeFt;
-    }
-
-    public String getPfTotalFt() {
-        return pfTotalFt;
-    }
-
-    public void setPfTotalFt(String pfTotalFt) {
-        this.pfTotalFt = pfTotalFt;
-    }
-
-    public String getPfAjustadoFt() {
-        return pfAjustadoFt;
-    }
-
-    public void setPfAjustadoFt(String pfAjustadoFt) {
-        this.pfAjustadoFt = pfAjustadoFt;
-    }
+    private String ftr;
 
 }

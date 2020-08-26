@@ -1,6 +1,8 @@
 package br.com.basis.abaco.domain;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.springframework.data.elasticsearch.annotations.Document;
@@ -26,6 +28,8 @@ import java.util.Objects;
 @Table(name = "der")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 @Document(indexName = "der")
+@AllArgsConstructor
+@NoArgsConstructor
 public class Der implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -36,7 +40,7 @@ public class Der implements Serializable {
     private Long id;
 
     @Column(name = "nome")
-    @Field (index = FieldIndex.not_analyzed, type = FieldType.String)
+    @Field(index = FieldIndex.not_analyzed, type = FieldType.String)
     private String nome;
 
     private Integer valor;
@@ -44,11 +48,11 @@ public class Der implements Serializable {
     @ManyToOne
     private Rlr rlr;
 
-    @JsonBackReference(value="funcaoDados")
+    @JsonBackReference(value = "funcaoDados")
     @ManyToOne
     private FuncaoDados funcaoDados;
 
-    @JsonBackReference(value="funcaoTransacao")
+    @JsonBackReference(value = "funcaoTransacao")
     @ManyToOne
     private FuncaoTransacao funcaoTransacao;
 

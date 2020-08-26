@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+   <changeSet author="basis (generated)" id="1590006254033-1">
+      <dropView viewName="baseline_sintetico"/>
+   </changeSet>
+   <changeSet author="basis (generated)" id="1590006254033-2">
+      <createView viewName="baseline_sintetico">
+          SELECT row_number() OVER (ORDER BY sistema.id_sistema) AS row_number,
+          sistema.id_sistema,
+          sistema.sigla,
+          sistema.nome,
+          sistema.numero_ocorrencia,
+          sistema.sum,
+          sistema.equipe_responsavel_id,
+          sistema.nome_equipe
+          FROM ( SELECT w.id_sistema,
+          w.sigla,
+          w.nome,
+          w.numero_ocorrencia,
+          sum(w.pf) AS sum,
+          w.equipe_responsavel_id,
+          w.nome_equipe
+          FROM ( SELECT 'fd'::text AS tipo,
+          c.impacto,
+          c.tipo,
+          c.analise_id,
+          a.data_homologacao_software,
+          b.id AS id_sistema,
+          b.nome,
+          b.sigla,
+          c.name,
+          c.grosspf AS pf,
+          c.id AS id_dados_trans,
+          c.complexidade,
+          b.numero_ocorrencia,
+          f.nome AS nome_equipe,
+          a.equipe_responsavel_id,
+          ( SELECT count(d_1.id) AS count
+          FROM der d_1
+          WHERE d_1.funcao_dados_id = c.id) AS der,
+          ( SELECT count(e_1.id) AS count
+          FROM rlr e_1
+          WHERE e_1.funcao_dados_id = c.id) AS rlr_alr
+          FROM analise a
+          JOIN sistema b ON a.sistema_id = b.id
+          JOIN funcao_dados c ON c.analise_id = a.id
+          JOIN tipo_equipe f ON a.equipe_responsavel_id = f.id
+          LEFT JOIN der d ON d.funcao_dados_id = c.id
+          LEFT JOIN rlr e ON e.funcao_dados_id = c.id
+          WHERE c.grosspf > 0::numeric AND a.data_homologacao_software IS NOT NULL AND a.data_homologacao_software = (( SELECT max(a1.data_homologacao_software) AS max
+          FROM analise a1
+          JOIN funcao_dados c1 ON c1.analise_id = a1.id AND c1.name::text = c.name::text
+          WHERE a1.bloqueado = true AND a1.id = a.id)) AND upper(a.metodo_contagem::text) = 'DETALHADA'::text AND a.bloqueado = true
+          UNION
+          SELECT 'ft'::text AS tipo,
+          c.impacto,
+          c.tipo,
+          c.analise_id,
+          a.data_homologacao_software,
+          b.id AS id_sistema,
+          b.nome,
+          b.sigla,
+          c.name,
+          c.grosspf AS pf,
+          c.id AS id_dados_trans,
+          c.complexidade,
+          b.numero_ocorrencia,
+          f.nome AS nome_equipe,
+          a.equipe_responsavel_id,
+          ( SELECT count(d.id) AS count
+          FROM der d
+          WHERE d.funcao_transacao_id = c.id) AS der,
+          ( SELECT count(e.id) AS count
+          FROM alr e
+          WHERE e.funcao_transacao_id = c.id) AS rlr_alr
+          FROM analise a
+          JOIN sistema b ON a.sistema_id = b.id
+          JOIN funcao_transacao c ON c.analise_id = a.id
+          JOIN tipo_equipe f ON a.equipe_responsavel_id = f.id
+          WHERE c.grosspf > 0::numeric AND a.data_homologacao_software IS NOT NULL AND a.data_homologacao_software = (( SELECT max(a1.data_homologacao_software) AS max
+          FROM analise a1
+          JOIN funcao_transacao c1 ON c1.analise_id = a1.id AND c1.name::text = c.name::text
+          WHERE a1.bloqueado = true AND a1.id = a.id)) AND upper(a.metodo_contagem::text) = 'DETALHADA'::text AND a.bloqueado = true) w(tipo, impacto, tipo_1, analise_id, data_homologacao_software, id_sistema, nome, sigla, name, pf, id_dados_trans, complexidade, numero_ocorrencia, nome_equipe, equipe_responsavel_id, der, rlr_alr)
+          GROUP BY w.id_sistema, w.sigla, w.nome, w.numero_ocorrencia, w.equipe_responsavel_id, w.nome_equipe) sistema;
+      </createView>
+   </changeSet>
+</databaseChangeLog>

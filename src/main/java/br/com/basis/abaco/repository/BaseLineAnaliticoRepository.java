@@ -13,7 +13,6 @@ import java.util.List;
 /**
  * Spring Data JPA repository for the BaseLineAnalitico entity.
  */
-@SuppressWarnings("unused")
 @Repository
 public interface BaseLineAnaliticoRepository extends JpaRepository<BaseLineAnalitico, Long> {
 

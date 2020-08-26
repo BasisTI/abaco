@@ -1,18 +1,23 @@
 package br.com.basis.abaco.web.rest;
 
-import static org.elasticsearch.index.query.QueryBuilders.multiMatchQuery;
-import static org.elasticsearch.index.query.QueryBuilders.queryStringQuery;
-
-import java.io.ByteArrayOutputStream;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.List;
-import java.util.Optional;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import javax.validation.Valid;
-
+import br.com.basis.abaco.domain.Organizacao;
+import br.com.basis.abaco.repository.OrganizacaoRepository;
+import br.com.basis.abaco.repository.search.OrganizacaoSearchRepository;
+import br.com.basis.abaco.service.OrganizacaoService;
+import br.com.basis.abaco.service.dto.DropdownDTO;
+import br.com.basis.abaco.service.dto.OrganizacaoDropdownDTO;
+import br.com.basis.abaco.service.exception.RelatorioException;
+import br.com.basis.abaco.service.relatorio.RelatorioOrganizacaoColunas;
+import br.com.basis.abaco.utils.AbacoUtil;
+import br.com.basis.abaco.utils.PageUtils;
+import br.com.basis.abaco.web.rest.util.HeaderUtil;
+import br.com.basis.abaco.web.rest.util.PaginationUtil;
+import br.com.basis.dynamicexports.service.DynamicExportsService;
+import br.com.basis.dynamicexports.util.DynamicExporter;
+import com.codahale.metrics.annotation.Timed;
+import io.github.jhipster.web.util.ResponseUtil;
+import net.sf.dynamicreports.report.exception.DRException;
+import net.sf.jasperreports.engine.JRException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.InputStreamResource;
@@ -36,25 +41,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.codahale.metrics.annotation.Timed;
+import javax.validation.Valid;
+import java.io.ByteArrayOutputStream;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.List;
+import java.util.Optional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
-import br.com.basis.abaco.domain.Organizacao;
-import br.com.basis.abaco.repository.OrganizacaoRepository;
-import br.com.basis.abaco.repository.search.OrganizacaoSearchRepository;
-import br.com.basis.abaco.service.OrganizacaoService;
-import br.com.basis.abaco.service.dto.DropdownDTO;
-import br.com.basis.abaco.service.dto.OrganizacaoDropdownDTO;
-import br.com.basis.abaco.service.exception.RelatorioException;
-import br.com.basis.abaco.service.relatorio.RelatorioOrganizacaoColunas;
-import br.com.basis.abaco.utils.AbacoUtil;
-import br.com.basis.abaco.utils.PageUtils;
-import br.com.basis.abaco.web.rest.util.HeaderUtil;
-import br.com.basis.abaco.web.rest.util.PaginationUtil;
-import br.com.basis.dynamicexports.service.DynamicExportsService;
-import br.com.basis.dynamicexports.util.DynamicExporter;
-import io.github.jhipster.web.util.ResponseUtil;
-import net.sf.dynamicreports.report.exception.DRException;
-import net.sf.jasperreports.engine.JRException;
+import static org.elasticsearch.index.query.QueryBuilders.*;
 
 /**
  * REST controller for managing Organizacao.
@@ -100,7 +96,7 @@ public class OrganizacaoResource {
 
   /**
    * Function to format a bad request URL to be returned to frontend
-   * 
+   *
    * @param errorKey       The key identifing the error occured
    * @param defaultMessage Default message to display to user
    * @return The bad request URL
@@ -128,11 +124,11 @@ public class OrganizacaoResource {
       i++;
     }
     /* Verifing if there is an existing Organizacao with same name */
-    Optional<Organizacao> existingOrganizacao = organizacaoRepository.findOneByNome(org.getNome());
+    Optional<Organizacao> existingOrganizacao = organizacaoSearchRepository.findOneByNome(org.getNome());
     if (existingOrganizacao.isPresent() && (!existingOrganizacao.get().getId().equals(org.getId()))) {
       return 4;
     }
-    existingOrganizacao = organizacaoRepository.findOneByCnpj(org.getCnpj());
+    existingOrganizacao = organizacaoSearchRepository.findOneByCnpj(org.getCnpj());
     if (org.getCnpj() != null && existingOrganizacao.isPresent()
         && (!existingOrganizacao.get().getId().equals(org.getId()))) {
       return 5;
@@ -164,9 +160,7 @@ public class OrganizacaoResource {
     if (i >= 0) {
       return this.createBadRequest(this.erro[i], this.mensagem[i]);
     }
-
     Organizacao result = organizacaoRepository.save(organizacao);
-
     organizacaoSearchRepository.save(result);
 
     return ResponseEntity.created(new URI("/api/organizacaos/" + result.getId()))
@@ -213,6 +207,13 @@ public class OrganizacaoResource {
         return organizacaoService.getOrganizacaoDropdown();
     }
 
+    @GetMapping("/organizacaos/drop-down/active")
+    @Timed
+    public List<OrganizacaoDropdownDTO> getOrganizacaoDropdownAtivas() {
+        log.debug("REST request to get dropdown Organizacaos");
+        return organizacaoService.getOrganizacaoDropdownAtivo();
+    }
+
   @GetMapping("/organizacaos/ativas")
   @Timed
   public List<Organizacao> searchActiveOrganizations() {
@@ -232,7 +233,6 @@ public class OrganizacaoResource {
   public ResponseEntity<Organizacao> getOrganizacao(@PathVariable Long id) {
     log.debug("REST request to get Organizacao : {}", id);
     Organizacao organizacao = organizacaoRepository.findOne(id);
-
     return ResponseUtil.wrapOrNotFound(Optional.ofNullable(organizacao));
   }
 
@@ -263,8 +263,8 @@ public class OrganizacaoResource {
   @GetMapping("/_search/organizacaos")
   @Timed
   public ResponseEntity<List<Organizacao>> searchOrganizacaos(@RequestParam(defaultValue = "*") String query,
-      @RequestParam String order, @RequestParam(name = "page") int pageNumber, @RequestParam int size,
-      @RequestParam(defaultValue = "id") String sort) throws URISyntaxException {
+      @RequestParam(defaultValue = "ASC") String order, @RequestParam(name = "page") int pageNumber, @RequestParam int size,
+      @RequestParam(defaultValue = "id", required = false) String sort) throws URISyntaxException {
     log.debug("REST request to search Organizacaos for query {}", query);
 
     Sort.Direction sortOrder = PageUtils.getSortDirection(order);
@@ -290,9 +290,8 @@ public class OrganizacaoResource {
       new NativeSearchQueryBuilder().withQuery(multiMatchQuery(query)).build();
       Page<Organizacao> result = organizacaoSearchRepository.search(queryStringQuery(query),
           dynamicExportsService.obterPageableMaximoExportacao());
-      byteArrayOutputStream = dynamicExportsService.export(new RelatorioOrganizacaoColunas(), result,
-          tipoRelatorio, Optional.empty(), Optional.ofNullable(AbacoUtil.REPORT_LOGO_PATH),
-          Optional.ofNullable(AbacoUtil.getReportFooter()));
+
+      byteArrayOutputStream = dynamicExportsService.export(new RelatorioOrganizacaoColunas(), result, tipoRelatorio, Optional.empty(), Optional.ofNullable(AbacoUtil.REPORT_LOGO_PATH), Optional.ofNullable(AbacoUtil.getReportFooter()));
     } catch (DRException | ClassNotFoundException | JRException | NoClassDefFoundError e) {
       log.error(e.getMessage(), e);
       throw new RelatorioException(e);
@@ -303,6 +302,7 @@ public class OrganizacaoResource {
     @GetMapping("/organizacaos/active-user")
     @Timed
     public List<DropdownDTO> findActiveUserOrganizations() {
+
         return organizacaoService.findActiveUserOrganizations();
     }
 }

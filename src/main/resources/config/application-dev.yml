@@ -38,9 +38,9 @@ spring:
         serialization.indent_output: true
     datasource:
         type: com.zaxxer.hikari.HikariDataSource
-        url: jdbc:postgresql://localhost:5432/abaco
-        username: abaco
-        password: abaco
+        url: jdbc:postgresql://localhost:5432/basis
+        username: postgres
+        password: postgres
     jpa:
         database-platform: io.github.jhipster.domain.util.FixedPostgreSQL82Dialect
         database: POSTGRESQL
@@ -141,6 +141,6 @@ jhipster:
 # More documentation is available at:
 # https://jhipster.github.io/common-application-properties/
 # ===================================================================
-
-application:
-
+nuvem:
+    elasticsearch:
+        reindex.enabled: true

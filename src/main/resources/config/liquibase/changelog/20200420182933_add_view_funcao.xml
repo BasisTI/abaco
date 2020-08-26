@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+   <changeSet author="basis (generated)" id="1587407380407-1">
+      <createView fullDefinition="false" viewName="vw_funcao_dados">
+
+         with count_der as (
+         select count(der.id) as total, funcao_dados_id from der where funcao_dados_id notnull group by funcao_dados_id
+         ),count_der_with_one as (
+         select coalesce(der.valor, 1)as total, t_der.funcao_dados_id as funcao_dados_id from count_der t_der inner join der on der.funcao_dados_id=t_der.funcao_dados_id where total = 1
+         ),count_der_more_one as (
+         select * from count_der where total > 1
+         ),sum_der as (
+         select * from count_der_with_one union select * from count_der_more_one
+         ),
+         count_rlr as (
+         select count(rlr.id) as total, funcao_dados_id from rlr where funcao_dados_id notnull group by funcao_dados_id
+         ),
+         total_rlr_with_one as (
+         select coalesce(rlr.valor, 1)as total, t_rlr.funcao_dados_id as funcao_dados_id from count_rlr t_rlr inner join rlr on rlr.funcao_dados_id=t_rlr.funcao_dados_id where total = 1
+         ),
+         total_rlr_more_one as (
+         select * from count_rlr where total > 1
+         ),sum_rlr as (
+         select * from total_rlr_more_one union select * from total_rlr_with_one
+         )
+
+         select
+         fd.id
+         ,fd.name
+         ,fd.tipo
+         ,fd.complexidade
+         ,fd.pf
+         ,fd.analise_id
+         ,fd.fator_ajuste_id
+         ,fd.funcionalidade_id
+         ,fd.sustantation
+         ,fd.grosspf
+         ,fc.nome as nome_funcionalidade
+         ,md.id as id_modulo
+         ,md.nome as nome_modulo
+         ,concat(fa.codigo,' - (', fa.origem,') - ',fa.nome,' - ', round( fa.fator, 2)) as deflator
+         ,coalesce(sum_der.total,0) as total_ders
+         ,coalesce(sum_rlr.total,0) as total_rlrs
+         from funcao_dados fd
+         left join funcionalidade fc on fd.funcionalidade_id = fc.id
+         left join modulo md on fc.modulo_id = md.id
+         left join fator_ajuste fa on fa.id = fd.fator_ajuste_id
+         left join sum_der on sum_der.funcao_dados_id = fd.id
+         left join sum_rlr on sum_rlr.funcao_dados_id = fd.id;
+      </createView>
+   </changeSet>
+   <changeSet author="basis (generated)" id="1587407380407-2">
+      <createView fullDefinition="false" viewName="vw_funcao_transacao">
+         with count_der as (
+         select count(der.id) as total, funcao_transacao_id from der where funcao_transacao_id notnull group by funcao_transacao_id
+         ),count_der_with_one as (
+         select coalesce(der.valor, 1)as total, t_der.funcao_transacao_id as funcao_transacao_id from count_der t_der inner join der on der.funcao_transacao_id=t_der.funcao_transacao_id where total = 1
+         ),count_der_more_one as (
+         select * from count_der where total > 1
+         ),sum_der as (
+         select * from count_der_with_one union select * from count_der_more_one
+         ),
+         count_alr as (
+         select count(alr.id) as total, funcao_transacao_id from alr where funcao_transacao_id notnull group by funcao_transacao_id
+         ),
+         total_alr_with_one as (
+         select coalesce(alr.valor, 1)as total, t_alr.funcao_transacao_id as funcao_transacao_id from count_alr t_alr inner join alr on alr.funcao_transacao_id=t_alr.funcao_transacao_id where total = 1
+         ),
+         total_alr_more_one as (
+         select * from count_alr where total > 1
+         ),sum_alr as (
+         select * from total_alr_more_one union select * from total_alr_with_one
+         )
+
+         select
+         ft.id
+         ,ft.name
+         ,ft.tipo
+         ,ft.complexidade
+         ,ft.pf
+         ,ft.analise_id
+         ,ft.fator_ajuste_id
+         ,ft.funcionalidade_id
+         ,fa.nome as fatorAjuste
+         ,ft.sustantation
+         ,ft.grosspf
+         ,fc.nome as nome_funcionalidade
+         ,md.id as id_modulo
+         ,md.nome as nome_modulo
+         ,concat(fa.codigo,' - (', fa.origem,') - ',fa.nome,' - ', round( fa.fator, 2)) as deflator
+         ,coalesce(sum_der.total,0) as total_ders
+         ,coalesce(sum_alr.total,0) as total_alrs
+         from funcao_transacao ft
+         left join funcionalidade fc on ft.funcionalidade_id = fc.id
+         left join modulo md on fc.modulo_id = md.id
+         left join fator_ajuste fa on fa.id = ft.fator_ajuste_id
+         left join sum_der on sum_der.funcao_transacao_id = ft.id
+         left join sum_alr on sum_alr.funcao_transacao_id = ft.id;
+      </createView>
+   </changeSet>
+</databaseChangeLog>

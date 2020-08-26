@@ -1,9 +1,16 @@
 package br.com.basis.abaco.domain;
 
+import br.com.basis.abaco.domain.enumeration.Complexidade;
 import br.com.basis.abaco.domain.enumeration.ImpactoFatorAjuste;
 import br.com.basis.abaco.domain.enumeration.TipoFuncaoTransacao;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.springframework.data.elasticsearch.annotations.Document;
@@ -13,31 +20,32 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
-import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
 import java.util.Set;
 
-/**
- * A FuncaoTransacao.
- */
 @Entity
 @Table(name = "funcao_transacao")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-@Document(indexName = "funcaotransacao")
+@Document(indexName = "funcao_transacao")
+@JsonInclude(Include.NON_EMPTY)
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class FuncaoTransacao extends FuncaoAnalise implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    private static  final String FUNCAOTRANSACAO = "funcaoTransacao";
+    private static final String FUNCAOTRANSACAO = "funcaoTransacao";
 
     @Enumerated(EnumType.STRING)
     @Column(name = "tipo")
@@ -59,13 +67,14 @@ public class FuncaoTransacao extends FuncaoAnalise implements Serializable {
     @JsonManagedReference(value = FUNCAOTRANSACAO)
     @OneToMany(mappedBy = FUNCAOTRANSACAO, cascade = CascadeType.ALL, orphanRemoval = true)
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+    @OrderBy("nome")
     private Set<Alr> alrs = new HashSet<>();
 
     @OneToMany(mappedBy = FUNCAOTRANSACAO, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<UploadedFile> files = new ArrayList<>();
 
     @Transient
-    private Set<String> ftrValues;
+    private Set<String> ftrValues = new HashSet<>();
 
     @Enumerated(EnumType.STRING)
     @Column(name = "impacto")
@@ -73,175 +82,25 @@ public class FuncaoTransacao extends FuncaoAnalise implements Serializable {
 
     @JsonManagedReference(value = FUNCAOTRANSACAO)
     @OneToMany(mappedBy = FUNCAOTRANSACAO, cascade = CascadeType.ALL, orphanRemoval = true)
+    @OrderBy("nome")
     private Set<Der> ders = new HashSet<>();
 
-    public TipoFuncaoTransacao getTipo() {
-        return tipo;
-    }
+    @JsonIgnore
+    @ManyToOne
+    private Analise analise;
 
-    public FuncaoTransacao tipo(TipoFuncaoTransacao tipo) {
+
+    public void bindFuncaoTransacao(TipoFuncaoTransacao tipo, String ftrStr, Integer quantidade, Set<Alr> alrs, List<UploadedFile> files, Set<String> ftrValues, ImpactoFatorAjuste impacto, Set<Der> ders, Analise analise, Complexidade complexidade, BigDecimal pf, BigDecimal grossPF, Funcionalidade funcionalidade, String detStr, FatorAjuste fatorAjuste, String name, String sustantation, Set<String> derValues) {
         this.tipo = tipo;
-        return this;
-    }
-
-    public void setTipo(TipoFuncaoTransacao tipo) {
-        this.tipo = tipo;
-    }
-
-    public Set<Funcionalidade> getFuncionalidades() {
-        return Optional.ofNullable(this.funcionalidades)
-            .map(LinkedHashSet::new)
-            .orElse(new LinkedHashSet<Funcionalidade>());
-    }
-
-    public FuncaoTransacao funcionalidades(Set<Funcionalidade> funcionalidades) {
-        this.funcionalidades = Optional.ofNullable(funcionalidades)
-            .map(LinkedHashSet::new)
-            .orElse(new LinkedHashSet<Funcionalidade>());
-        return this;
-    }
-
-    public FuncaoTransacao addFuncionalidade(Funcionalidade funcionalidade) {
-        if (funcionalidade == null) {
-            return this;
-        }
-        this.funcionalidades.add(funcionalidade);
-        funcionalidade.setFuncaoTransacao(this);
-        return this;
-    }
-
-    public FuncaoTransacao removeFuncionalidade(Funcionalidade funcionalidade) {
-        if (funcionalidade == null) {
-            return this;
-        }
-        this.funcionalidades.remove(funcionalidade);
-        funcionalidade.setFuncaoTransacao(null);
-        return this;
-    }
-
-    public void setFuncionalidades(Set<Funcionalidade> funcionalidades) {
-        this.funcionalidades = Optional.ofNullable(funcionalidades)
-            .map(LinkedHashSet::new)
-            .orElse(new LinkedHashSet<Funcionalidade>());
-    }
-
-    public Set<Alr> getAlrs() {
-        return Optional.ofNullable(this.alrs)
-            .map(LinkedHashSet::new)
-            .orElse(new LinkedHashSet<Alr>());
-    }
-
-    public FuncaoTransacao alrs(Set<Alr> alrs) {
-        this.alrs = Optional.ofNullable(alrs)
-            .map(LinkedHashSet::new)
-            .orElse(new LinkedHashSet<Alr>());
-        return this;
-    }
-
-    public FuncaoTransacao addAlr(Alr alr) {
-        if (alr == null) {
-            return this;
-        }
-        this.alrs.add(alr);
-        alr.setFuncaoTransacao(this);
-        return this;
-    }
-
-    public FuncaoTransacao removeAlr(Alr alr) {
-        if (alr == null) {
-            return this;
-        }
-        this.alrs.remove(alr);
-        alr.setFuncaoTransacao(null);
-        return this;
-    }
-
-    public void setAlrs(Set<Alr> alrs) {
-        this.alrs = Optional.ofNullable(alrs)
-            .map(LinkedHashSet::new)
-            .orElse(new LinkedHashSet<Alr>());
-    }
-
-    public String getFtrStr() {
-        return ftrStr;
-    }
-
-    public void setFtrStr(String ftrStr) {
         this.ftrStr = ftrStr;
-    }
-
-    public Set<Der> getDers() {
-        return Optional.ofNullable(ders)
-               .map(HashSet::new)
-                .orElse(new HashSet<>());
-    }
-
-    public void setDers(Set<Der> ders) {
-        this.ders = Optional.ofNullable(ders)
-            .map(HashSet::new)
-            .orElse(new HashSet<Der>());
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-        FuncaoTransacao funcaoTransacao = (FuncaoTransacao) o;
-        if (funcaoTransacao.getId() == null || getId() == null) {
-            return false;
-        }
-        return Objects.equals(getId(), funcaoTransacao.getId());
-    }
-
-    @Override
-    public int hashCode() {
-        return super.hashCode();
-    }
-
-    public List<UploadedFile> getFiles() {
-        return Optional.ofNullable(files)
-            .map(ArrayList::new)
-            .orElse(new ArrayList<>());
-    }
-
-    public void setFiles(List<UploadedFile> files) {
-        this.files = Optional.ofNullable(files)
-            .map(ArrayList::new)
-            .orElse(new ArrayList<>());
-    }
-
-    public Set<String> getFtrValues() {
-        return Collections.unmodifiableSet(ftrValues);
-    }
-
-    public void setFtrValues(Set<String> ftrValues) {
-        this.ftrValues = Optional.ofNullable(ftrValues)
-            .map(HashSet::new)
-            .orElse(new HashSet<String>());
-    }
-
-    public ImpactoFatorAjuste getImpacto() {
-        return impacto;
-    }
-
-    public void setImpacto(ImpactoFatorAjuste impacto) {
-        this.impacto = impacto;
-    }
-
-    public static long getSerialVersionUID() {
-        return serialVersionUID;
-    }
-
-    public Integer getQuantidade() {
-        return quantidade;
-    }
-
-    public void setQuantidade(Integer quantidade) {
         this.quantidade = quantidade;
+        this.alrs = alrs == null ? null : Collections.unmodifiableSet(alrs);
+        this.files = files == null ? null : Collections.unmodifiableList(files);
+        this.ftrValues = ftrValues == null ? null : Collections.unmodifiableSet(ftrValues);
+        this.impacto = impacto;
+        this.ders = ders == null ? null : Collections.unmodifiableSet(ders);
+        this.analise = analise;
+        bindFuncaoAnalise(null, complexidade, pf, grossPF, analise, funcionalidade, detStr, fatorAjuste, name, sustantation, derValues, null);
     }
 
 }

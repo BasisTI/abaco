@@ -8,7 +8,6 @@ import br.com.basis.abaco.domain.Modulo;
 import br.com.basis.abaco.domain.enumeration.ImpactoFatorAjuste;
 import br.com.basis.abaco.domain.enumeration.TipoFuncaoDados;
 import br.com.basis.abaco.domain.enumeration.TipoFuncaoTransacao;
-
 import br.com.basis.abaco.reports.util.itextutils.ReportFactory;
 import br.com.basis.dynamicexports.util.DynamicExporter;
 import com.itextpdf.kernel.geom.PageSize;
@@ -278,6 +277,9 @@ public class RelatorioUtil {
     }
 
     private String translateFD(ImpactoFatorAjuste impacto) {
+        if(impacto == null){
+            return "";
+        }
         switch (impacto){
             case INCLUSAO: return "Entidade incluída nesta demanda";
             case ALTERACAO: return "Entidade alterada nesta demanda";
@@ -289,6 +291,9 @@ public class RelatorioUtil {
     }
 
     private String translateFT(ImpactoFatorAjuste impacto) {
+        if(impacto == null){
+            return "";
+        }
         switch (impacto){
             case INCLUSAO: return "Funcionalidade/cenário incluído nesta demanda";
             case ALTERACAO: return "Funcionalidade/cenário alterado nesta demanda";
@@ -369,7 +374,7 @@ public class RelatorioUtil {
         exporter.setExporterOutput(new SimpleOutputStreamExporterOutput(outputStream));
 
         SimpleXlsReportConfiguration configuration = new SimpleXlsReportConfiguration();
-        configuration.setOnePagePerSheet(false);
+        configuration.setOnePagePerSheet(true);
         configuration.setDetectCellType(true);
         configuration.setCollapseRowSpan(false);
         configuration.setWhitePageBackground(true);

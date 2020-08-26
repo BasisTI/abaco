@@ -2,6 +2,7 @@ package br.com.basis.abaco.repository;
 
 import java.util.List;
 
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -40,5 +41,8 @@ public interface TipoEquipeRepository extends JpaRepository<TipoEquipe, Long> {
     @Query(value = "SELECT new br.com.basis.abaco.service.dto.DropdownDTO(t.id, t.nome) FROM User u JOIN u.tipoEquipes t "
             + " WHERE u.login = :currentUserLogin AND u.activated IS TRUE ")
     List<DropdownDTO> findActiveUserTipoEquipes(@Param("currentUserLogin") String currentUserLogin);
+
+    @EntityGraph(attributePaths = { "organizacoes"})
+    TipoEquipe findById(Long id);
 
 }

@@ -71,12 +71,12 @@ public class Manual implements Serializable, ReportObject, Cloneable {
   @Column(name = "arquivo_manual_id")
   private int arquivoManualId;
 
-  @OneToMany(mappedBy = "manual", cascade = CascadeType.ALL, orphanRemoval = true)
   @JsonManagedReference
+  @OneToMany(mappedBy = "manual", cascade = CascadeType.ALL, orphanRemoval = true)
   private Set<EsforcoFase> esforcoFases = new LinkedHashSet<>();
 
-  @OneToMany(mappedBy = "manual", cascade = CascadeType.ALL, orphanRemoval = true)
   @JsonManagedReference
+  @OneToMany(mappedBy = "manual", cascade = CascadeType.ALL, orphanRemoval = true)
   private Set<FatorAjuste> fatoresAjuste = new LinkedHashSet<>();
 
   @DecimalMin(value = MINPERCENT)

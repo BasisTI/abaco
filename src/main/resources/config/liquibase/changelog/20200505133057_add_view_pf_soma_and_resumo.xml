@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+   <changeSet author="basis (generated)" id="1588685465347-1">
+       <createView fullDefinition="false" viewName="vw_analise_soma_pf">
+           with total_fd as (
+           select analise_id, sum(pf) fd_pf, sum(grosspf) fd_pf_gross from funcao_dados group by analise_id
+           ), total_ft as(
+           select analise_id, sum(pf) ft_pf, sum(grosspf) ft_pf_gross from funcao_transacao group by analise_id
+           ), total as(
+           select id  as analise_id, total_fd.fd_pf, total_fd.fd_pf_gross, total_ft.ft_pf, total_ft.ft_pf_gross from analise ans
+           left join total_fd on total_fd.analise_id = ans.id
+           left join total_ft on total_ft.analise_id = ans.id
+           )
+           select analise_id, coalesce(ft_pf_gross, 0) + coalesce(fd_pf_gross, 0) as pf_gross,  coalesce(fd_pf, 0) + coalesce(ft_pf, 0) as pf_total from total
+       </createView>
+   </changeSet>
+   <changeSet author="basis (generated)" id="1588685465347-2">
+       <createView fullDefinition="false" viewName="vw_resumo">
+           with funcao_dados_group_complexidade as(
+           select
+           count(id) quantidade
+           ,complexidade
+           ,tipo
+           ,analise_id
+           from
+           funcao_dados
+           group by
+           complexidade
+           ,tipo
+           ,analise_id
+           ), funcao_dados_group_tipo as (
+           select
+           count(id) quantidade_tipo
+           ,sum(pf)pf_ajustada
+           ,sum(grosspf)pf_total
+           ,tipo
+           ,analise_id
+           from
+           funcao_dados
+           group by
+           tipo
+           ,analise_id
+           ), funcao_dados_group_complexidade_sem as (
+           select * from funcao_dados_group_complexidade where complexidade = 'SEM'
+           ), funcao_dados_group_complexidade_baixa as (
+           select * from funcao_dados_group_complexidade where complexidade = 'BAIXA'
+           ), funcao_dados_group_complexidade_media as (
+           select * from funcao_dados_group_complexidade where complexidade = 'MEDIA'
+           ), funcao_dados_group_complexidade_alta as (
+           select * from funcao_dados_group_complexidade where complexidade = 'ALTA'
+           ), funcao_dados_group_complexidade_inm as (
+           select * from funcao_dados_group_complexidade where complexidade = 'INM'
+           ), resumo_fd as (
+           select
+           fdgt.analise_id
+           ,fdgt.pf_ajustada
+           ,fdgt.pf_total
+           ,fdgt.quantidade_tipo
+           ,fdgt.tipo
+           ,coalesce(sem.quantidade,0) as sem
+           ,coalesce(baixa.quantidade,0) as baixa
+           ,coalesce(media.quantidade,0) as media
+           ,coalesce(alta.quantidade,0) as alta
+           ,coalesce(inm.quantidade,0) as inm
+           from funcao_dados_group_tipo fdgt
+           left join funcao_dados_group_complexidade_sem as sem on sem.analise_id=fdgt.analise_id and sem.tipo=fdgt.tipo
+           left join funcao_dados_group_complexidade_baixa as baixa on baixa.analise_id=fdgt.analise_id and baixa.tipo=fdgt.tipo
+           left join funcao_dados_group_complexidade_media as media on media.analise_id=fdgt.analise_id and media.tipo=fdgt.tipo
+           left join funcao_dados_group_complexidade_alta as alta on alta.analise_id=fdgt.analise_id and alta.tipo=fdgt.tipo
+           left join funcao_dados_group_complexidade_inm as inm on inm.analise_id=fdgt.analise_id and inm.tipo=fdgt.tipo
+           ), funcao_transacao_group_complexidade as(
+           select
+           count(id) quantidade
+           ,complexidade
+           ,tipo
+           ,analise_id
+           from
+           funcao_transacao
+           group by
+           complexidade
+           ,tipo
+           ,analise_id
+           ), funcao_transacao_group_tipo as (
+           select
+           count(id) quantidade_tipo
+           ,sum(pf)pf_ajustada
+           ,sum(grosspf)pf_total
+           ,tipo
+           ,analise_id
+           from
+           funcao_transacao
+           group by
+           tipo
+           ,analise_id
+           ), funcao_transacao_group_complexidade_sem as (
+           select * from funcao_transacao_group_complexidade where complexidade = 'SEM'
+           ), funcao_transacao_group_complexidade_baixa as (
+           select * from funcao_transacao_group_complexidade where complexidade = 'BAIXA'
+           ), funcao_transacao_group_complexidade_media as (
+           select * from funcao_transacao_group_complexidade where complexidade = 'MEDIA'
+           ), funcao_transacao_group_complexidade_alta as (
+           select * from funcao_transacao_group_complexidade where complexidade = 'ALTA'
+           ), funcao_transacao_group_complexidade_inm as (
+           select * from funcao_transacao_group_complexidade where complexidade = 'INM'
+           ), resumo_ft as (
+           select
+           ftdt.analise_id
+           ,ftdt.pf_ajustada
+           ,ftdt.pf_total
+           ,ftdt.quantidade_tipo
+           ,ftdt.tipo
+           ,coalesce(sem.quantidade,0) as sem
+           ,coalesce(baixa.quantidade,0) as baixa
+           ,coalesce(media.quantidade,0) as media
+           ,coalesce(alta.quantidade,0) as alta
+           ,coalesce(inm.quantidade,0) as inm
+           from funcao_transacao_group_tipo ftdt
+           left join funcao_transacao_group_complexidade_sem as sem on sem.analise_id=ftdt.analise_id and sem.tipo=ftdt.tipo
+           left join funcao_transacao_group_complexidade_baixa as baixa on baixa.analise_id=ftdt.analise_id and baixa.tipo=ftdt.tipo
+           left join funcao_transacao_group_complexidade_media as media on media.analise_id=ftdt.analise_id and media.tipo=ftdt.tipo
+           left join funcao_transacao_group_complexidade_alta as alta on alta.analise_id=ftdt.analise_id and alta.tipo=ftdt.tipo
+           left join funcao_transacao_group_complexidade_inm as inm on inm.analise_id=ftdt.analise_id and inm.tipo=ftdt.tipo
+           ), resumo as (
+           select * from resumo_ft union select * from resumo_fd
+           )
+           select row_number() OVER (ORDER BY analise_id) AS row_number,* from resumo
+       </createView>
+   </changeSet>
+</databaseChangeLog>

@@ -9,6 +9,7 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 import java.io.Serializable;
 import java.sql.Timestamp;
+import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Optional;
 import java.util.Set;
@@ -61,7 +62,7 @@ public class  Grupo implements Serializable {
     private Boolean bloqueado;
 
     @Transient
-    private Set<User> usuarios;
+    private Set<User> usuarios = new HashSet<>();
 
     public Long getIdAnalise() {
         return idAnalise;

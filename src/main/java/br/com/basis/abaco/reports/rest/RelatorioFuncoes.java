@@ -122,6 +122,7 @@ public class RelatorioFuncoes {
         funcoes.setComplexidadeFt(f.getComplexidade() == null ? dash : f.getComplexidade().toString());
         funcoes.setPfTotalFt(f.getGrossPF() == null ? dash : f.getGrossPF().stripTrailingZeros().toPlainString());
         funcoes.setPfAjustadoFt(f.getPf() == null ? dash : f.getPf().stripTrailingZeros().toPlainString());
+        funcoes.setSustantation(f.getSustantation() == null ? dash : f.getSustantation());
     }
 
     /**
@@ -129,8 +130,8 @@ public class RelatorioFuncoes {
      * @param f
      */
     private void popularImpacto(FuncaoTransacao f) {
-        funcoes.setImpactoFt(f.getImpacto() == null
-                && !f.getImpacto().toString().isEmpty()? dash : f.getImpacto().toString());
+        funcoes.setImpactoFt((f.getImpacto() == null
+                || f.getImpacto().toString().isEmpty())? dash : f.getImpacto().toString());
     }
 
     /**
@@ -139,7 +140,7 @@ public class RelatorioFuncoes {
      */
     private void popularModulo(FuncaoTransacao f) {
         funcoes.setModuloFt(f.getFuncionalidade() == null
-                && f.getFuncionalidade().getModulo() == null ? dash : f.getFuncionalidade().getModulo().getNome());
+                || f.getFuncionalidade().getModulo() == null ? dash : f.getFuncionalidade().getModulo().getNome());
     }
 
     /**
@@ -148,7 +149,7 @@ public class RelatorioFuncoes {
      */
     private void popularNome(FuncaoTransacao f) {
         funcoes.setNomeFt(f.getName() == null
-                && !f.getName().isEmpty() ? dash : f.getName());
+                || f.getName().isEmpty() ? dash : f.getName());
     }
 
     /**
@@ -356,19 +357,9 @@ public class RelatorioFuncoes {
         funcoes.setFuncionalidadeFd(f.getFuncionalidade() == null ? dash : f.getFuncionalidade().getNome());
         funcoes.setTipoFd(f.getTipo() == null ? dash : f.getTipo().toString());
         funcoes.setComplexidadeFd(f.getComplexidade() == null ? dash : f.getComplexidade().toString());
-        funcoes.setNomeFd(f.getName() == null ? dash : f.getName());
-        funcoes.setImpactoFd(f.getImpacto().toString());
-        if (f.getGrossPF() != null){
-            funcoes.setPfTotalFd(f.getGrossPF().stripTrailingZeros().toPlainString());
-        } else {
-            funcoes.setPfTotalFd("0");
-        }
-        if (f.getPf() != null){
-            funcoes.setPfAjustadoFd(f.getPf().stripTrailingZeros().toPlainString());
-        } else {
-            funcoes.setPfAjustadoFd("0");
-        }
-
+        funcoes.setPfTotalFd(f.getGrossPF() != null ? f.getGrossPF().stripTrailingZeros().toPlainString() : "0");
+        funcoes.setPfAjustadoFd(f.getPf() != null ? f.getPf().stripTrailingZeros().toPlainString() : "0" );
+        funcoes.setSustantation(f.getSustantation());
     }
 
     /**
@@ -377,7 +368,7 @@ public class RelatorioFuncoes {
      */
     private void popularImpactoFd(FuncaoDados f) {
         funcoes.setImpactoFd(f.getImpacto() == null
-                && !f.getImpacto().toString().isEmpty()
+                || f.getImpacto().toString().isEmpty()
                 ? dash : f.getImpacto().toString());
     }
 
@@ -387,7 +378,7 @@ public class RelatorioFuncoes {
      */
     private void popularModuloFd(FuncaoDados f) {
         funcoes.setModuloFd(f.getFuncionalidade() == null
-                && f.getFuncionalidade().getModulo() == null
+                || f.getFuncionalidade().getModulo() == null
                 ? dash : f.getFuncionalidade().getModulo().getNome());
     }
 
@@ -397,7 +388,7 @@ public class RelatorioFuncoes {
      */
     private void popularNomeFd(FuncaoDados f) {
         funcoes.setNomeFd(f.getName() == null
-                && !f.getName().isEmpty() ? dash : f.getName());
+                || f.getName().isEmpty() ? dash : f.getName());
     }
 
     /**

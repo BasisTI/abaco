@@ -86,9 +86,8 @@ public class SocialService {
         authorities.add(authorityRepository.findOne("ROLE_USER"));
 
         User newUser = getUser(userProfile, langKey, imageUrl, email, login, encryptedPassword, authorities);
-
-        userSearchRepository.save(newUser);
-        return userRepository.save(newUser);
+        userRepository.save(newUser);
+        return userSearchRepository.save(newUser);
     }
 
     private User verificarDados(String email, String userName) {

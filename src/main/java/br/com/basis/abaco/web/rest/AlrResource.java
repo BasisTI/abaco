@@ -63,6 +63,7 @@ public class AlrResource {
             return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert(ENTITY_NAME, "idexists", "A new alr cannot already have an ID")).body(null);
         }
         Alr result = alrRepository.save(alr);
+        alrRepository.save(result);
         alrSearchRepository.save(result);
         return ResponseEntity.created(new URI("/api/alrs/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString()))

@@ -1,28 +1,22 @@
 package br.com.basis.abaco.service.dto;
 
+import br.com.basis.abaco.domain.Rlr;
+import lombok.Getter;
+import lombok.Setter;
+
 /**
  * @author eduardo.andrade
  * @since 29/06/2018
  */
+@Getter
+@Setter
 public class DerFtDTO {
 
+    private Long id;
+
     private String nome;
-    
-    private String nomeFt;
 
-    public String getNome() {
-        return nome;
-    }
+    private Integer valor;
 
-    public void setNome(String nome) {
-        this.nome = nome;
-    }
-
-    public String getNomeFt() {
-        return nomeFt;
-    }
-
-    public void setNomeFt(String nomeFt) {
-        this.nomeFt = nomeFt;
-    }
+    private Rlr rlr;
 }

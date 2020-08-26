@@ -4,14 +4,13 @@ import br.com.basis.abaco.domain.audit.AbacoAudit;
 import br.com.basis.abaco.domain.audit.AbacoAuditListener;
 import br.com.basis.abaco.domain.audit.AbacoAuditable;
 import br.com.basis.abaco.domain.enumeration.Complexidade;
-import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.EntityListeners;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -24,9 +23,9 @@ import javax.persistence.Transient;
 import java.math.BigDecimal;
 import java.util.Collections;
 import java.util.HashSet;
-import java.util.LinkedHashSet;
-import java.util.Optional;
 import java.util.Set;
+
+import static java.util.Collections.unmodifiableSet;
 
 @MappedSuperclass
 @EntityListeners(AbacoAuditListener.class)
@@ -47,12 +46,12 @@ public abstract class FuncaoAnalise implements AbacoAuditable {
     @Column(name = "grosspf", precision = 10, scale = 4)
     private BigDecimal grossPF;
 
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "analise_id")
-    @JsonBackReference(value = "analise")
     private Analise analise;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne
     @JoinColumn(name = "funcionalidade_id")
     @OrderBy("nome ASC")
     private Funcionalidade funcionalidade;
@@ -69,12 +68,33 @@ public abstract class FuncaoAnalise implements AbacoAuditable {
     @Column
     private String sustantation;
 
+    @JsonIgnore
     @Transient
-    private Set<String> derValues;
+    private Set<String> derValues = new HashSet<>();
+
 
     @Embedded
     // XXX deve ter o new() mesmo?
     private AbacoAudit audit = new AbacoAudit();
+
+    protected void bindFuncaoAnalise(Long id, Complexidade complexidade, BigDecimal pf, BigDecimal grossPF, Analise analise, Funcionalidade funcionalidade, String detStr, FatorAjuste fatorAjuste, String name, String sustantation, Set<String> derValues, AbacoAudit audit) {
+        this.id = id;
+        this.complexidade = complexidade;
+        this.pf = pf;
+        this.grossPF = grossPF;
+        this.analise = analise;
+        this.funcionalidade = funcionalidade;
+        this.detStr = detStr;
+        this.fatorAjuste = fatorAjuste;
+        this.name = name;
+        this.sustantation = sustantation;
+        this.derValues = derValues == null ? null:Collections.unmodifiableSet(derValues);
+        this.audit = audit;
+        this.analise = analise;
+    }
+
+    public FuncaoAnalise() {
+    }
 
     public Long getId() {
         return id;
@@ -100,20 +120,20 @@ public abstract class FuncaoAnalise implements AbacoAuditable {
         this.pf = pf;
     }
 
+    public BigDecimal getGrossPF() {
+        return grossPF;
+    }
+
+    public void setGrossPF(BigDecimal grossPF) {
+        this.grossPF = grossPF;
+    }
+
     public Analise getAnalise() {
         return analise;
     }
 
     public void setAnalise(Analise analise) {
         this.analise = analise;
-    }
-
-    public FatorAjuste getFatorAjuste() {
-        return fatorAjuste;
-    }
-
-    public void setFatorAjuste(FatorAjuste fatorAjuste) {
-        this.fatorAjuste = fatorAjuste;
     }
 
     public Funcionalidade getFuncionalidade() {
@@ -132,12 +152,12 @@ public abstract class FuncaoAnalise implements AbacoAuditable {
         this.detStr = detStr;
     }
 
-    public BigDecimal getGrossPF() {
-        return grossPF;
+    public FatorAjuste getFatorAjuste() {
+        return fatorAjuste;
     }
 
-    public void setGrossPF(BigDecimal grossPF) {
-        this.grossPF = grossPF;
+    public void setFatorAjuste(FatorAjuste fatorAjuste) {
+        this.fatorAjuste = fatorAjuste;
     }
 
     public String getName() {
@@ -157,13 +177,11 @@ public abstract class FuncaoAnalise implements AbacoAuditable {
     }
 
     public Set<String> getDerValues() {
-        return Collections.unmodifiableSet(derValues);
+        return unmodifiableSet(derValues);
     }
 
     public void setDerValues(Set<String> derValues) {
-        this.derValues = Optional.ofNullable(derValues)
-            .map(HashSet::new)
-            .orElse(new LinkedHashSet<String>());
+        this.derValues = unmodifiableSet(derValues);
     }
 
     @Override
@@ -175,5 +193,4 @@ public abstract class FuncaoAnalise implements AbacoAuditable {
     public void setAudit(AbacoAudit audit) {
         this.audit = audit;
     }
-
 }
