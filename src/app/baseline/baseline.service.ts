@@ -7,6 +7,7 @@ import {BaselineSintetico} from './baseline-sintetico.model';
 import {BaselineAnalitico} from './baseline-analitico.model';
 import { HttpClient } from '@angular/common/http';
 import { FuncaoDados } from '../funcao-dados';
+import { BlockUiService } from '@nuvem/angular-base';
 
 
 @Injectable()
@@ -20,7 +21,7 @@ export class BaselineService {
     relatoriosBaselineUrl = this.resourceUrl + '/downloadPdfBaselineBrowser/';
 
 
-    constructor(private http: HttpClient) {
+    constructor(private http: HttpClient, private blockUiService: BlockUiService, ) {
     }
 
     allBaselineSintetico(sistema: Sistema): Observable<BaselineSintetico[]> {
@@ -104,9 +105,10 @@ export class BaselineService {
    *
    */
   public geraBaselinePdfBrowser(id: number): Observable<string> {
+    this.blockUiService.show();
     this.http.request('get', `${this.relatoriosBaselineUrl}${id}`, {
     responseType: 'blob',
-  }).subscribe( 
+  }).subscribe(
       (response) => {
         const mediaType = 'application/pdf';
         const blob = new Blob([response], {type: mediaType});
@@ -115,6 +117,7 @@ export class BaselineService {
         anchor.download = 'analise.pdf';
         anchor.href = fileURL;
         window.open(fileURL, '_blank', '');
+        this.blockUiService.hide();
         return null;
       });
       return null;

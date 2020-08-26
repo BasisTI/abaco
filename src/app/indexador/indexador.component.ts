@@ -1,6 +1,7 @@
 import {Component} from '@angular/core';
 import {Router} from '@angular/router';
 import {IndexadorService} from './indexador.service';
+import { BlockUiService } from '@nuvem/angular-base';
 
 
 @Component({
@@ -33,13 +34,16 @@ export class IndexadorComponent {
     constructor(
         private indexadorSearchService: IndexadorService,
         private router: Router,
+        private blockUiService: BlockUiService,
     ) { }
 
 
     submitIndexador() {
+        this.blockUiService.show();
         this.indexadorSearchService.reindexar(this.indexToReindexar).subscribe(
             err => console.log('HTTP Error', err),
             () => {
+                this.blockUiService.hide();
                 console.log('HTTP request completed.');
             });
     }

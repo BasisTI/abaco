@@ -472,7 +472,6 @@ export class PesquisarFtComponent implements OnInit {
     }
 
     public recarregarDataTable() {
-        debugger;
         if (this.isFuncaoDados) {
             if ((this.moduloSelecionado !== null) && (this.funcionalidadeAtual === null)) {
                 this.funcaoDadosService.getFuncaoDadosByModuloOrFuncionalidade(this.moduloSelecionado.id).subscribe(value => {

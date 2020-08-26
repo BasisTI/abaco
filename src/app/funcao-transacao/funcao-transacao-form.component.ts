@@ -352,7 +352,7 @@ export class FuncaoTransacaoFormComponent implements OnInit {
             forkJoin(lstFuncaotransacaoWithExist).subscribe(respFind => {
                 for (const value of  respFind) {
                     if (value) {
-                        this.pageNotificationService.addErrorMessage(this.getLabel('Global.Mensagens.RegistroCadastrado'));
+                        this.pageNotificationService.addErrorMessage(this.getLabel('Registro já cadastrado!'));
                         retorno = false;
                         break;
                     }
@@ -583,7 +583,7 @@ export class FuncaoTransacaoFormComponent implements OnInit {
             }
         }
 
-        if (this.analise.metodoContagem === 'DETALHADA' && !(this.currentFuncaoTransacao.fatorAjuste.tipoAjuste === 'UNITARIO')) {
+        if (this.analise.metodoContagem === 'DETALHADA' && !(this.currentFuncaoTransacao.fatorAjuste && this.currentFuncaoTransacao.fatorAjuste.tipoAjuste === 'UNITARIO')) {
 
             if (this.alrsChips.length === 0) {
                 this.erroTR = true;

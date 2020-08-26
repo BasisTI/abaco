@@ -494,7 +494,7 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
         const lstFuncaoDados: FuncaoDados[] = [];
         const lstFuncaoDadosToSave: Observable<any>[] = [];
         const lstFuncaoDadosWithExist: Observable<Boolean>[] = [];
-        let retorno: boolean = !this.verifyDataRequire();
+        let retorno: boolean = this.verifyDataRequire();
         this.desconverterChips();
         this.verificarModulo();
         this.seletedFuncaoDados = new FuncaoDados().copyFromJSON(this.seletedFuncaoDados);
@@ -516,7 +516,7 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
         forkJoin(lstFuncaoDadosWithExist).subscribe(listExistWithName => {
             for (const value of listExistWithName) {
                 if (value) {
-                    this.pageNotificationService.addErrorMessage(this.getLabel('Global.Mensagens.RegistroCadastrado'));
+                    this.pageNotificationService.addErrorMessage(this.getLabel('Registro já cadastrado.'));
                     retorno = false;
                     break;
                 }
@@ -643,7 +643,7 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
             }
         }
 
-        if (this.analise.metodoContagem === 'DETALHADA' && !(this.seletedFuncaoDados.fatorAjuste.tipoAjuste === 'UNITARIO')) {
+        if (this.analise.metodoContagem === 'DETALHADA' && !(this.seletedFuncaoDados.fatorAjuste && this.seletedFuncaoDados.fatorAjuste.tipoAjuste === 'UNITARIO')) {
 
             if (!this.rlrsChips || this.rlrsChips.length < 1) {
                 this.erroTR = true;
@@ -661,7 +661,7 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
         }
 
         if (this.seletedFuncaoDados.funcionalidade === undefined) {
-            this.pageNotificationService.addErrorMessage(this.getLabel('Cadastros.FuncaoDados.Mensagens.msgSelecioneModuloFuncionalidade'));
+            this.pageNotificationService.addErrorMessage(this.getLabel('Selecione um Módulo e Funcionalidade.'));
             this.erroModulo = true;
             retorno = false;
         } else {
