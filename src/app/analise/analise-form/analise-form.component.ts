@@ -679,7 +679,7 @@ export class AnaliseFormComponent implements OnInit {
                     this.users = this.usersDropDown;
                 }
                 if (this.analise.users && this.analise.users.length === 0) {
-                    const user = _.find(this.users, {id: this.loggedUser.id});
+                    const user = _.find(this.users, {id: this.loggedUser});
                     this.analise.users.push(user);
                 }
             });

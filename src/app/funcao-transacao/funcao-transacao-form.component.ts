@@ -331,7 +331,7 @@ export class FuncaoTransacaoFormComponent implements OnInit {
             const lstFuncaotransacao: FuncaoTransacao[] = [];
             const lstFuncaotransacaoToSave: Observable<Boolean>[] = [];
             const lstFuncaotransacaoWithExist: Observable<Boolean>[] = [];
-            let retorno: boolean = !this.verifyDataRequire();
+            let retorno: boolean = this.verifyDataRequire();
             this.desconverterChips();
             this.verificarModulo();
             const funcaoTransacaoCalculada: FuncaoTransacao = CalculadoraTransacao.calcular(this.analise.metodoContagem,
@@ -550,7 +550,7 @@ export class FuncaoTransacaoFormComponent implements OnInit {
     private verifyDataRequire(): boolean {
         let retorno = true;
 
-        if (this.currentFuncaoTransacao.name === undefined) {
+        if (!(this.currentFuncaoTransacao.name) && !(this.multiplos && this.text)) {
             this.nomeInvalido = true;
             retorno = false;
         } else {
@@ -787,7 +787,7 @@ export class FuncaoTransacaoFormComponent implements OnInit {
         this.funcaoTransacaoService.getById(funcaoTransacaoSelecionada.id).subscribe(funcaoTransacao => {
             this.disableTRDER();
             this.configurarDialog();
-            this.currentFuncaoTransacao = funcaoTransacao;
+            this.currentFuncaoTransacao = new FuncaoTransacao().copyFromJSON(funcaoTransacao);
             this.currentFuncaoTransacao.id = undefined;
             this.currentFuncaoTransacao.name = this.currentFuncaoTransacao.name + ' - Cópia';
             this.carregarValoresNaPaginaParaEdicao(this.currentFuncaoTransacao);

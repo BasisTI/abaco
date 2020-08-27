@@ -34,13 +34,15 @@ export class UserService {
     create(user: User): Observable<User> {
         const copy = this.convert(user);
         return this.http.post<User>(this.resourceUrl, copy).pipe(catchError((error: any) => {
-            return this.handlerError(error)}));
+            return this.handlerError(error);
+        }));
     }
 
     update(user: User): Observable<User> {
         const copy = this.convert(user);
         return this.http.put<User>(this.resourceUrl, copy).pipe(catchError((error: any) => {
-            return this.handlerError(error)}));
+            return this.handlerError(error);
+        }));
     }
 
     private handlerError(error: any) {
@@ -111,10 +113,10 @@ export class UserService {
             return this.handlerError(error)}));
     }
 
-    public convertResponse(res:any): User[]{
-        const result:User[] = [];
+    public convertResponse(res: any): User[] {
+        const result: User[] = [];
         for (let i = 0; i < res.length; i++) {
-            result.push(this.convertItemFromServer(res[i]));
+            result.push(new User().copyFromJSON(res[i]));
         }
         return result;
     }

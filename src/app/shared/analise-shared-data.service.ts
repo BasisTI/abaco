@@ -29,7 +29,9 @@ export class AnaliseSharedDataService {
   }
 
   isContratoSelected(): boolean {
-    return !_.isUndefined(this.analise.contrato);
+    if (this.analise) {
+      return !_.isUndefined(this.analise.contrato);
+    }
   }
 
   analiseSalva() {

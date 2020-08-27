@@ -47,7 +47,7 @@ export class TipoEquipeFormComponent implements OnInit, OnDestroy {
         .subscribe(tipoEquipe => {
           this.tipoEquipe = tipoEquipe;
           this.userService.getUsersFromOrganização(this.tipoEquipe.organizacoes).subscribe(response => {
-            this.users = response;
+            this.users = this.userService.convertResponse(response);
           });
         });
       }
@@ -124,8 +124,7 @@ export class TipoEquipeFormComponent implements OnInit, OnDestroy {
         case 400: {
           let invalidFieldNamesString = '';
           const fieldErrors = JSON.parse(error['_body']).fieldErrors;
-          // invalidFieldNamesString = this.pageNotificationService.getInvalidFields(fieldErrors);
-          this.pageNotificationService.addErrorMessage(this.getLabel('Cadastros.TipoEquipe.Mensagens.msgCamposInvalidos') + invalidFieldNamesString);
+          this.pageNotificationService.addErrorMessage(this.getLabel('Campos inválidos:') + invalidFieldNamesString);
         }
       }
     });
@@ -146,11 +145,12 @@ export class TipoEquipeFormComponent implements OnInit, OnDestroy {
       return this.getLabel('Campo Obrigatório.');
     }
   }
-  public loadUserCFPS(){
+  public loadUserCFPS() {
     this.tipoEquipe.cfpsResponsavel = null;
     this.userService.getUsersFromOrganização(this.tipoEquipe.organizacoes).subscribe(response => {
       this.users = null;
       this.users = this.userService.convertResponse(response);
+      debugger;
   });
   }
 

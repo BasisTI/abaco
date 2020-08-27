@@ -31,7 +31,7 @@ export class CalculadoraTransacao {
   }
 
   private static inicializaVariaveis(metodoContagem: MetodoContagem, funcaoTransacao: FuncaoTransacao, manual: Manual) {
-    this.funcaoTransacaoCalculada = funcaoTransacao.clone();
+    this.funcaoTransacaoCalculada = new FuncaoTransacao().copyFromJSON(funcaoTransacao).clone();
     this.funcaoTransacao = funcaoTransacao;
     this.metodoContagem = metodoContagem;
     this.defineFatorAjuste(funcaoTransacao, manual);
