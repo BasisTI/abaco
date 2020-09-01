@@ -13,6 +13,8 @@ import { AnaliseService } from '../analise.service';
 import { SearchGroup } from '../grupo/grupo.model';
 import { GrupoService } from '../grupo/grupo.service';
 import { BlockUiService } from '@nuvem/angular-base';
+import { StatusService } from 'src/app/status';
+import { Status } from 'src/app/status/status.model';
 
 @Component({
     selector: 'app-analise',
@@ -47,7 +49,7 @@ export class AnaliseListComponent implements OnInit {
     tipoEquipesToClone: TipoEquipe[] = [];
     query: String;
     usuarios: String[] = [];
-
+    lstStatus: Status[] = [];
     idAnaliseCloneToEquipe: number;
     public equipeToClone?: TipoEquipe;
 
@@ -79,6 +81,7 @@ export class AnaliseListComponent implements OnInit {
         private equipeService: TipoEquipeService,
         private usuarioService: UserService,
         private blockUiService: BlockUiService,
+        private statusService: StatusService,
     ) {
     }
 
@@ -97,6 +100,7 @@ export class AnaliseListComponent implements OnInit {
         this.recuperarEquipe();
         this.recuperarSistema();
         this.recuperarUsuarios();
+        this.recuperarStatus();
         this.inicial = false;
     }
 
@@ -197,6 +201,14 @@ export class AnaliseListComponent implements OnInit {
             this.tipoEquipesToClone = response;
             const emptyTeam = new TipoEquipe();
             this.tipoEquipesToClone.unshift(emptyTeam);
+        });
+    }
+
+    recuperarStatus() {
+        this.statusService.list().subscribe(response => {
+            this.lstStatus = response;
+            const emptyStatus = new Status();
+            this.lstStatus.unshift(emptyStatus);
         });
     }
 
@@ -374,6 +386,7 @@ export class AnaliseListComponent implements OnInit {
         this.searchGroup.metodoContagem = undefined;
         this.searchGroup.equipe = undefined;
         this.searchGroup.usuario = undefined;
+        this.searchGroup.status = undefined;
         this.userAnaliseUrl = this.grupoService.grupoUrl + this.changeUrl();
         this.enableTable = false;
         this.recarregarDataTable();
@@ -408,6 +421,9 @@ export class AnaliseListComponent implements OnInit {
             }
             if (this.searchGroup && this.searchGroup.usuario && this.searchGroup.usuario.id) {
                 this.datatable.filterParams['usuario'] = this.searchGroup.usuario.id;
+            }
+            if (this.searchGroup && this.searchGroup.status && this.searchGroup.status.id) {
+                this.datatable.filterParams['status'] = this.searchGroup.status.id;
             }
         }
     }

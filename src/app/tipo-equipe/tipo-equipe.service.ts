@@ -6,7 +6,6 @@ import { HttpClient } from '@angular/common/http';
 import { PageNotificationService } from '@nuvem/primeng-components';
 import { Observable } from 'rxjs';
 import { catchError } from 'rxjs/operators';
-import { AnaliseShareEquipe } from '../analise';
 
 
 @Injectable()

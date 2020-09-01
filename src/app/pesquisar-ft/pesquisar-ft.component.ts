@@ -474,12 +474,16 @@ export class PesquisarFtComponent implements OnInit {
     public recarregarDataTable() {
         if (this.isFuncaoDados) {
             if ((this.moduloSelecionado !== null) && (this.funcionalidadeAtual === null)) {
+                this.blockUiService.show();
                 this.funcaoDadosService.getFuncaoDadosByModuloOrFuncionalidade(this.moduloSelecionado.id).subscribe(value => {
+                    this.blockUiService.hide();
                     this.fn = value;
                 });
             } else if (this.moduloSelecionado !== undefined && this.funcionalidadeAtual !== undefined) {
+                this.blockUiService.show();
                 this.funcaoDadosService.getFuncaoDadosByModuloOrFuncionalidade(this.moduloSelecionado.id, this.funcionalidadeAtual.id)
                 .subscribe(value => {
+                    this.blockUiService.hide();
                     this.fn = value;
                 });
             } else {

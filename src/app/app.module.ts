@@ -36,6 +36,8 @@ import { DashboardModule } from './dashboard/dashboard.module';
 import { RouterModule } from '@angular/router';
 import { LoginModule } from './login/login.module';
 import { PesquisarFuncaoTransacaoModule } from './pesquisar-ft/pesquisar-ft.module';
+import { StatusModule } from './status/status.module';
+
 @NgModule({
     declarations: [
         AppComponent,
@@ -79,12 +81,13 @@ import { PesquisarFuncaoTransacaoModule } from './pesquisar-ft/pesquisar-ft.modu
         DashboardModule,
         PesquisarFuncaoTransacaoModule,
         BlockUiModule,
+        StatusModule,
     ],
     providers: [
         { provide: LocationStrategy, useClass: HashLocationStrategy },
         UploadService,
     ],
     bootstrap: [AppComponent],
-    exports:[RouterModule]
+    exports: [ RouterModule]
 })
 export class AppModule { }

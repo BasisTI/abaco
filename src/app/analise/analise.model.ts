@@ -15,6 +15,7 @@ import { MappableEntities } from '../shared/mappable-entities';
 import { ModuloDaFuncionalidadeFinder } from './modulo-finder';
 import { FuncaoDados } from '../funcao-dados';
 import { FuncaoTransacao } from '../funcao-transacao';
+import { Status } from '../status/status.model';
 
 export enum MetodoContagem {
     'DETALHADA' = 'DETALHADA',
@@ -75,7 +76,8 @@ export class Analise implements BaseEntity {
         public compartilhadas?: AnaliseShareEquipe[],
         public dataCriacaoOrdemServico?: any,
         public manual?: Manual,
-        public users?: User[]
+        public users?: User[],
+        public status?: Status,
     ) {
         this.inicializaMappables(funcaoDados, funcaoTransacaos);
         this.inicializaResumos();
@@ -320,6 +322,7 @@ class AnaliseCopyFromJSON {
         this.converteContrato();
         this.converteEsforcoFases();
         this.converteManual();
+        this.converteStatus();
         return this._analiseConverted;
     }
 
@@ -417,6 +420,13 @@ class AnaliseCopyFromJSON {
             this._analiseConverted.manual = new Manual().copyFromJSON(this._json.manual);
         } else {
             this._analiseConverted.manual = new Manual();
+        }
+    }
+    private converteStatus() {
+        if (this._json.status !== null) {
+            this._analiseConverted.status = new Status(this._json.status.id, this._json.status.nome, this._json.status.ativo);
+        } else {
+            this._analiseConverted.status = new Status();
         }
     }
 }

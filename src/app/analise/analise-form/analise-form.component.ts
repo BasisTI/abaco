@@ -24,6 +24,8 @@ import { AnaliseService } from '../analise.service';
 import { FuncaoDadosService } from '../../funcao-dados/funcao-dados.service';
 import { FuncaoTransacaoService } from '../../funcao-transacao/funcao-transacao.service';
 import { element } from 'protractor';
+import { StatusService } from 'src/app/status';
+import { Status } from 'src/app/status/status.model';
 
 
 @Component({
@@ -67,7 +69,7 @@ export class AnaliseFormComponent implements OnInit {
     users: User[] = [];
     usersDropDown: User[] = [];
     manuaisCombo: SelectItem[] = [];
-
+    statusCombo: Status[] = [];
     showFuncaoDados: Boolean = false;
 
 
@@ -90,13 +92,10 @@ export class AnaliseFormComponent implements OnInit {
     public hideShowSelectEquipe: boolean;
 
     constructor(
-        private confirmationService: ConfirmationService,
         private router: Router,
         private route: ActivatedRoute,
         private analiseService: AnaliseService,
         private sistemaService: SistemaService,
-        private funcaoDadosService: FuncaoDadosService,
-        private funcaoTransacaoService: FuncaoTransacaoService,
         private analiseSharedDataService: AnaliseSharedDataService,
         private equipeService: TipoEquipeService,
         private organizacaoService: OrganizacaoService,
@@ -104,6 +103,7 @@ export class AnaliseFormComponent implements OnInit {
         private userService: UserService,
         private contratoService: ContratoService,
         private manualService: ManualService,
+        private statusService: StatusService,
     ) {
     }
 
@@ -123,6 +123,7 @@ export class AnaliseFormComponent implements OnInit {
         this.getAnalise();
         this.traduzirtiposAnalise();
         this.traduzirMetodoContagem();
+        this.getLstStatus();
     }
 
     getLabel(label) {
@@ -168,6 +169,12 @@ export class AnaliseFormComponent implements OnInit {
     getEquipesFromActiveLoggedUser() {
         this.equipeService.getEquipesActiveLoggedUser().subscribe(res => {
             this.tipoEquipesLoggedUser = res;
+        });
+    }
+    getLstStatus() {
+        this.statusService.listActive().subscribe(
+        lstStatus => {
+            this.statusCombo = lstStatus;
         });
     }
 
@@ -221,6 +228,7 @@ export class AnaliseFormComponent implements OnInit {
                     });
             } else {
                 this.analise = new Analise();
+                this.analise.status = new Status();
                 this.analise.esforcoFases = [];
                 this.analise.enviarBaseline = true;
                 this.canEditMetodo = true;
@@ -550,27 +558,27 @@ export class AnaliseFormComponent implements OnInit {
     private verificarCamposObrigatorios(): boolean {
         let isValid = true;
         if (!this.analise.identificadorAnalise) {
-            this.pageNotificationService.addInfoMessage(this.getLabel('Informe o campo Identificador da Analise para continuar.'));
+            this.pageNotificationService.addErrorMessage(this.getLabel('Informe o campo Identificador da Analise para continuar.'));
             isValid = false;
         }
         if (!this.analise.contrato) {
-            this.pageNotificationService.addInfoMessage(this.getLabel('Informe o Contrato para continuar'));
+            this.pageNotificationService.addErrorMessage(this.getLabel('Informe o Contrato para continuar'));
             isValid = false;
         }
         if (!this.analise.dataCriacaoOrdemServico) {
-            this.pageNotificationService.addInfoMessage(this.getLabel('Informe a data de criação da ordem de serviço para continuar'));
+            this.pageNotificationService.addErrorMessage(this.getLabel('Informe a data de criação da ordem de serviço para continuar'));
             isValid = false;
         }
         if (!this.analise.metodoContagem) {
-            this.pageNotificationService.addInfoMessage(this.getLabel('Informe o Método de Contagem para continuar'));
+            this.pageNotificationService.addErrorMessage(this.getLabel('Informe o Método de Contagem para continuar'));
             isValid = false;
         }
         if (!this.analise.manual) {
-            this.pageNotificationService.addInfoMessage(this.getLabel('Informe o Tipo de Contagem para continuar'));
+            this.pageNotificationService.addErrorMessage(this.getLabel('Informe o Tipo de Contagem para continuar'));
             isValid = false;
         }
         if (!this.analise.tipoAnalise) {
-            this.pageNotificationService.addInfoMessage(this.getLabel('Informe o Tipo de Contagem para continuar'));
+            this.pageNotificationService.addErrorMessage(this.getLabel('Informe o Tipo de Contagem para continuar'));
             isValid = false;
         }
         if ((!this.analise.users || this.analise.users.length <= 0) && this.analise.id && this.analise.id > 0) {
@@ -579,6 +587,10 @@ export class AnaliseFormComponent implements OnInit {
         }
         if ((!this.analise.esforcoFases || this.analise.esforcoFases.length <= 0) && this.analise.id && this.analise.id > 0) {
             this.pageNotificationService.addErrorMessage(this.getLabel('Deve haver ao menos uma Fase para continuar'));
+            isValid = false;
+        }
+        if (!(this.analise.status && this.analise.status.id)) {
+            this.pageNotificationService.addErrorMessage(this.getLabel('Informe o Status da Analise para continuar'));
             isValid = false;
         }
         return isValid;

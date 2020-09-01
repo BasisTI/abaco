@@ -1,12 +1,12 @@
-import { Component, OnInit, OnDestroy } from "@angular/core";
-import { TipoEquipe } from "../tipo-equipe.model";
-import { Subscription, Observable } from "rxjs";
-import { Organizacao, OrganizacaoService } from "src/app/organizacao";
-import { ActivatedRoute, Router } from "@angular/router";
-import { TipoEquipeService } from "../tipo-equipe.service";
-import { PageNotificationService } from "@nuvem/primeng-components";
-import { UserService } from "src/app/user";
-import { User } from "../../user";
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { TipoEquipe } from '../tipo-equipe.model';
+import { Subscription, Observable } from 'rxjs';
+import { Organizacao, OrganizacaoService } from 'src/app/organizacao';
+import { ActivatedRoute, Router } from '@angular/router';
+import { TipoEquipeService } from '../tipo-equipe.service';
+import { PageNotificationService } from '@nuvem/primeng-components';
+import { UserService } from 'src/app/user';
+import { User } from '../../user';
 
 
 @Component({
@@ -23,7 +23,7 @@ export class TipoEquipeFormComponent implements OnInit, OnDestroy {
   private routeSub: Subscription;
 
   organizacoes: Organizacao[];
-  users:User[];
+  users: User[];
 
   constructor(
     private route: ActivatedRoute,
@@ -150,7 +150,6 @@ export class TipoEquipeFormComponent implements OnInit, OnDestroy {
     this.userService.getUsersFromOrganização(this.tipoEquipe.organizacoes).subscribe(response => {
       this.users = null;
       this.users = this.userService.convertResponse(response);
-      debugger;
   });
   }
 

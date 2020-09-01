@@ -29,6 +29,7 @@ export class IndexadorComponent {
         {value: 'TIPO_EQUIPE', label: 'Tipo Equipe'},
         {value: 'RLR', label: 'Rlr'},
         {value: 'SISTEMA', label: 'Sistema'},
+        {value: 'STATUS', label: 'Status'},
         {value: 'USER', label: 'Usuário'}];
 
     constructor(

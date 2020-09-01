@@ -34,7 +34,7 @@
                             optionLabel="nome"
                             [autoWidth]="false"
                             [(ngModel)]="searchGroup.usuario"
-                            [placeholder]="this.getLabel('Usuarios')" >
+                            [placeholder]="this.getLabel('Usuário')" >
                     </p-dropdown>
                 </div>
             </div>
@@ -69,6 +69,19 @@
                             [(ngModel)]="searchGroup.metodoContagem"
                             [autoWidth]="false"
                             [placeholder]="this.getLabel('Metodo de contagem')">
+                    </p-dropdown>
+                </div>
+            </div>
+            <div class="ui-g">
+                <div class="ui-g-4 ui-md-4 ui-sm-12">
+                    <p-dropdown
+                            [filter]="true"
+                            [options]="lstStatus"
+                            id="idStatusAnalise"
+                            [(ngModel)]="searchGroup.status"
+                            [autoWidth]="false"
+                            optionLabel="nome"
+                            [placeholder]="this.getLabel('Status')">
                     </p-dropdown>
                 </div>
             </div>
@@ -112,7 +125,7 @@
                         (click) = "selectAnalise()"
                         [showVisibleColumnsControl]="true"
                         [enableScroll]="true"
-                        [scrollHeight]="'500px'"
+                        [scrollHeight]="'700px'"
                         #datatable>
                     <p-column header="Organização" field="organizacao.nome" [sortable]="true" filterType="select" [filter]="true">
                         <ng-template let-col let-analise="rowData" pTemplate="body">
@@ -131,8 +144,13 @@
                             {{ analise.sistema.nome}}
                         </ng-template>
                     </p-column>
+                    <p-column header="Status" field="status.nome" [sortable]="true" [filter]="true">
+                        <ng-template let-col let-analise="rowData" pTemplate="body">
+                            {{ analise.status && analise.status.nome? analise.status.nome : ''}}
+                        </ng-template>
+                    </p-column>
                     <p-column header="Metodo Contagem" field="metodoContagem" [sortable]="true" filterType="select" [filter]="true"></p-column>
-                    <p-column header="PF Total" field="pfTotal" [sortable]="true" filterType="">
+                    <p-column header="PF total" field="pfTotal" [sortable]="true" filterType="">
                         <ng-template let-col let-analise="rowData" pTemplate="body">
                             {{ analise.pfTotal > 0 ? analise.pfTotal : 0 | number: '00.00'}}
                         </ng-template>
@@ -142,7 +160,7 @@
                             {{ analise.adjustPFTotal > 0 ? analise.adjustPFTotal : 0 | number: '00.00'}}
                         </ng-template>
                     </p-column>
-                    <p-column header="Data criação" field="dataCriacaoOrdemServico" [sortable]="true" filterType="">
+                    <p-column header="Data de criação" field="dataCriacaoOrdemServico" [sortable]="true" filterType="">
                         <ng-template let-col let-analise="rowData" pTemplate="body" filterType="">
                             {{ analise.dataCriacaoOrdemServico | date: 'dd/MM/y - HH:mm' }}
                         </ng-template>

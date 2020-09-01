@@ -136,7 +136,7 @@
                                             >
                                     </p-dropdown>
                                 </div>
-                                <div class="ui-g-8 ui-md-8 ui-sm-12" style="margin-bottom: 05px">
+                                <div class="ui-g-4 ui-md-4 ui-sm-12" style="margin-bottom: 05px">
                                     <label >Manual *</label>
                                     <p-dropdown
                                             required
@@ -153,9 +153,28 @@
                                             <ng-template let-manualSelc pTemplate="selectedItem">
                                                 {{manualSelc.label}}
                                             </ng-template>
-
                                         </div>
                                     </p-dropdown>
+                                </div>
+                                <div class="ui-g-4 ui-md-4 ui-sm-12" style="margin-bottom: 05px">
+                                    <label >Status *</label>
+                                    <p-dropdown
+                                            [filter]="true"
+                                            required
+                                            id="idStatusFormAnalise"
+                                            [placeholder]="this.getLabel('Selecione um status')"
+                                            name="status"
+                                            optionLabel="nome"
+                                            [options]="statusCombo"
+                                            [(ngModel)]="analise.status">
+                                    </p-dropdown>
+                                    <div *ngIf="editForm.controls['status']
+                                        && !editForm.controls['status'].valid
+                                        && (editForm.controls['status'].touched
+                                        || editForm.submitted)"
+                                        class="ui-message ui-messages-error">
+                                            Campo obrigatório.
+                                        </div>
                                 </div>
                                 <div [ngClass]="(disabledOptionsforEdit())? '(ui-g-4 ui-md-4 ui-sm-12)' : '(ui-g-6 ui-md-6 ui-sm-12)'"
                                      style="margin-bottom: 05px">
@@ -168,7 +187,6 @@
                                             name="metodoContagem"
                                             [options]="metodosContagem"
                                             [(ngModel)]="analise.metodoContagem"
-                                            
                                             [disabled]="disabledTipoContagemEdit()"
                                             (onChange)="alterarMetodoContagem()">
                                     </p-dropdown>

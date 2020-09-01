@@ -1,0 +1,43 @@
+<div class="ui-g ui-fluid">
+    <div class="ui-g-12">
+        <div class="card card-w-title">
+            <h1>{{ status.id ? ('Editar Status'  ) : (' Cadastrar Status' ) }}</h1>
+            <form name="editForm" (ngSubmit)="save(editForm)" #editForm="ngForm">
+                <div class="ui-g-12 ui-md-12 ui-sm-12 form-fields-container">
+                    <span class="md-inputfield">
+                        <input
+                            type="text"
+                            name="nome"
+                            [(ngModel)]="status.nome"
+                            [maxlength]="250"
+                            pInputText
+                            required/>
+                        <label >Nome</label>
+                        <div *ngIf="editForm.controls['nome'] 
+                            && !editForm.controls['nome'].valid 
+                            && (editForm.controls['nome'].touched 
+                            || editForm.submitted)"
+                            class="ui-message ui-messages-error">
+                            Campo obrigatório.
+                        </div>
+                    </span>
+                </div>
+                <div class="ui-g-12 ui-md-12 ui-sm-12 form-fields-container">
+                    <h4>Ativo</h4>
+                        <div class="p-col-6"><p-radioButton name="sim" [value]="true" label="Sim" [(ngModel)]="status.ativo" inputId="ativoSim"></p-radioButton></div>
+                        <div class="p-col-6"><p-radioButton name="nao" [value]="false" label="Não" [(ngModel)]="status.ativo" inputId="ativoNao"></p-radioButton></div>
+                </div>
+                <div class="ui-g ui-md-12 form-buttons-container">
+                    <div class="ui-g-2 ui-md-2 ui-sm-12">
+                        <app-white-button buttonLabel="Cancelar" routerLink="/status"></app-white-button>
+                    </div>
+                    <div class="ui-g-2 ui-md-2 ui-sm-12">
+                        <app-submit-button buttonLabel="Salvar" [isDisabled]="editForm.invalid"></app-submit-button>
+                    </div>
+                </div>
+
+            </form>
+
+        </div> 
+    </div>
+</div>

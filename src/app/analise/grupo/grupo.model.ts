@@ -1,7 +1,8 @@
-import { TipoEquipe } from "../../tipo-equipe";
-import { Organizacao } from "../../organizacao";
-import { Sistema } from "../../sistema";
-import {User} from '../../user';
+import { TipoEquipe } from '../../tipo-equipe';
+import { Organizacao } from '../../organizacao';
+import { Sistema } from '../../sistema';
+import { User } from '../../user';
+import { Status } from 'src/app/status/status.model';
 
 export class Grupo {
 
@@ -40,6 +41,7 @@ export class SearchGroup {
         public sistema?: Sistema,
         public metodoContagem?: string,
         public usuario?: User,
+        public status?: Status,
     ) {
     }
 
