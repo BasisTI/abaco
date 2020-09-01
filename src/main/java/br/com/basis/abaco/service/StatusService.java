@@ -2,6 +2,7 @@ package br.com.basis.abaco.service;
 
 import br.com.basis.abaco.domain.Status;
 import br.com.basis.abaco.repository.StatusRepository;
+import br.com.basis.abaco.repository.search.StatusSearchRepository;
 import br.com.basis.abaco.service.dto.StatusDTO;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
@@ -15,15 +16,24 @@ import java.util.stream.Collectors;
 public class StatusService {
 
     private final StatusRepository statusRepository;
+    private final StatusSearchRepository statusSearchRepository;
 
-    public StatusService(StatusRepository statusRepository) {
+    public StatusService(StatusRepository statusRepository, StatusSearchRepository statusSearchRepository) {
         this.statusRepository = statusRepository;
+        this.statusSearchRepository = statusSearchRepository;
     }
 
     @Transactional(readOnly = true)
     public List<br.com.basis.abaco.service.dto.DropdownDTO> getStatusDropdown() {
         return statusRepository.getDropdown();
     }
+    public StatusDTO save(StatusDTO statusDTO) {
+        Status status = convertToEntity(statusDTO);
+        Status result = statusRepository.save(status);
+        statusSearchRepository.save(result);
+        return convertToDto(status);
+    }
+
 
     public List<Status> findAllActive() {
         return statusRepository.findByAtivoTrue();

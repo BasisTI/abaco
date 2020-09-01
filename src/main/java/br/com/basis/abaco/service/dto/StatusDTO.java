@@ -19,4 +19,6 @@ public class StatusDTO implements Serializable, ReportObject {
 
     private String nome;
 
+    private Boolean ativo;
+
 }

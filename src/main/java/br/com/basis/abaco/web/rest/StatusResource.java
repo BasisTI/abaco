@@ -4,7 +4,7 @@ import br.com.basis.abaco.domain.Status;
 import br.com.basis.abaco.repository.StatusRepository;
 import br.com.basis.abaco.repository.search.StatusSearchRepository;
 import br.com.basis.abaco.service.StatusService;
-import br.com.basis.abaco.service.dto.DropdownDTO;
+import br.com.basis.abaco.service.dto.StatusDTO;
 import br.com.basis.abaco.service.exception.RelatorioException;
 import br.com.basis.abaco.service.relatorio.RelatorioEquipeColunas;
 import br.com.basis.abaco.utils.AbacoUtil;
@@ -77,15 +77,15 @@ public class StatusResource {
     @PostMapping("/status")
     @Timed
     @Secured({ROLE_ADMIN, ROLE_USER, ROLE_GESTOR, ROLE_ANALISTA})
-    public ResponseEntity<Status> createStatus(@Valid @RequestBody Status status)
+    public ResponseEntity<StatusDTO> createStatus(@Valid @RequestBody StatusDTO status)
         throws URISyntaxException {
         log.debug("REST request to save Status : {}", status);
         if (status.getId() != null) {
             return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert(ENTITY_NAME, "idexists",
                 "A new Status cannot already have an ID")).body(null);
         }
-        Status result = statusRepository.save(status);
-        statusSearchRepository.save(result);
+        StatusDTO result = statusService.save(status);
+
         return ResponseEntity.created(new URI("/api/status/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString())).body(result);
     }
@@ -93,35 +93,27 @@ public class StatusResource {
     @PutMapping("/status")
     @Timed
     @Secured({ROLE_ADMIN, ROLE_USER, ROLE_GESTOR, ROLE_ANALISTA})
-    public ResponseEntity<Status> updateStatus(@Valid @RequestBody Status status)
+    public ResponseEntity<StatusDTO> updateStatus(@Valid @RequestBody StatusDTO status)
         throws URISyntaxException {
         log.debug("REST request to update Status : {}", status);
         if (status.getId() == null) {
             return createStatus(status);
         }
-        Status result = statusRepository.save(status);
-        statusSearchRepository.save(result);
+        StatusDTO result = statusService.save(status);
         return ResponseEntity.ok().headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, status.getId().toString())).body(result);
-    }
-
-    @GetMapping("/status/drop-down")
-    @Timed
-    public List<DropdownDTO> getStatusDropdown() {
-        log.debug("REST request to get dropdown Status");
-        return statusService.getStatusDropdown();
     }
 
     @GetMapping("/status/list-active")
     @Timed
     public List<Status> getLstStatusActive() {
-        log.debug("REST request to get dropdown Status");
+        log.debug("REST request to get List Active Status");
         return statusService.findAllActive();
     }
 
     @GetMapping("/status/list")
     @Timed
     public List<Status> getLstStatus() {
-        log.debug("REST request to get dropdown Status");
+        log.debug("REST request to get list Status");
         return statusService.findAll();
     }
 
