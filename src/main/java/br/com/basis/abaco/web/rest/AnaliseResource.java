@@ -397,11 +397,12 @@ public class AnaliseResource {
                                                                         @RequestParam(value = "metodo", required = false) Set<MetodoContagem> metodo,
                                                                         @RequestParam(value = "organizacao", required = false) Set<Long> organizacao,
                                                                         @RequestParam(value = "equipeResponsavel", required = false) Long equipe,
+                                                                        @RequestParam(value = "status", required = false) Set<Long> status,
                                                                         @RequestParam(value = "users", required = false) Set<Long> usuario) throws RelatorioException {
         ByteArrayOutputStream byteArrayOutputStream;
         try {
             Pageable pageable = dynamicExportsService.obterPageableMaximoExportacao();
-            BoolQueryBuilder qb = analiseService.getBoolQueryBuilder(identificador, sistema, metodo, organizacao, equipe, usuario);
+            BoolQueryBuilder qb = analiseService.getBoolQueryBuilder(identificador, sistema, metodo, organizacao, equipe, usuario, status);
             SearchQuery searchQuery = new NativeSearchQueryBuilder().withQuery(qb).withPageable(pageable).build();
             Page<Analise> page = elasticsearchTemplate.queryForPage(searchQuery, Analise.class);
             byteArrayOutputStream = dynamicExportsService.export(new RelatorioAnaliseColunas(), page, tipoRelatorio, Optional.empty(), Optional.ofNullable(AbacoUtil.REPORT_LOGO_PATH), Optional.ofNullable(AbacoUtil.getReportFooter()));
@@ -424,12 +425,13 @@ public class AnaliseResource {
                                                                   @RequestParam(value = "metodoContagem", required = false) Set<MetodoContagem> metodo,
                                                                   @RequestParam(value = "organizacao", required = false) Set<Long> organizacao,
                                                                   @RequestParam(value = "equipe", required = false) Long equipe,
+                                                                  @RequestParam(value = "status", required = false) Set<Long> status,
                                                                   @RequestParam(value = "usuario", required = false) Set<Long> usuario)
         throws URISyntaxException {
         Sort.Direction sortOrder = PageUtils.getSortDirection(order);
         Pageable pageable = new PageRequest(pageNumber, size, sortOrder, sort);
         FieldSortBuilder sortBuilder = new FieldSortBuilder(sort).order(SortOrder.ASC);
-        BoolQueryBuilder qb = analiseService.getBoolQueryBuilder(identificador, sistema, metodo, organizacao, equipe, usuario);
+        BoolQueryBuilder qb = analiseService.getBoolQueryBuilder(identificador, sistema, metodo, organizacao, equipe, usuario, status);
         SearchQuery searchQuery = new NativeSearchQueryBuilder().withQuery(qb).withPageable(pageable).withSort(sortBuilder).build();
         Page<Analise> page = elasticsearchTemplate.queryForPage(searchQuery, Analise.class);
         Page<AnaliseDTO> dtoPage = page.map(analise -> analiseService.convertToDto(analise));

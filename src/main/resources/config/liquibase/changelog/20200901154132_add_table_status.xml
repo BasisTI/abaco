@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+   <changeSet author="basis (generated)" id="1598974899412-1">
+       <createTable tableName="status_analise">
+           <column name="id" type="BIGINT">
+               <constraints primaryKey="true" nullable="false"/>
+           </column>
+           <column name="nome" type="VARCHAR(255)" />
+           <column name="ativo" type="BOOLEAN"/>
+       </createTable>
+   </changeSet>
+   <changeSet author="basis (generated)" id="1598974899412-2">
+       <addColumn tableName="analise" >
+           <column name="status_id"
+                   type="BIGINT"/>
+       </addColumn>
+   </changeSet>
+   <changeSet author="basis (generated)" id="1598974899412-3">
+       <addForeignKeyConstraint  baseColumnNames="status_id"
+                                 baseTableName="analise"
+                                 constraintName="fk_analise_status"
+                                 deferrable="true"
+                                 onDelete="CASCADE"
+                                 onUpdate="RESTRICT"
+                                 referencedColumnNames="id"
+                                 referencedTableName="status_analise"
+       />
+   </changeSet>
+</databaseChangeLog>

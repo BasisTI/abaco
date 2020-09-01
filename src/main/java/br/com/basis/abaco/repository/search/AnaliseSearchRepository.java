@@ -6,4 +6,6 @@ import org.springframework.data.elasticsearch.repository.ElasticsearchRepository
 
 public interface AnaliseSearchRepository extends ElasticsearchRepository<Analise, Long> {
 
+    Boolean existsByStatusId(Long id);
+
 }
