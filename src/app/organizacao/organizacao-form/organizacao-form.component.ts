@@ -78,8 +78,7 @@ export class OrganizacaoFormComponent implements OnInit, OnDestroy {
     }
 
     getLabel(label) {
-        let str: any;
-        return str;
+        return label;
     }
 
     ngOnInit() {
@@ -356,40 +355,37 @@ export class OrganizacaoFormComponent implements OnInit, OnDestroy {
             form.controls.cnpjOrganizacao.markAsTouched();
             return;
         }
-        
         if (!this.organizacao.nome) {
-            // form.controls.nome.markAsTouched();
+            form.controls.nome.markAsTouched();
             this.pageNotificationService.addErrorMessage('O campo Nome é obrigatório!');
             return;
         }
 
         if (!this.organizacao.sigla) {
-            // form.controls.siglaOrganizacao.markAsTouched();
+            form.controls.siglaOrganizacao.markAsTouched();
             this.pageNotificationService.addErrorMessage('O campo Sigla é obrigatório!');
             return;
         }
 
-        if (!this.organizacao.cnpj) {
-            this.cnpjValido = true;
-            // form.controls.cnpjOrganizacao.markAsTouched();
-            this.pageNotificationService.addErrorMessage('O campo CNPJ é obrigatório!');
-            return;
-        }
-        
-        if (this.organizacao.cnpj !== ' ') {
+        // if (!this.organizacao.cnpj) {
+        //     this.cnpjValido = true;
+        //     form.controls.cnpjOrganizacao.markAsTouched();
+        //     this.pageNotificationService.addErrorMessage('O campo CNPJ é obrigatório!');
+        //     return;
+        // }
+        if (this.organizacao.cnpj) {
             if (!ValidacaoUtil.validarCNPJ(this.organizacao.cnpj)) {
                 this.cnpjValido = true;
+                form.controls.cnpjOrganizacao.markAsTouched();
                 this.pageNotificationService.addErrorMessage('CNPJ inválidoo');
                 return;
             }
         }
-        
         if (this.organizacao.contracts.length === 0 || this.organizacao.contracts === undefined) {
             document.getElementById('tabela-contrato').setAttribute('style', 'border: 1px dotted red;');
             this.pageNotificationService.addErrorMessage('Pelo menos 1 contrato é obrigatório por organização.');
             return;
         }
-            
         this.isSaving = true;
         this.organizacaoService.dropDown().subscribe(response => {
             const todasOrganizacoes = response;
@@ -451,9 +447,9 @@ export class OrganizacaoFormComponent implements OnInit, OnDestroy {
         if (!this.organizacao.sigla || this.organizacao.sigla === undefined) {
             this.invalidFields.push('Cadastros.Organizacao.Sigla');
         }
-        if (!this.organizacao.cnpj || this.organizacao.cnpj === undefined) {
-            this.invalidFields.push('Cadastros.Organizacao.CNPJ');
-        }
+        // if (!this.organizacao.cnpj || this.organizacao.cnpj === undefined) {
+        //     this.invalidFields.push('Cadastros.Organizacao.CNPJ');
+        // }
 
         isFieldsValid = (this.invalidFields.length === 0);
         return isFieldsValid;

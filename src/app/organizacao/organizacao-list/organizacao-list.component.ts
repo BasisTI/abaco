@@ -37,8 +37,7 @@ export class OrganizacaoListComponent implements OnInit {
   ) { }
 
   getLabel(label) {
-    let str: any;
-    return str;
+    return label;
   }
 
   public ngOnInit() {
