@@ -13,13 +13,6 @@ describe('Abaco - Cadastros Fase', function() {
         browser.get('/');
     });
 
-    it('Cadastros Fase - Cadastrar Fase Sem Campos Obrigatórios', function () {
-        page.login();
-        page.navegar();
-        page.clicarBotao('Novo');
-        page.cadastrarFase('');
-        expect(page.verificarPreenchimentoObrigatório()).toBe('OK');
-    });
 
     it('Cadastros Fase - Cadastrar Fases com sucesso', function () {
         page.login();
@@ -27,6 +20,14 @@ describe('Abaco - Cadastros Fase', function() {
         page.cadastrarNovasFases();
         expect(page.verificarMensagemInclusão('Registro incluído com sucesso!')).toBe('OK');
     }, 300000);
+
+    it('Cadastros Fase - Cadastrar Fase Sem Campos Obrigatórios', function () {
+        page.login();
+        page.navegar();
+        page.clicarBotao('Novo');
+        page.cadastrarFase('');
+        expect(page.verificarPreenchimentoObrigatório()).toBe('OK');
+    });
 
     it('Cadastros Fase - Editar Fase Sem Campos Obrigatoŕios', function () {
         page.login();
