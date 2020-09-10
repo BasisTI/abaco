@@ -11,6 +11,7 @@ import br.com.basis.abaco.domain.FuncaoTransacao;
 import br.com.basis.abaco.domain.Organizacao;
 import br.com.basis.abaco.domain.Rlr;
 import br.com.basis.abaco.domain.Sistema;
+import br.com.basis.abaco.domain.Status;
 import br.com.basis.abaco.domain.TipoEquipe;
 import br.com.basis.abaco.domain.User;
 import br.com.basis.abaco.domain.VwAnaliseSomaPf;
@@ -459,5 +460,15 @@ public class AnaliseService extends BaseService {
         analiseClone.setFuncaoTransacaos(bindCloneFuncaoTransacaos(analise, analiseClone));
         analiseClone.setBloqueiaAnalise(false);
         return analiseClone;
+    }
+
+    public boolean changeStatusAnalise(Analise analise, Status status, User user) {
+
+        if(user.getTipoEquipes().contains(analise.getEquipeResponsavel()) && user.getOrganizacoes().contains(analise.getOrganizacao())){
+            analise.setStatus(status);
+            return true;
+        }else {
+            return false;
+        }
     }
 }

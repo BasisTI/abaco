@@ -2,6 +2,7 @@ package br.com.basis.abaco.web.rest;
 
 import br.com.basis.abaco.domain.Analise;
 import br.com.basis.abaco.domain.Compartilhada;
+import br.com.basis.abaco.domain.Status;
 import br.com.basis.abaco.domain.TipoEquipe;
 import br.com.basis.abaco.domain.UploadedFile;
 import br.com.basis.abaco.domain.User;
@@ -12,6 +13,7 @@ import br.com.basis.abaco.repository.AnaliseRepository;
 import br.com.basis.abaco.repository.CompartilhadaRepository;
 import br.com.basis.abaco.repository.FuncaoDadosRepository;
 import br.com.basis.abaco.repository.FuncaoTransacaoRepository;
+import br.com.basis.abaco.repository.StatusRepository;
 import br.com.basis.abaco.repository.TipoEquipeRepository;
 import br.com.basis.abaco.repository.UploadedFilesRepository;
 import br.com.basis.abaco.repository.UserRepository;
@@ -89,6 +91,7 @@ public class AnaliseResource {
     private final CompartilhadaRepository compartilhadaRepository;
     private final AnaliseSearchRepository analiseSearchRepository;
     private final FuncaoDadosRepository funcaoDadosRepository;
+    private final StatusRepository statusRepository;
     private final FuncaoTransacaoRepository funcaoTransacaoRepository;
     private final DynamicExportsService dynamicExportsService;
     private final ElasticsearchTemplate elasticsearchTemplate;
@@ -113,7 +116,8 @@ public class AnaliseResource {
                            CompartilhadaRepository compartilhadaRepository,
                            FuncaoTransacaoRepository funcaoTransacaoRepository,
                            ElasticsearchTemplate elasticsearchTemplate,
-                           AnaliseService analiseService) {
+                           AnaliseService analiseService,
+                           StatusRepository statusRepository) {
         this.analiseRepository = analiseRepository;
         this.analiseSearchRepository = analiseSearchRepository;
         this.dynamicExportsService = dynamicExportsService;
@@ -123,6 +127,7 @@ public class AnaliseResource {
         this.funcaoTransacaoRepository = funcaoTransacaoRepository;
         this.elasticsearchTemplate = elasticsearchTemplate;
         this.analiseService = analiseService;
+        this.statusRepository = statusRepository;
     }
 
     @PostMapping("/analises")
@@ -456,6 +461,24 @@ public class AnaliseResource {
                 .body(new AnaliseEditDTO());
         }
     }
+
+    @GetMapping("/analises/change-status/{id}/{idStatus}")
+    @Timed
+    @Secured({AuthoritiesConstants.ADMIN, AuthoritiesConstants.USER, AuthoritiesConstants.GESTOR, AuthoritiesConstants.ANALISTA})
+    public ResponseEntity<AnaliseEditDTO> alterStatusAnalise(@PathVariable Long id, @PathVariable Long idStatus) {
+        Analise analise = analiseService.recuperarAnalise(id);
+        Status status = statusRepository.findById(idStatus);
+        User user = userRepository.findOneByLogin(SecurityUtils.getCurrentUserLogin()).get();
+        if (analise.getId() != null && status.getId() != null &&  analiseService.changeStatusAnalise(analise,status, user)) {
+            analiseRepository.save(analise);
+            analiseSearchRepository.save(analiseService.convertToEntity(analiseService.convertToDto(analise)));
+            return ResponseEntity.ok().headers(HeaderUtil.blockEntityUpdateAlert(ENTITY_NAME, analise.getId().toString()))
+                .body(analiseService.convertToAnaliseEditDTO(analise));
+        } else {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new AnaliseEditDTO());
+        }
+    }
+
 }
 
 
