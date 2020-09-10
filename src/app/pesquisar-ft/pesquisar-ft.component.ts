@@ -376,12 +376,17 @@ export class PesquisarFtComponent implements OnInit {
                 forkJoin(getFuncaoTransacoes).subscribe(result => {
                     result.forEach(funcaoTransacaoResp => {
                         funcaoTransacaoResp['id'] = undefined;
-                        funcaoTransacaoResp.ders.forEach(vd => {
-                            vd.id = undefined;
-                        });
-                        funcaoTransacaoResp.alrs.forEach(vd => {
-                            vd.id = undefined;
-                        });
+                        if (this.analise.metodoContagem === 'ESTIMADA' || this.analise.metodoContagem === 'INDICATIVA') {
+                            funcaoTransacaoResp.ders = [];
+                            funcaoTransacaoResp.alrs = [];
+                        } else {
+                            funcaoTransacaoResp.ders.forEach(vd => {
+                                vd.id = undefined;
+                            });
+                            funcaoTransacaoResp.alrs.forEach(vd => {
+                                vd.id = undefined;
+                            });
+                        }
                         if (this.novoDeflator != null) {
                             funcaoTransacaoResp.fatorAjuste = this.novoDeflator;
                             if (this.novoDeflator.tipoAjuste === 'UNITARIO') {
@@ -431,12 +436,17 @@ export class PesquisarFtComponent implements OnInit {
                 forkJoin(getFuncaoDados).subscribe(result => {
                     result.forEach(funcaoDadosResp => {
                         funcaoDadosResp['id'] = undefined;
-                        funcaoDadosResp.ders.forEach(der => {
-                            der.id = undefined;
-                        });
-                        funcaoDadosResp.rlrs.forEach(rlr => {
-                            rlr.id = undefined;
-                        });
+                        if (this.analise.metodoContagem === 'ESTIMADA' || this.analise.metodoContagem === 'INDICATIVA') {
+                            funcaoDadosResp.ders = [];
+                            funcaoDadosResp.rlrs = [];
+                        } else {
+                            funcaoDadosResp.ders.forEach(der => {
+                                der.id = undefined;
+                            });
+                            funcaoDadosResp.rlrs.forEach(rlr => {
+                                rlr.id = undefined;
+                            });
+                        }
                         if (this.novoDeflator != null) {
                             funcaoDadosResp.fatorAjuste = this.novoDeflator;
                             if (this.novoDeflator.tipoAjuste === 'UNITARIO') {

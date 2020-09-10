@@ -18,44 +18,44 @@
                             </div>
                             <div >
                                 <basis-datatable
-                                            type="memory" 
-                                            id="idTabelaFuncaoDados"
-                                            [disableDelete]="this.isView"
-                                            [disableEdit]="this.isView"
-                                            [disableClone]="this.isView"
-                                            [disableCrud]="this.isView"
-                                            (dblclick)="onRowDblclick($event)"
-                                            [value]="funcoesDados"
-                                            [showCrud]="true"
-                                            (buttonClick)="datatableClick($event)"
-                                            (click)="selectFD()"
-                                            [paginator]="false"
-                                            [scrollable]="true"
-                                            [rows]="20"
-                                            [filterOnColumn]="true"
-                                            [rowsPerPageOptions]="[20,50,100]"
-                                            [showVisibleColumnsControl]="true"
-                                            #tables>
+                                        type="memory" 
+                                        id="idTabelaFuncaoDados"
+                                        [disableDelete]="this.isView"
+                                        [disableEdit]="this.isView"
+                                        [disableClone]="this.isView"
+                                        [disableCrud]="this.isView"
+                                        (dblclick)="onRowDblclick($event)"
+                                        [value]="funcoesDados"
+                                        [showCrud]="true"
+                                        (buttonClick)="datatableClick($event)"
+                                        (click)="selectFD()"
+                                        [paginator]="false"
+                                        [scrollable]="true"
+                                        [rows]="20"
+                                        [filterOnColumn]="true"
+                                        [rowsPerPageOptions]="[20,50,100]"
+                                        [showVisibleColumnsControl]="true"
+                                        #tables>
 
-                                        <p-column field="nomeModulo" header="Módulo" [filter]="true" [sortable]="true"></p-column>
-                                        <p-column field="nomeFuncionalidade" [filter]="true" header="Funcionalidade" [sortable]="true"></p-column>
-                                        <p-column field="name" header="Nome" [sortable]="true"></p-column> 
-                                        <p-column field="deflator" header="Deflator" [sortable]="true"></p-column>
-                                        <p-column field="tipo" header="Classificação" [sortable]="true"></p-column>
-                                        <p-column field="totalDers" header="DER (TD)" [sortable]="true" ></p-column>
-                                        <p-column field="totalRlrs" header="RLR (TR)" [sortable]="true" ></p-column>
-                                        <p-column field="complexidade" header="Complexidade" [sortable]="true" ></p-column>
-                                        <p-column field="grossPF" header="PF Bruto" [sortable]="true"></p-column>
-                                        <p-column field="pf" header="PF Líquido" [sortable]="true" ></p-column>
-                                        <p-column field="hasSustantation"  header="Possui Fundamentação ?" [sortable]="true" typefilter="">
-                                            <ng-template let-hasSustantation="rowData.hasSustantation"
-                                                                pTemplate="body">
-                                                {{ hasSustantation ? this.getLabel('Sim') : this.getLabel('Não') }}
-                                            </ng-template>
-                                        </p-column>
-                                        <basis-datatable-button
+                                    <p-column field="nomeModulo" header="Módulo" [filter]="true" [sortable]="true"></p-column>
+                                    <p-column field="nomeFuncionalidade" [filter]="true" header="Funcionalidade" [sortable]="true"></p-column>
+                                    <p-column field="name" header="Nome" [sortable]="true"></p-column> 
+                                    <p-column field="deflator" header="Deflator" [sortable]="true"></p-column>
+                                    <p-column field="tipo" header="Classificação" [sortable]="true"></p-column>
+                                    <p-column field="totalDers" header="DER (TD)" [sortable]="true" ></p-column>
+                                    <p-column field="totalRlrs" header="RLR (TR)" [sortable]="true" ></p-column>
+                                    <p-column field="complexidade" header="Complexidade" [sortable]="true" ></p-column>
+                                    <p-column field="grossPF" header="PF Bruto" [sortable]="true"></p-column>
+                                    <p-column field="pf" header="PF Líquido" [sortable]="true" ></p-column>
+                                    <p-column field="hasSustantation"  header="Possui Fundamentação ?" [sortable]="true" typefilter="">
+                                        <ng-template let-hasSustantation="rowData.hasSustantation"
+                                                            pTemplate="body">
+                                            {{ hasSustantation ? this.getLabel('Sim') : this.getLabel('Não') }}
+                                        </ng-template>
+                                    </p-column>
+                                    <basis-datatable-button
                                         name="crud"
-                                        *ngIf="!isView && !(hideElementTDTR) "
+                                        *ngIf="!isView && !(analise && analise.metodoContagem && analise.metodoContagem === 'INDICATIVA') "
                                         [tooltip]="funcaoDadosEditar.id != null ? this.getLabel('Criar Crud') : this.getLabel('Escolha um registro para criar crud.')" 
                                         [disabled]="funcaoDadosEditar.id == null"
                                         class="ui-button-success"
