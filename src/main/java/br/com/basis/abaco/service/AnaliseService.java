@@ -11,6 +11,7 @@ import br.com.basis.abaco.domain.FuncaoTransacao;
 import br.com.basis.abaco.domain.Organizacao;
 import br.com.basis.abaco.domain.Rlr;
 import br.com.basis.abaco.domain.Sistema;
+import br.com.basis.abaco.domain.Status;
 import br.com.basis.abaco.domain.TipoEquipe;
 import br.com.basis.abaco.domain.User;
 import br.com.basis.abaco.domain.VwAnaliseSomaPf;
@@ -90,7 +91,7 @@ public class AnaliseService extends BaseService {
         this.vwAnaliseSomaPfRepository = vwAnaliseSomaPfRepository;
     }
 
-    public void bindFilterSearch(String identificador, Set<Long> sistema, Set<MetodoContagem> metodo, Set<Long> usuario, Long equipesIds, Set<Long> equipesUsersId, Set<Long> organizacoes, BoolQueryBuilder qb) {
+    public void bindFilterSearch(String identificador, Set<Long> sistema, Set<MetodoContagem> metodo, Set<Long> usuario, Long equipesIds, Set<Long> equipesUsersId, Set<Long> organizacoes, Set<Long> status, BoolQueryBuilder qb) {
         if (!StringUtils.isEmptyString((identificador))) {
             BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery()
                 .should(QueryBuilders.matchPhraseQuery("numeroOs", identificador))
@@ -107,6 +108,11 @@ public class AnaliseService extends BaseService {
             BoolQueryBuilder boolQueryBuilderSistema = QueryBuilders.boolQuery()
                 .must(QueryBuilders.termsQuery("metodoContagem", metodo));
             qb.must(boolQueryBuilderSistema);
+        }
+        if (status != null && status.size() > 0) {
+            BoolQueryBuilder boolQueryBuilderStatus = QueryBuilders.boolQuery()
+                .must(QueryBuilders.termsQuery("status.id", status));
+            qb.must(boolQueryBuilderStatus);
         }
         if (usuario != null && usuario.size() > 0) {
             BoolQueryBuilder queryBuilderUsers = QueryBuilders.boolQuery()
@@ -389,14 +395,15 @@ public class AnaliseService extends BaseService {
         analise.setEnviarBaseline(analiseUpdate.isEnviarBaseline());
         analise.setObservacoes(analiseUpdate.getObservacoes());
         analise.setEsforcoFases(analiseUpdate.getEsforcoFases());
+        analise.setStatus(analiseUpdate.getStatus());
     }
 
-    public BoolQueryBuilder getBoolQueryBuilder(String identificador, Set<Long> sistema, Set<MetodoContagem> metodo, Set<Long> organizacao, Long equipe, Set<Long> usuario) {
+    public BoolQueryBuilder getBoolQueryBuilder(String identificador, Set<Long> sistema, Set<MetodoContagem> metodo, Set<Long> organizacao, Long equipe, Set<Long> usuario, Set<Long> idsStatus) {
         User user = userSearchRepository.findByLogin(SecurityUtils.getCurrentUserLogin());
         Set<Long> equipesIds = getIdEquipes(user);
         Set<Long> organicoesIds = (organizacao != null && organizacao.size() > 0) ? organizacao : getIdOrganizacoes(user);
         BoolQueryBuilder qb = QueryBuilders.boolQuery();
-        bindFilterSearch(identificador, sistema, metodo, usuario, equipe, equipesIds, organicoesIds, qb);
+        bindFilterSearch(identificador, sistema, metodo, usuario, equipe, equipesIds, organicoesIds, idsStatus, qb);
         return qb;
     }
 
@@ -453,5 +460,15 @@ public class AnaliseService extends BaseService {
         analiseClone.setFuncaoTransacaos(bindCloneFuncaoTransacaos(analise, analiseClone));
         analiseClone.setBloqueiaAnalise(false);
         return analiseClone;
+    }
+
+    public boolean changeStatusAnalise(Analise analise, Status status, User user) {
+
+        if(user.getTipoEquipes().contains(analise.getEquipeResponsavel()) && user.getOrganizacoes().contains(analise.getOrganizacao())){
+            analise.setStatus(status);
+            return true;
+        }else {
+            return false;
+        }
     }
 }

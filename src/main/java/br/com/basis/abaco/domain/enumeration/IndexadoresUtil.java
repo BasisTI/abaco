@@ -19,7 +19,8 @@ public enum IndexadoresUtil {
     MODULO("modulo"),
     BASE_LINE_ANALITICO("baseline_analitico"),
     BASE_LINE_SINTETICO("baseline_sintetico"),
-    FUNCAO_TRANSACAO("função_transação");
+    FUNCAO_TRANSACAO("função_transação"),
+    STATUS("status");
 
     public final String label;
 

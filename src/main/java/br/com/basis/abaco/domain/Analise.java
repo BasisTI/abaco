@@ -144,6 +144,9 @@ public class Analise implements Serializable, ReportObject {
     private Sistema sistema;
 
     @ManyToOne
+    private Status status;
+
+    @ManyToOne
     private Contrato contrato;
 
     @JsonInclude

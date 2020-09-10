@@ -10,6 +10,7 @@ import br.com.basis.abaco.repository.FuncaoDadosRepository;
 import br.com.basis.abaco.repository.FuncaoDadosVersionavelRepository;
 import br.com.basis.abaco.repository.FuncaoTransacaoRepository;
 import br.com.basis.abaco.repository.GrupoRepository;
+import br.com.basis.abaco.repository.StatusRepository;
 import br.com.basis.abaco.repository.UserRepository;
 import br.com.basis.abaco.repository.VwAnaliseSomaPfRepository;
 import br.com.basis.abaco.repository.search.AnaliseSearchRepository;
@@ -96,6 +97,9 @@ public class AnaliseResourceIT {
     private UserSearchRepository userSearchRepository;
 
     @Autowired
+    private StatusRepository statusRepository;
+
+    @Autowired
     private GrupoRepository grupoRepository;
 
     @Autowired
@@ -143,7 +147,7 @@ public class AnaliseResourceIT {
             compartilhadaRepository,
             funcaoTransacaoRepository,
             elasticsearchTemplate,
-            analiseService);
+            analiseService, statusRepository);
         this.restAnaliseMockMvc = MockMvcBuilders.standaloneSetup(analiseResource)
             .setCustomArgumentResolvers(pageableArgumentResolver).setControllerAdvice(exceptionTranslator)
             .setMessageConverters(jacksonMessageConverter).build();

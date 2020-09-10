@@ -5,6 +5,7 @@ import br.com.basis.abaco.domain.Contrato;
 import br.com.basis.abaco.domain.EsforcoFase;
 import br.com.basis.abaco.domain.FatorAjuste;
 import br.com.basis.abaco.domain.Manual;
+import br.com.basis.abaco.domain.Status;
 import br.com.basis.abaco.domain.enumeration.MetodoContagem;
 import br.com.basis.abaco.domain.enumeration.TipoAnalise;
 import br.com.basis.dynamicexports.pojo.ReportObject;
@@ -48,6 +49,7 @@ public class AnaliseEditDTO implements ReportObject {
     private Set<EsforcoFase> esforcoFases;
     private Manual manual;
     private Set<Compartilhada> compartilhadas;
+    private Status status;
 
     public void setDataCriacaoOrdemServico(Timestamp dataCriacaoOrdemServico) {
         this.dataCriacaoOrdemServico = dataCriacaoOrdemServico == null ? null : new Timestamp(dataCriacaoOrdemServico.getTime());

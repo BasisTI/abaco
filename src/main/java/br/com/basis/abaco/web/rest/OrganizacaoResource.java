@@ -114,7 +114,7 @@ public class OrganizacaoResource {
   }
 
   private int validaCamposOrganizacao(Organizacao org) {
-    String[] campos = { org.getNome(), org.getCnpj(), org.getSigla(), org.getNumeroOcorrencia() };
+    String[] campos = { org.getNome(), org.getSigla(), org.getNumeroOcorrencia() };
     int i = 0;
 
     while (i < campos.length) {
@@ -128,7 +128,10 @@ public class OrganizacaoResource {
     if (existingOrganizacao.isPresent() && (!existingOrganizacao.get().getId().equals(org.getId()))) {
       return 4;
     }
-    existingOrganizacao = organizacaoSearchRepository.findOneByCnpj(org.getCnpj());
+    if(org.getCnpj() != null){
+        existingOrganizacao = organizacaoSearchRepository.findOneByCnpj(org.getCnpj());
+
+    }
     if (org.getCnpj() != null && existingOrganizacao.isPresent()
         && (!existingOrganizacao.get().getId().equals(org.getId()))) {
       return 5;

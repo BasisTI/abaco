@@ -10,7 +10,6 @@ import lombok.NoArgsConstructor;
 import org.apache.commons.lang3.BooleanUtils;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
-import org.hibernate.validator.constraints.br.CNPJ;
 import org.springframework.data.elasticsearch.annotations.Document;
 import org.springframework.data.elasticsearch.annotations.Field;
 import org.springframework.data.elasticsearch.annotations.FieldIndex;
@@ -63,7 +62,6 @@ public class Organizacao implements Serializable, ReportObject, Cloneable {
 
     @Size(max = 19)
     @Column(name = "cnpj", length = 14)
-    @CNPJ(message = "CNPJ inválido")
     @Field(type = FieldType.String, index = FieldIndex.not_analyzed)
     private String cnpj;
 
