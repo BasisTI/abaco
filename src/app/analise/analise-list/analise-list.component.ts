@@ -50,8 +50,11 @@ export class AnaliseListComponent implements OnInit {
     query: String;
     usuarios: String[] = [];
     lstStatus: Status[] = [];
+    lstStatusActive: Status[] = [];
     idAnaliseCloneToEquipe: number;
+    idAnaliseChangeStatus: number;
     public equipeToClone?: TipoEquipe;
+    public statusToChange?: Status;
 
     translateSusbscriptions: Subscription[] = [];
 
@@ -64,6 +67,7 @@ export class AnaliseListComponent implements OnInit {
     inicial: boolean;
     showDialogAnaliseCloneTipoEquipe = false;
     showDialogAnaliseBlock = false;
+    showDialogAnaliseChangeStatus = false;
     mostrarDialog = false;
     enableTable: Boolean = false;
     notLoadFilterTable = false;
@@ -143,6 +147,13 @@ export class AnaliseListComponent implements OnInit {
         return this.getLabel('Clonar para Equipe');
     }
 
+    changeStatusTooltip() {
+        if (!(this.datatable && this.datatable.selectedRow)) {
+            return this.getLabel('Selecione um registro para alterar o status');
+        }
+        return this.getLabel('Alterar Status');
+    }
+
     compartilharTooltip() {
         if (!(this.datatable && this.datatable.selectedRow)) {
             return this.getLabel('Selecione um registro para compartilhar');
@@ -210,6 +221,9 @@ export class AnaliseListComponent implements OnInit {
             const emptyStatus = new Status();
             this.lstStatus.unshift(emptyStatus);
         });
+        this.statusService.listActive().subscribe(response => {
+            this.lstStatusActive = response;
+        });
     }
 
     loadingGroupSearch(): SearchGroup {
@@ -265,6 +279,9 @@ export class AnaliseListComponent implements OnInit {
                 break;
             case 'relatorioAnaliseContagem':
                 this.gerarRelatorioContagem(event.selection);
+                break;
+            case 'changeStatus':
+                this.openModalChangeStatus(event.selection.id);
                 break;
         }
     }
@@ -606,6 +623,30 @@ export class AnaliseListComponent implements OnInit {
             });
         }
     }
+
+    public openModalChangeStatus(id: number) {
+        this.statusToChange = undefined;
+        this.idAnaliseChangeStatus = id;
+        this.showDialogAnaliseChangeStatus = true;
+    }
+
+    public alterStatusAnalise() {
+        if (this.idAnaliseChangeStatus && this.statusToChange) {
+            this.analiseService.changeStatusAnalise(this.idAnaliseChangeStatus, this.statusToChange).subscribe(data => {
+                this.statusToChange = undefined;
+                this.idAnaliseChangeStatus = undefined;
+                this.showDialogAnaliseChangeStatus = false;
+                this.recarregarDataTable();
+                this.datatable.filter();
+                this.pageNotificationService.addSuccessMessage('O status da analise ' + data.identificadorAnalise + ' foi alterado.');
+            },
+            err => this.pageNotificationService.addErrorMessage('Não foi possivel alterar o status da Analise.'));
+        } else {
+            this.pageNotificationService.addErrorMessage('Selecione uma Analise e um Status para continuar.');
+
+        }
+    }
+
     public setParamsLoad() {
         if (this.isLoadFilter) {
             this.searchGroup = this.loadingGroupSearch();
