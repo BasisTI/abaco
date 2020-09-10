@@ -1,0 +1,332 @@
+[
+	{
+	    "nome": "SISP 2.2",
+	    "estimada": "35",
+	    "indicativa": "50",
+	    "observacao": "",
+	    "inclusao": "100",
+	    "alteracao": "90",
+	    "exclusao": "30",
+	    "convesao": "100",
+	    "fase":[
+		    	{
+		    		"fase": "Testes",
+		    		"esforco": "15"
+				},
+		    	{
+		    		"fase": "Homologação",
+		    		"esforco": "5"
+				},
+		    	{
+		    		"fase": "Implantação",
+		    		"esforco": "5"
+				},
+		    	{
+		    		"fase": "Engenharia de Requisitos",
+		    		"esforco": "25"
+				},
+		    	{
+		    		"fase": "Design e Arquitetura",
+		    		"esforco": "10"
+				},
+		    	{
+		    		"fase": "Implementação",
+		    		"esforco": "40"
+				}
+	    ],
+	    "deflator":[
+		    	{
+		    		"nome": "Manutenção Corretiva - Não Desenvolvido pela Empresa",
+		    		"ajuste": "Percentual",
+		    		"deflator": "75",
+		    		"descricao": "Manutenção Corretiva \n\nMesmo com a execução de atividades de garantia da qualidade, pode-se identificar defeitos na aplicação entregue. A manutenção corretiva altera o software para correção de defeitos. Encontra-se nesta categoria, as demandas de correção de erros (bugs) em funcionalidades de sistemas em produção. \n\nPF_CORRETIVA = FI x PF_ALTERADO \n\nFI = 75% quando estiver fora da garantia e a correção for feita por empresa diferente daquela que desenvolveu a funcionalidade",
+		    		"codigo": "4.4.2",
+		    		"origem": "SISP 2.2"
+				},
+				{
+		    		"nome": "Migração de Dados",
+		    		"ajuste": "Percentual",
+		    		"deflator": "100",
+		    		"descricao": "Conforme mencionado na seção 3.3, este roteiro recomenda a supressão do PF_CONVERSÃO das fórmulas de contagem de pontos de função de projetos de desenvolvimento e de melhoria nos casos específicos onde for caracterizado um esforço relativamente maior dessa atividade, tais como, nos casos de migração de dados de banco de dados hierárquico para relacional, e no tratamento de funções complexas de migração de dados. Nesses casos, recomenda-se tratar esse serviço como projeto separado de migração de dados. \n\nOs projetos de migração de dados devem ser contados como um novo projeto de desenvolvimento de um sistema, seguindo a fórmula abaixo: \n\nPF_CONVERSÃO = PF_INCLUIDO \n\nUm projeto de migração deve contemplar minimamente: os ALI mantidos pela migração, as Entradas Externas – considerando as cargas de dados nos ALI – e, caso seja solicitado pelo usuário, os relatórios gerenciais das cargas, que serão contados como Saídas Externas. Todas as contagens de PF devem ser realizadas com base nas funcionalidades requisitadas e recebidas pelo usuário.",
+		    		"codigo": "4.3",
+		    		"origem": "SISP 2.2"
+				}
+	    ]
+	},
+	{
+        "nome": "Manual MP-SISP",
+        "estimada": "35",
+        "indicativa": "50",
+        "observacao": "",
+        "inclusao": "100",
+        "alteracao": "60",
+        "exclusao": "30",
+        "convesao": "100",
+        "fase":[
+                {
+                    "fase": "Engenharia de Requisitos",
+                    "esforco": "25"
+                },
+                {
+                    "fase": "Design e Arquitetura",
+                    "esforco": "10"
+                },
+                {
+                    "fase": "Implantação",
+                    "esforco": "5"
+                },
+                {
+                    "fase": "Testes",
+                    "esforco": "15"
+                },
+                {
+                    "fase": "Homologação",
+                    "esforco": "5"
+                },
+                {
+                    "fase": "Implementação",
+                    "esforco": "40"
+                }
+        ],
+        "deflator":[
+                {
+                    "nome": "Projeto de Desenvolvimento -  Novo",
+                    "ajuste": "Percentual",
+                    "deflator": "100",
+                    "descricao": "Projetos de Melhoria (Manutenção Evolutiva) \nTrata-se de projeto de manutenção evolutiva ou melhoria funcional. Seu tamanho funcional é a medida das funcionalidades incluídas, alteradas e excluídas em aplicações em produção. O tamanho funcional de um projeto de melhoria pode incluir o tamanho da funcionalidade de conversão de dados. \n\nPF_MELHORIA = PF_INCLUIDO + (FI x PF_ALTERADO) + (0,3 x PF_EXCLUIDO) + PF_CONVERSÃO",
+                    "codigo": "4.1",
+                    "origem": "GUIA MP"
+                },
+                {
+                    "nome": "Manutenção Corretiva - Com documentação atualizada",
+                    "ajuste": "Percentual",
+                    "deflator": "60",
+                    "descricao": "Manutenção Corretiva \n\nA manutenção corretiva consiste na correção e alteração de requisitos, projeto, código, conjunto de testes e documentação para correção de defeitos. Encontram-se nesta categoria as demandas de correção de erros (bugs) de funcionalidades em sistemas, comportamentos inadequados que causem problemas de uso.\n\nSistema com documentação completa e atualizada \nPF_INM = PFfi *0,50",
+                    "codigo": "4.4.2",
+                    "origem": "GUIA MP"
+                }
+        ]
+    },
+    {
+        "nome": "IBAMA",
+        "estimada": "35",
+        "indicativa": "50",
+        "observacao": "",
+        "inclusao": "100",
+        "alteracao": "50",
+        "exclusao": "30",
+        "convesao": "100",
+        "fase":[
+                {
+                    "fase": "Implementação",
+                    "esforco": "40"
+                },
+                {
+                    "fase": "Homologação",
+                    "esforco": "5"
+                },
+                {
+                    "fase": "Implantação",
+                    "esforco": "5"
+                },
+                {
+                    "fase": "Engenharia de Requisitos",
+                    "esforco": "25"
+                },
+                {
+                    "fase": "Design e Arquitetura",
+                    "esforco": "10"
+                },
+                {
+                    "fase": "Testes",
+                    "esforco": "15"
+                }
+        ],
+        "deflator":[
+                {
+                    "nome": "Desenvolvimento, Manutenção e Publicação de Páginas Estáticas",
+                    "ajuste": "Unitário",
+                    "deflator": "0.6",
+                    "descricao": "Desenvolvimento, Manutenção e Publicação de Páginas Estáticas de Intranet, Internet ou Portal\n\n Nesta seção são tratados desenvolvimentos e manutenções específicas em páginas estáticas de portais, intranets ou websites. As demandas desta seção abrangem a publicação de páginas Web com conteúdo estático.\n\n Estas demandas são consideradas como desenvolvimento de consultas. Nestes casos, considera-se 20% dos pontos de função das consultas desenvolvidas. Cada página é contada como uma consulta. As consultas são consideradas consultas externas simples (3 PF). Ou seja, 0,6 PF por cada página desenvolvida ou mantida, de acordo com a fórmula abaixo:\n\n PF_PUBLICAÇÃO =  0,6 PF x Quantidade de Páginas Alteradas ou Incluídas",
+                    "codigo": "4.11",
+                    "origem": "SISP 2.2"
+                },
+                {
+                    "nome": "Manutenção em Interface",
+                    "ajuste": "Unitário",
+                    "deflator": "0.6",
+                    "descricao": "Manutenção em Interface\n\n A manutenção em interface, denominada na literatura de manutenção cosmética, é associada às demandas de alterações de interface\n\n Nestes casos, a aferição do tamanho em pontos de função das funções transacionais impactadas será realizada com a aplicação de um fator de redução de modo a considerar 20% da contagem de uma função transacional de mais baixa complexidade (3 PF), ou seja 0,6 PF, independentemente da complexidade da funcionalidade alterada. Neste tipo de manutenção não são contadas funções de dados. \n\n PF_INTERFACE = 0,6 PF x QUANTIDADE DE FUNÇÕES TRANSACIONAIS IMPACTADAS",
+                    "codigo": "4.7",
+                    "origem": "SISP 2.2"
+                }
+        ]
+    },
+    {
+        "nome": "Manual EB-SISP",
+        "estimada": "35",
+        "indicativa": "50",
+        "observacao": "",
+        "inclusao": "100",
+        "alteracao": "90",
+        "exclusao": "30",
+        "convesao": "100",
+        "fase":[
+                {
+                    "fase": "Implementação",
+                    "esforco": "40"
+                },
+                {
+                    "fase": "Design e Arquitetura",
+                    "esforco": "10"
+                },
+                {
+                    "fase": "Engenharia de Requisitos",
+                    "esforco": "25"
+                },
+                {
+                    "fase": "Implantação",
+                    "esforco": "5"
+                },
+                {
+                    "fase": "Homologação",
+                    "esforco": "5"
+                },
+                {
+                    "fase": "Testes",
+                    "esforco": "15"
+                }
+        ],
+        "deflator":[
+                {
+                    "nome": "Adaptação em Funcionalidades sem Alteração de Requisitos Funcionais",
+                    "ajuste": "Percentual",
+                    "deflator": "90",
+                    "descricao": "Adaptação em Funcionalidades sem Alteração de Requisitos Funcionais\n\n São consideradas nesta categoria as demandas de manutenção adaptativa associadas a solicitações que envolvem aspectos não funcionais, sem alteração em requisitos funcionais.\n\n Nestes casos, a aferição do tamanho em pontos de função da funcionalidade ou das funcionalidades que sofreram impacto deve considerar um fator de impacto (FI) sobre o PF_ALTERADO, seguindo os conceitos do CPM 4.3, apresentados na seção 4.2.\n\n PF_ADAPTATIVA = FI x PF_ALTERADO\n\n Deve-se destacar que além da adequação das funcionalidades em questão, a documentação do projeto de manutenção adaptativa deve ser realizada. Além disso, caso exista a documentação das funcionalidades impactadas, estas deverão ser atualizadas, caso contrário, se for demandada a redocumentação dessas funcionalidades, deve-se adicionar ao FI um fator de redocumentação de 15%, conforme descrito na seção 4.2. ",
+                    "codigo": "4.8.3",
+                    "origem": "SISP 2.2"
+                },
+                {
+                    "nome": "Apuração Especial – Base de Dados",
+                    "ajuste": "Percentual",
+                    "deflator": "60",
+                    "descricao": "Apuração Especial\n\n São funcionalidades executadas apenas uma vez para: corrigir problemas de dados incorretos na base de dados das aplicações ou atualizar dados em bases de dados de aplicações.\n\n Apuração Especial – Base de Dados\n\n Este tipo de apuração especial é um projeto que inclui a geração de procedimentos para atualização da base de dados. Deve-se destacar que estas funções são executadas apenas uma vez, não fazendo parte da aplicação, visando a correção de dados incorretos na base de dados da aplicação ou atualização em função de modificação da estrutura de dados, por exemplo inclusão de valor “sim” ou “não” no campo “indicador de matriz” referente ao CNPJ. Normalmente, nesse tipo de atualização são afetados múltiplos registros. Nestes casos, considera-se a contagem de pontos de função das funcionalidades desenvolvidas. Geralmente, estas funcionalidades são classificadas como Entradas Externas. Nesse caso, como artefato de homologação da demanda, deve ser gerado um relatório para validação do usuário.\n\n c)  Atualização de Dados com Consulta Prévia Caso a Apuração Especial - Base de Dados seja solicitada após uma demanda de consulta prévia, deve-se aplicar um fator de 60% na fórmula de contagem da Apuração Especial - Base de Dados, seguindo a fórmula abaixo.\n\n PF_APURAÇÃO_BD_PÓS_CONSULTA_PRÉVIA = PF_INCLUÍDO x 0,60",
+                    "codigo": "4.9.1.c",
+                    "origem": "SISP 2.2"
+                }
+        ]
+    },
+    {
+        "nome": "Manual MME-SISP",
+        "estimada": "35",
+        "indicativa": "50",
+        "observacao": "",
+        "inclusao": "100",
+        "alteracao": "90",
+        "exclusao": "30",
+        "convesao": "100",
+        "fase":[
+                {
+                    "fase": "Design e Arquitetura",
+                    "esforco": "10"
+                },
+                {
+                    "fase": "Engenharia de Requisitos",
+                    "esforco": "25"
+                },
+                {
+                    "fase": "Implantação",
+                    "esforco": "5"
+                },
+                {
+                    "fase": "Homologação",
+                    "esforco": "5"
+                },
+                {
+                    "fase": "Testes",
+                    "esforco": "15"
+                },
+                {
+                    "fase": "Implementação",
+                    "esforco": "40"
+                }
+        ],
+        "deflator":[
+                {
+                    "nome": "Migração de Dados",
+                    "ajuste": "Percentual",
+                    "deflator": "30",
+                    "descricao": "6.2.2. Projetos de Migração (Conversão) de Dados\n\n Os projetos de migração de dados serão contados como um novo projeto de desenvolvimento de um sistema. Nos projetos de migração de dados o PF_CONVERSÃO das fórmulas de contagem de Pontos de Função de Projetos de Desenvolvimento e de Melhoria serão suprimidos e o as funções de migração de dados serão tratadas como projetos separados de migração de dados. Segue a Fórmula de Contagem de Pontos de Função de Projetos de Migração:\n\n PF = PF_NÃO_AJUSTADO x 0,3",
+                    "codigo": "6.2.2",
+                    "origem": "Guia MME"
+                },
+                {
+                    "nome": "Mudança de Plataforma - Linguagem",
+                    "ajuste": "Percentual",
+                    "deflator": "80",
+                    "descricao": "6.2.4. Mudança de plataforma\n\n A necessidade de migração de uma aplicação existente para outra plataforma. Exemplo: uma aplicação em VB que precise ser redesenvolvida em Java sem mudança nos requisitos funcionais.\n\n Segue a Fórmula de Contagem de Pontos de Função de mudanças de plataforma:\n PF = PF_NÃO_AJUSTADO x 0,8 ",
+                    "codigo": "6.2.4",
+                    "origem": "Guia MME"
+                }
+        ]
+    },
+    {
+        "nome": "MEC",
+        "estimada": "35",
+        "indicativa": "50",
+        "observacao": "",
+        "inclusao": "100",
+        "alteracao": "50",
+        "exclusao": "30",
+        "convesao": "30",
+        "fase":[
+                {
+                    "fase": "Engenharia de Requisitos",
+                    "esforco": "25"
+                }
+        ],
+        "deflator":[
+                {
+                    "nome": "Manutenção Cosmética",
+                    "ajuste": "Unitário",
+                    "deflator": "0.04",
+                    "descricao": "Fontes de letra, cores de telas, logotipos, mudança de botões de tela, mudança de títulos dos campos na tela, mudança de posição de campos em telas, em relatórios ou texto na tela, sem que haja alteração em elementos de dados, arquivos referenciados ou informações de controle; Inclusão, alteração ou exclusão de imagem; Divisão de telas e/ou relatórios, sem que tenha havido mudança na funcionalidade; Atualização de rótulos de dados sem que haja mudança de funcionalidade. Mudanças de texto em mensagens de erro, validação, aviso, alerta ou conclusão de processamento ao usuário, desde que não façam parte de um ALI ou AIE. ",
+                    "codigo": "5.1",
+                    "origem": "Guia de Métricas do MEC"
+                },
+                {
+                    "nome": "Manutenção Adaptativa - Mudança de Código",
+                    "ajuste": "Percentual",
+                    "deflator": "65",
+                    "descricao": "Descrição",
+                    "codigo": "4.2.1.4",
+                    "origem": "Guia de Métricas do MEC"
+                }
+        ]
+    },
+    {
+        "nome": "Teste Manual",
+        "estimada": "35",
+        "indicativa": "50",
+        "observacao": "",
+        "inclusao": "100",
+        "alteracao": "50",
+        "exclusao": "30",
+        "convesao": "30",
+        "fase":[
+                {
+                    "fase": "Engenharia de Requisitos",
+                    "esforco": "25"
+                }
+        ],
+        "deflator":[
+                {
+                    "nome": "Teste",
+                    "ajuste": "Unitário",
+                    "deflator": "0.04",
+                    "descricao": "Descrição",
+                    "codigo": "5.1",
+                    "origem": "Guia de Métricas"
+                }
+        ]
+    }		
+]

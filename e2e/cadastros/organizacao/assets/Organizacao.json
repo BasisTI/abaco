@@ -1,0 +1,258 @@
+[
+	{
+	    "nome": "BASIS Tecnologia",
+	    "sigla": "BASIS",
+	    "cnpj": "11.777.162/0001-57",
+	    "ocorrencia": "",
+
+	    "nroContrato": "111",
+	    "dataIniVigencia": "2009/12/31",
+	    "dataFimVigencia": "2024/12/31",
+	    "garantia": "365",
+
+	    "manual": "SISP 2.2",
+	    "dataIniManual": "2009/12/31",
+	    "dataFimManual": "2024/12/31"
+	},
+
+	{
+	    "nome": "Ministério do Turismo",
+	    "sigla": "MTur",
+	    "cnpj": "05.457.283/0002-08",
+	    "ocorrencia": "MTUR302019-1",
+
+	    "nroContrato": "30/2019",
+	    "dataIniVigencia": "2019/12/26",
+	    "dataFimVigencia": "2024/12/25",
+	    "garantia": "365",
+
+	    "manual": "Manual MP-SISP",
+	    "dataIniManual": "2019/12/26",
+	    "dataFimManual": "2024/12/25"
+	},
+
+	{
+	    "nome": "Fundo Nacional de Desenvolvimento da Educação",
+	    "sigla": "FNDE",
+	    "cnpj": "00.378.257/0001-81",
+	    "ocorrencia": "FNDE-1",
+
+	    "nroContrato": "29/2015",
+	    "dataIniVigencia": "2015/08/04",
+	    "dataFimVigencia": "2020/08/03",
+	    "garantia": "365",
+
+	    "manual": "SISP 2.2",
+	    "dataIniManual": "2015/08/04",
+	    "dataFimManual": "2020/08/03"
+	},
+
+	{
+	    "nome": "Conselho Nacional de Justiça",
+	    "sigla": "CNJ",
+	    "cnpj": "07.421.906/0001-29",
+	    "ocorrencia": "CNJ-1",
+
+	    "nroContrato": "02/2017",
+	    "dataIniVigencia": "2017/02/01",
+	    "dataFimVigencia": "2022/02/01",
+	    "garantia": "90",
+
+	    "manual": "SISP 2.2",
+	    "dataIniManual": "2017/02/01",
+	    "dataFimManual": "2022/02/01"
+	},
+
+	{
+	    "nome": "EXERCITO BRASILEIRO",
+	    "sigla": "EB",
+	    "cnpj": "00.394.452/0250-09",
+	    "ocorrencia": "EBCOLOG1372017-1 E EBDCT32017-1",
+
+	    "nroContrato": "EBDCT3/2017",
+	    "dataIniVigencia": "2017/10/04",
+	    "dataFimVigencia": "2022/10/04",
+	    "garantia": "90",
+
+	    "manual": "Manual EB-SIS",
+	    "dataIniManual": "2017/10/04",
+	    "dataFimManual": "2022/10/04"
+	},
+
+	{
+	    "nome": "Conselho Administrativo de Defesa Econômica",
+	    "sigla": "CADE",
+	    "cnpj": "00.418.993/0001-16",
+	    "ocorrencia": "CADE072018-1",
+
+	    "nroContrato": "CADE172019",
+	    "dataIniVigencia": "2019/06/25",
+	    "dataFimVigencia": "2023/06/25",
+	    "garantia": "365",
+
+	    "manual": "Manual MP-SISP",
+	    "dataIniManual": "2019/06/25",
+	    "dataFimManual": "2023/06/25"
+	},
+
+	{
+	    "nome": "Ministério de Minas e Energia",
+	    "sigla": "MME",
+	    "cnpj": "37.115.383/0001-53",
+	    "ocorrencia": "MME372017-1",
+
+	    "nroContrato": "37/2017",
+	    "dataIniVigencia": "2017/12/28",
+	    "dataFimVigencia": "2022/12/28",
+	    "garantia": "90",
+
+	    "manual": "Manual MME-SISP",
+	    "dataIniManual": "2017/12/28",
+	    "dataFimManual": "2022/12/28"
+	},
+
+	{
+	    "nome": "FUNPRESP",
+	    "sigla": "FUNPRESP",
+	    "cnpj": "17.312.597/0001-02",
+	    "ocorrencia": "FUNPRESP072019-1",
+
+	    "nroContrato": "07/2019",
+	    "dataIniVigencia": "2019/05/29",
+	    "dataFimVigencia": "2024/05/29",
+	    "garantia": "90",
+
+	    "manual": "Manual MP-SISP",
+	    "dataIniManual": "2019/05/29",
+	    "dataFimManual": "2024/05/29"
+	},
+
+
+	{
+	    "nome": "Instituto Brasileiro do Meio Ambiente e dos Recursos Naturais Renováveis",
+	    "sigla": "IBAMA",
+	    "cnpj": "03.659.166/0001-02",
+	    "ocorrencia": "IBAMA442017-1",
+
+	    "nroContrato": "44/2017",
+	    "dataIniVigencia": "2017/12/12",
+	    "dataFimVigencia": "2022/12/12",
+	    "garantia": "90",
+
+	    "manual": "IBAMA",
+	    "dataIniManual": "2018/12/12",
+	    "dataFimManual": "2022/12/12"
+	},
+
+	{
+	    "nome": "Ministério do Meio Ambiente",
+	    "sigla": "MMA",
+	    "cnpj": "37.115.375/0002-98",
+	    "ocorrencia": "MMA202017-1",
+
+	    "nroContrato": "20/2017",
+	    "dataIniVigencia": "2017/12/21",
+	    "dataFimVigencia": "2022/12/21",
+	    "garantia": "90",
+
+	    "manual": "IBAMA",
+	    "dataIniManual": "2017/12/21",
+	    "dataFimManual": "2022/12/21"
+	},
+
+	{
+	    "nome": "Conselho Federal de Contabilidade",
+	    "sigla": "CFC",
+	    "cnpj": "33.618.570/0001-07",
+	    "ocorrencia": "CFC-1",
+
+	    "nroContrato": "33/2016",
+	    "dataIniVigencia": "2016/12/22",
+	    "dataFimVigencia": "2022/12/22",
+	    "garantia": "90",
+
+	    "manual": "SISP 2.2",
+	    "dataIniManual": "2016/12/22",
+	    "dataFimManual": "2022/12/22"
+	},
+
+	{
+	    "nome": "Agência Nacional do Cinema",
+	    "sigla": "ANCINE",
+	    "cnpj": "04.884.574/0001-20",
+	    "ocorrencia": "ANCINE112019-1",
+
+	    "nroContrato": "11/2019",
+	    "dataIniVigencia": "2019/06/05",
+	    "dataFimVigencia": "2025/06/05",
+	    "garantia": "90",
+
+	    "manual": "Manual MP-SISP",
+	    "dataIniManual": "2019/06/05",
+	    "dataFimManual": "2025/06/05"
+	},
+
+	{
+	    "nome": "Ministério da Educação",
+	    "sigla": "MEC",
+	    "cnpj": "00.394.445/0139-39",
+	    "ocorrencia": "MEC252019-1",
+
+	    "nroContrato": "25/2019",
+	    "dataIniVigencia": "2019/10/14",
+	    "dataFimVigencia": "2024/10/14",
+	    "garantia": "90",
+
+	    "manual": "MEC",
+	    "dataIniManual": "2019/10/14",
+	    "dataFimManual": "2024/10/14"
+	},
+
+	{
+	    "nome": "Agência Nacional de Vigilância Sanitária",
+	    "sigla": "ANVISA",
+	    "cnpj": "03.112.386/0001-11",
+	    "ocorrencia": "ANVISA012020-1",
+
+	    "nroContrato": "01/2020",
+	    "dataIniVigencia": "2020/01/13",
+	    "dataFimVigencia": "2025/01/13",
+	    "garantia": "90",
+
+	    "manual": "Manual MP-SISP",
+	    "dataIniManual": "2020/01/13",
+	    "dataFimManual": "2025/01/13"
+	},
+
+	{
+	    "nome": "Serviço Florestal Brasileiro",
+	    "sigla": "SFB",
+	    "cnpj": "00.396.895/0094-24",
+	    "ocorrencia": "SFB082018-1",
+
+	    "nroContrato": "08/2018",
+	    "dataIniVigencia": "2018/08/14",
+	    "dataFimVigencia": "2023/08/14",
+	    "garantia": "90",
+
+	    "manual": "IBAMA",
+	    "dataIniManual": "2018/08/14",
+	    "dataFimManual": "2023/08/14"
+	},
+
+	{
+	    "nome": "Organização 1",
+	    "sigla": "ORG",
+	    "cnpj": "37.724.585/0001-00",
+	    "ocorrencia": "ORG-1",
+
+	    "nroContrato": "09/18",
+	    "dataIniVigencia": "2018/09/07",
+	    "dataFimVigencia": "2023/09/07",
+	    "garantia": "90",
+
+	    "manual": "IBAMA",
+	    "dataIniManual": "2018/09/07",
+	    "dataFimManual": "2023/09/07"
+	}
+]
