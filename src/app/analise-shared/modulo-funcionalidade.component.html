@@ -38,7 +38,7 @@
         <div class="ui-g-6 ui-md-6 ui-sm-12">
             <div class="ui-g-10 ui-md-10 ui-sm-10">
                 <!-- filtro/pesquisa? -->
-                <label translate="Analise.Analise.Funcionalidade*">Funcionalidade *</label>
+                <label >Funcionalidade *</label>
                 <p-dropdown
                         [filter]="true"
                         optionLabel="nome"
@@ -70,10 +70,9 @@
 
     <!-- Dialog módulo -->
     <p-dialog
-            [header]="this.getLabel('Cadastros.FuncaoDados.Modulo')"
+            [header]="this.getLabel('Modulo')"
             [(visible)]="mostrarDialogModulo"
-            [contentStyle]="{'overflow':'visible'}"
-           >
+             [style]="{width: '50vw'}">
 
         <div class="ui-g">
             <div class="ui-g-12" style="margin-bottom: 05px">
@@ -109,10 +108,9 @@
 
     <!-- Dialog Funcionalidade -->
     <p-dialog
-            [header]="this.getLabel('Analise.Analise.Funcionalidade')"
+            [header]="this.getLabel('Funcionalidade')"
             [(visible)]="mostrarDialogFuncionalidade"
-            [contentStyle]="{'overflow':'visible'}"
-           >
+             [style]="{width: '50vw'}">
 
         <div class="ui-g">
             <div class="ui-g-12" style="margin-bottom: 05px">

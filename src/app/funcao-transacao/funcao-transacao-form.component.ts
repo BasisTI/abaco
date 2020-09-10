@@ -438,7 +438,7 @@ export class FuncaoTransacaoFormComponent implements OnInit {
     }
 
     contratoSelecionado() {
-        if (this.currentFuncaoTransacao.fatorAjuste.tipoAjuste === 'UNITARIO') {
+        if (this.currentFuncaoTransacao.fatorAjuste && this.currentFuncaoTransacao.fatorAjuste.tipoAjuste === 'UNITARIO') {
             this.hideShowQuantidade = this.currentFuncaoTransacao.fatorAjuste === undefined;
         } else {
             this.currentFuncaoTransacao.quantidade = undefined;
@@ -557,15 +557,7 @@ export class FuncaoTransacaoFormComponent implements OnInit {
             this.nomeInvalido = false;
         }
 
-        if (this.currentFuncaoTransacao.fatorAjuste === undefined) {
-            this.erroDeflator = true;
-            retorno = false;
-            this.pageNotificationService.addErrorMessage(this.getLabel('Selecione um Deflator'));
-        } else {
-            this.erroDeflator = false;
-        }
-
-        if (this.currentFuncaoTransacao.fatorAjuste === undefined) {
+        if (!this.currentFuncaoTransacao.fatorAjuste) {
             this.deflatorVazio = true;
             retorno = false;
         } else {

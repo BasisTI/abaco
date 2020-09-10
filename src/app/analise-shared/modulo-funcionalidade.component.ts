@@ -240,15 +240,15 @@ export class ModuloFuncionalidadeComponent implements OnInit, OnDestroy {
         if (this.isSistemaSelected()) {
             return this.moduloDropdownPlaceholderComSistemaSelecionado();
         } else {
-            return this.getLabel('Analise.Analise.Mensagens.msgSelecioneSistemaParaCarregarModulos');
+            return this.getLabel('Selecione um Sistema na aba \'Geral\' para carregar os Módulos');
         }
     }
 
     private moduloDropdownPlaceholderComSistemaSelecionado(): string {
         if (this.sistemaTemModulos()) {
-            return this.getLabel('Analise.Analise.Mensagens.msgSelecioneModulo');
+            return this.getLabel('Selecione um Módulo');
         } else {
-            return this.getLabel('Analise.Analise.Mensagens.msgNenhumModuloCadastrado');
+            return this.getLabel('Nenhum Módulo cadastrado');
         }
     }
 
@@ -392,7 +392,7 @@ export class ModuloFuncionalidadeComponent implements OnInit, OnDestroy {
 
     private criarMensagemDeSucessoDaCriacaoDaFuncionalidade(nomeFunc: string, nomeModulo: string, nomeSistema: string) {
         this.pageNotificationService
-            .addSuccessMessage(`${this.getLabel('Analise.Analise.Mensagens.msgFuncionalidade')} ${nomeFunc} ${this.getLabel('Analise.Analise.Mensagens.msgCriadoNoModulo')} ${nomeModulo} ${this.getLabel('Analise.Analise.Mensagens.msgNoSistema')} ${nomeSistema}`);
+            .addSuccessMessage(`${this.getLabel('Funcionalidade ')} ${nomeFunc} ${this.getLabel(' criado no módulo ')} ${nomeModulo} ${this.getLabel(' do Sistema ')} ${nomeSistema}`);
     }
 
     ngOnDestroy() {

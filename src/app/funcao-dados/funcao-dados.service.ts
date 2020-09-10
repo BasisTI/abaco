@@ -44,7 +44,7 @@ export class FuncaoDadosService {
     }
 
     dropDownPEAnalitico(idSistema): Observable<any> {
-        return this.http.get(this.resourceUrlPEAnalitico + '/drop-down/' + idSistema);
+        return this.http.get(this.resourceUrlPEAnalitico + 'drop-down/' + idSistema);
     }
 
     autoCompletePEAnalitico(name: String, idFuncionalidade: number): Observable<any> {

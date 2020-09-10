@@ -9,6 +9,8 @@ import { Subscription } from 'rxjs';
 import { BaselineService } from 'src/app/baseline';
 import { FuncaoDados } from 'src/app/funcao-dados';
 import { FuncaoDadosService } from 'src/app/funcao-dados/funcao-dados.service';
+import { BlockUIModule } from 'primeng';
+import { BlockUiService } from '@nuvem/angular-base';
 
 @Component({
     selector: 'app-analise-referenciador-ar',
@@ -49,7 +51,8 @@ export class ReferenciadorArComponent implements OnInit, OnDestroy {
         private analiseService: AnaliseService,
         private baselineService: BaselineService,
         private funcaoDadosService: FuncaoDadosService,
-        private derService: DerService
+        private derService: DerService,
+        private blockUiService: BlockUiService,
     ) {
     }
 
@@ -61,33 +64,52 @@ export class ReferenciadorArComponent implements OnInit, OnDestroy {
     }
 
     private getFuncoesDados() {
+        this.blockUiService.show();
         this.funcoesDados = [];
         this.funcaoDadosService.dropDownPEAnalitico(this.analiseSharedDataService.analise.sistema.id).subscribe(res => {
+            this.blockUiService.show();
             this.funcoesDados = this.funcoesDados.concat(res.map((item) => {
                 const fd = new FuncaoDados();
                 fd.id = item.id;
                 fd.name = item.name;
                 return fd;
             }));
+            this.funcoesDados.sort((t1, t2) => {
+                const name1 = t1.name.toLowerCase();
+                const name2 = t2.name.toLowerCase();
+                if (name1 > name2) { return 1; }
+                if (name1 < name2) { return -1; }
+                return 0;
+              });
+              this.blockUiService.hide();
         });
     }
 
     private subscribeAnaliseCarregada() {
+        this.blockUiService.show();
         this.subscriptionAnaliseCarregada = this.analiseSharedDataService.getLoadSubject().subscribe(() => {
-            this.funcoesDadosCache = this.analiseSharedDataService.analise.funcaoDados;
             this.baselineService.analiticosFuncaoDados(
                 this.analiseSharedDataService.analise.sistema.id).subscribe((res: ResponseWrapper) => {
-                this.funcoesDados = res.json;
-                this.funcoesDados.concat(this.funcoesDadosCache);
-                if (this.funcoesDados && this.funcoesDados.length !== 0 && this.funcoesDadosCache) {
-                    for (const funcoes of this.funcoesDadosCache) {
-                        if (this.funcoesDados.indexOf(funcoes) === -1) {
-                            this.funcoesDados.push(funcoes);
+                    this.blockUiService.show();
+                    this.funcoesDados = res.json;
+                    this.funcoesDados.concat(this.funcoesDadosCache);
+                    if (this.funcoesDados && this.funcoesDados.length !== 0 && this.funcoesDadosCache) {
+                        for (const funcoes of this.funcoesDadosCache) {
+                            if (this.funcoesDados.indexOf(funcoes) === -1) {
+                                this.funcoesDados.push(funcoes);
+                            }
                         }
+                    } else {
+                        this.funcoesDados = this.funcoesDadosCache;
                     }
-                } else {
-                    this.funcoesDados = this.funcoesDadosCache;
-                }
+                    this.funcoesDados.sort((t1, t2) => {
+                        const name1 = t1.name.toLowerCase();
+                        const name2 = t2.name.toLowerCase();
+                        if (name1 > name2) { return 1; }
+                        if (name1 < name2) { return -1; }
+                        return 0;
+                    });
+                    this.blockUiService.hide();
             });
         });
     }
@@ -115,7 +137,7 @@ export class ReferenciadorArComponent implements OnInit, OnDestroy {
     }
 
     funcoesDadosDropdownPlaceholder(): string {
-        return this.getLabel('Analise.Analise.Mensagens.msgSelecioneFuncaoDados');
+        return this.getLabel('Selecione uma Função de Dados');
     }
 
     funcaoDadosSelected(fd: FuncaoDados) {
@@ -130,9 +152,9 @@ export class ReferenciadorArComponent implements OnInit, OnDestroy {
 
     dersMultiSelectedPlaceholder(): string {
         if (!this.funcaoDadosSelecionada) {
-            return this.getLabel('Analise.Analise.Mensagens.msgSelecioneFuncaoDadosParaSelecionarDERsReferenciar');
+            return this.getLabel('DERs - Selecione uma Função de Dados para selecionar quais DERs referenciar');
         }
-        return this.getLabel('Analise.Analise.Mensagens.msgSelecioneQuaisDERsReferenciar');
+        return this.getLabel('Selecione quais DERs deseja referenciar');
 
     }
 

@@ -622,6 +622,13 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
             this.classInvalida = false;
         }
 
+        if (!this.seletedFuncaoDados.fatorAjuste) {
+            this.erroDeflator = true;
+            retorno = false;
+        } else {
+            this.erroDeflator = false;
+        }
+
         if (this.seletedFuncaoDados.impacto) {
             if (this.seletedFuncaoDados.impacto.indexOf('ITENS_NAO_MENSURAVEIS') === 0 &&
                 this.seletedFuncaoDados.fatorAjuste === undefined) {
@@ -1088,7 +1095,7 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
     }
 
     contratoSelecionado() {
-        if (this.seletedFuncaoDados.fatorAjuste.tipoAjuste === 'UNITARIO') {
+        if (this.seletedFuncaoDados.fatorAjuste && this.seletedFuncaoDados.fatorAjuste.tipoAjuste === 'UNITARIO') {
             this.hideShowQuantidade = this.seletedFuncaoDados.fatorAjuste === undefined;
         } else {
             this.seletedFuncaoDados.quantidade = undefined;

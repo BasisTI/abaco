@@ -14,6 +14,7 @@ import { FuncaoDadosService } from '../funcao-dados/funcao-dados.service';
 import { FuncaoTransacaoService } from '../funcao-transacao/funcao-transacao.service';
 import { FuncaoTransacao } from '../funcao-transacao';
 import { FuncaoDados } from '../funcao-dados';
+import { Status } from '../status/status.model';
 
 @Injectable()
 export class AnaliseService {
@@ -39,6 +40,8 @@ export class AnaliseService {
     relatorioContagemUrl = environment.apiUrl + '/relatorioContagemPdf';
 
     clonarAnaliseUrl = this.resourceUrl + '/clonar/';
+
+    changeStatusUrl = this.resourceUrl + '/change-status/';
 
     resourceResumoUrl = environment.apiUrl + '/vw-resumo';
 
@@ -273,6 +276,10 @@ export class AnaliseService {
     }
     public clonarAnaliseToEquipe(id: number, equipe: TipoEquipe) {
         const url = this.clonarAnaliseUrl + id + '/' + equipe.id;
+        return this.http.get<Analise>(url);
+    }
+    public changeStatusAnalise(id: number, status: Status) {
+        const url = this.changeStatusUrl + id + '/' + status.id;
         return this.http.get<Analise>(url);
     }
 

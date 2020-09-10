@@ -240,6 +240,13 @@
                             [disabled]="datatable.selectedRow == null"
                             class="ui-button-success">
                     </basis-datatable-button>
+                    <basis-datatable-button
+                            name="changeStatus"
+                            [bTooltip]="changeStatusTooltip()"
+                            icon="swap-vert"
+                            [disabled]="datatable.selectedRow == null"
+                            class="ui-button-info">
+                    </basis-datatable-button>
                 </basis-datatable>
                     <div class="ui-g-12 ui-md-2">
                         <app-botoes-exportacao [query]="changeUrl()" resourceName="analise" id="idBtnExportacaoComponentAnalise"
@@ -368,5 +375,24 @@
     </div>
     <div class="ui-g-12 ui-md-6 ui-sm-6 ui-label">
         <button type="button" pButton icon="fa-check" (click)="alterAnaliseBlock()" label="Bloquear" style="float:right; margin-top: 5px"></button>
+    </div>
+</p-dialog>
+
+<p-dialog header="Alterar status" [(visible)]="showDialogAnaliseChangeStatus" [style]="{width: '50vw'}" [minHeight]="300" [modal]="true" >
+    <div style="min-height:200px">
+        <div class="ui-g" >
+            <div class="ui-g-12 ui-md-12 ui-sm-12">
+                <p-dropdown
+                        [style]="{'width':'100%'}"
+                        [filter]="true"
+                        optionLabel="nome"
+                        [options]="lstStatusActive"
+                        id="idStatusAnalise"
+                        [(ngModel)]="statusToChange"
+                        placeholder="Selecione um Status">
+                </p-dropdown>
+            </div>
+        </div>
+        <app-green-button buttonLabel="Adicionar" (click)="alterStatusAnalise()" style="float:right; margin-top: 5px"></app-green-button>
     </div>
 </p-dialog>
