@@ -14,5 +14,6 @@
     <include file="classpath:config/liquibase/changelog/20200526123641_alter_view_baseline_analitico.xml" relativeToChangelogFile="false"/>
     <include file="classpath:config/liquibase/changelog/20200617125747_add_column_cfps.xml" relativeToChangelogFile="false"/>
     <include file="classpath:config/liquibase/changelog/20200901154132_add_table_status.xml" relativeToChangelogFile="false"/>
+    <include file="classpath:config/liquibase/changelog/20200915105722_add_table_nomeclatura.xml" relativeToChangelogFile="false"/>
 
 </databaseChangeLog>

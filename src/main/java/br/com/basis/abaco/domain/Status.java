@@ -46,6 +46,10 @@ public class Status implements Serializable, ReportObject {
     @Column(name = "ativo", nullable = false)
     private Boolean ativo;
 
+    @NotNull
+    @Column(name = "divergencia", nullable = false)
+    private Boolean divergencia;
+
     public Long getId() {
         return id;
     }
@@ -68,5 +72,13 @@ public class Status implements Serializable, ReportObject {
 
     public void setAtivo(Boolean ativo) {
         this.ativo = ativo;
+    }
+
+    public Boolean getDivergencia() {
+        return divergencia;
+    }
+
+    public void setDivergencia(Boolean divergencia) {
+        this.divergencia = divergencia;
     }
 }

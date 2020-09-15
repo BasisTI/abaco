@@ -12,14 +12,11 @@ import java.io.Serializable;
 @AllArgsConstructor
 @Getter
 @Setter
-public class StatusDTO implements Serializable, ReportObject {
+public class NomenclaturaDTO implements Serializable, ReportObject {
     private static final long serialVersionUID = 1L;
 
     private Long id;
-
     private String nome;
+    private String descricao;
 
-    private Boolean ativo;
-
-    private Boolean divergencia;
 }

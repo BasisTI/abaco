@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.validator.constraints.Email;
 import org.springframework.data.elasticsearch.annotations.Document;
 import org.springframework.data.elasticsearch.annotations.Field;
 import org.springframework.data.elasticsearch.annotations.FieldIndex;
@@ -28,6 +29,7 @@ import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
@@ -54,6 +56,17 @@ public class TipoEquipe implements Serializable, ReportObject {
     @Column(name = "nome", nullable = false, unique = true)
     @Field(index = FieldIndex.not_analyzed, type = FieldType.String)
     private String nome;
+
+    @Column(name = "preposto", nullable = false, unique = true)
+    @Field(index = FieldIndex.not_analyzed, type = FieldType.String)
+    private String preposto;
+
+    @Email
+    @Size(max = 100)
+    @Column(name = "email_preposto", nullable = false )
+    @Field(index = FieldIndex.not_analyzed, type = FieldType.String)
+    private String emailPreposto;
+
 
     @Field(type = FieldType.Nested, index = FieldIndex.not_analyzed)
     @JsonInclude

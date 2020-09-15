@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <title th:text="#{email.activation.title}">Aviso de divergencia.</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    </head>
+    <body>
+        <p th:text="#{email.activation.greeting(${user})}">
+            Olá
+        </p>
+        <p th:text="#{email.activation.text1}">
+            Foi gerada uma divergência para sua equipe, por favor clique no URL abaixo para visualizá-la:
+        </p>
+        <p>
+            <a th:href="@{|${baseUrl}/#/activate?key=${user.activationKey}|}"  th:text="|${user.login}|">Link de Visualização</a>
+        </p>
+        <p>
+            <span th:text="#{email.activation.text2}">Saudações, </span>
+            <br/>
+            <em th:text="#{email.signature}">Ábaco.</em>
+        </p>
+    </body>
+</html>

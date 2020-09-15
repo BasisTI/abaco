@@ -21,6 +21,10 @@ public class TipoEquipeDTO {
 
     private UserTipoEquipeDTO cfpsResponsavel;
 
+    private String preposto;
+
+    private String emailPreposto;
+
     public Long getId() {
         return id;
     }

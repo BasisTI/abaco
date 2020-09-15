@@ -85,7 +85,6 @@ public class StatusResource {
                 "A new Status cannot already have an ID")).body(null);
         }
         StatusDTO result = statusService.save(status);
-
         return ResponseEntity.created(new URI("/api/status/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString())).body(result);
     }
