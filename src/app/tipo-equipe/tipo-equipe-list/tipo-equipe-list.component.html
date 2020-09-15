@@ -54,6 +54,10 @@
               {{ cfpsResponsavel && cfpsResponsavel.firstName ? cfpsResponsavel.firstName : null }} {{ cfpsResponsavel && cfpsResponsavel.lastName ? cfpsResponsavel.lastName : null}}
             </ng-template>
           </p-column>
+          <p-column header="Preposto" field="preposto" [sortable]="true" [style]="{'word-wrap':'break-word', 'width': '35%'}">
+          </p-column>
+          <p-column header="Email Preposto" field="emailPreposto" [sortable]="true" [style]="{'word-wrap':'break-word', 'width': '35%'}">
+          </p-column>
           <p-column header="Organização" [style]="{'word-wrap':'break-word', 'width': '50%'}" [sortable]="false" field="organizacoes.nome">
             <ng-template let-col let-row="rowData" pTemplate="body">
               <li *ngFor="let org of row.organizacoes">

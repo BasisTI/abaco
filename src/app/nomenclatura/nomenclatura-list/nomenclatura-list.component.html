@@ -4,7 +4,7 @@
   
       <div class="card card-w-title">
   
-        <h1 >Status</h1>
+        <h1>Nomenclatura</h1>
         <div class="ui-g">
   
           <div class="ui-g-12 ui-md-12 ui-sm-12">
@@ -32,7 +32,7 @@
             </div>
   
             <div class="uui-g-2 ui-md-2 ui-sm-12">
-              <app-green-button [buttonLabel]="'Novo'" buttonIcon="ui-icon-add" routerLink="/status/new"></app-green-button>
+              <app-green-button [buttonLabel]="'Novo'" buttonIcon="ui-icon-add" routerLink="/nomenclatura/new"></app-green-button>
             </div>
             
           </div>
@@ -46,17 +46,7 @@
             #datatable>
   
             <p-column header="Nome" field="nome" [sortable]="true" ></p-column>
-            <p-column header="Ativo" field="ativo" [sortable]="false" >
-              <ng-template let-col let-row="rowData" pTemplate="body">
-                {{ row.ativo ? 'Sim' : 'Não' }}
-              </ng-template>
-            </p-column>
-            <p-column header="Ativo" field="ativo" [sortable]="false" >
-              <ng-template let-col let-row="rowData" pTemplate="body">
-                {{ row.divergencia ? 'Sim' : 'Não' }}
-              </ng-template>
-            </p-column>
-  
+            <p-column header="Descrição" field="descricao" [sortable]="true" ></p-column>
           </basis-datatable>
           <div class="ui-g-12 ui-md-2">
             <app-botoes-exportacao [query]="elasticQuery.value" resourceName="tipoEquipe" fileName="TipoEquipe"></app-botoes-exportacao>

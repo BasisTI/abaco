@@ -9,6 +9,9 @@ export class TipoEquipe implements BaseEntity {
     public nome?: string,
     public nomeOrg?: string,
     public cfpsResponsavel?: User,
-    public organizacoes?: BaseEntity[]
+    public organizacoes?: BaseEntity[],
+    public preposto?: string,
+    public emailPreposto?: string,
+
   ) {}
 }

@@ -67,7 +67,8 @@ export class AppComponent implements AfterViewInit, OnDestroy, OnInit {
                     { label: 'Sistema', routerLink: 'sistema', icon: 'laptop' },
                     { label: 'Tipo Equipe', routerLink: 'admin/tipoEquipe', icon: 'people' },
                     { label: 'Usuários', routerLink: 'admin/user', icon: 'person' },
-                    { label: 'Status', routerLink: 'status', icon: 'assignment' }
+                    { label: 'Status', routerLink: 'status', icon: 'assignment' },
+                    { label: 'Nomenclatura', routerLink: 'nomenclatura', icon: 'comment_bank' },
                 ]
             },
             {
@@ -79,8 +80,6 @@ export class AppComponent implements AfterViewInit, OnDestroy, OnInit {
                     // { label: 'Validação' }
                 ]
             }
-            
-            
         ];
     }
 

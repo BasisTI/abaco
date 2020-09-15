@@ -67,6 +67,33 @@
             </span>
           </div>
         </div>
+        <div class="ui-g-6 ui-md-6 ui-sm-12" style="margin-bottom: 25px">
+          <span class="md-inputfield">
+              <input type="text" name="preposto" maxlength="99" [(ngModel)]="tipoEquipe.preposto" #loginUser='ngModel' pInputText/>
+              <label >Preposto</label>
+              <div *ngIf="editForm.controls['preposto']
+                      && !editForm.controls['preposto'].valid
+                      && (editForm.controls['preposto'].touched
+                      || editForm.submitted)"
+                      class="ui-message ui-messages-error" >
+                  Campo obrigatório.
+              </div>
+          </span>
+        </div>
+        <div class="ui-g-6 ui-md-6 ui-sm-12" style="margin-bottom: 25px">
+          <span class="md-inputfield">
+              <input type="email" name="email" [(ngModel)]="tipoEquipe.emailPreposto" pInputText maxlength="100" #email='ngModel' email/>
+              <label>E-mail preposto</label>
+              <div *ngIf="editForm.controls['email'] && !editForm.controls['email'].valid && this.tipoEquipe.emailPreposto && (editForm.controls['email'].touched || editForm.submitted)"
+                      class="ui-message ui-messages-error">
+                      Email Inválido
+              </div>
+              <div *ngIf="editForm.controls['email'] && !editForm.controls['email'].valid && !this.tipoEquipe.emailPreposto && (editForm.controls['email'].touched || editForm.submitted)"
+                  class="ui-message ui-messages-error">
+                  Campo obrigatório.
+              </div>
+          </span>
+        </div>
         <div class="ui-g ui-md-12" style="justify-content: center">
           <div class="ui-g-2 ui-md-2 ui-sm-12">
             <app-white-button 

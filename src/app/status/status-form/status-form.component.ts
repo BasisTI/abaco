@@ -30,6 +30,7 @@ export class StatusFormComponent implements OnInit {
           } else {
             this.status = new Status();
             this.status.ativo = true;
+            this.status.divergencia = false;
           }
       });
   }

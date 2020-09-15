@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Status } from '../status.model';
 import { StatusService } from '../status.service';
+import { PageNotificationService } from '@nuvem/primeng-components';
 
 @Component({
   selector: 'app-status-detail',
@@ -13,8 +14,10 @@ export class StatusDetailComponent implements OnInit {
   status: Status = new Status();
 
   constructor(
+      private router: Router,
       private route: ActivatedRoute,
       private statusService: StatusService,
+      private pageNotificationService: PageNotificationService,
   ) {
   }
 
@@ -23,10 +26,9 @@ export class StatusDetailComponent implements OnInit {
         if (params['id']) {
             this.statusService.find(params['id']).subscribe(status => this.status = status);
         } else {
-          this.status = new Status();
-          this.status.ativo = true;
+          this.pageNotificationService.addErrorMessage('Não foi possível localizar o Status.');
+          this.router.navigate(['/status']);
         }
     });
-}
-
+  }
 }

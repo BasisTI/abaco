@@ -25,6 +25,7 @@ export class IndexadorComponent {
         {value: 'MANUAL', label: 'Manual'},
         {value: 'MANUAL_CONTRATO', label: 'Manual Contrato'},
         {value: 'MODULO', label: 'Modulo'},
+        {value: 'NOMENCLATURA', label: 'Nomenclatura'},
         {value: 'ORGANIZACAO', label: 'Organização'},
         {value: 'TIPO_EQUIPE', label: 'Tipo Equipe'},
         {value: 'RLR', label: 'Rlr'},

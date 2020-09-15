@@ -29,7 +29,6 @@ import { CheckboxModule } from 'primeng';
       CommonModule,
       HttpClientModule,
       FormsModule,
-      RouterModule.forRoot(statusRoute, { useHash: true }),
       DatatableModule,
       AbacoButtonsModule,
       SharedModule,
