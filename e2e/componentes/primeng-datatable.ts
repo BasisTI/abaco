@@ -108,6 +108,40 @@ export class PrimengDataTable extends PrimengComponent {
         return this.isColumnTextsByElement(this.getElementByLocator(locator), column, texts, ascendent, trim);
     }
 
+    static isColumnTextsByLocatorSpan(locator: Locator,
+                                  column: number,
+                                  texts: string[],
+                                  ascendent: boolean = true,
+                                  trim: boolean = false) {
+        return this.isColumnTextsByElementSpan(this.getElementByLocator(locator), column, texts, ascendent, trim);
+    }
+
+    static isColumnTextsByElementSpan(elementFinder: ElementFinder,
+                                  column: number,
+                                  texts: string[],
+                                  ascendent: boolean = true,
+                                  trim: boolean = false) {
+        const promises = [];
+        if (ascendent) {
+            for (let i = 0; i < texts.length; i++) {
+                if (texts[i] !== null) {
+                    promises.push(PrimengDataTable.isCellTextByElement1(elementFinder, texts[i], (i + 1), column, trim));
+                }
+            }
+        } else {
+            let j: number;
+            for (let i = 0; i < texts.length; i++) {
+                if (texts[i] !== null) {
+                    j = (texts.length - 1) - i;
+                    promises.push(PrimengDataTable.isCellTextByElement1(elementFinder, texts[j], (i + 1), column, trim));
+                }
+            }
+        }
+        return Promise.all(promises).then(results => {
+            return results.every(item => item === true);
+        });
+    }
+
     static isColumnTextsByElement(elementFinder: ElementFinder,
                                   column: number,
                                   texts: string[],
@@ -201,7 +235,12 @@ export class PrimengDataTable extends PrimengComponent {
     }
 
     static isCellTextByElement(elementFinder: ElementFinder, text: string, row: number, column: number, trim: boolean = false) {
-        const css = `table > tbody > tr:nth-of-type(${row}) > td:nth-of-type(${column}) > span`;
+        const css = `table > tbody > tr:nth-child(${row}) > td:nth-child(${column}) > span`;
+        return this.isPresentByElement(elementFinder.element(by.cssContainingText(css, text)));
+    }
+
+    static isCellTextByElement1(elementFinder: ElementFinder, text: string, row: number, column: number, trim: boolean = false) {
+        const css = `table > tbody > tr:nth-child(${row}) > td:nth-child(${column})`;
         return this.isPresentByElement(elementFinder.element(by.cssContainingText(css, text)));
     }
 
