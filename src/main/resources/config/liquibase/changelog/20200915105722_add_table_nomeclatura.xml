@@ -13,7 +13,7 @@
        </createTable>
    </changeSet>
    <changeSet author="basis (generated)" id="1600167450071-2">
-       <addColumn tableName="analise" >
+       <addColumn tableName="tipo_equipe" >
            <column name="preposto" type="VARCHAR(255)"/>
            <column name="email_preposto" type="VARCHAR(100)"/>
        </addColumn>
