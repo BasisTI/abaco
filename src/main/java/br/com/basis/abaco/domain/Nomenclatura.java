@@ -38,6 +38,4 @@ public class Nomenclatura implements Serializable, ReportObject {
     @Column(name = "descricao", nullable = false)
     private String descricao;
 
-
-
 }

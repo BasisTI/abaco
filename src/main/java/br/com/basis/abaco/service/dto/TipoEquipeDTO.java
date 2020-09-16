@@ -48,4 +48,6 @@ public class TipoEquipeDTO {
     public void setOrganizacoes(Set<OrganizacaoDTO> organizacoes) {
         this.organizacoes = unmodifiableSet(organizacoes);
     }
+
+
 }

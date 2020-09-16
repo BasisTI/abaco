@@ -9,7 +9,7 @@
                <constraints primaryKey="true" nullable="false"/>
            </column>
            <column name="nome" type="VARCHAR(255)" />
-           <column name="descricao" type="BOOLEAN"/>
+           <column name="descricao" type="VARCHAR(255)"/>
        </createTable>
    </changeSet>
    <changeSet author="basis (generated)" id="1600167450071-2">
