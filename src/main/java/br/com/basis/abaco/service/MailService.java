@@ -129,7 +129,7 @@ public class MailService {
         context.setVariable(USER, tipoEquipe.getPreposto());
         context.setVariable(BASE_URL, jHipsterProperties.getMail().getBaseUrl());
         String content = templateEngine.process("notificationSharedAnalise", context);
-        String subject = messageSource.getMessage("email.reset.title", null, locale);
+        String subject = messageSource.getMessage("email.shared.analise.title", new Object[] {analise.getIdentificadorAnalise()}, locale);
         sendEmail(email, subject, content, false, true);
     }
 }
