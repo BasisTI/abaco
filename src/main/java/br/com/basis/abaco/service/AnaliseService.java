@@ -21,6 +21,7 @@ import br.com.basis.abaco.repository.CompartilhadaRepository;
 import br.com.basis.abaco.repository.FuncaoDadosRepository;
 import br.com.basis.abaco.repository.FuncaoDadosVersionavelRepository;
 import br.com.basis.abaco.repository.FuncaoTransacaoRepository;
+import br.com.basis.abaco.repository.TipoEquipeRepository;
 import br.com.basis.abaco.repository.UserRepository;
 import br.com.basis.abaco.repository.VwAnaliseSomaPfRepository;
 import br.com.basis.abaco.repository.search.AnaliseSearchRepository;
@@ -69,6 +70,8 @@ public class AnaliseService extends BaseService {
     private final FuncaoDadosRepository funcaoDadosRepository;
     private final FuncaoTransacaoRepository funcaoTransacaoRepository;
     private final VwAnaliseSomaPfRepository vwAnaliseSomaPfRepository;
+    private final MailService mailService;
+    private final TipoEquipeRepository tipoEquipeRepository;
     @Autowired
     private UserSearchRepository userSearchRepository;
 
@@ -80,7 +83,9 @@ public class AnaliseService extends BaseService {
                           CompartilhadaRepository compartilhadaRepository,
                           FuncaoTransacaoRepository funcaoTransacaoRepository,
                           AnaliseSearchRepository analiseSearchRepository,
-                          VwAnaliseSomaPfRepository vwAnaliseSomaPfRepository) {
+                          VwAnaliseSomaPfRepository vwAnaliseSomaPfRepository,
+                          TipoEquipeRepository tipoEquipeRepository,
+                          MailService mailService) {
         this.analiseRepository = analiseRepository;
         this.funcaoDadosVersionavelRepository = funcaoDadosVersionavelRepository;
         this.userRepository = userRepository;
@@ -89,6 +94,8 @@ public class AnaliseService extends BaseService {
         this.funcaoTransacaoRepository = funcaoTransacaoRepository;
         this.analiseSearchRepository = analiseSearchRepository;
         this.vwAnaliseSomaPfRepository = vwAnaliseSomaPfRepository;
+        this.mailService = mailService;
+        this.tipoEquipeRepository = tipoEquipeRepository;
     }
 
     public void bindFilterSearch(String identificador, Set<Long> sistema, Set<MetodoContagem> metodo, Set<Long> usuario, Long equipesIds, Set<Long> equipesUsersId, Set<Long> organizacoes, Set<Long> status, BoolQueryBuilder qb) {
@@ -407,13 +414,19 @@ public class AnaliseService extends BaseService {
         return qb;
     }
 
-    public void bindAnaliseCompartilhada(Set<Compartilhada> lstCompartilhadas) {
+    public void saveAnaliseCompartilhada(Set<Compartilhada> lstCompartilhadas) {
         if (lstCompartilhadas != null && lstCompartilhadas.size() > 0) {
             long idAnalise = lstCompartilhadas.stream().findFirst().get().getAnaliseId();
             Analise analise = analiseRepository.findOne(idAnalise);
             analise.setCompartilhadas(lstCompartilhadas);
             analiseRepository.save(analise);
             analiseSearchRepository.save(convertToEntity(convertToDto(analise)));
+            lstCompartilhadas.forEach(compartilhada -> {
+                TipoEquipe tipoEquipe = this.tipoEquipeRepository.findById(compartilhada.getEquipeId());
+                if(!(StringUtils.isEmptyString(tipoEquipe.getEmailPreposto()) && StringUtils.isEmptyString(tipoEquipe.getPreposto()))){
+                    this.mailService.sendAnaliseSharedEmail(analise, tipoEquipe);
+                }
+            });
         }
     }
 

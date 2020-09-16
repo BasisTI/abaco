@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <title th:text="#{email.shared.analise.title(${analise.identificadorAnalise})}">Análise compartilhada no Abaco identificador.</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    </head>
+    <body>
+        <p th:text="#{email.shared.analise.greeting(${user})}">
+            Caro
+        </p>
+        <p th:text="#{email.shared.analise.text1(${analise.organizacao.nome},${analise.equipeResponsavel.nome})}">
+            =a análise da orgarnização {0} foi compartilhada com a equipe {1}, para visualiza-la acesse o sistema Abaco.
+        </p>
+        <p th:text="#{email.shared.analise.text2(${analise.identificadorAnalise})}">
+            Identificador da Análise:
+        </p>
+        <p th:text="#{email.shared.analise.text3(${analise.numeroOs})}">
+            Número da Os.:
+        </p>
+        <p>
+            <span th:text="#{email.shared.analise.text4}">Saudações, </span>
+            <br/>
+            <em th:text="#{email.signature}">Ábaco.</em>
+        </p>
+    </body>
+</html>

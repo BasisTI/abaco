@@ -306,7 +306,7 @@ public class AnaliseResource {
         compartilhadaList.forEach(compartilhada -> {
             compartilhadaRepository.save(compartilhada);
         });
-        analiseService.bindAnaliseCompartilhada(compartilhadaList);
+        analiseService.saveAnaliseCompartilhada(compartilhadaList);
         return ResponseEntity.created(new URI("/api/analises/compartilhar"))
             .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, "created")).body(compartilhadaList);
     }
