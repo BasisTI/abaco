@@ -62,7 +62,7 @@ export class PrimengMultiSelect extends PrimengComponent {
 
     static selectByElement(elementFinder: ElementFinder, values: string[]) {
         let css: string;
-        css = 'aria-label';
+        css = 'li > span';
         values.forEach(value => {
             // const regex = this.regex(value);
             this.waitToBeClickableByElement(elementFinder.element(by.cssContainingText(css, value)));
