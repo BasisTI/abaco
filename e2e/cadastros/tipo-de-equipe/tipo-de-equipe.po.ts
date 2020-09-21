@@ -210,7 +210,8 @@ export class TipoDeEquipePage {
         let linhas: string[];
         linhas = [
             'Fabrica de Métricas - Cliente',
-            'Métricas - BASIS'
+            'Métricas - BASIS',
+            'Métricas - BASIS 2'
         ];
 
         PrimengButton.clickByLocator(by.css(`p-table > div > div > table > thead > tr > th:nth-child(${coluna})`));

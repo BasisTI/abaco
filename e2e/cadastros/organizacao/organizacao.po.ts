@@ -81,15 +81,6 @@ export class OrganizacaoPage {
         this.promises.push(PrimengComponent.isErrorMessage('.ui-message', 'Campo obrigatório.'));
         PrimengGrowl.closeWarningMessage();
 
-        /*CNPJ*/
-        PrimengInputText.clearAndFillTextByLocator(by.id('idNomeFormOrganizacao'), 'Organização 1');
-        PrimengInputText.clearAndFillTextByLocator(by.id('idSiglaFormOrganizacao'), 'ORG 1');
-        PrimengInputMask.clearAndFillTextByLocator(by.id('idCNPJFormOrganizacao'), '');
-        PrimengButton.clickByLocator(by.id('idBtnSalvarOrg'));
-
-        this.promises.push(PrimengComponent.isErrorMessage('.ui-message', 'Campo obrigatório.'));
-        PrimengGrowl.closeWarningMessage();
-
         /*CNPJ Inválido*/
         PrimengInputText.clearAndFillTextByLocator(by.id('idNomeFormOrganizacao'), 'Organização 1');
         PrimengInputText.clearAndFillTextByLocator(by.id('idSiglaFormOrganizacao'), 'ORG 1');
@@ -193,15 +184,6 @@ export class OrganizacaoPage {
         PrimengInputText.clearAndFillTextByLocator(by.id('idNomeFormOrganizacao'), 'Organização 1');
         PrimengInputText.clearAndFillTextByLocator(by.id('idSiglaFormOrganizacao'), '');
         PrimengInputMask.clearAndFillTextByLocator(by.id('idCNPJFormOrganizacao'), '37.724.585/0001-00');
-        PrimengButton.clickByLocator(by.id('idBtnSalvarOrg'));
-
-        this.promises.push(PrimengComponent.isErrorMessage('.ui-message', 'Campo obrigatório.'));
-        PrimengGrowl.closeWarningMessage();
-
-        /*CNPJ*/
-        PrimengInputText.clearAndFillTextByLocator(by.id('idNomeFormOrganizacao'), 'Organização 1');
-        PrimengInputText.clearAndFillTextByLocator(by.id('idSiglaFormOrganizacao'), 'ORG 1');
-        PrimengInputMask.clearAndFillTextByLocator(by.id('idCNPJFormOrganizacao'), '');
         PrimengButton.clickByLocator(by.id('idBtnSalvarOrg'));
 
         this.promises.push(PrimengComponent.isErrorMessage('.ui-message', 'Campo obrigatório.'));
@@ -468,13 +450,13 @@ export class OrganizacaoPage {
 
         PrimengInputText.clearAndFillTextByLocator(by.css('input'), 'MTur');
         this.clicarBotao('Pesquisar');
-        this.promises.push(browser.wait(PrimengDataTable.isCellTextByLocator(by.id(css), 'MTur', 1, coluna)));
+        this.promises.push(browser.wait(PrimengDataTable.isCellTextByLocator(by.css(css), 'MTur', 1, coluna)));
         PrimengInputText.clearAndFillTextByLocator(by.css('input'), 'presp');
         this.clicarBotao('Pesquisar');
-        this.promises.push(browser.wait(PrimengDataTable.isCellTextByLocator(by.id(css), 'FUNPRESP', 1, coluna)));
+        this.promises.push(browser.wait(PrimengDataTable.isCellTextByLocator(by.css(css), 'FUNPRESP', 1, coluna)));
         PrimengInputText.clearAndFillTextByLocator(by.css('input'), '');
         this.clicarBotao('Pesquisar');
-        this.promises.push(browser.wait(PrimengDataTable.isCellTextByLocator(by.id(css), 'BASIS', 1, coluna)));
+        this.promises.push(browser.wait(PrimengDataTable.isCellTextByLocator(by.css(css), 'BASIS', 1, coluna)));
         PrimengInputText.clearAndFillTextByLocator(by.css('input'), '@@');
         this.clicarBotao('Pesquisar');
         this.promises.push(browser.wait(PrimengDataTable.isEmptyMessageByLocator(by.css(css), mensagem)));
