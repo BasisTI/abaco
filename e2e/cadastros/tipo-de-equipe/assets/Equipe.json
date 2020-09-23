@@ -1,38 +1,60 @@
 [
 	{
 	    "nome": "Métricas - BASIS",
-	    "organizacao": 
+	    "organizacao":
 	    [
-		   "BASIS - BASIS Tecnologia",	    
-		   "MTur - Ministério do Turismo",	    
-		   "FNDE - Fundo Nacional de Desenvolvimento da Educação",	    
-		   "CNJ - Conselho Nacional de Justiça",	    
-		   "EB - EXERCITO BRASILEIRO",	    
-		   "CADE - Conselho Administrativo de Defesa Econômica",	    
+		   "BASIS - BASIS Tecnologia",
+		   "MTur - Ministério do Turismo",
+		   "FNDE - Fundo Nacional de Desenvolvimento da Educação",
+		   "CNJ - Conselho Nacional de Justiça",
+		   "EB - EXERCITO BRASILEIRO",
+		   "CADE - Conselho Administrativo de Defesa Econômica",
 		   "MME - Ministério de Minas e Energia",
-		   "FUNPRESP - FUNPRESP",	    
+		   "FUNPRESP - FUNPRESP",
 		   "IBAMA - Instituto Brasileiro do Meio Ambiente e dos Recursos Naturais Renováveis",
 		   "MMA - Ministério do Meio Ambiente",
 		   "CFC - Conselho Federal de Contabilidade",
 		   "ANCINE - Agência Nacional do Cinema",
-		   "MEC - Ministério da Educação",	    
-		   "ANVISA - Agência Nacional de Vigilância Sanitária",	    
+		   "MEC - Ministério da Educação",
+		   "ANVISA - Agência Nacional de Vigilância Sanitária",
+		   "SFB - Serviço Florestal Brasileiro"
+		],
+	    "cpf": ""
+	},
+	{
+	    "nome": "Métricas - BASIS 2",
+	    "organizacao":
+	    [
+		   "BASIS - BASIS Tecnologia",
+		   "MTur - Ministério do Turismo",
+		   "FNDE - Fundo Nacional de Desenvolvimento da Educação",
+		   "CNJ - Conselho Nacional de Justiça",
+		   "EB - EXERCITO BRASILEIRO",
+		   "CADE - Conselho Administrativo de Defesa Econômica",
+		   "MME - Ministério de Minas e Energia",
+		   "FUNPRESP - FUNPRESP",
+		   "IBAMA - Instituto Brasileiro do Meio Ambiente e dos Recursos Naturais Renováveis",
+		   "MMA - Ministério do Meio Ambiente",
+		   "CFC - Conselho Federal de Contabilidade",
+		   "ANCINE - Agência Nacional do Cinema",
+		   "MEC - Ministério da Educação",
+		   "ANVISA - Agência Nacional de Vigilância Sanitária",
 		   "SFB - Serviço Florestal Brasileiro"
 		],
 	    "cpf": ""
 	},
 	{
 	    "nome": "Fabrica de Métricas - Cliente",
-	    "organizacao": 
-	    [    
+	    "organizacao":
+	    [
 		   "MTur - Ministério do Turismo"
 		],
 	    "cpf": ""
 	},
 	{
 	    "nome": "Testes - Equipe",
-	    "organizacao": 
-	    [    
+	    "organizacao":
+	    [
 		   "BASIS - BASIS Tecnologia"
 		],
 	    "cpf": ""
