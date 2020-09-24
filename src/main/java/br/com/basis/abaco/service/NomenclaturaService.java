@@ -15,8 +15,7 @@ import java.util.stream.Collectors;
 @Service
 public class NomenclaturaService {
 
-    @Autowired
-    private NomenclaturaSearchRepository  nomenclaturaSearchRepository;
+    private final NomenclaturaSearchRepository  nomenclaturaSearchRepository;
 
     @Autowired
     private NomenclaturaRepository nomenclaturaRepository;

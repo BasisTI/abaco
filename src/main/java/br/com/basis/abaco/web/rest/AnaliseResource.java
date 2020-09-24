@@ -142,7 +142,7 @@ public class AnaliseResource {
         analise.getUsers().add(analise.getCreatedBy());
         analiseService.salvaNovaData(analise);
         analiseRepository.save(analise);
-        AnaliseEditDTO analiseEditDTO =  analiseService.convertToAnaliseEditDTO(analise);
+        AnaliseEditDTO analiseEditDTO = analiseService.convertToAnaliseEditDTO(analise);
         analiseSearchRepository.save(analiseService.convertToEntity(analiseService.convertToDto(analise)));
         return ResponseEntity.created(new URI("/api/analises/" + analise.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, analise.getId().toString())).body(analiseEditDTO);
@@ -164,7 +164,7 @@ public class AnaliseResource {
         }
         analise.setEditedBy(analiseRepository.findOne(analise.getId()).getCreatedBy());
         analiseRepository.save(analise);
-        AnaliseEditDTO analiseEditDTO =  analiseService.convertToAnaliseEditDTO(analise);
+        AnaliseEditDTO analiseEditDTO = analiseService.convertToAnaliseEditDTO(analise);
         analiseSearchRepository.save(analiseService.convertToEntity(analiseService.convertToDto(analise)));
         return ResponseEntity.ok().headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, analise.getId().toString()))
             .body(analiseEditDTO);
@@ -373,7 +373,7 @@ public class AnaliseResource {
         relatorioAnaliseRest = new RelatorioAnaliseRest(this.response, this.request);
         Long idLogo = analise.getOrganizacao().getLogoId();
         UploadedFile uploadedFiles = new UploadedFile();
-        if(idLogo!= null && idLogo > 0 ) {
+        if (idLogo != null && idLogo > 0) {
             uploadedFiles = uploadedFilesRepository.findOne(idLogo);
         }
         return relatorioAnaliseRest.downloadExcel(analise, uploadedFiles);
@@ -471,7 +471,7 @@ public class AnaliseResource {
         Analise analise = analiseService.recuperarAnalise(id);
         Status status = statusRepository.findById(idStatus);
         User user = userRepository.findOneByLogin(SecurityUtils.getCurrentUserLogin()).get();
-        if (analise.getId() != null && status.getId() != null &&  analiseService.changeStatusAnalise(analise,status, user)) {
+        if (analise.getId() != null && status.getId() != null && analiseService.changeStatusAnalise(analise, status, user)) {
             analiseRepository.save(analise);
             analiseSearchRepository.save(analiseService.convertToEntity(analiseService.convertToDto(analise)));
             return ResponseEntity.ok().headers(HeaderUtil.blockEntityUpdateAlert(ENTITY_NAME, analise.getId().toString()))
@@ -480,40 +480,41 @@ public class AnaliseResource {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new AnaliseEditDTO());
         }
     }
+
     @GetMapping("/analises/divergencia/{idAnaliseComparada}")
     @Timed
     @Secured({AuthoritiesConstants.ADMIN, AuthoritiesConstants.USER, AuthoritiesConstants.GESTOR, AuthoritiesConstants.ANALISTA})
-    public ResponseEntity<AnaliseEditDTO> gerarDivergencia( @PathVariable Long idAnaliseComparada){
+    public ResponseEntity<AnaliseEditDTO> gerarDivergencia(@PathVariable Long idAnaliseComparada) {
         Analise analise = analiseRepository.findOne(idAnaliseComparada);
         Status status = statusRepository.findFirstByDivergenciaTrue();
-        if(status ==  null || status.getId() == null){
+        if (status == null || status.getId() == null) {
             ResponseEntity.status(HttpStatus.FORBIDDEN).body("Error status");
         }
-        if(analise ==  null || analise.getId() == null){
+        if (analise == null || analise.getId() == null) {
             ResponseEntity.status(HttpStatus.FORBIDDEN).body("Error analise");
         }
         Analise analiseDivergencia = analiseService.generateDivergence(analise, status);
-        return  ResponseEntity.ok(analiseService.convertToAnaliseEditDTO(analiseDivergencia));
+        return ResponseEntity.ok(analiseService.convertToAnaliseEditDTO(analiseDivergencia));
     }
 
     @GetMapping("/analises/gerar-divergencia/{idAnalisePadao}/{idAnaliseComparada}")
     @Timed
     @Secured({AuthoritiesConstants.ADMIN, AuthoritiesConstants.USER, AuthoritiesConstants.GESTOR, AuthoritiesConstants.ANALISTA})
-    public ResponseEntity<AnaliseEditDTO> gerarDivergencia(@PathVariable Long idAnalisePadao, @PathVariable Long idAnaliseComparada){
+    public ResponseEntity<AnaliseEditDTO> gerarDivergencia(@PathVariable Long idAnalisePadao, @PathVariable Long idAnaliseComparada) {
         Analise analisePadrão = analiseRepository.findOne(idAnalisePadao);
         Analise analiseComparada = analiseRepository.findOne(idAnaliseComparada);
         Status status = statusRepository.findFirstByDivergenciaTrue();
-        if(status ==  null || status.getId() == null){
+        if (status == null || status.getId() == null) {
             ResponseEntity.status(HttpStatus.FORBIDDEN).body("Error Status");
         }
-        if(analisePadrão ==  null || analisePadrão.getId() == null){
+        if (analisePadrão == null || analisePadrão.getId() == null) {
             ResponseEntity.status(HttpStatus.FORBIDDEN).body("Error analise Padrão");
         }
-        if(analiseComparada ==  null || analiseComparada.getId() == null){
+        if (analiseComparada == null || analiseComparada.getId() == null) {
             ResponseEntity.status(HttpStatus.FORBIDDEN).body("Error analise Comparada");
         }
         Analise analiseDivergencia = analiseService.generateDivergence(analisePadrão, analiseComparada, status);
-        return  ResponseEntity.ok(analiseService.convertToAnaliseEditDTO(analiseDivergencia));
+        return ResponseEntity.ok(analiseService.convertToAnaliseEditDTO(analiseDivergencia));
     }
 
 }

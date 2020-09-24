@@ -497,14 +497,18 @@ public class AnaliseService extends BaseService {
 
     @Transactional
     public Analise generateDivergence(Analise analise, Status status){
-        User user = userRepository.findOneByLogin(SecurityUtils.getCurrentUserLogin()).get();
-        Analise analiseDivergencia = new Analise(analise, user);
-        analiseDivergencia = bindCloneAnalise(analiseDivergencia, analise, user);
-        analiseDivergencia.setStatus(status);
-        analiseDivergencia.setIsDivergence(true);
-        analiseRepository.save(analiseDivergencia);
-        updateAnaliseRelationAndSendEmail(analise,status,analiseDivergencia);
-        return analiseDivergencia;
+        Optional<User> optUser = userRepository.findOneByLogin(SecurityUtils.getCurrentUserLogin());
+        if (optUser.isPresent()) {
+            User user = optUser.get();
+            Analise analiseDivergencia = new Analise(analise, user);
+            analiseDivergencia = bindCloneAnalise(analiseDivergencia, analise, user);
+            analiseDivergencia.setStatus(status);
+            analiseDivergencia.setIsDivergence(true);
+            analiseRepository.save(analiseDivergencia);
+            updateAnaliseRelationAndSendEmail(analise,status,analiseDivergencia);
+            return analiseDivergencia;
+        }
+        return new Analise();
     }
     @Transactional
     public Analise generateDivergence(Analise analisePricinpal, Analise  analiseSecundaria, Status status){
@@ -535,13 +539,17 @@ public class AnaliseService extends BaseService {
     }
 
     private Analise bindAnaliseDivegernce(Analise analisePrincipal, Analise analiseSecundaria, Status status) {
-        User user = userRepository.findOneByLogin(SecurityUtils.getCurrentUserLogin()).get();
-        Analise analiseDivergenciaPrincipal = new Analise(analisePrincipal, user);
-        analiseDivergenciaPrincipal = bindCloneAnalise(analiseDivergenciaPrincipal, analisePrincipal, user);
-        unionFuncaoDadosAndFuncaoTransacao(analisePrincipal, analiseSecundaria, analiseDivergenciaPrincipal);
-        analiseDivergenciaPrincipal.setStatus(status);
-        analiseDivergenciaPrincipal.setIsDivergence(true);
-        return analiseDivergenciaPrincipal;
+        Optional<User> optUser = userRepository.findOneByLogin(SecurityUtils.getCurrentUserLogin());
+        if (optUser.isPresent()) {
+            User user = optUser.get();
+            Analise analiseDivergenciaPrincipal = new Analise(analisePrincipal, user);
+            analiseDivergenciaPrincipal = bindCloneAnalise(analiseDivergenciaPrincipal, analisePrincipal, user);
+            unionFuncaoDadosAndFuncaoTransacao(analisePrincipal, analiseSecundaria, analiseDivergenciaPrincipal);
+            analiseDivergenciaPrincipal.setStatus(status);
+            analiseDivergenciaPrincipal.setIsDivergence(true);
+            return analiseDivergenciaPrincipal;
+        }
+        return new Analise();
     }
 
     private void unionFuncaoDadosAndFuncaoTransacao(Analise analisePrincipal, Analise analiseSecundaria, Analise analiseDivergenciaPrincipal) {
