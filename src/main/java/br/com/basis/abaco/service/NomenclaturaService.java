@@ -5,7 +5,6 @@ import br.com.basis.abaco.repository.NomenclaturaRepository;
 import br.com.basis.abaco.repository.search.NomenclaturaSearchRepository;
 import br.com.basis.abaco.service.dto.NomenclaturaDTO;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,12 +15,11 @@ import java.util.stream.Collectors;
 public class NomenclaturaService {
 
     private final NomenclaturaSearchRepository  nomenclaturaSearchRepository;
+    private final NomenclaturaRepository nomenclaturaRepository;
 
-    @Autowired
-    private NomenclaturaRepository nomenclaturaRepository;
-
-    public NomenclaturaService(NomenclaturaSearchRepository nomenclaturaSearchRepository) {
+    public NomenclaturaService(NomenclaturaSearchRepository nomenclaturaSearchRepository, NomenclaturaRepository nomenclaturaRepository) {
         this.nomenclaturaSearchRepository = nomenclaturaSearchRepository;
+        this.nomenclaturaRepository = nomenclaturaRepository;
     }
 
     @Transactional
