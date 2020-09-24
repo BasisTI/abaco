@@ -21,6 +21,10 @@ public class NomenclaturaService {
     @Autowired
     private NomenclaturaRepository nomenclaturaRepository;
 
+    public NomenclaturaService(NomenclaturaSearchRepository nomenclaturaSearchRepository) {
+        this.nomenclaturaSearchRepository = nomenclaturaSearchRepository;
+    }
+
     @Transactional
     public NomenclaturaDTO save(NomenclaturaDTO nomenclaturaDTO) {
         Nomenclatura nomenclatura = convertToEntity(nomenclaturaDTO);

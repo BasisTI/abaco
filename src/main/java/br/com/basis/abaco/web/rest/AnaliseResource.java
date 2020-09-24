@@ -487,10 +487,10 @@ public class AnaliseResource {
         Analise analise = analiseRepository.findOne(idAnaliseComparada);
         Status status = statusRepository.findFirstByDivergenciaTrue();
         if(status ==  null || status.getId() == null){
-            ResponseEntity.status(HttpStatus.FORBIDDEN).body("Error Message");
+            ResponseEntity.status(HttpStatus.FORBIDDEN).body("Error status");
         }
         if(analise ==  null || analise.getId() == null){
-            ResponseEntity.status(HttpStatus.FORBIDDEN).body("Error Message");
+            ResponseEntity.status(HttpStatus.FORBIDDEN).body("Error analise");
         }
         Analise analiseDivergencia = analiseService.generateDivergence(analise, status);
         return  ResponseEntity.ok(analiseService.convertToAnaliseEditDTO(analiseDivergencia));
@@ -504,13 +504,13 @@ public class AnaliseResource {
         Analise analiseComparada = analiseRepository.findOne(idAnaliseComparada);
         Status status = statusRepository.findFirstByDivergenciaTrue();
         if(status ==  null || status.getId() == null){
-            ResponseEntity.status(HttpStatus.FORBIDDEN).body("Error Message");
+            ResponseEntity.status(HttpStatus.FORBIDDEN).body("Error Status");
         }
         if(analisePadrão ==  null || analisePadrão.getId() == null){
-            ResponseEntity.status(HttpStatus.FORBIDDEN).body("Error Message");
+            ResponseEntity.status(HttpStatus.FORBIDDEN).body("Error analise Padrão");
         }
         if(analiseComparada ==  null || analiseComparada.getId() == null){
-            ResponseEntity.status(HttpStatus.FORBIDDEN).body("Error Message");
+            ResponseEntity.status(HttpStatus.FORBIDDEN).body("Error analise Comparada");
         }
         Analise analiseDivergencia = analiseService.generateDivergence(analisePadrão, analiseComparada, status);
         return  ResponseEntity.ok(analiseService.convertToAnaliseEditDTO(analiseDivergencia));

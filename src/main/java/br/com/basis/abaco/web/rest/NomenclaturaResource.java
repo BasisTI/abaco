@@ -141,7 +141,7 @@ public class NomenclaturaResource {
             new NativeSearchQueryBuilder().withQuery(multiMatchQuery(query)).build();
             Page<Nomenclatura> result = nomenclaturaSearchRepository.search(queryStringQuery(query), dynamicExportsService.obterPageableMaximoExportacao());
             byteArrayOutputStream = dynamicExportsService.export(new RelatorioEquipeColunas(), result, tipoRelatorio, Optional.empty(), Optional.ofNullable(AbacoUtil.REPORT_LOGO_PATH), Optional.ofNullable(AbacoUtil.getReportFooter()));
-        } catch (DRException | ClassNotFoundException | JRException | NoClassDefFoundError e) {
+        } catch (NoClassDefFoundError | ClassNotFoundException | JRException | DRException e) {
             log.error(e.getMessage(), e);
             throw new RelatorioException(e);
         }

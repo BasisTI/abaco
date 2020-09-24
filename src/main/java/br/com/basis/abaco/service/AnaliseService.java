@@ -21,7 +21,6 @@ import br.com.basis.abaco.repository.CompartilhadaRepository;
 import br.com.basis.abaco.repository.FuncaoDadosRepository;
 import br.com.basis.abaco.repository.FuncaoDadosVersionavelRepository;
 import br.com.basis.abaco.repository.FuncaoTransacaoRepository;
-import br.com.basis.abaco.repository.StatusRepository;
 import br.com.basis.abaco.repository.TipoEquipeRepository;
 import br.com.basis.abaco.repository.UserRepository;
 import br.com.basis.abaco.repository.VwAnaliseSomaPfRepository;
@@ -73,7 +72,6 @@ public class AnaliseService extends BaseService {
     private final VwAnaliseSomaPfRepository vwAnaliseSomaPfRepository;
     private final MailService mailService;
     private final TipoEquipeRepository tipoEquipeRepository;
-    private final StatusRepository statusRepository;
     @Autowired
     private UserSearchRepository userSearchRepository;
 
@@ -87,8 +85,7 @@ public class AnaliseService extends BaseService {
                           AnaliseSearchRepository analiseSearchRepository,
                           VwAnaliseSomaPfRepository vwAnaliseSomaPfRepository,
                           TipoEquipeRepository tipoEquipeRepository,
-                          MailService mailService,
-                          StatusRepository statusRepository) {
+                          MailService mailService) {
         this.analiseRepository = analiseRepository;
         this.funcaoDadosVersionavelRepository = funcaoDadosVersionavelRepository;
         this.userRepository = userRepository;
@@ -99,7 +96,6 @@ public class AnaliseService extends BaseService {
         this.vwAnaliseSomaPfRepository = vwAnaliseSomaPfRepository;
         this.mailService = mailService;
         this.tipoEquipeRepository = tipoEquipeRepository;
-        this.statusRepository = statusRepository;
     }
 
     public void bindFilterSearch(String identificador, Set<Long> sistema, Set<MetodoContagem> metodo, Set<Long> usuario, Long equipesIds, Set<Long> equipesUsersId, Set<Long> organizacoes, Set<Long> status, boolean isDivergence, BoolQueryBuilder qb) {
@@ -540,13 +536,8 @@ public class AnaliseService extends BaseService {
 
     private Analise bindAnaliseDivegernce(Analise analisePrincipal, Analise analiseSecundaria, Status status) {
         User user = userRepository.findOneByLogin(SecurityUtils.getCurrentUserLogin()).get();
-
         Analise analiseDivergenciaPrincipal = new Analise(analisePrincipal, user);
         analiseDivergenciaPrincipal = bindCloneAnalise(analiseDivergenciaPrincipal, analisePrincipal, user);
-
-        Analise analiseDivergenciaSecundaria = new Analise(analiseSecundaria, user);
-        analiseDivergenciaSecundaria = bindCloneAnalise(analiseDivergenciaSecundaria, analiseSecundaria, user);
-
         unionFuncaoDadosAndFuncaoTransacao(analisePrincipal, analiseSecundaria, analiseDivergenciaPrincipal);
         analiseDivergenciaPrincipal.setStatus(status);
         analiseDivergenciaPrincipal.setIsDivergence(true);
