@@ -41,7 +41,7 @@ describe('Abaco - Cadastros Organização', function() {
         expect(page.verificarMensagem('Cadastros.Organizacao.Mensagens.msgJaExisteOrganizacaoRegistradaComEsteCNPJ')).toBe('OK');
     });
 
-    it('Cadastros Organização - Editar Organização Sem Campos Obrigatoŕios', function () {
+    it('Cadastros Organização - Editar Organização Sem Campos Obrigatorios', function () {
         page.login();
         page.navegar();
         page.selecionarLinhaEditar('ORG');

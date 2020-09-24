@@ -29,7 +29,7 @@ export class PrimengDropdown extends PrimengComponent {
                 css = 'div.ui-dropdown-open';
                 this.waitNotToBePresentByElement(elementFinder.element(by.css(css)));
             } else {
-                css = 'div.ui-dropdown-panel ul > li > span';
+                css = 'div.ui-dropdown ul > p-dropdownitem > li > span';
                 this.waitToBeClickableByLocator(by.cssContainingText(css, value));
                 this.clickByLocator(by.cssContainingText(css, value));
                 this.waitNotToBePresentByLocator(by.cssContainingText(css, value));
