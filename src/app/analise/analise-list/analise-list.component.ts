@@ -1,6 +1,6 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, ContentChildren } from '@angular/core';
 import { Router } from '@angular/router';
-import { DatatableClickEvent, DatatableComponent, PageNotificationService } from '@nuvem/primeng-components';
+import { DatatableClickEvent, DatatableComponent, PageNotificationService, Column } from '@nuvem/primeng-components';
 import { ConfirmationService, BlockUIModule } from 'primeng';
 import { Subscription } from 'rxjs';
 import { Organizacao, OrganizacaoService } from 'src/app/organizacao';
@@ -8,7 +8,7 @@ import { Sistema, SistemaService } from 'src/app/sistema';
 import { TipoEquipe, TipoEquipeService } from 'src/app/tipo-equipe';
 import { User, UserService } from 'src/app/user';
 import { AnaliseShareEquipe } from '../analise-share-equipe.model';
-import { Analise } from '../analise.model';
+import { Analise, MetodoContagem } from '../analise.model';
 import { AnaliseService } from '../analise.service';
 import { SearchGroup } from '../grupo/grupo.model';
 import { GrupoService } from '../grupo/grupo.service';
@@ -19,11 +19,41 @@ import { Status } from 'src/app/status/status.model';
 @Component({
     selector: 'app-analise',
     templateUrl: './analise-list.component.html',
-    providers: [GrupoService, ConfirmationService]
+    providers: [GrupoService, ConfirmationService],
 })
 export class AnaliseListComponent implements OnInit {
 
     @ViewChild(DatatableComponent) datatable: DatatableComponent ;
+
+    allColumnsTable = [
+        {value: 'organizacao.nome',  label: 'Organização'},
+        {value: 'identificadorAnalise',  label: 'Identificador Analise'},
+        {value: 'numeroOs',  label: 'Número Os.'},
+        {value: 'equipeResponsavel.nome',  label: 'Equipe'},
+        {value: 'sistema.nome',  label: 'Sistema'},
+        {value: 'status.nome',  label: 'Status'},
+        {value: 'metodoContagem',  label: 'Metodo Contagem'},
+        {value: 'pfTotal',  label: 'PF total'},
+        {value: 'adjustPFTotal',  label: 'PF Ajustado'},
+        {value: 'dataCriacaoOrdemServico',  label: 'Data de criação'},
+        {value: 'bloqueiaAnalise',  label: 'Bloqueado'},
+        {value: 'clonadaParaEquipe',  label: 'Clonada'},
+        {value: 'users',  label: 'Usuários'},
+    ];
+
+    columnsVisible = [
+            'organizacao.nome',
+            'identificadorAnalise',
+            'numeroOs',
+            'equipeResponsavel.nome',
+            'status.nome',
+            'metodoContagem',
+            'pfTotal',
+            'adjustPFTotal',
+            'PF Ajustado'];
+    private lastColumn: any[] = [];
+
+    visible: any;
 
     searchUrl: string = this.grupoService.grupoUrl;
 
@@ -56,6 +86,8 @@ export class AnaliseListComponent implements OnInit {
     public equipeToClone?: TipoEquipe;
     public statusToChange?: Status;
 
+    public changeOrderAnalise;
+
     translateSusbscriptions: Subscription[] = [];
 
     metsContagens = [
@@ -68,11 +100,15 @@ export class AnaliseListComponent implements OnInit {
     showDialogAnaliseCloneTipoEquipe = false;
     showDialogAnaliseBlock = false;
     showDialogAnaliseChangeStatus = false;
+    showDialogDivergence = false;
     mostrarDialog = false;
     enableTable: Boolean = false;
     notLoadFilterTable = false;
     analisesList: any[] = [];
     isLoadFilter = true;
+    firstAnaliseDivergencia = new Analise();
+    secondAnaliseDivergencia = new Analise();
+
     constructor(
         private router: Router,
         private confirmationService: ConfirmationService,
@@ -152,6 +188,13 @@ export class AnaliseListComponent implements OnInit {
             return this.getLabel('Selecione um registro para alterar o status');
         }
         return this.getLabel('Alterar Status');
+    }
+
+    changeDivergenceTooltip() {
+        if (!(this.datatable && this.datatable.selectedRow)) {
+            return this.getLabel('Selecione uma registro para gerar divergencia.');
+        }
+        return this.getLabel('Gerar Divergência');
     }
 
     compartilharTooltip() {
@@ -238,6 +281,14 @@ export class AnaliseListComponent implements OnInit {
     public datatableClick(event: DatatableClickEvent) {
         if (!event.selection) {
             return;
+        } else if (event.selection.length === 1) {
+            event.selection = event.selection[0];
+        } else if ( event.selection.length > 1 && event.button !== 'generateDivergence') {
+            this.pageNotificationService.addErrorMessage('Selecione somente uma Análise para essa ação.');
+            return ;
+        } else if (event.selection.length > 2) {
+            this.pageNotificationService.addErrorMessage('Selecione somente duas Análises para gerar divergência.');
+            return ;
         }
         switch (event.button) {
             case 'edit':
@@ -282,6 +333,13 @@ export class AnaliseListComponent implements OnInit {
                 break;
             case 'changeStatus':
                 this.openModalChangeStatus(event.selection.id);
+                break;
+            case 'generateDivergence':
+                if (event.selection.id) {
+                    this.confirmDivergenceGenerate(event.selection);
+                } else {
+                    this.openModalDivergence(event.selection);
+                }
                 break;
         }
     }
@@ -413,7 +471,9 @@ export class AnaliseListComponent implements OnInit {
     public selectAnalise() {
         if (this.datatable && this.datatable.selectedRow) {
             this.inicial = true;
-            this.analiseSelecionada = this.datatable.selectedRow;
+            if (this.datatable.selectedRow && this.datatable.selectedRow[0]) {
+                this.analiseSelecionada = this.datatable.selectedRow[0];
+            }
             this.blocked = this.datatable.selectedRow.bloqueiaAnalise;
         }
     }
@@ -499,6 +559,7 @@ export class AnaliseListComponent implements OnInit {
         this.enableTable = true ;
         sessionStorage.setItem('searchGroup', JSON.stringify(this.searchGroup));
         this.recarregarDataTable();
+        this.datatable.selectedRow = undefined;
         this.datatable.filter();
     }
 
@@ -654,8 +715,116 @@ export class AnaliseListComponent implements OnInit {
             this.recarregarDataTable();
             this.datatable.filter();
             this.isLoadFilter = false;
+            this.updateVisibleColumns(this.columnsVisible);
         } else {
             this.recarregarDataTable();
         }
+    }
+     mostrarColunas(event) {
+        if (this.columnsVisible.length) {
+            this.lastColumn = event.value;
+            this.updateVisibleColumns(this.columnsVisible);
+        } else {
+            this.lastColumn.map((item) => this.columnsVisible.push(item));
+            this.pageNotificationService.addErrorMessage('Não é possível exibir menos de uma coluna');
+        }
+    }
+
+    updateVisibleColumns(columns) {
+        this.allColumnsTable.forEach(col => {
+            if (this.visibleColumnCheck(col.value, columns)) {
+                this.datatable.visibleColumns[col.value] = 'table-cell';
+            } else {
+                this.datatable.visibleColumns[col.value] = 'none';
+            }
+        });
+    }
+
+    visibleColumnCheck(column: string, visibleColumns: any[]) {
+        return visibleColumns.some((item: any) => {
+            return (item) ? item === column : true;
+        });
+    }
+    public openModalDivergence(lstAnalise: Analise[]) {
+        this.statusToChange = undefined;
+        this.firstAnaliseDivergencia = lstAnalise[0];
+        this.secondAnaliseDivergencia = lstAnalise[1];
+        if (!this.firstAnaliseDivergencia.sistema &&
+             !this.secondAnaliseDivergencia.sistema ||
+            this.firstAnaliseDivergencia.sistema.id !== this.secondAnaliseDivergencia.sistema.id) {
+                this.pageNotificationService.addErrorMessage('Não é possivel gerar Divergencia dessas análises.');
+        } else if (
+                    !(this.checkToGenerateDivergence(this.firstAnaliseDivergencia)) &&
+                    !(this.checkToGenerateDivergence(this.secondAnaliseDivergencia))
+                    ){
+            this.showDialogDivergence = false;
+        } else {
+            this.showDialogDivergence = true;
+            this.changeOrderAnalise = false;
+        }
+    }
+
+    public generateDivergence() {
+        if (this.changeOrderAnalise) {
+            const auxAnalise =  this.firstAnaliseDivergencia ;
+            this.firstAnaliseDivergencia = this.secondAnaliseDivergencia;
+            this.secondAnaliseDivergencia = auxAnalise;
+        }
+        this.blockUiService.show();
+        this.analiseService.generateDivergence(this.firstAnaliseDivergencia, this.secondAnaliseDivergencia).subscribe(data => {
+            this.showDialogDivergence = false;
+            this.recarregarDataTable();
+            this.datatable.filter();
+            this.pageNotificationService.addSuccessMessage('O status da analise ' + data.identificadorAnalise + ' foi alterado.');
+            this.blockUiService.hide();
+        },
+        err => this.pageNotificationService.addErrorMessage('Não foi possivel gerar a Divergência das Analises.'));
+    }
+    public confirmDivergenceGenerate(analise: Analise) {
+        if (this.checkToGenerateDivergence(analise)) {
+            this.confirmationService.confirm({
+                message: this.getLabel('Tem certeza que deseja gerar Divergência para o registro ')
+                                .concat(analise.identificadorAnalise)
+                                .concat('?'),
+                accept: () => {
+                    this.blockUiService.show();
+                    this.analiseService.generateDivergenceFromAnalise(analise.id).subscribe(
+                        (analiseResp) => {
+                        this.recarregarDataTable();
+                        this.datatable.filter();
+                        this.pageNotificationService.addSuccessMessage('Divergencia da análise \"' + analise.identificadorAnalise + '\" foi gerada com sucesso!');
+                        this.blockUiService.hide();
+                    },  err => {
+                        this.pageNotificationService.addErrorMessage('Ocorreu um erro ao tentar gerar Divergência.');
+                        console.log(err);
+                    });
+                }
+            });
+        }
+    }
+    checkToGenerateDivergence(analise: Analise): boolean {
+        const canGenerateDivergence = this.tipoEquipesLoggedUser.find(
+            (tipoEquipeResponsave) =>  tipoEquipeResponsave.id === analise.equipeResponsavel['id']
+        );
+        if (!canGenerateDivergence) {
+            this.pageNotificationService.addErrorMessage(
+                this.getLabel('Somente membros da equipe responsável podem gerar divergência esta análise!'));
+            return false;
+        }
+        if (!(analise.bloqueiaAnalise) && analise.metodoContagem === MetodoContagem.INDICATIVA) {
+            this.pageNotificationService.addErrorMessage(this.getLabel('Você não pode gerar divergência de uma análise que não esteja bloqueada.'));
+            return false;
+        }
+        if (analise.metodoContagem === MetodoContagem.INDICATIVA) {
+            this.pageNotificationService.addErrorMessage(this.getLabel('Você não pode gerar divergência uma análise que seja Indicativa.'));
+            return false;
+        }
+        return true;
+    }
+
+    cancelGenerateDivergence() {
+        this.showDialogDivergence = false;
+        this.firstAnaliseDivergencia = new Analise();
+        this.firstAnaliseDivergencia = new Analise();
     }
 }

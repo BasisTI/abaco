@@ -390,4 +390,21 @@ export class AnaliseService {
             }
         }));
     }
+    public generateDivergence(mainAnalise: Analise, secondaryAnalise: Analise): Observable<Analise> {
+        if (!mainAnalise.id || !secondaryAnalise.id) {
+            this.pageNotificationService.addErrorMessage('Erro nas Análises selecionadas!');
+            return;
+        }
+        return this.http.get<Analise>(`${this.resourceUrl}/gerar-divergencia/${mainAnalise.id}/${secondaryAnalise.id}`);
+    }
+
+    public generateDivergenceFromAnalise(analiseId): Observable<Analise> {
+        return this.http.get<Analise>(`${this.resourceUrl}/divergencia/${analiseId}`).pipe(
+            catchError((error: any) => {
+            if (error.status === 403) {
+                this.pageNotificationService.addErrorMessage(this.getLabel('Você não possui permissão!'));
+                return Observable.throw(new Error(error.status));
+            }
+        }));
+    }
 }
