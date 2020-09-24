@@ -403,11 +403,12 @@ public class AnaliseResource {
                                                                         @RequestParam(value = "organizacao", required = false) Set<Long> organizacao,
                                                                         @RequestParam(value = "equipeResponsavel", required = false) Long equipe,
                                                                         @RequestParam(value = "status", required = false) Set<Long> status,
-                                                                        @RequestParam(value = "users", required = false) Set<Long> usuario) throws RelatorioException {
+                                                                        @RequestParam(value = "users", required = false) Set<Long> usuario,
+                                                                        @RequestParam(defaultValue = "false", value = "isDivergence", required = false) Boolean isDivergence) throws RelatorioException {
         ByteArrayOutputStream byteArrayOutputStream;
         try {
             Pageable pageable = dynamicExportsService.obterPageableMaximoExportacao();
-            BoolQueryBuilder qb = analiseService.getBoolQueryBuilder(identificador, sistema, metodo, organizacao, equipe, usuario, status);
+            BoolQueryBuilder qb = analiseService.getBoolQueryBuilder(identificador, sistema, metodo, organizacao, equipe, usuario, status, isDivergence);
             SearchQuery searchQuery = new NativeSearchQueryBuilder().withQuery(qb).withPageable(pageable).build();
             Page<Analise> page = elasticsearchTemplate.queryForPage(searchQuery, Analise.class);
             byteArrayOutputStream = dynamicExportsService.export(new RelatorioAnaliseColunas(), page, tipoRelatorio, Optional.empty(), Optional.ofNullable(AbacoUtil.REPORT_LOGO_PATH), Optional.ofNullable(AbacoUtil.getReportFooter()));
@@ -431,12 +432,13 @@ public class AnaliseResource {
                                                                   @RequestParam(value = "organizacao", required = false) Set<Long> organizacao,
                                                                   @RequestParam(value = "equipe", required = false) Long equipe,
                                                                   @RequestParam(value = "status", required = false) Set<Long> status,
-                                                                  @RequestParam(value = "usuario", required = false) Set<Long> usuario)
+                                                                  @RequestParam(value = "usuario", required = false) Set<Long> usuario,
+                                                                  @RequestParam(defaultValue = "false", value = "isDivergence", required = false) Boolean isDivergence)
         throws URISyntaxException {
         Sort.Direction sortOrder = PageUtils.getSortDirection(order);
         Pageable pageable = new PageRequest(pageNumber, size, sortOrder, sort);
         FieldSortBuilder sortBuilder = new FieldSortBuilder(sort).order(SortOrder.ASC);
-        BoolQueryBuilder qb = analiseService.getBoolQueryBuilder(identificador, sistema, metodo, organizacao, equipe, usuario, status);
+        BoolQueryBuilder qb = analiseService.getBoolQueryBuilder(identificador, sistema, metodo, organizacao, equipe, usuario, status, isDivergence);
         SearchQuery searchQuery = new NativeSearchQueryBuilder().withQuery(qb).withPageable(pageable).withSort(sortBuilder).build();
         Page<Analise> page = elasticsearchTemplate.queryForPage(searchQuery, Analise.class);
         Page<AnaliseDTO> dtoPage = page.map(analise -> analiseService.convertToDto(analise));
@@ -477,6 +479,41 @@ public class AnaliseResource {
         } else {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new AnaliseEditDTO());
         }
+    }
+    @GetMapping("/analises/divergencia/{idAnaliseComparada}")
+    @Timed
+    @Secured({AuthoritiesConstants.ADMIN, AuthoritiesConstants.USER, AuthoritiesConstants.GESTOR, AuthoritiesConstants.ANALISTA})
+    public ResponseEntity<AnaliseEditDTO> gerarDivergencia( @PathVariable Long idAnaliseComparada){
+        Analise analise = analiseRepository.findOne(idAnaliseComparada);
+        Status status = statusRepository.findFirstByDivergenciaTrue();
+        if(status ==  null || status.getId() == null){
+            ResponseEntity.status(HttpStatus.FORBIDDEN).body("Error Message");
+        }
+        if(analise ==  null || analise.getId() == null){
+            ResponseEntity.status(HttpStatus.FORBIDDEN).body("Error Message");
+        }
+        Analise analiseDivergencia = analiseService.generateDivergence(analise, status);
+        return  ResponseEntity.ok(analiseService.convertToAnaliseEditDTO(analiseDivergencia));
+    }
+
+    @GetMapping("/analises/gerar-divergencia/{idAnalisePadao}/{idAnaliseComparada}")
+    @Timed
+    @Secured({AuthoritiesConstants.ADMIN, AuthoritiesConstants.USER, AuthoritiesConstants.GESTOR, AuthoritiesConstants.ANALISTA})
+    public ResponseEntity<AnaliseEditDTO> gerarDivergencia(@PathVariable Long idAnalisePadao, @PathVariable Long idAnaliseComparada){
+        Analise analisePadrão = analiseRepository.findOne(idAnalisePadao);
+        Analise analiseComparada = analiseRepository.findOne(idAnaliseComparada);
+        Status status = statusRepository.findFirstByDivergenciaTrue();
+        if(status ==  null || status.getId() == null){
+            ResponseEntity.status(HttpStatus.FORBIDDEN).body("Error Message");
+        }
+        if(analisePadrão ==  null || analisePadrão.getId() == null){
+            ResponseEntity.status(HttpStatus.FORBIDDEN).body("Error Message");
+        }
+        if(analiseComparada ==  null || analiseComparada.getId() == null){
+            ResponseEntity.status(HttpStatus.FORBIDDEN).body("Error Message");
+        }
+        Analise analiseDivergencia = analiseService.generateDivergence(analisePadrão, analiseComparada, status);
+        return  ResponseEntity.ok(analiseService.convertToAnaliseEditDTO(analiseDivergencia));
     }
 
 }

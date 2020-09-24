@@ -29,6 +29,7 @@ public class AnaliseDTO implements ReportObject, Serializable {
     private String adjustPFTotal;
     private Timestamp dataCriacaoOrdemServico;
     private TipoAnalise tipoAnalise;
+    private Boolean isDivergence;
     private boolean bloqueiaAnalise;
     private boolean clonadaParaEquipe;
     private Set<UserAnaliseDTO> users = new HashSet<>();

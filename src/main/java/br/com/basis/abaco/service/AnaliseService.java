@@ -21,6 +21,7 @@ import br.com.basis.abaco.repository.CompartilhadaRepository;
 import br.com.basis.abaco.repository.FuncaoDadosRepository;
 import br.com.basis.abaco.repository.FuncaoDadosVersionavelRepository;
 import br.com.basis.abaco.repository.FuncaoTransacaoRepository;
+import br.com.basis.abaco.repository.StatusRepository;
 import br.com.basis.abaco.repository.TipoEquipeRepository;
 import br.com.basis.abaco.repository.UserRepository;
 import br.com.basis.abaco.repository.VwAnaliseSomaPfRepository;
@@ -72,6 +73,7 @@ public class AnaliseService extends BaseService {
     private final VwAnaliseSomaPfRepository vwAnaliseSomaPfRepository;
     private final MailService mailService;
     private final TipoEquipeRepository tipoEquipeRepository;
+    private final StatusRepository statusRepository;
     @Autowired
     private UserSearchRepository userSearchRepository;
 
@@ -85,7 +87,8 @@ public class AnaliseService extends BaseService {
                           AnaliseSearchRepository analiseSearchRepository,
                           VwAnaliseSomaPfRepository vwAnaliseSomaPfRepository,
                           TipoEquipeRepository tipoEquipeRepository,
-                          MailService mailService) {
+                          MailService mailService,
+                          StatusRepository statusRepository) {
         this.analiseRepository = analiseRepository;
         this.funcaoDadosVersionavelRepository = funcaoDadosVersionavelRepository;
         this.userRepository = userRepository;
@@ -96,9 +99,10 @@ public class AnaliseService extends BaseService {
         this.vwAnaliseSomaPfRepository = vwAnaliseSomaPfRepository;
         this.mailService = mailService;
         this.tipoEquipeRepository = tipoEquipeRepository;
+        this.statusRepository = statusRepository;
     }
 
-    public void bindFilterSearch(String identificador, Set<Long> sistema, Set<MetodoContagem> metodo, Set<Long> usuario, Long equipesIds, Set<Long> equipesUsersId, Set<Long> organizacoes, Set<Long> status, BoolQueryBuilder qb) {
+    public void bindFilterSearch(String identificador, Set<Long> sistema, Set<MetodoContagem> metodo, Set<Long> usuario, Long equipesIds, Set<Long> equipesUsersId, Set<Long> organizacoes, Set<Long> status, boolean isDivergence, BoolQueryBuilder qb) {
         if (!StringUtils.isEmptyString((identificador))) {
             BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery()
                 .should(QueryBuilders.matchPhraseQuery("numeroOs", identificador))
@@ -106,6 +110,15 @@ public class AnaliseService extends BaseService {
             qb.must(boolQueryBuilder);
         }
         bindFilterEquipeAndOrganizacao(equipesIds, equipesUsersId, organizacoes, qb);
+        BoolQueryBuilder boolQueryBuilderDivergence;
+        if(isDivergence) {
+            boolQueryBuilderDivergence = QueryBuilders.boolQuery()
+                .must(QueryBuilders.termQuery("isDivergence", true));
+        }else{
+            boolQueryBuilderDivergence = QueryBuilders.boolQuery()
+                .mustNot(QueryBuilders.termQuery("isDivergence", true));
+        }
+        qb.must(boolQueryBuilderDivergence);
         if (sistema != null && sistema.size() > 0) {
             BoolQueryBuilder boolQueryBuilderSistema = QueryBuilders.boolQuery()
                 .must(QueryBuilders.termsQuery("sistema.id", sistema));
@@ -121,6 +134,7 @@ public class AnaliseService extends BaseService {
                 .must(QueryBuilders.termsQuery("status.id", status));
             qb.must(boolQueryBuilderStatus);
         }
+
         if (usuario != null && usuario.size() > 0) {
             BoolQueryBuilder queryBuilderUsers = QueryBuilders.boolQuery()
                 .must(
@@ -405,12 +419,12 @@ public class AnaliseService extends BaseService {
         analise.setStatus(analiseUpdate.getStatus());
     }
 
-    public BoolQueryBuilder getBoolQueryBuilder(String identificador, Set<Long> sistema, Set<MetodoContagem> metodo, Set<Long> organizacao, Long equipe, Set<Long> usuario, Set<Long> idsStatus) {
+    public BoolQueryBuilder getBoolQueryBuilder(String identificador, Set<Long> sistema, Set<MetodoContagem> metodo, Set<Long> organizacao, Long equipe, Set<Long> usuario, Set<Long> idsStatus, Boolean isDivergence) {
         User user = userSearchRepository.findByLogin(SecurityUtils.getCurrentUserLogin());
         Set<Long> equipesIds = getIdEquipes(user);
         Set<Long> organicoesIds = (organizacao != null && organizacao.size() > 0) ? organizacao : getIdOrganizacoes(user);
         BoolQueryBuilder qb = QueryBuilders.boolQuery();
-        bindFilterSearch(identificador, sistema, metodo, usuario, equipe, equipesIds, organicoesIds, idsStatus, qb);
+        bindFilterSearch(identificador, sistema, metodo, usuario, equipe, equipesIds, organicoesIds, idsStatus, isDivergence, qb);
         return qb;
     }
 
@@ -484,4 +498,80 @@ public class AnaliseService extends BaseService {
             return false;
         }
     }
+
+    @Transactional
+    public Analise generateDivergence(Analise analise, Status status){
+        User user = userRepository.findOneByLogin(SecurityUtils.getCurrentUserLogin()).get();
+        Analise analiseDivergencia = new Analise(analise, user);
+        analiseDivergencia = bindCloneAnalise(analiseDivergencia, analise, user);
+        analiseDivergencia.setStatus(status);
+        analiseDivergencia.setIsDivergence(true);
+        analiseRepository.save(analiseDivergencia);
+        updateAnaliseRelationAndSendEmail(analise,status,analiseDivergencia);
+        return analiseDivergencia;
+    }
+    @Transactional
+    public Analise generateDivergence(Analise analisePricinpal, Analise  analiseSecundaria, Status status){
+        Analise analiseDivergencia = bindAnaliseDivegernce(analisePricinpal, analiseSecundaria, status);
+        save(analiseDivergencia);
+        updateAnaliseRelationAndSendEmail(analisePricinpal, status, analiseDivergencia);
+        updateAnaliseRelationAndSendEmail(analiseSecundaria, status, analiseDivergencia);
+        sharedAnaliseDivergence(analiseSecundaria, analiseDivergencia);
+        return analiseDivergencia;
+    }
+
+    private void sharedAnaliseDivergence(Analise analiseSecundaria, Analise analiseDivergencia) {
+        Compartilhada compartilhada  =  new Compartilhada();
+        compartilhada.setAnaliseId(analiseDivergencia.getId());
+        compartilhada.setEquipeId(analiseSecundaria.getEquipeResponsavel().getId());
+        compartilhada.setNomeEquipe(analiseSecundaria.getEquipeResponsavel().getNome());
+        compartilhada.setViewOnly(true);
+        compartilhadaRepository.save(compartilhada);
+    }
+
+    private void updateAnaliseRelationAndSendEmail(Analise analisePricinpal, Status status, Analise analiseDivergencia) {
+        analisePricinpal.setStatus(status);
+        analisePricinpal.setAnaliseDivergence(analiseDivergencia);
+        save(analisePricinpal);
+        if(analisePricinpal.getEquipeResponsavel().getNome() != null && analisePricinpal.getEquipeResponsavel().getEmailPreposto()!= null){
+            mailService.sendDivergenceEmail(analisePricinpal);
+        }
+    }
+
+    private Analise bindAnaliseDivegernce(Analise analisePrincipal, Analise analiseSecundaria, Status status) {
+        User user = userRepository.findOneByLogin(SecurityUtils.getCurrentUserLogin()).get();
+
+        Analise analiseDivergenciaPrincipal = new Analise(analisePrincipal, user);
+        analiseDivergenciaPrincipal = bindCloneAnalise(analiseDivergenciaPrincipal, analisePrincipal, user);
+
+        Analise analiseDivergenciaSecundaria = new Analise(analiseSecundaria, user);
+        analiseDivergenciaSecundaria = bindCloneAnalise(analiseDivergenciaSecundaria, analiseSecundaria, user);
+
+        unionFuncaoDadosAndFuncaoTransacao(analisePrincipal, analiseSecundaria, analiseDivergenciaPrincipal);
+        analiseDivergenciaPrincipal.setStatus(status);
+        analiseDivergenciaPrincipal.setIsDivergence(true);
+        return analiseDivergenciaPrincipal;
+    }
+
+    private void unionFuncaoDadosAndFuncaoTransacao(Analise analisePrincipal, Analise analiseSecundaria, Analise analiseDivergenciaPrincipal) {
+        Set<FuncaoDados> lstFuncaoDados = new HashSet<>();
+        Set<FuncaoTransacao> lstFuncaoTransacaos = new HashSet<>();
+        lstFuncaoDados.addAll(analisePrincipal.getFuncaoDados());
+        lstFuncaoDados.addAll(analiseSecundaria.getFuncaoDados());
+        lstFuncaoTransacaos.addAll(analisePrincipal.getFuncaoTransacaos());
+        lstFuncaoTransacaos.addAll(analiseSecundaria.getFuncaoTransacaos());
+        analisePrincipal.setFuncaoDados(lstFuncaoDados);
+        analisePrincipal.setFuncaoTransacaos(lstFuncaoTransacaos);
+        analiseDivergenciaPrincipal.setFuncaoDados(bindCloneFuncaoDados(analisePrincipal,analiseDivergenciaPrincipal));
+        analiseDivergenciaPrincipal.setFuncaoTransacaos(bindCloneFuncaoTransacaos(analisePrincipal,analiseDivergenciaPrincipal));
+    }
+
+    public Analise save (Analise analise){
+        analise = analiseRepository.save(analise);
+        AnaliseDTO analiseDTO =  convertToDto(analise);
+        analise = convertToEntity(analiseDTO);
+        analise = analiseSearchRepository.save(analise);
+        return analise;
+    }
+
 }

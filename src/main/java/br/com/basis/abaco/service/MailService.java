@@ -132,4 +132,19 @@ public class MailService {
         String subject = messageSource.getMessage("email.shared.analise.title", new Object[] {analise.getIdentificadorAnalise()}, locale);
         sendEmail(email, subject, content, false, true);
     }
+
+    @Async
+    public void sendDivergenceEmail(Analise analise) {
+        String email = analise.getEquipeResponsavel().getEmailPreposto() != null ? analise.getEquipeResponsavel().getEmailPreposto() : analise.getEquipeResponsavel().getCfpsResponsavel().getEmail();
+        String user = analise.getEquipeResponsavel().getPreposto() != null ?analise.getEquipeResponsavel().getPreposto():analise.getEquipeResponsavel().getCfpsResponsavel().getFirstName();
+        log.debug("Sending Divergence notification to e-mail '{}'", analise.getCreatedBy().getEmail());
+        Locale locale = Locale.forLanguageTag(PT_BR);
+        Context context = new Context(locale);
+        context.setVariable(ANALISE, analise);
+        context.setVariable(USER, user);
+        context.setVariable(BASE_URL, jHipsterProperties.getMail().getBaseUrl());
+        String content = templateEngine.process("notificationDivergenceAnalise", context);
+        String subject = messageSource.getMessage("email.shared.analise.title", new Object[] {analise.getIdentificadorAnalise()}, locale);
+        sendEmail(email, subject, content, false, true);
+    }
 }
