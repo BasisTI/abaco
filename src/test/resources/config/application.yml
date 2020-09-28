@@ -30,9 +30,9 @@ spring:
         serialization.write_dates_as_timestamps: false
     datasource:
         type: com.zaxxer.hikari.HikariDataSource
-        url: jdbc:postgresql://localhost:5432/abacotest
-        username: abacotest
-        password: abacotest
+        url: ${DB_URL}
+        username: ${DB_USERNAME}
+        password: ${DB_PASSWORD}
     jpa:
         database-platform: io.github.jhipster.domain.util.FixedPostgreSQL82Dialect
         database: POSTGRESQL
@@ -45,6 +45,8 @@ spring:
             hibernate.default_schema: public
             hibernate.cache.region.factory_class: io.github.jhipster.config.jcache.NoDefaultJCacheRegionFactory
             hibernate.event.merge.entity_copy_observe: allow
+        hibernate:
+            ddl-auto: create-drop
     data:
         elasticsearch:
             cluster-name:

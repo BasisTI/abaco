@@ -1,6 +1,7 @@
 package br.com.basis.abaco.web.rest;
 
 import br.com.basis.abaco.AbacoApp;
+import br.com.basis.abaco.config.PostgreSQLTestContainer;
 import br.com.basis.abaco.domain.EsforcoFase;
 import br.com.basis.abaco.domain.Fase;
 import br.com.basis.abaco.repository.FaseRepository;
@@ -12,6 +13,7 @@ import br.com.basis.abaco.web.rest.errors.ExceptionTranslator;
 import com.fasterxml.jackson.core.type.TypeReference;
 import org.hamcrest.Matchers;
 import org.junit.Before;
+import org.junit.ClassRule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.MockitoAnnotations;
@@ -28,6 +30,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
+import org.testcontainers.containers.PostgreSQLContainer;
 
 import javax.persistence.EntityManager;
 import java.math.BigDecimal;
@@ -53,6 +56,9 @@ public class FaseResourceIT {
 
     private static final String DEFAULT_NOME = "AAAAAAAAAA";
     private static final String UPDATED_NOME = "BBBBBBBBBB";
+
+    @ClassRule
+    public static final PostgreSQLContainer postgreSQLContainer = PostgreSQLTestContainer.getInstance();
 
     @Autowired
     private FaseService service;
