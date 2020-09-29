@@ -38,7 +38,7 @@ import { BlockUiService } from '@nuvem/angular-base';
     providers: [ConfirmationService]
 })
 export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
-
+    emptySustantion = '<p><br></p>';
     @Output()
     valueChange: EventEmitter<string> = new EventEmitter<string>();
     parseResult: ParseResult;

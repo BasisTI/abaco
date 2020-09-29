@@ -1,10 +1,9 @@
 import {Injectable} from '@angular/core';
 import {environment} from '../../environments/environment';
 
-import {Analise, AnaliseShareEquipe} from './';
+import { Divergencia } from '.';
 import {TipoEquipe} from '../tipo-equipe';
-import { Resumo } from './analise-resumo/resumo.model';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { PageNotificationService } from '@nuvem/primeng-components';
 import { Observable, forkJoin, pipe } from 'rxjs';
 import { catchError } from 'rxjs/operators';
@@ -14,11 +13,10 @@ import { FuncaoDadosService } from '../funcao-dados/funcao-dados.service';
 import { FuncaoTransacaoService } from '../funcao-transacao/funcao-transacao.service';
 import { FuncaoTransacao } from '../funcao-transacao';
 import { FuncaoDados } from '../funcao-dados';
-import { Status } from '../status/status.model';
-import { AbacoButtonsModule } from '../components/abaco-buttons/abaco-buttons.module';
+import { LazyLoadEvent } from 'primeng';
 
 @Injectable()
-export class AnaliseService {
+export class DivergenciaService {
 
     resourceUrl = environment.apiUrl + '/analises';
 
@@ -42,8 +40,6 @@ export class AnaliseService {
 
     clonarAnaliseUrl = this.resourceUrl + '/clonar/';
 
-    changeStatusUrl = this.resourceUrl + '/change-status/';
-
     resourceResumoUrl = environment.apiUrl + '/vw-resumo';
 
 
@@ -61,9 +57,9 @@ export class AnaliseService {
         return label;
     }
 
-    public create(analise: Analise): Observable<Analise> {
+    public create(analise: Divergencia): Observable<Divergencia> {
         const copy = this.convert(analise);
-        return this.http.post<Analise>(this.resourceUrl, copy).pipe(catchError((error: any) => {
+        return this.http.post<Divergencia>(this.resourceUrl, copy).pipe(catchError((error: any) => {
             if (error.status === 403) {
                 this.pageNotificationService.addErrorMessage(this.getLabel('Você não possui permissão!'));
                 return Observable.throw(new Error(error.status));
@@ -71,7 +67,7 @@ export class AnaliseService {
         }));
     }
 
-    public atualizaAnalise(analise: Analise) {
+    public atualizaAnalise(analise: Divergencia) {
         this.update(analise)
             .subscribe(() => (function () {
                 this.funcaoTransacaoService.getFuncaoTransacaoByAnalise(this.analise.id)
@@ -90,9 +86,9 @@ export class AnaliseService {
             }));
     }
 
-    public update(analise: Analise): Observable<Analise> {
+    public update(analise: Divergencia): Observable<Divergencia> {
         const copy = this.convert(analise);
-        return this.http.put<Analise>(this.resourceUrl, copy).pipe(catchError((error: any) => {
+        return this.http.put<Divergencia>(this.resourceUrl, copy).pipe(catchError((error: any) => {
             if (error.status === 403) {
                 this.pageNotificationService.addErrorMessage(this.getLabel('Você não possui permissão!'));
                 return Observable.throw(new Error(error.status));
@@ -100,9 +96,9 @@ export class AnaliseService {
         }));
     }
 
-    public block(analise: Analise): Observable<Analise> {
+    public block(analise: Divergencia): Observable<Divergencia> {
         const copy = analise;
-        return this.http.put<Analise>(`${this.resourceUrl}/${copy.id}/block`, copy).pipe(catchError((error: any) => {
+        return this.http.put<Divergencia>(`${this.resourceUrl}/${copy.id}/block`, copy).pipe(catchError((error: any) => {
             switch (error.status) {
                 case 400: {
                     if (error.headers.toJSON()['x-abacoapp-error'][0] === 'error.notadmin') {
@@ -255,33 +251,21 @@ export class AnaliseService {
         return null;
     }
 
-    public find(id: Number): Observable<Analise> {
-        return this.http.get<Analise>(`${this.resourceUrl}/${id}`);
+    public find(id: Number): Observable<Divergencia> {
+        return this.http.get<Divergencia>(`${this.resourceUrl}/${id}`);
     }
 
-    public findView(id: Number): Observable<Analise> {
-        return this.http.get<Analise>(`${this.resourceUrl}/view/${id}`);
+    public findView(id: Number): Observable<Divergencia> {
+        return this.http.get<Divergencia>(`${this.resourceUrl}/view/${id}`);
     }
 
-    public findWithFuncaos(id: number): any {
-        const analise: Analise = new Analise();
-        analise.id = id;
-        return forkJoin(this.http.get(`${this.resourceUrl}/${id}`),
-            this.funcaoDadosService.getFuncaoDadosByAnalise(analise),
-            this.funcaoTransacaoService.getFuncaoTransacaoByAnalise(analise));
-    }
-
-    public clonarAnalise(id: number): Observable<Analise> {
+    public clonarAnalise(id: number): Observable<Divergencia> {
         const url = this.clonarAnaliseUrl + id;
-        return this.http.get<Analise>(url);
+        return this.http.get<Divergencia>(url);
     }
     public clonarAnaliseToEquipe(id: number, equipe: TipoEquipe) {
         const url = this.clonarAnaliseUrl + id + '/' + equipe.id;
-        return this.http.get<Analise>(url);
-    }
-    public changeStatusAnalise(id: number, status: Status) {
-        const url = this.changeStatusUrl + id + '/' + status.id;
-        return this.http.get<Analise>(url);
+        return this.http.get<Divergencia>(url);
     }
 
     findAllByOrganizacaoId(orgId: number): Observable<ResponseWrapper> {
@@ -289,9 +273,9 @@ export class AnaliseService {
         return this.http.get<ResponseWrapper>(url);
     }
 
-    findAnalisesUsuario(idUsuario: number): Observable<Analise[]> {
+    findAnalisesUsuario(idUsuario: number): Observable<Divergencia[]> {
         const url = `${this.resourceUrl}/user/${idUsuario}`;
-        return this.http.get<Analise[]>(url);
+        return this.http.get<Divergencia[]>(url);
     }
 
     tratarErro(erro: string, id: number) {
@@ -328,11 +312,11 @@ export class AnaliseService {
         return new ResponseWrapper(res.headers, result, res.status);
     }
 
-    public convertItemFromServer(json: any): Analise {
-        return new Analise().copyFromJSON(json);
+    public convertItemFromServer(json: any): Divergencia {
+        return new Divergencia().copyFromJSON(json);
     }
 
-    convertJsonToAnalise(res): Analise[] {
+    convertJsonToAnalise(res): Divergencia[] {
         const jsonResponse = res.json();
         const result = [];
         for (let i = 0; i < jsonResponse.length; i++) {
@@ -341,22 +325,11 @@ export class AnaliseService {
         return result;
     }
 
-    private convert(analise: Analise): Analise {
+    private convert(analise: Divergencia): Divergencia {
         return analise.toJSONState();
     }
-    findAllCompartilhadaByAnalise(analiseId: number): Observable<AnaliseShareEquipe[]> {
-        const url = `${this.findCompartilhadaByAnaliseUrl}/${analiseId}`;
-        return this.http.get<AnaliseShareEquipe[]>(url);
-    }
 
-    findAllBaseline(): Observable<Response> {
-        const url = `${this.resourceUrl}/baseline`;
-        return this.http.get<Response>(url);
-    }
 
-    salvarCompartilhar(listaCompartilhada: Array<AnaliseShareEquipe>) {
-        return this.http.post(`${this.resourceUrl}/compartilhar`, listaCompartilhada);
-    }
 
     deletarCompartilhar(id: number): Observable<Response> {
         return this.http.delete<Response>(`${this.resourceUrl}/compartilhar/delete/${id}`).pipe(catchError((error: any) => {
@@ -382,34 +355,38 @@ export class AnaliseService {
         return this.http.get<Response>(url);
     }
 
-    getResumo(analiseId: Number): Observable<Resumo[]> {
-        return this.http.get<Resumo[]>(`${this.resourceResumoUrl}/${analiseId}`,).pipe(
-        catchError((error: any) => {
-            if (error.status === 403) {
-                this.pageNotificationService.addErrorMessage(this.getLabel('Você não possui permissão!'));
-                return Observable.throw(new Error(error.status));
-            }
-        }));
-    }
-    public generateDivergence(mainAnalise: Analise, secondaryAnalise: Analise): Observable<Analise> {
-        if (!mainAnalise.id || !secondaryAnalise.id) {
-            this.pageNotificationService.addErrorMessage('Erro nas Análises selecionadas!');
-            return;
+    search(event: LazyLoadEvent, rows: number, orderInSort: boolean, setParams: String, query?: any) {
+        let page = 0;
+        if (event !== undefined && event.first > 0) {
+            page = Math.floor(event.first / rows);
         }
-        return this.http.get<Analise>(`${this.resourceUrl}/gerar-divergencia/${mainAnalise.id}/${secondaryAnalise.id}`);
-    }
 
-    public updateDivergence(analise: Analise) {
-        return this.http.get<Analise>(`${this.resourceUrl}/divergente/update//${analise.id}/`);
-    }
+        let order = event.sortOrder === 1 ? 'asc' : 'desc';
+        let params: HttpParams = new HttpParams()
+        .set('page', page.toString())
+        .set('size', rows.toString());
 
-    public generateDivergenceFromAnalise(analiseId): Observable<Analise> {
-        return this.http.get<Analise>(`${this.resourceUrl}/divergencia/${analiseId}`).pipe(
-            catchError((error: any) => {
-            if (error.status === 403) {
-                this.pageNotificationService.addErrorMessage(this.getLabel('Você não possui permissão!'));
-                return Observable.throw(new Error(error.status));
+        if (orderInSort) {
+            if (event.sortField !== undefined) {
+                params = params.set('sort', event.sortField + ',' + order);
             }
-        }));
+        } else {
+            if (event.sortField !== undefined) {
+                params = params
+                .set('sort', event.sortField)
+                .set('order', order);
+            }
+        }
+
+        if ('string' === typeof query) {
+            params = params.set('query', query);
+        }
+
+        if ('object' === typeof query) {
+            Object.keys(query).forEach(key => params = params.set(key, query[key]));
+        }
+        return this.http.get(`${this.resourceUrl}?${params.toString()}${setParams}`, { observe: 'response' });
     }
+
+
 }

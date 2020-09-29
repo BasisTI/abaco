@@ -47,10 +47,10 @@
                                     <p-column field="complexidade" header="Complexidade" [sortable]="true" ></p-column>
                                     <p-column field="grossPF" header="PF Bruto" [sortable]="true"></p-column>
                                     <p-column field="pf" header="PF Líquido" [sortable]="true" ></p-column>
-                                    <p-column field="hasSustantation"  header="Possui Fundamentação ?" [sortable]="true" typefilter="">
-                                        <ng-template let-hasSustantation="rowData.hasSustantation"
+                                    <p-column field="sustantation"  header="Possui Fundamentação ?" [sortable]="true" typefilter="">
+                                        <ng-template let-sustantation="rowData.sustantation"
                                                             pTemplate="body">
-                                            {{ hasSustantation ? this.getLabel('Sim') : this.getLabel('Não') }}
+                                            {{ sustantation && sustantation !== emptySustantion ? this.getLabel('Sim') : this.getLabel('Não') }}
                                         </ng-template>
                                     </p-column>
                                     <basis-datatable-button

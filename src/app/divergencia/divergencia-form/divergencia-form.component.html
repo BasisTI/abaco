@@ -1,0 +1,145 @@
+<p-tabView (onChange)="handleChange($event)">
+    <p-tabPanel [header]="this.getLabel('Analise')" [selected]= "true">
+        <div class="ui-g ui-fluid">
+            <div class="ui-g-12">
+                <div class="ui-g">
+                    <div class="ui-g-4 ui-md-4 ui-sm-12" style="margin-bottom: 05px">
+                        <label>Identificador </label>
+                        <span class="md-inputfield">
+                            <input
+                                required
+                                type="text"
+                                maxlength="100"
+                                id="idnumeroOsAnaliseFormAnalise"
+                                name="numeroOsAnalise"
+                                [(ngModel)]="analise.numeroOs"
+                                pInputText
+                            />
+                            <!-- <div *ngIf="editForm.controls['numeroOsAnalise']
+                                && !editForm.controls['numeroOsAnalise'].valid
+                                && (editForm.controls['numeroOsAnalise'].touched
+                                || editForm.submitted)"
+                                class="ui-message ui-messages-error">
+                                    Campo obrigatório.
+                             </div> -->
+                        </span>
+                    </div>
+                    <div class="ui-g-4 ui-md-4 ui-sm-12" style="margin-bottom: 05px">
+                        <label>Número O.S.*</label>
+                        <span class="md-inputfield">
+                            <input
+                                required
+                                type="text"
+                                maxlength="100"
+                                id="idnumeroOsAnaliseFormAnalise"
+                                name="numeroOsAnalise"
+                                [(ngModel)]="analise.numeroOs"
+                                pInputText
+                            />
+                            <!-- <div *ngIf="editForm.controls['numeroOsAnalise']
+                                && !editForm.controls['numeroOsAnalise'].valid
+                                && (editForm.controls['numeroOsAnalise'].touched
+                                || editForm.submitted)"
+                                class="ui-message ui-messages-error">
+                                    Campo obrigatório.
+                             </div> -->
+                        </span>
+                    </div>
+                    <div class="ui-g-4 ui-md-4 ui-sm-12" style="margin-bottom: 05px">
+                        <label>Organização</label>
+                        <p-dropdown
+                                [filter]="true"
+                                dataKey="id"
+                                id="idOrganizacaoSaveFormAnalise"
+                                name="organizacao"
+                                optionLabel="nome"
+                                [disabled]="disabledOptionsforEdit()"
+                                [placeholder]="this.getLabel('Selecione')"
+                                [options]="organizacoes"
+                                [(ngModel)]="analise.organizacao"
+                                (onChange)="setSistemaOrganizacao($event.value)">
+                        </p-dropdown>
+                    </div>
+                    <div class="ui-g-4 ui-md-4 ui-sm-12" style="margin-bottom: 05px">
+                        <label >Sistema</label>
+                        <p-dropdown
+                                [filter]="true"
+                                dataKey="id"
+                                id="idSistemaSaveFormAnalise"
+                                optionLabel="sigla"
+                                [disabled]="disabledOptionsforEdit()"
+                                [placeholder]="this.getLabel('Selecione')"
+                                (onChange)="getSistemaSelecionado()"
+                                name="sistema"
+                                [options]="sistemas"
+                                [(ngModel)]="analise.sistema"
+                                >
+                        </p-dropdown>
+                    </div>
+                    <div class="ui-g-4 ui-md-4 ui-sm-12" style="margin-bottom: 05px">
+                        <label>Equipe Responsável</label>
+                        <p-dropdown
+                                [filter]="true"
+                                dataKey="id"
+                                id="idEquipeResponsavelSaveFormAnalise"
+                                name="equipeResponsavel"
+                                optionLabel="nome"
+                                [disabled]="disabledOptionsforEdit()"
+                                [placeholder]="this.getLabel('Selecione')"
+                                [options]="equipeResponsavel"
+                                [(ngModel)]="analise.equipeResponsavel" >
+                        </p-dropdown>
+                    </div>
+                    <div class="ui-g-4 ui-md-4 ui-sm-12">
+                        <label>Usuário</label>
+                        <p-dropdown
+                                [filter]="true"
+                                dataKey="id"
+                                id="idUsuario"
+                                name="usuario"
+                                optionLabel="nome"
+                                [disabled]="disabledOptionsforEdit()"
+                                [placeholder]="this.getLabel('Selecione')"
+                                [options]="usuariosOptions"
+                                [(ngModel)]="analise.equipeResponsavel" >
+                        </p-dropdown>
+                    </div>
+                </div>
+            </div>
+            <div class="ui-g ui-md-12" style="justify-content: center; margin-bottom: 05px; margin-top: 05px">
+                <div class="ui-g-12 ui-md-12 ui-lg-2" style="margin-bottom: 05px">
+                    <app-white-button
+                            [buttonLabel]="'Voltar' "
+                            id="idBtnVoltarFormAnalise"
+                            routerLink="/divergencia">
+                    </app-white-button>
+                </div>
+                <div class="ui-g-12 ui-md-12 ui-lg-2" style="margin-bottom: 05px">
+                    <app-green-button
+                            type="submit"
+                            id="idBtnSalvarFormAnalise"
+                            [buttonLabel]="'Pesquisar Analise' "
+                            (click)="save()">
+                    </app-green-button>
+                </div>
+            </div>
+        </div>
+        
+    </p-tabPanel>
+
+    <p-tabPanel [header]="this.getLabel('Funções Dados')" [disabled]="disableAba" ></p-tabPanel>
+
+    <p-tabPanel [header]="this.getLabel('Funções Transação')"[disabled]="disableFuncaoTrasacao"></p-tabPanel>
+
+    <p-tabPanel [header]="this.getLabel('Resumo')" [disabled]="disableAba" ></p-tabPanel>
+</p-tabView>
+
+<!-- Dialog confirmação deleção -->
+<p-confirmDialog [header]="this.getLabel('Confirmação')" #dialog>
+    <p-footer>
+        <button type="button" pButton icon="fa-close" [label]="'Não' "
+                (click)="dialog.reject()"></button>
+        <button type="button" pButton icon="fa-check" [label]="'Sim' "
+                (click)="dialog.accept()"></button>
+    </p-footer>
+</p-confirmDialog>

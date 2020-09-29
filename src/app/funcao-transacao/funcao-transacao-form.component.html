@@ -51,8 +51,8 @@
                                     <p-column header=" PF Liquído" field="pf"  >
                                         <ng-template let-pf="rowData.pf" pTemplate="body"> {{ pf | number }} </ng-template>
                                     </p-column>
-                                    <p-column header=" Possui Fundamentação ?" field="hasSustantation" >
-                                        <ng-template let-hasSustantation="rowData.hasSustantation" pTemplate="body"> {{ hasSustantation ? this.getLabel('Sim') : this.getLabel('Não') }}</ng-template>
+                                    <p-column header=" Possui Fundamentação ?" field="sustantation" >
+                                        <ng-template let-sustantation="rowData.sustantation" pTemplate="body"> {{ sustantation && sustantation !== emptySustantion ? this.getLabel('Sim') : this.getLabel('Não') }}</ng-template>
                                     </p-column>
                                     <basis-datatable-button
                                         name="clone"

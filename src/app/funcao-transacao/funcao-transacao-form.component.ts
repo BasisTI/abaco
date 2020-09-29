@@ -29,7 +29,7 @@ import { BlockUiService } from '@nuvem/angular-base';
     providers: [ConfirmationService]
 })
 export class FuncaoTransacaoFormComponent implements OnInit {
-
+    emptySustantion = '<p><br></p>';
     faS: FatorAjuste[] = [];
     textHeader: string;
     @Input() isView: boolean;

@@ -765,20 +765,22 @@ export class AnaliseListComponent implements OnInit {
     }
 
     public generateDivergence() {
-        if (this.changeOrderAnalise) {
-            const auxAnalise =  this.firstAnaliseDivergencia ;
-            this.firstAnaliseDivergencia = this.secondAnaliseDivergencia;
-            this.secondAnaliseDivergencia = auxAnalise;
-        }
         this.blockUiService.show();
-        this.analiseService.generateDivergence(this.firstAnaliseDivergencia, this.secondAnaliseDivergencia).subscribe(data => {
-            this.showDialogDivergence = false;
-            this.recarregarDataTable();
-            this.datatable.filter();
-            this.pageNotificationService.addSuccessMessage('O status da analise ' + data.identificadorAnalise + ' foi alterado.');
-            this.blockUiService.hide();
-        },
-        err => this.pageNotificationService.addErrorMessage('Não foi possivel gerar a Divergência das Analises.'));
+        this.analiseService.generateDivergence(this.firstAnaliseDivergencia, this.secondAnaliseDivergencia)
+            .subscribe(analiseCreateDivergence => {
+                this.blockUiService.show();
+                this.analiseService.updateDivergence(analiseCreateDivergence).subscribe(analiseUpdateDivergence => {
+                    this.showDialogDivergence = false;
+                    this.recarregarDataTable();
+                    this.datatable.filter();
+                    this.pageNotificationService.addSuccessMessage(
+                                'A foi gerada divergence de identificador '
+                                + analiseUpdateDivergence.identificadorAnalise
+                                + ' foi criado.');
+                    this.blockUiService.hide();
+                });
+            },
+            err => this.pageNotificationService.addErrorMessage('Não foi possivel gerar a Divergência das Analises.'));
     }
     public confirmDivergenceGenerate(analise: Analise) {
         if (this.checkToGenerateDivergence(analise)) {

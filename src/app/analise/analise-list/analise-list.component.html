@@ -423,13 +423,12 @@
 </p-dialog>
 <p-dialog header="Divergência" [(visible)]="showDialogDivergence" [style]="{width: '50vw'}" [minHeight]="300" [modal]="true">
     <div class="ui-g-12 ui-md-12 ui-sm-12">
-        <label>Seleciona a Análise principal:</label>
+        <label>Análises selecionadas para gerar divergência:</label>
         <div class="p-grid ui-g-12 ui-md-12 ui-sm-12">
-            <div class="p-col-12"><p-radioButton name="changeOrderAnalise" [value]="false" [label]="firstAnaliseDivergencia.identificadorAnalise" [(ngModel)]="changeOrderAnalise" ></p-radioButton></div>
-            <div class="p-col-12"><p-radioButton name="changeOrderAnalise" [value]="true" [label]="secondAnaliseDivergencia.identificadorAnalise" [(ngModel)]="changeOrderAnalise" ></p-radioButton></div>
+            <li>{{firstAnaliseDivergencia.identificadorAnalise}}</li>
+            <li>{{secondAnaliseDivergencia.identificadorAnalise}}</li>
         </div>
     </div>
-
     <app-green-button buttonLabel="Gerar Divergência" (click)="generateDivergence()" style="float:right; margin: 5px"></app-green-button>
     <app-white-button buttonLabel="Cancelar" (click)="cancelGenerateDivergence()" style="float:right; margin: 5px"> </app-white-button>
 </p-dialog>

@@ -38,6 +38,7 @@ import { LoginModule } from './login/login.module';
 import { PesquisarFuncaoTransacaoModule } from './pesquisar-ft/pesquisar-ft.module';
 import { StatusModule } from './status/status.module';
 import { NomenclaturaModule } from './nomenclatura/nomenclatura.module';
+import { DivergenciaModule } from './divergencia/divergencia.module';
 
 @NgModule({
     declarations: [
@@ -84,6 +85,7 @@ import { NomenclaturaModule } from './nomenclatura/nomenclatura.module';
         BlockUiModule,
         StatusModule,
         NomenclaturaModule,
+        DivergenciaModule,
     ],
     providers: [
         { provide: LocationStrategy, useClass: HashLocationStrategy },
