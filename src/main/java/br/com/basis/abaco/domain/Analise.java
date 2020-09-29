@@ -207,7 +207,7 @@ public class Analise implements Serializable, ReportObject {
     @JoinColumn(name="analise_divergence_id")
     private Analise analiseDivergence;
 
-    @OneToMany(mappedBy = "equipeResponsavel")
+    @OneToMany(mappedBy = "analiseDivergence")
     private Set<Analise> analisesComparadas = new HashSet<>();
 
 

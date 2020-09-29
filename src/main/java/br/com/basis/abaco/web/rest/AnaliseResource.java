@@ -245,9 +245,7 @@ public class AnaliseResource {
                 return ResponseUtil.wrapOrNotFound(Optional.ofNullable(analiseEditDTO));
             }
         }
-        return ResponseEntity
-            .status(HttpStatus.FORBIDDEN)
-            .body(null);
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
 
     }
 
@@ -517,6 +515,17 @@ public class AnaliseResource {
         return ResponseEntity.ok(analiseService.convertToAnaliseEditDTO(analiseDivergencia));
     }
 
+    @GetMapping("/analises/divergente/update/{id}")
+    @Timed
+    @Secured({AuthoritiesConstants.ADMIN, AuthoritiesConstants.USER, AuthoritiesConstants.GESTOR, AuthoritiesConstants.ANALISTA})
+    public ResponseEntity<AnaliseEditDTO> updateAnaliseDivergene(@PathVariable Long id) {
+        Analise analise = analiseRepository.findOne(id);
+        if (analise == null || analise.getId() == null) {
+            ResponseEntity.status(HttpStatus.FORBIDDEN).body("Error analise Padrão");
+        }
+        analise = analiseService.updateDivergenceAnalise(analise);
+        return ResponseEntity.ok(analiseService.convertToAnaliseEditDTO(analise));
+    }
 }
 
 

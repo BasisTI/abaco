@@ -43,6 +43,7 @@ import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.sql.Timestamp;
+import java.time.Instant;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
@@ -481,8 +482,18 @@ public class AnaliseService extends BaseService {
         analiseClone.setDataCriacaoOrdemServico(analise.getDataHomologacao());
         analiseClone.setFuncaoDados(bindCloneFuncaoDados(analise, analiseClone));
         analiseClone.setFuncaoTransacaos(bindCloneFuncaoTransacaos(analise, analiseClone));
+        analiseClone.setEsforcoFases(bindCloneEsforcoFase(analise));
         analiseClone.setBloqueiaAnalise(false);
         return analiseClone;
+    }
+
+    public  Set<EsforcoFase> bindCloneEsforcoFase(Analise analise){
+        Set<EsforcoFase> esforcoFases = new HashSet<>();
+            analise.getEsforcoFases().forEach(esforcoFase -> {
+                esforcoFase =  new EsforcoFase(esforcoFase.getId(), esforcoFase.getEsforco(), esforcoFase.getManual(), esforcoFase.getFase());
+                esforcoFases.add(esforcoFase);
+            });
+        return esforcoFases;
     }
 
     public boolean changeStatusAnalise(Analise analise, Status status, User user) {
@@ -547,6 +558,7 @@ public class AnaliseService extends BaseService {
             unionFuncaoDadosAndFuncaoTransacao(analisePrincipal, analiseSecundaria, analiseDivergenciaPrincipal);
             analiseDivergenciaPrincipal.setStatus(status);
             analiseDivergenciaPrincipal.setIsDivergence(true);
+            analiseDivergenciaPrincipal.setDataCriacaoOrdemServico(Timestamp.from(Instant.now()));
             return analiseDivergenciaPrincipal;
         }
         return new Analise();
@@ -570,6 +582,12 @@ public class AnaliseService extends BaseService {
         AnaliseDTO analiseDTO =  convertToDto(analise);
         analise = convertToEntity(analiseDTO);
         analise = analiseSearchRepository.save(analise);
+        return analise;
+    }
+    public Analise updateDivergenceAnalise(Analise analise) {
+        updatePf(analise);
+        analise.setIdentificadorAnalise(analise.getId().toString());
+        analise = save(analise);
         return analise;
     }
 

@@ -35,6 +35,8 @@ public class AnaliseDTO implements ReportObject, Serializable {
     private Set<UserAnaliseDTO> users = new HashSet<>();
     private Set<Compartilhada> compartilhadas = new HashSet<>();
     private StatusDTO status;
+    private AnaliseDivergenceDTO analiseDivergence;
+    private Set<AnaliseDivergenceDTO> analisesComparadas = new HashSet<>();
 
     public void setDataCriacaoOrdemServico(Timestamp dataCriacaoOrdemServico) {
         this.dataCriacaoOrdemServico = dataCriacaoOrdemServico == null ? null : new Timestamp(dataCriacaoOrdemServico.getTime());
