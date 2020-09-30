@@ -99,22 +99,26 @@ public class AnaliseService extends BaseService {
         this.tipoEquipeRepository = tipoEquipeRepository;
     }
 
-    public void bindFilterSearch(String identificador, Set<Long> sistema, Set<MetodoContagem> metodo, Set<Long> usuario, Long equipesIds, Set<Long> equipesUsersId, Set<Long> organizacoes, Set<Long> status, boolean isDivergence, BoolQueryBuilder qb) {
+    public void bindFilterSearch(String identificador, Set<Long> sistema, Set<MetodoContagem> metodo, Set<Long> usuario, Long equipesIds, Set<Long> equipesUsersId, Set<Long> organizacoes, Set<Long> status, BoolQueryBuilder qb) {
         if (!StringUtils.isEmptyString((identificador))) {
+            BoolQueryBuilder queryBuilderIdentificador = QueryBuilders.boolQuery()
+                .must(
+                    nestedQuery(
+                        "analisesComparadas",
+                        boolQuery().must(QueryBuilders.matchPhraseQuery("analisesComparadas.identificadorAnalise", identificador)
+                        )
+                    )
+                );
             BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery()
+                .should(queryBuilderIdentificador)
                 .should(QueryBuilders.matchPhraseQuery("numeroOs", identificador))
                 .should(QueryBuilders.matchPhraseQuery("identificadorAnalise", identificador));
             qb.must(boolQueryBuilder);
         }
         bindFilterEquipeAndOrganizacao(equipesIds, equipesUsersId, organizacoes, qb);
         BoolQueryBuilder boolQueryBuilderDivergence;
-        if(isDivergence) {
-            boolQueryBuilderDivergence = QueryBuilders.boolQuery()
-                .must(QueryBuilders.termQuery("isDivergence", true));
-        }else{
-            boolQueryBuilderDivergence = QueryBuilders.boolQuery()
-                .mustNot(QueryBuilders.termQuery("isDivergence", true));
-        }
+        boolQueryBuilderDivergence = QueryBuilders.boolQuery()
+            .mustNot(QueryBuilders.termQuery("isDivergence", true));
         qb.must(boolQueryBuilderDivergence);
         if (sistema != null && sistema.size() > 0) {
             BoolQueryBuilder boolQueryBuilderSistema = QueryBuilders.boolQuery()
@@ -142,6 +146,33 @@ public class AnaliseService extends BaseService {
                     )
                 );
             qb.must(queryBuilderUsers);
+        }
+    }
+    public void bindFilterSearchDivergence(String identificador, Set<Long> sistema, Set<Long> organizacoes, Set<Long> equipesUsersId, BoolQueryBuilder qb) {
+        if (!StringUtils.isEmptyString((identificador))) {
+            BoolQueryBuilder queryBuilderIdentificador = QueryBuilders.boolQuery()
+                .must(
+                    nestedQuery(
+                        "analisesComparadas",
+                        boolQuery().must(QueryBuilders.matchPhraseQuery("analisesComparadas.identificadorAnalise", identificador)
+                        )
+                    )
+                );
+            BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery()
+                .should(queryBuilderIdentificador)
+                .should(QueryBuilders.matchPhraseQuery("numeroOs", identificador))
+                .should(QueryBuilders.matchPhraseQuery("identificadorAnalise", identificador));
+            qb.must(boolQueryBuilder);
+        }
+        bindFilterEquipeAndOrganizacaoDivergence( equipesUsersId, organizacoes, qb);
+        BoolQueryBuilder boolQueryBuilderDivergence;
+            boolQueryBuilderDivergence = QueryBuilders.boolQuery()
+                .must(QueryBuilders.termQuery("isDivergence", true));
+        qb.must(boolQueryBuilderDivergence);
+        if (sistema != null && sistema.size() > 0) {
+            BoolQueryBuilder boolQueryBuilderSistema = QueryBuilders.boolQuery()
+                .must(QueryBuilders.termsQuery("sistema.id", sistema));
+            qb.must(boolQueryBuilderSistema);
         }
     }
 
@@ -186,6 +217,20 @@ public class AnaliseService extends BaseService {
             qb.must(boolQueryBuilder);
         }
     }
+
+    private void bindFilterEquipeAndOrganizacaoDivergence( Set<Long> equipesUsersId, Set<Long> organizacoes, BoolQueryBuilder qb) {
+        BoolQueryBuilder boolQueryBuilderEquipe = QueryBuilders.boolQuery()
+            .must(QueryBuilders.termsQuery(EQUIPE_RESPONSAVEL_ID, equipesUsersId))
+            .must(QueryBuilders.termsQuery(ORGANIZACAO_ID, organizacoes));
+        BoolQueryBuilder boolQueryBuilderCompartilhada = QueryBuilders.boolQuery()
+            .must(QueryBuilders.termsQuery(COMPARTILHADAS_EQUIPE_ID, equipesUsersId))
+            .must(QueryBuilders.termsQuery(ORGANIZACAO_ID, organizacoes));
+        BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery()
+            .should(boolQueryBuilderEquipe)
+            .should(boolQueryBuilderCompartilhada);
+        qb.must(boolQueryBuilder);
+    }
+
 
     private Set<Long> getIdEquipes(User user) {
         Set<TipoEquipe> listaEquipes = user.getTipoEquipes();
@@ -396,7 +441,6 @@ public class AnaliseService extends BaseService {
         return new ModelMapper().map(analiseEditDTO, Analise.class);
     }
 
-
     public void bindAnalise(@RequestBody @Valid Analise analiseUpdate, Analise analise) {
         salvaNovaData(analiseUpdate);
         analise.setNumeroOs(analiseUpdate.getNumeroOs());
@@ -416,14 +460,24 @@ public class AnaliseService extends BaseService {
         analise.setStatus(analiseUpdate.getStatus());
     }
 
-    public BoolQueryBuilder getBoolQueryBuilder(String identificador, Set<Long> sistema, Set<MetodoContagem> metodo, Set<Long> organizacao, Long equipe, Set<Long> usuario, Set<Long> idsStatus, Boolean isDivergence) {
+    public BoolQueryBuilder getBoolQueryBuilder(String identificador, Set<Long> sistema, Set<MetodoContagem> metodo, Set<Long> organizacao, Long equipe, Set<Long> usuario, Set<Long> idsStatus) {
         User user = userSearchRepository.findByLogin(SecurityUtils.getCurrentUserLogin());
         Set<Long> equipesIds = getIdEquipes(user);
         Set<Long> organicoesIds = (organizacao != null && organizacao.size() > 0) ? organizacao : getIdOrganizacoes(user);
         BoolQueryBuilder qb = QueryBuilders.boolQuery();
-        bindFilterSearch(identificador, sistema, metodo, usuario, equipe, equipesIds, organicoesIds, idsStatus, isDivergence, qb);
+        bindFilterSearch(identificador, sistema, metodo, usuario, equipe, equipesIds, organicoesIds, idsStatus, qb);
         return qb;
     }
+
+    public BoolQueryBuilder getBoolQueryBuilderDivergence(String identificador, Set<Long> sistema, Set<Long> organizacao) {
+        User user = userSearchRepository.findByLogin(SecurityUtils.getCurrentUserLogin());
+        Set<Long> equipesIds = getIdEquipes(user);
+        Set<Long> organicoesIds = (organizacao != null && organizacao.size() > 0) ? organizacao : getIdOrganizacoes(user);
+        BoolQueryBuilder qb = QueryBuilders.boolQuery();
+        bindFilterSearchDivergence(identificador, sistema, organicoesIds, equipesIds, qb);
+        return qb;
+    }
+
 
     public void saveAnaliseCompartilhada(Set<Compartilhada> lstCompartilhadas) {
         if (lstCompartilhadas != null && lstCompartilhadas.size() > 0) {
@@ -521,6 +575,7 @@ public class AnaliseService extends BaseService {
         }
         return new Analise();
     }
+
     @Transactional
     public Analise generateDivergence(Analise analisePricinpal, Analise  analiseSecundaria, Status status){
         Analise analiseDivergencia = bindAnaliseDivegernce(analisePricinpal, analiseSecundaria, status);
@@ -584,6 +639,7 @@ public class AnaliseService extends BaseService {
         analise = analiseSearchRepository.save(analise);
         return analise;
     }
+
     public Analise updateDivergenceAnalise(Analise analise) {
         updatePf(analise);
         analise.setIdentificadorAnalise(analise.getId().toString());

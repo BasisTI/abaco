@@ -208,6 +208,7 @@ public class Analise implements Serializable, ReportObject {
     private Analise analiseDivergence;
 
     @OneToMany(mappedBy = "analiseDivergence")
+    @Field(type = FieldType.Nested, ignoreFields = {"analisesComparadas", "manual", "esforcoFases", "escopo", "dataHomologacao", "documentacao", "fronteiras", "users"})
     private Set<Analise> analisesComparadas = new HashSet<>();
 
 
