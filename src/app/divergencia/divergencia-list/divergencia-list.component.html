@@ -105,7 +105,7 @@
                                         <div class="ui-g">
                                             <div class="ui-g-12 ui-md-6" *ngFor="let comp of rowData.analisesComparadas">
                                                 <div class="ui-g-12">
-                                                    <b>id:</b> {{comp.id}}
+                                                    <b>Equipe:</b>{{comp.equipeResponsavel.nome}}
                                                 </div>
                                                 <div class="ui-g-12">
                                                     <b>Identificador:</b>{{comp.identificadorAnalise}}
@@ -114,7 +114,10 @@
                                                     <b>Número Os.:</b>{{comp.numeroOs}}
                                                 </div>
                                                 <div class="ui-g-12">
-                                                    <b>Tipo Equipe:</b>{{comp.equipeResponsavel.nome}}
+                                                    <b>PF Total:</b>{{comp.pfTotal}}
+                                                </div>
+                                                <div class="ui-g-12">
+                                                    <b>PF Ajustado:</b>{{comp.adjustPFTotal}}
                                                 </div>
                                             </div>
                                         </div>

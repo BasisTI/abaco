@@ -18,7 +18,7 @@ import { LazyLoadEvent } from 'primeng';
 @Injectable()
 export class DivergenciaService {
 
-    resourceUrl = environment.apiUrl + '/analises';
+    resourceUrl = environment.apiUrl + '/divergencia';
 
     relatoriosUrl = environment.apiUrl + '/relatorioPdfBrowser';
 

@@ -607,8 +607,7 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
 
     private verifyDataRequire(): boolean {
         let retorno = true;
-
-        if (!this.seletedFuncaoDados.name) {
+        if (!(this.seletedFuncaoDados.name) && !(this.multiplos && this.text)) {
             this.nomeInvalido = true;
             retorno = false;
         } else {

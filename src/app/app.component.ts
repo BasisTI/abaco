@@ -76,7 +76,7 @@ export class AppComponent implements AfterViewInit, OnDestroy, OnInit {
                 items: [
                     { label: 'Análise', routerLink: 'analise', icon: 'description' },
                     { label: 'Baseline', routerLink: 'baseline', icon: 'view_list' },
-                    { label: 'Divergência', routerLink: 'divergencia', icon: 'gavel' },
+                    { label: 'Divergência', routerLink: 'divergencia', icon: 'compare_arrows' },
                 ]
             }
         ];

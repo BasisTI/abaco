@@ -41,7 +41,7 @@ export class DivergenciaListComponent implements OnInit {
 
     allColumnsTable = [
         {field: 'organizacao.nome',  header: 'Organização'},
-        {field: 'identificadorAnalise',  header: 'Identificador'},
+        {field: 'identificadorAnalise',  header: 'Identificador da Divergência'},
         {field: 'sistema.nome',  header: 'Sistema'},
         {field: 'metodoContagem',  header: 'Metodo Contagem'},
         {field: 'pfTotal',  header: 'PF total'},
@@ -180,7 +180,7 @@ export class DivergenciaListComponent implements OnInit {
     public changeUrl() {
         let querySearch = '&isDivergence=true';
         querySearch = querySearch.concat((this.searchDivergence.identificadorAnalise) ?
-            `&dentificador=*${this.searchDivergence.identificadorAnalise}*` : '');
+            `&identificador=*${this.searchDivergence.identificadorAnalise}*` : '');
         querySearch = querySearch.concat((this.searchDivergence.sistema && this.searchDivergence.sistema.id) ?
             `&sistema=${this.searchDivergence.sistema.id}` : '');
         querySearch = querySearch.concat((this.searchDivergence.organizacao && this.searchDivergence.organizacao.id) ?
