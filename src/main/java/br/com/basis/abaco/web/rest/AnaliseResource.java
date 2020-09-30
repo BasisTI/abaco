@@ -82,6 +82,7 @@ import java.util.Set;
 @RequestMapping("/api")
 public class AnaliseResource {
 
+    public static final String API_ANALISES = "/api/analises/";
     private final Logger log = LoggerFactory.getLogger(AnaliseResource.class);
     private static final String ENTITY_NAME = "analise";
     private static final String PAGE = "page";
@@ -144,7 +145,7 @@ public class AnaliseResource {
         analiseRepository.save(analise);
         AnaliseEditDTO analiseEditDTO = analiseService.convertToAnaliseEditDTO(analise);
         analiseSearchRepository.save(analiseService.convertToEntity(analiseService.convertToDto(analise)));
-        return ResponseEntity.created(new URI("/api/analises/" + analise.getId()))
+        return ResponseEntity.created(new URI(API_ANALISES + analise.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, analise.getId().toString())).body(analiseEditDTO);
     }
 
@@ -438,7 +439,7 @@ public class AnaliseResource {
         SearchQuery searchQuery = new NativeSearchQueryBuilder().withQuery(qb).withPageable(pageable).withSort(sortBuilder).build();
         Page<Analise> page = elasticsearchTemplate.queryForPage(searchQuery, Analise.class);
         Page<AnaliseDTO> dtoPage = page.map(analise -> analiseService.convertToDto(analise));
-        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/analises/");
+        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, API_ANALISES);
         return new ResponseEntity<>(dtoPage.getContent(), headers, HttpStatus.OK);
     }
 
@@ -542,7 +543,7 @@ public class AnaliseResource {
         SearchQuery searchQuery = new NativeSearchQueryBuilder().withQuery(qb).withPageable(pageable).withSort(sortBuilder).build();
         Page<Analise> page = elasticsearchTemplate.queryForPage(searchQuery, Analise.class);
         Page<AnaliseDTO> dtoPage = page.map(analise -> analiseService.convertToDto(analise));
-        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/analises/");
+        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, API_ANALISES);
         return new ResponseEntity<>(dtoPage.getContent(), headers, HttpStatus.OK);
     }
 
