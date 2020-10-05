@@ -3,7 +3,9 @@ package br.com.basis.abaco.web.rest;
 import br.com.basis.abaco.domain.PEAnalitico;
 import br.com.basis.abaco.repository.PEAnaliticoRepository;
 import br.com.basis.abaco.security.AuthoritiesConstants;
+import br.com.basis.abaco.service.PEAnaliticoService;
 import br.com.basis.abaco.service.dto.DropdownFuncaoDadosDTO;
+import br.com.basis.abaco.service.dto.PEAnaliticoDTO;
 import com.codahale.metrics.annotation.Timed;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,12 +22,14 @@ import java.util.stream.Collectors;
 public class PEAnaliticoResource {
 
     private final PEAnaliticoRepository peAnaliticoRepository;
+    private final PEAnaliticoService peAnaliticoService;
+    public final String FUNCAO_DADOS = "fd";
+    public final String FUNCAO_TRANSACAO = "ft";
 
-    private final String FUNCAO_DADOS = "fd";
-    private final String FUNCAO_TRANSACAO = "ft";
 
-    public PEAnaliticoResource(PEAnaliticoRepository peAnaliticoRepository) {
+    public PEAnaliticoResource(PEAnaliticoRepository peAnaliticoRepository, PEAnaliticoService peAnaliticoService) {
         this.peAnaliticoRepository = peAnaliticoRepository;
+        this.peAnaliticoService = peAnaliticoService;
     }
 
     @GetMapping("/peanalitico/{tipo}")
@@ -44,33 +48,18 @@ public class PEAnaliticoResource {
         return peAnaliticos.stream().map(this::convertToDto).collect(Collectors.toSet());
     }
 
-    @GetMapping("/peanalitico/funcaoTransacao/{idModulo}")
+    @GetMapping("/peanalitico/funcaoTransacao/{idSistema}")
     @Timed
     @Secured({AuthoritiesConstants.ADMIN, AuthoritiesConstants.USER, AuthoritiesConstants.GESTOR, AuthoritiesConstants.ANALISTA})
-    public Set<PEAnalitico> getFuncaoTransacaoByModuloOrFuncionalidade(@PathVariable Long idModulo, @RequestParam(required = false) Long idFuncionalidade) {
-        Set<PEAnalitico> peAnaliticos;
-
-        if (idFuncionalidade != null && idFuncionalidade > 0) {
-            peAnaliticos = peAnaliticoRepository.findAllByIdFuncionalidadeAndTipoOrderByName(idFuncionalidade, FUNCAO_TRANSACAO);
-        } else {
-            peAnaliticos = peAnaliticoRepository.findAllByIdModuloAndTipoOrderByName(idModulo, FUNCAO_TRANSACAO);
-        }
-        return peAnaliticos;
+    public Set<PEAnaliticoDTO> getFuncaoTransacaoByModuloOrFuncionalidade(@RequestParam(required = false) Long idModulo, @RequestParam(required = false) Long idFuncionalidade, @RequestParam(required = false) String name, @PathVariable(required = false) Long idSistema) {
+        return this.peAnaliticoService.getPeAnaliticoDTOS(idModulo, idFuncionalidade, name, idSistema, FUNCAO_TRANSACAO);
     }
 
-
-    @GetMapping("/peanalitico/funcaoDados/{idModulo}")
+    @GetMapping("/peanalitico/funcaoDados/{idSistema}")
     @Timed
     @Secured({AuthoritiesConstants.ADMIN, AuthoritiesConstants.USER, AuthoritiesConstants.GESTOR, AuthoritiesConstants.ANALISTA})
-    public Set<PEAnalitico> getFuncaoDadosyModuloOrFuncionalidade(@PathVariable Long idModulo, @RequestParam(required = false) Long idFuncionalidade) {
-        Set<PEAnalitico> peAnaliticos;
-
-        if (idFuncionalidade != null && idFuncionalidade > 0) {
-            peAnaliticos = peAnaliticoRepository.findAllByIdFuncionalidadeAndTipoOrderByName(idFuncionalidade, FUNCAO_DADOS);
-        } else {
-            peAnaliticos = peAnaliticoRepository.findAllByIdModuloAndTipoOrderByName(idModulo, FUNCAO_DADOS);
-        }
-        return peAnaliticos;
+    public Set<PEAnaliticoDTO> getFuncaoDadosyModuloOrFuncionalidade(@RequestParam(required = false) Long idModulo, @RequestParam(required = false) Long idFuncionalidade, @RequestParam(required = false) String name, @PathVariable(required = false) Long idSistema) {
+        return this.peAnaliticoService.getPeAnaliticoDTOS(idModulo, idFuncionalidade, name, idSistema, FUNCAO_DADOS);
     }
 
     private DropdownFuncaoDadosDTO convertToDto(PEAnalitico peAnalitico) {
