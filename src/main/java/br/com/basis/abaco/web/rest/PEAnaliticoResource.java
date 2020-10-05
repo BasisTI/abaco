@@ -23,8 +23,7 @@ public class PEAnaliticoResource {
 
     private final PEAnaliticoRepository peAnaliticoRepository;
     private final PEAnaliticoService peAnaliticoService;
-    public final String FUNCAO_DADOS = "fd";
-    public final String FUNCAO_TRANSACAO = "ft";
+    private final String FUNCAO_DADOS = "fd";
 
 
     public PEAnaliticoResource(PEAnaliticoRepository peAnaliticoRepository, PEAnaliticoService peAnaliticoService) {
@@ -52,14 +51,14 @@ public class PEAnaliticoResource {
     @Timed
     @Secured({AuthoritiesConstants.ADMIN, AuthoritiesConstants.USER, AuthoritiesConstants.GESTOR, AuthoritiesConstants.ANALISTA})
     public Set<PEAnaliticoDTO> getFuncaoTransacaoByModuloOrFuncionalidade(@RequestParam(required = false) Long idModulo, @RequestParam(required = false) Long idFuncionalidade, @RequestParam(required = false) String name, @PathVariable(required = false) Long idSistema) {
-        return this.peAnaliticoService.getPeAnaliticoDTOS(idModulo, idFuncionalidade, name, idSistema, FUNCAO_TRANSACAO);
+        return this.peAnaliticoService.getPeAnaliticoDTOS(idModulo, idFuncionalidade, name, idSistema, "ft");
     }
 
     @GetMapping("/peanalitico/funcaoDados/{idSistema}")
     @Timed
     @Secured({AuthoritiesConstants.ADMIN, AuthoritiesConstants.USER, AuthoritiesConstants.GESTOR, AuthoritiesConstants.ANALISTA})
     public Set<PEAnaliticoDTO> getFuncaoDadosyModuloOrFuncionalidade(@RequestParam(required = false) Long idModulo, @RequestParam(required = false) Long idFuncionalidade, @RequestParam(required = false) String name, @PathVariable(required = false) Long idSistema) {
-        return this.peAnaliticoService.getPeAnaliticoDTOS(idModulo, idFuncionalidade, name, idSistema, FUNCAO_DADOS);
+        return this.peAnaliticoService.getPeAnaliticoDTOS(idModulo, idFuncionalidade, name, idSistema, "fd");
     }
 
     private DropdownFuncaoDadosDTO convertToDto(PEAnalitico peAnalitico) {
