@@ -6,12 +6,13 @@ import { OrganizacaoService, Organizacao } from '../../organizacao';
 import { Sistema } from '../sistema.model';
 import { SistemaService } from '../sistema.service';
 import { Modulo } from 'src/app/modulo';
-import { Funcionalidade } from 'src/app/funcionalidade';
+import { Funcionalidade, funcionalidadeRoute, FuncionalidadeService } from 'src/app/funcionalidade';
 import { PageNotificationService, DatatableClickEvent } from '@nuvem/primeng-components';
+import { BlockUiService } from '@nuvem/angular-base';
 
 
 @Component({
-    selector: 'jhi-sistema-form',
+    selector: 'app-sistema-form',
     templateUrl: './sistema-form.component.html',
     providers: [ConfirmationService]
 })
@@ -50,6 +51,8 @@ export class SistemaFormComponent implements OnInit, OnDestroy {
         private organizacaoService: OrganizacaoService,
         private confirmationService: ConfirmationService,
         private pageNotificationService: PageNotificationService,
+        private funcionalidadeService: FuncionalidadeService,
+        private blockUiService: BlockUiService,
     ) {
     }
 
@@ -57,16 +60,20 @@ export class SistemaFormComponent implements OnInit, OnDestroy {
 
     ngOnInit() {
         this.isSaving = false;
+        this.blockUiService.show();
         this.organizacaoService.dropDownActive().subscribe(response => {
             this.organizacoes = response;
             this.organizacoes.push(new Organizacao());
+            this.blockUiService.hide();
         });
         this.routeSub = this.route.params.subscribe(params => {
             if (params['id']) {
+                this.blockUiService.show();
                 this.sistemaService.find(params['id']).subscribe(
                     sistema => {
-                        this.sistema = Sistema.fromJSON(sistema)
-                })
+                        this.sistema = Sistema.fromJSON(sistema);
+                        this.blockUiService.hide();
+                });
             }
         });
     }
@@ -84,8 +91,8 @@ export class SistemaFormComponent implements OnInit, OnDestroy {
                 this.moduloEmEdicao = event.selection.clone();
                 this.confirmDeleteModulo();
                 break;
-            default:  
-                break; 
+            default:
+                break;
         }
     }
     datatableClickFuncionalidade(event: DatatableClickEvent) {
@@ -102,8 +109,8 @@ export class SistemaFormComponent implements OnInit, OnDestroy {
                 this.funcionalidadeEmEdicao = event.selection.clone();
                 this.confirmDeleteFuncionalidade();
                 break;
-            default: 
-                break; 
+            default:
+                break;
         }
     }
 
@@ -128,6 +135,7 @@ export class SistemaFormComponent implements OnInit, OnDestroy {
     }
 
     confirmDeleteModulo() {
+        this.blockUiService.show();
         this.confirmationService.confirm({
             message: 'Tem certeza que deseja excluir o módulo ' + this.moduloEmEdicao.nome + ' ?',
             accept: () => {
@@ -237,12 +245,19 @@ export class SistemaFormComponent implements OnInit, OnDestroy {
     }
 
     confirmDeleteFuncionalidade() {
-        this.confirmationService.confirm({
-            message: 'Tem certeza que deseja excluir a funcionalidade'+ this.funcionalidadeEmEdicao.nome +
-           + ' do módulo '+ this.funcionalidadeEmEdicao.modulo.nome + ' ?',
-            accept: () => {
-                this.sistema.deleteFuncionalidade(this.funcionalidadeEmEdicao);
-                this.moduloEmEdicao = new Modulo();
+        this.funcionalidadeService.getTotalFunction(this.funcionalidadeEmEdicao.id)
+        .subscribe(totalFuncoes => {
+            if (totalFuncoes <= 0) {
+                this.confirmationService.confirm({
+                    message: 'Tem certeza que deseja excluir a funcionalidade' + this.funcionalidadeEmEdicao.nome +
+                    + ' do módulo ' + this.funcionalidadeEmEdicao.modulo.nome + ' ?',
+                    accept: () => {
+                        this.sistema.deleteFuncionalidade(this.funcionalidadeEmEdicao);
+                        this.moduloEmEdicao = new Modulo();
+                    }
+                });
+            } else {
+                this.pageNotificationService.addErrorMessage('Não é possível excluir a Funcionalidade selecionada.');
             }
         });
     }

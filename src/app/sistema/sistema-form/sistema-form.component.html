@@ -131,6 +131,7 @@
                             [enableScroll]="false"
                             (onRowEditEvent)="onRowEditEvent($event)"
                             editMode="row"
+                            [rows]="20"
                             #datatableModulo>
                         <p-column header="Código"
                                     [style]="{width: '25%'}">
@@ -167,7 +168,9 @@
                             disableClone="true"
                             [enableScroll]="false"
                             (onRowEditEvent)="onRowEditEvent($event)"
+                            [select]="single"
                             editMode="row"
+                            [rows]="20"
                             #datatableFuncionaliadade
                             >
                         <p-column header="Módulo" field="modulo.nome">

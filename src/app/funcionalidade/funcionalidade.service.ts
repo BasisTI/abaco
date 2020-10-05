@@ -113,4 +113,8 @@ export class FuncionalidadeService {
         const copy: Funcionalidade = Object.assign({}, funcionalidade);
         return copy;
     }
+
+    getTotalFunction(id: number): Observable<Number> {
+      return this.http.get<Number>(`${this.resourceUrl}/total-functions/${id}`);
+    }
 }
