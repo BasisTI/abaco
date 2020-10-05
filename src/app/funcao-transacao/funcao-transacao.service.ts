@@ -88,8 +88,8 @@ export class FuncaoTransacaoService {
         return this.http.get<FuncaoTransacao>(url);
     }
 
-    public getFuncaoTransacaoByModuloOrFuncionalidade(idModulo: Number, idFuncionalida: Number = 0 ): Observable<any[]> {
-        const url = `${this.resourceUrlPEAnalitico}funcaoTransacao/${idModulo}?idFuncionalidade=${idFuncionalida}`;
+    public getFuncaoTransacaoByModuloOrFuncionalidade(idSistema: Number, nome?: String, idModulo?: Number, idFuncionalidade?: Number): Observable<any[]> {
+        const url = `${this.resourceUrlPEAnalitico}funcaoTransacao/${idSistema}?name=${nome}&idModulo=${idModulo}&idFuncionalidade=${idFuncionalidade}`;
         return this.http.get<[]>(url);
     }
     public getVwFuncaoTransacaoByIdAnalise(id: Number): Observable<any[]> {

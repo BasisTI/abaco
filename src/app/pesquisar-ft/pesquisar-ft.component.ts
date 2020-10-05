@@ -24,7 +24,11 @@ import { DatatableComponent, PageNotificationService } from '@nuvem/primeng-comp
 import { AnaliseSharedDataService } from '../shared/analise-shared-data.service';
 import { BlockUiService } from '@nuvem/angular-base';
 import { FuncaoDados } from '../funcao-dados';
-import { Rlr } from '../rlr/rlr.model';
+import { FileSaver } from 'file-saver';
+import { saveAs } from 'file-saver';
+import * as XLSX from 'xlsx';
+import jsPDF from 'jspdf';
+import 'jspdf-autotable';
 
 @Component({
     selector: 'app-pesquisar-ft',
@@ -99,17 +103,23 @@ export class PesquisarFtComponent implements OnInit {
 
     quantidadeINM = 1;
 
-    moduloSelecionado: Modulo;
+    moduloSelecionado: Modulo = new Modulo();
 
-    funcionalidadeAtual: Funcionalidade;
+    funcionalidadeAtual: Funcionalidade = new Funcionalidade();
 
-    funcionalidadeSelecionada: Funcionalidade;
+    funcionalidadeSelecionada: Funcionalidade = new Funcionalidade();
 
     basilineAnaliticosList: any;
 
     erroUnitario = false;
 
     deflaPadrao: SelectItem = {label: 'Não Alterar', value: 'original-bAsis'};
+
+    nameSearch: String;
+
+    cols: any[];
+
+    exportColumns: any[];
 
 
     constructor(
@@ -132,6 +142,13 @@ export class PesquisarFtComponent implements OnInit {
         this.inicializaValoresAposCarregamento();
         this.analiseSharedDataService.analiseCarregada();
         this.estadoInicial();
+        this.cols = [
+            { field: 'nome', header: 'Módulo' },
+            { field: 'nomeFuncionalidade', header: 'Funcionalidade' },
+            { field: 'name', header: 'Nome' },
+            { field: 'classificacao', header: 'Classificação' }
+        ];
+        this.exportColumns = this.cols.map(col => ({title: col.header, dataKey: col.field}));
     }
 
     tiposAnalise: SelectItem[] = [
@@ -325,7 +342,7 @@ export class PesquisarFtComponent implements OnInit {
             const moduloId = modulo.id;
             this.funcionalidadeService.findFuncionalidadesDropdownByModulo(moduloId).subscribe((funcionalidades: Funcionalidade[]) => {
                 this.funcionalidades = funcionalidades;
-                this.funcionalidadeAtual = null;
+                this.funcionalidadeAtual = new Funcionalidade();
             });
         }
     }
@@ -335,192 +352,169 @@ export class PesquisarFtComponent implements OnInit {
     }
 
     private deselecionaFuncionalidadeSeModuloSelecionadoForDiferente() {
-        if (this.moduloSelecionado !== undefined) {
-            if (this.moduloSelecionado.id !== this.oldModuloSelectedId) {
-                this.funcionalidadeSelecionada = null;
-            }
+        if (this.moduloSelecionado && this.moduloSelecionado.id !== this.oldModuloSelectedId) {
+                this.funcionalidadeSelecionada = new Funcionalidade();
         }
-
     }
 
 
     performSearch() {
-        if (this.moduloSelecionado === undefined) {
-            this.modPesquisa = false;
-        } else {
-            this.modPesquisa = true;
-        }
-        if (this.funcionalidadeAtual === undefined) {
-            this.funcPesquisa = false;
-        } else {
-            this.funcPesquisa = true;
-        }
         this.recarregarDataTable();
     }
 
     montarFuncoes() {
-        if (!(this.isFuncaoDados)) {
-            const getFuncaoTransacoes: Observable<FuncaoTransacao>[] = [];
-            const saveFuncaoTransacoes: Observable<FuncaoTransacao>[] = [];
-            if (!(this.novoDeflator)) {
-                this.deflaPesquisa = false;
-            } else if (this.novoDeflator.tipoAjuste === 'UNITARIO' && this.quantidadeINM <= 0 ) {
-                this.erroUnitario = true;
-            } else {
-                this.erroUnitario = false;
-                this.deflaPesquisa = true;
-                this.selections.forEach(ft => {
-                    this.blockUiService.show();
-                    getFuncaoTransacoes.push(this.funcaoTransacaoService.getById(ft.idfuncaodados));
-                });
-                forkJoin(getFuncaoTransacoes).subscribe(result => {
-                    result.forEach(funcaoTransacaoResp => {
-                        funcaoTransacaoResp['id'] = undefined;
-                        if (this.analise.metodoContagem === 'ESTIMADA' || this.analise.metodoContagem === 'INDICATIVA') {
-                            funcaoTransacaoResp.ders = [];
-                            funcaoTransacaoResp.alrs = [];
-                        } else {
-                            funcaoTransacaoResp.ders.forEach(vd => {
-                                vd.id = undefined;
-                            });
-                            funcaoTransacaoResp.alrs.forEach(vd => {
-                                vd.id = undefined;
-                            });
-                        }
-                        if (this.novoDeflator != null) {
-                            funcaoTransacaoResp.fatorAjuste = this.novoDeflator;
-                            if (this.novoDeflator.tipoAjuste === 'UNITARIO') {
-                                funcaoTransacaoResp.quantidade = this.quantidadeINM;
-                            }
-                            funcaoTransacaoResp = new FuncaoTransacao().copyFromJSON(funcaoTransacaoResp);
-                            funcaoTransacaoResp = CalculadoraTransacao.calcular(
-                                this.analise.metodoContagem,
-                                funcaoTransacaoResp,
-                                this.analise.manual);
-                        }
-                        this.validaCamposObrigatorios();
-                        if (this.verificarCamposObrigatorios()) {
-                            this.blockUiService.show();
-                            saveFuncaoTransacoes.push(this.funcaoTransacaoService.create(funcaoTransacaoResp, this.analise.id));
-                        }
-                    });
-                forkJoin(saveFuncaoTransacoes).subscribe(
-                        response => {
-                            response.forEach(() => {
-                                this.pageNotificationService.addSuccessMessage(
-                                    this.isEdit ? this.getLabel('Informe o campo Identificador da Analise para continuar') :
-                                        this.getLabel('Dados alterados com sucesso!'));
-                                this.diasGarantia = this.analise.contrato.diasDeGarantia;
-                            });
-                        this.analiseService.updateSomaPf(this.analise.id).subscribe();
-                        this.blockUiService.hide();
-                        this.retornarParaTelaDeFT();
-                    });
-
-                });
-            }
+        if (!(this.novoDeflator)) {
+            this.deflaPesquisa = false;
+            this.pageNotificationService.addErrorMessage('Deflator é um campo obrigatório.');
+        } else if (this.novoDeflator.tipoAjuste === 'UNITARIO' && this.quantidadeINM <= 0 ) {
+            this.erroUnitario = true;
+        } else if (!(this.selections) || this.selections.length <= 0 ) {
+            this.pageNotificationService.addErrorMessage('É obrigatório selecionar uma Função.');
         } else {
-            const getFuncaoDados: Observable<FuncaoDados>[] = [];
-            const saveFuncaoDados: Observable<FuncaoDados>[] = [];
-            if (!(this.novoDeflator)) {
-                this.deflaPesquisa = false;
-            } else if (this.novoDeflator.tipoAjuste === 'UNITARIO' && this.quantidadeINM <= 0 ) {
-                this.erroUnitario = true;
-            } else {
-                this.erroUnitario = false;
-                this.deflaPesquisa = true;
-                this.selections.forEach(ft => {
-                    this.blockUiService.show();
-                    getFuncaoDados.push(this.funcaoDadosService.getById(ft.idfuncaodados));
-                });
-                forkJoin(getFuncaoDados).subscribe(result => {
-                    result.forEach(funcaoDadosResp => {
-                        funcaoDadosResp['id'] = undefined;
-                        if (this.analise.metodoContagem === 'ESTIMADA' || this.analise.metodoContagem === 'INDICATIVA') {
-                            funcaoDadosResp.ders = [];
-                            funcaoDadosResp.rlrs = [];
-                        } else {
-                            funcaoDadosResp.ders.forEach(der => {
-                                der.id = undefined;
-                            });
-                            funcaoDadosResp.rlrs.forEach(rlr => {
-                                rlr.id = undefined;
-                            });
-                        }
-                        if (this.novoDeflator != null) {
-                            funcaoDadosResp.fatorAjuste = this.novoDeflator;
-                            if (this.novoDeflator.tipoAjuste === 'UNITARIO') {
-                                funcaoDadosResp.quantidade = this.quantidadeINM;
+            if (!(this.isFuncaoDados)) {
+                const getFuncaoTransacoes: Observable<FuncaoTransacao>[] = [];
+                const saveFuncaoTransacoes: Observable<FuncaoTransacao>[] = [];
+                    this.erroUnitario = false;
+                    this.deflaPesquisa = true;
+                    this.selections.forEach(ft => {
+                        this.blockUiService.show();
+                        getFuncaoTransacoes.push(this.funcaoTransacaoService.getById(ft.idfuncaodados));
+                    });
+                    forkJoin(getFuncaoTransacoes).subscribe(result => {
+                        result.forEach(funcaoTransacaoResp => {
+                            funcaoTransacaoResp['id'] = undefined;
+                            if (this.analise.metodoContagem === 'ESTIMADA' || this.analise.metodoContagem === 'INDICATIVA') {
+                                funcaoTransacaoResp.ders = [];
+                                funcaoTransacaoResp.alrs = [];
+                            } else {
+                                funcaoTransacaoResp.ders.forEach(vd => {
+                                    vd.id = undefined;
+                                });
+                                funcaoTransacaoResp.alrs.forEach(vd => {
+                                    vd.id = undefined;
+                                });
                             }
-                            funcaoDadosResp = new FuncaoDados().copyFromJSON(funcaoDadosResp);
-                            funcaoDadosResp = Calculadora.calcular(
-                                this.analise.metodoContagem,
-                                funcaoDadosResp,
-                                this.analise.manual);
-                        }
-                        this.validaCamposObrigatorios();
-                        if (this.verificarCamposObrigatorios()) {
-                            this.blockUiService.show();
-                            saveFuncaoDados.push(this.funcaoDadosService.create(funcaoDadosResp, this.analise.id));
-                        }
-                    });
-                forkJoin(saveFuncaoDados).subscribe(
-                        response => {
-                            response.forEach(() => {
-                                this.pageNotificationService.addSuccessMessage(
-                                    this.isEdit ? this.getLabel('Informe o campo Identificador da Analise para continuar') :
-                                        this.getLabel('Dados alterados com sucesso!'));
-                                this.diasGarantia = this.analise.contrato.diasDeGarantia;
-                            });
-                        this.analiseService.updateSomaPf(this.analise.id).subscribe();
-                        this.blockUiService.hide();
-                    });
+                            if (this.novoDeflator != null) {
+                                funcaoTransacaoResp.fatorAjuste = this.novoDeflator;
+                                if (this.novoDeflator.tipoAjuste === 'UNITARIO') {
+                                    funcaoTransacaoResp.quantidade = this.quantidadeINM;
+                                }
+                                funcaoTransacaoResp = new FuncaoTransacao().copyFromJSON(funcaoTransacaoResp);
+                                funcaoTransacaoResp = CalculadoraTransacao.calcular(
+                                    this.analise.metodoContagem,
+                                    funcaoTransacaoResp,
+                                    this.analise.manual);
+                            }
+                            this.validaCamposObrigatorios();
+                            if (this.verificarCamposObrigatorios()) {
+                                this.blockUiService.show();
+                                saveFuncaoTransacoes.push(this.funcaoTransacaoService.create(funcaoTransacaoResp, this.analise.id));
+                            }
+                        });
+                    forkJoin(saveFuncaoTransacoes).subscribe(
+                            response => {
+                                response.forEach(() => {
+                                    this.pageNotificationService.addSuccessMessage(
+                                        this.isEdit ? this.getLabel('Informe o campo Identificador da Analise para continuar') :
+                                            this.getLabel('Dados alterados com sucesso!'));
+                                    this.diasGarantia = this.analise.contrato.diasDeGarantia;
+                                });
+                            this.analiseService.updateSomaPf(this.analise.id).subscribe();
+                            this.blockUiService.hide();
+                            this.retornarParaTelaDeFT();
+                        });
 
-                });
+                    });
+            } else {
+                const getFuncaoDados: Observable<FuncaoDados>[] = [];
+                const saveFuncaoDados: Observable<FuncaoDados>[] = [];
+                    this.erroUnitario = false;
+                    this.deflaPesquisa = true;
+                    this.selections.forEach(ft => {
+                        this.blockUiService.show();
+                        getFuncaoDados.push(this.funcaoDadosService.getById(ft.idfuncaodados));
+                    });
+                    forkJoin(getFuncaoDados).subscribe(result => {
+                        result.forEach(funcaoDadosResp => {
+                            funcaoDadosResp['id'] = undefined;
+                            if (this.analise.metodoContagem === 'ESTIMADA' || this.analise.metodoContagem === 'INDICATIVA') {
+                                funcaoDadosResp.ders = [];
+                                funcaoDadosResp.rlrs = [];
+                            } else {
+                                funcaoDadosResp.ders.forEach(der => {
+                                    der.id = undefined;
+                                });
+                                funcaoDadosResp.rlrs.forEach(rlr => {
+                                    rlr.id = undefined;
+                                });
+                            }
+                            if (this.novoDeflator != null) {
+                                funcaoDadosResp.fatorAjuste = this.novoDeflator;
+                                if (this.novoDeflator.tipoAjuste === 'UNITARIO') {
+                                    funcaoDadosResp.quantidade = this.quantidadeINM;
+                                }
+                                funcaoDadosResp = new FuncaoDados().copyFromJSON(funcaoDadosResp);
+                                funcaoDadosResp = Calculadora.calcular(
+                                    this.analise.metodoContagem,
+                                    funcaoDadosResp,
+                                    this.analise.manual);
+                            }
+                            this.validaCamposObrigatorios();
+                            if (this.verificarCamposObrigatorios()) {
+                                this.blockUiService.show();
+                                saveFuncaoDados.push(this.funcaoDadosService.create(funcaoDadosResp, this.analise.id));
+                            }
+                        });
+                    forkJoin(saveFuncaoDados).subscribe(
+                            response => {
+                                response.forEach(() => {
+                                    this.pageNotificationService.addSuccessMessage(
+                                        this.isEdit ? this.getLabel('Informe o campo Identificador da Analise para continuar') :
+                                            this.getLabel('Dados alterados com sucesso!'));
+                                    this.diasGarantia = this.analise.contrato.diasDeGarantia;
+                                });
+                            this.analiseService.updateSomaPf(this.analise.id).subscribe();
+                            this.blockUiService.hide();
+                        });
+
+                    });
             }
         }
     }
 
     public recarregarDataTable() {
+        this.funcionalidadeAtual.id = this.funcionalidadeAtual && this.funcionalidadeAtual.id ? this.funcionalidadeAtual.id : 0;
+        this.moduloSelecionado.id = this.moduloSelecionado && this.moduloSelecionado.id ? this.moduloSelecionado.id : 0;
+        this.nameSearch = this.nameSearch ? this.nameSearch : '';
         if (this.isFuncaoDados) {
-            if ((this.moduloSelecionado !== null) && (this.funcionalidadeAtual === null)) {
-                this.blockUiService.show();
-                this.funcaoDadosService.getFuncaoDadosByModuloOrFuncionalidade(this.moduloSelecionado.id).subscribe(value => {
-                    this.blockUiService.hide();
-                    this.fn = value;
-                });
-            } else if (this.moduloSelecionado !== undefined && this.funcionalidadeAtual !== undefined) {
-                this.blockUiService.show();
-                this.funcaoDadosService.getFuncaoDadosByModuloOrFuncionalidade(this.moduloSelecionado.id, this.funcionalidadeAtual.id)
-                .subscribe(value => {
-                    this.blockUiService.hide();
-                    this.fn = value;
-                });
-            } else {
-                this.getFuncoesTransacoes();
-            }
-
-
+            this.blockUiService.show();
+            this.funcaoDadosService.getFuncaoDadosByModuloOrFuncionalidade(this.analise.sistema.id, this.nameSearch, this.moduloSelecionado.id,  this.funcionalidadeAtual.id)
+            .subscribe(value => {
+                this.blockUiService.hide();
+                this.fn = value;
+            });
         } else {
-
-            if ((this.moduloSelecionado !== null) && (this.funcionalidadeAtual === null)) {
-                this.funcaoTransacaoService.getFuncaoTransacaoByModuloOrFuncionalidade(this.moduloSelecionado.id).subscribe(value => {
-                    this.fn = value;
-                });
-            } else if (this.moduloSelecionado !== undefined && this.funcionalidadeAtual !== undefined) {
-                this.funcaoTransacaoService.getFuncaoTransacaoByModuloOrFuncionalidade(this.moduloSelecionado.id, this.funcionalidadeAtual.id)
-                .subscribe(value => {
-                    this.fn = value;
-                });
-            } else {
-                this.getFuncoesTransacoes();
-            }
+            this.blockUiService.show();
+            this.funcaoTransacaoService.getFuncaoTransacaoByModuloOrFuncionalidade(this.analise.sistema.id, this.nameSearch, this.moduloSelecionado.id,  this.funcionalidadeAtual.id)
+            .subscribe(value => {
+                this.blockUiService.hide();
+                this.fn = value;
+            });
         }
     }
 
-    public limparPesquisa(modDropDown, funcDropDown, deflaDropDown) {
-        this.limparModAndFunc(modDropDown, funcDropDown, deflaDropDown);
-        this.getFuncoesTransacoes();
+    public limparPesquisa() {
+        if (this.moduloSelecionado && this.moduloSelecionado.id) {
+            this.moduloSelecionado = new Modulo();
+        }
+        if (this.funcionalidadeSelecionada && this.funcionalidadeSelecionada.id) {
+            this.funcionalidadeSelecionada = new Funcionalidade();
+        }
+        if (this.funcionalidadeAtual && this.funcionalidadeAtual.id) {
+            this.funcionalidadeAtual = new Funcionalidade();
+        }
+        this.nameSearch = '';
+        this.deflaPadrao = undefined;
     }
 
     save(funcao: FuncaoTransacao) {
@@ -600,10 +594,12 @@ export class PesquisarFtComponent implements OnInit {
 
     mudarDeflator(event: FatorAjuste) {
         this.novoDeflator = event;
-        if (event.tipoAjuste === 'UNITARIO') {
-            this.hideShowQuantidade = false;
-        } else {
-            this.hideShowQuantidade = true;
+        if ( event) {
+            if (event.tipoAjuste === 'UNITARIO') {
+                this.hideShowQuantidade = false;
+            } else {
+                this.hideShowQuantidade = true;
+            }
         }
     }
 
@@ -621,21 +617,42 @@ export class PesquisarFtComponent implements OnInit {
         location.reload();
     }
 
-    limparModAndFunc(modDropDown, funcDropDown, deflaDropDown) {
-        modDropDown.clear(null);
-        funcDropDown.clear(null);
-        deflaDropDown.clear(undefined);
-        this.moduloSelecionado = undefined;
-        this.funcionalidadeSelecionada = undefined;
-        this.deflaPadrao = undefined;
-        this.modPesquisa = true;
-        this.funcPesquisa = true;
-    }
-
     validarFT(funcao: FuncaoTransacao) {
         this.pageNotificationService.addCreateMsg(funcao.name);
         this.analise.addFuncaoTransacao(funcao);
         this.estadoInicial();
         this.save(funcao);
     }
+
+    exportPdf() {
+        if (this.fn && this.fn.length > 0) {
+            const doc = new jsPDF('p', 'pt');
+            doc['autoTable'](this.exportColumns, this.fn);
+            doc.save('funcoes.pdf');
+        } else {
+            this.pageNotificationService.addErrorMessage('Não ha funções para exportar.');
+        }
+
+    }
+
+    exportExcel() {
+        if (this.fn && this.fn.length > 0) {
+            const worksheet = XLSX.utils.json_to_sheet(this.fn);
+            const workbook = { Sheets: { 'data': worksheet }, SheetNames: ['data'] };
+            const excelBuffer: any = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
+            this.saveAsExcelFile(excelBuffer, 'funcoes');
+        } else {
+            this.pageNotificationService.addErrorMessage('Não ha funções para exportar.');
+        }
+    }
+
+    saveAsExcelFile(buffer: any, fileName: string): void {
+        const EXCEL_TYPE = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
+        const EXCEL_EXTENSION = '.xlsx';
+        const data: Blob = new Blob([buffer], {
+            type: EXCEL_TYPE
+        });
+        saveAs(data, fileName + '_export_' + new Date().getTime() + EXCEL_EXTENSION);
+    }
+
 }
