@@ -45,14 +45,7 @@
                     </div>
                     <div class="ui-g-6 ui-md-6 ui-sm-12" style="margin-bottom: 25px">
                         <span class="md-inputfield">
-                            <input
-                                    [disabled]="this.desabilitado()"
-                                    type="text"
-                                    name="loginUser"
-                                    maxlength="99"
-                                    [(ngModel)]="user.login"
-                                    #loginUser='ngModel'
-                                    pInputText required/>
+                            <input [disabled]="this.desabilitado()" type="text" name="loginUser" maxlength="255" [(ngModel)]="user.login" #loginUser='ngModel' pInputText required/>
                             <label >Login *</label>
                             <div *ngIf="editForm.controls['loginUser']
                                     && !this.desabilitado()
@@ -62,11 +55,11 @@
                                     class="ui-message ui-messages-error" >
                                 Campo obrigatório.
                             </div>
-                            </span>
-                                    </div>
+                        </span>
+                    </div>
 
-                                    <div class="ui-g-6 ui-md-6 ui-sm-12" style="margin-bottom: 25px">
-                            <span class="md-inputfield">
+                    <div class="ui-g-6 ui-md-6 ui-sm-12" style="margin-bottom: 25px">
+                        <span class="md-inputfield">
                             <input type="email"
                                     name="email"
                                     [(ngModel)]="user.email"

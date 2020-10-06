@@ -82,7 +82,7 @@
         </div>
         <div class="ui-g-6 ui-md-6 ui-sm-12" style="margin-bottom: 25px">
           <span class="md-inputfield">
-              <input type="email" name="email" [(ngModel)]="tipoEquipe.emailPreposto" pInputText maxlength="100" #email='ngModel' email/>
+              <input type="email" name="emailPreposto" [(ngModel)]="tipoEquipe.emailPreposto" pInputText maxlength="100" #email='ngModel' email/>
               <label>E-mail preposto</label>
               <div *ngIf="editForm.controls['email'] && !editForm.controls['email'].valid && this.tipoEquipe.emailPreposto && (editForm.controls['email'].touched || editForm.submitted)"
                       class="ui-message ui-messages-error">

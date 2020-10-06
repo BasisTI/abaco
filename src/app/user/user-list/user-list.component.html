@@ -31,9 +31,9 @@
                             [showVisibleColumnsControl]="true"
                             #datatable>
 
-                        <p-column header="Nome" field="firstName" [style]="{width:'15%'}" [sortable]="true">
+                        <p-column header="Nome" field="nome" [style]="{width:'15%'}" [sortable]="true">
                             <ng-template let-user="rowData" pTemplate="body">
-                                {{ user.firstName + ' ' + user.lastName }}
+                                {{ user.nome }}
                             </ng-template>
                         </p-column>
 
