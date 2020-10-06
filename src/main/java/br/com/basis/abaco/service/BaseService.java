@@ -19,6 +19,11 @@ public class BaseService {
             qb.must(QueryBuilders.matchPhraseQuery(nameField, valueField));
         }
     }
+    protected void mustMatchWildcardContainsQuery(String valueField, BoolQueryBuilder qb, String nameField) {
+        if (!StringUtils.isEmptyString(valueField)) {
+            qb.must(QueryBuilders.wildcardQuery(nameField, "*" + valueField + "*"));
+        }
+    }
 
     protected void mustMatchQuery(String valueField, BoolQueryBuilder qb, String nameField) {
         if (!StringUtils.isEmptyString(valueField)) {

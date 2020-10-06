@@ -300,9 +300,9 @@ public class UserService extends BaseService {
 
     public BoolQueryBuilder bindFilterSearch(String nome, String login, String email, Long [] organizacao, String[] perfil, Long[] equipeId) {
         BoolQueryBuilder qb = new BoolQueryBuilder();
-        mustMatchFuzzyQuery(nome, qb, "firstName");
-        mustMatchFuzzyQuery(login, qb, "login");
-        mustMatchFuzzyQuery(email, qb, "email");
+        mustMatchWildcardContainsQuery(nome, qb, "nome");
+        mustMatchWildcardContainsQuery(login, qb, "login");
+        mustMatchWildcardContainsQuery(email, qb, "email");
         if(organizacao != null && organizacao.length > 0 ){
             BoolQueryBuilder boolQueryBuilderOrganizacao = QueryBuilders.boolQuery()
             .must(
