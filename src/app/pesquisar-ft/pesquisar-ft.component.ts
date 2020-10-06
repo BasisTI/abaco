@@ -374,11 +374,33 @@ export class PesquisarFtComponent implements OnInit {
             if (!(this.isFuncaoDados)) {
                 const getFuncaoTransacoes: Observable<FuncaoTransacao>[] = [];
                 const saveFuncaoTransacoes: Observable<FuncaoTransacao>[] = [];
-                    this.erroUnitario = false;
-                    this.deflaPesquisa = true;
+                let lstToInclude: Observable<Boolean>[] = [];
+                this.erroUnitario = false;
+                this.deflaPesquisa = true;
+
+                this.selections.forEach(select => {
+                    this.blockUiService.show();
+                    lstToInclude.push(
+                        this.funcaoTransacaoService.existsWithName(
+                            select.name,
+                            this.analise.id,
+                            select.idFuncionalidade,
+                            select.idModulo,
+                            ));
+                });
+                forkJoin(lstToInclude).subscribe(respLStInclude => {
+                    respLStInclude.forEach((include, index) => {
+                        this.selections[index].isInclude = !include;
+                    });
                     this.selections.forEach(ft => {
-                        this.blockUiService.show();
-                        getFuncaoTransacoes.push(this.funcaoTransacaoService.getById(ft.idfuncaodados));
+                        if (ft.isInclude) {
+                            this.blockUiService.show();
+                            getFuncaoTransacoes.push(this.funcaoTransacaoService.getById(ft.idfuncaodados));
+                        } else {
+                            this.pageNotificationService.addErrorMessage(
+                                'Já existe uma função com o nome "' + ft.name +
+                                 '" na funcionalidade "' + ft.nomeFuncionalidade + '".');
+                        }
                     });
                     forkJoin(getFuncaoTransacoes).subscribe(result => {
                         result.forEach(funcaoTransacaoResp => {
@@ -411,29 +433,47 @@ export class PesquisarFtComponent implements OnInit {
                                 saveFuncaoTransacoes.push(this.funcaoTransacaoService.create(funcaoTransacaoResp, this.analise.id));
                             }
                         });
-                    forkJoin(saveFuncaoTransacoes).subscribe(
+                        forkJoin(saveFuncaoTransacoes).subscribe(
                             response => {
-                                response.forEach(() => {
-                                    this.pageNotificationService.addSuccessMessage(
-                                        this.isEdit ? this.getLabel('Informe o campo Identificador da Analise para continuar') :
-                                            this.getLabel('Dados alterados com sucesso!'));
-                                    this.diasGarantia = this.analise.contrato.diasDeGarantia;
+                                response.forEach((ftCreated) => {
+                                    this.pageNotificationService.addCreateMsg(ftCreated.name);
                                 });
                             this.analiseService.updateSomaPf(this.analise.id).subscribe();
                             this.blockUiService.hide();
-                            this.retornarParaTelaDeFT();
                         });
-
                     });
+                });
             } else {
                 const getFuncaoDados: Observable<FuncaoDados>[] = [];
                 const saveFuncaoDados: Observable<FuncaoDados>[] = [];
-                    this.erroUnitario = false;
-                    this.deflaPesquisa = true;
-                    this.selections.forEach(ft => {
-                        this.blockUiService.show();
-                        getFuncaoDados.push(this.funcaoDadosService.getById(ft.idfuncaodados));
+                let lstToInclude: Observable<Boolean>[] = [];
+                this.erroUnitario = false;
+                this.deflaPesquisa = true;
+                this.selections.forEach(select => {
+                    this.blockUiService.show();
+                    lstToInclude.push(
+                        this.funcaoDadosService.existsWithName(
+                            select.name,
+                            this.analise.id,
+                            select.idFuncionalidade,
+                            select.idModulo,
+                            ));
+                });
+                forkJoin(lstToInclude).subscribe(respLStInclude => {
+                    respLStInclude.forEach((include, index) => {
+                        this.selections[index].isInclude = !include;
                     });
+                    this.selections.forEach(ft => {
+                        if (ft.isInclude) {
+                            this.blockUiService.show();
+                            getFuncaoDados.push(this.funcaoDadosService.getById(ft.idfuncaodados));
+                        } else {
+                            this.pageNotificationService.addErrorMessage(
+                                'Já existe uma função com o nome "' + ft.name +
+                                    '" na funcionalidade "' + ft.nomeFuncionalidade + '".');
+                        }
+                    });
+
                     forkJoin(getFuncaoDados).subscribe(result => {
                         result.forEach(funcaoDadosResp => {
                             funcaoDadosResp['id'] = undefined;
@@ -465,18 +505,15 @@ export class PesquisarFtComponent implements OnInit {
                                 saveFuncaoDados.push(this.funcaoDadosService.create(funcaoDadosResp, this.analise.id));
                             }
                         });
-                    forkJoin(saveFuncaoDados).subscribe(
-                            response => {
-                                response.forEach(() => {
-                                    this.pageNotificationService.addSuccessMessage(
-                                        this.isEdit ? this.getLabel('Informe o campo Identificador da Analise para continuar') :
-                                            this.getLabel('Dados alterados com sucesso!'));
-                                    this.diasGarantia = this.analise.contrato.diasDeGarantia;
-                                });
-                            this.analiseService.updateSomaPf(this.analise.id).subscribe();
-                            this.blockUiService.hide();
+                        forkJoin(saveFuncaoDados).subscribe(
+                                response => {
+                                    response.forEach((fdCreated) => {
+                                        this.pageNotificationService.addCreateMsg(fdCreated.name);
+                                    });
+                                this.analiseService.updateSomaPf(this.analise.id).subscribe();
+                                this.blockUiService.hide();
+                            });
                         });
-
                     });
             }
         }
