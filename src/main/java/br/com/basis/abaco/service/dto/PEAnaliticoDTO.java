@@ -17,4 +17,6 @@ public class PEAnaliticoDTO {
     private String complexidade;
     private String nomeFuncionalidade;
     private String nomeModulo;
+    private Long idFuncionalidade;
+    private Long idModulo;
 }
