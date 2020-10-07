@@ -14,7 +14,7 @@ import {UploadService} from '../../upload/upload.service';
 import {FileUpload, SelectItem} from 'primeng';
 
 @Component({
-    selector: 'jhi-manual-form',
+    selector: 'app-manual-form',
     templateUrl: './manual-form.component.html',
     providers: [ManualService, ConfirmationService]
 })
@@ -41,6 +41,7 @@ export class ManualFormComponent implements OnInit, OnDestroy {
     editedPhaseEffort: EsforcoFase = new EsforcoFase();
     newAdjustFactor: FatorAjuste = new FatorAjuste();
     editedAdjustFactor: FatorAjuste = new FatorAjuste();
+    showEditOrderDeflator = false;
 
     adjustTypes: Array<any> = [
         {label: 'Percentual', value: 'PERCENTUAL'},
@@ -100,6 +101,12 @@ export class ManualFormComponent implements OnInit, OnDestroy {
         this.isSaving = true;
         this.manualService.query().subscribe(response => {
             const todosManuais = response;
+            const fatoresAjuste: FatorAjuste[] = [];
+            this.manual.fatoresAjuste.forEach((fatorAjuste, index) => {
+                fatorAjuste.ordem = index + 1;
+                fatoresAjuste.push(fatorAjuste);
+            });
+            this.manual.fatoresAjuste = fatoresAjuste;
 
             if (!this.checkIfManualAlreadyExists(todosManuais)) {
                 if (this.manual.id !== undefined) {
@@ -272,6 +279,9 @@ export class ManualFormComponent implements OnInit, OnDestroy {
     }
 
     adjustFactorDatatableClick(event: DatatableClickEvent) {
+        if (event && event.button && event.button === 'order') {
+            this.openEditOrderDeflator();
+        }
         if (!event.selection) {
             return;
         }
@@ -285,6 +295,9 @@ export class ManualFormComponent implements OnInit, OnDestroy {
             case 'delete':
                 this.editedAdjustFactor = event.selection.clone();
                 this.confirmDeleteAdjustFactor();
+            case 'order':
+                this.openEditOrderDeflator();
+
         }
     }
 
@@ -519,5 +532,9 @@ export class ManualFormComponent implements OnInit, OnDestroy {
             formatNumber = parseFloat(formatNumber).toFixed(2).toString();
             event.target.value = formatNumber.replace('.', ',');
         }
+    }
+
+    public openEditOrderDeflator() {
+        this.showEditOrderDeflator = true;
     }
 }

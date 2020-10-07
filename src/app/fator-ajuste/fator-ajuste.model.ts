@@ -26,7 +26,8 @@ export class FatorAjuste implements BaseEntity {
     public impacto?: ImpactoFatorAjuste,
     public manual?: Manual,
     public origem?: string,
-    public artificialId?: number
+    public artificialId?: number,
+    public ordem?: number,
   ) { }
 
   toJSONState(): FatorAjuste {
