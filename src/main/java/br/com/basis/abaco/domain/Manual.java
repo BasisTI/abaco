@@ -17,6 +17,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.DecimalMax;
@@ -76,6 +77,7 @@ public class Manual implements Serializable, ReportObject, Cloneable {
   private Set<EsforcoFase> esforcoFases = new LinkedHashSet<>();
 
   @JsonManagedReference
+  @OrderBy("ordem ASC")
   @OneToMany(mappedBy = "manual", cascade = CascadeType.ALL, orphanRemoval = true)
   private Set<FatorAjuste> fatoresAjuste = new LinkedHashSet<>();
 
