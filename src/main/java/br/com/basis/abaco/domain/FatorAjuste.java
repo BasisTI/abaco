@@ -79,6 +79,9 @@ public class FatorAjuste implements Serializable {
     @Field (index = FieldIndex.not_analyzed, type = FieldType.String)
     private String origem;
 
+    @Column(name="ordem")
+    private Long ordem;
+
     public Long getId() {
         return id;
     }
@@ -217,5 +220,13 @@ public class FatorAjuste implements Serializable {
     public String toString() {
         return "FatorAjuste{" + "id=" + id + ", nome='" + nome + "'" + ", fator='" + fator + "'" + ", ativo='" + ativo
                 + "'" + ", tipoAjuste='" + tipoAjuste + "'" + ", impacto='" + impacto + "'" + '}';
+    }
+
+    public Long getOrdem() {
+        return ordem;
+    }
+
+    public void setOrdem(Long ordem) {
+        this.ordem = ordem;
     }
 }
