@@ -33,7 +33,7 @@
 
                         <p-column header="Nome" field="nome" [style]="{width:'15%'}" [sortable]="true">
                             <ng-template let-user="rowData" pTemplate="body">
-                                {{ user.nome }}
+                                {{ user.firstName }} {{ user.lastName }}
                             </ng-template>
                         </p-column>
 
