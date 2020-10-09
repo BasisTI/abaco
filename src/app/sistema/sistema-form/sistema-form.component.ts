@@ -153,7 +153,6 @@ export class SistemaFormComponent implements OnInit, OnDestroy {
     }
 
     private moduleCanBeDeleted() {
-        
         let isDeletationValid = true;
 
         if (this.sistema.funcionalidades) {
@@ -245,21 +244,32 @@ export class SistemaFormComponent implements OnInit, OnDestroy {
     }
 
     confirmDeleteFuncionalidade() {
-        this.funcionalidadeService.getTotalFunction(this.funcionalidadeEmEdicao.id)
-        .subscribe(totalFuncoes => {
-            if (totalFuncoes <= 0) {
-                this.confirmationService.confirm({
-                    message: 'Tem certeza que deseja excluir a funcionalidade' + this.funcionalidadeEmEdicao.nome +
-                    + ' do módulo ' + this.funcionalidadeEmEdicao.modulo.nome + ' ?',
-                    accept: () => {
-                        this.sistema.deleteFuncionalidade(this.funcionalidadeEmEdicao);
-                        this.moduloEmEdicao = new Modulo();
+        if (this.funcionalidadeEmEdicao.id){
+            this.funcionalidadeService.getTotalFunction(this.funcionalidadeEmEdicao.id)
+                .subscribe(totalFuncoes => {
+                    if (totalFuncoes <= 0) {
+                        this.confirmationService.confirm({
+                            message: 'Tem certeza que deseja excluir a funcionalidade ' + this.funcionalidadeEmEdicao.nome +
+                             ' do módulo ' + this.funcionalidadeEmEdicao.modulo.nome + ' ?',
+                            accept: () => {
+                                this.sistema.deleteFuncionalidade(this.funcionalidadeEmEdicao);
+                                this.moduloEmEdicao = new Modulo();
+                            }
+                        });
+                    } else {
+                        this.pageNotificationService.addErrorMessage('Não é possível excluir a Funcionalidade selecionada.');
                     }
                 });
-            } else {
-                this.pageNotificationService.addErrorMessage('Não é possível excluir a Funcionalidade selecionada.');
-            }
-        });
+        } else {
+            this.confirmationService.confirm({
+                message: 'Tem certeza que deseja excluir a funcionalidade ' + this.funcionalidadeEmEdicao.nome +
+                 ' do módulo ' + this.funcionalidadeEmEdicao.modulo.nome + ' ?',
+                accept: () => {
+                    this.sistema.deleteFuncionalidade(this.funcionalidadeEmEdicao);
+                    this.moduloEmEdicao = new Modulo();
+                }
+            });
+        }
     }
 
     save(form) {
