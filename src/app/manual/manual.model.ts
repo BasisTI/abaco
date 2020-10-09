@@ -3,8 +3,7 @@ import { FatorAjuste } from '../fator-ajuste';
 import { EsforcoFase } from '../esforco-fase';
 import { MappableEntities } from '../shared/mappable-entities';
 
-export class Manual implements BaseEntity{
-    
+export class Manual implements BaseEntity {
     private mappablePhaseEfforts: MappableEntities<EsforcoFase>;
     private mappableAdjustFactors: MappableEntities<FatorAjuste>;
 

@@ -279,7 +279,7 @@ export class ManualFormComponent implements OnInit, OnDestroy {
     }
 
     adjustFactorDatatableClick(event: DatatableClickEvent) {
-        if (event && event.button && event.button === 'order') {
+        if (event.button && event.button === 'order') {
             this.openEditOrderDeflator();
         }
         if (!event.selection) {
@@ -295,8 +295,10 @@ export class ManualFormComponent implements OnInit, OnDestroy {
             case 'delete':
                 this.editedAdjustFactor = event.selection.clone();
                 this.confirmDeleteAdjustFactor();
+                break;
             case 'order':
                 this.openEditOrderDeflator();
+                break;
 
         }
     }

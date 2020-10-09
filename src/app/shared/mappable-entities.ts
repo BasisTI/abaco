@@ -1,4 +1,4 @@
-import { BaseEntity } from "./base-entity";
+import { BaseEntity } from './base-entity';
 
 // XXX If we expect a class that implements Cloneable, it's possible to implement a Immutable version
 export class MappableEntities<T extends BaseEntity> {
