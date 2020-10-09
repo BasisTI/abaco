@@ -37,7 +37,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
-import static java.util.Collections.unmodifiableSet;
+import static java.util.Collections.*;
 
 @Entity
 @Table(name = "jhi_user")
@@ -161,7 +161,7 @@ public class User extends AbstractAuditingEntity implements Serializable, Report
     }
 
     public String getNome() {
-        return this.firstName + " " + this.lastName;
+        return this.firstName.toLowerCase() + " " + this.lastName.toLowerCase();
     }
 
     public Long getId() {

@@ -24,6 +24,11 @@ public class BaseService {
             qb.must(QueryBuilders.wildcardQuery(nameField, "*" + valueField + "*"));
         }
     }
+    protected void mustMatchWildcardContainsQueryLowerCase(String valueField, BoolQueryBuilder qb, String nameField) {
+        if (!StringUtils.isEmptyString(valueField)) {
+            qb.must(QueryBuilders.wildcardQuery(nameField, "*" + valueField.toLowerCase() + "*"));
+        }
+    }
 
     protected void mustMatchQuery(String valueField, BoolQueryBuilder qb, String nameField) {
         if (!StringUtils.isEmptyString(valueField)) {
