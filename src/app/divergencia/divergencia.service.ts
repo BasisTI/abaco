@@ -227,7 +227,7 @@ export class DivergenciaService {
      */
     public gerarRelatorioContagem(idAnalise: number): Observable<string> {
         this.blockUiService.show();
-        this.http.request('get',`${this.relatorioContagemUrl}/${idAnalise}`, {
+        this.http.request('get', `${this.relatorioContagemUrl}/${idAnalise}`, {
             responseType: 'blob',
         }).pipe(catchError((error: any) => {
             if (error.status === 500) {

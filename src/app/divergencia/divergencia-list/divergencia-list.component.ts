@@ -30,8 +30,8 @@ export class DivergenciaListComponent implements OnInit {
 
     datasource: Analise[];
     event: LazyLoadEvent;
-    cars;
-
+    lstDivergence;
+    selectedDivergence;
     totalRecords;
 
     cols: any[];
@@ -102,6 +102,8 @@ export class DivergenciaListComponent implements OnInit {
     public ngOnInit() {
         this.estadoInicial();
         this.datatable.onLazyLoad.subscribe((event: LazyLoadEvent) => this.loadDirvenceLazy(event));
+        this.datatable.lazy = true;
+
     }
 
     getLabel(label) {
@@ -209,10 +211,9 @@ export class DivergenciaListComponent implements OnInit {
     loadDirvenceLazy(event: LazyLoadEvent) {
         this.blockUiService.show();
         this.event = event;
-        event.rows = !event.rows ? 5 : event.rows;
-        this.analiseService.search(event, event.rows, false, this.changeUrl()).subscribe(data => {
-            this.datatable.totalRecords = parseFloat(data.headers.get('X-Total-Count'));
-            this.cars = data.body;
+        this.analiseService.search(event, event.rows, false, this.changeUrl()).subscribe(response => {
+            this.lstDivergence = response.body;
+            this.datatable.totalRecords = parseInt(response.headers.get('x-total-count'), 10);
         });
     }
 

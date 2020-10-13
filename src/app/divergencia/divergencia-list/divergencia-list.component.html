@@ -58,7 +58,15 @@
                     </div>
                 </div>
                 <div>
-                    <p-table [columns]="allColumnsTable" [value]="cars" [lazy]="true"   dataKey="id" [paginator]="true"  [rowsPerPageOptions]="rowsPerPageOptions" #data>
+                    <p-table [columns]="allColumnsTable" 
+                                [value]="lstDivergence"
+                                [lazy]="true"
+                                [paginator]="true"
+                                [rows]="20"
+                                [rowsPerPageOptions]="rowsPerPageOptions"
+                                selectionMode="single"
+                                [(selection)]="selectedDivergence"
+                                #data >
                         <ng-template pTemplate="header" let-columns>
                             <tr>
                                 <th style="width: 3em"></th>
@@ -105,19 +113,19 @@
                                         <div class="ui-g">
                                             <div class="ui-g-12 ui-md-6" *ngFor="let comp of rowData.analisesComparadas">
                                                 <div class="ui-g-12">
-                                                    <b>Equipe:</b>{{comp.equipeResponsavel.nome}}
+                                                    <b>Equipe:</b> {{comp.equipeResponsavel.nome}}
                                                 </div>
                                                 <div class="ui-g-12">
-                                                    <b>Identificador:</b>{{comp.identificadorAnalise}}
+                                                    <b>Identificador:</b> {{comp.identificadorAnalise}}
                                                 </div>
                                                 <div class="ui-g-12">
-                                                    <b>Número Os.:</b>{{comp.numeroOs}}
+                                                    <b>Número Os.:</b> {{comp.numeroOs}}
                                                 </div>
                                                 <div class="ui-g-12">
-                                                    <b>PF Total:</b>{{comp.pfTotal}}
+                                                    <b>PF Total:</b> {{comp.pfTotal}}
                                                 </div>
                                                 <div class="ui-g-12">
-                                                    <b>PF Ajustado:</b>{{comp.adjustPFTotal}}
+                                                    <b>PF Ajustado:</b> {{comp.adjustPFTotal}}
                                                 </div>
                                             </div>
                                         </div>

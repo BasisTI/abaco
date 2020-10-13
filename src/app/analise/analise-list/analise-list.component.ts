@@ -473,8 +473,8 @@ export class AnaliseListComponent implements OnInit {
             this.inicial = true;
             if (this.datatable.selectedRow && this.datatable.selectedRow[0]) {
                 this.analiseSelecionada = this.datatable.selectedRow[0];
+                this.blocked = this.datatable.selectedRow[0].bloqueiaAnalise;
             }
-            this.blocked = this.datatable.selectedRow.bloqueiaAnalise;
         }
     }
 
@@ -715,6 +715,7 @@ export class AnaliseListComponent implements OnInit {
             this.recarregarDataTable();
             this.datatable.filter();
             this.isLoadFilter = false;
+            this.datatable.pDatatableComponent.metaKeySelection = true;
             this.updateVisibleColumns(this.columnsVisible);
         } else {
             this.recarregarDataTable();
