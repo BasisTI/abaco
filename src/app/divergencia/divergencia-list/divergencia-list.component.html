@@ -58,82 +58,92 @@
                     </div>
                 </div>
                 <div>
-                    <p-table [columns]="allColumnsTable" 
-                                [value]="lstDivergence"
-                                [lazy]="true"
-                                [paginator]="true"
-                                [rows]="20"
-                                [rowsPerPageOptions]="rowsPerPageOptions"
-                                selectionMode="single"
-                                [(selection)]="selectedDivergence"
-                                #data >
-                        <ng-template pTemplate="header" let-columns>
-                            <tr>
-                                <th style="width: 3em"></th>
-                                <th *ngFor="let col of columns" [pSortableColumn]="col.field">
-                                    {{col.header}}
-                                    <p-sortIcon [field]="col.field"></p-sortIcon>
-                                </th>
-                            </tr>
-                        </ng-template>
-                        <ng-template pTemplate="body" let-rowData let-expanded="expanded" let-columns="columns">
-                            <tr>
-                                <td>
-                                    <a href="#" [pRowToggler]="rowData">
-                                        <i [ngClass]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'"></i>
-                                    </a>
-                                </td>
-                                <td>
-                                    {{rowData.organizacao.nome}}
-                                </td>
-                                <td>
-                                    {{rowData.identificadorAnalise}}
-                                </td>
-                                <td>
-                                    {{rowData.sistema.nome}}
-                                </td>
-                                <td>
-                                    {{rowData.metodoContagem}}
-                                </td>
-                                <td>
-                                    {{rowData.pfTotal}}
-                                </td>
-                                <td>
-                                    {{rowData.adjustPFTotal}}
-                                </td>
-                                <td >
-                                    {{rowData.dataCriacaoOrdemServico | date: 'dd/MM/y - HH:mm' }}
-                                </td>
-                            </tr>
-                        </ng-template>
-                        <ng-template pTemplate="rowexpansion" let-rowData let-columns="columns">
-                            <tr>
-                                <td [attr.colspan]="columns.length + 1">
-                                    <div class="p-grid -fluid" style="font-size:16px;padding:20px">
-                                        <div class="ui-g">
-                                            <div class="ui-g-12 ui-md-6" *ngFor="let comp of rowData.analisesComparadas">
-                                                <div class="ui-g-12">
-                                                    <b>Equipe:</b> {{comp.equipeResponsavel.nome}}
-                                                </div>
-                                                <div class="ui-g-12">
-                                                    <b>Identificador:</b> {{comp.identificadorAnalise}}
-                                                </div>
-                                                <div class="ui-g-12">
-                                                    <b>Número Os.:</b> {{comp.numeroOs}}
-                                                </div>
-                                                <div class="ui-g-12">
-                                                    <b>PF Total:</b> {{comp.pfTotal}}
-                                                </div>
-                                                <div class="ui-g-12">
-                                                    <b>PF Ajustado:</b> {{comp.adjustPFTotal}}
+                    <div class="ui-g-12 ui-md-11" >
+                        <p-table [columns]="allColumnsTable" 
+                                    [value]="lstDivergence"
+                                    [lazy]="true"
+                                    [paginator]="true"
+                                    [rows]="20"
+                                    [rowsPerPageOptions]="rowsPerPageOptions"
+                                    selectionMode="single"
+                                    [(selection)]="selectedDivergence"
+                                    dataKey="id"
+                                    #data >
+                            <ng-template pTemplate="header" let-columns>
+                                <tr>
+                                    <th style="width: 3em"></th>
+                                    <th *ngFor="let col of columns" [pSortableColumn]="col.field">
+                                        {{col.header}}
+                                        <p-sortIcon [field]="col.field"></p-sortIcon>
+                                    </th>
+                                </tr>
+                            </ng-template>
+                            <ng-template pTemplate="body" let-rowData let-expanded="expanded" let-columns="columns">
+                                <tr [pSelectableRow]="rowData">
+                                    <td>
+                                        <a href="#" [pRowToggler]="rowData">
+                                            <i [ngClass]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'"></i>
+                                        </a>
+                                    </td>
+                                    <td>
+                                        {{rowData.organizacao.nome}}
+                                    </td>
+                                    <td>
+                                        {{rowData.identificadorAnalise}}
+                                    </td>
+                                    <td>
+                                        {{rowData.sistema.nome}}
+                                    </td>
+                                    <td>
+                                        {{rowData.metodoContagem}}
+                                    </td>
+                                    <td>
+                                        {{rowData.pfTotal}}
+                                    </td>
+                                    <td>
+                                        {{rowData.adjustPFTotal}}
+                                    </td>
+                                    <td >
+                                        {{rowData.dataCriacaoOrdemServico | date: 'dd/MM/y - HH:mm' }}
+                                    </td>
+                                </tr>
+                            </ng-template>
+                            <ng-template pTemplate="rowexpansion" let-rowData let-columns="columns">
+                                <tr>
+                                    <td [attr.colspan]="columns.length + 1">
+                                        <div class="p-grid -fluid" style="font-size:16px;padding:20px">
+                                            <div class="ui-g">
+                                                <div class="ui-g-12 ui-md-6" *ngFor="let comp of rowData.analisesComparadas">
+                                                    <div class="ui-g-12">
+                                                        <b>Equipe:</b> {{comp.equipeResponsavel.nome}}
+                                                    </div>
+                                                    <div class="ui-g-12">
+                                                        <b>Identificador:</b> {{comp.identificadorAnalise}}
+                                                    </div>
+                                                    <div class="ui-g-12">
+                                                        <b>Número Os.:</b> {{comp.numeroOs}}
+                                                    </div>
+                                                    <div class="ui-g-12">
+                                                        <b>PF Total:</b> {{comp.pfTotal}}
+                                                    </div>
+                                                    <div class="ui-g-12">
+                                                        <b>PF Ajustado:</b> {{comp.adjustPFTotal}}
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
-                                </td>
-                            </tr>
-                        </ng-template>
-                    </p-table>
+                                    </td>
+                                </tr>
+                            </ng-template>
+                        </p-table>
+                    </div>
+                    <div class="ui-g-12 ui-md-1" >
+                        <!-- <basis-datatable-button
+                                name="generateDivergence"
+                                icon="compare-arrows"
+                                class="ui-button-info">
+                        </basis-datatable-button> -->
+                    </div>
                     <div class="ui-g-12 ui-md-2">
                         <app-botoes-exportacao [query]="changeUrl()" resourceName="analise" id="idBtnExportacaoComponentAnalise"
                         fileName="analise">

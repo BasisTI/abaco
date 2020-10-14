@@ -269,22 +269,26 @@
                                 [filterOnColumn]="true"
                                 disableView="true"
                                 disableClone="true" >
-                                <p-column header="Ordem" field="ordem"></p-column>
+                                <p-column header="Ordem" field="ordem">
+                                    <ng-template let-col let-fatorAjuste="rowData" pTemplate="body">
+                                        {{ fatorAjuste.ordem ? fatorAjuste.ordem :  manual.fatoresAjuste.indexOf(fatorAjuste) + 1  }}
+                                    </ng-template>
+                                </p-column>
                                 <p-column header="Código" field="codigo">
-                                    <ng-template let-col let-fatoresAjuste="rowData" pTemplate="body">
-                                        {{ fatoresAjuste.codigo == null ? '---' : fatoresAjuste.codigo}}
+                                    <ng-template let-col let-fatorAjuste="rowData" pTemplate="body">
+                                        {{ fatorAjuste.codigo == null ? '---' : fatorAjuste.codigo}}
                                     </ng-template>
                                 </p-column>
                                 <p-column header="Nome" field="nome"></p-column>
                                 <p-column header="Fator" field="fator"></p-column>
                                 <p-column header="Tipo Ajuste" field="tipoAjuste" filterType="">
-                                    <ng-template let-col let-fatoresAjuste="rowData" pTemplate="body" >
-                                        {{ fatoresAjuste.tipoAjuste === 'PERCENTUAL' ? 'Percentual' :'Unitario'}}
+                                    <ng-template let-col let-fatorAjuste="rowData" pTemplate="body" >
+                                        {{ fatorAjuste.tipoAjuste === 'PERCENTUAL' ? 'Percentual' :'Unitario'}}
                                     </ng-template>
                                 </p-column>
                                 <p-column header="Ativo" field="ativo" filterType="">
-                                    <ng-template let-col let-fatoresAjuste="rowData" pTemplate="body">
-                                        {{ fatoresAjuste.ativo ? 'S': 'N' }}
+                                    <ng-template let-col let-fatorAjuste="rowData" pTemplate="body">
+                                        {{ fatorAjuste.ativo ? 'S': 'N' }}
                                     </ng-template>
                                 </p-column>
                                 <basis-datatable-button

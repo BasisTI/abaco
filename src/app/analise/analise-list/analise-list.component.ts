@@ -753,7 +753,7 @@ export class AnaliseListComponent implements OnInit {
         if (!this.firstAnaliseDivergencia.sistema &&
              !this.secondAnaliseDivergencia.sistema ||
             this.firstAnaliseDivergencia.sistema.id !== this.secondAnaliseDivergencia.sistema.id) {
-                this.pageNotificationService.addErrorMessage('Não é possivel gerar Divergencia dessas análises.');
+                this.pageNotificationService.addErrorMessage('Não é possivel gerar Divergência dessas análises.');
         } else if (
                     !(this.checkToGenerateDivergence(this.firstAnaliseDivergencia)) &&
                     !(this.checkToGenerateDivergence(this.secondAnaliseDivergencia))
@@ -795,7 +795,7 @@ export class AnaliseListComponent implements OnInit {
                         (analiseResp) => {
                         this.recarregarDataTable();
                         this.datatable.filter();
-                        this.pageNotificationService.addSuccessMessage('Divergencia da análise \"' + analise.identificadorAnalise + '\" foi gerada com sucesso!');
+                        this.pageNotificationService.addSuccessMessage('Divergência da análise \"' + analise.identificadorAnalise + '\" foi gerada com sucesso!');
                         this.blockUiService.hide();
                     },  err => {
                         this.pageNotificationService.addErrorMessage('Ocorreu um erro ao tentar gerar Divergência.');
