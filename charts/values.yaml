@@ -6,6 +6,14 @@ abacoui:
   replicaCount: 1
   ingress:
     url: "abaco.basis.com.br"
+    annotations:
+      cert-manager.io/cluster-issuer: letsencrypt-prod
+      kubernetes.io/tls-acme: "true"
+      nginx.ingress.kubernetes.io/proxy-body-size: 100m
+    tls:
+    - hosts:
+      - abaco.basis.com.br
+      secretName: abaco-cert
   ports:
     port: 80
   imagePullSecrets:
@@ -13,13 +21,6 @@ abacoui:
   proxy:
     locations:
     - abaco
-  annotations:
-    cert-manager.io/cluster-issuer: letsencrypt-prod
-    kubernetes.io/tls-acme: "true"
-  tls:
-  - hosts:
-    - abaco.basis.com.br
-    secretName: abaco-cert
 
 abaco:
   name: abaco
@@ -30,7 +31,7 @@ abaco:
   ports:
     port: 8080
   health:
-    disabled: true
+    disabled: false
   imagePullSecrets:
   - name: basis-registry
   memory:
@@ -79,6 +80,13 @@ elasticsearch:
       limits:
         memory: "4Gi"
         cpu: "1000m"
+    initResources:
+      requests:
+        memory: "128Mi"
+        cpu: "100m"
+      limits:
+        memory: "512Mi"
+        cpu: "500m"
   master:
     replicas: 2
     persistence:
@@ -92,6 +100,13 @@ elasticsearch:
       limits:
         memory: "4Gi"
         cpu: "1000m"
+    initResources:
+      requests:
+        memory: "128Mi"
+        cpu: "100m"
+      limits:
+        memory: "512Mi"
+        cpu: "500m"
   client:
     replicas: 1
     exposeTransportPort: true
@@ -103,6 +118,13 @@ elasticsearch:
       limits:
         memory: "4Gi"
         cpu: "1000m"
+    initResources:
+      requests:
+        memory: "128Mi"
+        cpu: "100m"
+      limits:
+        memory: "512Mi"
+        cpu: "500m"
 
 postgresql:
   install: true
@@ -111,6 +133,13 @@ postgresql:
   postgresqlPassword: abaco
   postgresqlDatabase: basis
   postgresqlPostgresPassword: asdfqwerzxcv
+  resources:
+    requests:
+      memory: "256Mi"
+      cpu: "250m"
+    limits:
+      memory: "1024Mi"
+      cpu: "1000m"
   persistence:
     storageClass: nfs-name
     size: 10Gi
