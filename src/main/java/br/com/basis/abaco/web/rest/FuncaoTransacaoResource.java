@@ -170,13 +170,10 @@ public class FuncaoTransacaoResource {
     @GetMapping("/funcao-transacaos/completa/{id}")
     @Timed
     public ResponseEntity<FuncaoTransacaoApiDTO> getFuncaoTransacaoCompleta(@PathVariable Long id) {
-        log.debug("REST request to get FuncaoTransacao : {}", id);
+        log.debug("REST request to get FuncaoTransacao Completa : {}", id);
         FuncaoTransacao funcaoTransacao = funcaoTransacaoRepository.findWithDerAndAlr(id);
-
         ModelMapper modelMapper = new ModelMapper();
-
         FuncaoTransacaoApiDTO funcaoDadosDTO = modelMapper.map(funcaoTransacao, FuncaoTransacaoApiDTO.class);
-
         return ResponseUtil.wrapOrNotFound(Optional.ofNullable(funcaoDadosDTO));
     }
 
@@ -236,7 +233,7 @@ public class FuncaoTransacaoResource {
     @Timed
     @Secured({AuthoritiesConstants.ADMIN, AuthoritiesConstants.USER, AuthoritiesConstants.GESTOR, AuthoritiesConstants.ANALISTA})
     public ResponseEntity<FuncaoTransacaoApiDTO> updateFuncaoTransacao(@PathVariable Long id, @PathVariable StatusFuncao statusFuncao) {
-        log.debug("REST request to get FuncaoTransacao : {}", id);
+        log.debug("REST request to get FuncaoTransacao by Status : {}", id);
         FuncaoTransacao funcaoTransacao = funcaoTransacaoRepository.findOne(id);
         funcaoTransacao.setStatusFuncao(statusFuncao);
         funcaoTransacaoRepository.save(funcaoTransacao);

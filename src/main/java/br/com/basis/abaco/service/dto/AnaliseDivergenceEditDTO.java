@@ -38,7 +38,6 @@ public class AnaliseDivergenceEditDTO implements ReportObject {
     private String propositoContagem;
     private String observacoes;
     private Boolean baselineImediatamente;
-    private Timestamp dataHomologacao;
     private boolean enviarBaseline;
     private Contrato contrato;
     private FatorAjuste fatorAjuste;

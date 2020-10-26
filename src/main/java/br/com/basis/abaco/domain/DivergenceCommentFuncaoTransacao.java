@@ -10,6 +10,7 @@ import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import java.io.Serializable;
 
 @Entity
 @Table(name = "divergence_comments_funcao_transacao")
@@ -18,7 +19,7 @@ import javax.persistence.Table;
 @AllArgsConstructor
 @Getter
 @Setter
-public class DivergenceCommentFuncaoTransacao extends DivergenceComment {
+public class DivergenceCommentFuncaoTransacao extends DivergenceComment implements Serializable {
 
     @ManyToOne
     @JoinColumn(name = "funcao_transacao_id")

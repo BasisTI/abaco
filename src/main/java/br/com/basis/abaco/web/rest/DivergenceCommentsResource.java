@@ -33,7 +33,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Optional;
@@ -113,28 +112,30 @@ public class DivergenceCommentsResource {
         return ResponseEntity.created(new URI("/api/funcao-transacao/" + result.getId())).headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString())).body(result);
     }
 
-    @PutMapping("/comment/funcao-dados")
+    @PutMapping("/comment/funcao-dados/{id}")
     @Timed
     @Secured({AuthoritiesConstants.ADMIN, AuthoritiesConstants.USER, AuthoritiesConstants.GESTOR, AuthoritiesConstants.ANALISTA})
-    public ResponseEntity<DivergenceCommentDTO> updateDivergenceCommentFuncaoDados(@Valid @RequestBody DivergenceCommentFuncaoDados divergenceCommentFuncaoDados)
-        throws URISyntaxException {
-        log.debug("REST request to update DivergenceComment : {}", divergenceCommentFuncaoDados);
+    public ResponseEntity<DivergenceCommentDTO> updateDivergenceCommentFuncaoDados(@PathVariable Long id, @RequestBody String comment) throws URISyntaxException {
+        log.debug("REST request to update DivergenceComment : {}", id);
+        DivergenceCommentFuncaoDados divergenceCommentFuncaoDados = divergenceCommentFuncaoDadosRepository.findOne(id);
         if (divergenceCommentFuncaoDados.getId() == null) {
             return createDivergenceCommentFuncaoDados(divergenceCommentFuncaoDados.getFuncaoDados().getId(), divergenceCommentFuncaoDados.getComment());
         }
+        divergenceCommentFuncaoDados.setComment(comment);
         DivergenceCommentDTO result = divergenceCommentService.saveCommentFuncaoDados(divergenceCommentFuncaoDados);
         return ResponseEntity.ok().headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, divergenceCommentFuncaoDados.getId().toString())).body(result);
     }
 
-    @PutMapping("/comment/funcao-transacao")
+    @PutMapping("/comment/funcao-transacao/{id}")
     @Timed
     @Secured({AuthoritiesConstants.ADMIN, AuthoritiesConstants.USER, AuthoritiesConstants.GESTOR, AuthoritiesConstants.ANALISTA})
-    public ResponseEntity<DivergenceCommentDTO> updateDivergenceCommentFuncaoTransacao(@Valid @RequestBody DivergenceCommentFuncaoTransacao divergenceCommentFuncaoTransacao)
-        throws URISyntaxException {
-        log.debug("REST request to update DivergenceComment : {}", divergenceCommentFuncaoTransacao);
+    public ResponseEntity<DivergenceCommentDTO> updateDivergenceCommentFuncaoTransacao(@PathVariable Long id, @RequestBody String comment) throws URISyntaxException {
+        log.debug("REST request to update DivergenceComment : {}", id);
+        DivergenceCommentFuncaoTransacao divergenceCommentFuncaoTransacao = divergenceCommentFuncaoTransacaoRepository.findOne(id);
         if (divergenceCommentFuncaoTransacao.getId() == null) {
             return createDivergenceCommentFuncaoTranscao(divergenceCommentFuncaoTransacao.getFuncaoTransacao().getId(), divergenceCommentFuncaoTransacao.getComment());
         }
+        divergenceCommentFuncaoTransacao.setComment(comment);
         DivergenceCommentDTO result = divergenceCommentService.saveFuncaoTransacao(divergenceCommentFuncaoTransacao);
         return ResponseEntity.ok().headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, divergenceCommentFuncaoTransacao.getId().toString())).body(result);
     }

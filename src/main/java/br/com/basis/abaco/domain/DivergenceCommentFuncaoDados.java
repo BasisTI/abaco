@@ -11,6 +11,7 @@ import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import java.io.Serializable;
 
 @Entity
 @Table(name = "divergence_comments_funcao_dados")
@@ -19,7 +20,7 @@ import javax.persistence.Table;
 @AllArgsConstructor
 @Getter
 @Setter
-public class DivergenceCommentFuncaoDados extends DivergenceComment {
+public class DivergenceCommentFuncaoDados extends DivergenceComment implements Serializable {
 
     @ManyToOne
     @JsonIgnore

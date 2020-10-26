@@ -11,11 +11,12 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.SequenceGenerator;
+import java.io.Serializable;
 
 @MappedSuperclass
 @Getter
 @Setter
-public class DivergenceComment {
+public class DivergenceComment  implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sequenceGenerator")

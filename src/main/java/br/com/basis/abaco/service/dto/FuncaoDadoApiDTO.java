@@ -8,9 +8,11 @@ import br.com.basis.abaco.domain.enumeration.TipoFuncaoDados;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 /**
  * @author alexandre.costa
@@ -176,10 +178,12 @@ public class FuncaoDadoApiDTO {
     }
 
     public List<DivergenceCommentDTO> getLstDivergenceComments() {
-        return lstDivergenceComments;
+        return  Collections.unmodifiableList(lstDivergenceComments);
     }
 
     public void setLstDivergenceComments(List<DivergenceCommentDTO> lstDivergenceComments) {
-        this.lstDivergenceComments = lstDivergenceComments;
+        this.lstDivergenceComments =  Optional.ofNullable(lstDivergenceComments)
+            .map(ArrayList::new)
+            .orElse(new ArrayList<>());;
     }
 }

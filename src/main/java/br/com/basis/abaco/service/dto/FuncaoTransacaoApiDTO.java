@@ -7,9 +7,11 @@ import br.com.basis.abaco.domain.enumeration.TipoFuncaoTransacao;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 public class FuncaoTransacaoApiDTO {
@@ -162,10 +164,12 @@ public class FuncaoTransacaoApiDTO {
     }
 
     public List<DivergenceCommentDTO> getLstDivergenceComments() {
-        return lstDivergenceComments;
+        return  Collections.unmodifiableList(lstDivergenceComments);
     }
 
     public void setLstDivergenceComments(List<DivergenceCommentDTO> lstDivergenceComments) {
-        this.lstDivergenceComments = lstDivergenceComments;
+        this.lstDivergenceComments =  Optional.ofNullable(lstDivergenceComments)
+            .map(ArrayList::new)
+            .orElse(new ArrayList<>());;
     }
 }
