@@ -15,6 +15,7 @@ import { FuncaoDados } from '../funcao-dados';
 import { FuncaoTransacao } from '../funcao-transacao';
 import { Status } from '../status/status.model';
 import { ModuloDaFuncionalidadeFinder } from '../analise/modulo-finder';
+import { Analise } from '../analise';
 
 export enum MetodoContagem {
     'DETALHADA' = 'DETALHADA',
@@ -76,9 +77,9 @@ export class Divergencia implements BaseEntity {
         public manual?: Manual,
         public users?: User[],
         public status?: Status,
+        public analisesComparadas?: Analise[],
     ) {
         this.inicializaMappables(funcaoDados, funcaoTransacaos);
-        this.inicializaResumos();
 
         // TODO
         if (!baselineImediatamente) {
@@ -96,51 +97,6 @@ export class Divergencia implements BaseEntity {
         } else {
             this.mappableFuncaoTransacaos = new MappableEntities<FuncaoTransacao>();
         }
-    }
-    private inicializaResumos() {
-        this._resumoFuncaoDados = new ResumoFuncoes(FuncaoDados.tipos());
-        this._resumoFuncaoTransacao = new ResumoFuncoes(FuncaoTransacao.tipos());
-        this.generateResumoTotal();
-    }
-    private generateResumoTotal() {
-        this._resumoTotal = new ResumoTotal(this._resumoFuncaoDados, this._resumoFuncaoTransacao);
-        this.pfTotal = this._resumoTotal.getTotalGrossPf().toString();
-        this.adjustPFTotal = this.aplicaTotalEsforco(this.ajustarPfTotal()).toFixed(2).toString();
-        this.pfTotalEsforco = this.aplicaTotalEsforco(this._resumoTotal.getTotalGrossPf()).toFixed(2).toString();
-    }
-    /**
-     * VERIFICAR CÁLCULO - Cálculo modificado par arefletir a nova forma de salvar
-     * Porcentagens no banco
-     * Renomenando método de "calcularPfTotalAjustado()"
-     * para "aplicaTotalEsforco()" por motivo de legibilidade e clareza
-     */
-    private aplicaTotalEsforco(pf: number): number {
-        return (pf * this.totalEsforcoFases()) / 100;
-    }
-    /**
-     * Renomenando método de "pfTotalAjustadoSomentePorFatorAjuste()"
-     * para "ajustarPfTotal()" por motivo de legibilidade e clareza
-     */
-    private ajustarPfTotal(): number {
-        const pfTotalAjustado = this._resumoTotal.getTotalPf();
-        if (this.fatorAjuste) {
-            return this.aplicarFator(pfTotalAjustado);
-        }
-        return pfTotalAjustado;
-    }
-    aplicarFator(pf: number): number {
-        if (this.fatorAjuste.tipoAjuste === 'UNITARIO') {
-            return this.fatorAjuste.fator;
-        } else {
-            return pf * this.fatorAjuste.fator;
-        }
-    }
-    private totalEsforcoFases(): number {
-        const initialValue = 0;
-        if (this.esforcoFases) {
-            return this.esforcoFases.reduce((val, ef) => val + ef.esforco, initialValue);
-        }
-        return 1;
     }
 
     // TODO extrair classe
@@ -176,70 +132,7 @@ export class Divergencia implements BaseEntity {
     copyFromJSON(json: any): Divergencia {
         const analiseCopiada: Divergencia = new DivergenciaCopyFromJSON(json).copy();
         analiseCopiada.inicializaMappables(analiseCopiada.funcaoDados, analiseCopiada.funcaoTransacaos);
-        analiseCopiada.generateAllResumos();
         return analiseCopiada;
-    }
-
-    private generateAllResumos() {
-        this.generateResumoFuncoesDados();
-        this.generateResumoFuncoesTransacao();
-        this.generateResumoTotal();
-    }
-
-    public get resumoTotal(): ResumoTotal {
-        return this._resumoTotal;
-    }
-
-    public get resumoFuncaoDados(): ResumoFuncoes {
-        return this._resumoFuncaoDados;
-    }
-
-    public get resumoFuncaoTransacoes(): ResumoFuncoes {
-        return this._resumoFuncaoTransacao;
-    }
-
-    public addFuncaoDados(funcaoDados: FuncaoDados) {
-        this.mappableFuncaoDados.push(funcaoDados);
-        this.atualizarFuncoesDados();
-    }
-
-    private atualizarFuncoesDados() {
-        this.funcaoDados = this.mappableFuncaoDados.values();
-        this.generateResumoFuncoesDados();
-        this.generateResumoTotal();
-    }
-
-    // potencial para ficar bem eficiente
-    // inserção/alteração/deleção pode ser feita por elemento
-    private generateResumoFuncoesDados() {
-        const resumo: ResumoFuncoes = new ResumoFuncoes(FuncaoDados.tipos());
-        if (this.funcaoDados) {
-            this.funcaoDados.forEach(f => {
-                resumo.somaFuncao(f);
-            });
-        }
-        this._resumoFuncaoDados = resumo;
-    }
-
-    updateFuncaoDados(funcaoDados: FuncaoDados) {
-        this.mappableFuncaoDados.update(funcaoDados);
-        this.atualizarFuncoesDados();
-    }
-
-    deleteFuncaoDados(funcaoDados: FuncaoDados) {
-        this.mappableFuncaoDados.delete(funcaoDados);
-        this.atualizarFuncoesDados();
-    }
-
-    addFuncaoTransacao(funcaoTransacao: FuncaoTransacao) {
-        this.mappableFuncaoTransacaos.push(funcaoTransacao);
-        this.atualizarFuncoesTransacao();
-    }
-
-    private atualizarFuncoesTransacao() {
-        this.funcaoTransacaos = this.mappableFuncaoTransacaos.values();
-        this.generateResumoFuncoesTransacao();
-        this.generateResumoTotal();
     }
 
     private generateResumoFuncoesTransacao() {
@@ -250,16 +143,6 @@ export class Divergencia implements BaseEntity {
             });
         }
         this._resumoFuncaoTransacao = resumo;
-    }
-
-    updateFuncaoTransacao(funcaoTransacao: FuncaoTransacao) {
-        this.mappableFuncaoTransacaos.update(funcaoTransacao);
-        this.atualizarFuncoesTransacao();
-    }
-
-    deleteFuncaoTransacao(funcaoTransacao: FuncaoTransacao) {
-        this.mappableFuncaoTransacaos.delete(funcaoTransacao);
-        this.atualizarFuncoesTransacao();
     }
 
     clone(): Divergencia {
@@ -295,7 +178,9 @@ export class Divergencia implements BaseEntity {
             this.bloqueiaAnalise,
             this.dataCriacaoOrdemServico,
             this.manual,
-            this.users);
+            this.users,
+            this.status,
+            this.analisesComparadas);
     }
 
 }

@@ -4,41 +4,39 @@ import { Column, DatatableClickEvent, DatatableComponent, DatatableModule, PageN
 import * as _ from 'lodash';
 import { ConfirmationService, SelectItem, FullCalendar } from 'primeng';
 import { forkJoin, Observable, Subscription } from 'rxjs';
-import { Alr } from '../alr/alr.model';
-import { Analise, AnaliseService } from '../analise';
-import { AnaliseReferenciavel } from '../analise-shared/analise-referenciavel';
-import { AnaliseSharedUtils } from '../analise-shared/analise-shared-utils';
-import { Calculadora } from '../analise-shared/calculadora';
-import { DerChipConverter } from '../analise-shared/der-chips/der-chip-converter';
-import { DerChipItem } from '../analise-shared/der-chips/der-chip-item';
-import { DerTextParser, ParseResult } from '../analise-shared/der-text/der-text-parser';
-import { ResumoFuncoes } from '../analise-shared/resumo-funcoes';
-import { FatorAjuste } from '../fator-ajuste';
-import { Funcionalidade } from '../funcionalidade/index';
-import { Manual } from '../manual';
-import { Modulo } from '../modulo';
-import { ResponseWrapper } from '../shared';
-import { AnaliseSharedDataService } from '../shared/analise-shared-data.service';
-import { FatorAjusteLabelGenerator } from '../shared/fator-ajuste-label-generator';
-import { MessageUtil } from '../util/message.util';
-import { FuncaoTransacaoService } from '../funcao-transacao/funcao-transacao.service';
-import { CalculadoraTransacao } from './../analise-shared/calculadora-transacao';
-import { MetodoContagem } from './../analise/analise.model';
-import { BaselineAnalitico } from './../baseline/baseline-analitico.model';
-import { BaselineService } from './../baseline/baseline.service';
-import { Der } from './../der/der.model';
-import { FuncaoTransacao, TipoFuncaoTransacao } from './../funcao-transacao/funcao-transacao.model';
-import { FuncaoDados } from './funcao-dados.model';
-import { FuncaoDadosService } from './funcao-dados.service';
+import { Alr } from '../../alr/alr.model';
+import { Analise, AnaliseService } from '../../analise';
+import { AnaliseReferenciavel } from '../../analise-shared/analise-referenciavel';
+import { Calculadora } from '../../analise-shared/calculadora';
+import { DerChipConverter } from '../../analise-shared/der-chips/der-chip-converter';
+import { DerChipItem } from '../../analise-shared/der-chips/der-chip-item';
+import { DerTextParser, ParseResult } from '../../analise-shared/der-text/der-text-parser';
+import { ResumoFuncoes } from '../../analise-shared/resumo-funcoes';
+import { FatorAjuste } from '../../fator-ajuste';
+import { Funcionalidade } from '../../funcionalidade/index';
+import { Manual } from '../../manual';
+import { Modulo } from '../../modulo';
+import { ResponseWrapper } from '../../shared';
+import { AnaliseSharedDataService } from '../../shared/analise-shared-data.service';
+import { FatorAjusteLabelGenerator } from '../../shared/fator-ajuste-label-generator';
+import { FuncaoTransacaoService } from '../../funcao-transacao/funcao-transacao.service';
+import { CalculadoraTransacao } from '../../analise-shared/calculadora-transacao';
+import { MetodoContagem } from '../../analise/analise.model';
+import { BaselineAnalitico } from '../../baseline/baseline-analitico.model';
+import { BaselineService } from '../../baseline/baseline.service';
+import { Der } from '../../der/der.model';
+import { FuncaoTransacao, TipoFuncaoTransacao } from '../../funcao-transacao/funcao-transacao.model';
+import { FuncaoDados } from '../funcao-dados.model';
+import { FuncaoDadosService } from '../funcao-dados.service';
 import { BlockUiService } from '@nuvem/angular-base';
+import { CommentFuncaoDados } from '../comment-funcado-dados.model';
 
 @Component({
     selector: 'app-analise-funcao-dados',
-    templateUrl: './funcao-dados-form.component.html',
+    templateUrl: './funcao-dados-divergence.component.html',
     providers: [ConfirmationService]
 })
-export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
-    emptySustantion = '<p><br></p>';
+export class FuncaoDadosDivergenceComponent implements OnInit {
     @Output()
     valueChange: EventEmitter<string> = new EventEmitter<string>();
     parseResult: ParseResult;
@@ -82,7 +80,7 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
     funcaoDadosEditar: FuncaoDados = new FuncaoDados();
     translateSubscriptions: Subscription[] = [];
     viewFuncaoDados = false;
-    divergenceComment: String;
+    showAddComent = false;
     impacto: SelectItem[] = [
         {label: 'Inclusão', value: 'INCLUSAO'},
         {label: 'Alteração', value: 'ALTERACAO'},
@@ -114,6 +112,8 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
     public analise: Analise;
     public seletedFuncaoDados: FuncaoDados = new FuncaoDados();
     public display = false;
+    public divergenceComment: string;
+    public commentFD: CommentFuncaoDados = new CommentFuncaoDados();
 
     constructor(
         private analiseSharedDataService: AnaliseSharedDataService,
@@ -143,14 +143,9 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
                 this.funcoesDados = value;
                 if (!this.isView) {
                     this.analiseService.find(this.idAnalise).subscribe(analise => {
-                        analise = new Analise().copyFromJSON(analise);
-                        this.analiseSharedDataService.analise = analise;
                         this.analise = analise;
-                        this.disableAba = this.analise.metodoContagem === MessageUtil.INDICATIVA;
                         this.hideShowQuantidade = true;
                         this.estadoInicial();
-                        this.impactos = AnaliseSharedUtils.impactos;
-                        this.disableTRDER();
                         this.blockUiService.hide();
                     });
                 }
@@ -180,27 +175,6 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
         }
     }
 
-    ngAfterViewInit() {
-        this.setSotableFields();
-    }
-
-    setSotableFields() {
-        if (this.colunasAMostrar) {
-            return;
-        }
-        // este forEach rodará apenas 1 vez, devido ao @ViewChildren retornar um array
-        // this.tables.forEach(table => {
-        //     table.columns.forEach(column => {
-        //         const item = this.colunasAMostrar.find(element =>
-        //             (element.header === column.header)
-        //         );
-        //         column.sortField = this.getField(item.header);
-        //         column.filterField = this.getField(item.header);
-        //         this.exceptions(column, item.header);
-        //         column.ngAfterContentInit();
-        //     });
-        // });
-    }
 
     sortColumn(event: any) {
         this.funcoesDados.sort((a, b) => {
@@ -540,7 +514,7 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
                         this.setFields(funcaoDadosTable);
                         this.funcoesDados.push(funcaoDadosTable);
                     });
-                    this.analiseService.updateSomaPf(this.analise.id).subscribe();
+                    this.analiseService.updateDivergenciaSomaPf(this.analise.id).subscribe();
                     return true;
                 });
             } else {
@@ -595,7 +569,7 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
                             this.atualizaResumo();
                             this.estadoInicial();
                             this.resetarEstadoPosSalvar();
-                            this.analiseService.updateSomaPf(this.analise.id).subscribe();
+                            this.analiseService.updateDivergenciaSomaPf(this.analise.id).subscribe();
                         }
                     );
                 } else {
@@ -711,7 +685,7 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
                         this.pageNotificationService.addSuccessMessage(`${this.getLabel('Cadastros.FuncaoDados.Mensagens.msgFuncaoDados')}
                 '${funcaoDadosCalculada.name}' ${this.getLabel(' alterada com sucesso')}`);
                         this.fecharDialog();
-                        this.analiseService.updateSomaPf(this.analise.id).subscribe();
+                        this.analiseService.updateDivergenciaSomaPf(this.analise.id).subscribe();
                     });
                 });
         }
@@ -795,24 +769,15 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
             case 'delete':
                 this.confirmDelete(funcaoDadosSelecionada);
                 break;
-            case 'clone':
-                this.disableTRDER();
-                this.configurarDialog();
-                this.isEdit = false;
-                this.prepareToClone(funcaoDadosSelecionada);
-                this.seletedFuncaoDados.id = undefined;
-                this.seletedFuncaoDados.artificialId = undefined;
-                this.textHeader = this.getLabel('Clonar Função de Dados');
-                break;
-            case 'crud':
-                this.createCrud(funcaoDadosSelecionada);
+            case 'pending':
+                this.confirmDivergence(funcaoDadosSelecionada);
                 break;
             case 'view':
                 this.viewFuncaoDados = true;
                 this.prepararParaVisualizar(funcaoDadosSelecionada);
                 break;
-            case 'filter':
-                this.display = true;
+            case 'approve':
+                this.confirmApproved(funcaoDadosSelecionada);
                 break;
         }
     }
@@ -829,7 +794,7 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
                         this.pageNotificationService.addCreateMsg(funcaoTransacaoAtual.name);
                         this.resetarEstadoPosSalvar();
                         this.estadoInicial();
-                        this.analiseService.updateSomaPf(this.analise.id).subscribe();
+                        this.analiseService.updateDivergenciaSomaPf(this.analise.id).subscribe();
                     });
                 } else {
                     this.pageNotificationService.addErrorMessage('CRUD já cadastrado!');
@@ -846,50 +811,6 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
             alrs.push(alr);
             funcaoTransacaoCalculada.alrs = alrs;
         }
-    }
-
-    private createCrud(funcaoDadosSelecionada) {
-        const lstFuncaoTransacaoCrud: FuncaoTransacao[] = [];
-        const lstFuncaoTransacaoToVerify: Observable<any>[] = [];
-        const lstFuncaoTransacaoToInclud: Observable<any>[] = [];
-        this.blockUiService.show();
-        this.funcaoDadosService.getById(funcaoDadosSelecionada.id).subscribe(funcaoDados => {
-            this.crud.forEach(element => {
-                lstFuncaoTransacaoCrud.push(this.gerarFuncaoTransacao(element, funcaoDados));
-            });
-            lstFuncaoTransacaoCrud.forEach(funcaoTransacaoAtual => {
-                lstFuncaoTransacaoToVerify.push(
-                    this.funcaoTransacaoService.existsWithName(
-                        funcaoTransacaoAtual.name,
-                        this.analise.id,
-                        funcaoTransacaoAtual.funcionalidade.id,
-                        funcaoTransacaoAtual.funcionalidade.modulo.id)
-                    );
-            });
-            forkJoin(lstFuncaoTransacaoToVerify).subscribe(lstFuncaoTranscao => {
-                let index = 0;
-                for (const existFuncaoTranasacao of lstFuncaoTranscao) {
-                    if (!existFuncaoTranasacao) {
-                        lstFuncaoTransacaoToInclud.push(
-                            this.funcaoTransacaoService.create(lstFuncaoTransacaoCrud[index], this.analise.id)
-                            );
-                    } else {
-                        this.pageNotificationService.addErrorMessage('CRUD já cadastrado!');
-                    }
-                    index++;
-                }
-                forkJoin(lstFuncaoTransacaoToInclud).subscribe(funcoesTransacoes => {
-                    funcoesTransacoes.forEach(
-                        () => {
-                            this.pageNotificationService.addCreateMsg(funcoesTransacoes['name']);
-                            this.resetarEstadoPosSalvar();
-                            this.estadoInicial();
-                            this.analiseService.updateSomaPf(this.analise.id).subscribe();
-                    });
-                    this.blockUiService.hide();
-                });
-            });
-        });
     }
 
     private gerarFuncaoTransacao(tipo: string, fdSelecionada: FuncaoDados): FuncaoTransacao {
@@ -928,6 +849,7 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
         this.blockUiService.show();
         this.funcaoDadosService.getById(funcaoDadosSelecionada.id).subscribe(funcaoDados => {
             this.seletedFuncaoDados = new FuncaoDados().copyFromJSON(funcaoDados);
+            this.seletedFuncaoDados.lstDivergenceComments = funcaoDados.lstDivergenceComments;
             if (this.seletedFuncaoDados.fatorAjuste.tipoAjuste === 'UNITARIO' && this.faS[0]) {
                 this.hideShowQuantidade = false;
             } else {
@@ -1021,16 +943,54 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
     confirmDelete(funcaoDadosSelecionada: FuncaoDados) {
         this.confirmationService.confirm({
             message: `${this.getLabel(
-                'Tem certeza que deseja excluir a Função de Dados ')} '${funcaoDadosSelecionada.name}'?`,
+                'Tem certeza que deseja alterar o status da Função de Dados ')} '${funcaoDadosSelecionada.name}' para Excluido ?`,
             accept: () => {
-                this.funcaoDadosService.delete(funcaoDadosSelecionada.id).subscribe(value => {
-                    this.funcoesDados = this.funcoesDados.filter((funcaoDados) => (funcaoDados.id !== funcaoDadosSelecionada.id));
-                    this.pageNotificationService.addDeleteMsg(funcaoDadosSelecionada.name);
-                    this.analiseService.updateSomaPf(this.analise.id).subscribe();
+                this.blockUiService.show();
+                this.funcaoDadosService.deleteStatus(funcaoDadosSelecionada.id).subscribe(value => {
+                    funcaoDadosSelecionada = this.funcoesDados.filter((funcaoDados) => (funcaoDados.id === funcaoDadosSelecionada.id))[0];
+                    funcaoDadosSelecionada['statusFuncao'] = value['statusFuncao'];
+                    this.pageNotificationService.addSuccessMessage('Status da funcionalidade ' + funcaoDadosSelecionada.name + ' foi alterado.');
+                    this.analiseService.updateDivergenciaSomaPf(this.analise.id).subscribe();
+                    this.showDialog = false;
+                    this.showDialog = false;
+                    this.blockUiService.hide();
                 });
             }
         });
     }
+
+    confirmDivergence(funcaoDadosSelecionada: FuncaoDados) {
+        this.confirmationService.confirm({
+            message: `${this.getLabel(
+                'Tem certeza que deseja alterar o status da Função de Dados ')} '${funcaoDadosSelecionada.name}' para Divergente?`,
+            accept: () => {
+                this.funcaoDadosService.pending(funcaoDadosSelecionada.id).subscribe(value => {
+                    funcaoDadosSelecionada = this.funcoesDados.filter((funcaoDados) => (funcaoDados.id === funcaoDadosSelecionada.id))[0];
+                    funcaoDadosSelecionada['statusFuncao'] = value['statusFuncao'];
+                    this.pageNotificationService.addSuccessMessage('Status da funcionalidade ' + funcaoDadosSelecionada.name + ' foi alterado.');
+                    this.showDialog = false;
+                    this.analiseService.updateDivergenciaSomaPf(this.analise.id).subscribe();
+                });
+            }
+        });
+    }
+
+    confirmApproved(funcaoDadosSelecionada: FuncaoDados) {
+        this.confirmationService.confirm({
+            message: `${this.getLabel(
+                'Tem certeza que deseja alterar o status da Função de Dados ')} '${funcaoDadosSelecionada.name}' para Aprovado ?`,
+            accept: () => {
+                this.funcaoDadosService.approved(funcaoDadosSelecionada.id).subscribe(value => {
+                    funcaoDadosSelecionada = this.funcoesDados.filter((funcaoDados) => (funcaoDados.id === funcaoDadosSelecionada.id))[0];
+                    funcaoDadosSelecionada['statusFuncao'] = value['statusFuncao'];
+                    this.pageNotificationService.addSuccessMessage('Status da funcionalidade ' + funcaoDadosSelecionada.name + ' foi alterado.');
+                    this.showDialog = false;
+                    this.analiseService.updateDivergenciaSomaPf(this.analise.id).subscribe();
+                });
+            }
+        });
+    }
+
 
     formataFatorAjuste(fatorAjuste: FatorAjuste): string {
         return fatorAjuste ? FatorAjusteLabelGenerator.generate(fatorAjuste) : this.getLabel('Nenhum');
@@ -1111,25 +1071,25 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
         switch (index) {
             case 0:
                 if (this.isView) {
-                    link = ['/analise/' + this.idAnalise + '/view'];
+                    link = ['/divergencia/' + this.idAnalise + '/view'];
                 } else {
-                    link = ['/analise/' + this.idAnalise + '/edit'];
+                    link = ['/divergencia/' + this.idAnalise + '/edit'];
                 }
                 break;
             case 1:
                 return;
             case 2:
                 if (this.isView) {
-                    link = ['/analise/' + this.idAnalise + '/funcao-transacao/view'];
+                    link = ['/divergencia/' + this.idAnalise + '/funcao-transacao/view'];
                 } else {
-                    link = ['/analise/' + this.idAnalise + '/funcao-transacao'];
+                    link = ['/divergencia/' + this.idAnalise + '/funcao-transacao'];
                 }
                 break;
             case 3:
                 if (this.isView) {
-                    link = ['/analise/' + this.idAnalise + '/resumo/view'];
+                    link = ['/divergencia/' + this.idAnalise + '/resumo/view'];
                 } else {
-                    link = ['/analise/' + this.idAnalise + '/resumo'];
+                    link = ['/divergencia/' + this.idAnalise + '/resumo'];
                 }
                 break;
         }
@@ -1160,5 +1120,30 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
         if (this.tables && this.tables.selectedRow) {
             this.funcaoDadosEditar = this.tables.selectedRow;
         }
+    }
+    public showDialogAddComent() {
+        this.showAddComent = true;
+    }
+    public saveComent(divergenceComment: string ) {
+        if (!divergenceComment) {
+            this.pageNotificationService.addErrorMessage('É obrigatório preencher o campo comentário.');
+            return;
+        }
+        if (!this.seletedFuncaoDados && !this.seletedFuncaoDados.id) {
+            this.pageNotificationService.addErrorMessage('A função de dados selecionada é inválida.');
+            return;
+        }
+        this.commentFD.commet = divergenceComment;
+        this.funcaoDadosService.saveComent(this.commentFD.commet, this.seletedFuncaoDados.id)
+            .subscribe((comment) => {
+                this.seletedFuncaoDados.lstDivergenceComments.push(comment);
+                this.divergenceComment = '';
+                this.showAddComent = false;
+                this.showDialog = false;
+                this.pageNotificationService.addSuccessMessage('Comentário adicionado.');
+            });
+    }
+    public cancelComment() {
+        this.showAddComent = false;
     }
 }

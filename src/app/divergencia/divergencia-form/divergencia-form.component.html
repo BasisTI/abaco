@@ -4,134 +4,146 @@
             <div class="ui-g-12">
                 <div class="ui-g">
                     <div class="ui-g-4 ui-md-4 ui-sm-12" style="margin-bottom: 05px">
-                        <label>Identificador </label>
-                        <span class="md-inputfield">
-                            <input
-                                required
-                                type="text"
-                                maxlength="100"
-                                id="idnumeroOsAnaliseFormAnalise"
-                                name="numeroOsAnalise"
-                                [(ngModel)]="analise.numeroOs"
-                                pInputText
-                            />
-                            <!-- <div *ngIf="editForm.controls['numeroOsAnalise']
-                                && !editForm.controls['numeroOsAnalise'].valid
-                                && (editForm.controls['numeroOsAnalise'].touched
-                                || editForm.submitted)"
-                                class="ui-message ui-messages-error">
-                                    Campo obrigatório.
-                             </div> -->
-                        </span>
+                        <label>Identificador: </label>
+                        <label>{{analise.identificadorAnalise}}</label> 
                     </div>
                     <div class="ui-g-4 ui-md-4 ui-sm-12" style="margin-bottom: 05px">
-                        <label>Número O.S.*</label>
-                        <span class="md-inputfield">
-                            <input
-                                required
-                                type="text"
-                                maxlength="100"
-                                id="idnumeroOsAnaliseFormAnalise"
-                                name="numeroOsAnalise"
-                                [(ngModel)]="analise.numeroOs"
-                                pInputText
-                            />
-                            <!-- <div *ngIf="editForm.controls['numeroOsAnalise']
-                                && !editForm.controls['numeroOsAnalise'].valid
-                                && (editForm.controls['numeroOsAnalise'].touched
-                                || editForm.submitted)"
-                                class="ui-message ui-messages-error">
-                                    Campo obrigatório.
-                             </div> -->
-                        </span>
+                        <label>Organização: </label>
+                        <label>{{analise.organizacao.nome}}</label> 
                     </div>
                     <div class="ui-g-4 ui-md-4 ui-sm-12" style="margin-bottom: 05px">
-                        <label>Organização</label>
-                        <p-dropdown
-                                [filter]="true"
-                                dataKey="id"
-                                id="idOrganizacaoSaveFormAnalise"
-                                name="organizacao"
-                                optionLabel="nome"
-                                [disabled]="disabledOptionsforEdit()"
-                                [placeholder]="this.getLabel('Selecione')"
-                                [options]="organizacoes"
-                                [(ngModel)]="analise.organizacao"
-                                (onChange)="setSistemaOrganizacao($event.value)">
-                        </p-dropdown>
+                        <label >Sistema: </label>
+                        <label>{{analise.sistema.nome}}</label> 
                     </div>
-                    <div class="ui-g-4 ui-md-4 ui-sm-12" style="margin-bottom: 05px">
-                        <label >Sistema</label>
-                        <p-dropdown
-                                [filter]="true"
-                                dataKey="id"
-                                id="idSistemaSaveFormAnalise"
-                                optionLabel="sigla"
-                                [disabled]="disabledOptionsforEdit()"
-                                [placeholder]="this.getLabel('Selecione')"
-                                (onChange)="getSistemaSelecionado()"
-                                name="sistema"
-                                [options]="sistemas"
-                                [(ngModel)]="analise.sistema"
-                                >
-                        </p-dropdown>
+                    <div>
+                        <p-fieldset *ngFor=" let analiseComparada of analise.analisesComparadas" [toggleable]="true" [collapsed]="true">
+                            <p-header>
+                                <label>Análise: </label>
+                                <label>{{analiseComparada.identificadorAnalise}}</label>
+                            </p-header>
+                            <div class="ui-g" >
+                                    <div class="ui-g-4 ui-md-4 ui-sm-12" style="margin-bottom: 05px">
+                                        <label>Identificador: </label>
+                                        <label>{{analiseComparada.identificadorAnalise}}</label> 
+                                    </div>
+                                    <div class="ui-g-4 ui-md-4 ui-sm-12" style="margin-bottom: 05px">
+                                        <label >Manual: </label>
+                                        <label>{{analiseComparada.contrato.numeroContrato}}</label> 
+                                    </div>
+                                    <div class="ui-g-6 ui-md-6 ui-sm-12" style="margin-bottom: 05px" >
+                                        <label >Propósito da Contagem:</label>
+                                        <span class="md-inputfield">
+                                            <textarea
+                                                    maxlength="4000"
+                                                    pInputTextarea name="propositoContagem"
+                                                    id="idPropositoContagemFormAnalise"
+                                                    [(ngModel)]="analiseComparada.propositoContagem">
+                                            </textarea>
+                                        </span>
+                                    </div>
+
+                                    <div class="ui-g-6 ui-md-6 ui-sm-12" style="margin-bottom: 05px" >
+                                        <label >Escopo da Contagem:</label>
+                                        <span class="md-inputfield">
+                                            <textarea
+                                                    maxlength="4000"
+                                                    pInputTextarea name="escopo"
+                                                    id="idEscopoContagemFormAnalise"
+                                                    [(ngModel)]="analiseComparada.escopo">
+                                            </textarea>
+                                        </span>
+                                    </div>
+
+                                    <div class="ui-g-6 ui-md-6 ui-sm-12" style="margin-bottom: 05px"
+                                    >
+                                        <label >Fronteira</label>
+                                        <span class="md-inputfield">
+                                            <textarea
+                                                    maxlength="4000"
+                                                    pInputTextarea name="fronteiras"
+                                                    id="idFronteirasFormAnalise"
+                                                    [(ngModel)]="analiseComparada.fronteiras">
+                                            </textarea>
+                                        </span>
+                                    </div>
+
+                                    <div class="ui-g-6 ui-md-6 ui-sm-12" style="margin-bottom: 05px" >
+                                        <label>Documentação</label>
+                                        <span class="md-inputfield">
+                                            <textarea
+                                                    maxlength="4000"
+                                                    required
+                                                    pInputTextarea name="documentacao"
+                                                    id="idDocumentacaoFormAnalise"
+                                                    [(ngModel)]="analiseComparada.documentacao">
+                                            </textarea>
+                                        </span>
+                                    </div>
+
+                                    <p-fieldset [legend]="this.getLabel('Fases')" [toggleable]="true" [collapsed]="true">
+                                        <div class="ui-g-12 ui-md-12 ui-sm-12" style="margin-bottom: 05px">
+                                            <p-table
+                                                    dataKey="id"
+                                                    [rowHover]="true"
+                                                    [emptyMessage]="this.getLabel('Selecione um Contrato para escolher Fases')"
+                                                    [value]="analiseComparada.esforcoFases"
+                                                    id="idTabelaFases"
+                                                    [resizableColumns]="true">
+                                                <ng-template pTemplate="caption">
+                                                    Fases
+                                                </ng-template>
+                                                <ng-template pTemplate="header">
+                                                    <tr>
+                                                        <th pSortableColumn="fase.nome">Nome <p-sortIcon></p-sortIcon></th>
+                                                        <th pSortableColumn="esforco">Esforço <p-sortIcon></p-sortIcon></th>
+                                                    </tr>
+                                                </ng-template>
+                                                <ng-template pTemplate="body" let-esforcoFase>
+                                                    <tr class="ui-selectable-row">
+                                                        <td>
+                                                            {{esforcoFase.fase.nome}}
+                                                        </td>
+                                                        <td>
+                                                            {{esforcoFase.esforco}}%
+                                                        </td>
+                                                    </tr>
+                                                </ng-template>
+                                                <ng-template pTemplate="footer">
+                                                    <tr>
+                                                        <td colspan="2" style="text-align:center">{{this.getLabel('Total')}} {{ totalEsforcoFases() }}%</td>
+                                                    </tr>
+                                                </ng-template>
+                                            </p-table>
+                                        </div>
+                                    </p-fieldset>
+                                    <div class="ui-g-12 ui-md-12 ui-sm-12" style="margin-bottom: 05px">
+                                        <label>Observações</label>
+                                        <span class="md-inputfield">
+                                            <textarea
+                                                    [rows]="3"
+                                                    id="idObservacoesFormAnalise"
+                                                    [cols]="180"
+                                                    maxlength="4000"
+                                                    autoResize=true
+                                                    pInputTextarea name="observacoes"
+                                                    [(ngModel)]="analiseComparada.observacoes">
+                                            </textarea>
+                                        </span>
+                                    </div>
+                                </div>
+                            </p-fieldset>
                     </div>
-                    <div class="ui-g-4 ui-md-4 ui-sm-12" style="margin-bottom: 05px">
-                        <label>Equipe Responsável</label>
-                        <p-dropdown
-                                [filter]="true"
-                                dataKey="id"
-                                id="idEquipeResponsavelSaveFormAnalise"
-                                name="equipeResponsavel"
-                                optionLabel="nome"
-                                [disabled]="disabledOptionsforEdit()"
-                                [placeholder]="this.getLabel('Selecione')"
-                                [options]="equipeResponsavel"
-                                [(ngModel)]="analise.equipeResponsavel" >
-                        </p-dropdown>
-                    </div>
-                    <div class="ui-g-4 ui-md-4 ui-sm-12">
-                        <label>Usuário</label>
-                        <p-dropdown
-                                [filter]="true"
-                                dataKey="id"
-                                id="idUsuario"
-                                name="usuario"
-                                optionLabel="nome"
-                                [disabled]="disabledOptionsforEdit()"
-                                [placeholder]="this.getLabel('Selecione')"
-                                [options]="usuariosOptions"
-                                [(ngModel)]="analise.equipeResponsavel" >
-                        </p-dropdown>
-                    </div>
-                </div>
-            </div>
-            <div class="ui-g ui-md-12" style="justify-content: center; margin-bottom: 05px; margin-top: 05px">
-                <div class="ui-g-12 ui-md-12 ui-lg-2" style="margin-bottom: 05px">
-                    <app-white-button
-                            [buttonLabel]="'Voltar' "
-                            id="idBtnVoltarFormAnalise"
-                            routerLink="/divergencia">
-                    </app-white-button>
-                </div>
-                <div class="ui-g-12 ui-md-12 ui-lg-2" style="margin-bottom: 05px">
-                    <app-green-button
-                            type="submit"
-                            id="idBtnSalvarFormAnalise"
-                            [buttonLabel]="'Pesquisar Analise' "
-                            (click)="save()">
-                    </app-green-button>
                 </div>
             </div>
         </div>
         
     </p-tabPanel>
 
-    <p-tabPanel [header]="this.getLabel('Funções Dados')" [disabled]="disableAba" ></p-tabPanel>
+    <p-tabPanel [header]="this.getLabel('Funções Dados')" ></p-tabPanel>
 
-    <p-tabPanel [header]="this.getLabel('Funções Transação')"[disabled]="disableFuncaoTrasacao"></p-tabPanel>
+    <p-tabPanel [header]="this.getLabel('Funções Transação')"></p-tabPanel>
 
-    <p-tabPanel [header]="this.getLabel('Resumo')" [disabled]="disableAba" ></p-tabPanel>
+    <p-tabPanel [header]="this.getLabel('Resumo')" ></p-tabPanel>
 </p-tabView>
 
 <!-- Dialog confirmação deleção -->

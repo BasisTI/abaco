@@ -9,6 +9,8 @@ import {DerChipConverter} from '../analise-shared/der-chips/der-chip-converter';
 import {Alr} from '../alr/alr.model';
 import {Impacto} from '../analise-shared/impacto-enum';
 import {FuncaoResumivel} from '../analise-shared';
+import { CommentFuncaoTransacao } from './comment.model';
+import { Status } from '../status/status.model';
 
 export enum TipoFuncaoTransacao {
   'EE' = 'EE',
@@ -49,7 +51,9 @@ export class FuncaoTransacao implements FuncaoResumivel, BaseEntity, FuncaoAnali
     public ftrValues?: string[],
     public ders?: Der[],
     public impacto?: Impacto,
-    public quantidade?: number
+    public quantidade?: number,
+    public statusFuncao?: String,
+    public lstDivergenceComments?: CommentFuncaoTransacao[],
   ) {
     if (!pf) {
       this.pf = 0;
@@ -122,7 +126,7 @@ export class FuncaoTransacao implements FuncaoResumivel, BaseEntity, FuncaoAnali
       this.complexidade, this.pf, this.analise, this.funcionalidades,
       this.funcionalidade, this.fatorAjuste, this.alrs,
       this.name, this.sustantation, this.der, this.ftr, this.grossPF,
-      this.derValues, this.ftrValues, this.ders, this.impacto, this.quantidade);
+      this.derValues, this.ftrValues, this.ders, this.impacto, this.quantidade, this.statusFuncao, this.lstDivergenceComments);
   }
 
 }
@@ -160,6 +164,7 @@ class FuncaoTransacaoCopyFromJSON {
     this._funcaoTransacao.grossPF = this._json.grossPF;
     this._funcaoTransacao.impacto = this._json.impacto;
     this._funcaoTransacao.quantidade = this._json.quantidade;
+    this._funcaoTransacao.statusFuncao = this._json.statusFuncao;
   }
 
   private converteBaseEntities() {

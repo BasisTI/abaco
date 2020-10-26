@@ -161,22 +161,15 @@ export class DivergenciaListComponent implements OnInit {
     }
 
 
-    public datatableClick(event: DatatableClickEvent) {
-        if (!event.selection) {
+    public editDivergence(analiseDivergence: Analise) {
+        if (!analiseDivergence) {
             return;
         }
-        switch (event.button) {
-            case 'edit':
-                if (event.selection.bloqueiaAnalise) {
-                    this.pageNotificationService.addErrorMessage('Você não pode editar uma análise bloqueada!');
-                    return;
-                }
-                this.router.navigate(['/divergencia', event.selection.id, 'edit']);
-                break;
-            case 'view':
-                this.router.navigate(['/divergencia', event.selection.id, 'view']);
-                break;
+        if (analiseDivergence.bloqueiaAnalise) {
+            this.pageNotificationService.addErrorMessage('Você não pode editar uma análise bloqueada!');
+            return;
         }
+        this.router.navigate(['/divergencia', analiseDivergence.id, 'edit']);
     }
 
     public changeUrl() {

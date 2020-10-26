@@ -15,6 +15,7 @@ import { RouterModule } from '@angular/router';
 import { SharedModule } from '../shared/shared.module';
 import { ConfirmationService } from 'primeng';
 import { PesquisarFuncaoTransacaoModule } from '../pesquisar-ft/pesquisar-ft.module';
+import { FuncaoTransacaoDivergenceComponent } from './funcao-transacao-divergence/funcao-transacao-divergence.component';
 
 @NgModule({
     imports: [
@@ -33,10 +34,12 @@ import { PesquisarFuncaoTransacaoModule } from '../pesquisar-ft/pesquisar-ft.mod
 
     ],
   declarations: [
-    FuncaoTransacaoFormComponent
+    FuncaoTransacaoFormComponent,
+    FuncaoTransacaoDivergenceComponent,
   ],
   exports: [
-    FuncaoTransacaoFormComponent
+    FuncaoTransacaoFormComponent,
+    FuncaoTransacaoDivergenceComponent,
   ],
   providers: [
     FuncaoTransacaoService,

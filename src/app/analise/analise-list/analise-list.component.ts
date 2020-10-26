@@ -62,7 +62,7 @@ export class AnaliseListComponent implements OnInit {
     rowsPerPageOptions: number[] = [5, 10, 20, 50, 100];
 
     customOptions: Object = {};
-
+    setMainAnalise: boolean = true;
     analiseSelecionada: any = new Analise();
     analiseTableSelecionada: Analise = new Analise();
     searchGroup: SearchGroup = new SearchGroup();
@@ -108,6 +108,8 @@ export class AnaliseListComponent implements OnInit {
     isLoadFilter = true;
     firstAnaliseDivergencia = new Analise();
     secondAnaliseDivergencia = new Analise();
+    mainAnaliseDivergencia: Analise;
+    auxiliaryAnaliseDivergencia: Analise;
 
     constructor(
         private router: Router,
@@ -757,7 +759,7 @@ export class AnaliseListComponent implements OnInit {
         } else if (
                     !(this.checkToGenerateDivergence(this.firstAnaliseDivergencia)) &&
                     !(this.checkToGenerateDivergence(this.secondAnaliseDivergencia))
-                    ){
+                    ) {
             this.showDialogDivergence = false;
         } else {
             this.showDialogDivergence = true;
@@ -765,9 +767,17 @@ export class AnaliseListComponent implements OnInit {
         }
     }
 
-    public generateDivergence() {
-        this.blockUiService.show();
-        this.analiseService.generateDivergence(this.firstAnaliseDivergencia, this.secondAnaliseDivergencia)
+    public generateDivergence(setMainAnalise: boolean) {
+
+        if (setMainAnalise) {
+            this.mainAnaliseDivergencia = this.firstAnaliseDivergencia;
+            this.secondAnaliseDivergencia = this.secondAnaliseDivergencia;
+        }
+        if (!this.mainAnaliseDivergencia || !this.auxiliaryAnaliseDivergencia) {
+            this.pageNotificationService.addErrorMessage('Selecione a Análise para divergência das Funções de Dados e Transação.');
+            return;
+        }
+        this.analiseService.generateDivergence(this.mainAnaliseDivergencia, this.auxiliaryAnaliseDivergencia, setMainAnalise)
             .subscribe(analiseCreateDivergence => {
                 this.blockUiService.show();
                 this.analiseService.updateDivergence(analiseCreateDivergence).subscribe(analiseUpdateDivergence => {
@@ -778,6 +788,8 @@ export class AnaliseListComponent implements OnInit {
                                 'A foi gerada divergence de identificador '
                                 + analiseUpdateDivergence.identificadorAnalise
                                 + ' foi criado.');
+                    this.mainAnaliseDivergencia = null;
+                    this.auxiliaryAnaliseDivergencia = null;
                     this.blockUiService.hide();
                 });
             },
@@ -829,5 +841,9 @@ export class AnaliseListComponent implements OnInit {
         this.showDialogDivergence = false;
         this.firstAnaliseDivergencia = new Analise();
         this.firstAnaliseDivergencia = new Analise();
+    }
+
+    setFunctionMainAnalise( auxiliaryAnalise: Analise) {
+        this.auxiliaryAnaliseDivergencia = auxiliaryAnalise;
     }
 }

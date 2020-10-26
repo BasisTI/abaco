@@ -17,6 +17,8 @@ import { funcaoDadosRoute } from './funcao-dados.route';
 import { BaselineService } from '../baseline';
 import { SharedModule } from '../shared/shared.module';
 import { PesquisarFuncaoTransacaoModule } from '../pesquisar-ft/pesquisar-ft.module';
+import { FuncaoTransacaoDivergenceComponent } from '../funcao-transacao';
+import { FuncaoDadosDivergenceComponent } from './funcao-dados-divergence/funcao-dados-divergence.component';
 
 
 
@@ -39,10 +41,12 @@ import { PesquisarFuncaoTransacaoModule } from '../pesquisar-ft/pesquisar-ft.mod
         PesquisarFuncaoTransacaoModule,
     ],
   declarations: [
-    FuncaoDadosFormComponent
+    FuncaoDadosFormComponent,
+    FuncaoDadosDivergenceComponent,
   ],
   exports: [
-    FuncaoDadosFormComponent
+    FuncaoDadosFormComponent,
+    FuncaoDadosDivergenceComponent,
   ],
   providers: [
     FuncaoDadosService,

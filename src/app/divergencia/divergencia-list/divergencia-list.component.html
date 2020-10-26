@@ -138,11 +138,13 @@
                         </p-table>
                     </div>
                     <div class="ui-g-12 ui-md-1" >
-                        <!-- <basis-datatable-button
+                        <basis-datatable-button
                                 name="generateDivergence"
-                                icon="compare-arrows"
+                                icon="edit"
+                                [disabled]="!selectedDivergence"
+                                (click)="editDivergence(selectedDivergence)"
                                 class="ui-button-info">
-                        </basis-datatable-button> -->
+                        </basis-datatable-button>
                     </div>
                     <div class="ui-g-12 ui-md-2">
                         <app-botoes-exportacao [query]="changeUrl()" resourceName="analise" id="idBtnExportacaoComponentAnalise"

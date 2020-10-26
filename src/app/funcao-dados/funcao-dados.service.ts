@@ -11,11 +11,13 @@ import { Funcionalidade } from 'src/app/funcionalidade';
 import { ResponseWrapper } from 'src/app/shared';
 import { Manual } from 'src/app/manual';
 import { Analise } from '../analise';
+import { CommentFuncaoDados } from './comment-funcado-dados.model';
 
 @Injectable()
 export class FuncaoDadosService {
 
     resourceUrl = environment.apiUrl + '/funcao-dados';
+    resourceUrlComment = environment.apiUrl + '/comment/funcao-dados';
     vwresourceUrl = environment.apiUrl + '/vw-funcao-dados';
     resourceUrlPEAnalitico = environment.apiUrl + '/peanalitico/';
     funcaoTransacaoResourceUrl = environment.apiUrl + '/funcao-transacaos';
@@ -104,9 +106,26 @@ export class FuncaoDadosService {
         return entity;
     }
 
-    public delete(id: number): Observable<Response> {
-        return this.http.delete<Response>(`${this.resourceUrl}/${id}`);
+    delete(id: number): Observable<Response> {
+        return this.http.get<Response>(`${this.resourceUrl}/${id}`);
     }
+
+    deleteStatus(id: number): Observable<Response> {
+        return this.http.get<Response>(`${this.resourceUrl}/update-status/${id}/${StatusFunction.EXCLUIDO}`);
+    }
+
+    approved(id: number): Observable<Response> {
+        return this.http.get<Response>(`${this.resourceUrl}/update-status/${id}/${StatusFunction.VALIDADO}`);
+    }
+
+    pending(id: number): Observable<Response> {
+        return this.http.get<Response>(`${this.resourceUrl}/update-status/${id}/${StatusFunction.DIVERGENTE}`);
+    }
+
+    saveComent(comment: String, idStatus: number) {
+        return this.http.post<CommentFuncaoDados>(`${this.resourceUrlComment}/${idStatus}`, comment);
+    }
+
 
     private convertResponse(res): ResponseWrapper {
         const jsonResponse = res;
@@ -171,3 +190,8 @@ export class FuncaoDadosService {
         return this.http.get<[]>(url);
     }
 }
+enum StatusFunction {
+    DIVERGENTE = 'DIVERGENTE',
+    EXCLUIDO = 'EXCLUIDO',
+    VALIDADO = 'VALIDADO',
+  }

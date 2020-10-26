@@ -21,7 +21,6 @@ import { FuncaoDados } from '../../funcao-dados';
 import { DivergenciaService } from '../divergencia.service';
 import { StatusService } from 'src/app/status';
 import { Status } from 'src/app/status/status.model';
-import { Analise } from 'src/app/analise';
 
 
 @Component({
@@ -103,73 +102,17 @@ export class DivergenciaFormComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.disableAba = true;
-        this.validacaoCampos = true;
-        this.hideShowSelectEquipe = true;
         this.analiseSharedDataService.init();
-        this.isEdicao = false;
-        this.isSaving = false;
-        this.dataHomologacao = new Date();
-        this.dataCriacao = new Date();
-        this.getOrganizationsFromActiveLoggedUser();
-        this.getLoggedUserId();
-        this.getEquipesFromActiveLoggedUser();
-        this.habilitarCamposIniciais();
         this.getAnalise();
-        this.traduzirtiposAnalise();
-        this.traduzirMetodoContagem();
-        this.getLstStatus();
     }
 
     getLabel(label) {
         return label;
     }
 
-    traduzirtiposAnalise() {
-        // this.translate.stream(['Analise.Analise.TiposAnalise.ProjetoDesenvolvimento', 'Analise.Analise.TiposAnalise.ProjetoMelhoria',
-        //     'Analise.Analise.TiposAnalise.ContagemAplicacao']).subscribe((traducao) => {
-        //     this.tiposAnalise = [
-        //         {label: traducao['Analise.Analise.TiposAnalise.ProjetoDesenvolvimento'], value: 'DESENVOLVIMENTO'},
-        //         {label: traducao['Analise.Analise.TiposAnalise.ProjetoMelhoria'], value: 'MELHORIA'},
-        //         {label: traducao['Analise.Analise.TiposAnalise.ContagemAplicacao'], value: 'APLICACAO'}
-        //     ];
-
-        // });
-    }
-
-    traduzirMetodoContagem() {
-        // this.translate.stream(['Analise.Analise.metsContagens.DETALHADA_IFPUG', 'Analise.Analise.metsContagens.INDICATIVA_NESMA',
-        //     'Analise.Analise.metsContagens.ESTIMADA_NESMA']).subscribe((traducao) => {
-        //     this.metodoContagem = [
-        //         {label: traducao['Analise.Analise.metsContagens.DETALHADA_IFPUG'], value: 'DETALHADA'},
-        //         {label: traducao['Analise.Analise.metsContagens.INDICATIVA_NESMA'], value: 'INDICATIVA'},
-        //         {label: traducao['Analise.Analise.metsContagens.ESTIMADA_NESMA'], value: 'ESTIMADA'}
-        //     ];
-
-        // });
-    }
-
     getOrganizationsFromActiveLoggedUser() {
         this.organizacaoService.dropDownActiveLoggedUser().subscribe(res => {
             this.organizacoes = res;
-        });
-    }
-
-    getLoggedUserId() {
-        this.userService.getLoggedUserWithId().subscribe(res => {
-            this.loggedUser = res;
-        });
-    }
-
-    getEquipesFromActiveLoggedUser() {
-        this.equipeService.getEquipesActiveLoggedUser().subscribe(res => {
-            this.tipoEquipesLoggedUser = res;
-        });
-    }
-    getLstStatus() {
-        this.statusService.listActive().subscribe(
-        lstStatus => {
-            this.statusCombo = lstStatus;
         });
     }
 
@@ -190,42 +133,18 @@ export class DivergenciaFormComponent implements OnInit {
         });
     }
 
-
-    checkIfUserCanEdit() {
-        let retorno = false;
-        // if (this.tipoEquipesLoggedUser && this.analise.compartilhadas) {
-        //     // this.tipoEquipesLoggedUser.forEach(equipe => {
-        //     //     this.analise.compartilhadas.forEach(compartilhada => {
-        //     //         if (equipe.id === compartilhada.equipeId) {
-        //     //             if (!compartilhada.viewOnly) {
-        //     //                 retorno = true;
-        //     //             }
-        //     //         }
-        //     //     });
-        //     // });
-        // }
-        return retorno;
-    }
-
     getAnalise() {
         this.routeSub = this.route.params.subscribe(params => {
             if (params['id']) {
                 this.isEdicao = true;
                 this.analiseService.find(params['id']).subscribe(analise => {
-                    analise = new  Divergencia().copyFromJSON(analise);
-                    this.loadDataAnalise(analise);
-                    if (!(this.verifyCanEditAnalise(analise))) {
-                        this.pageNotificationService.addErrorMessage('Você não tem permissão para editar esta análise, redirecionando para a tela de visualização...');
-                        this.router.navigate(['/analise', analise.id, 'view']);
-                    }
-                    this.disableFuncaoTrasacao = analise.metodoContagem === MessageUtil.INDICATIVA;
-                    this.canEditMetodo = !(this.isEdicao) || (this.route.snapshot.paramMap.get('clone')) && this.analise.metodoContagem === MetodoContagem.ESTIMADA;
+                    this.analise = analise;
                     },
                     err => {
                         this.pageNotificationService.addErrorMessage(
                             this.getLabel('Você não tem permissão para editar esta análise, redirecionando para a tela de visualização...')
                         );
-                        this.router.navigate(['/analise']);
+                        this.router.navigate(['/divergence']);
                     });
             } else {
                 this.analise = new Divergencia();
@@ -270,16 +189,7 @@ export class DivergenciaFormComponent implements OnInit {
     }
 
     private inicializaValoresAposCarregamento(analiseCarregada: Divergencia) {
-        if (analiseCarregada.bloqueiaAnalise) {
-            this.pageNotificationService.addErrorMessage(this.getLabel('Você não pode editar uma análise bloqueada!'));
-            this.router.navigate(['/analise']);
-        }
         this.analise = analiseCarregada;
-        if (!this.checkIfUserCanEdit() && !this.checkUserAnaliseEquipes()) {
-            this.pageNotificationService
-                .addErrorMessage(this.getLabel('msgSemVocê não tem permissão para editar esta análise, redirecionando para a tela de visualização...PermissaoParaEditarAnalise'));
-            this.router.navigate([`/analise/${analiseCarregada.id}/view`]);
-        }
         this.setSistemaOrganizacao(analiseCarregada.organizacao);
         if (analiseCarregada.contrato !== undefined && analiseCarregada.contrato.manualContrato) {
             this.setManual(analiseCarregada.manual ? analiseCarregada.manual : new Manual());
@@ -511,7 +421,6 @@ export class DivergenciaFormComponent implements OnInit {
     }
 
     save() {
-        this.validaCamposObrigatorios();
         if (this.verificarCamposObrigatorios()) {
             if (this.analise.id && this.analise.id > 0) {
                 this.analiseService.update(this.analise).subscribe(() => {
@@ -528,18 +437,6 @@ export class DivergenciaFormComponent implements OnInit {
                 });
             }
         }
-    }
-
-    private validaCamposObrigatorios() {
-        const validacaoIdentificadorAnalise = this.analise.identificadorAnalise ? true : false;
-        const validacaoContrato = this.analise.contrato ? true : false;
-        const validacaoMetodoContagem = this.analise.metodoContagem ? true : false;
-        const validacaoTipoAnallise = this.analise.tipoAnalise ? true : false;
-        this.validacaoCampos = !(validacaoIdentificadorAnalise === true
-            && validacaoContrato === true
-            && validacaoMetodoContagem === true
-            && validacaoTipoAnallise === true);
-        this.enableDisableAba();
     }
 
     enableDisableAba() {
@@ -670,15 +567,10 @@ export class DivergenciaFormComponent implements OnInit {
 
     private loadDataAnalise(analise: Divergencia) {
         this.inicializaValoresAposCarregamento(analise);
-        this.dataAnalise = this.analise;
-        this.aguardarGarantia = this.analise.baselineImediatamente;
-        this.enviarParaBaseLine = this.analise.enviarBaseline;
         this.setDataHomologacao();
         this.setDataOrdemServico();
         this.diasGarantia = this.getGarantia();
         this.contratoSelected(this.analise.contrato);
-        this.populaComboUsers();
-        this.validaCamposObrigatorios();
         this.analiseSharedDataService.analiseCarregada();
     }
 
@@ -689,13 +581,13 @@ export class DivergenciaFormComponent implements OnInit {
             case 0:
                 return;
             case 1:
-                link = ['/analise/' + this.analise.id + '/funcao-dados'];
+                link = ['/divergencia/' + this.analise.id + '/funcao-dados'];
                 break;
             case 2:
-                link = ['/analise/' + this.analise.id + '/funcao-transacao'];
+                link = ['/divergencia/' + this.analise.id + '/funcao-transacao'];
                 break;
             case 3:
-                link = ['/analise/' + this.analise.id + '/resumo'];
+                link = ['/divergencia/' + this.analise.id + '/resumo'];
                 break;
         }
         this.router.navigate(link);

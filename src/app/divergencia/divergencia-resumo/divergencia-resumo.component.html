@@ -1,0 +1,194 @@
+<basis-block-ui></basis-block-ui>
+<p-tabView (onChange)="handleChange($event)" *ngIf="analise">
+    <p-tabPanel [header]="this.getLabel('Geral')"></p-tabPanel>
+
+    <p-tabPanel [header]="this.getLabel('Funções de Dados')"></p-tabPanel>
+
+    <p-tabPanel [header]="this.getLabel('Funções de Transações')" [disabled]="disableAba" ></p-tabPanel>
+
+    <p-tabPanel [header]="this.getLabel('Resumo')" [selected]="true">
+        <div class="ui-g ui-fluid">
+            <div class="card card-w-title">
+                <div class="ui-g-12" *ngIf="analise">
+                    <h2>{{this.getLabel('PF Final Total:')}} {{ pfTotal }}</h2>
+                    <h2>{{this.getLabel('PF Final Ajustado:')}} {{ pfAjustada }}</h2>
+                    <div class="ui-g-12 ui-md-12 ui-sm-12">
+                        <div class="ui-g-12 ui-md-12 ui-sm-12">
+                          <h2>Complexidade</h2>
+                          <basis-datatable
+                              type="memory"
+                              [value]="linhaResumo"
+                              [paginator]="false"
+                              disableEdit="true"
+                              disableView="true"
+                              disableDelete="true"
+                              disableClone="true"
+                              [rows]="20" >
+                            <p-column >
+                                <ng-template let-linhaResumo="rowData" pTemplate="body">
+                                  {{ linhaResumo.tipo}}
+                                </ng-template>
+                            </p-column>
+                            <p-column [header]="this.getLabel('SEM')">
+                              <ng-template let-linhaResumo="rowData" pTemplate="body">
+                                {{ linhaResumo.sem}}
+                              </ng-template>
+                            </p-column>
+                            <p-column [header]="this.getLabel('Baixa')">
+                                <ng-template let-linhaResumo="rowData" pTemplate="body">
+                                  {{ linhaResumo.baixa}}
+                                </ng-template>
+                            </p-column>
+                            <p-column [header]="this.getLabel('Média')">
+                                <ng-template let-linhaResumo="rowData" pTemplate="body">
+                                  {{ linhaResumo.media}}
+                                </ng-template>
+                            </p-column>
+                            <p-column [header]="this.getLabel('Alta')">
+                                <ng-template let-linhaResumo="rowData" pTemplate="body">
+                                  {{ linhaResumo.alta}}
+                                </ng-template>
+                            </p-column>
+                            <p-column [header]="this.getLabel('INM')">
+                                <ng-template let-linhaResumo="rowData" pTemplate="body">
+                                  {{ linhaResumo.inm}}
+                                </ng-template>
+                            </p-column>
+                            <p-column [header]="this.getLabel('Qtd')">
+                                <ng-template let-linhaResumo="rowData" pTemplate="body">
+                                  {{ linhaResumo.quantidadeTipo}}
+                                </ng-template>
+                            </p-column>
+                            <p-column [header]="this.getLabel('PF Total')">
+                              <ng-template let-linhaResumo="rowData" pTemplate="body">
+                                {{ linhaResumo.pfTotal | number }}
+                              </ng-template>
+                            </p-column>
+                            <p-column [header]="this.getLabel('PF Ajustado')">
+                              <ng-template let-linhaResumo="rowData" pTemplate="body">
+                                {{ linhaResumo.pfAjustada | number }}
+                              </ng-template>
+                            </p-column>
+                          </basis-datatable>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="ui-g">
+          <div class="ui-g ui-md-12" >
+            <div class="ui-g-2 ui-md-2 ui-sm-12">
+              <app-white-button
+                      [buttonLabel]="this.getLabel('Voltar')"
+                      routerLink="/analise">
+              </app-white-button>
+            </div>
+            <div class="ui-g-2 ui-md-2 ui-sm-12">
+              <app-green-button 
+                      [buttonLabel]="this.getLabel('Gerar Relatório Excel')"
+                      (click)="geraRelatorioExcelBrowser()">
+              </app-green-button>
+            </div>
+            <div class="ui-g-2 ui-md-2 ui-sm-12">
+              <app-gray-button 
+                      [buttonLabel]="this.getLabel('Gerar Relatório PDF')"
+                      (click)="geraRelatorioPdfDetalhadoBrowser()">
+              </app-gray-button>
+            </div>
+            <div class="ui-g-2 ui-md-2 ui-sm-12">
+              <app-red-button *ngIf="!this.isView"
+                      [buttonLabel]="this.getLabel('Bloquear Análise')"
+                      (click)="bloquearAnalise()">
+              </app-red-button>
+            </div>
+            <div class="ui-g-2 ui-md-2 ui-sm-12">
+              <app-blue-button *ngIf="!this.isView"
+                      [buttonLabel]="this.getLabel('Compartilhar Análise')"
+                      (click)="openCompartilharDialog()">
+              </app-blue-button>
+            </div>
+          </div>
+      </div>
+    </p-tabPanel>
+</p-tabView>
+<p-dialog [header]="this.getLabel('Compartilhar Análise')" [(visible)]="mostrarDialog" [modal]="true" (onHide)="limparSelecaoCompartilhar()" *ngIf="equipeShare" [style]="{width:'80vw'}">
+  <p-table
+    [(value)]="equipeShare"
+    [headerCheckboxToggleAllPages]="true"
+    [(selection)]="selectedEquipes"
+    dataKey="equipeId"
+    emptyMessage="Nenhuma outra equipe na sua organização pode ter acesso à essa análise">
+
+    <ng-template pTemplate="header">
+        <tr>
+            <th style="text-align:left; width: 50px;"><p-tableHeaderCheckbox></p-tableHeaderCheckbox></th>
+            <th>Equipe</th>
+            <th>Somente visualizar ?</th>
+        </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-equipe>
+        <tr class="ui-selectable-row">
+            <td >
+                <p-tableCheckbox [value]=" equipe"></p-tableCheckbox>
+            </td>
+            <td>
+                {{equipe.nomeEquipe}}
+            </td>
+            <td>
+                <div class="p-col-12">
+                    <p-radioButton [value]="true" label="Sim" [(ngModel)]="equipe.viewOnly">
+                    </p-radioButton>
+                </div>
+                <div class="p-col-12">
+                    <p-radioButton [value]="false" label="Não" [(ngModel)]="equipe.viewOnly">
+                    </p-radioButton>
+                </div>
+            </td>
+        </tr>
+    </ng-template>
+  </p-table>
+  
+    <app-green-button [buttonLabel]="'Adicionar'" (click)="salvarCompartilhar()"  style="float:right; margin-top: 5px"></app-green-button>
+    <br/>
+    <br/>
+
+    <hr/>
+    <h3>Compartilhada com:</h3>
+    <p-table
+      *ngIf="analise && analise.compartilhadas"
+      [(value)]="analise.compartilhadas"
+      selectionMode="single"
+      [(selection)]="selectedToDelete"
+      dataKey="equipeId"
+      emptyMessage="Nenhuma outra equipe tem acesso a essa análise">
+
+          <ng-template pTemplate="header">
+              <tr>
+                  <th style="text-align:left; width: 50px;"></th>
+                  <th>Equipe</th>
+                  <th>Somente visualizar ?</th>
+              </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-equipe>
+              <tr class="ui-selectable-row">
+                  <td >
+                      <p-radioButton [(ngModel)]="selectedToDelete" [value]="equipe"></p-radioButton>
+                  </td>
+                  <td>
+                      {{equipe.nomeEquipe}}
+                  </td>
+                  <td>
+                      {{equipe.viewOnly? 'Sim' : 'Não'}}
+                  </td>
+              </tr>
+          </ng-template>
+    </p-table>
+    <app-red-button [buttonLabel]="this.getLabel('Remover')" (click)="deletarCompartilhar()"
+                    style="float:right; margin-top: 5px"></app-red-button>
+</p-dialog>
+<p-confirmDialog [header]="this.getLabel('Confirmação')" #dialog>
+    <p-footer>
+        <button type="button" pButton icon="fa-close" [label]="'Não'" (click)="dialog.reject()"></button>
+        <button type="button" pButton icon="fa-check" [label]="'Sim'" (click)="dialog.accept()"></button>
+    </p-footer>
+</p-confirmDialog>
