@@ -1,0 +1,289 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+   <changeSet author="basis (generated)" id="1603313942920-1">
+       <dropView viewName="vw_funcao_dados"/>
+   </changeSet>
+   <changeSet author="basis (generated)" id="1603313942920-2">
+       <dropView viewName="vw_funcao_transacao"/>
+   </changeSet>
+   <changeSet author="basis (generated)" id="1603313942920-3">
+       <createView fullDefinition="false" viewName="vw_funcao_dados">
+           with count_der as (
+           select count(der.id) as total, funcao_dados_id from der where funcao_dados_id notnull group by funcao_dados_id
+           ),count_der_with_one as (
+           select coalesce(der.valor, 1)as total, t_der.funcao_dados_id as funcao_dados_id from count_der t_der inner join der on der.funcao_dados_id=t_der.funcao_dados_id where total = 1
+           ),count_der_more_one as (
+           select * from count_der where total > 1
+           ),sum_der as (
+           select * from count_der_with_one union select * from count_der_more_one
+           ),
+           count_rlr as (
+           select count(rlr.id) as total, funcao_dados_id from rlr where funcao_dados_id notnull group by funcao_dados_id
+           ),
+           total_rlr_with_one as (
+           select coalesce(rlr.valor, 1)as total, t_rlr.funcao_dados_id as funcao_dados_id from count_rlr t_rlr inner join rlr on rlr.funcao_dados_id=t_rlr.funcao_dados_id where total = 1
+           ),
+           total_rlr_more_one as (
+           select * from count_rlr where total > 1
+           ),sum_rlr as (
+           select * from total_rlr_more_one union select * from total_rlr_with_one
+           )
+
+           select
+           fd.id
+           ,fd.name
+           ,fd.tipo
+           ,fd.complexidade
+           ,fd.pf
+           ,fd.analise_id
+           ,fd.fator_ajuste_id
+           ,fd.funcionalidade_id
+           ,fd.sustantation
+           ,fd.grosspf
+           ,fd.status_funcao
+           ,fc.nome as nome_funcionalidade
+           ,md.id as id_modulo
+           ,md.nome as nome_modulo
+           ,concat(fa.codigo,' - (', fa.origem,') - ',fa.nome,' - ', round( fa.fator, 2)) as deflator
+           ,coalesce(sum_der.total,0) as total_ders
+           ,coalesce(sum_rlr.total,0) as total_rlrs
+           from funcao_dados fd
+           left join funcionalidade fc on fd.funcionalidade_id = fc.id
+           left join modulo md on fc.modulo_id = md.id
+           left join fator_ajuste fa on fa.id = fd.fator_ajuste_id
+           left join sum_der on sum_der.funcao_dados_id = fd.id
+           left join sum_rlr on sum_rlr.funcao_dados_id = fd.id;
+       </createView>
+   </changeSet>
+   <changeSet author="basis (generated)" id="1603313942920-4">
+       <createView fullDefinition="false" viewName="vw_funcao_transacao">
+           with count_der as (
+           select count(der.id) as total, funcao_transacao_id from der where funcao_transacao_id notnull group by funcao_transacao_id
+           ),count_der_with_one as (
+           select coalesce(der.valor, 1)as total, t_der.funcao_transacao_id as funcao_transacao_id from count_der t_der inner join der on der.funcao_transacao_id=t_der.funcao_transacao_id where total = 1
+           ),count_der_more_one as (
+           select * from count_der where total > 1
+           ),sum_der as (
+           select * from count_der_with_one union select * from count_der_more_one
+           ),
+           count_alr as (
+           select count(alr.id) as total, funcao_transacao_id from alr where funcao_transacao_id notnull group by funcao_transacao_id
+           ),
+           total_alr_with_one as (
+           select coalesce(alr.valor, 1)as total, t_alr.funcao_transacao_id as funcao_transacao_id from count_alr t_alr inner join alr on alr.funcao_transacao_id=t_alr.funcao_transacao_id where total = 1
+           ),
+           total_alr_more_one as (
+           select * from count_alr where total > 1
+           ),sum_alr as (
+           select * from total_alr_more_one union select * from total_alr_with_one
+           )
+
+           select
+           ft.id
+           ,ft.name
+           ,ft.tipo
+           ,ft.complexidade
+           ,ft.pf
+           ,ft.analise_id
+           ,ft.fator_ajuste_id
+           ,ft.funcionalidade_id
+           ,fa.nome as fatorAjuste
+           ,ft.sustantation
+           ,ft.grosspf
+           ,ft.status_funcao
+           ,fc.nome as nome_funcionalidade
+           ,md.id as id_modulo
+           ,md.nome as nome_modulo
+           ,concat(fa.codigo,' - (', fa.origem,') - ',fa.nome,' - ', round( fa.fator, 2)) as deflator
+           ,coalesce(sum_der.total,0) as total_ders
+           ,coalesce(sum_alr.total,0) as total_alrs
+           from funcao_transacao ft
+           left join funcionalidade fc on ft.funcionalidade_id = fc.id
+           left join modulo md on fc.modulo_id = md.id
+           left join fator_ajuste fa on fa.id = ft.fator_ajuste_id
+           left join sum_der on sum_der.funcao_transacao_id = ft.id
+           left join sum_alr on sum_alr.funcao_transacao_id = ft.id;
+       </createView>
+   </changeSet>
+   <changeSet author="basis (generated)" id="1603313942920-5">
+       <createView fullDefinition="false" viewName="vw_analise_divergencia_soma_pf">
+           with total_fd as (
+           select analise_id, sum(pf) fd_pf, sum(grosspf) fd_pf_gross from funcao_dados  where status_funcao = 'VALIDADO' group by analise_id
+           ), total_ft as(
+           select analise_id, sum(pf) ft_pf, sum(grosspf) ft_pf_gross from funcao_transacao  where status_funcao = 'VALIDADO' group by analise_id
+           ), total as(
+           select id  as analise_id, total_fd.fd_pf, total_fd.fd_pf_gross, total_ft.ft_pf, total_ft.ft_pf_gross from analise ans
+           left join total_fd on total_fd.analise_id = ans.id
+           left join total_ft on total_ft.analise_id = ans.id
+           )
+           select analise_id, coalesce(ft_pf_gross, 0) + coalesce(fd_pf_gross, 0) as pf_gross,  coalesce(fd_pf, 0) + coalesce(ft_pf, 0) as pf_total from total
+       </createView>
+   </changeSet>
+   <changeSet author="basis (generated)" id="1603313942920-6">
+       <createView fullDefinition="false" viewName="vw_divergencia_resumo">
+           with funcao_dados_group_complexidade as(
+           select
+           count(id) quantidade
+           ,complexidade
+           ,tipo
+           ,analise_id
+           from
+           funcao_dados
+           where status_funcao::text = 'VALIDADO'::text
+           group by
+           complexidade
+           ,tipo
+           ,analise_id
+           ), funcao_dados_group_tipo as (
+           select
+           count(id) quantidade_tipo
+           ,sum(pf)pf_ajustada
+           ,sum(grosspf)pf_total
+           ,tipo
+           ,analise_id
+           from
+           funcao_dados
+           where status_funcao::text = 'VALIDADO'::text
+           group by
+           tipo
+           ,analise_id
+           ), funcao_dados_group_complexidade_sem as (
+           select * from funcao_dados_group_complexidade where complexidade = 'SEM'
+           ), funcao_dados_group_complexidade_baixa as (
+           select * from funcao_dados_group_complexidade where complexidade = 'BAIXA'
+           ), funcao_dados_group_complexidade_media as (
+           select * from funcao_dados_group_complexidade where complexidade = 'MEDIA'
+           ), funcao_dados_group_complexidade_alta as (
+           select * from funcao_dados_group_complexidade where complexidade = 'ALTA'
+           ), funcao_dados_group_complexidade_inm as (
+           select * from funcao_dados_group_complexidade where complexidade = 'INM'
+           ), resumo_fd as (
+           select
+           fdgt.analise_id
+           ,fdgt.pf_ajustada
+           ,fdgt.pf_total
+           ,fdgt.quantidade_tipo
+           ,fdgt.tipo
+           ,coalesce(sem.quantidade,0) as sem
+           ,coalesce(baixa.quantidade,0) as baixa
+           ,coalesce(media.quantidade,0) as media
+           ,coalesce(alta.quantidade,0) as alta
+           ,coalesce(inm.quantidade,0) as inm
+           from funcao_dados_group_tipo fdgt
+           left join funcao_dados_group_complexidade_sem as sem on sem.analise_id=fdgt.analise_id and sem.tipo=fdgt.tipo
+           left join funcao_dados_group_complexidade_baixa as baixa on baixa.analise_id=fdgt.analise_id and baixa.tipo=fdgt.tipo
+           left join funcao_dados_group_complexidade_media as media on media.analise_id=fdgt.analise_id and media.tipo=fdgt.tipo
+           left join funcao_dados_group_complexidade_alta as alta on alta.analise_id=fdgt.analise_id and alta.tipo=fdgt.tipo
+           left join funcao_dados_group_complexidade_inm as inm on inm.analise_id=fdgt.analise_id and inm.tipo=fdgt.tipo
+           ), funcao_transacao_group_complexidade as(
+           select
+           count(id) quantidade
+           ,complexidade
+           ,tipo
+           ,analise_id
+           from
+           funcao_transacao
+            where status_funcao::text = 'VALIDADO'::text
+           group by
+           complexidade
+           ,tipo
+           ,analise_id
+           ), funcao_transacao_group_tipo as (
+           select
+           count(id) quantidade_tipo
+           ,sum(pf)pf_ajustada
+           ,sum(grosspf)pf_total
+           ,tipo
+           ,analise_id
+           from
+           funcao_transacao
+            where status_funcao::text = 'VALIDADO'::text
+           group by
+           tipo
+           ,analise_id
+           ), funcao_transacao_group_complexidade_sem as (
+           select * from funcao_transacao_group_complexidade where complexidade = 'SEM'
+           ), funcao_transacao_group_complexidade_baixa as (
+           select * from funcao_transacao_group_complexidade where complexidade = 'BAIXA'
+           ), funcao_transacao_group_complexidade_media as (
+           select * from funcao_transacao_group_complexidade where complexidade = 'MEDIA'
+           ), funcao_transacao_group_complexidade_alta as (
+           select * from funcao_transacao_group_complexidade where complexidade = 'ALTA'
+           ), funcao_transacao_group_complexidade_inm as (
+           select * from funcao_transacao_group_complexidade where complexidade = 'INM'
+           ), resumo_ft as (
+           select
+           ftdt.analise_id
+           ,ftdt.pf_ajustada
+           ,ftdt.pf_total
+           ,ftdt.quantidade_tipo
+           ,ftdt.tipo
+           ,coalesce(sem.quantidade,0) as sem
+           ,coalesce(baixa.quantidade,0) as baixa
+           ,coalesce(media.quantidade,0) as media
+           ,coalesce(alta.quantidade,0) as alta
+           ,coalesce(inm.quantidade,0) as inm
+           from funcao_transacao_group_tipo ftdt
+           left join funcao_transacao_group_complexidade_sem as sem on sem.analise_id=ftdt.analise_id and sem.tipo=ftdt.tipo
+           left join funcao_transacao_group_complexidade_baixa as baixa on baixa.analise_id=ftdt.analise_id and baixa.tipo=ftdt.tipo
+           left join funcao_transacao_group_complexidade_media as media on media.analise_id=ftdt.analise_id and media.tipo=ftdt.tipo
+           left join funcao_transacao_group_complexidade_alta as alta on alta.analise_id=ftdt.analise_id and alta.tipo=ftdt.tipo
+           left join funcao_transacao_group_complexidade_inm as inm on inm.analise_id=ftdt.analise_id and inm.tipo=ftdt.tipo
+           ), resumo as (
+           select * from resumo_ft union select * from resumo_fd
+           )
+           select row_number() OVER (ORDER BY analise_id) AS row_number,* from resumo
+       </createView>
+   </changeSet>
+   <changeSet author="basis (generated)" id="1603313942920-7">
+      <createTable tableName="divergence_comments_funcao_dados">
+         <column name="id" type="BIGINT">
+            <constraints nullable="false"/>
+         </column>
+         <column name="funcao_dados_id" type="BIGINT"/>
+         <column name="user_id" type="BIGINT"/>
+         <column name="comment" type="VARCHAR(255)"/>
+      </createTable>
+   </changeSet>
+   <changeSet author="basis (generated)" id="1603313942920-8">
+       <createTable tableName="divergence_comments_funcao_transacao">
+           <column name="id" type="BIGINT">
+               <constraints nullable="false"/>
+           </column>
+           <column name="funcao_transacao_id" type="BIGINT"/>
+           <column name="user_id" type="BIGINT"/>
+           <column name="comment" type="VARCHAR(255)"/>
+       </createTable>
+   </changeSet>
+   <changeSet author="basis (generated)" id="1603313942920-9">
+       <addForeignKeyConstraint baseColumnNames="user_id"
+                                baseTableName="divergence_comments_funcao_dados"
+                                constraintName="FK_user_divergence_comment"
+                                referencedColumnNames="id"
+                                referencedTableName="jhi_user"/>
+   </changeSet>
+   <changeSet author="basis (generated)" id="1603313942920-10">
+       <addForeignKeyConstraint baseColumnNames="user_id"
+                                baseTableName="divergence_comments_funcao_transacao"
+                                constraintName="FK_user_divergence_comment"
+                                referencedColumnNames="id"
+                                referencedTableName="jhi_user"/>
+   </changeSet>
+   <changeSet author="basis (generated)" id="1603313942920-11">
+       <addForeignKeyConstraint baseColumnNames="funcao_dados_id"
+                                baseTableName="divergence_comments_funcao_dados"
+                                constraintName="FK_fucao_dados_divergence_comment"
+                                referencedColumnNames="id"
+                                referencedTableName="funcao_dados"/>
+   </changeSet>
+   <changeSet author="basis (generated)" id="1603313942920-12">
+       <addForeignKeyConstraint baseColumnNames="funcao_transacao_id"
+                                baseTableName="divergence_comments_funcao_transacao"
+                                constraintName="FK_fucao_transacao_divergence_comment"
+                                referencedColumnNames="id"
+                                referencedTableName="funcao_transacao"/>
+   </changeSet>
+</databaseChangeLog>

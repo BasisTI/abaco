@@ -11,10 +11,10 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 
 @Entity
-@Table(name = "vw_analise_soma_pf")
+@Table(name = "vw_analise_divergencia_soma_pf")
 @Getter
 @Setter
-public class VwAnaliseSomaPf  implements Serializable {
+public class VwAnaliseDivergenteSomaPf  implements Serializable {
 
     @Id
     private Long analiseId;
@@ -24,5 +24,4 @@ public class VwAnaliseSomaPf  implements Serializable {
 
     @Column(name = "pf_total")
     private BigDecimal pfTotal;
-
 }

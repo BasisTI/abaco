@@ -4,6 +4,7 @@ import br.com.basis.abaco.domain.audit.AbacoAudit;
 import br.com.basis.abaco.domain.audit.AbacoAuditListener;
 import br.com.basis.abaco.domain.audit.AbacoAuditable;
 import br.com.basis.abaco.domain.enumeration.Complexidade;
+import br.com.basis.abaco.domain.enumeration.StatusFuncao;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.Column;
@@ -71,6 +72,12 @@ public abstract class FuncaoAnalise implements AbacoAuditable {
     @JsonIgnore
     @Transient
     private Set<String> derValues = new HashSet<>();
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status_funcao")
+    private StatusFuncao statusFuncao;
+
+
 
 
     @Embedded
@@ -192,5 +199,13 @@ public abstract class FuncaoAnalise implements AbacoAuditable {
     @Override
     public void setAudit(AbacoAudit audit) {
         this.audit = audit;
+    }
+
+    public StatusFuncao getStatusFuncao() {
+        return statusFuncao;
+    }
+
+    public void setStatusFuncao(StatusFuncao statusFuncao) {
+        this.statusFuncao = statusFuncao;
     }
 }

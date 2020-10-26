@@ -1,6 +1,8 @@
 package br.com.basis.abaco.web.rest;
 
 import br.com.basis.abaco.domain.VwResumo;
+import br.com.basis.abaco.domain.VwResumoDivergencia;
+import br.com.basis.abaco.repository.VwResumoDivergenteRepository;
 import br.com.basis.abaco.repository.VwResumoRepository;
 import br.com.basis.abaco.security.AuthoritiesConstants;
 import com.codahale.metrics.annotation.Timed;
@@ -16,9 +18,11 @@ import java.util.Set;
 @RequestMapping("/api")
 public class VwResumoResource {
     private final VwResumoRepository vwResumoRepository;
+    private final VwResumoDivergenteRepository vwResumoDivergenteRepository;
 
-    public VwResumoResource(VwResumoRepository vwResumoRepository) {
+    public VwResumoResource(VwResumoRepository vwResumoRepository, VwResumoDivergenteRepository vwResumoDivergenteRepository ) {
         this.vwResumoRepository = vwResumoRepository;
+        this.vwResumoDivergenteRepository = vwResumoDivergenteRepository;
     }
 
     @GetMapping("/vw-resumo/{analiseId}")
@@ -26,5 +30,13 @@ public class VwResumoResource {
     @Secured({AuthoritiesConstants.ADMIN, AuthoritiesConstants.USER, AuthoritiesConstants.GESTOR, AuthoritiesConstants.ANALISTA})
     public Set<VwResumo> getResumo(@PathVariable Long analiseId) {
         return vwResumoRepository.findByAnaliseIdOrderByTipoAsc(analiseId);
+    }
+
+    @GetMapping("/vw-resumo/divergencia/{analiseId}")
+    @Timed
+    @Secured({AuthoritiesConstants.ADMIN, AuthoritiesConstants.USER, AuthoritiesConstants.GESTOR, AuthoritiesConstants.ANALISTA})
+    public Set<VwResumoDivergencia> getResumoDivergence(@PathVariable Long analiseId) {
+        Set<VwResumoDivergencia> lstVwResumoDivergencias = vwResumoDivergenteRepository.findByAnaliseIdOrderByTipoAsc(analiseId);
+        return lstVwResumoDivergencias;
     }
 }

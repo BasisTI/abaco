@@ -4,6 +4,7 @@ import br.com.basis.abaco.domain.Analise;
 import br.com.basis.abaco.domain.Der;
 import br.com.basis.abaco.domain.FuncaoDados;
 import br.com.basis.abaco.domain.Rlr;
+import br.com.basis.abaco.domain.enumeration.StatusFuncao;
 import br.com.basis.abaco.domain.enumeration.TipoFatorAjuste;
 import br.com.basis.abaco.repository.AnaliseRepository;
 import br.com.basis.abaco.repository.FuncaoDadosRepository;
@@ -77,7 +78,7 @@ public class FuncaoDadosResource {
     @PostMapping("/funcao-dados/{idAnalise}")
     @Timed
     @Secured({AuthoritiesConstants.ADMIN, AuthoritiesConstants.USER, AuthoritiesConstants.GESTOR, AuthoritiesConstants.ANALISTA})
-    public ResponseEntity<FuncaoDados> createFuncaoDados(@PathVariable Long idAnalise, @RequestBody FuncaoDados funcaoDados) throws URISyntaxException {
+    public ResponseEntity<FuncaoDadoApiDTO> createFuncaoDados(@PathVariable Long idAnalise, @RequestBody FuncaoDados funcaoDados) throws URISyntaxException {
         log.debug("REST request to save FuncaoDados : {}", funcaoDados);
         Analise analise = analiseRepository.findOne(idAnalise);
         funcaoDados.setAnalise(analise);
@@ -85,9 +86,10 @@ public class FuncaoDadosResource {
             return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert(ENTITY_NAME, "idexists", "A new funcaoDados cannot already have an ID")).body(null);
         }
         FuncaoDados result = funcaoDadosRepository.save(funcaoDados);
-        return ResponseEntity.created(new URI("/api/funcao-dados/" + result.getId()))
-                .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString()))
-                .body(result);
+        FuncaoDadoApiDTO funcaoDadosDTO = getFuncaoDadoApiDTO(result);
+        return ResponseEntity.created(new URI("/api/funcao-dados/" + funcaoDadosDTO.getId()))
+                .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, funcaoDadosDTO.getId().toString()))
+                .body(funcaoDadosDTO);
     }
 
     /**
@@ -102,7 +104,7 @@ public class FuncaoDadosResource {
     @PutMapping("/funcao-dados/{id}")
     @Timed
     @Secured({AuthoritiesConstants.ADMIN, AuthoritiesConstants.USER, AuthoritiesConstants.GESTOR, AuthoritiesConstants.ANALISTA})
-    public ResponseEntity<FuncaoDados> updateFuncaoDados(@PathVariable Long id, @RequestBody FuncaoDados funcaoDados) throws URISyntaxException {
+    public ResponseEntity<FuncaoDadoApiDTO> updateFuncaoDados(@PathVariable Long id, @RequestBody FuncaoDados funcaoDados) throws URISyntaxException {
         log.debug("REST request to update FuncaoDados : {}", funcaoDados);
         FuncaoDados funcaoDadosOld = funcaoDadosRepository.findById(id);
         if (funcaoDados.getId() == null) {
@@ -114,9 +116,10 @@ public class FuncaoDadosResource {
             return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert(ENTITY_NAME, "idexists", "A new funcaoDados cannot already have an ID")).body(null);
         }
         FuncaoDados result = funcaoDadosRepository.save(funcaoDados);
+        FuncaoDadoApiDTO funcaoDadosDTO = getFuncaoDadoApiDTO(result);
         return ResponseEntity.ok()
                 .headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, funcaoDados.getId().toString()))
-                .body(result);
+                .body(funcaoDadosDTO);
     }
 
     /**
@@ -157,14 +160,9 @@ public class FuncaoDadosResource {
         if (funcaoDados.getAnalise().getFuncaoTransacaos() != null) {
             funcaoDados.getAnalise().getFuncaoTransacaos().clear();
         }
-
-        ModelMapper modelMapper = new ModelMapper();
-
-        FuncaoDadoApiDTO funcaoDadosDTO = modelMapper.map(funcaoDados, FuncaoDadoApiDTO.class);
-
+        FuncaoDadoApiDTO funcaoDadosDTO = getFuncaoDadoApiDTO(funcaoDados);
         return ResponseUtil.wrapOrNotFound(Optional.ofNullable(funcaoDadosDTO));
     }
-
 
     @GetMapping("/funcao-dados-dto/analise/{id}")
     @Timed
@@ -244,6 +242,25 @@ public class FuncaoDadosResource {
         return ResponseEntity.ok(existInAnalise);
     }
 
+    /**
+     * GET  /funcao-dados/:id : update status the "id" funcaoDados.
+     *
+     * @param id the id of the funcaoDados to retrieve
+     * @return the ResponseEntity with status 200 (OK) and with body the funcaoDados, or with status 404 (Not Found)
+     */
+    @GetMapping("/funcao-dados/update-status/{id}/{statusFuncao}")
+    @Timed
+    @Secured({AuthoritiesConstants.ADMIN, AuthoritiesConstants.USER, AuthoritiesConstants.GESTOR, AuthoritiesConstants.ANALISTA})
+    public ResponseEntity<FuncaoDadoApiDTO> updateStatusFuncaoDados(@PathVariable Long id, @PathVariable StatusFuncao statusFuncao) {
+        log.debug("REST request to update status FuncaoDados : {}", id);
+        FuncaoDados funcaoDados = funcaoDadosRepository.findOne(id);
+        funcaoDados.setStatusFuncao(statusFuncao);
+        FuncaoDados result = funcaoDadosRepository.save(funcaoDados);
+        FuncaoDadoApiDTO funcaoDadosDTO = getFuncaoDadoApiDTO(result);
+        return ResponseUtil.wrapOrNotFound(Optional.ofNullable(funcaoDadosDTO));
+    }
+
+
     private FuncaoDadoAnaliseDTO convertToDto(FuncaoDados funcaoDados) {
         FuncaoDadoAnaliseDTO funcaoDadoAnaliseDTO = new ModelMapper().map(funcaoDados, FuncaoDadoAnaliseDTO.class);
         funcaoDadoAnaliseDTO.setRlrFilter(getValueRlr(funcaoDados));
@@ -298,6 +315,11 @@ public class FuncaoDadosResource {
 
     private Boolean getSustantation(FuncaoDados funcaoDados) {
         return funcaoDados.getSustantation() != null && !(funcaoDados.getSustantation().isEmpty());
+    }
+
+    private FuncaoDadoApiDTO getFuncaoDadoApiDTO(FuncaoDados funcaoDados) {
+        ModelMapper modelMapper = new ModelMapper();
+        return modelMapper.map(funcaoDados, FuncaoDadoApiDTO.class);
     }
 
 

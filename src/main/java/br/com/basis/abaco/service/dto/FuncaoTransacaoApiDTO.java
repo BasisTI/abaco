@@ -2,44 +2,35 @@ package br.com.basis.abaco.service.dto;
 
 import br.com.basis.abaco.domain.enumeration.Complexidade;
 import br.com.basis.abaco.domain.enumeration.ImpactoFatorAjuste;
+import br.com.basis.abaco.domain.enumeration.StatusFuncao;
 import br.com.basis.abaco.domain.enumeration.TipoFuncaoTransacao;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Set;
 
 public class FuncaoTransacaoApiDTO {
 
     private Long id;
-
     private Complexidade complexidade;
-
     private BigDecimal pf;
-
     private BigDecimal grossPF;
-
     private FuncionalidadeDTO funcionalidade;
-
     private String detStr;
-
     private FatorAjusteDTO fatorAjuste;
-
     private String name;
-
     private String sustantation;
-
     private TipoFuncaoTransacao tipo;
-
     private String ftrStr;
-
     private Integer quantidade;
-
     private Set<AlrDTO> alrs = new HashSet<>();
-
     private ImpactoFatorAjuste impacto;
-
     private Set<DerFtDTO> ders = new HashSet<>();
+    private StatusFuncao statusFuncao;
+    private List<DivergenceCommentDTO> lstDivergenceComments = new ArrayList<>();
 
     public Long getId() {
         return id;
@@ -160,5 +151,21 @@ public class FuncaoTransacaoApiDTO {
 
     public void setDers(Set<DerFtDTO> ders) {
         this.ders = new LinkedHashSet<DerFtDTO>(ders);
+    }
+
+    public StatusFuncao getStatusFuncao() {
+        return statusFuncao;
+    }
+
+    public void setStatusFuncao(StatusFuncao statusFuncao) {
+        this.statusFuncao = statusFuncao;
+    }
+
+    public List<DivergenceCommentDTO> getLstDivergenceComments() {
+        return lstDivergenceComments;
+    }
+
+    public void setLstDivergenceComments(List<DivergenceCommentDTO> lstDivergenceComments) {
+        this.lstDivergenceComments = lstDivergenceComments;
     }
 }

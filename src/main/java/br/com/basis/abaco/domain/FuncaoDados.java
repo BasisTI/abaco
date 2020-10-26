@@ -70,6 +70,9 @@ public class FuncaoDados extends FuncaoAnalise implements Serializable {
     @OneToMany(mappedBy = FUNCAODADOS, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<UploadedFile> files = new ArrayList<>();
 
+    @OneToMany(mappedBy = FUNCAODADOS)
+    private List<DivergenceCommentFuncaoDados> lstDivergenceComments = new ArrayList<>();
+
     @Transient
     private Set<String> rlrValues = new HashSet<>();
 
@@ -305,6 +308,16 @@ public class FuncaoDados extends FuncaoAnalise implements Serializable {
 
     public void setQuantidade(Integer quantidade) {
         this.quantidade = quantidade;
+    }
+
+    public List<DivergenceCommentFuncaoDados> getLstDivergenceComments() {
+        return  Collections.unmodifiableList(lstDivergenceComments);
+    }
+
+    public void setLstDivergenceComments(List<DivergenceCommentFuncaoDados> lstDivergenceComments) {
+        this.lstDivergenceComments =  Optional.ofNullable(lstDivergenceComments)
+            .map(ArrayList::new)
+            .orElse(new ArrayList<>());;
     }
 
 }

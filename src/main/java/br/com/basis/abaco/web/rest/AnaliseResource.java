@@ -23,6 +23,7 @@ import br.com.basis.abaco.security.AuthoritiesConstants;
 import br.com.basis.abaco.security.SecurityUtils;
 import br.com.basis.abaco.service.AnaliseService;
 import br.com.basis.abaco.service.dto.AnaliseDTO;
+import br.com.basis.abaco.service.dto.AnaliseDivergenceEditDTO;
 import br.com.basis.abaco.service.dto.AnaliseEditDTO;
 import br.com.basis.abaco.service.exception.RelatorioException;
 import br.com.basis.abaco.service.relatorio.RelatorioAnaliseColunas;
@@ -461,6 +462,25 @@ public class AnaliseResource {
         }
     }
 
+
+    @GetMapping("/analises/update-divergente-pf/{id}")
+    @Timed
+    @Secured({AuthoritiesConstants.ADMIN, AuthoritiesConstants.USER, AuthoritiesConstants.GESTOR, AuthoritiesConstants.ANALISTA})
+    public ResponseEntity<AnaliseEditDTO> updateSomaDivergentePf(@PathVariable Long id) {
+        Analise analise = analiseService.recuperarAnalise(id);
+        if (analise.getId() != null) {
+            analiseService.updatePFDivergente(analise);
+            analiseRepository.save(analise);
+            analiseSearchRepository.save(analiseService.convertToEntity(analiseService.convertToDto(analise)));
+            return ResponseEntity.ok().headers(HeaderUtil.blockEntityUpdateAlert(ENTITY_NAME, analise.getId().toString()))
+                .body(analiseService.convertToAnaliseEditDTO(analise));
+        } else {
+            return ResponseEntity
+                .status(HttpStatus.FORBIDDEN)
+                .body(new AnaliseEditDTO());
+        }
+    }
+
     @GetMapping("/analises/change-status/{id}/{idStatus}")
     @Timed
     @Secured({AuthoritiesConstants.ADMIN, AuthoritiesConstants.USER, AuthoritiesConstants.GESTOR, AuthoritiesConstants.ANALISTA})
@@ -497,7 +517,7 @@ public class AnaliseResource {
     @GetMapping("/analises/gerar-divergencia/{idAnalisePadao}/{idAnaliseComparada}")
     @Timed
     @Secured({AuthoritiesConstants.ADMIN, AuthoritiesConstants.USER, AuthoritiesConstants.GESTOR, AuthoritiesConstants.ANALISTA})
-    public ResponseEntity<AnaliseEditDTO> gerarDivergencia(@PathVariable Long idAnalisePadao, @PathVariable Long idAnaliseComparada) {
+    public ResponseEntity<AnaliseEditDTO> gerarDivergencia(@PathVariable Long idAnalisePadao, @PathVariable Long idAnaliseComparada,  @RequestParam(value = "isUnion", defaultValue = "false" ) boolean isUnionFunctio) {
         Analise analisePadrão = analiseRepository.findOne(idAnalisePadao);
         Analise analiseComparada = analiseRepository.findOne(idAnaliseComparada);
         Status status = statusRepository.findFirstByDivergenciaTrue();
@@ -510,7 +530,7 @@ public class AnaliseResource {
         if (analiseComparada == null || analiseComparada.getId() == null) {
             ResponseEntity.status(HttpStatus.FORBIDDEN).body("Error analise Comparada");
         }
-        Analise analiseDivergencia = analiseService.generateDivergence(analisePadrão, analiseComparada, status);
+        Analise analiseDivergencia = analiseService.generateDivergence(analisePadrão, analiseComparada, status, isUnionFunctio);
         return ResponseEntity.ok(analiseService.convertToAnaliseEditDTO(analiseDivergencia));
     }
 
@@ -547,6 +567,19 @@ public class AnaliseResource {
         return new ResponseEntity<>(dtoPage.getContent(), headers, HttpStatus.OK);
     }
 
+    @GetMapping("/divergencia/{id}")
+    @Timed
+    public ResponseEntity<AnaliseDivergenceEditDTO> getDivergence(@PathVariable Long id) {
+        Analise analise = analiseService.recuperarAnaliseDivergence(id);
+        if (analise != null) {
+            User user = userRepository.findOneByLogin(SecurityUtils.getCurrentUserLogin()).get();
+            if (analiseService.permissionToEdit(user, analise)) {
+                AnaliseDivergenceEditDTO analiseDivergenceEditDTO = analiseService.convertToAnaliseDivergenceEditDTO(analise);
+                return ResponseUtil.wrapOrNotFound(Optional.ofNullable(analiseDivergenceEditDTO));
+            }
+        }
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
+    }
 }
 
 

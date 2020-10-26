@@ -9,7 +9,6 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
-import java.util.Optional;
 
 /**
  * Spring Data JPA repository for the Analise entity.
@@ -44,6 +43,10 @@ public interface AnaliseRepository extends JpaRepository<Analise, Long> {
     @EntityGraph(attributePaths = {"compartilhadas", "esforcoFases", "users", "fatorAjuste", "contrato"})
     Analise findById(Long id);
 
+
+    @EntityGraph(attributePaths = {"compartilhadas", "esforcoFases", "users", "fatorAjuste", "contrato", "analisesComparadas"})
+    Analise findOneById(Long id);
+
     @Query(value = "SELECT a " +
             "FROM Analise a " +
             "JOIN Sistema s              ON s.id = a.sistema.id " +
@@ -55,9 +58,6 @@ public interface AnaliseRepository extends JpaRepository<Analise, Long> {
             "JOIN FETCH FatorAjuste fa        ON fa.id = fd.fatorAjuste.id OR fa.id = ft.fatorAjuste.id " +
             "WHERE a.id = :id ORDER BY m.nome, f.nome, fd.name, ft.name")
     Analise reportContagem(@Param("id") Long id);
-
-    @EntityGraph(attributePaths = {"compartilhadas", "funcaoDados", "funcaoTransacaos", "esforcoFases", "users"})
-    Optional<Analise> findOneById(Long id);
 
     List<Analise> findAll();
 
