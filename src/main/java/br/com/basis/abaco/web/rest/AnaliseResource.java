@@ -572,7 +572,7 @@ public class AnaliseResource {
     public ResponseEntity<AnaliseDivergenceEditDTO> getDivergence(@PathVariable Long id) {
         Analise analise = analiseService.recuperarAnaliseDivergence(id);
         if (analise != null) {
-            User user = userRepository.findOneByLogin(SecurityUtils.getCurrentUserLogin()).get();
+            User user = userRepository.findOneByLogin(SecurityUtils.getCurrentUserLogin()).orElse(new User());
             if (analiseService.permissionToEdit(user, analise)) {
                 AnaliseDivergenceEditDTO analiseDivergenceEditDTO = analiseService.convertToAnaliseDivergenceEditDTO(analise);
                 return ResponseUtil.wrapOrNotFound(Optional.ofNullable(analiseDivergenceEditDTO));

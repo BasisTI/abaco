@@ -75,10 +75,10 @@ public class AnaliseService extends BaseService {
     private final FuncaoDadosVersionavelRepository funcaoDadosVersionavelRepository;
     private final FuncaoDadosRepository funcaoDadosRepository;
     private final FuncaoTransacaoRepository funcaoTransacaoRepository;
-    private final VwAnaliseSomaPfRepository vwAnaliseSomaPfRepository;
     private final VwAnaliseDivergenteSomaPfRepository vwAnaliseDivergenteSomaPfRepository;
-    private final MailService mailService;
+    private final VwAnaliseSomaPfRepository vwAnaliseSomaPfRepository;
     private final TipoEquipeRepository tipoEquipeRepository;
+    private final MailService mailService;
     @Autowired
     private UserSearchRepository userSearchRepository;
 
@@ -101,9 +101,9 @@ public class AnaliseService extends BaseService {
         this.funcaoDadosRepository = funcaoDadosRepository;
         this.funcaoTransacaoRepository = funcaoTransacaoRepository;
         this.analiseSearchRepository = analiseSearchRepository;
+        this.mailService = mailService;
         this.vwAnaliseSomaPfRepository = vwAnaliseSomaPfRepository;
         this.vwAnaliseDivergenteSomaPfRepository = vwAnaliseDivergenteSomaPfRepository;
-        this.mailService = mailService;
         this.tipoEquipeRepository = tipoEquipeRepository;
     }
 
@@ -156,6 +156,7 @@ public class AnaliseService extends BaseService {
             qb.must(queryBuilderUsers);
         }
     }
+
     public void bindFilterSearchDivergence(String identificador, Set<Long> sistema, Set<Long> organizacoes, Set<Long> equipesUsersId, BoolQueryBuilder qb) {
         if (!StringUtils.isEmptyString((identificador))) {
             BoolQueryBuilder queryBuilderIdentificador = QueryBuilders.boolQuery()
@@ -172,10 +173,10 @@ public class AnaliseService extends BaseService {
                 .should(QueryBuilders.matchPhraseQuery("identificadorAnalise", identificador));
             qb.must(boolQueryBuilder);
         }
-        bindFilterEquipeAndOrganizacaoDivergence( equipesUsersId, organizacoes, qb);
+        bindFilterEquipeAndOrganizacaoDivergence(equipesUsersId, organizacoes, qb);
         BoolQueryBuilder boolQueryBuilderDivergence;
-            boolQueryBuilderDivergence = QueryBuilders.boolQuery()
-                .must(QueryBuilders.termQuery("isDivergence", true));
+        boolQueryBuilderDivergence = QueryBuilders.boolQuery()
+            .must(QueryBuilders.termQuery("isDivergence", true));
         qb.must(boolQueryBuilderDivergence);
         if (sistema != null && sistema.size() > 0) {
             BoolQueryBuilder boolQueryBuilderSistema = QueryBuilders.boolQuery()
@@ -226,7 +227,7 @@ public class AnaliseService extends BaseService {
         }
     }
 
-    private void bindFilterEquipeAndOrganizacaoDivergence( Set<Long> equipesUsersId, Set<Long> organizacoes, BoolQueryBuilder qb) {
+    private void bindFilterEquipeAndOrganizacaoDivergence(Set<Long> equipesUsersId, Set<Long> organizacoes, BoolQueryBuilder qb) {
         BoolQueryBuilder boolQueryBuilderEquipe = QueryBuilders.boolQuery()
             .must(QueryBuilders.termsQuery(EQUIPE_RESPONSAVEL_ID, equipesUsersId))
             .must(QueryBuilders.termsQuery(ORGANIZACAO_ID, organizacoes));
@@ -285,6 +286,7 @@ public class AnaliseService extends BaseService {
             return null;
         }
     }
+
     public Analise recuperarAnaliseDivergence(Long id) {
 
         boolean retorno = checarPermissao(id);
@@ -383,25 +385,27 @@ public class AnaliseService extends BaseService {
     public Set<FuncaoDados> bindCloneFuncaoDados(Analise analise, Analise analiseClone) {
         Set<FuncaoDados> funcaoDados = new HashSet<>();
         analise.getFuncaoDados().forEach(fd -> {
-            Set<Rlr> rlrs = new HashSet<>();
-            Set<Der> ders = new HashSet<>();
-            FuncaoDados funcaoDado = new FuncaoDados();
-            bindFuncaoDados(analiseClone, fd, rlrs, ders, funcaoDado);
-            funcaoDado.setDers(ders);
-            funcaoDado.setRlrs(rlrs);
+            FuncaoDados funcaoDado = bindFuncaoDados(analiseClone, fd);
             funcaoDados.add(funcaoDado);
         });
         return funcaoDados;
     }
+
+    @org.jetbrains.annotations.NotNull
+    private FuncaoDados bindFuncaoDados(Analise analiseClone, FuncaoDados fd) {
+        Set<Rlr> rlrs = new HashSet<>();
+        Set<Der> ders = new HashSet<>();
+        FuncaoDados funcaoDado = new FuncaoDados();
+        bindFuncaoDados(analiseClone, fd, rlrs, ders, funcaoDado);
+        funcaoDado.setDers(ders);
+        funcaoDado.setRlrs(rlrs);
+        return funcaoDado;
+    }
+
     public Set<FuncaoDados> bindDivergenceFuncaoDados(Analise analise, Analise analiseClone) {
         Set<FuncaoDados> funcaoDados = new HashSet<>();
         analise.getFuncaoDados().forEach(fd -> {
-            Set<Rlr> rlrs = new HashSet<>();
-            Set<Der> ders = new HashSet<>();
-            FuncaoDados funcaoDado = new FuncaoDados();
-            bindFuncaoDados(analiseClone, fd, rlrs, ders, funcaoDado);
-            funcaoDado.setDers(ders);
-            funcaoDado.setRlrs(rlrs);
+            FuncaoDados funcaoDado = bindFuncaoDados(analiseClone, fd);
             funcaoDado.setStatusFuncao(StatusFuncao.DIVERGENTE);
             funcaoDados.add(funcaoDado);
         });
@@ -411,18 +415,7 @@ public class AnaliseService extends BaseService {
     public Set<FuncaoTransacao> bindCloneFuncaoTransacaos(Analise analise, Analise analiseClone) {
         Set<FuncaoTransacao> funcaoTransacoes = new HashSet<>();
         analise.getFuncaoTransacaos().forEach(ft -> {
-            Set<Alr> alrs = new HashSet<>();
-            Set<Der> ders = new HashSet<>();
-            FuncaoTransacao funcaoTransacao = new FuncaoTransacao();
-            funcaoTransacao.bindFuncaoTransacao(ft.getTipo(), ft.getFtrStr(), ft.getQuantidade(), alrs, null, ft.getFtrValues(), ft.getImpacto(), ders, analiseClone, ft.getComplexidade(), ft.getPf(), ft.getGrossPF(), ft.getFuncionalidade(), ft.getDetStr(), ft.getFatorAjuste(), ft.getName(), ft.getSustantation(), ft.getDerValues());
-            ft.getAlrs().forEach(alr -> {
-                Alr alrClone = new Alr(null, alr.getNome(), alr.getValor(), funcaoTransacao, null);
-                alrs.add(alrClone);
-            });
-            ft.getDers().forEach(der -> {
-                Der derClone = new Der(null, der.getNome(), der.getValor(), der.getRlr(), null, funcaoTransacao);
-                ders.add(derClone);
-            });
+            FuncaoTransacao funcaoTransacao = bindFuncaoTransacao(analiseClone, ft);
             funcaoTransacoes.add(funcaoTransacao);
         });
         return funcaoTransacoes;
@@ -431,22 +424,27 @@ public class AnaliseService extends BaseService {
     public Set<FuncaoTransacao> bindDivergenceFuncaoTransacaos(Analise analise, Analise analiseClone) {
         Set<FuncaoTransacao> funcaoTransacoes = new HashSet<>();
         analise.getFuncaoTransacaos().forEach(ft -> {
-            Set<Alr> alrs = new HashSet<>();
-            Set<Der> ders = new HashSet<>();
-            FuncaoTransacao funcaoTransacao = new FuncaoTransacao();
-            funcaoTransacao.bindFuncaoTransacao(ft.getTipo(), ft.getFtrStr(), ft.getQuantidade(), alrs, null, ft.getFtrValues(), ft.getImpacto(), ders, analiseClone, ft.getComplexidade(), ft.getPf(), ft.getGrossPF(), ft.getFuncionalidade(), ft.getDetStr(), ft.getFatorAjuste(), ft.getName(), ft.getSustantation(), ft.getDerValues());
-            ft.getAlrs().forEach(alr -> {
-                Alr alrClone = new Alr(null, alr.getNome(), alr.getValor(), funcaoTransacao, null);
-                alrs.add(alrClone);
-            });
-            ft.getDers().forEach(der -> {
-                Der derClone = new Der(null, der.getNome(), der.getValor(), der.getRlr(), null, funcaoTransacao);
-                ders.add(derClone);
-            });
+            FuncaoTransacao funcaoTransacao = bindFuncaoTransacao(analiseClone, ft);
             funcaoTransacao.setStatusFuncao(StatusFuncao.DIVERGENTE);
             funcaoTransacoes.add(funcaoTransacao);
         });
         return funcaoTransacoes;
+    }
+
+    private FuncaoTransacao bindFuncaoTransacao(Analise analiseClone, FuncaoTransacao ft) {
+        Set<Alr> alrs = new HashSet<>();
+        Set<Der> ders = new HashSet<>();
+        FuncaoTransacao funcaoTransacao = new FuncaoTransacao();
+        funcaoTransacao.bindFuncaoTransacao(ft.getTipo(), ft.getFtrStr(), ft.getQuantidade(), alrs, null, ft.getFtrValues(), ft.getImpacto(), ders, analiseClone, ft.getComplexidade(), ft.getPf(), ft.getGrossPF(), ft.getFuncionalidade(), ft.getDetStr(), ft.getFatorAjuste(), ft.getName(), ft.getSustantation(), ft.getDerValues());
+        ft.getAlrs().forEach(alr -> {
+            Alr alrClone = new Alr(null, alr.getNome(), alr.getValor(), funcaoTransacao, null);
+            alrs.add(alrClone);
+        });
+        ft.getDers().forEach(der -> {
+            Der derClone = new Der(null, der.getNome(), der.getValor(), der.getRlr(), null, funcaoTransacao);
+            ders.add(derClone);
+        });
+        return funcaoTransacao;
     }
 
     public void bindAnaliseCloneForTipoEquipe(Analise analise, TipoEquipe tipoEquipe, Analise analiseClone) {
@@ -545,7 +543,7 @@ public class AnaliseService extends BaseService {
             analiseSearchRepository.save(convertToEntity(convertToDto(analise)));
             lstCompartilhadas.forEach(compartilhada -> {
                 TipoEquipe tipoEquipe = this.tipoEquipeRepository.findById(compartilhada.getEquipeId());
-                if(!(StringUtils.isEmptyString(tipoEquipe.getEmailPreposto()) && StringUtils.isEmptyString(tipoEquipe.getPreposto()))){
+                if (!(StringUtils.isEmptyString(tipoEquipe.getEmailPreposto()) && StringUtils.isEmptyString(tipoEquipe.getPreposto()))) {
                     this.mailService.sendAnaliseSharedEmail(analise, tipoEquipe);
                 }
             });
@@ -626,27 +624,27 @@ public class AnaliseService extends BaseService {
         return analiseClone;
     }
 
-    public  Set<EsforcoFase> bindCloneEsforcoFase(Analise analise){
+    public Set<EsforcoFase> bindCloneEsforcoFase(Analise analise) {
         Set<EsforcoFase> esforcoFases = new HashSet<>();
-            analise.getEsforcoFases().forEach(esforcoFase -> {
-                esforcoFase =  new EsforcoFase(esforcoFase.getId(), esforcoFase.getEsforco(), esforcoFase.getManual(), esforcoFase.getFase());
-                esforcoFases.add(esforcoFase);
-            });
+        analise.getEsforcoFases().forEach(esforcoFase -> {
+            esforcoFase = new EsforcoFase(esforcoFase.getId(), esforcoFase.getEsforco(), esforcoFase.getManual(), esforcoFase.getFase());
+            esforcoFases.add(esforcoFase);
+        });
         return esforcoFases;
     }
 
     public boolean changeStatusAnalise(Analise analise, Status status, User user) {
 
-        if(user.getTipoEquipes().contains(analise.getEquipeResponsavel()) && user.getOrganizacoes().contains(analise.getOrganizacao())){
+        if (user.getTipoEquipes().contains(analise.getEquipeResponsavel()) && user.getOrganizacoes().contains(analise.getOrganizacao())) {
             analise.setStatus(status);
             return true;
-        }else {
+        } else {
             return false;
         }
     }
 
     @Transactional
-    public Analise generateDivergence(Analise analise, Status status){
+    public Analise generateDivergence(Analise analise, Status status) {
         Optional<User> optUser = userRepository.findOneByLogin(SecurityUtils.getCurrentUserLogin());
         if (optUser.isPresent()) {
             User user = optUser.get();
@@ -655,14 +653,14 @@ public class AnaliseService extends BaseService {
             analiseDivergencia.setStatus(status);
             analiseDivergencia.setIsDivergence(true);
             analiseDivergencia = save(analiseDivergencia);
-            updateAnaliseRelationAndSendEmail(analise,status,analiseDivergencia);
+            updateAnaliseRelationAndSendEmail(analise, status, analiseDivergencia);
             return analiseDivergencia;
         }
         return new Analise();
     }
 
     @Transactional
-    public Analise generateDivergence(Analise analisePricinpal, Analise  analiseSecundaria, Status status, boolean isUnionFunction){
+    public Analise generateDivergence(Analise analisePricinpal, Analise analiseSecundaria, Status status, boolean isUnionFunction) {
         Analise analiseDivergencia = bindAnaliseDivegernce(analisePricinpal, analiseSecundaria, status, isUnionFunction);
         save(analiseDivergencia);
         updateAnaliseRelationAndSendEmail(analisePricinpal, status, analiseDivergencia);
@@ -672,7 +670,7 @@ public class AnaliseService extends BaseService {
     }
 
     private void sharedAnaliseDivergence(Analise analiseSecundaria, Analise analiseDivergencia) {
-        Compartilhada compartilhada  =  new Compartilhada();
+        Compartilhada compartilhada = new Compartilhada();
         compartilhada.setAnaliseId(analiseDivergencia.getId());
         compartilhada.setEquipeId(analiseSecundaria.getEquipeResponsavel().getId());
         compartilhada.setNomeEquipe(analiseSecundaria.getEquipeResponsavel().getNome());
@@ -684,7 +682,7 @@ public class AnaliseService extends BaseService {
         analisePricinpal.setStatus(status);
         analisePricinpal.setAnaliseDivergence(analiseDivergencia);
         save(analisePricinpal);
-        if(analisePricinpal.getEquipeResponsavel().getNome() != null && analisePricinpal.getEquipeResponsavel().getEmailPreposto()!= null){
+        if (analisePricinpal.getEquipeResponsavel().getNome() != null && analisePricinpal.getEquipeResponsavel().getEmailPreposto() != null) {
             mailService.sendDivergenceEmail(analisePricinpal);
         }
     }
@@ -695,7 +693,7 @@ public class AnaliseService extends BaseService {
             User user = optUser.get();
             Analise analiseDivergenciaPrincipal = new Analise(analisePrincipal, user);
             analiseDivergenciaPrincipal = bindDivergenceAnalise(analiseDivergenciaPrincipal, analisePrincipal, user);
-            if (isUnionFunction){
+            if (isUnionFunction) {
                 unionFuncaoDadosAndFuncaoTransacao(analisePrincipal, analiseSecundaria, analiseDivergenciaPrincipal);
             }
             analiseDivergenciaPrincipal.setStatus(status);
@@ -715,13 +713,13 @@ public class AnaliseService extends BaseService {
         lstFuncaoTransacaos.addAll(analiseSecundaria.getFuncaoTransacaos());
         analisePrincipal.setFuncaoDados(lstFuncaoDados);
         analisePrincipal.setFuncaoTransacaos(lstFuncaoTransacaos);
-        analiseDivergenciaPrincipal.setFuncaoDados(bindDivergenceFuncaoDados(analisePrincipal,analiseDivergenciaPrincipal));
-        analiseDivergenciaPrincipal.setFuncaoTransacaos(bindDivergenceFuncaoTransacaos(analisePrincipal,analiseDivergenciaPrincipal));
+        analiseDivergenciaPrincipal.setFuncaoDados(bindDivergenceFuncaoDados(analisePrincipal, analiseDivergenciaPrincipal));
+        analiseDivergenciaPrincipal.setFuncaoTransacaos(bindDivergenceFuncaoTransacaos(analisePrincipal, analiseDivergenciaPrincipal));
     }
 
-    public Analise save (Analise analise){
+    public Analise save(Analise analise) {
         analise = analiseRepository.save(analise);
-        AnaliseDTO analiseDTO =  convertToDto(analise);
+        AnaliseDTO analiseDTO = convertToDto(analise);
         analise = convertToEntity(analiseDTO);
         analise = analiseSearchRepository.save(analise);
         return analise;
