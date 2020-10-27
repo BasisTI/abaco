@@ -11,7 +11,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.sql.Timestamp;
 import java.util.Set;
 
 @Getter
@@ -34,15 +33,5 @@ public class AnaliseDivergenceEditDTO extends AnaliseBaseDTO implements ReportOb
     private Set<Compartilhada> compartilhadas;
     private Status status;
     private Set<AnaliseEditDTO> analisesComparadas;
-    protected Timestamp dataCriacaoOrdemServico ;
-
-
-    public void setDataCriacaoOrdemServico(Timestamp dataCriacaoOrdemServico) {
-        this.dataCriacaoOrdemServico = dataCriacaoOrdemServico == null ? null : new Timestamp(dataCriacaoOrdemServico.getTime());
-    }
-
-    public Timestamp getDataCriacaoOrdemServico() {
-        return dataCriacaoOrdemServico == null ? null : new Timestamp(this.dataCriacaoOrdemServico.getTime());
-    }
 
 }
