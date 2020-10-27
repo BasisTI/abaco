@@ -5,19 +5,17 @@ import br.com.basis.abaco.domain.DivergenceCommentFuncaoDados;
 import br.com.basis.abaco.domain.DivergenceCommentFuncaoTransacao;
 import br.com.basis.abaco.domain.FuncaoDados;
 import br.com.basis.abaco.domain.FuncaoTransacao;
+import br.com.basis.abaco.domain.User;
 import br.com.basis.abaco.repository.DivergenceCommentFuncaoDadosRepository;
 import br.com.basis.abaco.repository.DivergenceCommentFuncaoTransacaoRepository;
 import br.com.basis.abaco.repository.FuncaoDadosRepository;
 import br.com.basis.abaco.repository.FuncaoTransacaoRepository;
 import br.com.basis.abaco.repository.UserRepository;
-import br.com.basis.abaco.repository.search.DivergenceCommentFuncaoDadosSearchRepository;
-import br.com.basis.abaco.repository.search.DivergenceCommentFuncaoTransacaoSearchRepository;
 import br.com.basis.abaco.security.AuthoritiesConstants;
 import br.com.basis.abaco.security.SecurityUtils;
 import br.com.basis.abaco.service.DivergenceCommentService;
 import br.com.basis.abaco.service.dto.DivergenceCommentDTO;
 import br.com.basis.abaco.web.rest.util.HeaderUtil;
-import br.com.basis.dynamicexports.service.DynamicExportsService;
 import com.codahale.metrics.annotation.Timed;
 import io.github.jhipster.web.util.ResponseUtil;
 import org.slf4j.Logger;
@@ -45,30 +43,21 @@ public class DivergenceCommentsResource {
     private static final String ENTITY_NAME = "Comment";
     private final DivergenceCommentFuncaoDadosRepository divergenceCommentFuncaoDadosRepository;
     private final DivergenceCommentFuncaoTransacaoRepository divergenceCommentFuncaoTransacaoRepository;
-    private final DivergenceCommentFuncaoDadosSearchRepository divergenceCommentFuncaoDadosSearchRepository;
-    private final DivergenceCommentFuncaoTransacaoSearchRepository divergenceCommentFuncaoTransacaoSearchRepository;
     private final DivergenceCommentService divergenceCommentService;
     private final FuncaoDadosRepository funcaoDadosRepository;
     private final FuncaoTransacaoRepository funcaoTransacaoRepository;
-    private final DynamicExportsService dynamicExportsService;
     private final UserRepository userRepository;
 
 
     public DivergenceCommentsResource(  DivergenceCommentFuncaoDadosRepository divergenceCommentFuncaoDadosRepository,
                                         DivergenceCommentFuncaoTransacaoRepository divergenceCommentFuncaoTransacaoRepository,
-                                        DivergenceCommentFuncaoDadosSearchRepository divergenceCommentFuncaoDadosSearchRepository,
-                                        DivergenceCommentFuncaoTransacaoSearchRepository divergenceCommentFuncaoTransacaoSearchRepository,
                                         DivergenceCommentService divergenceCommentService,
                                         FuncaoDadosRepository funcaoDadosRepository,
                                         FuncaoTransacaoRepository funcaoTransacaoRepository,
-                                        UserRepository userRepository,
-                                        DynamicExportsService dynamicExportsService){
+                                        UserRepository userRepository){
 
-        this.dynamicExportsService = dynamicExportsService;
         this.divergenceCommentFuncaoDadosRepository = divergenceCommentFuncaoDadosRepository;
         this.divergenceCommentFuncaoTransacaoRepository = divergenceCommentFuncaoTransacaoRepository;
-        this.divergenceCommentFuncaoDadosSearchRepository = divergenceCommentFuncaoDadosSearchRepository;
-        this.divergenceCommentFuncaoTransacaoSearchRepository = divergenceCommentFuncaoTransacaoSearchRepository;
         this.funcaoDadosRepository = funcaoDadosRepository;
         this.funcaoTransacaoRepository = funcaoTransacaoRepository;
         this.divergenceCommentService = divergenceCommentService;
@@ -89,7 +78,10 @@ public class DivergenceCommentsResource {
         DivergenceCommentFuncaoDados divergenceCommentFuncaoDados = new DivergenceCommentFuncaoDados();
         divergenceCommentFuncaoDados.setFuncaoDados(funcaoDados);
         divergenceCommentFuncaoDados.setComment(comment);
-        divergenceCommentFuncaoDados.setUser(userRepository.findOneByLogin(SecurityUtils.getCurrentUserLogin()).get());
+        User user = userRepository.findOneByLogin(SecurityUtils.getCurrentUserLogin()).orElse(new User());
+        if(user.getId() != null  && user.getId() > 0){
+            divergenceCommentFuncaoDados.setUser(user);
+        }
         DivergenceCommentDTO result = divergenceCommentService.saveCommentFuncaoDados(divergenceCommentFuncaoDados);
         return ResponseEntity.created(new URI("/api/funcao-dados/" + result.getId())).headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString())).body(result);
     }
@@ -107,7 +99,10 @@ public class DivergenceCommentsResource {
         DivergenceCommentFuncaoTransacao divergenceCommentFuncaoTransacao = new DivergenceCommentFuncaoTransacao();
         divergenceCommentFuncaoTransacao.setFuncaoTransacao(funcaoTransacao);
         divergenceCommentFuncaoTransacao.setComment(comment);
-        divergenceCommentFuncaoTransacao.setUser(userRepository.findOneByLogin(SecurityUtils.getCurrentUserLogin()).get());
+        User user = userRepository.findOneByLogin(SecurityUtils.getCurrentUserLogin()).orElse(new User());
+        if(user.getId() != null  && user.getId() > 0){
+            divergenceCommentFuncaoTransacao.setUser(user);
+        }
         DivergenceCommentDTO result = divergenceCommentService.saveFuncaoTransacao(divergenceCommentFuncaoTransacao);
         return ResponseEntity.created(new URI("/api/funcao-transacao/" + result.getId())).headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString())).body(result);
     }

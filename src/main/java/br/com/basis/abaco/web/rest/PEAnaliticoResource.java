@@ -23,7 +23,7 @@ public class PEAnaliticoResource {
 
     private final PEAnaliticoRepository peAnaliticoRepository;
     private final PEAnaliticoService peAnaliticoService;
-    private final String FUNCAO_DADOS = "fd";
+    private final static String FUNCAO_DADOS = "fd";
 
 
     public PEAnaliticoResource(PEAnaliticoRepository peAnaliticoRepository, PEAnaliticoService peAnaliticoService) {

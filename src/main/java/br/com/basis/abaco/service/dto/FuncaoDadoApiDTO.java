@@ -39,7 +39,6 @@ public class FuncaoDadoApiDTO {
     private StatusFuncao statusFuncao;
     private List<DivergenceCommentDTO> lstDivergenceComments = new ArrayList<>();
 
-
     public Long getId() {
         return id;
     }

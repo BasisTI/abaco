@@ -40,7 +40,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
-import static org.elasticsearch.index.query.QueryBuilders.*;
+import static org.elasticsearch.index.query.QueryBuilders.queryStringQuery;
 
 /**
  * REST controller for managing FuncaoDados.
@@ -71,16 +71,17 @@ public class FuncaoDadosResource {
     /**
      * POST  /funcao-dados : Create a new funcaoDados.
      *
-     * @param funcaoDados the funcaoDados to create
+     * @param funcaoDadoApiDTO the funcaoDados to create
      * @return the ResponseEntity with status 201 (Created) and with body the new funcaoDados, or with status 400 (Bad Request) if the funcaoDados has already an ID
      * @throws URISyntaxException if the Location URI syntax is incorrect
      */
     @PostMapping("/funcao-dados/{idAnalise}")
     @Timed
     @Secured({AuthoritiesConstants.ADMIN, AuthoritiesConstants.USER, AuthoritiesConstants.GESTOR, AuthoritiesConstants.ANALISTA})
-    public ResponseEntity<FuncaoDadoApiDTO> createFuncaoDados(@PathVariable Long idAnalise, @RequestBody FuncaoDados funcaoDados) throws URISyntaxException {
-        log.debug("REST request to save FuncaoDados : {}", funcaoDados);
+    public ResponseEntity<FuncaoDadoApiDTO> createFuncaoDados(@PathVariable Long idAnalise,@RequestBody FuncaoDadoApiDTO funcaoDadoApiDTO) throws URISyntaxException {
+        log.debug("REST request to save FuncaoDados : {}", funcaoDadoApiDTO);
         Analise analise = analiseRepository.findOne(idAnalise);
+        FuncaoDados funcaoDados = convertToEntity(funcaoDadoApiDTO);
         funcaoDados.setAnalise(analise);
         if (funcaoDados.getId() != null || funcaoDados.getAnalise() == null || funcaoDados.getAnalise().getId() == null) {
             return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert(ENTITY_NAME, "idexists", "A new funcaoDados cannot already have an ID")).body(null);
@@ -95,7 +96,7 @@ public class FuncaoDadosResource {
     /**
      * PUT  /funcao-dados : Updates an existing funcaoDados.
      *
-     * @param funcaoDados the funcaoDados to update
+     * @param funcaoDadoApiDTO the funcaoDados to update
      * @return the ResponseEntity with status 200 (OK) and with body the updated funcaoDados,
      * or with status 400 (Bad Request) if the funcaoDados is not valid,
      * or with status 500 (Internal Server Error) if the funcaoDados couldnt be updated
@@ -104,22 +105,22 @@ public class FuncaoDadosResource {
     @PutMapping("/funcao-dados/{id}")
     @Timed
     @Secured({AuthoritiesConstants.ADMIN, AuthoritiesConstants.USER, AuthoritiesConstants.GESTOR, AuthoritiesConstants.ANALISTA})
-    public ResponseEntity<FuncaoDadoApiDTO> updateFuncaoDados(@PathVariable Long id, @RequestBody FuncaoDados funcaoDados) throws URISyntaxException {
-        log.debug("REST request to update FuncaoDados : {}", funcaoDados);
+    public ResponseEntity<FuncaoDadoApiDTO> updateFuncaoDados(@PathVariable Long id, @RequestBody FuncaoDadoApiDTO funcaoDadoApiDTO) throws URISyntaxException {
+        log.debug("REST request to update FuncaoDados : {}", funcaoDadoApiDTO);
         FuncaoDados funcaoDadosOld = funcaoDadosRepository.findById(id);
+        FuncaoDados funcaoDados = convertToEntity(funcaoDadoApiDTO);
         if (funcaoDados.getId() == null) {
-            return createFuncaoDados(funcaoDados.getAnalise().getId(), funcaoDados);
+            return createFuncaoDados(funcaoDados.getAnalise().getId(), funcaoDadoApiDTO);
         }
         Analise analise = analiseRepository.findOne(funcaoDadosOld.getAnalise().getId());
         funcaoDados.setAnalise(analise);
         if (funcaoDados.getAnalise() == null || funcaoDados.getAnalise().getId() == null) {
             return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert(ENTITY_NAME, "idexists", "A new funcaoDados cannot already have an ID")).body(null);
         }
+        updateFuncaoDados(funcaoDadosOld, funcaoDados);
         FuncaoDados result = funcaoDadosRepository.save(funcaoDados);
         FuncaoDadoApiDTO funcaoDadosDTO = getFuncaoDadoApiDTO(result);
-        return ResponseEntity.ok()
-                .headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, funcaoDados.getId().toString()))
-                .body(funcaoDadosDTO);
+        return ResponseEntity.ok().headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, funcaoDados.getId().toString())).body(funcaoDadosDTO);
     }
 
     /**
@@ -320,6 +321,25 @@ public class FuncaoDadosResource {
     private FuncaoDadoApiDTO getFuncaoDadoApiDTO(FuncaoDados funcaoDados) {
         ModelMapper modelMapper = new ModelMapper();
         return modelMapper.map(funcaoDados, FuncaoDadoApiDTO.class);
+    }
+
+    private FuncaoDados convertToEntity(FuncaoDadoApiDTO funcaoDadoApiDTO){
+        ModelMapper modelMapper = new ModelMapper();
+        return modelMapper.map(funcaoDadoApiDTO, FuncaoDados.class);
+    }
+
+    private void updateFuncaoDados(FuncaoDados funcaoDadosOld, FuncaoDados funcaoDados) {
+        funcaoDadosOld.setAlr(funcaoDados.getAlr());
+        funcaoDadosOld.setDers(funcaoDados.getDers());
+        funcaoDadosOld.setFuncionalidade(funcaoDados.getFuncionalidade());
+        funcaoDadosOld.setName(funcaoDados.getName());
+        funcaoDadosOld.setComplexidade(funcaoDados.getComplexidade());
+        funcaoDadosOld.setFatorAjuste(funcaoDados.getFatorAjuste());
+        funcaoDadosOld.setPf(funcaoDados.getPf());
+        funcaoDadosOld.setGrossPF(funcaoDados.getGrossPF());
+        funcaoDadosOld.setSustantation(funcaoDados.getSustantation());
+        funcaoDadosOld.setRlrs(funcaoDados.getRlrs());
+        funcaoDadosOld.setTipo(funcaoDados.getTipo());
     }
 
 
