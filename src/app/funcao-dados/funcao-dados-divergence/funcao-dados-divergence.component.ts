@@ -30,6 +30,7 @@ import { FuncaoDados } from '../funcao-dados.model';
 import { FuncaoDadosService } from '../funcao-dados.service';
 import { BlockUiService } from '@nuvem/angular-base';
 import { CommentFuncaoDados } from '../comment-funcado-dados.model';
+import { Status } from 'src/app/status/status.model';
 
 @Component({
     selector: 'app-analise-funcao-dados',
@@ -559,7 +560,7 @@ export class FuncaoDadosDivergenceComponent implements OnInit {
                 this.seletedFuncaoDados.funcionalidade.id,
                 this.seletedFuncaoDados.funcionalidade.modulo.id).subscribe(value => {
                 if (value === false) {
-                    this.funcaoDadosService.create(funcaoDadosCalculada, this.analise.id).subscribe(
+                    this.funcaoDadosService.createDivergence(funcaoDadosCalculada, this.analise.id).subscribe(
                         (funcaoDados) => {
                             this.pageNotificationService.addCreateMsg(funcaoDadosCalculada.name);
                             funcaoDadosCalculada.id = funcaoDados.id;
@@ -682,8 +683,7 @@ export class FuncaoDadosDivergenceComponent implements OnInit {
                         this.setFields(funcaoDadosCalculada);
                         this.funcoesDados.push(funcaoDadosCalculada);
                         this.resetarEstadoPosSalvar();
-                        this.pageNotificationService.addSuccessMessage(`${this.getLabel('Cadastros.FuncaoDados.Mensagens.msgFuncaoDados')}
-                '${funcaoDadosCalculada.name}' ${this.getLabel(' alterada com sucesso')}`);
+                        this.pageNotificationService.addCreateMsg(funcaoDadosCalculada.name);
                         this.fecharDialog();
                         this.analiseService.updateDivergenciaSomaPf(this.analise.id).subscribe();
                     });

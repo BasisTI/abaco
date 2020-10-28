@@ -1,4 +1,3 @@
-import {FuncaoTransacao} from './../funcao-transacao/funcao-transacao.model';
 import { FuncaoResumivel, Complexidade } from 'src/app/analise-shared';
 import { Impacto } from 'src/app/analise-shared/impacto-enum';
 import { Modulo } from 'src/app/modulo';
@@ -17,6 +16,12 @@ export enum TipoFuncaoDados {
     'AIE' = 'AIE',
     'INM' = 'INM'
 }
+
+enum StatusFunction {
+    DIVERGENTE = 'DIVERGENTE',
+    EXCLUIDO = 'EXCLUIDO',
+    VALIDADO = 'VALIDADO',
+  }
 
 export class Editor {
     constructor(public label?: string,
@@ -54,7 +59,7 @@ export class FuncaoDados implements FuncaoResumivel, BaseEntity, FuncaoAnalise{
         public impacto?: Impacto,
         public quantidade: number = 0,
         public modulo?: Modulo,
-        public statusFuncao?: String,
+        public statusFuncao?: StatusFunction,
         public lstDivergenceComments?: CommentFuncaoDados[],
     ) {
         if (!pf) {

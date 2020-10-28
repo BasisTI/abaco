@@ -12,6 +12,7 @@ import { ResponseWrapper } from 'src/app/shared';
 import { Manual } from 'src/app/manual';
 import { Analise } from '../analise';
 import { CommentFuncaoDados } from './comment-funcado-dados.model';
+import { Status } from '../status/status.model';
 
 @Injectable()
 export class FuncaoDadosService {
@@ -163,6 +164,12 @@ export class FuncaoDadosService {
     }
 
     create(funcaoDados: FuncaoDados, idAnalise: Number): Observable<any> {
+        const json = funcaoDados.toJSONState();
+        return this.http.post(`${this.resourceUrl}/${idAnalise}`, json);
+    }
+
+    createDivergence(funcaoDados: FuncaoDados, idAnalise: Number): Observable<any> {
+        funcaoDados.statusFuncao = StatusFunction.DIVERGENTE;
         const json = funcaoDados.toJSONState();
         return this.http.post(`${this.resourceUrl}/${idAnalise}`, json);
     }
