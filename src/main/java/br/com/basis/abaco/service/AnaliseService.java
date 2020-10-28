@@ -726,7 +726,7 @@ public class AnaliseService extends BaseService {
     }
 
     public Analise updateDivergenceAnalise(Analise analise) {
-        updatePf(analise);
+        updatePFDivergente(analise);
         analise.setIdentificadorAnalise(analise.getId().toString());
         analise = save(analise);
         return analise;

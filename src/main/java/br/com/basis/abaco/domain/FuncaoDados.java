@@ -204,9 +204,7 @@ public class FuncaoDados extends FuncaoAnalise implements Serializable {
     }
 
     public void setRlrs(Set<Rlr> rlrs) {
-        this.rlrs = Optional.ofNullable(rlrs)
-                .map(lista -> new LinkedHashSet<Rlr>(lista))
-                .orElse(new LinkedHashSet<Rlr>());
+        this.rlrs.addAll(rlrs);
     }
 
     public Alr getAlr() {
@@ -277,9 +275,7 @@ public class FuncaoDados extends FuncaoAnalise implements Serializable {
     }
 
     public void setDers(Set<Der> ders) {
-        this.ders = Optional.ofNullable(ders)
-                .map(LinkedHashSet::new)
-                .orElse(new LinkedHashSet<Der>());
+        this.ders.addAll(ders);
     }
 
     public FuncaoDadosVersionavel getFuncaoDadosVersionavel() {
