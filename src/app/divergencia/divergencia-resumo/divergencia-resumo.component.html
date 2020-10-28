@@ -80,7 +80,7 @@
             <div class="ui-g-2 ui-md-2 ui-sm-12">
               <app-white-button
                       [buttonLabel]="this.getLabel('Voltar')"
-                      routerLink="/analise">
+                      routerLink="/divergencia">
               </app-white-button>
             </div>
             <div class="ui-g-2 ui-md-2 ui-sm-12">
@@ -94,18 +94,6 @@
                       [buttonLabel]="this.getLabel('Gerar Relatório PDF')"
                       (click)="geraRelatorioPdfDetalhadoBrowser()">
               </app-gray-button>
-            </div>
-            <div class="ui-g-2 ui-md-2 ui-sm-12">
-              <app-red-button *ngIf="!this.isView"
-                      [buttonLabel]="this.getLabel('Bloquear Análise')"
-                      (click)="bloquearAnalise()">
-              </app-red-button>
-            </div>
-            <div class="ui-g-2 ui-md-2 ui-sm-12">
-              <app-blue-button *ngIf="!this.isView"
-                      [buttonLabel]="this.getLabel('Compartilhar Análise')"
-                      (click)="openCompartilharDialog()">
-              </app-blue-button>
             </div>
           </div>
       </div>

@@ -26,11 +26,11 @@ export class DivergenciaService {
 
     findCompartilhadaByAnaliseUrl = environment.apiUrl + '/compartilhada';
 
-    relatorioAnaliseUrl = environment.apiUrl + '/relatorioPdfArquivo';
+    relatorioAnaliseUrl = this.resourceUrl + '/relatorioPdfArquivo';
 
-    relatoriosDetalhadoUrl = environment.apiUrl + '/downloadPdfDetalhadoBrowser';
+    relatoriosDetalhadoUrl = this.resourceUrl + '/downloadPdfDetalhadoBrowser';
 
-    relatorioExcelUrl = environment.apiUrl + '/downloadRelatorioExcel';
+    relatorioExcelUrl = this.resourceUrl + '/downloadRelatorioExcel';
 
     searchUrl = environment.apiUrl + '/_search/analises';
 

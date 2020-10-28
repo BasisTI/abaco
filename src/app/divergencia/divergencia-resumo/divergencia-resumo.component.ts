@@ -20,6 +20,7 @@ import { Analise } from '../../analise/analise.model';
 import { AnaliseService } from '../../analise/analise.service';
 import { Resumo } from './resumo.model';
 import { BlockUiService } from '@nuvem/angular-base';
+import { DivergenciaService } from '../divergencia.service';
 
 @Component({
     selector: 'app-analise-resumo',
@@ -67,6 +68,7 @@ export class DivergenciaResumoComponent implements OnInit {
         private pageNotificationService: PageNotificationService,
         private userService: UserService,
         private blockUiService: BlockUiService,
+        private divergenciaService: DivergenciaService,
     ) {
     }
 
@@ -188,11 +190,11 @@ export class DivergenciaResumoComponent implements OnInit {
     }
 
     public geraRelatorioExcelBrowser() {
-        this.analiseService.gerarRelatorioExcel(this.idAnalise);
+        this.divergenciaService.gerarRelatorioExcel(this.idAnalise);
     }
 
     public geraRelatorioPdfDetalhadoBrowser() {
-        this.analiseService.geraRelatorioPdfDetalhadoBrowser(this.idAnalise);
+        this.divergenciaService.geraRelatorioPdfDetalhadoBrowser(this.idAnalise);
     }
 
     public bloquearAnalise() {
