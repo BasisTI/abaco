@@ -7,6 +7,7 @@ import br.com.basis.abaco.domain.TipoEquipe;
 import br.com.basis.abaco.domain.UploadedFile;
 import br.com.basis.abaco.domain.User;
 import br.com.basis.abaco.domain.enumeration.MetodoContagem;
+import br.com.basis.abaco.domain.enumeration.StatusFuncao;
 import br.com.basis.abaco.domain.enumeration.TipoRelatorio;
 import br.com.basis.abaco.reports.rest.RelatorioAnaliseRest;
 import br.com.basis.abaco.repository.AnaliseRepository;
@@ -343,6 +344,14 @@ public class AnaliseResource {
         return relatorioAnaliseRest.downloadPdfArquivo(analise, TipoRelatorio.ANALISE);
     }
 
+    @GetMapping("/divergencia/relatorioPdfArquivo/{id}")
+    @Timed
+    public ResponseEntity<byte[]> downloadDivergenciaPdfArquivo(@PathVariable Long id) throws URISyntaxException, IOException, JRException {
+        Analise analise = analiseService.recuperarAnalise(id);
+        relatorioAnaliseRest = new RelatorioAnaliseRest(this.response, this.request);
+        return relatorioAnaliseRest.downloadPdfArquivo(analise, TipoRelatorio.ANALISE);
+    }
+
     @GetMapping("/relatorioPdfBrowser/{id}")
     @Timed
     public @ResponseBody
@@ -363,6 +372,17 @@ public class AnaliseResource {
         return relatorioAnaliseRest.downloadPdfBrowser(analise, TipoRelatorio.ANALISE_DETALHADA);
     }
 
+    @GetMapping("/divergencia/downloadPdfDetalhadoBrowser/{id}")
+    @Timed
+    public @ResponseBody
+    byte[] downloadPdfDivergenciaDetalhadoBrowser(@PathVariable Long id) throws URISyntaxException, IOException, JRException {
+        Analise analise = analiseService.recuperarAnalise(id);
+        analise.setFuncaoDados(funcaoDadosRepository.findByAnaliseIdAndStatusFuncaoOrderByFuncionalidadeModuloNomeAscFuncionalidadeNomeAscNameAsc(id, StatusFuncao.VALIDADO));
+        analise.setFuncaoTransacaos(funcaoTransacaoRepository.findByAnaliseIdAndStatusFuncaoOrderByFuncionalidadeModuloNomeAscFuncionalidadeNomeAscNameAsc(id, StatusFuncao.VALIDADO));
+        relatorioAnaliseRest = new RelatorioAnaliseRest(this.response, this.request);
+        return relatorioAnaliseRest.downloadPdfBrowser(analise, TipoRelatorio.ANALISE_DETALHADA);
+    }
+
     @GetMapping("/downloadRelatorioExcel/{id}")
     @Timed
     public @ResponseBody
@@ -378,6 +398,23 @@ public class AnaliseResource {
         }
         return relatorioAnaliseRest.downloadExcel(analise, uploadedFiles);
     }
+
+    @GetMapping("/divergencia/downloadRelatorioExcel/{id}")
+    @Timed
+    public @ResponseBody
+    byte[] downloadDivergenciaRelatorioExcel(@PathVariable Long id) throws URISyntaxException, IOException, JRException {
+        Analise analise = analiseService.recuperarAnalise(id);
+        analise.setFuncaoDados(funcaoDadosRepository.findByAnaliseIdAndStatusFuncaoOrderByFuncionalidadeModuloNomeAscFuncionalidadeNomeAscNameAsc(id, StatusFuncao.VALIDADO));
+        analise.setFuncaoTransacaos(funcaoTransacaoRepository.findByAnaliseIdAndStatusFuncaoOrderByFuncionalidadeModuloNomeAscFuncionalidadeNomeAscNameAsc(id, StatusFuncao.VALIDADO));
+        relatorioAnaliseRest = new RelatorioAnaliseRest(this.response, this.request);
+        Long idLogo = analise.getOrganizacao().getLogoId();
+        UploadedFile uploadedFiles = new UploadedFile();
+        if (idLogo != null && idLogo > 0) {
+            uploadedFiles = uploadedFilesRepository.findOne(idLogo);
+        }
+        return relatorioAnaliseRest.downloadExcel(analise, uploadedFiles);
+    }
+
 
     @GetMapping("/relatorioContagemPdf/{id}")
     @Timed
