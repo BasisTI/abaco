@@ -391,7 +391,6 @@ public class AnaliseService extends BaseService {
         return funcaoDados;
     }
 
-    @org.jetbrains.annotations.NotNull
     private FuncaoDados bindFuncaoDados(Analise analiseClone, FuncaoDados fd) {
         Set<Rlr> rlrs = new HashSet<>();
         Set<Der> ders = new HashSet<>();
@@ -652,8 +651,8 @@ public class AnaliseService extends BaseService {
             analiseDivergencia = bindDivergenceAnalise(analiseDivergencia, analise, user);
             analiseDivergencia.setStatus(status);
             analiseDivergencia.setIsDivergence(true);
-            analiseDivergencia = save(analiseDivergencia);
             updateAnaliseRelationAndSendEmail(analise, status, analiseDivergencia);
+            analiseDivergencia = save(analiseDivergencia);
             return analiseDivergencia;
         }
         return new Analise();

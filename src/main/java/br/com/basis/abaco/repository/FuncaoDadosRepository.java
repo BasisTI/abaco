@@ -51,4 +51,6 @@ public interface FuncaoDadosRepository extends JpaRepository<FuncaoDados, Long> 
     Boolean existsByNameAndAnaliseIdAndFuncionalidadeIdAndFuncionalidadeModuloIdAndIdNot(String name, Long analiseId, Long idFuncionalidade, Long idModulo, Long id);
 
     long countByFuncionalidadeId(Long id);
+
+    FuncaoDados findByIdOrderByDersIdAscRlrsIdAsc(Long id);
 }

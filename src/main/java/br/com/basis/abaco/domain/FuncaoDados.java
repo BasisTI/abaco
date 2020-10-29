@@ -61,7 +61,7 @@ public class FuncaoDados extends FuncaoAnalise implements Serializable {
     @JsonManagedReference(value = FUNCAODADOS)
     @OneToMany(mappedBy = FUNCAODADOS, cascade = CascadeType.ALL, orphanRemoval = true)
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-    @OrderBy("nome")
+    @OrderBy("valor ASC")
     private Set<Rlr> rlrs = new HashSet<>();
 
     @ManyToOne
@@ -78,7 +78,7 @@ public class FuncaoDados extends FuncaoAnalise implements Serializable {
 
     @JsonManagedReference(value = FUNCAODADOS)
     @OneToMany(mappedBy = FUNCAODADOS, cascade = CascadeType.ALL, orphanRemoval = true)
-    @OrderBy("nome")
+    @OrderBy("id ASC")
     private Set<Der> ders = new LinkedHashSet<>();
 
     @JsonIgnore
@@ -204,7 +204,9 @@ public class FuncaoDados extends FuncaoAnalise implements Serializable {
     }
 
     public void setRlrs(Set<Rlr> rlrs) {
-        this.rlrs.addAll(rlrs);
+        this.rlrs = Optional.ofNullable(rlrs)
+            .map(lista -> new LinkedHashSet<Rlr>(lista))
+            .orElse(new LinkedHashSet<Rlr>());
     }
 
     public Alr getAlr() {
@@ -271,11 +273,15 @@ public class FuncaoDados extends FuncaoAnalise implements Serializable {
     }
 
     public Set<Der> getDers() {
-        return Collections.unmodifiableSet(ders);
+        return Optional.ofNullable(this.ders)
+            .map(lista -> new LinkedHashSet<Der>(lista))
+            .orElse(new LinkedHashSet<Der>());
     }
 
     public void setDers(Set<Der> ders) {
-        this.ders.addAll(ders);
+        this.ders = Optional.ofNullable(ders)
+            .map(LinkedHashSet::new)
+            .orElse(new LinkedHashSet<Der>());
     }
 
     public FuncaoDadosVersionavel getFuncaoDadosVersionavel() {
@@ -316,4 +322,13 @@ public class FuncaoDados extends FuncaoAnalise implements Serializable {
             .orElse(new ArrayList<>());;
     }
 
+    public void updateDers(Set<Der> ders){
+        this.ders.clear();
+        this.ders.addAll(ders);
+    }
+
+    public void updateRlrs(Set<Rlr> rlrs){
+        this.rlrs.clear();
+        this.rlrs.addAll(rlrs);
+    }
 }

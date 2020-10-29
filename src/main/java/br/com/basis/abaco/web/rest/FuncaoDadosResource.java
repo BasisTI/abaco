@@ -35,6 +35,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -155,7 +156,7 @@ public class FuncaoDadosResource {
     @Timed
     public ResponseEntity<FuncaoDadoApiDTO> getFuncaoDados(@PathVariable Long id) {
         log.debug("REST request to get FuncaoDados : {}", id);
-        FuncaoDados funcaoDados = funcaoDadosRepository.findOne(id);
+        FuncaoDados funcaoDados = funcaoDadosRepository.findByIdOrderByDersIdAscRlrsIdAsc(id);
         if (funcaoDados.getAnalise().getFuncaoDados() != null) {
             funcaoDados.getAnalise().getFuncaoDados().clear();
         }
@@ -348,14 +349,26 @@ public class FuncaoDadosResource {
         funcaoDadosOld.setPf(funcaoDados.getPf());
         funcaoDadosOld.setGrossPF(funcaoDados.getGrossPF());
         funcaoDadosOld.setSustantation(funcaoDados.getSustantation());
-        funcaoDadosOld.setDers(funcaoDados.getDers());
-        funcaoDadosOld.setRlrs(funcaoDados.getRlrs());
-        funcaoDadosOld.getDers().forEach(der -> {der.setFuncaoDados(funcaoDadosOld);});
-        funcaoDadosOld.getRlrs().forEach(rlr -> {rlr.setFuncaoDados(funcaoDadosOld);});
+        setDersAndRlrs(funcaoDadosOld, funcaoDados);
         funcaoDadosOld.setTipo(funcaoDados.getTipo());
         funcaoDadosOld.setComplexidade(funcaoDados.getComplexidade());
         funcaoDadosOld.setStatusFuncao(funcaoDados.getStatusFuncao());
         funcaoDadosOld.setQuantidade(funcaoDados.getQuantidade());
         return  funcaoDadosOld;
+    }
+
+    private void setDersAndRlrs(FuncaoDados funcaoDadosOld, FuncaoDados funcaoDados) {
+        Set<Der> lstDers = new HashSet<>();
+        Set<Rlr> lstRlrs = new HashSet<>();
+        funcaoDados.getDers().forEach(der -> {
+            der.setFuncaoDados(funcaoDadosOld);
+            lstDers.add(der);
+        });
+        funcaoDados.getRlrs().forEach(rlr -> {
+            rlr.setFuncaoDados(funcaoDadosOld);
+            lstRlrs.add(rlr);
+        });
+        funcaoDadosOld.updateDers(lstDers);
+        funcaoDadosOld.updateRlrs(lstRlrs);
     }
 }
