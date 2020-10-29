@@ -628,37 +628,24 @@ export class FuncaoTransacaoDivergenceComponent implements OnInit {
             this.pageNotificationService.addErrorMessage(this.getLabel('Por favor preencher o campo obrigatório!'));
             return;
         } else {
-            this.funcaoTransacaoService.existsWithName(
-                this.currentFuncaoTransacao.name,
-                this.analise.id,
-                this.currentFuncaoTransacao.funcionalidade.id,
-                this.currentFuncaoTransacao.funcionalidade.modulo.id,
-                this.currentFuncaoTransacao.id).subscribe(existFuncaoTransacao => {
-                if (!existFuncaoTransacao) {
-                    this.desconverterChips();
-                    this.verificarModulo();
-                    this.currentFuncaoTransacao = new FuncaoTransacao().copyFromJSON(this.currentFuncaoTransacao);
-                    const funcaoTransacaoCalculada = CalculadoraTransacao.calcular(
-                        this.analise.metodoContagem, this.currentFuncaoTransacao, this.analise.contrato.manual);
-                    this.funcaoTransacaoService.update(funcaoTransacaoCalculada).subscribe(value => {
-                        this.funcoesTransacoes = this.funcoesTransacoes.filter((funcaoTransacao) => (
-                            funcaoTransacao.id !== funcaoTransacaoCalculada.id
-                        ));
-                        this.setFields(funcaoTransacaoCalculada);
-                        this.funcoesTransacoes.push(funcaoTransacaoCalculada);
-                        this.resetarEstadoPosSalvar();
-                        this.fecharDialog();
-                        this.analiseService.updateDivergenciaSomaPf(this.analise.id).subscribe();
-                        this.pageNotificationService
-                            .addSuccessMessage(`${this.getLabel('Função de Transação')}
-                '${funcaoTransacaoCalculada.name}' ${this.getLabel(' alterada com sucesso')}`);
-                    });
+            this.desconverterChips();
+            this.verificarModulo();
+            this.currentFuncaoTransacao = new FuncaoTransacao().copyFromJSON(this.currentFuncaoTransacao);
+            const funcaoTransacaoCalculada = CalculadoraTransacao.calcular(
+                this.analise.metodoContagem, this.currentFuncaoTransacao, this.analise.contrato.manual);
+            this.funcaoTransacaoService.update(funcaoTransacaoCalculada).subscribe(value => {
+                this.funcoesTransacoes = this.funcoesTransacoes.filter((funcaoTransacao) => (
+                    funcaoTransacao.id !== funcaoTransacaoCalculada.id
+                ));
+                this.setFields(funcaoTransacaoCalculada);
+                this.funcoesTransacoes.push(funcaoTransacaoCalculada);
+                this.resetarEstadoPosSalvar();
+                this.fecharDialog();
+                this.analiseService.updateDivergenciaSomaPf(this.analise.id).subscribe();
+                this.pageNotificationService
+                    .addSuccessMessage(`${this.getLabel('Função de Transação')}
+                        '${funcaoTransacaoCalculada.name}' ${this.getLabel(' alterada com sucesso')}`);
 
-                } else {
-                    this.pageNotificationService.addErrorMessage(
-                        this.getLabel('Registro já cadastrado')
-                    );
-                }
             });
         }
     }
