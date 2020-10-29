@@ -684,8 +684,8 @@
         </div>
     </div>
 </div>
-<p-dialog [header]="'Ordem de Exibição do Deflator'" [(visible)]="showEditOrderDeflator" [style]="{width: '60vw'}">
-    <p-orderList [value]="manual.fatoresAjuste" styleClass="custom-orderlist">
+<p-dialog [header]="'Ordem de Exibição do Deflator'"  [(visible)]="showEditOrderDeflator" [style]="{width: '60vw'}">
+    <p-orderList [value]="manual.fatoresAjuste" styleClass="custom-orderlist" [listStyle]="{'height':'700px'}" dragdrop="true">
         <ng-template let-deflator pTemplate="item">
             <div class="ui-helper-clearfix">
                 <div style="font-size:14px; margin:15px 5px 0 0">{{deflator.codigo}} - {{deflator.nome}} - {{deflator.fator}} {{ deflator.tipoAjuste === 'PERCENTUAL' ? '%' :'PF'}} - {{ deflator.ativo ? 'Ativo': 'Inativo'}}</div>

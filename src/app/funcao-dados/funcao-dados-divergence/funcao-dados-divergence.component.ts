@@ -1139,7 +1139,6 @@ export class FuncaoDadosDivergenceComponent implements OnInit {
                 this.seletedFuncaoDados.lstDivergenceComments.push(comment);
                 this.divergenceComment = '';
                 this.showAddComent = false;
-                this.showDialog = false;
                 this.pageNotificationService.addSuccessMessage('Comentário adicionado.');
             });
     }

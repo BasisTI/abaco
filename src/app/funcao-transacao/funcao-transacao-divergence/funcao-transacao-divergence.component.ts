@@ -828,6 +828,7 @@ export class FuncaoTransacaoDivergenceComponent implements OnInit {
             } '${funcaoTransacaoSelecionada.name}'?`,
             accept: () => {
                 this.funcaoTransacaoService.deleteStatus(funcaoTransacaoSelecionada.id).subscribe(value => {
+                    funcaoTransacaoSelecionada = this.funcoesTransacoes.filter((funcaoTransacao) => (funcaoTransacao.id === funcaoTransacaoSelecionada.id))[0];
                     funcaoTransacaoSelecionada['statusFuncao'] = value['statusFuncao'];
                     this.pageNotificationService.addSuccessMessage('Status da funcionalidade ' + funcaoTransacaoSelecionada.name + ' foi alterado.');
                     this.analiseService.updateDivergenciaSomaPf(this.analise.id).subscribe();
@@ -844,6 +845,7 @@ export class FuncaoTransacaoDivergenceComponent implements OnInit {
             } '${funcaoTransacaoSelecionada.name}'?`,
             accept: () => {
                 this.funcaoTransacaoService.pending(funcaoTransacaoSelecionada.id).subscribe(value => {
+                    funcaoTransacaoSelecionada = this.funcoesTransacoes.filter((funcaoTransacao) => (funcaoTransacao.id === funcaoTransacaoSelecionada.id))[0];
                     funcaoTransacaoSelecionada['statusFuncao'] = value['statusFuncao'];
                     this.pageNotificationService.addSuccessMessage('Status da funcionalidade ' + funcaoTransacaoSelecionada.name + ' foi alterado.');
                     this.analiseService.updateDivergenciaSomaPf(this.analise.id).subscribe();
@@ -859,6 +861,7 @@ export class FuncaoTransacaoDivergenceComponent implements OnInit {
             } '${funcaoTransacaoSelecionada.name}'?`,
             accept: () => {
                 this.funcaoTransacaoService.approved(funcaoTransacaoSelecionada.id).subscribe(value => {
+                    funcaoTransacaoSelecionada = this.funcoesTransacoes.filter((funcaoTransacao) => (funcaoTransacao.id === funcaoTransacaoSelecionada.id))[0];
                     funcaoTransacaoSelecionada['statusFuncao'] = value['statusFuncao'];
                     this.pageNotificationService.addSuccessMessage('Status da funcionalidade ' + funcaoTransacaoSelecionada.name + ' foi alterado.');
                     this.analiseService.updateDivergenciaSomaPf(this.analise.id).subscribe();
@@ -999,7 +1002,7 @@ export class FuncaoTransacaoDivergenceComponent implements OnInit {
             return;
         }
         if (!this.currentFuncaoTransacao && !this.currentFuncaoTransacao.id) {
-            this.pageNotificationService.addErrorMessage('A função de dados selecionada é inválida.');
+            this.pageNotificationService.addErrorMessage('A função de transação selecionada é inválida.');
             return;
         }
         this.commentFT.commet = divergenceComment;
@@ -1007,7 +1010,6 @@ export class FuncaoTransacaoDivergenceComponent implements OnInit {
             .subscribe((comment) => {
                 this.currentFuncaoTransacao.lstDivergenceComments.push(comment);
                 this.showAddComent = false;
-                this.showDialog = false;
                 this.divergenceComment = '';
                 this.pageNotificationService.addSuccessMessage('Comentário adicionado.');
             });

@@ -771,7 +771,7 @@ export class AnaliseListComponent implements OnInit {
 
         if (setMainAnalise) {
             this.mainAnaliseDivergencia = this.firstAnaliseDivergencia;
-            this.secondAnaliseDivergencia = this.secondAnaliseDivergencia;
+            this.auxiliaryAnaliseDivergencia = this.secondAnaliseDivergencia;
         }
         if (!this.mainAnaliseDivergencia || !this.auxiliaryAnaliseDivergencia) {
             this.pageNotificationService.addErrorMessage('Selecione a Análise para divergência das Funções de Dados e Transação.');
@@ -803,15 +803,23 @@ export class AnaliseListComponent implements OnInit {
                                 .concat('?'),
                 accept: () => {
                     this.blockUiService.show();
-                    this.analiseService.generateDivergenceFromAnalise(analise.id).subscribe(
-                        (analiseResp) => {
-                        this.recarregarDataTable();
-                        this.datatable.filter();
-                        this.pageNotificationService.addSuccessMessage('Divergência da análise \"' + analise.identificadorAnalise + '\" foi gerada com sucesso!');
-                        this.blockUiService.hide();
+                        this.analiseService.generateDivergenceFromAnalise(analise.id)
+                        .subscribe(
+                            (analiseResp) => {
+                                this.analiseService.updateDivergence(analiseResp).subscribe(analiseUpdateDivergence => {
+                            this.recarregarDataTable();
+                            this.datatable.filter();
+                            this.pageNotificationService.addSuccessMessage('Divergência da análise \"' + analiseUpdateDivergence.identificadorAnalise + '\" foi gerada com sucesso!');
+                            this.blockUiService.hide();
+                        },  err => {
+                            this.pageNotificationService.addErrorMessage('Ocorreu um erro ao tentar gerar Divergência.');
+                            console.log(err);
+                            this.blockUiService.hide();
+                        });
                     },  err => {
                         this.pageNotificationService.addErrorMessage('Ocorreu um erro ao tentar gerar Divergência.');
                         console.log(err);
+                        this.blockUiService.hide();
                     });
                 }
             });

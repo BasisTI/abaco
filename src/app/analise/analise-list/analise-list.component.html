@@ -286,10 +286,8 @@
 
 <p-confirmDialog header="Confirmação" #dialog>
     <p-footer>
-        <button type="button" pButton icon="fa-close" label="Não"
-                (click)="dialog.reject()"></button>
-        <button type="button" pButton icon="fa-check" label="Sim"
-                (click)="dialog.accept()"></button>
+        <button type="button" pButton icon="fa-close" label="Não" (click)="dialog.reject()"></button>
+        <button type="button" pButton icon="fa-check" label="Sim" (click)="dialog.accept()"></button>
     </p-footer>
 </p-confirmDialog>
 <p-dialog *ngIf="equipeShare" header="Compartilhar Análise" [(visible)]="mostrarDialog" [modal]="true" (onHide)="limparSelecaoCompartilhar()" [style]="{width: '50vw'}" >

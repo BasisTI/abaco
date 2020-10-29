@@ -37,6 +37,13 @@
                                         [rowsPerPageOptions]="[20,50,100]"
                                         [showVisibleColumnsControl]="true"
                                         #tables>
+                                    <p-column field="statusFuncao" header="Status" [sortable]="true" >
+                                        <ng-template let-statusFuncao="rowData.statusFuncao" pTemplate="body">
+                                            <button type="button" pButton icon="ui-icon-schedule" *ngIf="statusFuncao === 'DIVERGENTE'" ></button>
+                                            <button type="button" pButton icon="ui-icon-delete" class="ui-button-danger" *ngIf="statusFuncao === 'EXCLUIDO'" ></button>
+                                            <button type="button" pButton icon="ui-icon-check" class="ui-button-success" *ngIf="statusFuncao === 'VALIDADO'" ></button>
+                                        </ng-template>
+                                    </p-column>
                                     <p-column field="nomeModulo" header="Módulo" sortable="true"></p-column>
                                     <p-column field="nomeFuncionalidade" header="Funcionalidade" sortable="true"></p-column>
                                     <p-column field="name" header=" Nome" sortable="true"></p-column>
@@ -50,13 +57,6 @@
                                     </p-column>
                                     <p-column header=" PF Liquído" field="pf"  >
                                         <ng-template let-pf="rowData.pf" pTemplate="body"> {{ pf | number }} </ng-template>
-                                    </p-column>
-                                    <p-column field="statusFuncao" header="Status" [sortable]="true" >
-                                        <ng-template let-statusFuncao="rowData.statusFuncao" pTemplate="body">
-                                            <i [ngClass]="{'ui-icon-schedule' : statusFuncao === 'DIVERGENTE'}"></i>
-                                            <i [ngClass]="{'ui-icon-not-interested' : statusFuncao === 'EXCLUIDO'}"></i>
-                                            <i [ngClass]="{'ui-icon-check' : statusFuncao === 'VALIDADO'}"></i>
-                                        </ng-template>
                                     </p-column>
                                     <basis-datatable-button
                                         name="divergence"
@@ -85,6 +85,8 @@
                             [(header)]="textHeader"
                             [contentStyle]="{'height': ['windowHeightDialog']}"
                             [style]="{width: '80vw'}">
+
+                            <h4>Status: {{currentFuncaoTransacao.statusFuncao}}</h4>
                         <app-analise-modulo-funcionalidade
                                 [erroModulo]="erroModulo" [isFuncaoDados]="false"
                                 (moduloSelectedEvent)="moduloSelected($event)"
@@ -279,20 +281,13 @@
 
                         <div class="ui-g ui-md-12 ui-sm-12" style="justify-content: flex-end">
                             <div class="ui-md-2 ui-sm-12" >
-                                <app-blue-button [buttonLabel]="'Comentário'"
+                                <app-blue-button [buttonLabel]="'Comentário'" 
+                                    *ngIf="isEdit"
                                     id="idDeleteFormFuncaoDados"
                                     buttonIcon="ui-icon-comment"
                                     (click)="showDialogAddComent()">
                                 </app-blue-button>
                             </div>
-                            <div class="ui-md-2 ui-sm-12">
-                                <app-white-button
-                                        [buttonLabel]="'Fechar'"
-                                        id="idBtnFecharFormFuncaoTransacao"
-                                        (click)="cancelar()">
-                                </app-white-button>
-                            </div>
-
                             <div class="ui-md-2 ui-sm-12">
                                 <app-blue-button
                                         [buttonLabel]="'Salvar'"
@@ -321,6 +316,13 @@
                                                   buttonIcon="ui-icon-done"
                                                   (click)="confirmApproved(currentFuncaoTransacao)">
                                 </app-green-button>
+                            </div>
+                            <div class="ui-md-2 ui-sm-12">
+                                <app-white-button
+                                        [buttonLabel]="'Fechar'"
+                                        id="idBtnFecharFormFuncaoTransacao"
+                                        (click)="cancelar()">
+                                </app-white-button>
                             </div>
                         </div>
                     </p-dialog>
