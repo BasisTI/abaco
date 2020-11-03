@@ -1,8 +1,6 @@
 package br.com.basis.abaco.domain;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.Column;
@@ -16,14 +14,15 @@ import java.math.BigDecimal;
 @Table(name = "vw_analise_soma_pf")
 @Getter
 @Setter
-@AllArgsConstructor
-@NoArgsConstructor
-public class VwAnaliseSomaPf implements Serializable {
+public class VwAnaliseSomaPf  implements Serializable {
 
     @Id
     private Long analiseId;
-    @Column
+
+    @Column(name = "pf_gross")
     private BigDecimal pfGross;
-    @Column
+
+    @Column(name = "pf_total")
     private BigDecimal pfTotal;
+
 }

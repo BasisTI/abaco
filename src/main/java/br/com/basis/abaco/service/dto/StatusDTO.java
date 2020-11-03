@@ -21,4 +21,5 @@ public class StatusDTO implements Serializable, ReportObject {
 
     private Boolean ativo;
 
+    private Boolean divergencia;
 }

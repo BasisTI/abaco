@@ -24,4 +24,6 @@ public interface StatusRepository extends JpaRepository<Status, Long> {
     Status findById(Long id);
 
     List<Status> findByAtivoTrue();
+
+    Status findFirstByDivergenciaTrue();
 }

@@ -4,7 +4,7 @@ import br.com.basis.abaco.utils.StringUtils;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 
-import static org.elasticsearch.index.query.QueryBuilders.nestedQuery;
+import static org.elasticsearch.index.query.QueryBuilders.*;
 
 public class BaseService {
 
@@ -17,6 +17,22 @@ public class BaseService {
     protected void mustMatchPhaseQuery(String valueField, BoolQueryBuilder qb, String nameField) {
         if (!StringUtils.isEmptyString(valueField)) {
             qb.must(QueryBuilders.matchPhraseQuery(nameField, valueField));
+        }
+    }
+    protected void mustMatchWildcardContainsQuery(String valueField, BoolQueryBuilder qb, String nameField) {
+        if (!StringUtils.isEmptyString(valueField)) {
+            qb.must(QueryBuilders.wildcardQuery(nameField, "*" + valueField + "*"));
+        }
+    }
+    protected void mustMatchWildcardContainsQueryLowerCase(String valueField, BoolQueryBuilder qb, String nameField) {
+        if (!StringUtils.isEmptyString(valueField)) {
+            qb.must(QueryBuilders.wildcardQuery(nameField, "*" + valueField.toLowerCase() + "*"));
+        }
+    }
+
+    protected void mustMatchQuery(String valueField, BoolQueryBuilder qb, String nameField) {
+        if (!StringUtils.isEmptyString(valueField)) {
+            qb.must(QueryBuilders.matchQuery(nameField, valueField));
         }
     }
 

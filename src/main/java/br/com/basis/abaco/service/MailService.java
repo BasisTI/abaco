@@ -1,5 +1,7 @@
 package br.com.basis.abaco.service;
 
+import br.com.basis.abaco.domain.Analise;
+import br.com.basis.abaco.domain.TipoEquipe;
 import br.com.basis.abaco.domain.User;
 import io.github.jhipster.config.JHipsterProperties;
 import org.apache.commons.lang3.CharEncoding;
@@ -27,23 +29,18 @@ import java.util.Locale;
 @Service
 public class MailService {
 
+    public static final String PT_BR = "pt";
     private final Logger log = LoggerFactory.getLogger(MailService.class);
-
     private static final String USER = "user";
-
+    private static final String ANALISE = "analise";
     private static final String BASE_URL = "baseUrl";
-
     private final JHipsterProperties jHipsterProperties;
-
     private final JavaMailSender javaMailSender;
-
     private final MessageSource messageSource;
-
     private final SpringTemplateEngine templateEngine;
 
     public MailService(JHipsterProperties jHipsterProperties, JavaMailSender javaMailSender,
                        MessageSource messageSource, SpringTemplateEngine templateEngine) {
-
         this.jHipsterProperties = jHipsterProperties;
         this.javaMailSender = javaMailSender;
         this.messageSource = messageSource;
@@ -117,5 +114,37 @@ public class MailService {
         String content = templateEngine.process("socialRegistrationValidationEmail", context);
         String subject = messageSource.getMessage("email.social.registration.title", null, locale);
         sendEmail(user.getEmail(), subject, content, false, true);
+    }
+
+    @Async
+    public void sendAnaliseSharedEmail(Analise analise, TipoEquipe tipoEquipe) {
+        String email = tipoEquipe.getEmailPreposto();
+        log.debug("Sending shared notification to e-mail '{}'", tipoEquipe.getEmailPreposto());
+        Locale locale = Locale.forLanguageTag(PT_BR);
+        Context context = new Context(locale);
+        if(analise.getNumeroOs() == null){
+            analise.setNumeroOs("");
+        }
+        context.setVariable(ANALISE, analise);
+        context.setVariable(USER, tipoEquipe.getPreposto());
+        context.setVariable(BASE_URL, jHipsterProperties.getMail().getBaseUrl());
+        String content = templateEngine.process("notificationSharedAnalise", context);
+        String subject = messageSource.getMessage("email.shared.analise.title", new Object[] {analise.getIdentificadorAnalise()}, locale);
+        sendEmail(email, subject, content, false, true);
+    }
+
+    @Async
+    public void sendDivergenceEmail(Analise analise) {
+        String email = analise.getEquipeResponsavel().getEmailPreposto() != null ? analise.getEquipeResponsavel().getEmailPreposto() : analise.getEquipeResponsavel().getCfpsResponsavel().getEmail();
+        String user = analise.getEquipeResponsavel().getPreposto() != null ?analise.getEquipeResponsavel().getPreposto():analise.getEquipeResponsavel().getCfpsResponsavel().getFirstName();
+        log.debug("Sending Divergence notification to e-mail '{}'", analise.getCreatedBy().getEmail());
+        Locale locale = Locale.forLanguageTag(PT_BR);
+        Context context = new Context(locale);
+        context.setVariable(ANALISE, analise);
+        context.setVariable(USER, user);
+        context.setVariable(BASE_URL, jHipsterProperties.getMail().getBaseUrl());
+        String content = templateEngine.process("notificationDivergenceAnalise", context);
+        String subject = messageSource.getMessage("email.shared.analise.title", new Object[] {analise.getIdentificadorAnalise()}, locale);
+        sendEmail(email, subject, content, false, true);
     }
 }

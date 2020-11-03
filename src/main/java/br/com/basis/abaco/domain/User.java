@@ -4,6 +4,7 @@ import br.com.basis.abaco.config.Constants;
 import br.com.basis.abaco.security.AuthoritiesConstants;
 import br.com.basis.dynamicexports.pojo.ReportObject;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
@@ -26,6 +27,7 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
@@ -35,7 +37,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
-import static java.util.Collections.unmodifiableSet;
+import static java.util.Collections.*;
 
 @Entity
 @Table(name = "jhi_user")
@@ -67,12 +69,18 @@ public class User extends AbstractAuditingEntity implements Serializable, Report
 
     @Size(max = 50)
     @Column(name = "first_name", length = 50)
+    @Field(index = FieldIndex.not_analyzed, type = FieldType.String)
     private String firstName;
 
     @Size(max = 50)
     @Column(name = "last_name", length = 50)
     @Field(index = FieldIndex.not_analyzed, type = FieldType.String)
     private String lastName;
+
+    @Transient
+    @JsonSerialize
+    @Field(index = FieldIndex.not_analyzed, type = FieldType.String)
+    private String nome;
 
     @Email
     @Size(max = 100)
@@ -150,6 +158,10 @@ public class User extends AbstractAuditingEntity implements Serializable, Report
         }
 
         return nomeOrg;
+    }
+
+    public String getNome() {
+        return this.firstName.toLowerCase() + " " + this.lastName.toLowerCase();
     }
 
     public Long getId() {
@@ -279,4 +291,5 @@ public class User extends AbstractAuditingEntity implements Serializable, Report
     public void setOrganizacoes(Set<Organizacao> organizacoes) {
         this.organizacoes = unmodifiableSet(organizacoes);
     }
+
 }

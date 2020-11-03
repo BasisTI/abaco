@@ -4,6 +4,7 @@ import br.com.basis.abaco.domain.Alr;
 import br.com.basis.abaco.domain.Analise;
 import br.com.basis.abaco.domain.Der;
 import br.com.basis.abaco.domain.FuncaoTransacao;
+import br.com.basis.abaco.domain.enumeration.StatusFuncao;
 import br.com.basis.abaco.repository.AnaliseRepository;
 import br.com.basis.abaco.repository.DerRepository;
 import br.com.basis.abaco.repository.FuncaoTransacaoRepository;
@@ -40,7 +41,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
-import static org.elasticsearch.index.query.QueryBuilders.*;
+import static org.elasticsearch.index.query.QueryBuilders.queryStringQuery;
 
 /**
  * REST controller for managing FuncaoTransacao.
@@ -169,13 +170,10 @@ public class FuncaoTransacaoResource {
     @GetMapping("/funcao-transacaos/completa/{id}")
     @Timed
     public ResponseEntity<FuncaoTransacaoApiDTO> getFuncaoTransacaoCompleta(@PathVariable Long id) {
-        log.debug("REST request to get FuncaoTransacao : {}", id);
+        log.debug("REST request to get FuncaoTransacao Completa : {}", id);
         FuncaoTransacao funcaoTransacao = funcaoTransacaoRepository.findWithDerAndAlr(id);
-
         ModelMapper modelMapper = new ModelMapper();
-
         FuncaoTransacaoApiDTO funcaoDadosDTO = modelMapper.map(funcaoTransacao, FuncaoTransacaoApiDTO.class);
-
         return ResponseUtil.wrapOrNotFound(Optional.ofNullable(funcaoDadosDTO));
     }
 
@@ -224,6 +222,26 @@ public class FuncaoTransacaoResource {
         }
         return ResponseEntity.ok(existInAnalise);
     }
+
+    /**
+     * GET  /funcao-transacaos/:id : get the "id" funcaoTransacao.
+     *
+     * @param id the id of the funcaoTransacao to retrieve
+     * @return the ResponseEntity with status 200 (OK) and with body the funcaoTransacao, or with status 404 (Not Found)
+     */
+    @GetMapping("/funcao-transacaos/update-status/{id}/{statusFuncao}")
+    @Timed
+    @Secured({AuthoritiesConstants.ADMIN, AuthoritiesConstants.USER, AuthoritiesConstants.GESTOR, AuthoritiesConstants.ANALISTA})
+    public ResponseEntity<FuncaoTransacaoApiDTO> updateFuncaoTransacao(@PathVariable Long id, @PathVariable StatusFuncao statusFuncao) {
+        log.debug("REST request to get FuncaoTransacao by Status : {}", id);
+        FuncaoTransacao funcaoTransacao = funcaoTransacaoRepository.findOne(id);
+        funcaoTransacao.setStatusFuncao(statusFuncao);
+        funcaoTransacaoRepository.save(funcaoTransacao);
+        ModelMapper modelMapper = new ModelMapper();
+        FuncaoTransacaoApiDTO funcaoDadosDTO = modelMapper.map(funcaoTransacao, FuncaoTransacaoApiDTO.class);
+        return ResponseUtil.wrapOrNotFound(Optional.ofNullable(funcaoDadosDTO));
+    }
+
 
     private FuncaoTransacaoAnaliseDTO convertToDto(FuncaoTransacao funcaoTransacao) {
         FuncaoTransacaoAnaliseDTO funcaoTransacaoAnaliseDTO = new ModelMapper().map(funcaoTransacao, FuncaoTransacaoAnaliseDTO.class);

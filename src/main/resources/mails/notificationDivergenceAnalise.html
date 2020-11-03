@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <title th:text="#{email.divergence.analise.title(${analise.identificadorAnalise})}">Aviso de Divergência no Abaco - identificador da Análise: {0}</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    </head>
+    <body>
+        <p th:text="#{email.divergence.analise.greeting(${user})}">
+            Caro {0},
+        </p>
+        <p th:text="#{email.divergence.analise.text1(${analise.organizacao.nome},${analise.equipeResponsavel.nome})}">
+            foi gerado  uma divergência da orgarnização <b>{0}</b> e equipe <b>{1}</b> , para visualiza-lá acesse o sistema Abaco.
+        </p>
+        <p>
+            <a th:href="@{|${baseUrl}/#/analise/${analise.id}/view|}"
+               th:text="|#{email.divergence.analise.text2(${analise.identificadorAnalise})}">Link de Ativação</a>
+            Identificador da Análise: {0}
+        </p>
+        <p>
+            <span th:text="#{email.divergence.analise.text4}">Atenciosamente, </span>
+            <br/>
+            <em th:text="#{email.signature}">Ábaco.</em>
+        </p>
+    </body>
+</html>

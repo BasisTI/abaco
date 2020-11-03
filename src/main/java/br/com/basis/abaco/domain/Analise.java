@@ -134,6 +134,10 @@ public class Analise implements Serializable, ReportObject {
     @Column(name = "clonada_para_equipe")
     private Boolean clonadaParaEquipe = false;
 
+    @Column(name = "is_divergence")
+    @Field(type = FieldType.Boolean, index = FieldIndex.not_analyzed)
+    private Boolean isDivergence = false;
+
     @Column(name = "bloqueado")
     private boolean bloqueiaAnalise;
 
@@ -198,6 +202,15 @@ public class Analise implements Serializable, ReportObject {
 
     @ManyToOne
     private Manual manual;
+
+    @ManyToOne
+    @JoinColumn(name="analise_divergence_id")
+    private Analise analiseDivergence;
+
+    @OneToMany(mappedBy = "analiseDivergence")
+    @Field(type = FieldType.Nested, ignoreFields = {"analisesComparadas", "manual", "esforcoFases", "escopo", "dataHomologacao", "documentacao", "fronteiras", "users"})
+    private Set<Analise> analisesComparadas = new HashSet<>();
+
 
     public Analise(Analise analise, User user) {
         this.id = null;

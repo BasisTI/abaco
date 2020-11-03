@@ -27,6 +27,7 @@ public class StatusService {
     public List<br.com.basis.abaco.service.dto.DropdownDTO> getStatusDropdown() {
         return statusRepository.getDropdown();
     }
+    @Transactional
     public StatusDTO save(StatusDTO statusDTO) {
         Status status = convertToEntity(statusDTO);
         Status result = statusRepository.save(status);
@@ -34,23 +35,18 @@ public class StatusService {
         return convertToDto(status);
     }
 
-
     public List<Status> findAllActive() {
         return statusRepository.findByAtivoTrue();
     }
-
     public List<Status> findAll() {
         return statusRepository.findAll();
     }
-
     public StatusDTO convertToDto(Status status) {
         return new ModelMapper().map(status, StatusDTO.class);
     }
-
     public Status convertToEntity(StatusDTO statusDTO) {
         return new ModelMapper().map(statusDTO, Status.class);
     }
-
     public Status setEntityToElatischSearch(Status status){
         return convertToEntity(convertToDto(status));
     }

@@ -1,9 +1,12 @@
 package br.com.basis.abaco.domain;
 
+import br.com.basis.abaco.domain.enumeration.StatusFuncao;
 import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.Column;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
 import java.math.BigDecimal;
@@ -58,4 +61,8 @@ public class VwFuncao {
 
     @Column(name = "total_ders")
     private Integer totalDers;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status_funcao")
+    private StatusFuncao statusFuncao;
 }

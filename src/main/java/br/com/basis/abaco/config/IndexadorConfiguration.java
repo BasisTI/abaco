@@ -14,6 +14,7 @@ import br.com.basis.abaco.domain.Funcionalidade;
 import br.com.basis.abaco.domain.Manual;
 import br.com.basis.abaco.domain.ManualContrato;
 import br.com.basis.abaco.domain.Modulo;
+import br.com.basis.abaco.domain.Nomenclatura;
 import br.com.basis.abaco.domain.Organizacao;
 import br.com.basis.abaco.domain.Rlr;
 import br.com.basis.abaco.domain.Sistema;
@@ -35,6 +36,7 @@ import br.com.basis.abaco.repository.FuncionalidadeRepository;
 import br.com.basis.abaco.repository.ManualContratoRepository;
 import br.com.basis.abaco.repository.ManualRepository;
 import br.com.basis.abaco.repository.ModuloRepository;
+import br.com.basis.abaco.repository.NomenclaturaRepository;
 import br.com.basis.abaco.repository.OrganizacaoRepository;
 import br.com.basis.abaco.repository.RlrRepository;
 import br.com.basis.abaco.repository.SistemaRepository;
@@ -55,6 +57,7 @@ import br.com.basis.abaco.repository.search.FuncionalidadeSearchRepository;
 import br.com.basis.abaco.repository.search.ManualContratoSearchRepository;
 import br.com.basis.abaco.repository.search.ManualSearchRepository;
 import br.com.basis.abaco.repository.search.ModuloSearchRepository;
+import br.com.basis.abaco.repository.search.NomenclaturaSearchRepository;
 import br.com.basis.abaco.repository.search.OrganizacaoSearchRepository;
 import br.com.basis.abaco.repository.search.RlrSearchRepository;
 import br.com.basis.abaco.repository.search.SistemaSearchRepository;
@@ -101,6 +104,7 @@ public class IndexadorConfiguration {
     private BaseLineAnaliticoRepository baseLineAnaliticoRepository;
     private BaseLineSinteticoRepository baseLineSinteticoRepository;
     private StatusRepository statusRepository;
+    private NomenclaturaRepository nomenclaturaRepository;
 
     private AnaliseSearchRepository analiseSearchRepository;
     private AlrSearchRepository alrSearchRepository;
@@ -122,6 +126,7 @@ public class IndexadorConfiguration {
     private BaseLineAnaliticoSearchRepository baseLineAnaliticoSearchRepository;
     private BaseLineSinteticoSearchRepository baseLineSinteticoSearchRepository;
     private StatusSearchRepository statusSearchRepository;
+    private NomenclaturaSearchRepository nomenclaturaSearchRepository;
 
     @Bean
     public Indexador indexadorUser() {
@@ -311,6 +316,15 @@ public class IndexadorConfiguration {
             statusSearchRepository, elasticsearchTemplate);
         indexador.setCodigo(IndexadoresUtil.STATUS.name());
         indexador.setDescricao(IndexadoresUtil.STATUS.label);
+        return indexador;
+    }
+
+    @Bean
+    public Indexador indexadorNomenclatura() {
+        IndexadorSemMapper<Nomenclatura, Long> indexador = new IndexadorSemMapper<>(nomenclaturaRepository,
+            nomenclaturaSearchRepository, elasticsearchTemplate);
+        indexador.setCodigo(IndexadoresUtil.NOMENCLATURA.name());
+        indexador.setDescricao(IndexadoresUtil.NOMENCLATURA.label);
         return indexador;
     }
 }

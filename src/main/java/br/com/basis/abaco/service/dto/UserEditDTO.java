@@ -2,6 +2,7 @@ package br.com.basis.abaco.service.dto;
 
 import br.com.basis.abaco.domain.Authority;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.HashSet;
@@ -9,6 +10,7 @@ import java.util.Set;
 
 @Getter
 @Setter
+@NoArgsConstructor
 public class UserEditDTO {
 
     private Long id;
@@ -29,5 +31,9 @@ public class UserEditDTO {
 
     private Set<OrganizacaoDTO> organizacoes = new HashSet<>();
 
+    private String nome;
 
+    public String getNome() {
+        return this.firstName + ' ' + this.lastName ;
+    }
 }

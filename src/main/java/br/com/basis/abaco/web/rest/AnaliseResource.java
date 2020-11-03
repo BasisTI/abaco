@@ -7,6 +7,7 @@ import br.com.basis.abaco.domain.TipoEquipe;
 import br.com.basis.abaco.domain.UploadedFile;
 import br.com.basis.abaco.domain.User;
 import br.com.basis.abaco.domain.enumeration.MetodoContagem;
+import br.com.basis.abaco.domain.enumeration.StatusFuncao;
 import br.com.basis.abaco.domain.enumeration.TipoRelatorio;
 import br.com.basis.abaco.reports.rest.RelatorioAnaliseRest;
 import br.com.basis.abaco.repository.AnaliseRepository;
@@ -23,6 +24,7 @@ import br.com.basis.abaco.security.AuthoritiesConstants;
 import br.com.basis.abaco.security.SecurityUtils;
 import br.com.basis.abaco.service.AnaliseService;
 import br.com.basis.abaco.service.dto.AnaliseDTO;
+import br.com.basis.abaco.service.dto.AnaliseDivergenceEditDTO;
 import br.com.basis.abaco.service.dto.AnaliseEditDTO;
 import br.com.basis.abaco.service.exception.RelatorioException;
 import br.com.basis.abaco.service.relatorio.RelatorioAnaliseColunas;
@@ -82,6 +84,7 @@ import java.util.Set;
 @RequestMapping("/api")
 public class AnaliseResource {
 
+    public static final String API_ANALISES = "/api/analises/";
     private final Logger log = LoggerFactory.getLogger(AnaliseResource.class);
     private static final String ENTITY_NAME = "analise";
     private static final String PAGE = "page";
@@ -142,9 +145,9 @@ public class AnaliseResource {
         analise.getUsers().add(analise.getCreatedBy());
         analiseService.salvaNovaData(analise);
         analiseRepository.save(analise);
-        AnaliseEditDTO analiseEditDTO =  analiseService.convertToAnaliseEditDTO(analise);
+        AnaliseEditDTO analiseEditDTO = analiseService.convertToAnaliseEditDTO(analise);
         analiseSearchRepository.save(analiseService.convertToEntity(analiseService.convertToDto(analise)));
-        return ResponseEntity.created(new URI("/api/analises/" + analise.getId()))
+        return ResponseEntity.created(new URI(API_ANALISES + analise.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, analise.getId().toString())).body(analiseEditDTO);
     }
 
@@ -164,7 +167,7 @@ public class AnaliseResource {
         }
         analise.setEditedBy(analiseRepository.findOne(analise.getId()).getCreatedBy());
         analiseRepository.save(analise);
-        AnaliseEditDTO analiseEditDTO =  analiseService.convertToAnaliseEditDTO(analise);
+        AnaliseEditDTO analiseEditDTO = analiseService.convertToAnaliseEditDTO(analise);
         analiseSearchRepository.save(analiseService.convertToEntity(analiseService.convertToDto(analise)));
         return ResponseEntity.ok().headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, analise.getId().toString()))
             .body(analiseEditDTO);
@@ -245,9 +248,7 @@ public class AnaliseResource {
                 return ResponseUtil.wrapOrNotFound(Optional.ofNullable(analiseEditDTO));
             }
         }
-        return ResponseEntity
-            .status(HttpStatus.FORBIDDEN)
-            .body(null);
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
 
     }
 
@@ -306,7 +307,7 @@ public class AnaliseResource {
         compartilhadaList.forEach(compartilhada -> {
             compartilhadaRepository.save(compartilhada);
         });
-        analiseService.bindAnaliseCompartilhada(compartilhadaList);
+        analiseService.saveAnaliseCompartilhada(compartilhadaList);
         return ResponseEntity.created(new URI("/api/analises/compartilhar"))
             .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, "created")).body(compartilhadaList);
     }
@@ -343,6 +344,14 @@ public class AnaliseResource {
         return relatorioAnaliseRest.downloadPdfArquivo(analise, TipoRelatorio.ANALISE);
     }
 
+    @GetMapping("/divergencia/relatorioPdfArquivo/{id}")
+    @Timed
+    public ResponseEntity<byte[]> downloadDivergenciaPdfArquivo(@PathVariable Long id) throws URISyntaxException, IOException, JRException {
+        Analise analise = analiseService.recuperarAnalise(id);
+        relatorioAnaliseRest = new RelatorioAnaliseRest(this.response, this.request);
+        return relatorioAnaliseRest.downloadPdfArquivo(analise, TipoRelatorio.ANALISE);
+    }
+
     @GetMapping("/relatorioPdfBrowser/{id}")
     @Timed
     public @ResponseBody
@@ -363,6 +372,17 @@ public class AnaliseResource {
         return relatorioAnaliseRest.downloadPdfBrowser(analise, TipoRelatorio.ANALISE_DETALHADA);
     }
 
+    @GetMapping("/divergencia/downloadPdfDetalhadoBrowser/{id}")
+    @Timed
+    public @ResponseBody
+    byte[] downloadPdfDivergenciaDetalhadoBrowser(@PathVariable Long id) throws URISyntaxException, IOException, JRException {
+        Analise analise = analiseService.recuperarAnalise(id);
+        analise.setFuncaoDados(funcaoDadosRepository.findByAnaliseIdAndStatusFuncaoOrderByFuncionalidadeModuloNomeAscFuncionalidadeNomeAscNameAsc(id, StatusFuncao.VALIDADO));
+        analise.setFuncaoTransacaos(funcaoTransacaoRepository.findByAnaliseIdAndStatusFuncaoOrderByFuncionalidadeModuloNomeAscFuncionalidadeNomeAscNameAsc(id, StatusFuncao.VALIDADO));
+        relatorioAnaliseRest = new RelatorioAnaliseRest(this.response, this.request);
+        return relatorioAnaliseRest.downloadPdfBrowser(analise, TipoRelatorio.ANALISE_DETALHADA);
+    }
+
     @GetMapping("/downloadRelatorioExcel/{id}")
     @Timed
     public @ResponseBody
@@ -373,11 +393,28 @@ public class AnaliseResource {
         relatorioAnaliseRest = new RelatorioAnaliseRest(this.response, this.request);
         Long idLogo = analise.getOrganizacao().getLogoId();
         UploadedFile uploadedFiles = new UploadedFile();
-        if(idLogo!= null && idLogo > 0 ) {
+        if (idLogo != null && idLogo > 0) {
             uploadedFiles = uploadedFilesRepository.findOne(idLogo);
         }
         return relatorioAnaliseRest.downloadExcel(analise, uploadedFiles);
     }
+
+    @GetMapping("/divergencia/downloadRelatorioExcel/{id}")
+    @Timed
+    public @ResponseBody
+    byte[] downloadDivergenciaRelatorioExcel(@PathVariable Long id) throws URISyntaxException, IOException, JRException {
+        Analise analise = analiseService.recuperarAnalise(id);
+        analise.setFuncaoDados(funcaoDadosRepository.findByAnaliseIdAndStatusFuncaoOrderByFuncionalidadeModuloNomeAscFuncionalidadeNomeAscNameAsc(id, StatusFuncao.VALIDADO));
+        analise.setFuncaoTransacaos(funcaoTransacaoRepository.findByAnaliseIdAndStatusFuncaoOrderByFuncionalidadeModuloNomeAscFuncionalidadeNomeAscNameAsc(id, StatusFuncao.VALIDADO));
+        relatorioAnaliseRest = new RelatorioAnaliseRest(this.response, this.request);
+        Long idLogo = analise.getOrganizacao().getLogoId();
+        UploadedFile uploadedFiles = new UploadedFile();
+        if (idLogo != null && idLogo > 0) {
+            uploadedFiles = uploadedFilesRepository.findOne(idLogo);
+        }
+        return relatorioAnaliseRest.downloadExcel(analise, uploadedFiles);
+    }
+
 
     @GetMapping("/relatorioContagemPdf/{id}")
     @Timed
@@ -440,7 +477,7 @@ public class AnaliseResource {
         SearchQuery searchQuery = new NativeSearchQueryBuilder().withQuery(qb).withPageable(pageable).withSort(sortBuilder).build();
         Page<Analise> page = elasticsearchTemplate.queryForPage(searchQuery, Analise.class);
         Page<AnaliseDTO> dtoPage = page.map(analise -> analiseService.convertToDto(analise));
-        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/analises/");
+        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, API_ANALISES);
         return new ResponseEntity<>(dtoPage.getContent(), headers, HttpStatus.OK);
     }
 
@@ -462,6 +499,25 @@ public class AnaliseResource {
         }
     }
 
+
+    @GetMapping("/analises/update-divergente-pf/{id}")
+    @Timed
+    @Secured({AuthoritiesConstants.ADMIN, AuthoritiesConstants.USER, AuthoritiesConstants.GESTOR, AuthoritiesConstants.ANALISTA})
+    public ResponseEntity<AnaliseEditDTO> updateSomaDivergentePf(@PathVariable Long id) {
+        Analise analise = analiseService.recuperarAnalise(id);
+        if (analise.getId() != null) {
+            analiseService.updatePFDivergente(analise);
+            analiseRepository.save(analise);
+            analiseSearchRepository.save(analiseService.convertToEntity(analiseService.convertToDto(analise)));
+            return ResponseEntity.ok().headers(HeaderUtil.blockEntityUpdateAlert(ENTITY_NAME, analise.getId().toString()))
+                .body(analiseService.convertToAnaliseEditDTO(analise));
+        } else {
+            return ResponseEntity
+                .status(HttpStatus.FORBIDDEN)
+                .body(new AnaliseEditDTO());
+        }
+    }
+
     @GetMapping("/analises/change-status/{id}/{idStatus}")
     @Timed
     @Secured({AuthoritiesConstants.ADMIN, AuthoritiesConstants.USER, AuthoritiesConstants.GESTOR, AuthoritiesConstants.ANALISTA})
@@ -469,7 +525,7 @@ public class AnaliseResource {
         Analise analise = analiseService.recuperarAnalise(id);
         Status status = statusRepository.findById(idStatus);
         User user = userRepository.findOneByLogin(SecurityUtils.getCurrentUserLogin()).get();
-        if (analise.getId() != null && status.getId() != null &&  analiseService.changeStatusAnalise(analise,status, user)) {
+        if (analise.getId() != null && status.getId() != null && analiseService.changeStatusAnalise(analise, status, user)) {
             analiseRepository.save(analise);
             analiseSearchRepository.save(analiseService.convertToEntity(analiseService.convertToDto(analise)));
             return ResponseEntity.ok().headers(HeaderUtil.blockEntityUpdateAlert(ENTITY_NAME, analise.getId().toString()))
@@ -479,6 +535,88 @@ public class AnaliseResource {
         }
     }
 
+    @GetMapping("/analises/divergencia/{idAnaliseComparada}")
+    @Timed
+    @Secured({AuthoritiesConstants.ADMIN, AuthoritiesConstants.USER, AuthoritiesConstants.GESTOR, AuthoritiesConstants.ANALISTA})
+    public ResponseEntity<AnaliseEditDTO> gerarDivergencia(@PathVariable Long idAnaliseComparada) {
+        Analise analise = analiseRepository.findOne(idAnaliseComparada);
+        Status status = statusRepository.findFirstByDivergenciaTrue();
+        if (status == null || status.getId() == null) {
+            ResponseEntity.status(HttpStatus.FORBIDDEN).body("Error status");
+        }
+        if (analise == null || analise.getId() == null) {
+            ResponseEntity.status(HttpStatus.FORBIDDEN).body("Error analise");
+        }
+        Analise analiseDivergencia = analiseService.generateDivergence(analise, status);
+        return ResponseEntity.ok(analiseService.convertToAnaliseEditDTO(analiseDivergencia));
+    }
+
+    @GetMapping("/analises/gerar-divergencia/{idAnalisePadao}/{idAnaliseComparada}")
+    @Timed
+    @Secured({AuthoritiesConstants.ADMIN, AuthoritiesConstants.USER, AuthoritiesConstants.GESTOR, AuthoritiesConstants.ANALISTA})
+    public ResponseEntity<AnaliseEditDTO> gerarDivergencia(@PathVariable Long idAnalisePadao, @PathVariable Long idAnaliseComparada,  @RequestParam(value = "isUnion", defaultValue = "false" ) boolean isUnionFunctio) {
+        Analise analisePadrão = analiseRepository.findOne(idAnalisePadao);
+        Analise analiseComparada = analiseRepository.findOne(idAnaliseComparada);
+        Status status = statusRepository.findFirstByDivergenciaTrue();
+        if (status == null || status.getId() == null) {
+            ResponseEntity.status(HttpStatus.FORBIDDEN).body("Error Status");
+        }
+        if (analisePadrão == null || analisePadrão.getId() == null) {
+            ResponseEntity.status(HttpStatus.FORBIDDEN).body("Error analise Padrão");
+        }
+        if (analiseComparada == null || analiseComparada.getId() == null) {
+            ResponseEntity.status(HttpStatus.FORBIDDEN).body("Error analise Comparada");
+        }
+        Analise analiseDivergencia = analiseService.generateDivergence(analisePadrão, analiseComparada, status, isUnionFunctio);
+        return ResponseEntity.ok(analiseService.convertToAnaliseEditDTO(analiseDivergencia));
+    }
+
+    @GetMapping("/analises/divergente/update/{id}")
+    @Timed
+    @Secured({AuthoritiesConstants.ADMIN, AuthoritiesConstants.USER, AuthoritiesConstants.GESTOR, AuthoritiesConstants.ANALISTA})
+    public ResponseEntity<AnaliseEditDTO> updateAnaliseDivergene(@PathVariable Long id) {
+        Analise analise = analiseRepository.findOne(id);
+        if (analise == null || analise.getId() == null) {
+            ResponseEntity.status(HttpStatus.FORBIDDEN).body("Error analise Padrão");
+        }
+        analise = analiseService.updateDivergenceAnalise(analise);
+        return ResponseEntity.ok(analiseService.convertToAnaliseEditDTO(analise));
+    }
+
+    @GetMapping("/divergencia")
+    @Timed
+    public ResponseEntity<List<AnaliseDTO>> getDivergence(@RequestParam(defaultValue = "ASC", required = false) String order,
+                                                                  @RequestParam(defaultValue = "0", name = PAGE) int pageNumber,
+                                                                  @RequestParam(defaultValue = "20") int size,
+                                                                  @RequestParam(defaultValue = "id") String sort,
+                                                                  @RequestParam(value = "identificador", required = false) String identificador,
+                                                                  @RequestParam(value = "sistema", required = false) Set<Long> sistema,
+                                                                  @RequestParam(value = "organizacao", required = false) Set<Long> organizacao)
+        throws URISyntaxException {
+        Sort.Direction sortOrder = PageUtils.getSortDirection(order);
+        Pageable pageable = new PageRequest(pageNumber, size, sortOrder, sort);
+        FieldSortBuilder sortBuilder = new FieldSortBuilder(sort).order(SortOrder.ASC);
+        BoolQueryBuilder qb = analiseService.getBoolQueryBuilderDivergence(identificador, sistema, organizacao);
+        SearchQuery searchQuery = new NativeSearchQueryBuilder().withQuery(qb).withPageable(pageable).withSort(sortBuilder).build();
+        Page<Analise> page = elasticsearchTemplate.queryForPage(searchQuery, Analise.class);
+        Page<AnaliseDTO> dtoPage = page.map(analise -> analiseService.convertToDto(analise));
+        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, API_ANALISES);
+        return new ResponseEntity<>(dtoPage.getContent(), headers, HttpStatus.OK);
+    }
+
+    @GetMapping("/divergencia/{id}")
+    @Timed
+    public ResponseEntity<AnaliseDivergenceEditDTO> getDivergence(@PathVariable Long id) {
+        Analise analise = analiseService.recuperarAnaliseDivergence(id);
+        if (analise != null) {
+            User user = userRepository.findOneByLogin(SecurityUtils.getCurrentUserLogin()).orElse(new User());
+            if (analiseService.permissionToEdit(user, analise)) {
+                AnaliseDivergenceEditDTO analiseDivergenceEditDTO = analiseService.convertToAnaliseDivergenceEditDTO(analise);
+                return ResponseUtil.wrapOrNotFound(Optional.ofNullable(analiseDivergenceEditDTO));
+            }
+        }
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
+    }
 }
 
 

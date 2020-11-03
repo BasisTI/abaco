@@ -21,6 +21,10 @@ public class TipoEquipeDTO {
 
     private UserTipoEquipeDTO cfpsResponsavel;
 
+    private String preposto;
+
+    private String emailPreposto;
+
     public Long getId() {
         return id;
     }
@@ -44,4 +48,6 @@ public class TipoEquipeDTO {
     public void setOrganizacoes(Set<OrganizacaoDTO> organizacoes) {
         this.organizacoes = unmodifiableSet(organizacoes);
     }
+
+
 }

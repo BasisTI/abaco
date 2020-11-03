@@ -1,6 +1,7 @@
 package br.com.basis.abaco.repository;
 
 import br.com.basis.abaco.domain.FuncaoDados;
+import br.com.basis.abaco.domain.enumeration.StatusFuncao;
 import br.com.basis.abaco.service.dto.DropdownDTO;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -43,8 +44,13 @@ public interface FuncaoDadosRepository extends JpaRepository<FuncaoDados, Long> 
 
     Set<FuncaoDados> findByAnaliseIdOrderByFuncionalidadeModuloNomeAscFuncionalidadeNomeAscNameAsc(Long idAnalise);
 
+    Set<FuncaoDados> findByAnaliseIdAndStatusFuncaoOrderByFuncionalidadeModuloNomeAscFuncionalidadeNomeAscNameAsc(Long idAnalise, StatusFuncao statusFuncao);
+
     Boolean existsByNameAndAnaliseIdAndFuncionalidadeIdAndFuncionalidadeModuloId(String name, Long analiseId, Long idFuncionalidade, Long idModulo);
 
     Boolean existsByNameAndAnaliseIdAndFuncionalidadeIdAndFuncionalidadeModuloIdAndIdNot(String name, Long analiseId, Long idFuncionalidade, Long idModulo, Long id);
 
+    long countByFuncionalidadeId(Long id);
+
+    FuncaoDados findByIdOrderByDersIdAscRlrsIdAsc(Long id);
 }

@@ -16,4 +16,10 @@ public interface PEAnaliticoRepository extends JpaRepository<PEAnalitico, Long> 
     Set<PEAnalitico> findAllByIdModuloAndTipoOrderByName(Long idModulo, String tipo);
 
     Set<PEAnalitico> findAllByIdFuncionalidadeAndTipoOrderByName(Long idFuncionalidade, String tipo);
+
+    Set<PEAnalitico> findAllByIdModuloAndTipoAndNameContainsIgnoreCaseOrderByName(Long idmodulo, String tipo, String name);
+
+    Set<PEAnalitico> findAllByIdFuncionalidadeAndTipoAndNameContainsIgnoreCaseOrderByName(Long idFuncionalidade, String tipo, String name);
+
+    Set<PEAnalitico> findAllByidsistemaAndTipoAndNameContainsIgnoreCaseOrderByName(Long idsistema, String tipo, String name);
 }
