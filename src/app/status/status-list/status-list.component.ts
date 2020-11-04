@@ -112,4 +112,12 @@ export class StatusListComponent implements OnInit {
     this.datatable.refresh(this.elasticQuery.query);
   }
 
+  public selectStatus() {
+    if (this.datatable && this.datatable.selectedRow) {
+        if (this.datatable.selectedRow && this.datatable.selectedRow) {
+            this.statusSelecionada = this.datatable.selectedRow;
+          }
+      }
+  }
+
 }

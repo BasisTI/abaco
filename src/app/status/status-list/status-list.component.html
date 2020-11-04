@@ -39,7 +39,9 @@
   
           <basis-datatable
             [url]="searchUrl" 
-            (buttonClick)="datatableClick($event)" 
+            (buttonClick)="datatableClick($event)"
+            (dblclick)="onRowDblclick($event)"
+            (click) = "selectStatus()"
             [rows]="20"
             [rowsPerPageOptions]="rowsPerPageOptions"
             [showPaginationFooter]="true" 

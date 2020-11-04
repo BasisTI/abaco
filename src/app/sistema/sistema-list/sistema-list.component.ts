@@ -187,4 +187,12 @@ export class SistemaListComponent {
     }
     return concatedString;
   }
+
+  public selectTipoEquipe() {
+    if (this.datatable && this.datatable.selectedRow) {
+        if (this.datatable.selectedRow && this.datatable.selectedRow) {
+            this.sistemaSelecionado = this.datatable.selectedRow;
+          }
+      }
+  }
 }

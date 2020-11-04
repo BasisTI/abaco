@@ -7,7 +7,7 @@ import {ManualService} from '../manual.service';
 import {EsforcoFaseService} from '../../esforco-fase/esforco-fase.service';
 import {EsforcoFase} from '../../esforco-fase/esforco-fase.model';
 import {Fase, FaseService} from '../../fase';
-import {DatatableClickEvent, PageNotificationService} from '@nuvem/primeng-components';
+import {DatatableClickEvent, DatatableComponent, PageNotificationService} from '@nuvem/primeng-components';
 import {ConfirmationService} from 'primeng';
 import {FatorAjuste, TipoFatorAjuste} from '../../fator-ajuste/fator-ajuste.model';
 import {UploadService} from '../../upload/upload.service';
@@ -19,6 +19,12 @@ import {FileUpload, SelectItem} from 'primeng';
     providers: [ManualService, ConfirmationService]
 })
 export class ManualFormComponent implements OnInit, OnDestroy {
+
+    @ViewChild(DatatableComponent) dataTableFase: DatatableComponent;
+    @ViewChild('dataTableFator') dataTableFator: DatatableComponent;
+
+
+
     manual: Manual;
     isSaving;
     isEdit;
@@ -42,6 +48,8 @@ export class ManualFormComponent implements OnInit, OnDestroy {
     newAdjustFactor: FatorAjuste = new FatorAjuste();
     editedAdjustFactor: FatorAjuste = new FatorAjuste();
     showEditOrderDeflator = false;
+    fatorAjusteSelected?: FatorAjuste = new FatorAjuste();
+    esforcoFaseSelected?: EsforcoFase = new EsforcoFase();
 
     adjustTypes: Array<any> = [
         {label: 'Percentual', value: 'PERCENTUAL'},
@@ -539,4 +547,35 @@ export class ManualFormComponent implements OnInit, OnDestroy {
     public openEditOrderDeflator() {
         this.showEditOrderDeflator = true;
     }
+
+    public onRowDblclickFase(event) {
+        if (event.target.nodeName === 'TD') {
+            this.openDialogEditPhaseEffort();
+        } else if (event.target.parentNode.nodeName === 'TD') {
+            this.openDialogEditPhaseEffort();
+        }
+    }
+
+    public selectFase() {
+        if (this.dataTableFase && this.dataTableFase.selectedRow) {
+            if (this.dataTableFase.selectedRow && this.dataTableFase.selectedRow) {
+                this.editedPhaseEffort = this.dataTableFase.selectedRow;
+              }
+          }
+    }
+    public onRowDblclickFator(event) {
+        if (event.target.nodeName === 'TD') {
+            this.openDialogEditAdjustFactor();
+        } else if (event.target.parentNode.nodeName === 'TD') {
+            this.openDialogEditAdjustFactor();
+        }
+    }
+
+    public selectFator() {
+        if (this.dataTableFator && this.dataTableFator.selectedRow) {
+            if (this.dataTableFator.selectedRow && this.dataTableFator.selectedRow) {
+                this.editedAdjustFactor = this.dataTableFator.selectedRow;
+              }
+          }
+      }
 }

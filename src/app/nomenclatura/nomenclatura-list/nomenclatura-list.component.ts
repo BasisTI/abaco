@@ -112,4 +112,11 @@ export class NomenclaturaListComponent implements OnInit {
     this.datatable.refresh(this.elasticQuery.query);
   }
 
+  public selectNomenclatura() {
+    if (this.datatable && this.datatable.selectedRow) {
+        if (this.datatable.selectedRow && this.datatable.selectedRow) {
+            this.nomenclaturaSelecionada = this.datatable.selectedRow;
+          }
+      }
+  }
 }

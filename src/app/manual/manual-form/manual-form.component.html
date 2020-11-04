@@ -226,8 +226,11 @@
                                     id="idTabelaEsforcoFaseFormManual"
                                     disableView="true"
                                     sortOrder="1"
+                                    (dblclick)="onRowDblclickFase($event)"
+                                    (click) = "selectFase()"
                                     (buttonClick)="datatableClick($event)"
-                                    disableClone="true">
+                                    disableClone="true"
+                                    #dataTableFase>
                             <p-column header="Fase" field="fase">
                                 <ng-template let-col let-esforco="rowData" pTemplate="body">
                                     {{esforco.fase.nome}}
@@ -259,16 +262,15 @@
                     <div class="ui-g-12 ui-md-12 ui-sm-12" id="tabela-deflator">
                         <basis-datatable
                                 type="memory"
-                                [rows]="10"
                                 [value]="manual.fatoresAjuste"
                                 id="idTabelaDeflatorFormManual"
-                                sortOrder="1"
+                                (click) = "selectFator($event)"
+                                (dblclick)="onRowDblclickFator($event)"
                                 [rows]="20"
                                 [rowsPerPageOptions]="[5,10,20,100]"
                                 (buttonClick)="adjustFactorDatatableClick($event)"
-                                [filterOnColumn]="true"
-                                disableView="true"
-                                disableClone="true" >
+                                [(selection)]="editedAdjustFactor"
+                                disableView="true" #dataTableFator>
                                 <p-column header="Ordem" field="ordem">
                                     <ng-template let-col let-fatorAjuste="rowData" pTemplate="body">
                                         {{ fatorAjuste.ordem ? fatorAjuste.ordem :  manual.fatoresAjuste.indexOf(fatorAjuste) + 1  }}
@@ -384,10 +386,7 @@
             </form>
 
                 <!-- Dialog Edit  Esforco Fase -->
-                <p-dialog [header]="'Esforço Fase'" [(visible)]="showDialogEditPhaseEffort"
-                          [contentStyle]="{'overflow':'visible'}"
-                         >
-
+                <p-dialog [header]="'Esforço Fase'" [(visible)]="showDialogEditPhaseEffort" >
                     <div class="ui-g">
                         <div class="ui-g-12 ui-md-12 ui-sm-12" style="padding-top: 25px">
                             <label id=idLabelManualFormComponentFase>Fase*</label>
@@ -433,13 +432,13 @@
 
                     <div class="ui-g">
                         <div class="ui-g ui-md-12" style="justify-content: flex-end; padding-top: 25px">
-                            <div class="ui-g-2 ui-md-2 ui-sm-12">
+                            <div class="ui-g-4 ui-md-4 ui-sm-12">
                                 <app-white-button  [buttonLabel]="'Cancelar' " id="idBtnCancelarEditFormManual"
                                                   (click)="closeDialogEditPhaseEffort()">
                                 </app-white-button>
                             </div>
 
-                            <div class="ui-g-2 ui-md-2 ui-sm-12">
+                            <div class="ui-g-4 ui-md-4 ui-sm-12">
                                 <app-green-button  [buttonLabel]="'Salvar' " id="idBtnSalvarEditFormManual"
                                                   buttonIcon="ui-icon-add"
                                                   (click)="editPhaseEffort()">

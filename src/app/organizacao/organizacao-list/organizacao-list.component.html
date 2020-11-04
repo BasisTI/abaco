@@ -44,6 +44,7 @@
             type="server"
             [url]="searchUrl"
             (dblclick)="onRowDblclick($event)"
+            (click) = "selectOrganizacao()"
             (buttonClick)="onClick($event)"
             [rows]="20"
             [rowsPerPageOptions]="rowsPerPageOptions"

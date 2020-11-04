@@ -114,5 +114,12 @@ export class OrganizacaoListComponent implements OnInit {
     }
     this.datatable.refresh(this.elasticQuery.query);
   }
+  public selectOrganizacao() {
+    if (this.datatable && this.datatable.selectedRow) {
+        if (this.datatable.selectedRow && this.datatable.selectedRow) {
+            this.organizacaoSelecionada = this.datatable.selectedRow;
+          }
+      }
+  }
 
 }

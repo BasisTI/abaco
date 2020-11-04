@@ -23,6 +23,8 @@
                             type="server"
                             [rows]="20"
                             [url]="urlFaseService"
+                            (dblclick)="onRowDblclick($event)"
+                            (click) = "selectFase()"
                             (buttonClick)="onClick($event)"
                             [filterOnColumn]="true"
                             #dataTable >

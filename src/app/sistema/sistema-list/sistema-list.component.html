@@ -81,6 +81,8 @@
         <basis-datatable
             type="server"
             [url]="searchUrl"
+            (dblclick)="onRowDblclick($event)"
+            (click) = "selectTipoEquipe()"
             (buttonClick)="datatableClick($event)"
             id="idTabelaComponentSistema"
             [rows]="20"

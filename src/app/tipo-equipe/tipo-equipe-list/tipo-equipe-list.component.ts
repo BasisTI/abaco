@@ -116,4 +116,12 @@ export class TipoEquipeListComponent {
     this.datatable.refresh(this.elasticQuery.query);
   }
 
+  public selectTipoEquipe() {
+    if (this.datatable && this.datatable.selectedRow) {
+        if (this.datatable.selectedRow && this.datatable.selectedRow) {
+            this.equipeSelecionada = this.datatable.selectedRow;
+          }
+      }
+  }
+
 }

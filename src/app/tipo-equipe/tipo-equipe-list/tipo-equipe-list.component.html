@@ -42,6 +42,8 @@
         <basis-datatable
           [url]="searchUrl" 
           (buttonClick)="datatableClick($event)" 
+          (dblclick)="onRowDblclick($event)"
+          (click) = "selectTipoEquipe()"
           [rows]="20"
           [rowsPerPageOptions]="rowsPerPageOptions"
           [showPaginationFooter]="true" 

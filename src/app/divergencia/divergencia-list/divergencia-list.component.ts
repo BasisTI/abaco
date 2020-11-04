@@ -101,6 +101,7 @@ export class DivergenciaListComponent implements OnInit {
 
     public ngOnInit() {
         this.estadoInicial();
+        this.blockUiService.show();
         this.datatable.onLazyLoad.subscribe((event: LazyLoadEvent) => this.loadDirvenceLazy(event));
         this.datatable.lazy = true;
 
@@ -208,6 +209,26 @@ export class DivergenciaListComponent implements OnInit {
             this.lstDivergence = response.body;
             this.datatable.totalRecords = parseInt(response.headers.get('x-total-count'), 10);
         });
+    }
+    public onRowDblclick(event) {
+        if (event.target.nodeName === 'TD') {
+            this.editDivergence(this.selectedDivergence);
+        } else if (event.target.parentNode.nodeName === 'TD') {
+            this.editDivergence(this.selectedDivergence);
+        }
+    }
+    public datatableClick(event: DatatableClickEvent) {
+        if (!event.selection) {
+            return;
+        } else if (event.selection.length === 1) {
+            event.selection = event.selection[0];
+        } else if ( event.selection.length > 1 && event.button !== 'generateDivergence') {
+            this.pageNotificationService.addErrorMessage('Selecione somente uma Análise para essa ação.');
+            return ;
+        } else if (event.selection.length > 2) {
+            this.pageNotificationService.addErrorMessage('Selecione somente duas Análises para gerar divergência.');
+            return ;
+        }
     }
 
 }

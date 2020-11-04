@@ -66,6 +66,7 @@
                                     [rows]="20"
                                     [rowsPerPageOptions]="rowsPerPageOptions"
                                     selectionMode="single"
+                                    (dblclick)="onRowDblclick($event)"
                                     [(selection)]="selectedDivergence"
                                     dataKey="id"
                                     #data >

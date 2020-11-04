@@ -6,6 +6,8 @@ import { ConfirmationService } from 'primeng';
 import { Manual } from '../manual.model';
 import { ManualService } from '../manual.service';
 import { ElasticQuery } from 'src/app/shared/elastic-query';
+import { FatorAjuste } from 'src/app/fator-ajuste';
+import { EsforcoFase } from 'src/app/esforco-fase';
 
 @Component({
     selector: 'app-manual',
@@ -46,11 +48,11 @@ export class ManualListComponent implements OnInit {
         }
     }
 
-    public onRowDblclick(event: DatatableClickEvent) {
-        if (event.selection.nodeName === 'TD') {
-            this.abrirEditar(event.selection);
-        } else if (event.selection.parentNode.nodeName === 'TD') {
-            this.abrirEditar(event.selection);
+    public onRowDblclick(event) {
+        if (event.target.nodeName === 'TD') {
+            this.abrirEditar(this.manualSelecionado);
+        } else if (event.target.parentNode.nodeName === 'TD') { 
+            this.abrirEditar(this.manualSelecionado);
         }
     }
 
@@ -154,5 +156,12 @@ export class ManualListComponent implements OnInit {
                break;
             }
          }
+    }
+    public selectManual() {
+        if (this.datatable && this.datatable.selectedRow) {
+            if (this.datatable.selectedRow && this.datatable.selectedRow) {
+                this.manualSelecionado = this.datatable.selectedRow;
+            }
+        }
     }
 }

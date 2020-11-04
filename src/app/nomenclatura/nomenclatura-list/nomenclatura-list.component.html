@@ -40,6 +40,8 @@
           <basis-datatable
             [url]="searchUrl" 
             (buttonClick)="datatableClick($event)" 
+            (dblclick)="onRowDblclick($event)"
+            (click) = "selectNomenclatura()"
             [rows]="20"
             [rowsPerPageOptions]="rowsPerPageOptions"
             [showPaginationFooter]="true" 

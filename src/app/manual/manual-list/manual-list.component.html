@@ -48,6 +48,7 @@
                 <basis-datatable
                         [url]="searchUrl"
                         (dblclick)="onRowDblclick($event)"
+                        (click) = "selectManual()"
                         (buttonClick)="onClick($event)"
                         [rows]="20"
                         id="idTabelaComponentManual"

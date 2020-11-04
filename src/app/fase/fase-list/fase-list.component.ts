@@ -66,8 +66,8 @@ export class FaseListComponent implements OnInit {
     limparPesquisa() {
         this.filtro = new FaseFilter();
     }
-    onClick(event: DatatableClickEvent){
-        switch(event.button) {
+    onClick(event: DatatableClickEvent) {
+        switch (event.button) {
             case 'edit': {
                 this.abrirEditar(event.selection);
                break;
@@ -84,6 +84,23 @@ export class FaseListComponent implements OnInit {
                break;
             }
          }
+    }
+
+    public onRowDblclick(event) {
+        if (event.target.nodeName === 'TD') {
+            this.abrirEditar(this.tipoFaseSelecionada);
+        } else if (event.target.parentNode.nodeName === 'TD') {
+            this.abrirEditar(this.tipoFaseSelecionada);
+        }
+    }
+
+
+    public selectFase() {
+        if (this.dataTable && this.dataTable.selectedRow) {
+            if (this.dataTable.selectedRow && this.dataTable.selectedRow) {
+                this.tipoFaseSelecionada = this.dataTable.selectedRow;
+            }
+        }
     }
 }
 
