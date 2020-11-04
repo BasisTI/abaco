@@ -44,6 +44,7 @@ export class AnaliseListComponent implements OnInit {
     columnsVisible = [
             'organizacao.nome',
             'identificadorAnalise',
+            'sistema.nome',
             'numeroOs',
             'equipeResponsavel.nome',
             'status.nome',

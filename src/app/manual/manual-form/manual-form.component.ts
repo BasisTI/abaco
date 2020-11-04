@@ -23,8 +23,6 @@ export class ManualFormComponent implements OnInit, OnDestroy {
     @ViewChild(DatatableComponent) dataTableFase: DatatableComponent;
     @ViewChild('dataTableFator') dataTableFator: DatatableComponent;
 
-
-
     manual: Manual;
     isSaving;
     isEdit;
