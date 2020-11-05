@@ -63,6 +63,7 @@ export class FuncaoTransacaoService {
 
     create(funcaoTransacao: FuncaoTransacao, idAnalise: Number): Observable<any> {
         const json = funcaoTransacao.toJSONState();
+        debugger;
         return this.http.post(`${this.funcaoTransacaoResourceUrl}/${idAnalise}`, json);
     }
 
@@ -77,7 +78,7 @@ export class FuncaoTransacaoService {
     }
 
     delete(id: number): Observable<Response> {
-        return this.http.get<Response>(`${this.funcaoTransacaoResourceUrl}/${id}`);
+        return this.http.delete<Response>(`${this.funcaoTransacaoResourceUrl}/${id}`);
     }
 
     deleteStatus(id: number): Observable<Response> {
