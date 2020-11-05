@@ -827,14 +827,6 @@ export class AnaliseListComponent implements OnInit {
         }
     }
     checkToGenerateDivergence(analise: Analise): boolean {
-        const canGenerateDivergence = this.tipoEquipesLoggedUser.find(
-            (tipoEquipeResponsave) =>  tipoEquipeResponsave.id === analise.equipeResponsavel['id']
-        );
-        if (!canGenerateDivergence) {
-            this.pageNotificationService.addErrorMessage(
-                this.getLabel('Somente membros da equipe responsável podem gerar divergência esta análise!'));
-            return false;
-        }
         if (!(analise.bloqueiaAnalise) && analise.metodoContagem === MetodoContagem.INDICATIVA) {
             this.pageNotificationService.addErrorMessage(this.getLabel('Você não pode gerar divergência de uma análise que não esteja bloqueada.'));
             return false;

@@ -412,7 +412,7 @@ export class AnaliseService {
             this.pageNotificationService.addErrorMessage('Erro nas Análises selecionadas!');
             return;
         }
-        return this.http.get<Analise>(`${this.resourceUrl}/gerar-divergencia/${mainAnalise.id}/${secondaryAnalise.id}`);
+        return this.http.get<Analise>(`${this.resourceUrl}/gerar-divergencia/${mainAnalise.id}/${secondaryAnalise.id}?isUnion=${isUnionFunction}`);
     }
 
     public updateDivergence(analise: Analise) {

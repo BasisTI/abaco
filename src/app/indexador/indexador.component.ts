@@ -13,7 +13,6 @@ export class IndexadorComponent {
 
     public indexToReindexar: string[];
     indexList = [
-        {value: 'ALR', label: 'Alr'},
         {value: 'ANALISE', label: 'Analise'},
         {value: 'CONTRATO', label: 'Contrato'},
         {value: 'DER', label: 'Der'},
