@@ -1,0 +1,44 @@
+version: '2'
+volumes:
+  abaco-pgsql-vol:
+  abaco-es-vol:
+services:
+  abaco-ui:
+    image: basisti/abaco-ui:2.5.2
+    ports:
+    - "80"
+    environment:
+      ENDERECO_API: abaco:8080
+  abaco:
+    image: basisti/abaco:2.5.2
+    environment:
+      SPRING_CLOUD_CONFIG_ENABLED: 'false'
+      SPRING_CLOUD_DISCOVERY_ENABLED: 'false'
+      SPRING_DATA_ELASTICSEARCH_CLUSTER-NAME: abaco
+      SPRING_DATA_ELASTICSEARCH_CLUSTER-NODES: es-abaco:9300
+      SPRING_DATASOURCE_PASSWORD: abacosenha
+      SPRING_DATASOURCE_URL: jdbc:postgresql://pgsql-abaco/abaco
+      SPRING_DATASOURCE_USERNAME: abaco
+      SPRING_JACKSON_SERIALIZATION_WRITE_DATES_AS_TIMESTAMPS: 'false'
+      SPRING_MAIL_HOST: smtp.basis.intern
+      SPRING_MAIL_PASSWORD: '""'
+      SPRING_MAIL_PORT: '25'
+      SPRING_MAIL_USERNAME: '""'
+      SPRING_PROFILES_ACTIVE: prod,swagger
+  pgsql-abaco:
+    image: postgres:11.7-alpine
+    environment:
+      POSTGRES_DB: abaco
+      POSTGRES_PASSWORD: abacosenha
+      POSTGRES_USER: abaco
+      TZ: America/Sao_Paulo
+    volumes:
+    - abaco-pgsql-vol:/var/lib/postgresql/data
+  es-abaco:
+    image: elasticsearch:2.4-alpine
+    environment:
+      ES_JAVA_OPTS: -Xms1g -Xmx1g -Des.path.conf=/usr/share/elasticsearch/config -Des.cluster.name=abaco -Des.discovery.zen.minimum_master_nodes=1 -Des.discovery.zen.ping.unicast.hosts=es-abaco
+    volumes:
+    - abaco-es-vol:/usr/share/elasticsearch/data
+    command:
+    - -Dcluster.name=abaco
