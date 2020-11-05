@@ -122,8 +122,8 @@ public class FuncaoDadosResource {
         if (funcaoDados.getAnalise() == null || funcaoDados.getAnalise().getId() == null) {
             return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert(ENTITY_NAME, "idexists", "A new funcaoDados cannot already have an ID")).body(null);
         }
-        funcaoDadosOld = updateFuncaoDados(funcaoDadosOld, funcaoDados);
-        FuncaoDados result = funcaoDadosRepository.save(funcaoDadosOld);
+        FuncaoDados funcaoDadosUpdate = updateFuncaoDados(funcaoDadosOld, funcaoDados);
+        FuncaoDados result = funcaoDadosRepository.save(funcaoDadosUpdate);
         FuncaoDadosEditDTO funcaoDadosEditDTO = convertFuncaoDadoAEditDTO(result);
         return ResponseEntity.ok().headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, funcaoDados.getId().toString())).body(funcaoDadosEditDTO);
     }
@@ -333,19 +333,10 @@ public class FuncaoDadosResource {
         return modelMapper.map(funcaoDados, FuncaoDadosEditDTO.class);
     }
 
-    private FuncaoDados convertToEntity(FuncaoDadoApiDTO funcaoDadoApiDTO){
-        ModelMapper modelMapper = new ModelMapper();
-        return modelMapper.map(funcaoDadoApiDTO, FuncaoDados.class);
-    }
 
     private FuncaoDados convertToEntity(FuncaoDadosSaveDTO funcaoDadosSaveDTO){
         ModelMapper modelMapper = new ModelMapper();
         return modelMapper.map(funcaoDadosSaveDTO, FuncaoDados.class);
-    }
-
-    private FuncaoDados convertToEntity(FuncaoDadosEditDTO funcaoDadosEditDTO){
-        ModelMapper modelMapper = new ModelMapper();
-        return modelMapper.map(funcaoDadosEditDTO, FuncaoDados.class);
     }
 
     private FuncaoDados updateFuncaoDados(FuncaoDados funcaoDadosOld, FuncaoDados funcaoDados) {
