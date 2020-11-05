@@ -1,7 +1,5 @@
 package br.com.basis.abaco.service.dto;
 
-import br.com.basis.abaco.domain.Der;
-import br.com.basis.abaco.domain.Rlr;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,10 +13,10 @@ import java.util.Set;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class FuncaoDadosEditDTO extends FuncaoDadosEditSaveDTO{
+public class FuncaoDadosSaveDTO extends FuncaoDadosEditSaveDTO {
 
-    private Set<Rlr> rlrs = new HashSet<>();
-    private Set<Der> ders = new LinkedHashSet<>();
+    private Set<RlrDTO> rlrs = new HashSet<>();
+    private Set<DerDTO> ders = new LinkedHashSet<>();
 
 
 
