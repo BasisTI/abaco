@@ -63,7 +63,6 @@ export class FuncaoTransacaoService {
 
     create(funcaoTransacao: FuncaoTransacao, idAnalise: Number): Observable<any> {
         const json = funcaoTransacao.toJSONState();
-        debugger;
         return this.http.post(`${this.funcaoTransacaoResourceUrl}/${idAnalise}`, json);
     }
 
