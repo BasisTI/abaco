@@ -15,6 +15,7 @@ import br.com.basis.abaco.service.dto.DropdownDTO;
 import br.com.basis.abaco.service.dto.FuncaoDadoAnaliseDTO;
 import br.com.basis.abaco.service.dto.FuncaoDadoApiDTO;
 import br.com.basis.abaco.service.dto.FuncaoDadosEditDTO;
+import br.com.basis.abaco.service.dto.FuncaoDadosSaveDTO;
 import br.com.basis.abaco.web.rest.util.HeaderUtil;
 import com.codahale.metrics.annotation.Timed;
 import io.github.jhipster.web.util.ResponseUtil;
@@ -80,10 +81,12 @@ public class FuncaoDadosResource {
     @PostMapping("/funcao-dados/{idAnalise}")
     @Timed
     @Secured({AuthoritiesConstants.ADMIN, AuthoritiesConstants.USER, AuthoritiesConstants.GESTOR, AuthoritiesConstants.ANALISTA})
-    public ResponseEntity<FuncaoDadosEditDTO> createFuncaoDados(@PathVariable Long idAnalise,@RequestBody FuncaoDadosEditDTO funcaoDadoADadosEditDTO) throws URISyntaxException {
-        log.debug("REST request to save FuncaoDados : {}", funcaoDadoADadosEditDTO);
+    public ResponseEntity<FuncaoDadosEditDTO> createFuncaoDados(@PathVariable Long idAnalise, @RequestBody FuncaoDadosSaveDTO funcaoDadosSaveDTO) throws URISyntaxException {
+        log.debug("REST request to save FuncaoDados : {}", funcaoDadosSaveDTO);
         Analise analise = analiseRepository.findOne(idAnalise);
-        FuncaoDados funcaoDados = convertToEntity(funcaoDadoADadosEditDTO);
+        funcaoDadosSaveDTO.getDers().forEach(der -> { der.setFuncaoDados(funcaoDadosSaveDTO);});
+        funcaoDadosSaveDTO.getRlrs().forEach(rlr -> { rlr.setFuncaoDados(funcaoDadosSaveDTO);});
+        FuncaoDados funcaoDados = convertToEntity(funcaoDadosSaveDTO);
         funcaoDados.setAnalise(analise);
         if (funcaoDados.getId() != null || funcaoDados.getAnalise() == null || funcaoDados.getAnalise().getId() == null) {
             return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert(ENTITY_NAME, "idexists", "A new funcaoDados cannot already have an ID")).body(null);
@@ -107,12 +110,12 @@ public class FuncaoDadosResource {
     @PutMapping("/funcao-dados/{id}")
     @Timed
     @Secured({AuthoritiesConstants.ADMIN, AuthoritiesConstants.USER, AuthoritiesConstants.GESTOR, AuthoritiesConstants.ANALISTA})
-    public ResponseEntity<FuncaoDadosEditDTO> updateFuncaoDados(@PathVariable Long id, @RequestBody FuncaoDadosEditDTO funcaoDadosEditDTO) throws URISyntaxException {
-        log.debug("REST request to update FuncaoDados : {}", funcaoDadosEditDTO);
+    public ResponseEntity<FuncaoDadosEditDTO> updateFuncaoDados(@PathVariable Long id, @RequestBody FuncaoDadosSaveDTO funcaoDadosSaveDTO) throws URISyntaxException {
+        log.debug("REST request to update FuncaoDados : {}", funcaoDadosSaveDTO);
         FuncaoDados funcaoDadosOld = funcaoDadosRepository.findById(id);
-        FuncaoDados funcaoDados = convertToEntity(funcaoDadosEditDTO);
+        FuncaoDados funcaoDados = convertToEntity(funcaoDadosSaveDTO);
         if (funcaoDados.getId() == null) {
-            return createFuncaoDados(funcaoDados.getAnalise().getId(), funcaoDadosEditDTO);
+            return createFuncaoDados(funcaoDados.getAnalise().getId(), funcaoDadosSaveDTO);
         }
         Analise analise = analiseRepository.findOne(funcaoDadosOld.getAnalise().getId());
         funcaoDados.setAnalise(analise);
@@ -121,7 +124,7 @@ public class FuncaoDadosResource {
         }
         funcaoDadosOld = updateFuncaoDados(funcaoDadosOld, funcaoDados);
         FuncaoDados result = funcaoDadosRepository.save(funcaoDadosOld);
-        funcaoDadosEditDTO = convertFuncaoDadoAEditDTO(result);
+        FuncaoDadosEditDTO funcaoDadosEditDTO = convertFuncaoDadoAEditDTO(result);
         return ResponseEntity.ok().headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, funcaoDados.getId().toString())).body(funcaoDadosEditDTO);
     }
 
@@ -333,6 +336,11 @@ public class FuncaoDadosResource {
     private FuncaoDados convertToEntity(FuncaoDadoApiDTO funcaoDadoApiDTO){
         ModelMapper modelMapper = new ModelMapper();
         return modelMapper.map(funcaoDadoApiDTO, FuncaoDados.class);
+    }
+
+    private FuncaoDados convertToEntity(FuncaoDadosSaveDTO funcaoDadosSaveDTO){
+        ModelMapper modelMapper = new ModelMapper();
+        return modelMapper.map(funcaoDadosSaveDTO, FuncaoDados.class);
     }
 
     private FuncaoDados convertToEntity(FuncaoDadosEditDTO funcaoDadosEditDTO){
