@@ -731,4 +731,16 @@ public class AnaliseService extends BaseService {
         return analise;
     }
 
+    public void deleteDivergence(Long id, Analise analise) {
+        analise.getCompartilhadas().forEach(compartilhada -> {
+            compartilhadaRepository.delete(compartilhada.getId());
+        });
+        analise.getAnalisesComparadas().forEach(analiseComparada -> {
+            analiseComparada.setAnaliseDivergence(null);
+            save(analiseComparada);
+        });
+        analiseRepository.delete(id);
+        analiseSearchRepository.delete(id);
+    }
+
 }

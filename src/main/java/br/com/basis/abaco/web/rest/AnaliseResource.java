@@ -284,12 +284,8 @@ public class AnaliseResource {
                 analiseSearchRepository.delete(id);
             }
         } else {
-            return ResponseEntity
-                .status(HttpStatus.FORBIDDEN)
-                .body(null);
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
         }
-
-
         return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id.toString())).build();
     }
 
@@ -617,6 +613,25 @@ public class AnaliseResource {
         }
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
     }
+
+
+    @DeleteMapping("/divergencia/{id}")
+    @Timed
+    @Secured({AuthoritiesConstants.ADMIN, AuthoritiesConstants.USER, AuthoritiesConstants.GESTOR, AuthoritiesConstants.ANALISTA})
+    public ResponseEntity<Void> deleteAnaliseDivergence(@PathVariable Long id) {
+        Analise analise = analiseService.recuperarAnalise(id);
+        User user = userRepository.findOneByLogin(SecurityUtils.getCurrentUserLogin()).get();
+        if (analise != null) {
+            if (user.getOrganizacoes().contains(analise.getOrganizacao())) {
+                analiseService.deleteDivergence(id, analise);
+            }
+        } else {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
+        }
+        return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id.toString())).build();
+    }
+
+
 }
 
 

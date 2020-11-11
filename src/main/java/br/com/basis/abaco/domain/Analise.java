@@ -12,6 +12,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.data.elasticsearch.annotations.Document;
 import org.springframework.data.elasticsearch.annotations.Field;
@@ -208,6 +210,7 @@ public class Analise implements Serializable, ReportObject {
     private Analise analiseDivergence;
 
     @OneToMany(mappedBy = "analiseDivergence")
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @Field(type = FieldType.Nested, ignoreFields = {"analisesComparadas", "manual", "esforcoFases", "escopo", "dataHomologacao", "documentacao", "fronteiras", "users"})
     private Set<Analise> analisesComparadas = new HashSet<>();
 
