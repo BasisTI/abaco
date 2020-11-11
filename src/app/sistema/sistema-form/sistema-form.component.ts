@@ -135,7 +135,6 @@ export class SistemaFormComponent implements OnInit, OnDestroy {
     }
 
     confirmDeleteModulo() {
-        this.blockUiService.show();
         this.confirmationService.confirm({
             message: 'Tem certeza que deseja excluir o módulo ' + this.moduloEmEdicao.nome + ' ?',
             accept: () => {
@@ -143,7 +142,7 @@ export class SistemaFormComponent implements OnInit, OnDestroy {
                     this.sistema.deleteModulo(this.moduloEmEdicao);
                     this.moduloEmEdicao = new Modulo();
                 } else {
-                    this.pageNotificationService.addErrorMessage('O'
+                    this.pageNotificationService.addErrorMessage('O '
                             + this.moduloEmEdicao.nome
                             + ' não pode ser excluído porque existem funcionalidades atribuídas.'
                         );
@@ -244,7 +243,7 @@ export class SistemaFormComponent implements OnInit, OnDestroy {
     }
 
     confirmDeleteFuncionalidade() {
-        if (this.funcionalidadeEmEdicao.id){
+        if (this.funcionalidadeEmEdicao.id) {
             this.funcionalidadeService.getTotalFunction(this.funcionalidadeEmEdicao.id)
                 .subscribe(totalFuncoes => {
                     if (totalFuncoes <= 0) {
