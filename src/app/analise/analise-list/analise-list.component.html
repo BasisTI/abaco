@@ -439,8 +439,8 @@
             <label>Selecione a Análise para importar as funções de dados e transação para Divergência:</label>
             <div class="p-grid ui-g-12 ui-md-12 ui-sm-12">
                 <div class="p-grid" style="width:250px;margin-bottom:10px">
-                    <div class="p-col-12"><p-radioButton name="mainAnalise" (click)="setFunctionMainAnalise(secondAnaliseDivergencia)" value="firstAnaliseDivergencia" [label]="firstAnaliseDivergencia.identificadorAnalise" [(ngModel)]="mainAnaliseDivergencia" ></p-radioButton></div>
-                    <div class="p-col-12"><p-radioButton name="mainAnalise" (click)="setFunctionMainAnalise(firstAnaliseDivergencia)" value="secondAnaliseDivergencia" [label]="secondAnaliseDivergencia.identificadorAnalise" [(ngModel)]="mainAnaliseDivergencia" ></p-radioButton></div>
+                    <div class="p-col-12"><p-radioButton name="mainAnalise" (click)="setFunctionMainAnalise(secondAnaliseDivergencia)" [value]="firstAnaliseDivergencia" [label]="firstAnaliseDivergencia.identificadorAnalise" [(ngModel)]="mainAnaliseDivergencia" ></p-radioButton></div>
+                    <div class="p-col-12"><p-radioButton name="mainAnalise" (click)="setFunctionMainAnalise(firstAnaliseDivergencia)" [value]="secondAnaliseDivergencia" [label]="secondAnaliseDivergencia.identificadorAnalise" [(ngModel)]="mainAnaliseDivergencia" ></p-radioButton></div>
                 </div>
             </div>
         </div>
