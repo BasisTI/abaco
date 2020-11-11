@@ -1,20 +1,19 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
-import { DatatableClickEvent, DatatableComponent, PageNotificationService } from '@nuvem/primeng-components';
-import { ConfirmationService, BlockUIModule, LazyLoadEvent } from 'primeng';
+import { BlockUiService } from '@nuvem/angular-base';
+import { DatatableClickEvent, PageNotificationService } from '@nuvem/primeng-components';
+import { ConfirmationService, LazyLoadEvent } from 'primeng';
+import { Table as DataTable } from 'primeng/table';
 import { Subscription } from 'rxjs';
+import { Analise, SearchGroup } from 'src/app/analise';
 import { Organizacao, OrganizacaoService } from 'src/app/organizacao';
 import { Sistema, SistemaService } from 'src/app/sistema';
-import { TipoEquipe, TipoEquipeService } from 'src/app/tipo-equipe';
-import { User, UserService } from 'src/app/user';
-import { Divergencia } from '../divergencia.model';
-import { DivergenciaService } from '../divergencia.service';
-import { BlockUiService } from '@nuvem/angular-base';
 import { StatusService } from 'src/app/status';
 import { Status } from 'src/app/status/status.model';
-import {  SearchGroup, Analise } from 'src/app/analise';
-import { Table as DataTable } from 'primeng/table';
-import { verify } from 'crypto';
+import { TipoEquipe, TipoEquipeService } from 'src/app/tipo-equipe';
+import { User } from 'src/app/user';
+import { Divergencia } from '../divergencia.model';
+import { DivergenciaService } from '../divergencia.service';
 
 @Component({
     selector: 'app-divergencia-list',
@@ -86,6 +85,7 @@ export class DivergenciaListComponent implements OnInit {
     notLoadFilterTable = false;
     analisesList: any[] = [];
     isLoadFilter = true;
+
     constructor(
         private router: Router,
         private sistemaService: SistemaService,
@@ -96,12 +96,13 @@ export class DivergenciaListComponent implements OnInit {
         private equipeService: TipoEquipeService,
         private blockUiService: BlockUiService,
         private statusService: StatusService,
+        private confirmationService: ConfirmationService,
+        private divergenciaService: DivergenciaService,
     ) {
     }
 
     public ngOnInit() {
         this.estadoInicial();
-        this.blockUiService.show();
         this.datatable.onLazyLoad.subscribe((event: LazyLoadEvent) => this.loadDirvenceLazy(event));
         this.datatable.lazy = true;
 
@@ -173,6 +174,25 @@ export class DivergenciaListComponent implements OnInit {
         this.router.navigate(['/divergencia', analiseDivergence.id, 'edit']);
     }
 
+    public confirmDeleteDivergence(divergence: Analise) {
+        if (!divergence) {
+            this.pageNotificationService.addErrorMessage('Nenhuma divergência foi selecionada.');
+            return;
+        } else {
+            this.confirmationService.confirm({
+                message: this.getLabel('Tem certeza que deseja excluir o registro ').concat(divergence.identificadorAnalise).concat(' ?'),
+                accept: () => {
+                    this.blockUiService.show();
+                    this.divergenciaService.delete(divergence.id).subscribe(() => {
+                        this.pageNotificationService.addDeleteMsg(divergence.identificadorAnalise);
+                        this.blockUiService.hide();
+                        this. performSearch();
+                    });
+                }
+            });
+        }
+    }
+
     public changeUrl() {
         let querySearch = '&isDivergence=true';
         querySearch = querySearch.concat((this.searchDivergence.identificadorAnalise) ?
@@ -208,6 +228,7 @@ export class DivergenciaListComponent implements OnInit {
         this.analiseService.search(event, event.rows, false, this.changeUrl()).subscribe(response => {
             this.lstDivergence = response.body;
             this.datatable.totalRecords = parseInt(response.headers.get('x-total-count'), 10);
+            this.blockUiService.hide();
         });
     }
     public onRowDblclick(event) {

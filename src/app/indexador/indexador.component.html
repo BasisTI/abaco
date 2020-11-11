@@ -4,10 +4,7 @@
             <h1>Reindexar Índices</h1>
             <div class="ui-g">
                 <div class="ui-g-12 ui-md-10">
-                    <p-dropdown
-                            [options]="indexList"
-                            [(ngModel)]="indexToReindexar"
-                            [filter]="true" selectionLimit="3" ></p-dropdown>
+                    <p-dropdown [options]="indexList" [(ngModel)]="indexToReindexar" placeholder="Selecione o índice" required ></p-dropdown>
                 </div>
                 <div class="ui-g-2 ui-md-2 ui-sm-6">
                     <button pButton type="button" label="Reindexar" (click)="submitIndexador()" class="ui-button-raised ui-button-success"></button>

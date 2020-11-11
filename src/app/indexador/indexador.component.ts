@@ -40,9 +40,13 @@ export class IndexadorComponent {
 
 
     submitIndexador() {
+        if (!this.indexToReindexar) {
+            return;
+        }
         this.blockUiService.show();
-        this.indexadorSearchService.reindexar(this.indexToReindexar).subscribe(
-            err => console.log('HTTP Error', err),
+        this.indexadorSearchService.reindexar(this.indexToReindexar)
+            .subscribe(
+                err => console.log('HTTP Error', err),
             () => {
                 this.blockUiService.hide();
                 console.log('HTTP request completed.');

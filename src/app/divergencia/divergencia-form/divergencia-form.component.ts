@@ -420,24 +420,6 @@ export class DivergenciaFormComponent implements OnInit {
         return bool ? this.getLabel(' Ativo') : this.getLabel(' Inativo');
     }
 
-    save() {
-        if (this.verificarCamposObrigatorios()) {
-            if (this.analise.id && this.analise.id > 0) {
-                this.analiseService.update(this.analise).subscribe(() => {
-                    this.pageNotificationService.addSuccessMessage(
-                        this.isEdit ? this.getLabel('Registro salvo com sucesso!') :
-                            this.getLabel('Dados alterados com sucesso!'));
-                    this.diasGarantia = this.analise.contrato.diasDeGarantia;
-                });
-            } else {
-                this.analiseService.create(this.analise).subscribe(res => {
-                    this.analise = res;
-                    this.pageNotificationService.addSuccessMessage(this.getLabel('Análise salva com sucesso'));
-                    this.router.navigate(['/analise', this.analise.id, 'edit']);
-                });
-            }
-        }
-    }
 
     enableDisableAba() {
         if (this.validacaoCampos === false) {

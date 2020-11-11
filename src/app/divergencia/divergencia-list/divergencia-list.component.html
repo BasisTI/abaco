@@ -140,11 +140,18 @@
                     </div>
                     <div class="ui-g-12 ui-md-1" >
                         <basis-datatable-button
+                            name="generateDivergence"
+                            icon="edit"
+                            [disabled]="!selectedDivergence"
+                            (click)="editDivergence(selectedDivergence)"
+                            class="ui-button-info">
+                        </basis-datatable-button>
+                        <basis-datatable-button
                                 name="generateDivergence"
-                                icon="edit"
+                                icon="delete"
                                 [disabled]="!selectedDivergence"
-                                (click)="editDivergence(selectedDivergence)"
-                                class="ui-button-info">
+                                (click)="confirmDeleteDivergence(selectedDivergence)"
+                                class="ui-button-danger">
                         </basis-datatable-button>
                     </div>
                     <div class="ui-g-12 ui-md-2">
@@ -152,6 +159,13 @@
                         fileName="analise">
                         </app-botoes-exportacao>
                     </div>
+                    <!-- Dialog confirmação deleção -->
+                    <p-confirmDialog [header]="this.getLabel('Confirmação')" #dialog>
+                        <p-footer>
+                            <button type="button" pButton icon="fa-close" [label]="'Não'" (click)="dialog.reject()"></button>
+                            <button type="button" pButton icon="fa-check" [label]="'Sim'" (click)="dialog.accept()"></button>
+                        </p-footer>
+                    </p-confirmDialog>
                 </div>
             </div>
         </div>
