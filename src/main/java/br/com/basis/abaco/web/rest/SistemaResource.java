@@ -24,6 +24,9 @@ import com.codahale.metrics.annotation.Timed;
 import io.github.jhipster.web.util.ResponseUtil;
 import net.sf.dynamicreports.report.exception.DRException;
 import net.sf.jasperreports.engine.JRException;
+import org.elasticsearch.index.query.BoolQueryBuilder;
+import org.elasticsearch.search.sort.FieldSortBuilder;
+import org.elasticsearch.search.sort.SortOrder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.InputStreamResource;
@@ -32,6 +35,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
+import org.springframework.data.elasticsearch.core.query.SearchQuery;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -58,7 +62,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
-import static org.elasticsearch.index.query.QueryBuilders.*;
+import static org.elasticsearch.index.query.QueryBuilders.multiMatchQuery;
+import static org.elasticsearch.index.query.QueryBuilders.queryStringQuery;
 
 @RestController
 @RequestMapping("/api")
@@ -80,11 +85,11 @@ public class SistemaResource {
     private static final String PAGE = "page";
 
     public SistemaResource(
-            SistemaRepository sistemaRepository,
-            SistemaSearchRepository sistemaSearchRepository,
-            FuncaoDadosVersionavelRepository funcaoDadosVersionavelRepository,
-            FuncaoDadosRepository funcaoDadosRepository, DynamicExportsService dynamicExportsService,
-            SistemaService sistemaService) {
+        SistemaRepository sistemaRepository,
+        SistemaSearchRepository sistemaSearchRepository,
+        FuncaoDadosVersionavelRepository funcaoDadosVersionavelRepository,
+        FuncaoDadosRepository funcaoDadosRepository, DynamicExportsService dynamicExportsService,
+        SistemaService sistemaService) {
 
         this.sistemaRepository = sistemaRepository;
         this.sistemaSearchRepository = sistemaSearchRepository;
@@ -101,26 +106,25 @@ public class SistemaResource {
         log.debug("REST request to save Sistema : {}", sistema);
         if (sistema.getId() != null) {
             return ResponseEntity.badRequest().headers(
-                    HeaderUtil.createFailureAlert(ENTITY_NAME, "idexists", "A new sistema cannot already have an ID"))
-                    .body(null);
+                HeaderUtil.createFailureAlert(ENTITY_NAME, "idexists", "A new sistema cannot already have an ID"))
+                .body(null);
         }
         Sistema linkedSistema = linkSistemaToModuleToFunctionalities(sistema);
-        Sistema result = sistemaRepository.save(linkedSistema);
-        sistemaSearchRepository.save(result);
+        Sistema result = sistemaService.saveSistema(linkedSistema);
         return ResponseEntity.created(new URI("/api/sistemas/" + result.getId()))
-                .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString())).body(result);
+            .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString())).body(result);
     }
 
     private Sistema linkSistemaToModuleToFunctionalities(Sistema sistema) {
         Sistema linkedSistema = copySistema(sistema);
         Set<Modulo> modulos = linkedSistema.getModulos();
         Optional.ofNullable(modulos).orElse(Collections.emptySet())
-                .forEach(m -> {
-                    m.setSistema(linkedSistema);
-                    Optional.ofNullable(m.getFuncionalidades())
-                            .orElse(Collections.emptySet())
-                            .parallelStream().forEach(f -> f.setModulo(m));
-                });
+            .forEach(m -> {
+                m.setSistema(linkedSistema);
+                Optional.ofNullable(m.getFuncionalidades())
+                    .orElse(Collections.emptySet())
+                    .parallelStream().forEach(f -> f.setModulo(m));
+            });
         return linkedSistema;
     }
 
@@ -133,8 +137,8 @@ public class SistemaResource {
         copy.setNumeroOcorrencia(sistema.getNumeroOcorrencia());
         copy.setOrganizacao(sistema.getOrganizacao());
         copy.setModulos(Optional.ofNullable(sistema.getModulos())
-                .map((lista) -> new HashSet<>(lista))
-                .orElse(new HashSet<>()));
+            .map((lista) -> new HashSet<>(lista))
+            .orElse(new HashSet<>()));
         return copy;
     }
 
@@ -147,8 +151,7 @@ public class SistemaResource {
             return createSistema(sistema);
         }
         Sistema linkedSistema = linkSistemaToModuleToFunctionalities(sistema);
-        Sistema result = sistemaRepository.save(linkedSistema);
-        sistemaSearchRepository.save(result);
+        Sistema result = sistemaService.saveSistema(linkedSistema);
         return ResponseEntity.ok().headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, sistema.getId().toString())).body(result);
     }
 
@@ -193,7 +196,7 @@ public class SistemaResource {
     public FuncaoDados recuperarFuncaoDadosPorIdNome(@PathVariable Long id, @PathVariable String nome) {
 
         Optional<FuncaoDadosVersionavel> funcaoDadosVersionavelOptional = funcaoDadosVersionavelRepository
-                .findOneByNomeIgnoreCaseAndSistemaId(nome, id);
+            .findOneByNomeIgnoreCaseAndSistemaId(nome, id);
 
         if (funcaoDadosVersionavelOptional.isPresent()) {
             FuncaoDadosVersionavel fdv = funcaoDadosVersionavelOptional.get();
@@ -221,14 +224,21 @@ public class SistemaResource {
 
     @GetMapping("/_search/sistemas")
     @Timed
-    public ResponseEntity<List<Sistema>> searchSistemas(@RequestParam(defaultValue = "*") String query,
-                                                        @RequestParam (defaultValue = "ASC", required = false)String order, @RequestParam(name = PAGE) int pageNumber, @RequestParam int size,
+    public ResponseEntity<List<Sistema>> searchSistemas(@RequestParam(required = false) String sigla,
+                                                        @RequestParam(required = false) String nome,
+                                                        @RequestParam(required = false) String numeroOcorrencia,
+                                                        @RequestParam(required = false) Long[] organizacao,
+                                                        @RequestParam(defaultValue = "ASC", required = false) String order,
+                                                        @RequestParam(name = PAGE) int pageNumber, @RequestParam int size,
                                                         @RequestParam(defaultValue = "id") String sort) throws URISyntaxException {
-        log.debug(DBG_MSG_SIS, query);
+        log.debug(DBG_MSG_SIS);
         Sort.Direction sortOrder = PageUtils.getSortDirection(order);
-        Pageable newPageable = new PageRequest(pageNumber, size, sortOrder, sort);
-        Page<Sistema> page = sistemaSearchRepository.search(queryStringQuery(query), newPageable);
-        HttpHeaders headers = PaginationUtil.generateSearchPaginationHttpHeaders(query, page, "/api/_search/sistemas");
+        Pageable pageable = new PageRequest(pageNumber, size, sortOrder, sort);
+        FieldSortBuilder sortBuilder = new FieldSortBuilder(sort).order(SortOrder.ASC);
+        BoolQueryBuilder qb = sistemaService.bindFilterSearch(nome, sigla, numeroOcorrencia, organizacao);
+        SearchQuery searchQuery = new NativeSearchQueryBuilder().withQuery(qb).withPageable(pageable).withSort(sortBuilder).build();
+        Page<Sistema> page = sistemaSearchRepository.search(searchQuery);
+        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/_search/sistemas");
         return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
     }
 
@@ -245,6 +255,6 @@ public class SistemaResource {
             throw new RelatorioException(e);
         }
         return DynamicExporter.output(byteArrayOutputStream,
-                "relatorio." + tipoRelatorio);
+            "relatorio." + tipoRelatorio);
     }
 }

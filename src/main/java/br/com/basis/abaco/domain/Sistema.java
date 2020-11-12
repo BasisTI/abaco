@@ -3,6 +3,7 @@ package br.com.basis.abaco.domain;
 import br.com.basis.abaco.domain.enumeration.TipoSistema;
 import br.com.basis.dynamicexports.pojo.ReportObject;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.Builder;
@@ -29,6 +30,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
@@ -71,6 +73,22 @@ public class Sistema implements Serializable, ReportObject {
     @Column(name = "numero_ocorrencia")
     @Field(index = FieldIndex.not_analyzed, type = FieldType.String)
     private String numeroOcorrencia;
+
+    @Transient
+    @JsonSerialize
+    @Field(index = FieldIndex.not_analyzed, type = FieldType.String)
+    private String nomeSearch;
+
+    @Transient
+    @JsonSerialize
+    @Field(index = FieldIndex.not_analyzed, type = FieldType.String)
+    private String numeroOcorrenciaSearch;
+
+    @Transient
+    @JsonSerialize
+    @Field(index = FieldIndex.not_analyzed, type = FieldType.String)
+    private String siglaSearch;
+
 
     @ManyToOne
     @JoinColumn(name = "organizacao_id")

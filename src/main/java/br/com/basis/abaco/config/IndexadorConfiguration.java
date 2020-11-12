@@ -68,9 +68,11 @@ import br.com.basis.abaco.service.Indexador;
 import br.com.basis.abaco.service.IndexadorComMapper;
 import br.com.basis.abaco.service.IndexadorSemMapper;
 import br.com.basis.abaco.service.dto.AnaliseDTO;
+import br.com.basis.abaco.service.dto.SistemaListDTO;
 import br.com.basis.abaco.service.dto.TipoEquipeDTO;
 import br.com.basis.abaco.service.dto.UserEditDTO;
 import br.com.basis.abaco.service.mapper.AnaliseMapper;
+import br.com.basis.abaco.service.mapper.SistemaElasticSearchMapper;
 import br.com.basis.abaco.service.mapper.TipoEquipeMapper;
 import br.com.basis.abaco.service.mapper.UserElasticSearchMapper;
 import lombok.AllArgsConstructor;
@@ -143,12 +145,18 @@ public class IndexadorConfiguration {
 
     @Bean
     public Indexador indexadorSistema() {
-        IndexadorSemMapper<Sistema, Long> indexador = new IndexadorSemMapper<>(sistemaRepository,
-            sistemaSearchRepository, elasticsearchTemplate);
+
+        SistemaElasticSearchMapper sistemaElasticSearchMapper = new SistemaElasticSearchMapper();
+        IndexadorComMapper<Sistema, Sistema, Long, SistemaListDTO> indexador = new IndexadorComMapper<>(
+            sistemaRepository,
+            sistemaSearchRepository,
+            sistemaElasticSearchMapper,
+            elasticsearchTemplate);
         indexador.setCodigo(IndexadoresUtil.SISTEMA.name());
         indexador.setDescricao(IndexadoresUtil.SISTEMA.label);
         return indexador;
     }
+
 
     @Bean
     public Indexador indexadorAlr() {
