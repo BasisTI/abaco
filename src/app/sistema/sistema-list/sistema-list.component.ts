@@ -8,9 +8,9 @@ import { Organizacao, OrganizacaoService } from 'src/app/organizacao';
 import { SistemaService } from '../sistema.service';
 
 @Component({
-    selector: 'jhi-sistema',
+    selector: 'app-sistema',
     templateUrl: './sistema-list.component.html',
-    providers:[ConfirmationService]
+    providers: [ConfirmationService]
 })
 export class SistemaListComponent {
 
@@ -20,7 +20,8 @@ export class SistemaListComponent {
     rowsPerPageOptions: number[] = [5, 10, 20];
     paginationParams = {contentIndex: null};
     elasticQuery: ElasticQuery = new ElasticQuery();
-    organizations:Organizacao[] = [];
+    organizations: Organizacao[] = [];
+    customOptions: Object = {};
     searchParams: any = {
         sigla: undefined,
         nomeSistema: undefined,
@@ -40,6 +41,10 @@ export class SistemaListComponent {
     ) {
         const emptyOrganization = new Organizacao();
         this.organizacaoService.dropDown().subscribe(response => {
+
+            this.customOptions['organizacao'] = response.map((item) => {
+                return {label: item.nome, value: item.id};
+              });
             this.organizations = response;
             this.organizations.push(emptyOrganization);
         });
@@ -145,7 +150,7 @@ export class SistemaListComponent {
             }
         }
         if (this.searchParams.organizacao.id !== undefined && this.searchParams.organizacao.id !== '') {
-                stringParamsArray.length > 0 ? stringParamsArray.push(' AND organizacao.id: '+ this.searchParams.sigla ) : stringParamsArray.push(' organizacao.id:' + this.searchParams.organizacao.id); 
+                stringParamsArray.length > 0 ? stringParamsArray.push(' AND organizacao.id: '+ this.searchParams.organizacao.id ) : stringParamsArray.push(' organizacao.id:' + this.searchParams.organizacao.id); 
         }
         return stringParamsArray;
     }
