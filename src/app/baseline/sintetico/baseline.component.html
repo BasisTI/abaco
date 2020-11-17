@@ -38,7 +38,7 @@
                         <app-green-button 
                             [buttonLabel]="'Atualizar'"
                             buttonIcon="ui-icon-update"
-                            (click)="atualizarAnalise()">
+                            (click)="atualizarBaseline()">
                         </app-green-button>
                     </div>
                 </div>
@@ -69,6 +69,22 @@
                                 <p-column [header]="this.getLabel('Equipe')" field="nomeEquipe" [sortable]="true"></p-column>
                             </basis-datatable>
                         </div>
+                        <p-dialog header="Atualização de Baseline" [(visible)]="showUpdateBaseline">
+                            <label>Desejar atualizar a Baseline dos Sistemas?</label>
+                            <div class="ui-g">
+                                <div class="ui-g-12 ui-md-12 ui-sm-12">
+                                    <p-listbox [options]="nomeSistemas" [(ngModel)]="sistemaUpdate" [checkbox]="true" [filter]="true" optionLabel="nome" [listStyle]="{'max-height':'300px'}"></p-listbox>
+                                </div>
+                                <div>
+                                    <div class="ui-g-6 ui-md-6 ui-sm-6">
+                                        <button type="button" pButton icon="pi pi-times" (click)="showUpdateBaseline=false" label="Cancelar" class="ui-button-secondary ui-g-3 ui-md-3 ui-sm-3"></button>
+                                    </div>
+                                    <div class="ui-g-6 ui-md-6 ui-sm-6">
+                                        <button type="button" pButton icon="ui-icon-update" (click)="updateBaseline(sistemaUpdate)" label="Atualizar" class="ui-button-success ui-g-3 ui-md-3 ui-sm-3"></button>
+                                    </div>
+                                </div>
+                            </div>
+                        </p-dialog>
                         <div class="ui-g-12 ui-md-2" *ngIf="enableTable">
                             <app-botoes-exportacao resourceName="baseline" fileName="baseline"></app-botoes-exportacao>
                         </div>
@@ -78,11 +94,10 @@
         </div>
     </div>
 </div>
-<p-confirmDialog [header]="getLabel('Confirmação')" #dialog>
+<p-dialog [header]="getLabel('Confirmação')" #dialog>
     <p-footer>
-        <button type="button" pButton icon="fa-close" [label]="this.getLabel('Não')"
-                (click)="dialog.reject()"></button>
-        <button type="button" pButton icon="fa-check" [label]="this.getLabel('Sim')"
-                (click)="dialog.accept()"></button>
+        <button type="button" pButton icon="fa-close" [label]="this.getLabel('Não')" (click)="dialog.reject()"></button>
+        <button type="button" pButton icon="fa-check" [label]="this.getLabel('Sim')" (click)="dialog.accept()"></button>
     </p-footer>
-</p-confirmDialog>
+</p-dialog>
+

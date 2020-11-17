@@ -122,5 +122,11 @@ export class BaselineService {
       });
       return null;
   }
-
+    updateBaselineSintetico(sistema: Sistema): Observable<BaselineSintetico> {
+        let url = `${this.sinteticosUrl}`;
+        if (sistema && sistema.id) {
+            url = url + '/update/' + sistema.id.valueOf();
+        }
+        return this.http.get<BaselineSintetico>(url);
+    }
 }

@@ -46,7 +46,7 @@
                                 [sortable]="true">
                         </p-column>
 
-                        <p-column header="Organização" field="organizacao.nome" [sortable]="false" filterType="select">
+                        <p-column header="Organização" field="organizacao" [sortable]="false" filterType="select">
                             <ng-template let-col let-row="rowData" pTemplate="body" >
                                 <li *ngFor="let org of row.organizacoes">
                                     {{ org.nome }}
