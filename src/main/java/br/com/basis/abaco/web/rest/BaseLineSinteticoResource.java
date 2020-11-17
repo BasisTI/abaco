@@ -1,6 +1,10 @@
 package br.com.basis.abaco.web.rest;
 
+import br.com.basis.abaco.domain.BaseLineAnalitico;
 import br.com.basis.abaco.domain.BaseLineSintetico;
+import br.com.basis.abaco.repository.BaseLineAnaliticoRepository;
+import br.com.basis.abaco.repository.BaseLineSinteticoRepository;
+import br.com.basis.abaco.repository.search.BaseLineAnaliticoSearchRepository;
 import br.com.basis.abaco.repository.search.BaseLineSinteticoSearchRepository;
 import br.com.basis.abaco.service.exception.RelatorioException;
 import br.com.basis.abaco.service.relatorio.RelatorioBaselineSinteticoColunas;
@@ -40,12 +44,21 @@ public class BaseLineSinteticoResource {
 
     private final Logger log = LoggerFactory.getLogger(BaseLineSinteticoResource.class);
     private final BaseLineSinteticoSearchRepository baseLineSinteticoSearchRepository;
+    private final BaseLineSinteticoRepository baseLineSinteticoRepository;
+    private final BaseLineAnaliticoSearchRepository baseLineAnaliticoSearchRepository;
+    private final BaseLineAnaliticoRepository baseLineAnaliticoRepository;
     private final DynamicExportsService dynamicExportsService;
 
     public BaseLineSinteticoResource(DynamicExportsService dynamicExportsService,
-                                     BaseLineSinteticoSearchRepository baseLineSinteticoSearchRepository) {
+                                     BaseLineSinteticoSearchRepository baseLineSinteticoSearchRepository,
+                                     BaseLineAnaliticoSearchRepository baseLineAnaliticoSearchRepository,
+                                     BaseLineAnaliticoRepository baseLineAnaliticoRepository,
+                                     BaseLineSinteticoRepository baseLineSinteticoRepository ) {
         this.dynamicExportsService = dynamicExportsService;
         this.baseLineSinteticoSearchRepository = baseLineSinteticoSearchRepository;
+        this.baseLineAnaliticoRepository = baseLineAnaliticoRepository;
+        this.baseLineAnaliticoSearchRepository = baseLineAnaliticoSearchRepository;
+        this.baseLineSinteticoRepository = baseLineSinteticoRepository;
     }
 
     @GetMapping("/baseline-sinteticos")
@@ -61,6 +74,22 @@ public class BaseLineSinteticoResource {
             return lstBaseLineSintetico;
         }
     }
+
+    @GetMapping("/baseline-sinteticos/update/{id}")
+    @Timed
+    public ResponseEntity<BaseLineSintetico> updateBaseLineSintetico(@PathVariable(value = "id") Long id) {
+        log.debug("REST request to update BaseLineSinteticos");
+        if(id == null){
+            ResponseEntity.badRequest().body(null);
+        }
+        BaseLineSintetico baseLineSintetico =  baseLineSinteticoRepository.findOneByIdsistema(id);
+        BaseLineSintetico result =  baseLineSinteticoSearchRepository.save(baseLineSintetico);
+        List<BaseLineAnalitico> lstAnalitico = baseLineAnaliticoRepository.getAllByIdsistema(id);
+        lstAnalitico.forEach(baseLineAnalitico ->  baseLineAnaliticoSearchRepository.save(baseLineAnalitico));
+        return ResponseEntity.ok(result);
+    }
+
+
 
     @GetMapping("/baseline-sinteticos/{id}")
     @Timed

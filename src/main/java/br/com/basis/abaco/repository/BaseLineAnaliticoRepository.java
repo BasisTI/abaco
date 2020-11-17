@@ -24,4 +24,6 @@ public interface BaseLineAnaliticoRepository extends JpaRepository<BaseLineAnali
 
     Page<BaseLineAnalitico> getAllByIdsistemaAndEquipeResponsavelIdAndTipo(Long id, Long idEquipe, String ft,Pageable pageable);
 
+    List<BaseLineAnalitico> getAllByIdsistema(Long id);
+
 }
