@@ -80,11 +80,11 @@ public class BaseLineSinteticoResource {
     public ResponseEntity<BaseLineSintetico> updateBaseLineSintetico(@PathVariable(value = "id") Long id) {
         log.debug("REST request to update BaseLineSinteticos");
         if(id == null){
-            ResponseEntity.badRequest().body(null);
+            return ResponseEntity.badRequest().body(null);
         }
         BaseLineSintetico baseLineSintetico =  baseLineSinteticoRepository.findOneByIdsistema(id);
         if(baseLineSintetico == null){
-            ResponseEntity.badRequest().body(null);
+            return ResponseEntity.badRequest().body(null);
         }
         BaseLineSintetico result =  baseLineSinteticoSearchRepository.save(baseLineSintetico);
         List<BaseLineAnalitico> lstAnalitico = baseLineAnaliticoRepository.getAllByIdsistema(id);
