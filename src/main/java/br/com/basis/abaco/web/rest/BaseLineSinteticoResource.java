@@ -83,6 +83,9 @@ public class BaseLineSinteticoResource {
             ResponseEntity.badRequest().body(null);
         }
         BaseLineSintetico baseLineSintetico =  baseLineSinteticoRepository.findOneByIdsistema(id);
+        if(baseLineSintetico == null){
+            ResponseEntity.badRequest().body(null);
+        }
         BaseLineSintetico result =  baseLineSinteticoSearchRepository.save(baseLineSintetico);
         List<BaseLineAnalitico> lstAnalitico = baseLineAnaliticoRepository.getAllByIdsistema(id);
         lstAnalitico.forEach(baseLineAnalitico ->  baseLineAnaliticoSearchRepository.save(baseLineAnalitico));
