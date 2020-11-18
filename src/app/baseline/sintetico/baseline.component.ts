@@ -9,6 +9,7 @@ import { DatatableComponent, DatatableClickEvent, PageNotificationService } from
 import { ResponseWrapper } from 'src/app/shared';
 import { ConfirmationService } from 'primeng';
 import { BaselineSintetico } from '../baseline-sintetico.model';
+import { error } from 'console';
 
 @Component({
     // tslint:disable-next-line:component-selector
@@ -132,6 +133,10 @@ export class BaselineComponent implements OnInit {
             this.sistema = sistema;
             this.sistemaUpdate =  new Sistema();
             this.performSearch();
-        });
+        }, error => {
+            this.pageNotificationService.addErrorMessage('Não foi possível localizar Análise para gerar Baseline do sistema informado.');
+            console.log(error.message);
+            this.showUpdateBaseline = false;
+       });
     }
 }
