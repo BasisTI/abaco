@@ -40,7 +40,7 @@ export class DivergenciaListComponent implements OnInit {
 
     allColumnsTable = [
         {field: 'organizacao.nome',  header: 'Organização'},
-        {field: 'identificadorAnalise',  header: 'Identificador da Divergência'},
+        {field: 'identificadorAnalise',  header: 'Identificador da Validação'},
         {field: 'sistema.nome',  header: 'Sistema'},
         {field: 'metodoContagem',  header: 'Metodo Contagem'},
         {field: 'pfTotal',  header: 'PF total'},
@@ -176,7 +176,7 @@ export class DivergenciaListComponent implements OnInit {
 
     public confirmDeleteDivergence(divergence: Analise) {
         if (!divergence) {
-            this.pageNotificationService.addErrorMessage('Nenhuma divergência foi selecionada.');
+            this.pageNotificationService.addErrorMessage('Nenhuma Validação foi selecionada.');
             return;
         } else {
             this.confirmationService.confirm({
@@ -247,7 +247,7 @@ export class DivergenciaListComponent implements OnInit {
             this.pageNotificationService.addErrorMessage('Selecione somente uma Análise para essa ação.');
             return ;
         } else if (event.selection.length > 2) {
-            this.pageNotificationService.addErrorMessage('Selecione somente duas Análises para gerar divergência.');
+            this.pageNotificationService.addErrorMessage('Selecione somente duas Análises para gerar a Validação.');
             return ;
         }
     }

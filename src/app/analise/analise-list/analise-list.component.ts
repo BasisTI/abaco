@@ -197,7 +197,7 @@ export class AnaliseListComponent implements OnInit {
         if (!(this.datatable && this.datatable.selectedRow)) {
             return this.getLabel('Selecione uma registro para gerar divergencia.');
         }
-        return this.getLabel('Gerar Divergência');
+        return this.getLabel('Gerar Validação');
     }
 
     compartilharTooltip() {
@@ -290,7 +290,7 @@ export class AnaliseListComponent implements OnInit {
             this.pageNotificationService.addErrorMessage('Selecione somente uma Análise para essa ação.');
             return ;
         } else if (event.selection.length > 2) {
-            this.pageNotificationService.addErrorMessage('Selecione somente duas Análises para gerar divergência.');
+            this.pageNotificationService.addErrorMessage('Selecione somente duas Análises para gerar Validação.');
             return ;
         }
         switch (event.button) {
@@ -756,7 +756,7 @@ export class AnaliseListComponent implements OnInit {
         if (!this.firstAnaliseDivergencia.sistema &&
              !this.secondAnaliseDivergencia.sistema ||
             this.firstAnaliseDivergencia.sistema.id !== this.secondAnaliseDivergencia.sistema.id) {
-                this.pageNotificationService.addErrorMessage('Não é possivel gerar Divergência dessas análises.');
+                this.pageNotificationService.addErrorMessage('Não é possivel gerar Validação dessas análises.');
         } else if (
                     !(this.checkToGenerateDivergence(this.firstAnaliseDivergencia)) &&
                     !(this.checkToGenerateDivergence(this.secondAnaliseDivergencia))
@@ -775,7 +775,7 @@ export class AnaliseListComponent implements OnInit {
             this.auxiliaryAnaliseDivergencia = this.secondAnaliseDivergencia;
         }
         if (!this.mainAnaliseDivergencia || !this.auxiliaryAnaliseDivergencia) {
-            this.pageNotificationService.addErrorMessage('Selecione a Análise para divergência das Funções de Dados e Transação.');
+            this.pageNotificationService.addErrorMessage('Selecione a Análise para Validação das Funções de Dados e Transação.');
             return;
         }
         this.analiseService.generateDivergence(this.mainAnaliseDivergencia, this.auxiliaryAnaliseDivergencia, setMainAnalise)
@@ -794,12 +794,12 @@ export class AnaliseListComponent implements OnInit {
                     this.blockUiService.hide();
                 });
             },
-            err => this.pageNotificationService.addErrorMessage('Não foi possivel gerar a Divergência das Analises.'));
+            err => this.pageNotificationService.addErrorMessage('Não foi possivel gerar a Validação das Analises.'));
     }
     public confirmDivergenceGenerate(analise: Analise) {
         if (this.checkToGenerateDivergence(analise)) {
             this.confirmationService.confirm({
-                message: this.getLabel('Tem certeza que deseja gerar Divergência para o registro ')
+                message: this.getLabel('Tem certeza que deseja gerar Validação para o registro ')
                                 .concat(analise.identificadorAnalise)
                                 .concat('?'),
                 accept: () => {
@@ -810,15 +810,15 @@ export class AnaliseListComponent implements OnInit {
                                 this.analiseService.updateDivergence(analiseResp).subscribe(analiseUpdateDivergence => {
                             this.recarregarDataTable();
                             this.datatable.filter();
-                            this.pageNotificationService.addSuccessMessage('Divergência da análise \"' + analiseUpdateDivergence.identificadorAnalise + '\" foi gerada com sucesso!');
+                            this.pageNotificationService.addSuccessMessage('Validação da análise \"' + analiseUpdateDivergence.identificadorAnalise + '\" foi gerada com sucesso!');
                             this.blockUiService.hide();
                         },  err => {
-                            this.pageNotificationService.addErrorMessage('Ocorreu um erro ao tentar gerar Divergência.');
+                            this.pageNotificationService.addErrorMessage('Ocorreu um erro ao tentar gerar Validação.');
                             console.log(err);
                             this.blockUiService.hide();
                         });
                     },  err => {
-                        this.pageNotificationService.addErrorMessage('Ocorreu um erro ao tentar gerar Divergência.');
+                        this.pageNotificationService.addErrorMessage('Ocorreu um erro ao tentar gerar Validação.');
                         console.log(err);
                         this.blockUiService.hide();
                     });
@@ -828,11 +828,11 @@ export class AnaliseListComponent implements OnInit {
     }
     checkToGenerateDivergence(analise: Analise): boolean {
         if (!(analise.bloqueiaAnalise) && analise.metodoContagem === MetodoContagem.INDICATIVA) {
-            this.pageNotificationService.addErrorMessage(this.getLabel('Você não pode gerar divergência de uma análise que não esteja bloqueada.'));
+            this.pageNotificationService.addErrorMessage(this.getLabel('Você não pode gerar Validação de uma análise que não esteja bloqueada.'));
             return false;
         }
         if (analise.metodoContagem === MetodoContagem.INDICATIVA) {
-            this.pageNotificationService.addErrorMessage(this.getLabel('Você não pode gerar divergência uma análise que seja Indicativa.'));
+            this.pageNotificationService.addErrorMessage(this.getLabel('Você não pode gerar Validação uma análise que seja Indicativa.'));
             return false;
         }
         return true;
