@@ -70,7 +70,7 @@ public class FuncaoDados extends FuncaoAnalise implements Serializable {
     @OneToMany(mappedBy = FUNCAODADOS, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<UploadedFile> files = new ArrayList<>();
 
-    @OneToMany(mappedBy = FUNCAODADOS)
+    @OneToMany(mappedBy = FUNCAODADOS, orphanRemoval = true)
     private List<DivergenceCommentFuncaoDados> lstDivergenceComments = new ArrayList<>();
 
     @Transient

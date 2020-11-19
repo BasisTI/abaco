@@ -284,12 +284,8 @@ public class AnaliseResource {
                 analiseSearchRepository.delete(id);
             }
         } else {
-            return ResponseEntity
-                .status(HttpStatus.FORBIDDEN)
-                .body(null);
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
         }
-
-
         return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id.toString())).build();
     }
 
@@ -554,7 +550,7 @@ public class AnaliseResource {
     @GetMapping("/analises/gerar-divergencia/{idAnalisePadao}/{idAnaliseComparada}")
     @Timed
     @Secured({AuthoritiesConstants.ADMIN, AuthoritiesConstants.USER, AuthoritiesConstants.GESTOR, AuthoritiesConstants.ANALISTA})
-    public ResponseEntity<AnaliseEditDTO> gerarDivergencia(@PathVariable Long idAnalisePadao, @PathVariable Long idAnaliseComparada,  @RequestParam(value = "isUnion", defaultValue = "false" ) boolean isUnionFunctio) {
+    public ResponseEntity<AnaliseEditDTO> gerarDivergencia(@PathVariable Long idAnalisePadao, @PathVariable Long idAnaliseComparada,  @RequestParam(value = "isUnion", defaultValue = "false" ) boolean isUnionFunction) {
         Analise analisePadrão = analiseRepository.findOne(idAnalisePadao);
         Analise analiseComparada = analiseRepository.findOne(idAnaliseComparada);
         Status status = statusRepository.findFirstByDivergenciaTrue();
@@ -567,7 +563,7 @@ public class AnaliseResource {
         if (analiseComparada == null || analiseComparada.getId() == null) {
             ResponseEntity.status(HttpStatus.FORBIDDEN).body("Error analise Comparada");
         }
-        Analise analiseDivergencia = analiseService.generateDivergence(analisePadrão, analiseComparada, status, isUnionFunctio);
+        Analise analiseDivergencia = analiseService.generateDivergence(analisePadrão, analiseComparada, status, isUnionFunction);
         return ResponseEntity.ok(analiseService.convertToAnaliseEditDTO(analiseDivergencia));
     }
 
@@ -617,6 +613,25 @@ public class AnaliseResource {
         }
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
     }
+
+
+    @DeleteMapping("/divergencia/{id}")
+    @Timed
+    @Secured({AuthoritiesConstants.ADMIN, AuthoritiesConstants.USER, AuthoritiesConstants.GESTOR, AuthoritiesConstants.ANALISTA})
+    public ResponseEntity<Void> deleteAnaliseDivergence(@PathVariable Long id) {
+        Analise analise = analiseService.recuperarAnalise(id);
+        User user = userRepository.findOneByLogin(SecurityUtils.getCurrentUserLogin()).get();
+        if (analise != null) {
+            if (user.getOrganizacoes().contains(analise.getOrganizacao())) {
+                analiseService.deleteDivergence(id, analise);
+            }
+        } else {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
+        }
+        return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id.toString())).build();
+    }
+
+
 }
 
 
