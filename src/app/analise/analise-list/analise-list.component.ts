@@ -573,28 +573,28 @@ export class AnaliseListComponent implements OnInit {
     public bloqueiaAnalise(bloquear: boolean) {
         this.analiseService.find(this.analiseSelecionada.id).subscribe((res) => {
             this.analiseTemp = new Analise().copyFromJSON(res);
-            if (!this.analiseTemp.dataHomologacao && !bloquear) {
-                this.analiseTemp.dataHomologacao  =  new Date();
-                this.showDialogAnaliseBlock = true;
-            } else {
-                let canBloqued = false;
-                if (this.tipoEquipesLoggedUser) {
-                    this.tipoEquipesLoggedUser.forEach(equipe => {
-                        if (equipe.id === this.analiseTemp.equipeResponsavel.id) {
-                            canBloqued = true;
-                        }
-                    });
-                }
-                if (canBloqued) {
+            let canBloqued = false;
+            if (this.tipoEquipesLoggedUser) {
+                this.tipoEquipesLoggedUser.forEach(equipe => {
+                    if (equipe.id === this.analiseTemp.equipeResponsavel.id) {
+                        canBloqued = true;
+                    }
+                });
+            }
+            if (canBloqued) {
+                if (!this.analiseTemp.dataHomologacao && !bloquear) {
+                    this.analiseTemp.dataHomologacao  =  new Date();
+                    this.showDialogAnaliseBlock = true;
+                } else {
                     this.confirmationService.confirm({
                         message: this.mensagemDialogBloquear(bloquear),
                         accept: () => {
                             this.alterAnaliseBlock();
                         }
                     });
-                } else {
-                    this.pageNotificationService.addErrorMessage(this.getLabel('Somente membros da equipe responsável podem excluir esta análise!'));
                 }
+            } else {
+                this.pageNotificationService.addErrorMessage(this.getLabel('Somente membros da equipe responsável podem excluir esta análise!'));
             }
         },
         err => {
@@ -612,6 +612,7 @@ export class AnaliseListComponent implements OnInit {
                 this.mensagemAnaliseBloqueada(bloqueado, nome);
                 this.recarregarDataTable();
                 this.datatable.filter();
+                this.showDialogAnaliseBlock = false;
             });
         }
     }
