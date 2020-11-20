@@ -2,15 +2,13 @@ package br.com.basis.abaco.service;
 
 import br.com.basis.abaco.config.IndexadorConfiguration;
 import br.com.basis.abaco.domain.enumeration.IndexadoresUtil;
-import org.springframework.scheduling.annotation.EnableScheduling;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Service
-@EnableScheduling
+//@EnableScheduling
 public class BaselineService {
     private static final String TIME_ZONE = "America/Sao_Paulo";
 
@@ -22,7 +20,7 @@ public class BaselineService {
         this.indexadorConfiguration = indexadorConfiguration;
     }
 
-    @Scheduled(cron = "0 2 * * *", zone = TIME_ZONE)
+//    @Scheduled(cron = "0 2 * * *", zone = TIME_ZONE)
     public void atualizarBaseline(){
         List<String> indexBaseline =  new ArrayList();
         indexBaseline.add(IndexadoresUtil.BASE_LINE_ANALITICO.toString());
