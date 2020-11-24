@@ -19,8 +19,7 @@ import java.io.Serializable;
 /**
  * A BaseLineAnalitico Função de Dado.
  */
-@Table(name = "baseline_analitico_fd")
-@Document(indexName = "baseline_analitico_fd")
+
 @Immutable
 @Getter
 @Setter
@@ -30,6 +29,9 @@ import java.io.Serializable;
 @NoArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 @Entity
+@Table(name = "baseline_analitico_fd")
+@Document(indexName = "baseline_analitico_fd")
 public class BaseLineAnaliticoFD extends BaseLineAnalitico implements Serializable {
 
 }
+
