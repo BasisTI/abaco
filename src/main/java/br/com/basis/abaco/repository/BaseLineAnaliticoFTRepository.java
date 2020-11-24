@@ -21,6 +21,10 @@ public interface BaseLineAnaliticoFTRepository extends JpaRepository<BaseLineAna
 
     Page<BaseLineAnaliticoFT> getAllByIdsistemaAndEquipeResponsavelId(Long id, Long idEquipe, Pageable pageable);
 
+    List<BaseLineAnaliticoFT> getAllByIdsistemaAndEquipeResponsavelId(Long id, Long idEquipe);
+
     List<BaseLineAnaliticoFT> getAllByIdsistema(Long id);
+
+    void deleteAllByIdsistemaAndEquipeResponsavelId(Long id, Long idEquipe);
 
 }

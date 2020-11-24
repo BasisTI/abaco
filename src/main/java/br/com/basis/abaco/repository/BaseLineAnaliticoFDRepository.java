@@ -23,4 +23,7 @@ public interface BaseLineAnaliticoFDRepository extends JpaRepository<BaseLineAna
 
     List<BaseLineAnaliticoFD> getAllByIdsistema(Long id);
 
+    List<BaseLineAnaliticoFD> getAllByIdsistemaAndEquipeResponsavelId(Long id, Long idEquipe);
+
+    void deleteAllByIdsistemaAndEquipeResponsavelId(Long id, Long idEquipe);
 }

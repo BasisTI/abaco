@@ -25,6 +25,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -86,6 +87,7 @@ public class BaseLineSinteticoResource {
 
     @GetMapping("/baseline-sinteticos/update/{id}/{idEquipe}")
     @Timed
+    @Transactional
     public ResponseEntity<BaseLineSintetico> updateBaseLineSintetico(@PathVariable(value = "id") Long id, @PathVariable(value = "idEquipe") Long idEquipe) {
         log.debug("REST request to update BaseLineSinteticos");
         if(id == null){
@@ -99,8 +101,10 @@ public class BaseLineSinteticoResource {
             return ResponseEntity.notFound().build();
         }
         BaseLineSintetico result =  baseLineSinteticoSearchRepository.save(baseLineSintetico);
-        List<BaseLineAnaliticoFD> lstAnaliticoFD = baseLineAnaliticoFDRepository.getAllByIdsistema(id);
-        List<BaseLineAnaliticoFT> lstAnaliticoFT = baseLineAnaliticoFTRepository.getAllByIdsistema(id);
+        baseLineAnaliticoFDSearchRepository.deleteAllByIdsistemaAndEquipeResponsavelId(id, idEquipe);
+        baseLineAnaliticoFTSearchRepository.deleteAllByIdsistemaAndEquipeResponsavelId(id, idEquipe);
+        List<BaseLineAnaliticoFD> lstAnaliticoFD = baseLineAnaliticoFDRepository.getAllByIdsistemaAndEquipeResponsavelId(id, idEquipe);
+        List<BaseLineAnaliticoFT> lstAnaliticoFT = baseLineAnaliticoFTRepository.getAllByIdsistemaAndEquipeResponsavelId(id, idEquipe);
         lstAnaliticoFD.forEach(baseLineAnaliticoFD ->  baseLineAnaliticoFDSearchRepository.save(baseLineAnaliticoFD));
         lstAnaliticoFT.forEach(baseLineAnaliticoFT ->  baseLineAnaliticoFTSearchRepository.save(baseLineAnaliticoFT));
         return ResponseEntity.ok(result);
