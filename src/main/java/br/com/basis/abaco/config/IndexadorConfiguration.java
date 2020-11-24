@@ -2,7 +2,8 @@ package br.com.basis.abaco.config;
 
 import br.com.basis.abaco.domain.Alr;
 import br.com.basis.abaco.domain.Analise;
-import br.com.basis.abaco.domain.BaseLineAnalitico;
+import br.com.basis.abaco.domain.BaseLineAnaliticoFD;
+import br.com.basis.abaco.domain.BaseLineAnaliticoFT;
 import br.com.basis.abaco.domain.BaseLineSintetico;
 import br.com.basis.abaco.domain.Contrato;
 import br.com.basis.abaco.domain.Der;
@@ -24,7 +25,8 @@ import br.com.basis.abaco.domain.User;
 import br.com.basis.abaco.domain.enumeration.IndexadoresUtil;
 import br.com.basis.abaco.repository.AlrRepository;
 import br.com.basis.abaco.repository.AnaliseRepository;
-import br.com.basis.abaco.repository.BaseLineAnaliticoRepository;
+import br.com.basis.abaco.repository.BaseLineAnaliticoFDRepository;
+import br.com.basis.abaco.repository.BaseLineAnaliticoFTRepository;
 import br.com.basis.abaco.repository.BaseLineSinteticoRepository;
 import br.com.basis.abaco.repository.ContratoRepository;
 import br.com.basis.abaco.repository.DerRepository;
@@ -45,7 +47,8 @@ import br.com.basis.abaco.repository.TipoEquipeRepository;
 import br.com.basis.abaco.repository.UserRepository;
 import br.com.basis.abaco.repository.search.AlrSearchRepository;
 import br.com.basis.abaco.repository.search.AnaliseSearchRepository;
-import br.com.basis.abaco.repository.search.BaseLineAnaliticoSearchRepository;
+import br.com.basis.abaco.repository.search.BaseLineAnaliticoFDSearchRepository;
+import br.com.basis.abaco.repository.search.BaseLineAnaliticoFTSearchRepository;
 import br.com.basis.abaco.repository.search.BaseLineSinteticoSearchRepository;
 import br.com.basis.abaco.repository.search.ContratoSearchRepository;
 import br.com.basis.abaco.repository.search.DerSearchRepository;
@@ -103,7 +106,8 @@ public class IndexadorConfiguration {
     private OrganizacaoRepository organizacaoRepository;
     private RlrRepository rlrRepository;
     private TipoEquipeRepository tipoEquipeRepository;
-    private BaseLineAnaliticoRepository baseLineAnaliticoRepository;
+    private BaseLineAnaliticoFDRepository baseLineAnaliticoFDRepository;
+    private BaseLineAnaliticoFTRepository baseLineAnaliticoFTRepository;
     private BaseLineSinteticoRepository baseLineSinteticoRepository;
     private StatusRepository statusRepository;
     private NomenclaturaRepository nomenclaturaRepository;
@@ -125,7 +129,8 @@ public class IndexadorConfiguration {
     private OrganizacaoSearchRepository organizacaoSearchRepository;
     private RlrSearchRepository rlrSearchRepository;
     private TipoEquipeSearchRepository tipoEquipeSearchRepository;
-    private BaseLineAnaliticoSearchRepository baseLineAnaliticoSearchRepository;
+    private BaseLineAnaliticoFDSearchRepository baseLineAnaliticoFDSearchRepository;
+    private BaseLineAnaliticoFTSearchRepository baseLineAnaliticoFTSearchRepository;
     private BaseLineSinteticoSearchRepository baseLineSinteticoSearchRepository;
     private StatusSearchRepository statusSearchRepository;
     private NomenclaturaSearchRepository nomenclaturaSearchRepository;
@@ -301,11 +306,20 @@ public class IndexadorConfiguration {
     }
 
     @Bean
-    public Indexador indexadorBaseLineAnalitico() {
-        IndexadorSemMapper<BaseLineAnalitico, Long> indexador = new IndexadorSemMapper<>(baseLineAnaliticoRepository,
-            baseLineAnaliticoSearchRepository, elasticsearchTemplate);
-        indexador.setCodigo(IndexadoresUtil.BASE_LINE_ANALITICO.name());
-        indexador.setDescricao(IndexadoresUtil.BASE_LINE_ANALITICO.label);
+    public Indexador indexadorBaseLineAnaliticoFD() {
+        IndexadorSemMapper<BaseLineAnaliticoFD, Long> indexador = new IndexadorSemMapper<>(baseLineAnaliticoFDRepository,
+            baseLineAnaliticoFDSearchRepository, elasticsearchTemplate);
+        indexador.setCodigo(IndexadoresUtil.BASE_LINE_ANALITICO_FD.name());
+        indexador.setDescricao(IndexadoresUtil.BASE_LINE_ANALITICO_FD.label);
+        return indexador;
+    }
+
+    @Bean
+    public Indexador indexadorBaseLineAnaliticoFT() {
+        IndexadorSemMapper<BaseLineAnaliticoFT, Long> indexador = new IndexadorSemMapper<>(baseLineAnaliticoFTRepository,
+            baseLineAnaliticoFTSearchRepository, elasticsearchTemplate);
+        indexador.setCodigo(IndexadoresUtil.BASE_LINE_ANALITICO_FT.name());
+        indexador.setDescricao(IndexadoresUtil.BASE_LINE_ANALITICO_FT.label);
         return indexador;
     }
 

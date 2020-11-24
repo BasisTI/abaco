@@ -1,38 +1,20 @@
 package br.com.basis.abaco.domain;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
-import org.hibernate.annotations.Immutable;
-import org.springframework.data.elasticsearch.annotations.Document;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.Column;
-import javax.persistence.Embeddable;
-import javax.persistence.Entity;
-import javax.persistence.EntityListeners;
 import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.MappedSuperclass;
 import java.io.Serializable;
 import java.math.BigDecimal;
 
 /**
  * A BaseLineAnalitico.
  */
-@Entity
-@Table(name = "baseline_analitico")
-@Document(indexName = "baseline_analitico")
-@Immutable
+@MappedSuperclass
 @Getter
 @Setter
-@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-@EntityListeners(AuditingEntityListener.class)
-@Embeddable
-@NoArgsConstructor
-@JsonInclude(JsonInclude.Include.NON_EMPTY)
 public class BaseLineAnalitico implements Serializable {
 
     @Id
@@ -47,9 +29,6 @@ public class BaseLineAnalitico implements Serializable {
 
     @Column(name = "equipe_responsavel_id")
     private Long equipeResponsavelId;
-
-    @Column(name = "tipo")
-    private String tipo;
 
     @Column(name = "classificacao")
     private String classificacao;
@@ -136,14 +115,6 @@ public class BaseLineAnalitico implements Serializable {
 
     public void setNomeModulo(String nomeModulo){
         this.nomeModulo = nomeModulo;
-    }
-
-    public String getTipo() {
-        return tipo;
-    }
-
-    public void setTipo(String tipo) {
-        this.tipo = tipo;
     }
 
     public String getClassificacao() {

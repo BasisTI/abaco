@@ -1,12 +1,14 @@
 package br.com.basis.abaco.web.rest;
 
-import br.com.basis.abaco.domain.BaseLineAnalitico;
+import br.com.basis.abaco.domain.BaseLineAnaliticoFD;
+import br.com.basis.abaco.domain.BaseLineAnaliticoFT;
 import br.com.basis.abaco.domain.BaseLineSintetico;
 import br.com.basis.abaco.domain.FuncaoDados;
 import br.com.basis.abaco.reports.rest.RelatorioBaselineRest;
 import br.com.basis.abaco.repository.FuncaoDadosRepository;
 import br.com.basis.abaco.repository.FuncaoTransacaoRepository;
-import br.com.basis.abaco.repository.search.BaseLineAnaliticoSearchRepository;
+import br.com.basis.abaco.repository.search.BaseLineAnaliticoFDSearchRepository;
+import br.com.basis.abaco.repository.search.BaseLineAnaliticoFTSearchRepository;
 import br.com.basis.abaco.repository.search.BaseLineSinteticoSearchRepository;
 import br.com.basis.abaco.service.BaselineAnaliseService;
 import br.com.basis.abaco.service.dto.BaselineAnaliticoDTO;
@@ -50,7 +52,8 @@ import java.util.Set;
 public class BaseLineAnaliticoResource {
 
     private final Logger log = LoggerFactory.getLogger(BaseLineAnaliticoResource.class);
-    private final BaseLineAnaliticoSearchRepository baseLineAnaliticoSearchRepository;
+    private final BaseLineAnaliticoFDSearchRepository baseLineAnaliticoFDSearchRepository;
+    private final BaseLineAnaliticoFTSearchRepository baseLineAnaliticoFTSearchRepository;
     private final FuncaoDadosRepository funcaoDadosRepository;
     private final FuncaoTransacaoRepository funcaoTransacaoRepository;
     private final BaseLineSinteticoSearchRepository baseLineSinteticoSearchRepository;
@@ -70,14 +73,16 @@ public class BaseLineAnaliticoResource {
                                      FuncaoDadosRepository funcaoDadosRepository,
                                      FuncaoTransacaoRepository funcaoTransacaoRepository,
                                      BaseLineSinteticoSearchRepository baseLineSinteticoSearchRepository,
-                                     BaseLineAnaliticoSearchRepository baseLineAnaliticoSearchRepository,
+                                     BaseLineAnaliticoFDSearchRepository baseLineAnaliticoFDSearchRepository,
                                      BaselineAnaliseService baselineAnaliseService,
+                                     BaseLineAnaliticoFTSearchRepository baseLineAnaliticoFTSearchRepository,
                                      ElasticsearchTemplate elasticsearchTemplate) {
         this.funcaoTransacaoRepository = funcaoTransacaoRepository;
         this.baseLineSinteticoSearchRepository = baseLineSinteticoSearchRepository;
         this.funcaoDadosRepository = funcaoDadosRepository;
-        this.baseLineAnaliticoSearchRepository = baseLineAnaliticoSearchRepository;
+        this.baseLineAnaliticoFDSearchRepository = baseLineAnaliticoFDSearchRepository;
         this.baselineAnaliseService = baselineAnaliseService;
+        this.baseLineAnaliticoFTSearchRepository = baseLineAnaliticoFTSearchRepository;
         this.elasticsearchTemplate = elasticsearchTemplate;
     }
 
@@ -93,22 +98,22 @@ public class BaseLineAnaliticoResource {
      */
     @GetMapping("/baseline-analiticos")
     @Timed
-    public Set<BaseLineAnalitico> getAllBaseLineAnaliticos() {
+    public Set<BaseLineAnaliticoFD> getAllBaseLineAnaliticos() {
         log.debug("REST request to get all BaseLineAnaliticos");
-        return new HashSet<>(baseLineAnaliticoSearchRepository.findAll());
+        return new HashSet<>(baseLineAnaliticoFDSearchRepository.findAll());
     }
 
 
-    public List<BaseLineAnalitico> getBaseLineAnaliticoFD(@PathVariable Long id) {
+    public List<BaseLineAnaliticoFD> getBaseLineAnaliticoFD(@PathVariable Long id) {
         log.debug(DBG_MSG_FD, id);
-        return baseLineAnaliticoSearchRepository.findByIdsistemaAndTipoOrderByNameAsc(id, "fd");
+        return baseLineAnaliticoFDSearchRepository.findByIdsistemaOrderByNameAsc(id);
     }
 
     @GetMapping("/baseline-analiticos/fd/{id}")
     @Timed
     public List<BaselineAnaliticoDTO> getBaseLineAnaliticoFDDTO(@PathVariable Long id) {
         log.debug(DBG_MSG_FD, id);
-        List<BaseLineAnalitico> baseLineAnaliticos = baseLineAnaliticoSearchRepository.findByIdsistemaAndTipoOrderByNameAsc(id, "fd");
+        List<BaseLineAnaliticoFD> baseLineAnaliticos = baseLineAnaliticoFDSearchRepository.findByIdsistemaOrderByNameAsc(id);
         List<BaselineAnaliticoDTO> baselineAnaliticoDTOS = new ArrayList<>();
         ModelMapper modelMapper = new ModelMapper();
         baseLineAnaliticos.forEach(baseLineAnalitico ->
@@ -121,16 +126,16 @@ public class BaseLineAnaliticoResource {
     }
 
 
-    public List<BaseLineAnalitico> getBaseLineAnaliticoFT(@PathVariable Long id) {
+    public List<BaseLineAnaliticoFT> getBaseLineAnaliticoFT(@PathVariable Long id) {
         log.debug("REST request to get FT BaseLineAnalitico : {}", id);
-        return baseLineAnaliticoSearchRepository.findByIdsistemaAndTipoOrderByNameAsc(id, "ft");
+        return baseLineAnaliticoFTSearchRepository.findByIdsistemaOrderByNameAsc(id);
     }
 
     @GetMapping("/baseline-analiticos/ft/{id}")
     @Timed
     public List<BaselineAnaliticoDTO> getBaseLineAnaliticoFTDTO(@PathVariable Long id) {
         log.debug("REST request to get FT BaseLineAnaliticoDTO : {}", id);
-        List<BaseLineAnalitico> baseLineAnaliticos = baseLineAnaliticoSearchRepository.findByIdsistemaAndTipoOrderByNameAsc(id, "ft");
+        List<BaseLineAnaliticoFT> baseLineAnaliticos = baseLineAnaliticoFTSearchRepository.findByIdsistemaOrderByNameAsc(id);
         List<BaselineAnaliticoDTO> baselineAnaliticoDTOS = new ArrayList<>();
 
         ModelMapper modelMapper = new ModelMapper();
@@ -158,9 +163,9 @@ public class BaseLineAnaliticoResource {
     @Timed
     public List<FuncaoDados> getFDBaseline(@PathVariable Long id) {
         log.debug(DBG_MSG_FD, id);
-        List<BaseLineAnalitico> integerList = baseLineAnaliticoSearchRepository.findByIdsistemaAndTipoOrderByNameAsc(id, "fd");
+        List<BaseLineAnaliticoFD> integerList = baseLineAnaliticoFDSearchRepository.findByIdsistemaOrderByNameAsc(id);
         List<FuncaoDados> fds = new ArrayList<>();
-        for (BaseLineAnalitico baseLineAnalitico : integerList) {
+        for (BaseLineAnaliticoFD baseLineAnalitico : integerList) {
             Long idFuncaoDados = baseLineAnalitico.getIdfuncaodados();
             if (idFuncaoDados != null) {
                 FuncaoDados fd = funcaoDadosRepository.findById(idFuncaoDados);
@@ -181,7 +186,7 @@ public class BaseLineAnaliticoResource {
 
     @GetMapping("/baseline-analiticos/fd/{id}/equipe/{idEquipe}")
     @Timed
-    public Page<BaseLineAnalitico> getBaseLineAnaliticoFDEquipe(@PathVariable String id,
+    public Page<BaseLineAnaliticoFD> getBaseLineAnaliticoFDEquipe(@PathVariable String id,
                                                                 @PathVariable String idEquipe,
                                                                 @RequestParam(defaultValue = "ASC") String order,
                                                                 @RequestParam(defaultValue = "0", name = PAGE) int pageNumber,
@@ -190,15 +195,15 @@ public class BaseLineAnaliticoResource {
         log.debug(DBG_MSG_FD, id);
         Sort.Direction sortOrder = PageUtils.getSortDirection(order);
         Pageable pageable = new PageRequest(pageNumber, size, sortOrder, sort);
-        BoolQueryBuilder qb = baselineAnaliseService.getBoolQueryBuilder(id, idEquipe, "fd");
+        BoolQueryBuilder qb = baselineAnaliseService.getBoolQueryBuilder(id, idEquipe);
         SearchQuery searchQuery = new NativeSearchQueryBuilder().withQuery(qb).withPageable(pageable).build();
-        Page<BaseLineAnalitico> lstPage = elasticsearchTemplate.queryForPage(searchQuery, BaseLineAnalitico.class);
+        Page<BaseLineAnaliticoFD> lstPage = elasticsearchTemplate.queryForPage(searchQuery, BaseLineAnaliticoFD.class);
         return new PageImpl(lstPage.getContent(), pageable, lstPage.getTotalElements());
     }
 
     @GetMapping("/baseline-analiticos/ft/{id}/equipe/{idEquipe}")
     @Timed
-    public Page<BaseLineAnalitico> getBaseLineAnaliticoFTEquipe(@PathVariable String id,
+    public Page<BaseLineAnaliticoFT> getBaseLineAnaliticoFTEquipe(@PathVariable String id,
                                                                 @PathVariable String idEquipe,
                                                                 @RequestParam(defaultValue = "ASC") String order,
                                                                 @RequestParam(defaultValue = "0", name = PAGE) int pageNumber,
@@ -207,9 +212,9 @@ public class BaseLineAnaliticoResource {
         log.debug(DBG_MSG_FD, id);
         Sort.Direction sortOrder = PageUtils.getSortDirection(order);
         Pageable pageable = new PageRequest(pageNumber, size, sortOrder, sort);
-        BoolQueryBuilder qb = baselineAnaliseService.getBoolQueryBuilder(id, idEquipe, "ft");
+        BoolQueryBuilder qb = baselineAnaliseService.getBoolQueryBuilder(id, idEquipe);
         SearchQuery searchQuery = new NativeSearchQueryBuilder().withQuery(qb).withPageable(pageable).build();
-        Page<BaseLineAnalitico> lstPage = elasticsearchTemplate.queryForPage(searchQuery, BaseLineAnalitico.class);
+        Page<BaseLineAnaliticoFT> lstPage = elasticsearchTemplate.queryForPage(searchQuery, BaseLineAnaliticoFT.class);
         return new PageImpl(lstPage.getContent(), pageable, lstPage.getTotalElements());
     }
 }
