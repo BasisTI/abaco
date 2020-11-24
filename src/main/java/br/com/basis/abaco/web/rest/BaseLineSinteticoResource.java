@@ -84,16 +84,19 @@ public class BaseLineSinteticoResource {
         }
     }
 
-    @GetMapping("/baseline-sinteticos/update/{id}")
+    @GetMapping("/baseline-sinteticos/update/{id}/{idEquipe}")
     @Timed
-    public ResponseEntity<BaseLineSintetico> updateBaseLineSintetico(@PathVariable(value = "id") Long id) {
+    public ResponseEntity<BaseLineSintetico> updateBaseLineSintetico(@PathVariable(value = "id") Long id, @PathVariable(value = "idEquipe") Long idEquipe) {
         log.debug("REST request to update BaseLineSinteticos");
         if(id == null){
-            return ResponseEntity.badRequest().body(null);
+            return ResponseEntity.notFound().build();
         }
-        BaseLineSintetico baseLineSintetico =  baseLineSinteticoRepository.findOneByIdsistema(id);
+        if(idEquipe == null){
+            return ResponseEntity.notFound().build();
+        }
+        BaseLineSintetico baseLineSintetico =  baseLineSinteticoRepository.findOneByIdsistemaAndEquipeResponsavelId(id, idEquipe );
         if(baseLineSintetico == null){
-            return ResponseEntity.badRequest().body(null);
+            return ResponseEntity.notFound().build();
         }
         BaseLineSintetico result =  baseLineSinteticoSearchRepository.save(baseLineSintetico);
         List<BaseLineAnaliticoFD> lstAnaliticoFD = baseLineAnaliticoFDRepository.getAllByIdsistema(id);
