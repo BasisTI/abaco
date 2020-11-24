@@ -55,7 +55,7 @@
           LEFT JOIN modulo m ON fc.modulo_id = m.id
           WHERE c.grosspf > 0::numeric AND a.data_homologacao_software IS NOT NULL AND a.data_homologacao_software = (( SELECT max(a1.data_homologacao_software) AS max
           FROM analise a1
-          JOIN funcao_transacao c1 ON c1.analise_id = a1.id AND c1.name::text = c.name::text
+          JOIN funcao_dados c1 ON c1.analise_id = a1.id AND c1.name::text = c.name::text
           WHERE a1.bloqueado = true AND a1.id = a.id)) AND upper(a.metodo_contagem::text) = 'DETALHADA'::text AND a.bloqueado = true
           ) fdt;
       </createView>
