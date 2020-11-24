@@ -8,6 +8,7 @@ import {BaselineAnalitico} from './baseline-analitico.model';
 import { HttpClient } from '@angular/common/http';
 import { FuncaoDados } from '../funcao-dados';
 import { BlockUiService } from '@nuvem/angular-base';
+import { TipoEquipe } from '../tipo-equipe';
 
 
 @Injectable()
@@ -122,11 +123,11 @@ export class BaselineService {
       });
       return null;
   }
-    updateBaselineSintetico(sistema: Sistema): Observable<BaselineSintetico> {
+    updateBaselineSintetico(sistema: Sistema, equipe: TipoEquipe): Observable<BaselineSintetico> {
         this.blockUiService.show();
         let url = `${this.sinteticosUrl}`;
         if (sistema && sistema.id) {
-            url = url + 'update/' + sistema.id.valueOf();
+            url = url + 'update/' + sistema.id.valueOf() + '/' + equipe.id.valueOf();
         }
         return this.http.get<BaselineSintetico>(url);
     }

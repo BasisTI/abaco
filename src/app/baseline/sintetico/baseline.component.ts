@@ -10,6 +10,7 @@ import { ResponseWrapper } from 'src/app/shared';
 import { ConfirmationService } from 'primeng';
 import { BaselineSintetico } from '../baseline-sintetico.model';
 import { error } from 'console';
+import { TipoEquipe, TipoEquipeService } from 'src/app/tipo-equipe';
 
 @Component({
     // tslint:disable-next-line:component-selector
@@ -25,8 +26,10 @@ export class BaselineComponent implements OnInit {
     public urlBaseLineSintetico = this.baselineService.sinteticosUrl;
     selecionada: boolean;
     nomeSistemas: Array<Sistema>;
+    nomeEquipes: Array<TipoEquipe>;
     sistema?: Sistema = new Sistema();
     sistemaUpdate?: Sistema = new Sistema();
+    equipeUpdate?: TipoEquipe = new TipoEquipe();
     urlBaseline: string;
     enableTable = false ;
     lstBasilineSintetico: BaselineSintetico[];
@@ -36,6 +39,7 @@ export class BaselineComponent implements OnInit {
         private router: Router,
         private baselineService: BaselineService,
         private sistemaService: SistemaService,
+        private equipeService: TipoEquipeService,
         private pageNotificationService: PageNotificationService,
     ) {
     }
@@ -46,6 +50,7 @@ export class BaselineComponent implements OnInit {
 
     ngOnInit(): void {
         this.recuperarSistema();
+        this. recuperarEquipe();
     }
 
     public carregarDataTable() {
@@ -85,6 +90,14 @@ export class BaselineComponent implements OnInit {
             this.nomeSistemas.unshift(emptySystem);
         });
     }
+    recuperarEquipe() {
+        this.equipeService.dropDown().subscribe(response => {
+            this.nomeEquipes = response;
+            const emptySystem = new TipoEquipe();
+            this.nomeEquipes.unshift(emptySystem);
+        });
+    }
+
     public changeUrl() {
 
         let querySearch = '?identificador=';
@@ -121,22 +134,29 @@ export class BaselineComponent implements OnInit {
     public atualizarBaseline() {
         this.showUpdateBaseline = true;
     }
-    public updateBaseline(sistema: Sistema) {
-        if (!sistema) {
+    public updateBaseline(sistema: Sistema, equipe: TipoEquipe) {
+        if (!sistema || !sistema.id) {
             this.pageNotificationService.addErrorMessage(
-                this.getLabel('Somente administradores podem bloquear/desbloquear análises!')
+                this.getLabel('Selecione um Sistema para atualizar!')
             );
             return;
+        } else if (!equipe || !equipe.id) {
+            this.pageNotificationService.addErrorMessage(
+                this.getLabel('Selecione uma Equipe para atualizar!')
+            );
+            return;
+        } else {
+            this.baselineService.updateBaselineSintetico(sistema, equipe).subscribe((res) => {
+                    this.showUpdateBaseline = false;
+                    this.sistema = sistema;
+                    this.sistemaUpdate =  new Sistema();
+                    this.equipeUpdate = new TipoEquipe();
+                    this.performSearch();
+                }, error => {
+                    this.pageNotificationService.addErrorMessage('Não foi possível localizar Análise para gerar Baseline do sistema informado.');
+                    console.log(error.message);
+                    this.showUpdateBaseline = false;
+            });
         }
-        this.baselineService.updateBaselineSintetico(sistema).subscribe((res) => {
-            this.showUpdateBaseline = false;
-            this.sistema = sistema;
-            this.sistemaUpdate =  new Sistema();
-            this.performSearch();
-        }, error => {
-            this.pageNotificationService.addErrorMessage('Não foi possível localizar Análise para gerar Baseline do sistema informado.');
-            console.log(error.message);
-            this.showUpdateBaseline = false;
-       });
     }
 }
