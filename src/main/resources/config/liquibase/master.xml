@@ -18,6 +18,6 @@
     <include file="classpath:config/liquibase/changelog/20200924003245_add_dirvergence_status_analise.xml" relativeToChangelogFile="false"/>
     <include file="classpath:config/liquibase/changelog/20201019211633_add_status_functions.xml" relativeToChangelogFile="false"/>
     <include file="classpath:config/liquibase/changelog/20201021205856_alter_views_divergence.xml" relativeToChangelogFile="false"/>
-    <include file="classpath:config/liquibase/changelog/20201124122201_alter_views_baselines" relativeToChangelogFile="false"/>
+    <include file="classpath:config/liquibase/changelog/20201124192213_add_view_baseline_analitico_fd_ft.xml" relativeToChangelogFile="false"/>
 
 </databaseChangeLog>
