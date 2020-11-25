@@ -81,7 +81,7 @@
           fdt.der,
           fdt.rlr_alr
           FROM (
-          SELECT 'ft'::text AS tipo,
+          SELECT DISTINCT
           c.tipo AS classificacao,
           c.impacto,
           c.analise_id,
