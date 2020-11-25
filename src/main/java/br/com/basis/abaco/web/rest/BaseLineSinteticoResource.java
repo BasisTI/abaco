@@ -1,10 +1,13 @@
 package br.com.basis.abaco.web.rest;
 
-import br.com.basis.abaco.domain.BaseLineAnalitico;
+import br.com.basis.abaco.domain.BaseLineAnaliticoFD;
+import br.com.basis.abaco.domain.BaseLineAnaliticoFT;
 import br.com.basis.abaco.domain.BaseLineSintetico;
-import br.com.basis.abaco.repository.BaseLineAnaliticoRepository;
+import br.com.basis.abaco.repository.BaseLineAnaliticoFDRepository;
+import br.com.basis.abaco.repository.BaseLineAnaliticoFTRepository;
 import br.com.basis.abaco.repository.BaseLineSinteticoRepository;
-import br.com.basis.abaco.repository.search.BaseLineAnaliticoSearchRepository;
+import br.com.basis.abaco.repository.search.BaseLineAnaliticoFDSearchRepository;
+import br.com.basis.abaco.repository.search.BaseLineAnaliticoFTSearchRepository;
 import br.com.basis.abaco.repository.search.BaseLineSinteticoSearchRepository;
 import br.com.basis.abaco.service.exception.RelatorioException;
 import br.com.basis.abaco.service.relatorio.RelatorioBaselineSinteticoColunas;
@@ -22,6 +25,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -33,7 +37,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static org.elasticsearch.index.query.QueryBuilders.*;
+import static org.elasticsearch.index.query.QueryBuilders.multiMatchQuery;
 
 /**
  * REST controller for managing BaseLineSintetico.
@@ -45,20 +49,26 @@ public class BaseLineSinteticoResource {
     private final Logger log = LoggerFactory.getLogger(BaseLineSinteticoResource.class);
     private final BaseLineSinteticoSearchRepository baseLineSinteticoSearchRepository;
     private final BaseLineSinteticoRepository baseLineSinteticoRepository;
-    private final BaseLineAnaliticoSearchRepository baseLineAnaliticoSearchRepository;
-    private final BaseLineAnaliticoRepository baseLineAnaliticoRepository;
+    private final BaseLineAnaliticoFDSearchRepository baseLineAnaliticoFDSearchRepository;
+    private final BaseLineAnaliticoFDRepository baseLineAnaliticoFDRepository;
+    private final BaseLineAnaliticoFTSearchRepository baseLineAnaliticoFTSearchRepository;
+    private final BaseLineAnaliticoFTRepository baseLineAnaliticoFTRepository;
     private final DynamicExportsService dynamicExportsService;
 
     public BaseLineSinteticoResource(DynamicExportsService dynamicExportsService,
                                      BaseLineSinteticoSearchRepository baseLineSinteticoSearchRepository,
-                                     BaseLineAnaliticoSearchRepository baseLineAnaliticoSearchRepository,
-                                     BaseLineAnaliticoRepository baseLineAnaliticoRepository,
-                                     BaseLineSinteticoRepository baseLineSinteticoRepository ) {
+                                     BaseLineAnaliticoFDSearchRepository baseLineAnaliticoFDSearchRepository,
+                                     BaseLineAnaliticoFDRepository baseLineAnaliticoFDRepository,
+                                     BaseLineAnaliticoFTSearchRepository baseLineAnaliticoFTSearchRepository,
+                                     BaseLineAnaliticoFTRepository baseLineAnaliticoFTRepository,
+                                     BaseLineSinteticoRepository baseLineSinteticoRepository) {
         this.dynamicExportsService = dynamicExportsService;
         this.baseLineSinteticoSearchRepository = baseLineSinteticoSearchRepository;
-        this.baseLineAnaliticoRepository = baseLineAnaliticoRepository;
-        this.baseLineAnaliticoSearchRepository = baseLineAnaliticoSearchRepository;
+        this.baseLineAnaliticoFDRepository = baseLineAnaliticoFDRepository;
+        this.baseLineAnaliticoFDSearchRepository = baseLineAnaliticoFDSearchRepository;
         this.baseLineSinteticoRepository = baseLineSinteticoRepository;
+        this.baseLineAnaliticoFTSearchRepository = baseLineAnaliticoFTSearchRepository;
+        this.baseLineAnaliticoFTRepository = baseLineAnaliticoFTRepository;
     }
 
     @GetMapping("/baseline-sinteticos")
@@ -75,20 +85,28 @@ public class BaseLineSinteticoResource {
         }
     }
 
-    @GetMapping("/baseline-sinteticos/update/{id}")
+    @GetMapping("/baseline-sinteticos/update/{id}/{idEquipe}")
     @Timed
-    public ResponseEntity<BaseLineSintetico> updateBaseLineSintetico(@PathVariable(value = "id") Long id) {
+    @Transactional
+    public ResponseEntity<BaseLineSintetico> updateBaseLineSintetico(@PathVariable(value = "id") Long id, @PathVariable(value = "idEquipe") Long idEquipe) {
         log.debug("REST request to update BaseLineSinteticos");
         if(id == null){
-            return ResponseEntity.badRequest().body(null);
+            return ResponseEntity.notFound().build();
         }
-        BaseLineSintetico baseLineSintetico =  baseLineSinteticoRepository.findOneByIdsistema(id);
+        if(idEquipe == null){
+            return ResponseEntity.notFound().build();
+        }
+        BaseLineSintetico baseLineSintetico =  baseLineSinteticoRepository.findOneByIdsistemaAndEquipeResponsavelId(id, idEquipe );
         if(baseLineSintetico == null){
-            return ResponseEntity.badRequest().body(null);
+            return ResponseEntity.notFound().build();
         }
         BaseLineSintetico result =  baseLineSinteticoSearchRepository.save(baseLineSintetico);
-        List<BaseLineAnalitico> lstAnalitico = baseLineAnaliticoRepository.getAllByIdsistema(id);
-        lstAnalitico.forEach(baseLineAnalitico ->  baseLineAnaliticoSearchRepository.save(baseLineAnalitico));
+        baseLineAnaliticoFDSearchRepository.deleteAllByIdsistemaAndEquipeResponsavelId(id, idEquipe);
+        baseLineAnaliticoFTSearchRepository.deleteAllByIdsistemaAndEquipeResponsavelId(id, idEquipe);
+        List<BaseLineAnaliticoFD> lstAnaliticoFD = baseLineAnaliticoFDRepository.getAllByIdsistemaAndEquipeResponsavelId(id, idEquipe);
+        List<BaseLineAnaliticoFT> lstAnaliticoFT = baseLineAnaliticoFTRepository.getAllByIdsistemaAndEquipeResponsavelId(id, idEquipe);
+        lstAnaliticoFD.forEach(baseLineAnaliticoFD ->  baseLineAnaliticoFDSearchRepository.save(baseLineAnaliticoFD));
+        lstAnaliticoFT.forEach(baseLineAnaliticoFT ->  baseLineAnaliticoFTSearchRepository.save(baseLineAnaliticoFT));
         return ResponseEntity.ok(result);
     }
 

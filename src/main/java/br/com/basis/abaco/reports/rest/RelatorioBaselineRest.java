@@ -1,6 +1,7 @@
 package br.com.basis.abaco.reports.rest;
 
-import br.com.basis.abaco.domain.BaseLineAnalitico;
+import br.com.basis.abaco.domain.BaseLineAnaliticoFD;
+import br.com.basis.abaco.domain.BaseLineAnaliticoFT;
 import br.com.basis.abaco.domain.BaseLineSintetico;
 import br.com.basis.abaco.reports.util.RelatorioUtil;
 import br.com.basis.abaco.service.dto.BaselineDTO;
@@ -56,7 +57,7 @@ public class RelatorioBaselineRest {
      * @throws FileNotFoundException
      * @throws JRException
      */
-    public @ResponseBody byte[] downloadPdfBaselineBrowser(BaseLineSintetico baseLineSintetico, List<BaseLineAnalitico> baselineFds, List<BaseLineAnalitico> baselineFts) throws FileNotFoundException, JRException {
+    public @ResponseBody byte[] downloadPdfBaselineBrowser(BaseLineSintetico baseLineSintetico, List<BaseLineAnaliticoFD> baselineFds, List<BaseLineAnaliticoFT> baselineFts) throws FileNotFoundException, JRException {
         init();
         return relatorio.downloadPdfBaselineBrowser(caminhoRelatorioBaseline, popularBaseline(baseLineSintetico, baselineFds, baselineFts));
     }
@@ -65,7 +66,7 @@ public class RelatorioBaselineRest {
      *
      * @return
      */
-    private Map<String, Object> popularBaseline(BaseLineSintetico baseLineSintetico, List<BaseLineAnalitico> baselineFds, List<BaseLineAnalitico> baselineFts) {
+    private Map<String, Object> popularBaseline(BaseLineSintetico baseLineSintetico, List<BaseLineAnaliticoFD> baselineFds, List<BaseLineAnaliticoFT> baselineFts) {
         parametro = new HashMap<String, Object>();
         this.popularImagemRelatorio();
         this.popularParametroSistema(baseLineSintetico);
@@ -86,9 +87,9 @@ public class RelatorioBaselineRest {
      * Método responsável por popular a lista de FDs da baseline.
      * @param baselineFds
      */
-    private void popularListaBaseLineFD(List<BaseLineAnalitico> baselineFds) {
+    private void popularListaBaseLineFD(List<BaseLineAnaliticoFD> baselineFds) {
         List<BaselineDTO> listBaselineFdsDTO = new ArrayList<>();
-        for(BaseLineAnalitico a : baselineFds) {
+        for(BaseLineAnaliticoFD a : baselineFds) {
             objeto = new BaselineDTO();
 
             objeto.setNome(a.getName());
@@ -108,9 +109,9 @@ public class RelatorioBaselineRest {
      * Método responsável por popular a lista de FTs da baseline.
      * @param baselineFts
      */
-    private void popularListaBaseLineFT(List<BaseLineAnalitico> baselineFts) {
+    private void popularListaBaseLineFT(List<BaseLineAnaliticoFT> baselineFts) {
         List<BaselineDTO> listBaselineFtsDTO = new ArrayList<>();
-        for(BaseLineAnalitico a : baselineFts) {
+        for(BaseLineAnaliticoFT a : baselineFts) {
             objeto = new BaselineDTO();
 
             objeto.setDer(a.getDer().toString());
