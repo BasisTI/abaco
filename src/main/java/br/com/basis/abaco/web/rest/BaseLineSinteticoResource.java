@@ -1,11 +1,6 @@
 package br.com.basis.abaco.web.rest;
 
 import br.com.basis.abaco.domain.BaseLineSintetico;
-import br.com.basis.abaco.repository.BaseLineAnaliticoFDRepository;
-import br.com.basis.abaco.repository.BaseLineAnaliticoFTRepository;
-import br.com.basis.abaco.repository.BaseLineSinteticoRepository;
-import br.com.basis.abaco.repository.search.BaseLineAnaliticoFDSearchRepository;
-import br.com.basis.abaco.repository.search.BaseLineAnaliticoFTSearchRepository;
 import br.com.basis.abaco.repository.search.BaseLineSinteticoSearchRepository;
 import br.com.basis.abaco.service.BaselineSinteticoService;
 import br.com.basis.abaco.service.exception.RelatorioException;
@@ -47,29 +42,14 @@ public class BaseLineSinteticoResource {
 
     private final Logger log = LoggerFactory.getLogger(BaseLineSinteticoResource.class);
     private final BaseLineSinteticoSearchRepository baseLineSinteticoSearchRepository;
-    private final BaseLineSinteticoRepository baseLineSinteticoRepository;
-    private final BaseLineAnaliticoFDSearchRepository baseLineAnaliticoFDSearchRepository;
-    private final BaseLineAnaliticoFDRepository baseLineAnaliticoFDRepository;
-    private final BaseLineAnaliticoFTSearchRepository baseLineAnaliticoFTSearchRepository;
-    private final BaseLineAnaliticoFTRepository baseLineAnaliticoFTRepository;
     private final DynamicExportsService dynamicExportsService;
     private final BaselineSinteticoService baselineSinteticoService;
 
     public BaseLineSinteticoResource(DynamicExportsService dynamicExportsService,
                                      BaseLineSinteticoSearchRepository baseLineSinteticoSearchRepository,
-                                     BaseLineAnaliticoFDSearchRepository baseLineAnaliticoFDSearchRepository,
-                                     BaseLineAnaliticoFDRepository baseLineAnaliticoFDRepository,
-                                     BaseLineAnaliticoFTSearchRepository baseLineAnaliticoFTSearchRepository,
-                                     BaseLineAnaliticoFTRepository baseLineAnaliticoFTRepository,
-                                     BaseLineSinteticoRepository baseLineSinteticoRepository,
                                      BaselineSinteticoService baselineSinteticoService) {
         this.dynamicExportsService = dynamicExportsService;
         this.baseLineSinteticoSearchRepository = baseLineSinteticoSearchRepository;
-        this.baseLineAnaliticoFDRepository = baseLineAnaliticoFDRepository;
-        this.baseLineAnaliticoFDSearchRepository = baseLineAnaliticoFDSearchRepository;
-        this.baseLineSinteticoRepository = baseLineSinteticoRepository;
-        this.baseLineAnaliticoFTSearchRepository = baseLineAnaliticoFTSearchRepository;
-        this.baseLineAnaliticoFTRepository = baseLineAnaliticoFTRepository;
         this.baselineSinteticoService = baselineSinteticoService;
     }
 
@@ -102,7 +82,7 @@ public class BaseLineSinteticoResource {
         if (baseLineSintetico == null) {
             return ResponseEntity.notFound().build();
         }
-        baselineSinteticoService.getBaseLineAnaliticoFDFT(id, idEquipe, baseLineSintetico);
+        baseLineSintetico = baselineSinteticoService.getBaseLineAnaliticoFDFT(id, idEquipe, baseLineSintetico);
         return ResponseEntity.ok(baseLineSintetico);
     }
 

@@ -19,10 +19,6 @@ public interface BaseLineAnaliticoFDRepository extends JpaRepository<BaseLineAna
     @Query( value = "SELECT b FROM BaseLineAnaliticoFD b where b.idsistema = ?1 ORDER BY b.nomeFuncionalidade asc, b.name asc")
     List<BaseLineAnaliticoFD> getAllAnaliticosFD(Long id);
 
-    @Query( value = "SELECT br.com.basis.abaco.domain.BaseLineAnaliticoFD(f.id, f.idfuncaodados, f.idsistema, f.equipeResponsavelId, f.classificacao, f.analiseid, f.dataHomologacao, f.nome, f.nomeEquipe, f.sigla, f.name, f.pf, f.complexidade, f.der, f.rlralr, f.nomeFuncionalidade, f.nomeModulo) FROM fc_funcao_dados_vw( ?1 ,?2) f",  nativeQuery = true)
-    List<BaseLineAnaliticoFD> getAllAnaliticosFDByIdandIdequipe(Long id, Long idEquipe);
-
-
     Page<BaseLineAnaliticoFD> getAllByIdsistemaAndEquipeResponsavelId(Long id, Long idEquipe, Pageable pageable);
 
     List<BaseLineAnaliticoFD> getAllByIdsistema(Long id);
