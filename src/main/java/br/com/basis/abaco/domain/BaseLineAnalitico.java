@@ -1,8 +1,5 @@
 package br.com.basis.abaco.domain;
 
-import lombok.Getter;
-import lombok.Setter;
-
 import javax.persistence.Column;
 import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
@@ -13,8 +10,6 @@ import java.math.BigDecimal;
  * A BaseLineAnalitico.
  */
 @MappedSuperclass
-@Getter
-@Setter
 public class BaseLineAnalitico implements Serializable {
 
     @Id
