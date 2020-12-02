@@ -14,4 +14,5 @@ public interface BaseLineAnaliticoFDSearchRepository extends ElasticsearchReposi
 
     void deleteAllByIdsistemaAndEquipeResponsavelId(Long id, Long idEquipe);
 
+    List<BaseLineAnaliticoFD> save(List<BaseLineAnaliticoFD> baseLineAnaliticoFDs);
 }

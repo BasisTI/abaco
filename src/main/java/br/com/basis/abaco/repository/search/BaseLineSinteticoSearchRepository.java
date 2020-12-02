@@ -15,4 +15,6 @@ public interface BaseLineSinteticoSearchRepository extends ElasticsearchReposito
 
     BaseLineSintetico findOneByIdsistemaAndEquipeResponsavelId(Long idsistema, Long idEquipe);
 
+    void deleteByIdsistemaAndEquipeResponsavelId(Long idsistema, Long idEquipe);
+
 }
