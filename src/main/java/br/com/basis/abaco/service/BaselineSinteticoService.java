@@ -49,6 +49,7 @@ public class BaselineSinteticoService {
     }
 
     public BaseLineSintetico getBaseLineAnaliticoFDFT(Long id, Long idEquipe, BaseLineSintetico baseLineSintetico) {
+        baseLineSinteticoSearchRepository.deleteByIdsistemaAndEquipeResponsavelId(id, idEquipe);
         BaseLineSintetico result = baseLineSinteticoSearchRepository.save(baseLineSintetico);
         baseLineAnaliticoFDSearchRepository.deleteAllByIdsistemaAndEquipeResponsavelId(id, idEquipe);
         baseLineAnaliticoFTSearchRepository.deleteAllByIdsistemaAndEquipeResponsavelId(id, idEquipe);
@@ -56,8 +57,8 @@ public class BaselineSinteticoService {
         Query nativeQueryFT = entityManager.createNativeQuery(SELECT_FUNCTION_FT, BaseLineAnaliticoFT.class).setParameter(ID, id).setParameter(ID_EQUIPE, idEquipe);
         List<BaseLineAnaliticoFT> lstAnaliticoFT = nativeQueryFT.getResultList();
         List<BaseLineAnaliticoFD> lstAnaliticoFD = nativeQueryFD.getResultList();
-        lstAnaliticoFD.forEach(baseLineAnaliticoFD -> baseLineAnaliticoFDSearchRepository.save(baseLineAnaliticoFD));
-        lstAnaliticoFT.forEach(baseLineAnaliticoFT -> baseLineAnaliticoFTSearchRepository.save(baseLineAnaliticoFT));
+        baseLineAnaliticoFDSearchRepository.save(lstAnaliticoFD);
+        baseLineAnaliticoFTSearchRepository.save(lstAnaliticoFT);
         return result;
     }
 }
