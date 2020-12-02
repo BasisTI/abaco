@@ -1,16 +1,12 @@
-import { IndexadorService } from './../../indexador/indexador.service';
-import { Component, AfterViewInit, ViewChild, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
-import { SistemaService } from '../../sistema/sistema.service';
-import { BaselineService } from '../baseline.service';
-import { Sistema } from '../../sistema';
+import { DatatableClickEvent, DatatableComponent, PageNotificationService } from '@nuvem/primeng-components';
 import { ElasticQuery } from 'src/app/shared/elastic-query';
-import { DatatableComponent, DatatableClickEvent, PageNotificationService } from '@nuvem/primeng-components';
-import { ResponseWrapper } from 'src/app/shared';
-import { ConfirmationService } from 'primeng';
-import { BaselineSintetico } from '../baseline-sintetico.model';
-import { error } from 'console';
 import { TipoEquipe, TipoEquipeService } from 'src/app/tipo-equipe';
+import { Sistema } from '../../sistema';
+import { SistemaService } from '../../sistema/sistema.service';
+import { BaselineSintetico } from '../baseline-sintetico.model';
+import { BaselineService } from '../baseline.service';
 
 @Component({
     // tslint:disable-next-line:component-selector
@@ -67,7 +63,7 @@ export class BaselineComponent implements OnInit {
     }
 
     public datatableClick(event: DatatableClickEvent) {
-        if (!event.selection) {
+        if  (!event.selection) {
             return;
         }
         switch (event.button) {
@@ -126,21 +122,25 @@ export class BaselineComponent implements OnInit {
         this.enableTable = false;
     }
     public recarregarDataTable() {
-        if (this.datatable) {
-            this.datatable.filterParams['sistema'] = this.sistema.id;
+        if  (this.datatable ){
+            if (this.sistema && this.sistema.id) {
+                this.datatable.filterParams['sistema'] = this.sistema.id;
+            }
             this.datatable.reset();
         }
     }
+
     public atualizarBaseline() {
         this.showUpdateBaseline = true;
     }
+
     public updateBaseline(sistema: Sistema, equipe: TipoEquipe) {
-        if (!sistema || !sistema.id) {
+        if  (!sistema || !sistema.id) {
             this.pageNotificationService.addErrorMessage(
                 this.getLabel('Selecione um Sistema para atualizar!')
             );
             return;
-        } else if (!equipe || !equipe.id) {
+        } else if  (!equipe || !equipe.id) {
             this.pageNotificationService.addErrorMessage(
                 this.getLabel('Selecione uma Equipe para atualizar!')
             );
