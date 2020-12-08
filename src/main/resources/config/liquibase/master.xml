@@ -19,5 +19,6 @@
     <include file="classpath:config/liquibase/changelog/20201019211633_add_status_functions.xml" relativeToChangelogFile="false"/>
     <include file="classpath:config/liquibase/changelog/20201021205856_alter_views_divergence.xml" relativeToChangelogFile="false"/>
     <include file="classpath:config/liquibase/changelog/20201124192213_add_view_baseline_analitico_fd_ft.xml" relativeToChangelogFile="false"/>
+    <include file="classpath:config/liquibase/changelog/20201129204722_alter_view_for_function.xml" relativeToChangelogFile="false"/>
 
 </databaseChangeLog>

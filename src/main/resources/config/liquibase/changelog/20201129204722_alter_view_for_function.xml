@@ -1,0 +1,569 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+   <changeSet author="basis (generated)" id="1606682848713-1">
+       <createIndex indexName="analise_sistema_id_idx"
+                    tableName="analise">
+           <column name="sistema_id" type="BIGINT"/>
+       </createIndex>
+   </changeSet>
+   <changeSet author="basis (generated)" id="1606682848713-2">
+       <createIndex indexName="metodo_contagem_idx"
+                    tableName="analise">
+           <column name="metodo_contagem" type="VARCHAR(255)" />
+       </createIndex>
+   </changeSet>
+   <changeSet author="basis (generated)" id="1606682848713-3">
+       <createIndex indexName="data_homologacao_software_idx"
+                    tableName="analise">
+           <column name="data_homologacao_software" type="TIMESTAMP WITH TIME ZONE"/>
+       </createIndex>
+   </changeSet>
+   <changeSet author="basis (generated)" id="1606682848713-4">
+       <createIndex indexName="bloqueado_idx"
+                    tableName="analise">
+           <column name="bloqueado" type="BOOLEAN"/>
+       </createIndex>
+   </changeSet>
+   <changeSet author="basis (generated)" id="1606682848713-5">
+       <createIndex indexName="equipe_responsavel_id_idx"
+                    tableName="analise">
+           <column name="equipe_responsavel_id" type="BIGINT"/>
+       </createIndex>
+   </changeSet>
+   <changeSet author="basis (generated)" id="1606682848713-6">
+       <createIndex indexName="analise_id_idx"
+                    tableName="funcao_transacao">
+           <column name="analise_id" type="BIGINT"/>
+       </createIndex>
+   </changeSet>
+   <changeSet author="basis (generated)" id="1606682848713-7">
+       <createIndex indexName="modulo_id_idx"
+                    tableName="funcionalidade">
+           <column name="modulo_id" type="BIGINT"/>
+       </createIndex>
+   </changeSet>
+   <changeSet author="basis (generated)" id="1606682848713-8">
+       <createIndex indexName="funcao_dados_analise_id_idx"
+                    tableName="funcao_dados"
+                    unique="true">
+           <column name="analise_id" type="BIGINT"/>
+       </createIndex>
+   </changeSet>
+   <changeSet author="basis (generated)" id="1606682848713-9">
+       <createIndex indexName="idx_user_login"
+                    tableName="jhi_user">
+           <column name="login" type="varchar(100)"/>
+       </createIndex>
+   </changeSet>
+   <changeSet author="basis (generated)" id="1606682848713-10">
+       <createIndex indexName="idx_user_login"
+                    tableName="jhi_user">
+           <column name="login" type="varchar(100)"/>
+       </createIndex>
+   </changeSet>
+    <changeSet author="basis (generated)" id="1606682848713-11">
+        <createSequence sequenceName="function_seq" startValue="1" incrementBy="1"/>
+    </changeSet>
+   <changeSet author="basis (generated)" id="1606682848713-12">
+       <sql splitStatements="false"><![CDATA[
+        CREATE OR REPLACE FUNCTION public.fc_funcao_dados_vw(v_id_sistema bigint, v_id_equipe bigint)
+             RETURNS TABLE(row_number bigint, classificacao character varying, impacto character varying, analise_id bigint, data_homologacao_software timestamp without time zone, id_sistema bigint, nome character varying, sigla character varying, name character varying, pf bigint, id_funcao_dados bigint, complexidade character varying, nome_equipe character varying, equipe_responsavel_id bigint, nome_funcionalidade character varying, nome_modulo character varying, der bigint, rlr_alr bigint)
+             LANGUAGE plpgsql
+            AS $function$
+            declare
+                var_r record;
+            begin
+                for var_r in(
+                    SELECT
+                        nextval('function_seq') AS r_row_number,
+                        fdt.tipo r_tipo,
+                        fdt.impacto r_impacto,
+                        fdt.classificacao r_classificacao,
+                        fdt.analise_id r_analise_id,
+                        fdt.data_homologacao_software r_data_homologacao_software,
+                        fdt.id_sistema r_id_sistema,
+                        fdt.nome r_nome,
+                        fdt.sigla r_sigla,
+                        fdt.name r_name,
+                        fdt.pf r_pf,
+                        fdt.id_funcao_dados r_id_funcao_dados,
+                        fdt.complexidade r_complexidade,
+                        fdt.nome_equipe r_nome_equipe,
+                        fdt.equipe_responsavel_id r_equipe_responsavel_id,
+                        fdt.nome_funcionalidade r_nome_funcionalidade,
+                        fdt.nome_modulo r_nome_modulo,
+                        fdt.der r_der,
+                        fdt.rlr_alr r_rlr_alr
+                    FROM
+                        (
+                            SELECT
+                                'fd'::text AS tipo,
+                                c.tipo AS classificacao,
+                                c.impacto,
+                                c.analise_id,
+                                a.data_homologacao_software,
+                                b.id AS id_sistema,
+                                b.nome,
+                                b.sigla,
+                                c.name,
+                                c.grosspf AS pf,
+                                c.id AS id_funcao_dados,
+                                c.complexidade,
+                                f.nome AS nome_equipe,
+                                a.equipe_responsavel_id,
+                                fc.nome AS nome_funcionalidade,
+                                m.nome AS nome_modulo,
+                                ( SELECT sum(case when d_1.valor is null then 1 else d_1.valor  end)  AS count FROM der d_1 WHERE d_1.funcao_dados_id = c.id) AS der,
+                                ( SELECT sum(case when e_1.valor is null then 1 else e_1.valor  end) AS count  FROM rlr e_1 WHERE e_1.funcao_dados_id = c.id) AS rlr_alr
+                               FROM
+                                    tipo_equipe f
+                                    JOIN analise a
+                                        on
+                                            f.id = v_id_equipe
+                                            and a.sistema_id = v_id_sistema
+                                            and a.equipe_responsavel_id = f.id
+                                            and a.data_homologacao_software IS NOT NULL
+                                            and a.bloqueado = true
+                                            AND upper(a.metodo_contagem::text) = 'DETALHADA'::text
+                                            --683
+                                    JOIN sistema b
+                                        ON
+                                            a.sistema_id = b.id
+                                    JOIN funcao_dados c
+                                        ON
+                                            c.grosspf > 0::numeric
+                                            and c.analise_id = a.id
+                                            and c.id IN (
+                                                    SELECT edi.id
+                                                    FROM
+                                                        (
+                                                            SELECT
+                                                                max(fds.id) AS id,
+                                                                fds.name,
+                                                                fds.funcionalidade_id
+                                                            FROM
+                                                                funcao_dados fds
+                                                                JOIN analise ans
+                                                                    ON
+                                                                        ans.bloqueado = true
+                                                                        and fds.analise_id = ans.id
+                                                                        AND a.sistema_id = ans.sistema_id
+                                                                        AND upper(ans.metodo_contagem::text) = 'DETALHADA'::text
+                                                                        AND ans.data_homologacao_software =
+                                                                            (
+                                                                                (
+                                                                                    SELECT
+                                                                                        max(a1.data_homologacao_software) AS max
+                                                                                    FROM
+                                                                                        analise a1
+                                                                                        JOIN funcao_dados c1
+                                                                                            on
+                                                                                                a1.bloqueado = true
+                                                                                                and c1.analise_id = a1.id
+                                                                                                and a1.id = ans.id
+                                                                                                AND c1.name::text = fds.name::text
+                                                                                )
+                                                                            )
+
+
+                                                            GROUP BY fds.name, fds.funcionalidade_id
+                                                    ) edi
+                                             )
+
+                                    LEFT JOIN funcionalidade fc
+                                        ON
+                                            c.funcionalidade_id = fc.id
+                                    LEFT JOIN modulo m
+                                        ON
+                                            fc.modulo_id = m.id
+
+
+                        ) fdt
+                )loop
+
+                    row_number:= var_r.r_row_number;
+                    classificacao := var_r.r_classificacao ;
+                    impacto := var_r.r_impacto ;
+                    analise_id := var_r.r_analise_id;
+                    data_homologacao_software	:= var_r.r_data_homologacao_software ;
+                    id_sistema := var_r.r_id_sistema ;
+                    nome := var_r.r_nome ;
+                    sigla := var_r.r_sigla ;
+                    name := var_r.r_name  ;
+                    pf := var_r.r_pf ;
+                    id_funcao_dados := var_r.r_id_funcao_dados ;
+                    complexidade := var_r.r_complexidade ;
+                    nome_equipe := var_r.r_nome_equipe;
+                    equipe_responsavel_id := var_r.r_equipe_responsavel_id ;
+                    nome_funcionalidade := var_r.r_nome_funcionalidade ;
+                    nome_modulo := var_r.r_nome_modulo;
+                    der := var_r.r_der ;
+                    rlr_alr := var_r.r_rlr_alr ;
+
+
+                       return next;
+                end loop;
+            end; $function$
+      LANGUAGE PLPGSQL;
+     ]]></sql>
+   </changeSet>
+   <changeSet author="basis (generated)" id="1606682848713-13">
+       <sql splitStatements="false"><![CDATA[
+          CREATE OR REPLACE FUNCTION public.fc_funcao_transacao_vw(v_id_sistema bigint, v_id_equipe bigint)
+          RETURNS TABLE(row_number bigint, classificacao character varying, impacto character varying, analise_id bigint, data_homologacao_software timestamp without time zone, id_sistema bigint, nome character varying, sigla character varying, name character varying, pf bigint, id_funcao_dados bigint, complexidade character varying, nome_equipe character varying, equipe_responsavel_id bigint, nome_funcionalidade character varying, nome_modulo character varying, der bigint, rlr_alr bigint)
+          LANGUAGE plpgsql
+          AS $function$
+          declare
+          var_r record;
+          begin
+          for var_r in(
+          SELECT nextval('function_seq') AS r_row_number,
+          fdt.classificacao r_classificacao,
+          fdt.impacto r_impacto,
+          fdt.analise_id r_analise_id,
+          fdt.data_homologacao_software r_data_homologacao_software,
+          fdt.id_sistema r_id_sistema,
+          fdt.nome r_nome,
+          fdt.sigla r_sigla,
+          fdt.name r_name,
+          fdt.pf r_pf,
+          fdt.id_funcao_dados r_id_funcao_dados,
+          fdt.complexidade r_complexidade,
+          fdt.nome_equipe r_nome_equipe,
+          fdt.equipe_responsavel_id r_equipe_responsavel_id,
+          fdt.nome_funcionalidade r_nome_funcionalidade,
+          fdt.nome_modulo r_nome_modulo,
+          fdt.der r_der,
+          fdt.rlr_alr r_rlr_alr
+          FROM
+          (
+
+          SELECT
+
+          'ft'::text AS tipo,
+          c.tipo AS classificacao,
+          c.impacto,
+          c.analise_id,
+          a.data_homologacao_software,
+          b.id AS id_sistema,
+          b.nome,
+          b.sigla,
+          c.name,
+          c.grosspf AS pf,
+          c.id AS id_funcao_dados,
+          c.complexidade,
+          f.nome AS nome_equipe,
+          a.equipe_responsavel_id,
+          fc.nome AS nome_funcionalidade,
+          m.nome AS nome_modulo,
+          ( select sum(case when d.valor is null then 1 else d.valor  end ) AS count FROM der d WHERE d.funcao_transacao_id = c.id) AS der,
+          ( SELECT sum(case when e.valor is null then 1 else e.valor  end ) AS count FROM alr e WHERE e.funcao_transacao_id = c.id) AS rlr_alr
+
+          from
+          tipo_equipe f
+          join analise a
+          on
+          f.id = v_id_equipe
+          and a.sistema_id = v_id_sistema
+          and a.data_homologacao_software IS NOT null
+          and a.bloqueado = true
+          and a.equipe_responsavel_id = f.id
+          and upper(a.metodo_contagem::text) = 'DETALHADA'::text
+          JOIN sistema b
+          on
+          --sistema_id = 1059300 and
+          a.data_homologacao_software IS NOT null
+          and a.bloqueado = true
+          and a.sistema_id = b.id
+          and upper(a.metodo_contagem::text) = 'DETALHADA'::text
+          JOIN funcao_transacao c
+          ON
+          c.grosspf > 0::numeric
+          and c.analise_id = a.id
+
+
+          LEFT JOIN funcionalidade fc
+          on
+          c.funcionalidade_id = fc.id
+
+          LEFT JOIN modulo m
+          ON
+          fc.modulo_id = m.id
+
+          WHERE
+          (
+          c.id IN (
+          SELECT
+          edi.id
+          FROM
+          (
+          SELECT
+          max(fds.id) AS id,
+          fds.name,
+          fds.funcionalidade_id
+          FROM
+          funcao_transacao fds
+          JOIN analise ans
+          ON
+          ans.bloqueado = true
+          and fds.analise_id = ans.id
+          and a.sistema_id = ans.sistema_id
+          AND upper(ans.metodo_contagem::text) = 'DETALHADA'::text
+          AND ans.data_homologacao_software =
+          (
+          SELECT
+          max(a1.data_homologacao_software) AS max
+          FROM
+          analise a1
+          JOIN funcao_transacao c1
+          ON
+          a1.bloqueado = true
+          and c1.analise_id = a1.id
+          AND c.funcionalidade_id = c1.funcionalidade_id
+          AND c1.name::text = fds.name::text
+
+          WHERE
+          a1.id = ans.id
+          )
+
+          GROUP BY
+          fds.name,
+          fds.funcionalidade_id
+          ) edi
+          )
+          )
+
+          ) fdt
+          ) loop
+
+          row_number:= var_r.r_row_number;
+          classificacao := var_r.r_classificacao ;
+          impacto := var_r.r_impacto ;
+          analise_id := var_r.r_analise_id;
+          data_homologacao_software	:= var_r.r_data_homologacao_software ;
+          id_sistema := var_r.r_id_sistema ;
+          nome := var_r.r_nome ;
+          sigla := var_r.r_sigla ;
+          name := var_r.r_name  ;
+          pf := var_r.r_pf ;
+          id_funcao_dados := var_r.r_id_funcao_dados ;
+          complexidade := var_r.r_complexidade ;
+          nome_equipe := var_r.r_nome_equipe;
+          equipe_responsavel_id := var_r.r_equipe_responsavel_id ;
+          nome_funcionalidade := var_r.r_nome_funcionalidade ;
+          nome_modulo := var_r.r_nome_modulo;
+          der := var_r.r_der ;
+          rlr_alr := var_r.r_rlr_alr ;
+
+
+          return next;
+          end loop;
+          end; $function$
+            LANGUAGE PLPGSQL;
+     ]]></sql>
+   </changeSet>
+   <changeSet author="basis (generated)" id="1606682848713-14">
+       <sql splitStatements="false"><![CDATA[
+           CREATE OR REPLACE FUNCTION public.fc_baseline_sintetico_vw(v_id_sistema bigint, v_id_equipe bigint)
+           RETURNS TABLE(row_number bigint, id_sistema bigint, sigla character varying, nome character varying, numero_ocorrencia character varying, sum bigint, equipe_responsavel_id bigint, nome_equipe character varying)
+           LANGUAGE plpgsql
+           AS $function$
+           declare
+           var_r record;
+           begin
+           for var_r in(
+           SELECT
+           nextval('function_seq') AS r_row_number,
+           sistema.id_sistema r_id_sistema,
+           sistema.sigla r_sigla,
+           sistema.nome r_nome,
+           sistema.numero_ocorrencia r_numero_ocorrencia,
+           sistema.sum r_sum,
+           sistema.equipe_responsavel_id r_equipe_responsavel_id,
+           sistema.nome_equipe  r_nome_equipe
+           FROM
+           (
+           SELECT
+           w.id_sistema,
+           w.sigla,
+           w.nome,
+           w.numero_ocorrencia,
+           sum(w.pf) AS sum,
+           w.equipe_responsavel_id,
+           w.nome_equipe
+           FROM
+           (
+           SELECT
+           DISTINCT 'fd'::text AS tipo,
+           c.impacto,
+           c.tipo,
+           c.analise_id,
+           a.data_homologacao_software,
+           b.id AS id_sistema,
+           b.nome,
+           b.sigla,
+           c.name,
+           c.grosspf AS pf,
+           c.id AS id_dados_trans,
+           c.complexidade,
+           b.numero_ocorrencia,
+           f.nome AS nome_equipe,
+           a.equipe_responsavel_id,
+           ( select sum(case when d.valor is null then 1 else d.valor  end ) AS count FROM der d WHERE d.funcao_transacao_id = c.id) AS der,
+           ( SELECT sum(case when e.valor is null then 1 else e.valor  end ) AS count FROM alr e WHERE e.funcao_transacao_id = c.id) AS rlr_alr
+           FROM
+           tipo_equipe f
+           join analise a
+           ON
+           f.id = v_id_equipe
+           and a.sistema_id = v_id_sistema
+           and a.data_homologacao_software IS NOT NULL
+           and a.equipe_responsavel_id = f.id
+           and upper(a.metodo_contagem::text) = 'DETALHADA'::text
+           JOIN sistema b
+           ON
+           a.sistema_id = b.id
+           JOIN funcao_dados c
+           on
+           c.grosspf > 0::numeric
+           and c.id in
+           (
+           SELECT edi.id
+           FROM
+           (
+           SELECT
+           max(fds.id) AS id,
+           fds.name,
+           fds.funcionalidade_id
+           FROM funcao_dados fds
+           JOIN analise ans ON fds.analise_id = ans.id
+           AND upper(ans.metodo_contagem::text) = 'DETALHADA'::text
+           AND ans.data_homologacao_software =
+           (
+           (
+           SELECT max(a1.data_homologacao_software) AS max
+           FROM
+           analise a1
+           JOIN funcao_dados c1 ON c1.analise_id = a1.id
+           AND c1.name::text = fds.name::text
+           WHERE
+           a1.bloqueado = true
+           AND a1.id = ans.id
+           )
+           )
+           AND upper(ans.metodo_contagem::text) = 'DETALHADA'::text
+           AND ans.bloqueado = true
+           GROUP BY fds.name, fds.funcionalidade_id
+           ) edi
+           )
+           and c.analise_id = a.id
+
+           LEFT JOIN funcionalidade fc
+           ON
+           c.funcionalidade_id = fc.id
+           LEFT JOIN modulo m
+           ON fc.modulo_id = m.id
+
+           UNION
+
+           SELECT
+           DISTINCT 'ft'::text AS tipo,
+           c.impacto,
+           c.tipo,
+           c.analise_id,
+           a.data_homologacao_software,
+           b.id AS id_sistema,
+           b.nome,
+           b.sigla,
+           c.name,
+           c.grosspf AS pf,
+           c.id AS id_dados_trans,
+           c.complexidade,
+           b.numero_ocorrencia,
+           f.nome AS nome_equipe,
+           a.equipe_responsavel_id,
+           ( SELECT sum(case when d_1.valor is null then 1 else d_1.valor  end)  AS count FROM der d_1 WHERE d_1.funcao_dados_id = c.id) AS der,
+           ( SELECT sum(case when e_1.valor is null then 1 else e_1.valor  end) AS count  FROM rlr e_1 WHERE e_1.funcao_dados_id = c.id) AS rlr_alr
+           FROM
+           tipo_equipe f
+           join analise a
+           on
+           f.id = v_id_equipe
+           and a.sistema_id = v_id_sistema
+           AND a.data_homologacao_software IS NOT null
+           AND a.bloqueado = true
+           and a.equipe_responsavel_id = f.id
+           AND upper(a.metodo_contagem::text) = 'DETALHADA'::text
+           join sistema b
+           ON
+           a.sistema_id = b.id
+           JOIN funcao_transacao c
+           ON
+           c.grosspf > 0::numeric
+           AND c.id in
+           (
+           SELECT
+           edi.id
+           FROM
+           (
+           SELECT
+           max(fds.id) AS id,
+           fds.name,
+           fds.funcionalidade_id
+           FROM
+           funcao_transacao fds
+           JOIN analise ans ON fds.analise_id = ans.id
+           AND upper(ans.metodo_contagem::text) = 'DETALHADA'::text
+           AND ans.data_homologacao_software =
+           (
+           (
+           select
+           max(a1.data_homologacao_software) AS max
+           FROM
+           analise a1
+           JOIN funcao_transacao c1
+           ON
+           c1.analise_id = a1.id
+           AND c1.name::text = fds.name::text
+           WHERE
+           a1.bloqueado = true
+           AND a1.id = ans.id
+           )
+           )
+           AND upper(ans.metodo_contagem::text) = 'DETALHADA'::text
+           AND ans.bloqueado = true
+           GROUP BY
+           fds.name,
+           fds.funcionalidade_id
+           ) edi
+           )
+           and c.analise_id = a.id
+
+           LEFT JOIN funcionalidade fc ON c.funcionalidade_id = fc.id
+           LEFT JOIN modulo m ON fc.modulo_id = m.id
+
+           ) w
+           (tipo, impacto, tipo_1, analise_id, data_homologacao_software, id_sistema, nome, sigla, name, pf, id_dados_trans, complexidade, numero_ocorrencia, nome_equipe, equipe_responsavel_id, der, rlr_alr)
+           GROUP BY w.id_sistema, w.sigla, w.nome, w.numero_ocorrencia, w.equipe_responsavel_id, w.nome_equipe) sistema
+           )loop
+
+           row_number := var_r.r_row_number;
+           id_sistema := var_r.r_id_sistema;
+           sigla  := var_r.r_sigla;
+           nome  := var_r.r_nome;
+           numero_ocorrencia  := var_r.r_numero_ocorrencia;
+           sum  := var_r.r_sum;
+           equipe_responsavel_id  := var_r.r_equipe_responsavel_id;
+           nome_equipe := var_r.r_nome_equipe;
+
+
+           return next;
+           end loop;
+           end; $function$
+            LANGUAGE PLPGSQL;
+     ]]></sql>
+   </changeSet>
+</databaseChangeLog>
