@@ -359,8 +359,7 @@
 
           return next;
           end loop;
-          end; $function$
-            LANGUAGE PLPGSQL;
+            end; $function$;
      ]]></sql>
    </changeSet>
    <changeSet author="basis (generated)" id="1606682848713-14">
@@ -560,8 +559,7 @@
 
            return next;
            end loop;
-           end; $function$
-            LANGUAGE PLPGSQL;
+            end; $function$;
      ]]></sql>
    </changeSet>
 </databaseChangeLog>
