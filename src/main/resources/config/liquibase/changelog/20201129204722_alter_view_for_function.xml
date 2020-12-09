@@ -57,12 +57,6 @@
            <column name="login" type="varchar(100)"/>
        </createIndex>
    </changeSet>
-   <changeSet author="basis (generated)" id="1606682848713-10">
-       <createIndex indexName="idx_user_login"
-                    tableName="jhi_user">
-           <column name="login" type="varchar(100)"/>
-       </createIndex>
-   </changeSet>
     <changeSet author="basis (generated)" id="1606682848713-11">
         <createSequence sequenceName="function_seq" startValue="1" incrementBy="1"/>
     </changeSet>
