@@ -68,7 +68,7 @@
     </changeSet>
    <changeSet author="basis (generated)" id="1606682848713-12">
        <sql splitStatements="false"><![CDATA[
-        CREATE OR REPLACE FUNCTION public.fc_funcao_dados_vw(v_id_sistema bigint, v_id_equipe bigint)
+        CREATE OR REPLACE FUNCTION fc_funcao_dados_vw(v_id_sistema bigint, v_id_equipe bigint)
              RETURNS TABLE(row_number bigint, classificacao character varying, impacto character varying, analise_id bigint, data_homologacao_software timestamp without time zone, id_sistema bigint, nome character varying, sigla character varying, name character varying, pf bigint, id_funcao_dados bigint, complexidade character varying, nome_equipe character varying, equipe_responsavel_id bigint, nome_funcionalidade character varying, nome_modulo character varying, der bigint, rlr_alr bigint)
              LANGUAGE plpgsql
             AS $function$
@@ -205,13 +205,12 @@
 
                        return next;
                 end loop;
-            end; $function$
-      LANGUAGE PLPGSQL;
+            end; $function$;
      ]]></sql>
    </changeSet>
    <changeSet author="basis (generated)" id="1606682848713-13">
        <sql splitStatements="false"><![CDATA[
-          CREATE OR REPLACE FUNCTION public.fc_funcao_transacao_vw(v_id_sistema bigint, v_id_equipe bigint)
+          CREATE OR REPLACE FUNCTION fc_funcao_transacao_vw(v_id_sistema bigint, v_id_equipe bigint)
           RETURNS TABLE(row_number bigint, classificacao character varying, impacto character varying, analise_id bigint, data_homologacao_software timestamp without time zone, id_sistema bigint, nome character varying, sigla character varying, name character varying, pf bigint, id_funcao_dados bigint, complexidade character varying, nome_equipe character varying, equipe_responsavel_id bigint, nome_funcionalidade character varying, nome_modulo character varying, der bigint, rlr_alr bigint)
           LANGUAGE plpgsql
           AS $function$
@@ -366,7 +365,7 @@
    </changeSet>
    <changeSet author="basis (generated)" id="1606682848713-14">
        <sql splitStatements="false"><![CDATA[
-           CREATE OR REPLACE FUNCTION public.fc_baseline_sintetico_vw(v_id_sistema bigint, v_id_equipe bigint)
+           CREATE OR REPLACE FUNCTION fc_baseline_sintetico_vw(v_id_sistema bigint, v_id_equipe bigint)
            RETURNS TABLE(row_number bigint, id_sistema bigint, sigla character varying, nome character varying, numero_ocorrencia character varying, sum bigint, equipe_responsavel_id bigint, nome_equipe character varying)
            LANGUAGE plpgsql
            AS $function$
