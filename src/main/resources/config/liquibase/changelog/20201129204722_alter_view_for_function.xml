@@ -47,8 +47,7 @@
    </changeSet>
    <changeSet author="basis (generated)" id="1606682848713-8">
        <createIndex indexName="funcao_dados_analise_id_idx"
-                    tableName="funcao_dados"
-                    unique="true">
+                    tableName="funcao_dados">
            <column name="analise_id" type="BIGINT"/>
        </createIndex>
    </changeSet>
