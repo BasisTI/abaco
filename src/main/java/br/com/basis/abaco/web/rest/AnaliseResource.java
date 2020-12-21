@@ -606,7 +606,7 @@ public class AnaliseResource {
         Analise analise = analiseService.recuperarAnaliseDivergence(id);
         if (analise != null) {
             User user = userRepository.findOneByLogin(SecurityUtils.getCurrentUserLogin()).orElse(new User());
-            if (analiseService.permissionToEdit(user, analise)) {
+            if (analiseService.permissionToEditDivergence(user, analise)) {
                 AnaliseDivergenceEditDTO analiseDivergenceEditDTO = analiseService.convertToAnaliseDivergenceEditDTO(analise);
                 return ResponseUtil.wrapOrNotFound(Optional.ofNullable(analiseDivergenceEditDTO));
             }

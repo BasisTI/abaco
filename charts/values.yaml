@@ -58,7 +58,7 @@ abaco:
         elasticsearch:
           cluster-name: abaco
           cluster-nodes: es-abaco-tst-client:9300
-    
+
 elasticsearch:
   install: true
   fullnameOverride: es-abaco-tst
