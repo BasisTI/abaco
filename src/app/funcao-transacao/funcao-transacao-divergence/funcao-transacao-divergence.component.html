@@ -99,9 +99,7 @@
                                     <p-autoComplete
                                             [(ngModel)]="currentFuncaoTransacao.name"
                                             [suggestions]="baselineResultados"
-                                            id="idNomeProcessoElementarFormFuncaoTransacao"
-                                            (completeMethod)="searchBaseline($event)"
-                                            (onSelect)="recuperarNomeSelecionado($event)">
+                                            id="idNomeProcessoElementarFormFuncaoTransacao">
                                         <ng-template let-currentFuncaoTransacao pTemplate="name">
                                             <div class="ui-helper-clearfix">
                                                 <div style="font-size:15px;float:left;margin:10px 10px 0 0">{{currentFuncaoTransacao.name}}</div>

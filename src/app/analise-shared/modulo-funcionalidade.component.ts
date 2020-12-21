@@ -35,15 +35,12 @@ export class ModuloFuncionalidadeComponent implements OnInit, OnDestroy {
     private subscriptionAnaliseCarregada: Subscription;
     private subscriptionFuncaoAnaliseCarregada: Subscription;
     private subscriptionFuncaoAnaliseDescarregada: Subscription;
-
     private oldModuloSelectedId = -1;
-
     modulos: Modulo[];
     mostrarDialogModulo = false;
     novoModulo: Modulo = new Modulo();
     moduloSelecionado: Modulo;
     @Input() erroModulo: boolean;
-
     funcionalidades: Funcionalidade[];
     mostrarDialogFuncionalidade = false;
     novaFuncionalidade: Funcionalidade = new Funcionalidade();

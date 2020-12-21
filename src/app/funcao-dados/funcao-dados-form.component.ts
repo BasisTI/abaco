@@ -120,7 +120,6 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
         private confirmationService: ConfirmationService,
         private route: ActivatedRoute,
         private pageNotificationService: PageNotificationService,
-        private changeDetectorRef: ChangeDetectorRef,
         private funcaoDadosService: FuncaoDadosService,
         private funcaoTransacaoService: FuncaoTransacaoService,
         private analiseService: AnaliseService,
@@ -145,6 +144,7 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
                     this.analiseService.find(this.idAnalise).subscribe(analise => {
                         analise = new Analise().copyFromJSON(analise);
                         this.analiseSharedDataService.analise = analise;
+                        debugger;
                         this.analise = analise;
                         this.disableAba = this.analise.metodoContagem === MessageUtil.INDICATIVA;
                         this.hideShowQuantidade = true;

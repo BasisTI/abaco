@@ -61,7 +61,6 @@ export class DivergenciaResumoComponent implements OnInit {
         private confirmationService: ConfirmationService,
         private router: Router,
         private route: ActivatedRoute,
-        private analiseService: AnaliseService,
         private analiseSharedDataService: AnaliseSharedDataService,
         private equipeService: TipoEquipeService,
         private organizacaoService: OrganizacaoService,
@@ -86,7 +85,7 @@ export class DivergenciaResumoComponent implements OnInit {
             this.blockUiService.show();
             if (this.idAnalise) {
                 if (!this.isView) {
-                    this.analiseService.find(this.idAnalise).subscribe(analise => {
+                    this.divergenciaService.find(this.idAnalise).subscribe(analise => {
                         this.analiseSharedDataService.analise = new Analise().copyFromJSON(analise);
                         this.analise =  new Analise().copyFromJSON(analise);
                         this.disableAba = analise.metodoContagem === MessageUtil.INDICATIVA;
@@ -95,7 +94,7 @@ export class DivergenciaResumoComponent implements OnInit {
                         this.esforcoFases = this.analiseSharedDataService.analise.esforcoFases;
                         this.pfTotal = analise.pfTotal;
                         this.pfAjustada = analise.adjustPFTotal;
-                        this.analiseService.getDivergenciaResumo(this.idAnalise)
+                        this.divergenciaService.getDivergenciaResumo(this.idAnalise)
                         .subscribe(res => {
                             const jsonResponse = res;
                                 const lstResumo: Resumo[] = [];
@@ -122,13 +121,13 @@ export class DivergenciaResumoComponent implements OnInit {
                             );
                     });
                 } else {
-                    this.analiseService.findView(this.idAnalise).subscribe(analise => {
+                    this.divergenciaService.findView(this.idAnalise).subscribe(analise => {
                         this.analiseSharedDataService.analise = analise;
                         this.analise = analise;
                         this.pfTotal = analise.pfTotal;
                         this.pfAjustada = analise.adjustPFTotal;
                         this.disableAba = analise.metodoContagem === MessageUtil.INDICATIVA;
-                        this.analiseService.getResumo(this.idAnalise)
+                        this.divergenciaService.getDivergenciaResumo(this.idAnalise)
                             .subscribe(res => {
                                 this.linhaResumo = res;
                                 this.linhaResumo = Resumo.addTotalLine(this.linhaResumo);
@@ -197,105 +196,6 @@ export class DivergenciaResumoComponent implements OnInit {
         this.divergenciaService.geraRelatorioPdfDetalhadoBrowser(this.idAnalise);
     }
 
-    public bloquearAnalise() {
-        if (!this.analise.dataHomologacao) {
-            this.pageNotificationService.addInfoMessage(this.getLabel('Informe a data de homolagação para continuar'));
-        }
-
-        if (this.analise.dataHomologacao) {
-            this.confirmationService.confirm({
-                message: this.getLabel('Tem certeza que deseja bloquear o registro ?')
-                    .concat(this.analise.identificadorAnalise)
-                    .concat('?'),
-                accept: () => {
-                    const copy = this.analise.toJSONState();
-                    this.analiseService.block(copy).subscribe(() => {
-                        this.pageNotificationService.addSuccessMessage(this.analise.identificadorAnalise);
-                        this.router.navigate(['analise/']);
-                    }, (error: Response) => {
-                        switch (error.status) {
-                            case 400: {
-                                if (error) {
-                                    this.pageNotificationService.addErrorMessage(
-                                        this.getLabel('Somente administradores podem bloquear/desbloquear análises!')
-                                    );
-                                } else {
-                                    this.pageNotificationService
-                                        .addErrorMessage(
-                                            this.getLabel('Somente membros da equipe responsável podem bloquear esta análise!'));
-                                }
-                            }
-                        }
-                    });
-                }
-            });
-        }
-
-    }
-
-    public openCompartilharDialog() {
-        if (this.checkUserAnaliseEquipes()) {
-            this.equipeService.findAllCompartilhaveis(this.analise.organizacao.id,
-                this.analise.id,
-                this.analise.equipeResponsavel.id).subscribe((equipes) => {
-                if (equipes) {
-                    equipes.forEach((equipe) => {
-                        const entity: AnaliseShareEquipe = Object.assign(new AnaliseShareEquipe(),
-                            {
-                                id: undefined,
-                                equipeId: equipe.id,
-                                analiseId: this.analise.id,
-                                viewOnly: false,
-                                nomeEquipe: equipe.nome
-                            });
-                        this.equipeShare.push(entity);
-                    });
-                }
-            });
-            this.analiseService.findAllCompartilhadaByAnalise(this.analise.id).subscribe((shared) => {
-                this.analiseShared = shared;
-            });
-            this.mostrarDialog = true;
-        } else {
-            this.pageNotificationService.addErrorMessage(this.getLabel('Somente membros da equipe responsável podem compartilhar esta análise!'));
-        }
-    }
-
-    public salvarCompartilhar() {
-        if (this.selectedEquipes && this.selectedEquipes.length !== 0) {
-            this.analiseService.salvarCompartilhar(this.selectedEquipes).subscribe((res) => {
-                this.mostrarDialog = false;
-                this.analise.compartilhadas = this.analise.compartilhadas.concat(this.selectedEquipes);
-                this.selectedEquipes.forEach( item => {
-                    this.equipeShare = this.equipeShare.filter(
-                        compartilha => {
-                            return compartilha.id !== item.id ? true : false;
-                        });
-                });
-                this.pageNotificationService.addSuccessMessage(this.getLabel('Análise compartilhada com sucesso!'));
-                this.limparSelecaoCompartilhar();
-            });
-        } else {
-            this.pageNotificationService.addInfoMessage(this.getLabel('Selecione pelo menos um registro para poder adicionar ou clique no X para sair!'));
-        }
-
-    }
-
-    public deletarCompartilhar() {
-        if (this.selectedToDelete && this.selectedToDelete !== null) {
-            this.analiseService.deletarCompartilhar(this.selectedToDelete.id).subscribe((res) => {
-                this.analise.compartilhadas = this.analise.compartilhadas.filter(
-                    compartilha => {
-                       return compartilha.id !== this.selectedToDelete.id ? true : false;
-                    });
-                this.mostrarDialog = false;
-                this.pageNotificationService.addSuccessMessage(this.getLabel('Compartilhamento removido com sucesso!'));
-                this.limparSelecaoCompartilhar();
-            });
-        } else {
-            this.pageNotificationService.addInfoMessage(this.getLabel('Selecione pelo menos um registro para poder remover ou clique no X para sair!'));
-        }
-    }
 
     public limparSelecaoCompartilhar() {
         this.selectedEquipes = undefined;
@@ -304,7 +204,7 @@ export class DivergenciaResumoComponent implements OnInit {
 
     public updateViewOnly() {
         setTimeout(() => {
-            this.analiseService.atualizarCompartilhar(this.selectedToDelete).subscribe((res) => {
+            this.divergenciaService.atualizarCompartilhar(this.selectedToDelete).subscribe((res) => {
                 this.pageNotificationService.addSuccessMessage(this.getLabel('Registro atualizado com sucesso!'));
             });
         }, 250);

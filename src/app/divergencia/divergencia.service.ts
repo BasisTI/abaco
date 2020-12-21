@@ -1,19 +1,16 @@
-import {Injectable} from '@angular/core';
-import {environment} from '../../environments/environment';
-
-import { Divergencia } from '.';
-import {TipoEquipe} from '../tipo-equipe';
 import { HttpClient, HttpParams } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { BlockUiService } from '@nuvem/angular-base';
 import { PageNotificationService } from '@nuvem/primeng-components';
-import { Observable, forkJoin, pipe } from 'rxjs';
-import { catchError } from 'rxjs/operators';
-import { HttpGenericErrorService, BlockUiService } from '@nuvem/angular-base';
-import { ResponseWrapper, createRequestOption } from '../shared';
-import { FuncaoDadosService } from '../funcao-dados/funcao-dados.service';
-import { FuncaoTransacaoService } from '../funcao-transacao/funcao-transacao.service';
-import { FuncaoTransacao } from '../funcao-transacao';
-import { FuncaoDados } from '../funcao-dados';
 import { LazyLoadEvent } from 'primeng';
+import { Observable } from 'rxjs';
+import { catchError } from 'rxjs/operators';
+import { Divergencia } from '.';
+import { environment } from '../../environments/environment';
+import { Analise } from '../analise';
+import { Resumo } from '../analise/analise-resumo/resumo.model';
+import { createRequestOption, ResponseWrapper } from '../shared';
+
 
 @Injectable()
 export class DivergenciaService {
@@ -199,12 +196,12 @@ export class DivergenciaService {
         return null;
     }
 
-    public find(id: Number): Observable<Divergencia> {
-        return this.http.get<Divergencia>(`${this.resourceUrl}/${id}`);
+    public find(id: Number): Observable<Analise> {
+        return this.http.get<Analise>(`${this.resourceUrl}/${id}`);
     }
 
-    public findView(id: Number): Observable<Divergencia> {
-        return this.http.get<Divergencia>(`${this.resourceUrl}/view/${id}`);
+    public findView(id: Number): Observable<Analise> {
+        return this.http.get<Analise>(`${this.resourceUrl}/view/${id}`);
     }
 
 
@@ -325,5 +322,29 @@ export class DivergenciaService {
         return this.http.get(`${this.resourceUrl}?${params.toString()}${setParams}`, { observe: 'response' });
     }
 
+    updateDivergenciaSomaPf(analiseId: number): Observable<Response> {
+        const url = `${this.resourceUrl}/update-divergente-pf/${analiseId}`;
+        return this.http.get<Response>(url);
+    }
+
+    public generateDivergenceFromAnalise(analiseId): Observable<Analise> {
+        return this.http.get<Analise>(`${this.resourceUrl}/divergencia/${analiseId}`).pipe(
+            catchError((error: any) => {
+            if (error.status === 403) {
+                this.pageNotificationService.addErrorMessage(this.getLabel('Você não possui permissão!'));
+                return Observable.throw(new Error(error.status));
+            }
+        }));
+    }
+    
+    getDivergenciaResumo(analiseId: Number): Observable<Resumo[]> {
+        return this.http.get<Resumo[]>(`${this.resourceResumoUrl}/divergencia/${analiseId}`,).pipe(
+        catchError((error: any) => {
+            if (error.status === 403) {
+                this.pageNotificationService.addErrorMessage(this.getLabel('Você não possui permissão!'));
+                return Observable.throw(new Error(error.status));
+            }
+        }));
+    }
 
 }

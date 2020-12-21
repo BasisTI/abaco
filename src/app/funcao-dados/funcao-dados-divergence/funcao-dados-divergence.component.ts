@@ -1,36 +1,36 @@
-import { AfterViewInit, ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output, QueryList, ViewChildren, ViewChild} from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Column, DatatableClickEvent, DatatableComponent, DatatableModule, PageNotificationService } from '@nuvem/primeng-components';
+import { BlockUiService } from '@nuvem/angular-base';
+import { Column, DatatableClickEvent, DatatableComponent, PageNotificationService } from '@nuvem/primeng-components';
 import * as _ from 'lodash';
-import { ConfirmationService, SelectItem, FullCalendar } from 'primeng';
+import { ConfirmationService, SelectItem } from 'primeng';
 import { forkJoin, Observable, Subscription } from 'rxjs';
+import { DivergenciaService } from 'src/app/divergencia';
 import { Alr } from '../../alr/alr.model';
-import { Analise, AnaliseService } from '../../analise';
+import { Analise } from '../../analise';
 import { AnaliseReferenciavel } from '../../analise-shared/analise-referenciavel';
 import { Calculadora } from '../../analise-shared/calculadora';
+import { CalculadoraTransacao } from '../../analise-shared/calculadora-transacao';
 import { DerChipConverter } from '../../analise-shared/der-chips/der-chip-converter';
 import { DerChipItem } from '../../analise-shared/der-chips/der-chip-item';
 import { DerTextParser, ParseResult } from '../../analise-shared/der-text/der-text-parser';
 import { ResumoFuncoes } from '../../analise-shared/resumo-funcoes';
+import { MetodoContagem } from '../../analise/analise.model';
+import { BaselineAnalitico } from '../../baseline/baseline-analitico.model';
+import { BaselineService } from '../../baseline/baseline.service';
+import { Der } from '../../der/der.model';
 import { FatorAjuste } from '../../fator-ajuste';
+import { FuncaoTransacao, TipoFuncaoTransacao } from '../../funcao-transacao/funcao-transacao.model';
+import { FuncaoTransacaoService } from '../../funcao-transacao/funcao-transacao.service';
 import { Funcionalidade } from '../../funcionalidade/index';
 import { Manual } from '../../manual';
 import { Modulo } from '../../modulo';
 import { ResponseWrapper } from '../../shared';
 import { AnaliseSharedDataService } from '../../shared/analise-shared-data.service';
 import { FatorAjusteLabelGenerator } from '../../shared/fator-ajuste-label-generator';
-import { FuncaoTransacaoService } from '../../funcao-transacao/funcao-transacao.service';
-import { CalculadoraTransacao } from '../../analise-shared/calculadora-transacao';
-import { MetodoContagem } from '../../analise/analise.model';
-import { BaselineAnalitico } from '../../baseline/baseline-analitico.model';
-import { BaselineService } from '../../baseline/baseline.service';
-import { Der } from '../../der/der.model';
-import { FuncaoTransacao, TipoFuncaoTransacao } from '../../funcao-transacao/funcao-transacao.model';
+import { CommentFuncaoDados } from '../comment-funcado-dados.model';
 import { FuncaoDados } from '../funcao-dados.model';
 import { FuncaoDadosService } from '../funcao-dados.service';
-import { BlockUiService } from '@nuvem/angular-base';
-import { CommentFuncaoDados } from '../comment-funcado-dados.model';
-import { Status } from 'src/app/status/status.model';
 
 @Component({
     selector: 'app-analise-funcao-dados',
@@ -124,7 +124,7 @@ export class FuncaoDadosDivergenceComponent implements OnInit {
         private changeDetectorRef: ChangeDetectorRef,
         private funcaoDadosService: FuncaoDadosService,
         private funcaoTransacaoService: FuncaoTransacaoService,
-        private analiseService: AnaliseService,
+        private divergenciaService: DivergenciaService,
         private baselineService: BaselineService,
         private router: Router,
         private blockUiService: BlockUiService,
@@ -143,7 +143,7 @@ export class FuncaoDadosDivergenceComponent implements OnInit {
             this.funcaoDadosService.getVWFuncaoDadosByIdAnalise(this.idAnalise).subscribe(value => {
                 this.funcoesDados = value;
                 if (!this.isView) {
-                    this.analiseService.find(this.idAnalise).subscribe(analise => {
+                    this.divergenciaService.find(this.idAnalise).subscribe(analise => {
                         this.analise = analise;
                         this.hideShowQuantidade = true;
                         this.estadoInicial();
@@ -515,7 +515,7 @@ export class FuncaoDadosDivergenceComponent implements OnInit {
                         this.setFields(funcaoDadosTable);
                         this.funcoesDados.push(funcaoDadosTable);
                     });
-                    this.analiseService.updateDivergenciaSomaPf(this.analise.id).subscribe();
+                    this.divergenciaService.updateDivergenciaSomaPf(this.analise.id).subscribe();
                     return true;
                 });
             } else {
@@ -570,7 +570,7 @@ export class FuncaoDadosDivergenceComponent implements OnInit {
                             this.atualizaResumo();
                             this.estadoInicial();
                             this.resetarEstadoPosSalvar();
-                            this.analiseService.updateDivergenciaSomaPf(this.analise.id).subscribe();
+                            this.divergenciaService.updateDivergenciaSomaPf(this.analise.id).subscribe();
                         }
                     );
                 } else {
@@ -685,7 +685,7 @@ export class FuncaoDadosDivergenceComponent implements OnInit {
                         this.resetarEstadoPosSalvar();
                         this.pageNotificationService.addCreateMsg(funcaoDadosCalculada.name);
                         this.fecharDialog();
-                        this.analiseService.updateDivergenciaSomaPf(this.analise.id).subscribe();
+                        this.divergenciaService.updateDivergenciaSomaPf(this.analise.id).subscribe();
                     });
                 });
         }
@@ -794,7 +794,7 @@ export class FuncaoDadosDivergenceComponent implements OnInit {
                         this.pageNotificationService.addCreateMsg(funcaoTransacaoAtual.name);
                         this.resetarEstadoPosSalvar();
                         this.estadoInicial();
-                        this.analiseService.updateDivergenciaSomaPf(this.analise.id).subscribe();
+                        this.divergenciaService.updateDivergenciaSomaPf(this.analise.id).subscribe();
                     });
                 } else {
                     this.pageNotificationService.addErrorMessage('CRUD já cadastrado!');
@@ -950,7 +950,7 @@ export class FuncaoDadosDivergenceComponent implements OnInit {
                     funcaoDadosSelecionada = this.funcoesDados.filter((funcaoDados) => (funcaoDados.id === funcaoDadosSelecionada.id))[0];
                     funcaoDadosSelecionada['statusFuncao'] = value['statusFuncao'];
                     this.pageNotificationService.addSuccessMessage('Status da funcionalidade ' + funcaoDadosSelecionada.name + ' foi alterado.');
-                    this.analiseService.updateDivergenciaSomaPf(this.analise.id).subscribe();
+                    this.divergenciaService.updateDivergenciaSomaPf(this.analise.id).subscribe();
                     this.showDialog = false;
                     this.showDialog = false;
                     this.blockUiService.hide();
@@ -969,7 +969,7 @@ export class FuncaoDadosDivergenceComponent implements OnInit {
                     funcaoDadosSelecionada['statusFuncao'] = value['statusFuncao'];
                     this.pageNotificationService.addSuccessMessage('Status da funcionalidade ' + funcaoDadosSelecionada.name + ' foi alterado.');
                     this.showDialog = false;
-                    this.analiseService.updateDivergenciaSomaPf(this.analise.id).subscribe();
+                    this.divergenciaService.updateDivergenciaSomaPf(this.analise.id).subscribe();
                 });
             }
         });
@@ -985,7 +985,7 @@ export class FuncaoDadosDivergenceComponent implements OnInit {
                     funcaoDadosSelecionada['statusFuncao'] = value['statusFuncao'];
                     this.pageNotificationService.addSuccessMessage('Status da funcionalidade ' + funcaoDadosSelecionada.name + ' foi alterado.');
                     this.showDialog = false;
-                    this.analiseService.updateDivergenciaSomaPf(this.analise.id).subscribe();
+                    this.divergenciaService.updateDivergenciaSomaPf(this.analise.id).subscribe();
                 });
             }
         });

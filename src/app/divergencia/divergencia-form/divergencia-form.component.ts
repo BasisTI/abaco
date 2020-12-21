@@ -21,6 +21,7 @@ import { FuncaoDados } from '../../funcao-dados';
 import { DivergenciaService } from '../divergencia.service';
 import { StatusService } from 'src/app/status';
 import { Status } from 'src/app/status/status.model';
+import { Analise } from 'src/app/analise';
 
 
 @Component({
@@ -63,7 +64,7 @@ export class DivergenciaFormComponent implements OnInit {
     manuaisCombo: SelectItem[] = [];
     statusCombo: Status[] = [];
     showFuncaoDados: Boolean = false;
-    analise = new Divergencia();
+    analise = new Analise();
     usuariosOptions: User[] = [];
 
 
@@ -147,7 +148,7 @@ export class DivergenciaFormComponent implements OnInit {
                         this.router.navigate(['/divergence']);
                     });
             } else {
-                this.analise = new Divergencia();
+                this.analise = new Analise();
                 this.analise.status = new Status();
                 this.analise.esforcoFases = [];
                 this.analise.enviarBaseline = true;
@@ -188,7 +189,7 @@ export class DivergenciaFormComponent implements OnInit {
         this.diasGarantia = this.diasGarantia !== undefined ? this.analise.contrato.diasDeGarantia : undefined;
     }
 
-    private inicializaValoresAposCarregamento(analiseCarregada: Divergencia) {
+    private inicializaValoresAposCarregamento(analiseCarregada: Analise) {
         this.analise = analiseCarregada;
         this.setSistemaOrganizacao(analiseCarregada.organizacao);
         if (analiseCarregada.contrato !== undefined && analiseCarregada.contrato.manualContrato) {
@@ -202,7 +203,7 @@ export class DivergenciaFormComponent implements OnInit {
 
     setSistemaOrganizacao(org: Organizacao) {
         if (!this.isEdicao) {
-            this.analise = new Divergencia();
+            this.analise = new Analise();
             this.analise.manual = new Manual();
             this.analise.organizacao = org;
         }
@@ -547,7 +548,7 @@ export class DivergenciaFormComponent implements OnInit {
         }
     }
 
-    private loadDataAnalise(analise: Divergencia) {
+    private loadDataAnalise(analise: Analise) {
         this.inicializaValoresAposCarregamento(analise);
         this.setDataHomologacao();
         this.setDataOrdemServico();

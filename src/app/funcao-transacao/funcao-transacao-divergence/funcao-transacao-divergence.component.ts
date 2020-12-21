@@ -24,6 +24,7 @@ import { Manual } from 'src/app/manual';
 import * as _ from 'lodash';
 import { BlockUiService } from '@nuvem/angular-base';
 import { CommentFuncaoTransacao } from '../comment.model';
+import { DivergenciaService } from 'src/app/divergencia';
 
 @Component({
     selector: 'app-analise-funcao-transacao',
@@ -140,7 +141,7 @@ export class FuncaoTransacaoDivergenceComponent implements OnInit {
         private pageNotificationService: PageNotificationService,
         private changeDetectorRef: ChangeDetectorRef,
         private funcaoDadosService: FuncaoDadosService,
-        private analiseService: AnaliseService,
+        private divergenciaService: DivergenciaService,
         private funcaoTransacaoService: FuncaoTransacaoService,
         private router: Router,
         private route: ActivatedRoute,
@@ -160,7 +161,7 @@ export class FuncaoTransacaoDivergenceComponent implements OnInit {
             this.funcaoTransacaoService.getVwFuncaoTransacaoByIdAnalise(this.idAnalise).subscribe(value => {
                 this.funcoesTransacoes = value;
                 if (!this.isView) {
-                    this.analiseService.find(this.idAnalise).subscribe(analise => {
+                    this.divergenciaService.find(this.idAnalise).subscribe(analise => {
                         this.analise = analise;
                         this.analiseSharedDataService.analise = analise;
                         this.disableAba = this.analise.metodoContagem === MessageUtil.INDICATIVA;
@@ -379,7 +380,7 @@ export class FuncaoTransacaoDivergenceComponent implements OnInit {
                         this.fecharDialog();
                         this.estadoInicial();
                         this.resetarEstadoPosSalvar();
-                        this.analiseService.updateDivergenciaSomaPf(this.analise.id).subscribe();
+                        this.divergenciaService.updateDivergenciaSomaPf(this.analise.id).subscribe();
                         return true;
                     });
                 } else {
@@ -541,7 +542,7 @@ export class FuncaoTransacaoDivergenceComponent implements OnInit {
                                 this.fecharDialog();
                                 this.resetarEstadoPosSalvar();
                                 this.estadoInicial();
-                                this.analiseService.updateDivergenciaSomaPf(this.analise.id).subscribe();
+                                this.divergenciaService.updateDivergenciaSomaPf(this.analise.id).subscribe();
                                 return retorno;
                             });
                         } else {
@@ -641,7 +642,7 @@ export class FuncaoTransacaoDivergenceComponent implements OnInit {
                 this.funcoesTransacoes.push(funcaoTransacaoCalculada);
                 this.resetarEstadoPosSalvar();
                 this.fecharDialog();
-                this.analiseService.updateDivergenciaSomaPf(this.analise.id).subscribe();
+                this.divergenciaService.updateDivergenciaSomaPf(this.analise.id).subscribe();
                 this.pageNotificationService
                     .addSuccessMessage(`${this.getLabel('Função de Transação')}
                         '${funcaoTransacaoCalculada.name}' ${this.getLabel(' alterada com sucesso')}`);
@@ -818,7 +819,7 @@ export class FuncaoTransacaoDivergenceComponent implements OnInit {
                     funcaoTransacaoSelecionada = this.funcoesTransacoes.filter((funcaoTransacao) => (funcaoTransacao.id === funcaoTransacaoSelecionada.id))[0];
                     funcaoTransacaoSelecionada['statusFuncao'] = value['statusFuncao'];
                     this.pageNotificationService.addSuccessMessage('Status da funcionalidade ' + funcaoTransacaoSelecionada.name + ' foi alterado.');
-                    this.analiseService.updateDivergenciaSomaPf(this.analise.id).subscribe();
+                    this.divergenciaService.updateDivergenciaSomaPf(this.analise.id).subscribe();
                 });
             }
         });
@@ -835,7 +836,7 @@ export class FuncaoTransacaoDivergenceComponent implements OnInit {
                     funcaoTransacaoSelecionada = this.funcoesTransacoes.filter((funcaoTransacao) => (funcaoTransacao.id === funcaoTransacaoSelecionada.id))[0];
                     funcaoTransacaoSelecionada['statusFuncao'] = value['statusFuncao'];
                     this.pageNotificationService.addSuccessMessage('Status da funcionalidade ' + funcaoTransacaoSelecionada.name + ' foi alterado.');
-                    this.analiseService.updateDivergenciaSomaPf(this.analise.id).subscribe();
+                    this.divergenciaService.updateDivergenciaSomaPf(this.analise.id).subscribe();
                 });
             }
         });
@@ -851,7 +852,7 @@ export class FuncaoTransacaoDivergenceComponent implements OnInit {
                     funcaoTransacaoSelecionada = this.funcoesTransacoes.filter((funcaoTransacao) => (funcaoTransacao.id === funcaoTransacaoSelecionada.id))[0];
                     funcaoTransacaoSelecionada['statusFuncao'] = value['statusFuncao'];
                     this.pageNotificationService.addSuccessMessage('Status da funcionalidade ' + funcaoTransacaoSelecionada.name + ' foi alterado.');
-                    this.analiseService.updateDivergenciaSomaPf(this.analise.id).subscribe();
+                    this.divergenciaService.updateDivergenciaSomaPf(this.analise.id).subscribe();
                 });
             }
         });

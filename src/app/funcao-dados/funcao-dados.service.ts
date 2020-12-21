@@ -164,7 +164,6 @@ export class FuncaoDadosService {
     }
 
     create(funcaoDados: FuncaoDados, idAnalise: Number): Observable<any> {
-        debugger;
         const json = funcaoDados.toJSONState();
         return this.http.post(`${this.resourceUrl}/${idAnalise}`, json);
     }

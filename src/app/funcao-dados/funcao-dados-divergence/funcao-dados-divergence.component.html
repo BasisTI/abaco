@@ -101,8 +101,6 @@
                                                 [(ngModel)]="seletedFuncaoDados.name"
                                                 [suggestions]="baselineResults"
                                                 id="idNomeFormFuncaoDados"
-                                                (completeMethod)="searchBaseline($event)"
-                                                (onSelect)="recuperarNomeSelecionado($event)"
                                                 datakey="id">
                                             <ng-template let-seletedFuncaoDados pTemplate="name">
                                                 <div class="ui-helper-clearfix">
