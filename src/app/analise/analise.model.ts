@@ -78,6 +78,7 @@ export class Analise implements BaseEntity {
         public manual?: Manual,
         public users?: User[],
         public status?: Status,
+        public analisesComparadas?: Analise[],
     ) {
         this.inicializaMappables(funcaoDados, funcaoTransacaos);
         this.inicializaResumos();
