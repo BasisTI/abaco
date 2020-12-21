@@ -15,6 +15,7 @@ import { GrupoService } from '../grupo/grupo.service';
 import { BlockUiService } from '@nuvem/angular-base';
 import { StatusService } from 'src/app/status';
 import { Status } from 'src/app/status/status.model';
+import { Divergencia, DivergenciaService } from 'src/app/divergencia';
 
 @Component({
     selector: 'app-analise',
@@ -125,6 +126,7 @@ export class AnaliseListComponent implements OnInit {
         private usuarioService: UserService,
         private blockUiService: BlockUiService,
         private statusService: StatusService,
+        private divergenceServie: DivergenciaService,
     ) {
     }
 

@@ -327,16 +327,6 @@ export class DivergenciaService {
         return this.http.get<Response>(url);
     }
 
-    public generateDivergenceFromAnalise(analiseId): Observable<Analise> {
-        return this.http.get<Analise>(`${this.resourceUrl}/divergencia/${analiseId}`).pipe(
-            catchError((error: any) => {
-            if (error.status === 403) {
-                this.pageNotificationService.addErrorMessage(this.getLabel('Você não possui permissão!'));
-                return Observable.throw(new Error(error.status));
-            }
-        }));
-    }
-    
     getDivergenciaResumo(analiseId: Number): Observable<Resumo[]> {
         return this.http.get<Resumo[]>(`${this.resourceResumoUrl}/divergencia/${analiseId}`,).pipe(
         catchError((error: any) => {
