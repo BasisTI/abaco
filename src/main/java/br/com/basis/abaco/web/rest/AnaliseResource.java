@@ -606,8 +606,10 @@ public class AnaliseResource {
         Analise analise = analiseService.recuperarAnaliseDivergence(id);
         if (analise != null) {
             User user = userRepository.findOneByLogin(SecurityUtils.getCurrentUserLogin()).orElse(new User());
-            AnaliseDivergenceEditDTO analiseDivergenceEditDTO = analiseService.convertToAnaliseDivergenceEditDTO(analise);
-            return ResponseUtil.wrapOrNotFound(Optional.ofNullable(analiseDivergenceEditDTO));
+            if (user.getOrganizacoes().contains(analise.getOrganizacao())) {
+                AnaliseDivergenceEditDTO analiseDivergenceEditDTO = analiseService.convertToAnaliseDivergenceEditDTO(analise);
+                return ResponseUtil.wrapOrNotFound(Optional.ofNullable(analiseDivergenceEditDTO));
+            }
         }
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
     }
@@ -620,7 +622,9 @@ public class AnaliseResource {
         Analise analise = analiseService.recuperarAnalise(id);
         User user = userRepository.findOneByLogin(SecurityUtils.getCurrentUserLogin()).get();
         if (analise != null) {
-            analiseService.deleteDivergence(id, analise);
+            if (user.getOrganizacoes().contains(analise.getOrganizacao())) {
+                analiseService.deleteDivergence(id, analise);
+            }
         } else {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
         }

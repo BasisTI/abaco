@@ -564,10 +564,6 @@ public class AnaliseService extends BaseService {
         return canEdit;
     }
 
-    public boolean permissionToEditDivergence(User user, Analise analise) {
-        return user.getOrganizacoes().contains(analise.getOrganizacao())? true: false;
-    }
-
     public void updatePf(Analise analise) {
         VwAnaliseSomaPf vwAnaliseSomaPf = vwAnaliseSomaPfRepository.findByAnaliseId(analise.getId());
         BigDecimal sumFase = new BigDecimal(BigInteger.ZERO).setScale(decimalPlace);
