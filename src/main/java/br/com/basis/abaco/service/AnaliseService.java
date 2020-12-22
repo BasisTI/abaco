@@ -286,14 +286,7 @@ public class AnaliseService extends BaseService {
     }
 
     public Analise recuperarAnaliseDivergence(Long id) {
-
-        boolean retorno = checarPermissao(id);
-
-        if (retorno) {
-            return analiseRepository.findOneById(id);
-        } else {
-            return null;
-        }
+        return analiseRepository.findOneById(id);
     }
 
     @Transactional(readOnly = true)

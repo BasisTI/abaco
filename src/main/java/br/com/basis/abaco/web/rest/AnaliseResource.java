@@ -605,8 +605,11 @@ public class AnaliseResource {
     public ResponseEntity<AnaliseDivergenceEditDTO> getDivergence(@PathVariable Long id) {
         Analise analise = analiseService.recuperarAnaliseDivergence(id);
         if (analise != null) {
-            AnaliseDivergenceEditDTO analiseDivergenceEditDTO = analiseService.convertToAnaliseDivergenceEditDTO(analise);
-            return ResponseUtil.wrapOrNotFound(Optional.ofNullable(analiseDivergenceEditDTO));
+            User user = userRepository.findOneByLogin(SecurityUtils.getCurrentUserLogin()).orElse(new User());
+            if (user.getOrganizacoes().contains(analise.getOrganizacao())) {
+                AnaliseDivergenceEditDTO analiseDivergenceEditDTO = analiseService.convertToAnaliseDivergenceEditDTO(analise);
+                return ResponseUtil.wrapOrNotFound(Optional.ofNullable(analiseDivergenceEditDTO));
+            }
         }
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
     }
@@ -617,8 +620,11 @@ public class AnaliseResource {
     @Secured({AuthoritiesConstants.ADMIN, AuthoritiesConstants.USER, AuthoritiesConstants.GESTOR, AuthoritiesConstants.ANALISTA})
     public ResponseEntity<Void> deleteAnaliseDivergence(@PathVariable Long id) {
         Analise analise = analiseService.recuperarAnalise(id);
+        User user = userRepository.findOneByLogin(SecurityUtils.getCurrentUserLogin()).get();
         if (analise != null) {
+            if (user.getOrganizacoes().contains(analise.getOrganizacao())) {
                 analiseService.deleteDivergence(id, analise);
+            }
         } else {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
         }
