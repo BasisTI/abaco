@@ -781,6 +781,7 @@ export class AnaliseListComponent implements OnInit {
             this.pageNotificationService.addErrorMessage('Selecione a Análise para Validação das Funções de Dados e Transação.');
             return;
         }
+        this.blockUiService.show();
         this.analiseService.generateDivergence(this.mainAnaliseDivergencia, this.auxiliaryAnaliseDivergencia, setMainAnalise)
             .subscribe(analiseCreateDivergence => {
                 this.blockUiService.show();
