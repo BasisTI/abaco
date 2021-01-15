@@ -54,7 +54,6 @@ export class AppComponent implements AfterViewInit, OnDestroy, OnInit {
                 label: `Configuração`, icon: 'settings',
                 items: [
                     { label: 'Reindexar', routerLink: 'indexador', icon: 'refresh' },
-                    { label: 'Editar Usuário', routerLink: `usuario/edit`, icon: 'tag_faces' },
                     { label: 'Alterar Senha', routerLink: `senha`, icon: 'security' }
                 ]
             },
