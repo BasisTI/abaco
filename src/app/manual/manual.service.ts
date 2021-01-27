@@ -7,6 +7,7 @@ import { Manual } from './manual.model';
 import { Observable, throwError, pipe } from 'rxjs';
 import { catchError, retry } from 'rxjs/operators';
 import { createRequestOption, ResponseWrapper } from '../shared';
+import { Upload } from '../upload/upload.model';
 
 @Injectable()
 export class ManualService {
@@ -29,33 +30,75 @@ export class ManualService {
         return str;
     }
 
-    create(manual: Manual): Observable<any> {
-        const copy = this.convert(manual);
-        return this.http.post<Manual>(this.resourceUrl, copy).pipe(
-        catchError((error: any) => {
+    create(manual: Manual, files: File[]): Observable<any> {
+        let body = new FormData();
+
+        for (let i = 0; i < files.length; i++) {
+            body.append('file', files[i]);
+        }
+
+        const json = JSON.stringify(manual);
+        const blob = new Blob([json], {
+            type: 'application/json'
+        });
+
+        body.append('manual', blob);
+
+
+        return this.http.post<Manual>(this.resourceUrl, body).pipe(
+            catchError((error: any) => {
+                if (error.status === 403) {
+                    this.pageNotificationService.addErrorMessage(this.getLabel('Você não possui permissão!'));
+                    return Observable.throw(new Error(error.status));
+                }
+                if (error.status === 400) {
+                    this.pageNotificationService.addErrorMessage(`O nome digitado já existe!`);
+                    return Observable.throw(new Error(error.status));
+                }
+            }));
+    }
+
+    update(manual: Manual, files: File[]): Observable<Manual> {
+        let body = new FormData();
+        if (files) {
+            for (let i = 0; i < files.length; i++) {
+                body.append('file', files[i]);
+            }
+        }
+
+        const json = JSON.stringify(manual);
+        const blob = new Blob([json], {
+            type: 'application/json'
+        });
+        body.append('manual', blob);
+        return this.http.put<Manual>(this.resourceUrl, body).pipe(catchError((error: any) => {
             if (error.status === 403) {
                 this.pageNotificationService.addErrorMessage(this.getLabel('Você não possui permissão!'));
-                return Observable.throw(new Error(error.status));
-            }
-            if (error.status === 400) {
-                this.pageNotificationService.addErrorMessage(`O nome digitado já existe!`);
                 return Observable.throw(new Error(error.status));
             }
         }));
     }
 
-    update(manual: Manual): Observable<Manual> {
-        const copy = this.convert(manual);
-        return this.http.put<Manual>(this.resourceUrl, copy).pipe(catchError((error: any) => {
+    clonar(manual: Manual): Observable<any>{
+        return this.http.post<Manual>(`${this.resourceUrl}/clonar`, manual).pipe(catchError((error: any) => {
             if (error.status === 403) {
-                this.pageNotificationService.addErrorMessage(this.getLabel('Você não possui permissão!'));
+                this.pageNotificationService.addErrorMessage('Você não possui permissão');
                 return Observable.throw(new Error(error.status));
             }
         }));
     }
 
-    find(id: number): Observable<Manual> {  
+    find(id: number): Observable<Manual> {
         return this.http.get<Manual>(`${this.resourceUrl}/${id}`).pipe(catchError((error: any) => {
+            if (error.status === 403) {
+                this.pageNotificationService.addErrorMessage('Você não possui permissão');
+                return Observable.throw(new Error(error.status));
+            }
+        }));
+    }
+
+    getFiles(id: number): Observable<Upload[]> {
+        return this.http.get<Upload[]>(`${this.resourceUrl}/arquivos/${id}`).pipe(catchError((error: any) => {
             if (error.status === 403) {
                 this.pageNotificationService.addErrorMessage('Você não possui permissão');
                 return Observable.throw(new Error(error.status));
@@ -76,7 +119,7 @@ export class ManualService {
 
     dropdown(): Observable<ResponseWrapper> {
         return this.http.get<ResponseWrapper>(this.resourceUrl + '/dropdown').
-           pipe(catchError((error: any) => {
+            pipe(catchError((error: any) => {
                 if (error.status === 403) {
                     this.pageNotificationService.addErrorMessage('Você não possui permissão.');
                     return Observable.throw(new Error(error.status));
@@ -94,7 +137,7 @@ export class ManualService {
                 if (error._body == "contratoexists") {
                     this.pageNotificationService.addErrorMessage(this.getLabel('Cadastros.Manual.Mensagens.msgManualNaoPodeSerExcluido'));
                     return Observable.throw(new Error(error.status));
-                } 
+                }
                 if (error._body == "analiseexists") {
                     this.pageNotificationService.addErrorMessage(this.getLabel('Cadastros.Manual.Mensagens.msgManualEstaVinculadoUmaAnalise'));
                     return Observable.throw(new Error(error.status));
@@ -104,7 +147,7 @@ export class ManualService {
                     return Observable.throw(new Error(error.status));
                 }
             }
-        ));
+            ));
     }
 
     // private convertResponse(res: Response): ResponseWrapper {

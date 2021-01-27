@@ -51,7 +51,7 @@ export class ManualListComponent implements OnInit {
     public onRowDblclick(event) {
         if (event.target.nodeName === 'TD') {
             this.abrirEditar(this.manualSelecionado);
-        } else if (event.target.parentNode.nodeName === 'TD') { 
+        } else if (event.target.parentNode.nodeName === 'TD') {
             this.abrirEditar(this.manualSelecionado);
         }
     }
@@ -81,16 +81,9 @@ export class ManualListComponent implements OnInit {
             this.nomeValido = false;
             const manual: Manual = Manual.convertManualJsonToObject(this.manualSelecionado);
             const manualClonado: Manual = manual.clone();
-            manualClonado.id = undefined;
             manualClonado.nome = this.nomeDoManualClonado;
-            if (manualClonado.esforcoFases) {
-                manualClonado.esforcoFases.forEach(ef => ef.id = undefined);
-            }
-            if (manualClonado.fatoresAjuste) {
-                manualClonado.fatoresAjuste.forEach(fa => fa.id = undefined);
-            }
 
-            this.manualService.create(manualClonado).subscribe((manualSalvo: Manual) => {
+            this.manualService.clonar(manualClonado).subscribe((manualSalvo: Manual) => {
                 this.pageNotificationService.addSuccessMessage(
                     'Manual' + manualSalvo.nome + ' clonado a partir do manual' + this.manualSelecionado.nome + ' com sucesso!'
                     );
