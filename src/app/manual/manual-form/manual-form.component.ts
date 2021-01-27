@@ -301,9 +301,7 @@ export class ManualFormComponent implements OnInit, OnDestroy {
     }
 
     adjustFactorDatatableClick(event: DatatableClickEvent) {
-        if (event.button && event.button === 'order') {
-            this.openEditOrderDeflator();
-        }
+    
         if (!event.selection) {
             return;
         }
@@ -318,10 +316,18 @@ export class ManualFormComponent implements OnInit, OnDestroy {
                 this.editedAdjustFactor = event.selection.clone();
                 this.confirmDeleteAdjustFactor();
                 break;
-            case 'order':
-                this.openEditOrderDeflator();
+            case 'order-up':
+                this.orderList(event);
                 break;
-
+            case 'order-down':
+                this.orderList(event);
+                break;
+            case 'order-top':
+                this.orderList(event);
+                break;
+            case 'order-botton':
+                this.orderList(event);
+                break;
         }
     }
 
@@ -594,7 +600,64 @@ export class ManualFormComponent implements OnInit, OnDestroy {
         if (this.dataTableFator && this.dataTableFator.selectedRow) {
             if (this.dataTableFator.selectedRow && this.dataTableFator.selectedRow) {
                 this.editedAdjustFactor = this.dataTableFator.selectedRow;
+              }
+          }
+      }
+
+    public updateIndex(){
+        let temp =1
+        for(let i =0; i < this.manual.fatoresAjuste.length; i++){
+            this.manual.fatoresAjuste[i].ordem = temp
+            temp++
+        }
+    }
+    
+    public orderList(event){
+     
+        let i = this.manual.fatoresAjuste.indexOf(event.selection)
+        let del = i
+
+        if (event.button == 'order-top' && event.selection != null) {
+            if(i == 0){
+                return
+            } else{
+                this.manual.fatoresAjuste.splice(del, 1);
+                this.manual.fatoresAjuste.unshift(event.selection);
+            }
+        } 
+
+        if(event.button == 'order-up' && event.selection != null){
+            if(i == 0){
+                return
+            } else{
+                let pos = i -1
+                this.manual.fatoresAjuste.splice(del, 1)
+                this.manual.fatoresAjuste.splice( pos,0, event.selection)
+                this.manual.fatoresAjuste.indexOf(event.selection)
             }
         }
+        
+        if (event.button == 'order-down' && event.selection != null) {
+            if(i == this.manual.fatoresAjuste.length -1){
+                return 
+            } else{
+                let pos = i +1; 
+                this.manual.fatoresAjuste.splice(del, 1);
+                this.manual.fatoresAjuste.splice( pos,0, event.selection);
+                this.manual.fatoresAjuste.indexOf(event.selection);
+            }
+
+        } 
+
+        if(event.button == 'order-botton' && event.selection != null){
+            if(i == this.manual.fatoresAjuste.length-1){
+                return
+            }
+            this.manual.fatoresAjuste.splice(del, 1);
+            this.manual.fatoresAjuste.push(event.selection);
+            this.manual.fatoresAjuste.indexOf(event.selection);
+        }
+        
+        this.updateIndex()
     }
 }
