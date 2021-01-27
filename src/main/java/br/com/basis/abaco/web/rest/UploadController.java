@@ -1,6 +1,8 @@
 package br.com.basis.abaco.web.rest;
 
+import br.com.basis.abaco.domain.Manual;
 import br.com.basis.abaco.domain.UploadedFile;
+import br.com.basis.abaco.repository.ManualRepository;
 import br.com.basis.abaco.repository.UploadedFilesRepository;
 import br.com.basis.abaco.web.rest.errors.UploadException;
 import br.com.basis.abaco.web.rest.util.HeaderUtil;
@@ -21,6 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import javax.persistence.PreRemove;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -30,6 +33,7 @@ import java.io.IOException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Date;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api")
@@ -44,34 +48,39 @@ public class UploadController {
     private UploadedFilesRepository filesRepository;
 
     @Autowired
+    private ManualRepository manualRepository;
+
+    @Autowired
     ServletContext context;
 
     private byte[] bytes;
 
     @PostMapping("/uploadFile")
-    public ResponseEntity<UploadedFile> singleFileUpload(@RequestParam("file") MultipartFile file,
+    public ResponseEntity<String> singleFileUpload(@RequestParam("file") MultipartFile[] files,
             HttpServletRequest request, RedirectAttributes redirectAttributes) {
-
-        UploadedFile uploadedFile = new UploadedFile();
         try {
-            byte[] bytes = file.getBytes();
+            for(MultipartFile file : files) {
+                UploadedFile uploadedFile = new UploadedFile();
+                byte[] bytes = file.getBytes();
 
-            byte[] bytesFileName = (file.getOriginalFilename() + String.valueOf(System.currentTimeMillis()))
+                byte[] bytesFileName = (file.getOriginalFilename() + String.valueOf(System.currentTimeMillis()))
                     .getBytes("UTF-8");
-            String filename = DatatypeConverter.printHexBinary(MessageDigest.getInstance("MD5").digest(bytesFileName));
-            String ext = FilenameUtils.getExtension(file.getOriginalFilename());
-            filename += "." + ext;
+                String filename = DatatypeConverter.printHexBinary(MessageDigest.getInstance("MD5").digest(bytesFileName));
+                String ext = FilenameUtils.getExtension(file.getOriginalFilename());
+                filename += "." + ext;
 
-            uploadedFile.setLogo(bytes);
-            uploadedFile.setDateOf(new Date());
-            uploadedFile.setOriginalName(file.getOriginalFilename());
-            uploadedFile.setFilename(filename);
-            uploadedFile.setSizeOf(bytes.length);
-            uploadedFile = filesRepository.save(uploadedFile);
+                uploadedFile.setLogo(bytes);
+                uploadedFile.setDateOf(new Date());
+                uploadedFile.setOriginalName(file.getOriginalFilename());
+                uploadedFile.setFilename(filename);
+                uploadedFile.setSizeOf(bytes.length);
+                uploadedFile = filesRepository.save(uploadedFile);
+
+            }
         } catch (IOException | NoSuchAlgorithmException e) {
             throw new UploadException("Erro ao efetuar o upload do arquivo", e);
         }
-        return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION, "/saveFile").body(uploadedFile);
+        return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION, "/saveFile").body("Upload dos arquivos efetuado com sucesso");
     }
 
     @GetMapping("/uploadStatus")
@@ -83,7 +92,7 @@ public class UploadController {
     public UploadedFile getUploadedFile(@PathVariable Long id) throws IOException {
         return filesRepository.findOne(id);
     }
-    
+
     @GetMapping("/downloadFile/{id}")
     public void downloadPDFResource(HttpServletResponse response, @PathVariable Long id) throws IOException {
     byte [] arquivo = filesRepository.findOne(id).getLogo();
@@ -97,6 +106,7 @@ public class UploadController {
         log.debug("REST request to delete Manual : {}", id);
 
         filesRepository.delete(id);
+
         return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert("UploadedFile", id.toString())).build();
 
     }

@@ -22,4 +22,5 @@ public interface ManualRepository extends JpaRepository<Manual, Long> {
 
     @Query("SELECT new br.com.basis.abaco.service.dto.DropdownDTO(m.id, m.nome) FROM Manual m ORDER BY m.nome ASC ")
     List<DropdownDTO> getManualDropdow();
+
 }

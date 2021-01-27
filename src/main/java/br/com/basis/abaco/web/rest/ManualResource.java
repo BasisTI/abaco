@@ -1,14 +1,11 @@
 package br.com.basis.abaco.web.rest;
 
-import br.com.basis.abaco.domain.Analise;
-import br.com.basis.abaco.domain.FatorAjuste;
-import br.com.basis.abaco.domain.FuncaoTransacao;
-import br.com.basis.abaco.domain.Manual;
-import br.com.basis.abaco.domain.ManualContrato;
+import br.com.basis.abaco.domain.*;
 import br.com.basis.abaco.repository.AnaliseRepository;
 import br.com.basis.abaco.repository.FatorAjusteRepository;
 import br.com.basis.abaco.repository.FuncaoTransacaoRepository;
 import br.com.basis.abaco.repository.ManualContratoRepository;
+import br.com.basis.abaco.repository.UploadedFilesRepository;
 import br.com.basis.abaco.repository.ManualRepository;
 import br.com.basis.abaco.repository.search.ManualSearchRepository;
 import br.com.basis.abaco.service.ManualService;
@@ -17,16 +14,22 @@ import br.com.basis.abaco.service.exception.RelatorioException;
 import br.com.basis.abaco.service.relatorio.RelatorioManualColunas;
 import br.com.basis.abaco.utils.AbacoUtil;
 import br.com.basis.abaco.utils.PageUtils;
+import br.com.basis.abaco.web.rest.errors.UploadException;
 import br.com.basis.abaco.web.rest.util.HeaderUtil;
 import br.com.basis.abaco.web.rest.util.PaginationUtil;
 import br.com.basis.dynamicexports.service.DynamicExportsService;
 import br.com.basis.dynamicexports.util.DynamicExporter;
 import com.codahale.metrics.annotation.Timed;
 import io.github.jhipster.web.util.ResponseUtil;
+import jdk.nashorn.internal.parser.JSONParser;
 import net.sf.dynamicreports.report.exception.DRException;
 import net.sf.jasperreports.engine.JRException;
+import org.apache.commons.beanutils.BeanUtils;
+import org.apache.commons.io.FilenameUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.boot.json.JsonParserFactory;
+import org.springframework.cloud.cloudfoundry.com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -38,23 +41,26 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import javax.mail.Multipart;
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import javax.xml.bind.DatatypeConverter;
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.Reader;
+import java.io.StringReader;
+import java.lang.reflect.InvocationTargetException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import static org.elasticsearch.index.query.QueryBuilders.multiMatchQuery;
 import static org.elasticsearch.index.query.QueryBuilders.queryStringQuery;
@@ -84,7 +90,13 @@ public class ManualResource {
 
     private final DynamicExportsService dynamicExportsService;
 
+    private final UploadedFilesRepository filesRepository;
+
     private final ManualService manualService;
+
+    private final EsforcoFaseResource esforcoFaseResource;
+
+    private final FatorAjusteResource fatorAjusteResource;
 
     private static final String ROLE_ANALISTA = "ROLE_ANALISTA";
 
@@ -98,7 +110,8 @@ public class ManualResource {
 
     public ManualResource(ManualRepository manualRepository, ManualSearchRepository manualSearchRepository, DynamicExportsService dynamicExportsService,
                           ManualContratoRepository manualContratoRepository, AnaliseRepository analiseRepository, FatorAjusteRepository fatorAjusteRepository,
-                          FuncaoTransacaoRepository funcaoTransacaoRepository, ManualService manualService) {
+                          FuncaoTransacaoRepository funcaoTransacaoRepository, ManualService manualService, UploadedFilesRepository uploadedFilesRepository,
+                          EsforcoFaseResource esforcoFaseResource, FatorAjusteResource fatorAjusteResource) {
         this.manualRepository = manualRepository;
         this.manualSearchRepository = manualSearchRepository;
         this.dynamicExportsService = dynamicExportsService;
@@ -107,12 +120,16 @@ public class ManualResource {
         this.fatorAjusteRepository = fatorAjusteRepository;
         this.funcaoTransacaoRepository = funcaoTransacaoRepository;
         this.manualService = manualService;
+        this.filesRepository = uploadedFilesRepository;
+        this.esforcoFaseResource = esforcoFaseResource;
+        this.fatorAjusteResource = fatorAjusteResource;
     }
 
     /**
      * POST /manuals : Create a new manual.
      *
      * @param manual
+     * @param files
      *            the manual to create
      * @return the ResponseEntity with status 201 (Created) and with body the new
      *         manual, or with status 400 (Bad Request) if the manual has already an
@@ -120,10 +137,11 @@ public class ManualResource {
      * @throws URISyntaxException
      *             if the Location URI syntax is incorrect
      */
-    @PostMapping("/manuals")
+    @PostMapping(path = "/manuals", consumes = {"multipart/form-data"})
     @Timed
     @Secured({ROLE_ADMIN, ROLE_USER, ROLE_GESTOR, ROLE_ANALISTA})
-    public ResponseEntity<Manual> createManual(@Valid @RequestBody Manual manual) throws URISyntaxException {
+    public ResponseEntity<Manual> createManual(@Valid @RequestPart("manual") Manual manual, @RequestPart("file") List<MultipartFile> files) throws URISyntaxException {
+
         log.debug("REST request to save Manual : {}", manual);
         if (manual.getId() != null) {
             return ResponseEntity.badRequest().headers(
@@ -137,8 +155,12 @@ public class ManualResource {
                 .headers(HeaderUtil.createFailureAlert(ENTITY_NAME, "manualexists", "Manual already in use"))
                 .body(null);
         }
-
         Manual linkedManual = linkManualToPhaseEffortsAndAdjustFactors(manual);
+        List<UploadedFile> uploadedFiles = manualService.uploadFiles(files);
+        linkedManual.setArquivosManual(uploadedFiles);
+        for(UploadedFile file : uploadedFiles){
+            file.getManuais().add(linkedManual);
+        }
         Manual result = manualRepository.save(linkedManual);
         manualSearchRepository.save(result);
         return ResponseEntity.created(new URI("/api/manuals/" + result.getId()))
@@ -164,6 +186,7 @@ public class ManualResource {
      * PUT /manuals : Updates an existing manual.
      *
      * @param manual
+     * @param files
      *            the manual to update
      * @return the ResponseEntity with status 200 (OK) and with body the updated
      *         manual, or with status 400 (Bad Request) if the manual is not valid,
@@ -172,13 +195,14 @@ public class ManualResource {
      * @throws URISyntaxException
      *             if the Location URI syntax is incorrect
      */
-    @PutMapping("/manuals")
+    @PutMapping(path = "/manuals", consumes = {"multipart/form-data"})
     @Timed
     @Secured({ROLE_ADMIN, ROLE_USER, ROLE_GESTOR, ROLE_ANALISTA})
-    public ResponseEntity<Manual> updateManual(@Valid @RequestBody Manual manual) throws URISyntaxException {
+    public ResponseEntity<Manual> updateManual(@Valid @RequestPart("manual") Manual manual, @RequestPart("file") List<MultipartFile> files) throws URISyntaxException {
+
         log.debug("REST request to update Manual : {}", manual);
         if (manual.getId() == null) {
-            return createManual(manual);
+            return createManual(manual, files);
         }
 
         Optional<Manual> existingManual = manualRepository.findOneByNome(manual.getNome());
@@ -188,6 +212,11 @@ public class ManualResource {
                 .body(null);
         }
 
+        List<UploadedFile> uploadedFiles = manualService.uploadFiles(files);
+        for(UploadedFile file : uploadedFiles){
+            file.getManuais().add(manual);
+        }
+        manual.getArquivosManual().addAll(uploadedFiles);
         Manual result = manualRepository.save(manual);
         manualSearchRepository.save(result);
         return ResponseEntity.ok().headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, manual.getId().toString()))
@@ -228,6 +257,9 @@ public class ManualResource {
     public ResponseEntity<Manual> getManual(@PathVariable Long id) {
         log.debug("REST request to get Manual : {}", id);
         Manual manual = manualRepository.findOne(id);
+        List<UploadedFile> files = filesRepository.findAllByManuais(manual).get();
+        System.out.println(files);
+        manual.setArquivosManual(files);
         return ResponseUtil.wrapOrNotFound(Optional.ofNullable(manual));
     }
 
@@ -258,6 +290,61 @@ public class ManualResource {
         manualRepository.delete(id);
         manualSearchRepository.delete(id);
         return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id.toString())).build();
+    }
+
+    /**
+     * POST /manuals/clonar : Clone manual.
+     *
+     * @param manual
+     *
+     * @return the ResponseEntity with status 201 (Created) and with body the new
+     *         manual, or with status 400 (Bad Request) if the manual has already an
+     *         ID
+     * @throws URISyntaxException
+     *             if the Location URI syntax is incorrect
+     */
+    @PostMapping("/manuals/clonar")
+    @Timed
+    @Transactional
+    public ResponseEntity<Manual> clonar(@RequestBody Manual manual) throws InvocationTargetException, IllegalAccessException {
+
+        Optional<Manual> existingManual = manualRepository.findOneByNome(manual.getNome());
+        if (existingManual.isPresent()) {
+            return ResponseEntity.badRequest()
+                .headers(HeaderUtil.createFailureAlert(ENTITY_NAME, "manualexists", "Manual already in use"))
+                .body(null);
+        }
+
+        List<UploadedFile> files = filesRepository.findAllByManuais(manual).get();
+        List<EsforcoFase> esforcoFases = esforcoFaseResource.getAllPhaseEffortsByManual(manual);
+        List<FatorAjuste> fatorAjustes = fatorAjusteResource.getAllContratoesByOrganization(manual);
+
+        Manual linkedManual = linkManualToPhaseEffortsAndAdjustFactors(manual);
+
+        linkedManual.setId(null);
+        linkedManual.setArquivosManual(files);
+        linkedManual.setEsforcoFases(esforcoFases.stream().collect(Collectors.toSet()));
+        linkedManual.setFatoresAjuste(fatorAjustes.stream().collect(Collectors.toSet()));
+
+        for(UploadedFile file : files){
+            UploadedFile fileNew = new UploadedFile();
+            BeanUtils.copyProperties(fileNew, file);
+            fileNew.setManuais(Arrays.asList(linkedManual));
+            fileNew.setId(null);
+            filesRepository.save(fileNew);
+        }
+
+        Manual result = manualRepository.save(linkedManual);
+        manualSearchRepository.save(result);
+
+        return ResponseEntity.ok().headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, manual.getId().toString()))
+            .body(result);
+    }
+
+    @GetMapping("/manuals/arquivos/{id}")
+    public List<UploadedFile> getFiles(@PathVariable Long id){
+        Manual manual = manualRepository.findOne(id);
+        return filesRepository.findAllByManuais(manual).get();
     }
 
     private boolean verificarManualContrato(Long id) {
