@@ -308,10 +308,29 @@
                                     </ng-template>
                                 </p-column>
                                 <basis-datatable-button
-                                        name="order"
-                                        [bTooltip]="'Ordem de exibição do deflator.'"
-                                        icon="reorder"
-                                        class="ui-button-success">
+                                        name="order-up"
+                                        [bTooltip]="'Mover para cima.'"
+                                        icon="arrow-drop-up"
+                                        
+                                        >
+                                </basis-datatable-button>
+                                <basis-datatable-button
+                                        name="order-top"
+                                        [bTooltip]="'Mover ao topo.'"
+                                        icon="skip-next"
+                                        >
+                                </basis-datatable-button>
+                                <basis-datatable-button
+                                        name="order-down"
+                                        [bTooltip]="'Mover para baixo.'"
+                                        icon="arrow-drop-down"
+                                        >
+                                </basis-datatable-button>
+                                <basis-datatable-button style="transform: rotate(-90deg);"
+                                        name="order-botton"
+                                        [bTooltip]="'Mover ao final.'"
+                                        icon="skip-previous"
+                                        >
                                 </basis-datatable-button>
                         </basis-datatable>
                     </div>
@@ -697,12 +716,3 @@
         </div>
     </div>
 </div>
-<p-dialog [header]="'Ordem de Exibição do Deflator'"  [(visible)]="showEditOrderDeflator" [style]="{width: '60vw'}">
-    <p-orderList [value]="manual.fatoresAjuste" styleClass="custom-orderlist" [listStyle]="{'height':'700px'}" dragdrop="true">
-        <ng-template let-deflator pTemplate="item">
-            <div class="ui-helper-clearfix">
-                <div style="font-size:14px; margin:15px 5px 0 0">{{deflator.codigo}} - {{deflator.nome}} - {{deflator.fator}} {{ deflator.tipoAjuste === 'PERCENTUAL' ? '%' :'PF'}} - {{ deflator.ativo ? 'Ativo': 'Inativo'}}</div>
-            </div>
-        </ng-template>
-    </p-orderList>
-</p-dialog>
