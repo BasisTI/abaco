@@ -1,19 +1,23 @@
-import { DatatableComponent } from '@nuvem/primeng-components';
+import { DatatableComponent, PageNotificationService } from '@nuvem/primeng-components';
 import { FaseFilter } from './model/fase.filter';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, throwError } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../environments/environment';
 
 import { Fase } from './model/fase.model';
 import { createRequestOption } from '../shared/request-util';
+import { catchError } from 'rxjs/operators';
 
 @Injectable()
 export class FaseService {
 
     resourceUrl = environment.apiUrl + '/fases';
 
-    constructor( private http: HttpClient ) {}
+    constructor( 
+        private http: HttpClient,
+        private pageNotificationService: PageNotificationService,
+        ) {}
 
     create(fase: Fase): Observable<any> {
         return this.http.post(this.resourceUrl, fase);
@@ -33,6 +37,12 @@ export class FaseService {
     }
 
     delete(id: number): Observable<Object> {
-        return this.http.delete(`${this.resourceUrl}/${id}`);
+        return this.http.delete(`${this.resourceUrl}/${id}`).pipe(
+            catchError((error: any) => {
+                if (error.status === 400) {
+                    this.pageNotificationService.addErrorMessage('Fase vinculado à um manual não pode ser excluído');
+                    return throwError(new Error(error.status));
+                }
+            }));
     }
 }
