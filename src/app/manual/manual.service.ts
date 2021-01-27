@@ -134,16 +134,16 @@ export class ManualService {
                     this.pageNotificationService.addErrorMessage(this.getLabel('Você não possui permissão!'));
                     return Observable.throw(new Error(error.status));
                 }
-                if (error._body == "contratoexists") {
-                    this.pageNotificationService.addErrorMessage(this.getLabel('Cadastros.Manual.Mensagens.msgManualNaoPodeSerExcluido'));
+                if (error.error.message == "ContratoRelacionado") {
+                    this.pageNotificationService.addErrorMessage('Erro de integridade: Manual relacionado com contrato(s)');
+                    return Observable.throw(new Error(error.status));
+                } 
+                if (error.error.message == "AnaliseRelacionada") {
+                    this.pageNotificationService.addErrorMessage('Erro de integridade: Manual relacionado com análise(s)');
                     return Observable.throw(new Error(error.status));
                 }
-                if (error._body == "analiseexists") {
-                    this.pageNotificationService.addErrorMessage(this.getLabel('Cadastros.Manual.Mensagens.msgManualEstaVinculadoUmaAnalise'));
-                    return Observable.throw(new Error(error.status));
-                }
-                if (error._body == "fatorajusteexists") {
-                    this.pageNotificationService.addErrorMessage(this.getLabel('Cadastros.Manual.Mensagens.msgManualVinculadoFatorAjusteVerifiqueFuncoesDadosOuFuncoesTransacoes'));
+                if (error.error.message == "FatorDeAjusteRelacionado") {
+                    this.pageNotificationService.addErrorMessage('Erro de integridade: Manual relacionado com fatore(s) de reajuste');
                     return Observable.throw(new Error(error.status));
                 }
             }
