@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+    <changeSet author="basis (generated)" id="1610625148110-6">
+        <createTable tableName="manual_files">
+            <column name="manual_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="files_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="basis (generated)" id="1610640251182-28">
+      <addForeignKeyConstraint baseColumnNames="manual_id"
+                               baseTableName="manual_files"
+                               constraintName="FKiy23lwkhhtash13iu0hh73vhj"
+                               deferrable="false"
+                               initiallyDeferred="false"
+                               referencedColumnNames="id"
+                               referencedTableName="manual"/>
+   </changeSet>
+   <changeSet author="basis (generated)" id="1610640251182-29">
+      <addForeignKeyConstraint baseColumnNames="files_id"
+                               baseTableName="manual_files"
+                               constraintName="FKmajgweqhg6p3axs49ixb7659h"
+                               deferrable="false"
+                               initiallyDeferred="false"
+                               referencedColumnNames="id"
+                               referencedTableName="files"/>
+   </changeSet>
+   <changeSet author="basis (generated)" id="1610640251182-45">
+      <dropColumn columnName="arquivo_manual_id" tableName="manual"/>
+   </changeSet>
+</databaseChangeLog>

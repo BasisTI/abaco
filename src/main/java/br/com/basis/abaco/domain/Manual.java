@@ -10,26 +10,14 @@ import org.springframework.data.elasticsearch.annotations.Field;
 import org.springframework.data.elasticsearch.annotations.FieldIndex;
 import org.springframework.data.elasticsearch.annotations.FieldType;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
-import javax.persistence.OrderBy;
-import javax.persistence.SequenceGenerator;
-import javax.persistence.Table;
+import javax.persistence.*;
 import javax.validation.constraints.DecimalMax;
 import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.util.LinkedHashSet;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 /**
  * A Manual.
@@ -69,8 +57,11 @@ public class Manual implements Serializable, ReportObject, Cloneable {
   @Column(name = "valor_variacao_indicativa", precision = 10, scale = 4, nullable = false)
   private BigDecimal valorVariacaoIndicativa;
 
-  @Column(name = "arquivo_manual_id")
-  private int arquivoManualId;
+  @ManyToMany(cascade = {CascadeType.ALL})
+  @JoinTable(name= "manual_files",
+      joinColumns = @JoinColumn(name = "manual_id"),
+      inverseJoinColumns = @JoinColumn(name = "files_id"))
+  private List<UploadedFile> arquivosManual = new ArrayList<>();
 
   @JsonManagedReference
   @OneToMany(mappedBy = "manual", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -164,15 +155,15 @@ public class Manual implements Serializable, ReportObject, Cloneable {
     this.valorVariacaoIndicativa = valorVariacaoIndicativa;
   }
 
-  public int getArquivoManualId() {
-    return arquivoManualId;
-  }
+    public List<UploadedFile> getArquivosManual() {
+        return arquivosManual;
+    }
 
-  public void setArquivoManualId(int arquivoManualId) {
-    this.arquivoManualId = arquivoManualId;
-  }
+    public void setArquivosManual(List<UploadedFile> arquivosManual) {
+        this.arquivosManual = arquivosManual;
+    }
 
-  public Set<EsforcoFase> getEsforcoFases() {
+    public Set<EsforcoFase> getEsforcoFases() {
     return Optional.ofNullable(this.esforcoFases)
         .map(lista -> new LinkedHashSet<EsforcoFase>(lista))
         .orElse(new LinkedHashSet<EsforcoFase>());
@@ -285,7 +276,7 @@ public class Manual implements Serializable, ReportObject, Cloneable {
   public String toString() {
     return "Manual{" + "id=" + id + ", nome='" + nome + "'" + ", observacao='" + observacao + "'"
         + ", valorVariacaoEstimada='" + valorVariacaoEstimada + "'" + ", valorVariacaoIndicativa='"
-        + valorVariacaoIndicativa + "'" + ", arquivoManualId='" + arquivoManualId + "'" + '}';
+        + valorVariacaoIndicativa + "'" + ", arquivoManualId='" + "'" + '}';
   }
 
   @Override
