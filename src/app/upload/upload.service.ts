@@ -2,75 +2,86 @@ import { Injectable } from '@angular/core';
 import { HttpRequest, HttpClient } from '@angular/common/http';
 import { environment } from '../../environments/environment';
 import { Upload } from './upload.model';
+import { Observable } from 'rxjs';
 
 @Injectable()
 export class UploadService {
 
-  constructor(private http: HttpClient) { }
+    constructor(private http: HttpClient) { }
 
-  resources = {
-    upload: environment.apiUrl + '/uploadFile',
-    uploadLogo: environment.apiUrl + '/uploadLogo',
-    getArquivoManual: environment.apiUrl + '/getFile',
-    getFile: environment.apiUrl + '/getLogo',
-    getFileInfo: environment.apiUrl + '/getLogo/info',
-    saveFile: environment.apiUrl + '/saveFile'
-  };
+    resources = {
+        upload: environment.apiUrl + '/uploadFile',
+        uploadLogo: environment.apiUrl + '/uploadLogo',
+        getArquivoManual: environment.apiUrl + '/getFile',
+        getFilesByManual: environment.apiUrl + '/manuals/arquivos',
+        getFile: environment.apiUrl + '/getLogo',
+        getFileInfo: environment.apiUrl + '/getLogo/info',
+        saveFile: environment.apiUrl + '/saveFile'
+    };
 
-  uploadFile(file: File) {
-    const headers: any = {
-      'Content-Type': 'multipart/form-data',
+    uploadFile(files: File[]) {
+
+        const headers: any = {
+            'Content-Type': 'multipart/form-data',
+        }
+        let body = new FormData();
+
+        for(let i = 0; i < files.length; i++){
+            body.append('file', files[i]);
+        }
+
+        return this.http.post(this.resources.upload, body);
     }
-    let body = new FormData();
-    body.append('file', file)
-    return this.http.post(this.resources.upload, body);
-  }
 
-  deleteFile(id: number){
-    this.http.delete(environment.apiUrl + '/deleteFile/' + id);
-  }
-
-  uploadLogo(file: File) {
-    const headers: any = {
-      'Content-Type': 'multipart/form-data',
+    deleteFile(id: number) : Observable<void>{
+        return this.http.delete<void>(environment.apiUrl + '/deleteFile/' + id);
     }
-    let body = new FormData();
-    body.append('file', file);
-    return this.http.post(this.resources.uploadLogo, body);
-  }
 
-
-  saveFile(file: File): any {
-
-    const headers: any = {
-      'Content-Type': 'multipart/form-data',
+    uploadLogo(file: File) {
+        const headers: any = {
+            'Content-Type': 'multipart/form-data',
+        }
+        let body = new FormData();
+        body.append('file', file);
+        return this.http.post(this.resources.uploadLogo, body);
     }
-  
-    let body = new FormData();
 
-    body.append('file', file);
 
-    return this.http.post(this.resources.saveFile, body);
-  }
+    saveFile(file: File): any {
 
-  convertJsonToObject(json: any): Upload {
-    const upload = Object.create(Upload.prototype);
-    return Object.assign(upload, json, {
-        created: new Date(json.created)
-    });
-}
+        const headers: any = {
+            'Content-Type': 'multipart/form-data',
+        }
 
-  getFile(id: number) {
-    return this.http.get<File>(this.resources.getArquivoManual + '/' + id);
-  }
+        let body = new FormData();
 
-  getFileInfo(id: number) {
-    return this.http.get(this.resources.getFileInfo + "/" + id);
-  }
+        body.append('file', file);
 
-  
-  getLogo(id: number){
-    return this.http.get<Upload>(this.resources.getFile + "/" + id);
-  }
+        return this.http.post(this.resources.saveFile, body);
+    }
+
+    convertJsonToObject(json: any): Upload {
+        const upload = Object.create(Upload.prototype);
+        return Object.assign(upload, json, {
+            created: new Date(json.created)
+        });
+    }
+
+    getFilesByManual(manualId: number): Observable<File[]>{
+        return this.http.get<File[]>(this.resources.getFilesByManual+'/'+ manualId);
+    }
+
+    getFile(id: number) {
+        return this.http.get<File>(this.resources.getArquivoManual + '/' + id);
+    }
+
+    getFileInfo(id: number) {
+        return this.http.get(this.resources.getFileInfo + "/" + id);
+    }
+
+
+    getLogo(id: number) {
+        return this.http.get<Upload>(this.resources.getFile + "/" + id);
+    }
 
 }

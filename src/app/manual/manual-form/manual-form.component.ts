@@ -1,17 +1,18 @@
-import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
-import {ActivatedRoute, Router} from '@angular/router';
-import {Observable, Subscription} from 'rxjs';
+import { Component, OnDestroy, OnInit, resolveForwardRef, ViewChild } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import { Observable, Subscription } from 'rxjs';
 
-import {Manual} from '../manual.model';
-import {ManualService} from '../manual.service';
-import {EsforcoFaseService} from '../../esforco-fase/esforco-fase.service';
-import {EsforcoFase} from '../../esforco-fase/esforco-fase.model';
-import {Fase, FaseService} from '../../fase';
-import {DatatableClickEvent, DatatableComponent, PageNotificationService} from '@nuvem/primeng-components';
-import {ConfirmationService} from 'primeng';
-import {FatorAjuste, TipoFatorAjuste} from '../../fator-ajuste/fator-ajuste.model';
-import {UploadService} from '../../upload/upload.service';
-import {FileUpload, SelectItem} from 'primeng';
+import { Manual } from '../manual.model';
+import { ManualService } from '../manual.service';
+import { EsforcoFaseService } from '../../esforco-fase/esforco-fase.service';
+import { EsforcoFase } from '../../esforco-fase/esforco-fase.model';
+import { Fase, FaseService } from '../../fase';
+import { DatatableClickEvent, DatatableComponent, PageNotificationService } from '@nuvem/primeng-components';
+import { ConfirmationService } from 'primeng';
+import { FatorAjuste, TipoFatorAjuste } from '../../fator-ajuste/fator-ajuste.model';
+import { UploadService } from '../../upload/upload.service';
+import { FileUpload, SelectItem } from 'primeng';
+import { Upload } from 'src/app/upload/upload.model';
 
 @Component({
     selector: 'app-manual-form',
@@ -33,7 +34,7 @@ export class ManualFormComponent implements OnInit, OnDestroy {
     validaTipoDeflator;
     validaDeflator: boolean;
     private routeSub: Subscription;
-    arquivoManual;
+    arquivoManual: any[];
     esforcoFases: Array<EsforcoFase>;
     showDialogPhaseEffort = false;
     showDialogEditPhaseEffort = false;
@@ -50,8 +51,8 @@ export class ManualFormComponent implements OnInit, OnDestroy {
     esforcoFaseSelected?: EsforcoFase = new EsforcoFase();
 
     adjustTypes: Array<any> = [
-        {label: 'Percentual', value: 'PERCENTUAL'},
-        {label: 'Unitário', value: 'UNITARIO'}
+        { label: 'Percentual', value: 'PERCENTUAL' },
+        { label: 'Unitário', value: 'UNITARIO' }
     ];
 
     invalidFields: Array<string> = [];
@@ -82,9 +83,11 @@ export class ManualFormComponent implements OnInit, OnDestroy {
             this.manual.esforcoFases = [];
             if (params['id']) {
                 this.manualService.find(params['id']).subscribe(manual => {
+
                     this.manual = new Manual().copyFromJSON(manual);
                     this.isEdit = true;
-                    if (this.manual.arquivoManualId) {
+
+                    if (this.manual.arquivosManual) {
                         this.getFile();
                     }
                 });
@@ -116,6 +119,7 @@ export class ManualFormComponent implements OnInit, OnDestroy {
 
             if (!this.checkIfManualAlreadyExists(todosManuais)) {
                 if (this.manual.id !== undefined) {
+
                     this.editar();
                 } else {
                     this.novo();
@@ -137,22 +141,30 @@ export class ManualFormComponent implements OnInit, OnDestroy {
     }
 
     private editar() {
-        this.manualService.find(this.manual.id).subscribe(() => {
-            const oldId = this.manual.arquivoManualId;
+        this.manualService.find(this.manual.id).subscribe((response) => {
             if (this.checkRequiredFields()) {
-                if (this.newUpload) {
-                    this.uploadService.uploadFile(this.arquivoManual).subscribe(response => {
-                        // this.manual.arquivoManualId = response.id;
-                        this.isEdit = true;
-                        this.uploadService.deleteFile(oldId);
-                        this.subscribeToSaveResponse(this.manualService.update(this.manual));
-                    });
-                } else {
-                    this.isEdit = true;
-                    this.subscribeToSaveResponse(this.manualService.update(this.manual));
-                }
+                this.subscribeToSaveResponse(this.manualService.update(this.manual, this.arquivoManual));
+                this.isEdit = true;
             } else {
                 this.privateExibirMensagemCamposInvalidos(1);
+            }
+        });
+    }
+
+    public confirmDelete(arquivoId: number) {
+        let arquivo: Upload;
+
+        this.uploadService.getFileInfo(arquivoId).subscribe(response => {
+            arquivo = response;
+        });
+
+        this.confirmationService.confirm({
+            message: 'Tem certeza que deseja excluir o arquivo?',
+            accept: () => {
+                this.uploadService.deleteFile(arquivoId).subscribe(response => {
+                    this.manual.arquivosManual.splice(this.manual.arquivosManual.indexOf(arquivo, 1));
+                    this.pageNotificationService.addSuccessMessage('Arquivo excluído com sucesso!');
+                });
             }
         });
     }
@@ -161,15 +173,12 @@ export class ManualFormComponent implements OnInit, OnDestroy {
 
         if (this.arquivoManual) {
             if (this.checkRequiredFields()) {
-                this.uploadService.uploadFile(this.arquivoManual).subscribe(response => {
-                    // this.manual.arquivoManualId = response.id;
-                    this.subscribeToSaveResponse(this.manualService.create(this.manual));
-                });
+                this.subscribeToSaveResponse(this.manualService.create(this.manual, this.arquivoManual));
             } else {
                 this.privateExibirMensagemCamposInvalidos(1);
             }
         } else if (this.checkRequiredFields()) {
-            this.subscribeToSaveResponse(this.manualService.create(this.manual));
+            this.subscribeToSaveResponse(this.manualService.create(this.manual, this.arquivoManual));
         } else {
             this.privateExibirMensagemCamposInvalidos(1);
         }
@@ -246,10 +255,10 @@ export class ManualFormComponent implements OnInit, OnDestroy {
 
     private subscribeToSaveResponse(result: Observable<Manual>) {
         result.subscribe((res: Manual) => {
-                this.isSaving = false;
-                this.router.navigate(['/manual']);
-                this.isEdit ? this.pageNotificationService.addUpdateMsg() : this.pageNotificationService.addCreateMsg();
-            },
+            this.isSaving = false;
+            this.router.navigate(['/manual']);
+            this.isEdit ? this.pageNotificationService.addUpdateMsg() : this.pageNotificationService.addCreateMsg();
+        },
             (error: Response) => {
                 this.isSaving = false;
 
@@ -264,8 +273,15 @@ export class ManualFormComponent implements OnInit, OnDestroy {
         this.routeSub.unsubscribe();
     }
 
-    uploadFile(event: any) {
-        this.arquivoManual = event.files[0];
+    uploadFile(event) {
+        if (!this.arquivoManual) {
+            this.arquivoManual = [];
+        }
+
+        for (let i = 0; i < event.currentFiles["length"]; i++) {
+            this.arquivoManual.push(event.currentFiles[i]);
+
+        }
         this.newUpload = true;
     }
 
@@ -351,7 +367,7 @@ export class ManualFormComponent implements OnInit, OnDestroy {
     editPhaseEffort() {
         if (this.checkPhaseEffortRequiredFields(this.editedPhaseEffort)) {
             this.manual.updateEsforcoFases(this.editedPhaseEffort);
-                       this.pageNotificationService.addUpdateMsg();
+            this.pageNotificationService.addUpdateMsg();
             this.closeDialogEditPhaseEffort();
         } else {
             this.pageNotificationService.addErrorMessage('Por favor preencher campos obrigatórios.');
@@ -511,8 +527,13 @@ export class ManualFormComponent implements OnInit, OnDestroy {
     }
 
     getFile() {
-        this.uploadService.getFile(this.manual.arquivoManualId).subscribe(response => {
-            this.arquivoManual = response;
+        this.uploadService.getFilesByManual(this.manual.id).subscribe(response => {
+
+            if (response) {
+                for (let i = 0; i < response.length; i++) {
+                    this.arquivoManual.push(response[i]);
+                }
+            }
         });
     }
 
@@ -558,8 +579,8 @@ export class ManualFormComponent implements OnInit, OnDestroy {
         if (this.dataTableFase && this.dataTableFase.selectedRow) {
             if (this.dataTableFase.selectedRow && this.dataTableFase.selectedRow) {
                 this.editedPhaseEffort = this.dataTableFase.selectedRow;
-              }
-          }
+            }
+        }
     }
     public onRowDblclickFator(event) {
         if (event.target.nodeName === 'TD') {
@@ -573,7 +594,7 @@ export class ManualFormComponent implements OnInit, OnDestroy {
         if (this.dataTableFator && this.dataTableFator.selectedRow) {
             if (this.dataTableFator.selectedRow && this.dataTableFator.selectedRow) {
                 this.editedAdjustFactor = this.dataTableFator.selectedRow;
-              }
-          }
-      }
+            }
+        }
+    }
 }

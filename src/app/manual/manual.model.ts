@@ -2,6 +2,7 @@ import {BaseEntity} from '../shared';
 import { FatorAjuste } from '../fator-ajuste';
 import { EsforcoFase } from '../esforco-fase';
 import { MappableEntities } from '../shared/mappable-entities';
+import { Upload } from '../upload/upload.model';
 
 export class Manual implements BaseEntity {
     private mappablePhaseEfforts: MappableEntities<EsforcoFase>;
@@ -14,7 +15,7 @@ export class Manual implements BaseEntity {
         public observacao?: string,
         public valorVariacaoEstimada?: number,
         public valorVariacaoIndicativa?: number,
-        public arquivoManualId?: number,
+        public arquivosManual?: any[],
         public fatoresAjuste?: FatorAjuste[],
         public esforcoFases?: EsforcoFase[],
         public artificialId?: number,
@@ -62,7 +63,7 @@ export class Manual implements BaseEntity {
                     , jsonObject.observacao
                     , jsonObject.valorVariacaoEstimada
                     , jsonObject.valorVariacaoIndicativa
-                    , jsonObject.arquivoManualId
+                    , jsonObject.arquivosManual
                     , fatoresAjuste
                     , esforcoFases
                     , undefined
@@ -160,7 +161,7 @@ export class Manual implements BaseEntity {
             this.observacao,
             this.valorVariacaoEstimada,
             this.valorVariacaoIndicativa,
-            this.arquivoManualId,
+            this.arquivosManual,
             this.fatoresAjuste,
             this.esforcoFases,
             this.artificialId,

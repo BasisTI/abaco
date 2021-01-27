@@ -5,6 +5,7 @@ import { Subscription } from 'rxjs';
 import { Manual } from '../manual.model';
 import { ManualService } from '../manual.service';
 import { UploadService } from '../../upload/upload.service';
+import { Upload } from 'src/app/upload/upload.model';
 
 @Component({
   selector: 'jhi-manual-detail',
@@ -15,7 +16,7 @@ export class ManualDetailComponent implements OnInit, OnDestroy {
   manual: Manual = new Manual() ;
   manualArray: Manual[] = [];
   private subscription: Subscription;
-  fileName: string;
+  arquivos: Upload[];
 
 
   constructor(
@@ -34,11 +35,11 @@ export class ManualDetailComponent implements OnInit, OnDestroy {
       this.load(params['id']);
     });
   }
-  
+
   load(id) {
     this.manualService.find(id).subscribe((manual) => {
       this.manual = this.manual.copyFromJSON(manual);
-      if (manual.arquivoManualId > 0) {
+      if (manual.id) {
         this.getFileInfo();
       }
       this.manualArray.push(manual);
@@ -50,11 +51,8 @@ export class ManualDetailComponent implements OnInit, OnDestroy {
   }
 
   getFileInfo() {
-    let fileInfo;
-    this.uploadService.getFileInfo(this.manual.arquivoManualId).subscribe(response => {
-      fileInfo = response;
-
-      this.fileName = fileInfo["originalName"];
-    });
+    this.manualService.getFiles(this.manual.id).subscribe(response => {
+        this.arquivos = response;
+    })
   }
 }

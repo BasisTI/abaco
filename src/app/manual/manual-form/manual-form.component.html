@@ -88,11 +88,25 @@
                         <span class="md-inputfield">
                             <p-fileUpload #fileInput chooseLabel="Selecionar Arquivo" [showUploadButton]="false"
                                           id="idArquivoManualFormManual"
-                                          [showCancelButton]="false" name="arquivoManual"
+                                          multiple="multiple"
+                                          [showCancelButton]="false"
+                                          name="arquivosManual"
                                           (onSelect)="uploadFile($event)" accept=".pdf,.odt,.doc,.docx">
-                                <ng-template pTemplate="content">
-                                    <ul *ngIf="arquivoManual && !newUpload">
-                                        <a target="_self" href="/api/downloadFile/{{ arquivoManual.id }}" download="arquivo-manual.pdf">{{arquivoManual.originalName}}</a>
+                                <ng-template pTemplate="content" >
+                                    <ul *ngIf="manual.arquivosManual">
+                                        <label>Arquivos do manual {{manual.nome}}</label>
+                                        <hr>
+                                        <li *ngFor="let arquivo of manual.arquivosManual" style="list-style: circle;">
+                                            <a  target="_self" href="/api/downloadFile/{{ arquivo.id }}" download="arquivo-manual.pdf">{{arquivo.originalName}}</a>
+                                            <basis-datatable-button style="display: inline-table; margin-left: 10px; max-zoom: 10px;"
+                                            name="deleteArquivo"
+                                            [bTooltip]="'Excluir arquivo'"
+                                            icon="delete"
+                                            (click)="confirmDelete(arquivo.id)"
+                                            class="ui-button-danger">
+                                    </basis-datatable-button>
+
+                                        </li>
                                     </ul>
                                 </ng-template>
                             </p-fileUpload>
@@ -331,7 +345,7 @@
                                         [options]="fases"
                                         [(ngModel)]="newPhaseEffort.fase"
                                         [placeholder]="'Fase'"
-                                        
+
                                         name="tipoFase"
                                         optionLabel="nome"
                                         (onFocus)="this.validaTipoFase = false">
@@ -479,7 +493,7 @@
                         <div class="ui-g-3 ui-md-3 ui-sm-12" style="padding-top: 25px">
                             <label >Tipo Deflator *</label><br>
                             <p-dropdown [filter]="true" #dd id="tipo_ajuste" [options]="adjustTypes" name="tipoAjuste"
-                                        [(ngModel)]="newAdjustFactor.tipoAjuste" filter="true" 
+                                        [(ngModel)]="newAdjustFactor.tipoAjuste" filter="true"
                                         [placeholder]="'TipoAjuste'" required
                                         (onClick)= "this.validaTipoDeflator = false">
                             </p-dropdown>
