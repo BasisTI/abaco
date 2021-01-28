@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpRequest, HttpClient } from '@angular/common/http';
+import { HttpRequest, HttpClient, HttpParams } from '@angular/common/http';
 import { environment } from '../../environments/environment';
 import { Upload } from './upload.model';
 import { Observable } from 'rxjs';
@@ -33,8 +33,13 @@ export class UploadService {
         return this.http.post(this.resources.upload, body);
     }
 
-    deleteFile(id: number) : Observable<void>{
-        return this.http.delete<void>(environment.apiUrl + '/deleteFile/' + id);
+    deleteFile(id: number, manualId) : Observable<void>{
+        let params = new HttpParams();
+
+        params = params.append('arquivoId', JSON.stringify(id));
+        params = params.append('manualId', JSON.stringify(manualId));
+
+        return this.http.delete<void>(environment.apiUrl + '/deleteFile/',  {params: params});
     }
 
     uploadLogo(file: File) {

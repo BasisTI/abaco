@@ -86,10 +86,6 @@ export class ManualFormComponent implements OnInit, OnDestroy {
 
                     this.manual = new Manual().copyFromJSON(manual);
                     this.isEdit = true;
-
-                    if (this.manual.arquivosManual) {
-                        this.getFile();
-                    }
                 });
             }
         });
@@ -151,7 +147,7 @@ export class ManualFormComponent implements OnInit, OnDestroy {
         });
     }
 
-    public confirmDelete(arquivoId: number) {
+    public confirmDelete(arquivoId: number, manualId: number) {
         let arquivo: Upload;
 
         this.uploadService.getFileInfo(arquivoId).subscribe(response => {
@@ -161,11 +157,18 @@ export class ManualFormComponent implements OnInit, OnDestroy {
         this.confirmationService.confirm({
             message: 'Tem certeza que deseja excluir o arquivo?',
             accept: () => {
-                this.uploadService.deleteFile(arquivoId).subscribe(response => {
+                this.uploadService.deleteFile(arquivoId, manualId).subscribe(response => {
                     this.manual.arquivosManual.splice(this.manual.arquivosManual.indexOf(arquivo, 1));
                     this.pageNotificationService.addSuccessMessage('Arquivo excluído com sucesso!');
+                    this.refreshArquivos();
                 });
             }
+        });
+    }
+
+    refreshArquivos() {
+        this.manualService.getFiles(this.manual.id).subscribe(response => {
+            this.manual.arquivosManual = response;
         });
     }
 
@@ -274,9 +277,7 @@ export class ManualFormComponent implements OnInit, OnDestroy {
     }
 
     uploadFile(event) {
-        if (!this.arquivoManual) {
-            this.arquivoManual = [];
-        }
+        this.arquivoManual = [];
 
         for (let i = 0; i < event.currentFiles["length"]; i++) {
             this.arquivoManual.push(event.currentFiles[i]);
@@ -530,17 +531,6 @@ export class ManualFormComponent implements OnInit, OnDestroy {
         (isNameValid && isAdjustTypeValid && isFactorValid) ? (isAdjustFactorValid = true) : (isAdjustFactorValid = false);
 
         return isAdjustFactorValid;
-    }
-
-    getFile() {
-        this.uploadService.getFilesByManual(this.manual.id).subscribe(response => {
-
-            if (response) {
-                for (let i = 0; i < response.length; i++) {
-                    this.arquivoManual.push(response[i]);
-                }
-            }
-        });
     }
 
 

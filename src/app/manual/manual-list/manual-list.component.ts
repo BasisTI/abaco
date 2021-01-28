@@ -83,10 +83,17 @@ export class ManualListComponent implements OnInit {
             const manualClonado: Manual = manual.clone();
             manualClonado.nome = this.nomeDoManualClonado;
 
+            if (manualClonado.esforcoFases) {
+                manualClonado.esforcoFases.forEach(ef => ef.id = undefined);
+            }
+            if (manualClonado.fatoresAjuste) {
+                manualClonado.fatoresAjuste.forEach(fa => fa.id = undefined);
+            }
+
             this.manualService.clonar(manualClonado).subscribe((manualSalvo: Manual) => {
                 this.pageNotificationService.addSuccessMessage(
                     'Manual' + manualSalvo.nome + ' clonado a partir do manual' + this.manualSelecionado.nome + ' com sucesso!'
-                    );
+                );
                 this.fecharDialogClonar();
                 this.recarregarDataTable();
             });
@@ -127,11 +134,11 @@ export class ManualListComponent implements OnInit {
     onClick(event: DatatableClickEvent) {
         switch (event.button) {
             case 'edit': {
-                    this.abrirEditar(event.selection);
+                this.abrirEditar(event.selection);
                 break;
             }
             case 'view': {
-                    this.abrirVisualizar(event.selection);
+                this.abrirVisualizar(event.selection);
                 break;
 
             }
@@ -140,15 +147,15 @@ export class ManualListComponent implements OnInit {
                 break;
             }
             case 'clone': {
-                    this.manualSelecionado.id = event.selection.id;
-                    this.manualSelecionado = event.selection;
-                    this.mostrarDialogClonar = true;
+                this.manualSelecionado.id = event.selection.id;
+                this.manualSelecionado = event.selection;
+                this.mostrarDialogClonar = true;
                 break;
             }
             default: {
-               break;
+                break;
             }
-         }
+        }
     }
     public selectManual() {
         if (this.datatable && this.datatable.selectedRow) {
