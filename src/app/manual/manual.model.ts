@@ -8,7 +8,6 @@ export class Manual implements BaseEntity {
     private mappablePhaseEfforts: MappableEntities<EsforcoFase>;
     private mappableAdjustFactors: MappableEntities<FatorAjuste>;
 
-
     constructor(
         public id?: number,
         public nome?: string,

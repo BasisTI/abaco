@@ -56,13 +56,18 @@
                         [showPaginationFooter]="true"
                         [showVisibleColumnsControl]="true"
                         #datatable>
+
                     <basis-datatable-button
                             name="clone"
                             icon="content-copy"
                             id="idTabelaCloneComponentManual"
                             disabled="desabilitarBotaoClonar()">
                     </basis-datatable-button>
-                    <p-column header="Nome" field="nome" [sortable]="true" [style]="{'width': '15%'}" [filterOnColumn]="true"></p-column>
+                    
+                    <p-column header="Nome" field="nome" [sortable]="true" [style]="{'width': '15%'}" [filterOnColumn]="true">
+
+                    </p-column>
+                    
                     <p-column header="Estimada" field="valorVariacaoEstimada" [sortable]="true" [editable]="false" >
                         <ng-template let-col let-manual="rowData" pTemplate="body">
                             {{ manual.valorVariacaoEstimada.toString() | slice:0:4}}%
@@ -100,14 +105,14 @@
                     </p-column>
 
                     <p-column header="Observação" field="observacao" [style]="{'width': '25%'}" [sortable]="true">
+                        
                     </p-column>
 
                 </basis-datatable>
 
-                <div class="ui-g-12 ui-md-2">
-                    <app-botoes-exportacao resourceName="manual" id="idBtnExportarComponentManual" fileName="manual"></app-botoes-exportacao>
-                </div>
-
+                <div class="ui-g-12 ui-md-2 ui-lg-2">
+                    <button pButton name="exportarPdf" id="exportarPdf" label="Exportar PDF" class="btnSim"  (click)="gerarRelatorioPdf()"></button>
+                </div> 
             </div>
         </div>
     </div>

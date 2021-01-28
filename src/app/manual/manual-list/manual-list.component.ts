@@ -8,6 +8,7 @@ import { ManualService } from '../manual.service';
 import { ElasticQuery } from 'src/app/shared/elastic-query';
 import { FatorAjuste } from 'src/app/fator-ajuste';
 import { EsforcoFase } from 'src/app/esforco-fase';
+import { MessageUtil } from 'src/app/util/message.util';
 
 @Component({
     selector: 'app-manual',
@@ -26,6 +27,8 @@ export class ManualListComponent implements OnInit {
     rowsPerPageOptions: number[] = [5, 10, 20];
     myform: FormGroup;
     nomeValido = false;
+    urlManualService = this.manualService.resourceUrl;
+    idManual: Number;
 
     constructor(
         private router: Router,
@@ -46,6 +49,10 @@ export class ManualListComponent implements OnInit {
                 this.manualSelecionado = undefined;
             });
         }
+    }
+
+    getLabel(label) {
+        return label;
     }
 
     public onRowDblclick(event) {
@@ -131,6 +138,7 @@ export class ManualListComponent implements OnInit {
     public search() {
         this.datatable.refresh(this.elasticQuery.query);
     }
+
     onClick(event: DatatableClickEvent) {
         switch (event.button) {
             case 'edit': {
@@ -140,7 +148,6 @@ export class ManualListComponent implements OnInit {
             case 'view': {
                 this.abrirVisualizar(event.selection);
                 break;
-
             }
             case 'delete': {
                 this.confirmDelete(event.selection);
@@ -158,10 +165,19 @@ export class ManualListComponent implements OnInit {
         }
     }
     public selectManual() {
+        console.log(this.datatable);
         if (this.datatable && this.datatable.selectedRow) {
             if (this.datatable.selectedRow && this.datatable.selectedRow) {
                 this.manualSelecionado = this.datatable.selectedRow;
+                console.log(this.manualSelecionado);
             }
         }
     }
+
+    public gerarRelatorioPdf(){
+        console.log('entrou gerar PDF');
+        console.log(this.manualSelecionado.id);
+        this.manualService.gerarRelatorioPdfArquivo(this.manualSelecionado.id)
+    }
+    
 }
