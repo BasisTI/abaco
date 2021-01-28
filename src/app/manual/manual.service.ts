@@ -9,16 +9,22 @@ import { catchError, retry } from 'rxjs/operators';
 import { createRequestOption, ResponseWrapper } from '../shared';
 import { Upload } from '../upload/upload.model';
 
+import { BlockUiService } from '@nuvem/angular-base';
+
 @Injectable()
 export class ManualService {
 
     resourceName = '/manuals';
     resourceUrl = environment.apiUrl + this.resourceName;
     searchUrl = environment.apiUrl + '/_search/manual';
+    relatoriosUrl = environment.apiUrl + '/manuals';
+
+    relatorioManualUrl = environment.apiUrl + '/manual/exportacaoPDF';
 
     constructor(
         private http: HttpClient,
         private pageNotificationService: PageNotificationService,
+        private blockUiService: BlockUiService
     ) {
     }
 
@@ -173,5 +179,25 @@ export class ManualService {
     private convert(manual: Manual): Manual {
         const copy: Manual = manual.toJSONState();
         return copy;
+    }
+
+    public gerarRelatorioPdfArquivo(id: number): Observable<any> {
+        this.blockUiService.show();
+        this.http.request('get',`${this.relatorioManualUrl}/${id}`, {
+            responseType: 'blob',
+        }).subscribe(
+            response => {
+                const mediaType = 'application/pdf';
+                const blob = new Blob([response], { type: mediaType });
+                const fileURL = window.URL.createObjectURL(blob);
+                const anchor = document.createElement('a');
+                anchor.download = 'Manual.pdf';
+                anchor.href = fileURL;
+                document.body.appendChild(anchor);
+                anchor.click();
+                this.blockUiService.hide();
+                return null;
+            });
+        return null;
     }
 }
