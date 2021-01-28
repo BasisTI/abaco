@@ -426,4 +426,22 @@ public class ManualResource {
             "relatorio." + tipoRelatorio);
     }
 
+
+    @GetMapping(value = "/manual/exportacaoPDF/{id}", produces = MediaType.APPLICATION_PDF_VALUE)
+    @Timed
+    public ResponseEntity<InputStreamResource> gerarRelatorio(@PathVariable Long id, @RequestParam(defaultValue = "*") String query) throws RelatorioException {
+        ByteArrayOutputStream byteArrayOutputStream;
+        Manual manual = manualRepository.findOne(id);
+        try {
+            new NativeSearchQueryBuilder().withQuery(multiMatchQuery(query)).build();
+            Page<Manual> result = manualSearchRepository.findAll(dynamicExportsService.obterPageableMaximoExportacao());
+            byteArrayOutputStream = dynamicExportsService.export(new RelatorioManualColunas(), result, "pdf", Optional.empty(), Optional.ofNullable(AbacoUtil.REPORT_LOGO_PATH), Optional.ofNullable(AbacoUtil.getReportFooter()));
+        } catch (DRException | ClassNotFoundException | JRException | NoClassDefFoundError e) {
+            log.error(e.getMessage(), e);
+            throw new RelatorioException(e);
+        }
+        return DynamicExporter.output(byteArrayOutputStream,
+            "relatorio." + "pdf");
+    }
+    
 }
