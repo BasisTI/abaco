@@ -101,11 +101,20 @@ public class UploadController {
     response.getOutputStream().write(arquivo);
     }
 
-    @DeleteMapping("/deleteFile/{id}")
-    public ResponseEntity<Void> deleteFile(@PathVariable Long id) {
-        log.debug("REST request to delete Manual : {}", id);
+    @DeleteMapping("/deleteFile")
+    public ResponseEntity<Void> deleteFile(@RequestParam("arquivoId") Long id, @RequestParam("manualId") Long manualId) {
+        log.debug("REST request to delete File : {}", id);
 
-        filesRepository.delete(id);
+        UploadedFile file = filesRepository.findOne(id);
+        Manual manual = manualRepository.findOne(manualId);
+
+        manual.removeArquivoManual(file);
+        manualRepository.save(manual);
+        filesRepository.save(file);
+
+        if(file.getManuais().isEmpty()){
+            filesRepository.delete(id);
+        }
 
         return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert("UploadedFile", id.toString())).build();
 
