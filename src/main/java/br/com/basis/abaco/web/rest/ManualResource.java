@@ -1,12 +1,7 @@
 package br.com.basis.abaco.web.rest;
 
 import br.com.basis.abaco.domain.*;
-import br.com.basis.abaco.repository.AnaliseRepository;
-import br.com.basis.abaco.repository.FatorAjusteRepository;
-import br.com.basis.abaco.repository.FuncaoTransacaoRepository;
-import br.com.basis.abaco.repository.ManualContratoRepository;
-import br.com.basis.abaco.repository.UploadedFilesRepository;
-import br.com.basis.abaco.repository.ManualRepository;
+import br.com.basis.abaco.repository.*;
 import br.com.basis.abaco.repository.search.ManualSearchRepository;
 import br.com.basis.abaco.service.ManualService;
 import br.com.basis.abaco.service.dto.DropdownDTO;
@@ -25,7 +20,6 @@ import jdk.nashorn.internal.parser.JSONParser;
 import net.sf.dynamicreports.report.exception.DRException;
 import net.sf.jasperreports.engine.JRException;
 import org.apache.commons.beanutils.BeanUtils;
-import org.apache.commons.io.FilenameUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.json.JsonParserFactory;
@@ -41,26 +35,18 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.mail.Multipart;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import javax.xml.bind.DatatypeConverter;
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.Reader;
-import java.io.StringReader;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.util.*;
-import java.util.stream.Collectors;
 
 import static org.elasticsearch.index.query.QueryBuilders.multiMatchQuery;
 import static org.elasticsearch.index.query.QueryBuilders.queryStringQuery;
@@ -156,7 +142,7 @@ public class ManualResource {
                 .body(null);
         }
         Manual linkedManual = linkManualToPhaseEffortsAndAdjustFactors(manual);
-        List<UploadedFile> uploadedFiles = manualService.uploadFiles(files);
+        List<UploadedFile> uploadedFiles = manualService.uploadFiles(files, linkedManual);
         linkedManual.setArquivosManual(uploadedFiles);
         for(UploadedFile file : uploadedFiles){
             file.getManuais().add(linkedManual);
@@ -211,8 +197,8 @@ public class ManualResource {
                 .headers(HeaderUtil.createFailureAlert(ENTITY_NAME, "manualexists", "Manual already in use"))
                 .body(null);
         }
-
-        List<UploadedFile> uploadedFiles = manualService.uploadFiles(files);
+        manual.setArquivosManual(filesRepository.findAllByManuais(manual).get());
+        List<UploadedFile> uploadedFiles = manualService.uploadFiles(files, manual);
         for(UploadedFile file : uploadedFiles){
             file.getManuais().add(manual);
         }
@@ -287,8 +273,17 @@ public class ManualResource {
             return ResponseEntity.badRequest().body("fatorajusteexists");
         }
 
-        manualRepository.delete(id);
-        manualSearchRepository.delete(id);
+        Manual manual = manualRepository.findOne(id);
+
+        for(UploadedFile file : new LinkedList<UploadedFile>(manual.getArquivosManual())){
+            manual.removeArquivoManual(file);
+            if(file.getManuais().isEmpty()){
+                filesRepository.delete(file);
+            }
+        }
+
+        manualRepository.delete(manual);
+        manualSearchRepository.delete(manual);
         return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id.toString())).build();
     }
 
@@ -305,7 +300,6 @@ public class ManualResource {
      */
     @PostMapping("/manuals/clonar")
     @Timed
-    @Transactional
     public ResponseEntity<Manual> clonar(@RequestBody Manual manual) throws InvocationTargetException, IllegalAccessException {
 
         Optional<Manual> existingManual = manualRepository.findOneByNome(manual.getNome());
@@ -316,21 +310,16 @@ public class ManualResource {
         }
 
         List<UploadedFile> files = filesRepository.findAllByManuais(manual).get();
-        List<EsforcoFase> esforcoFases = esforcoFaseResource.getAllPhaseEffortsByManual(manual);
-        List<FatorAjuste> fatorAjustes = fatorAjusteResource.getAllContratoesByOrganization(manual);
 
+        manual.setId(null);
         Manual linkedManual = linkManualToPhaseEffortsAndAdjustFactors(manual);
 
-        linkedManual.setId(null);
         linkedManual.setArquivosManual(files);
-        linkedManual.setEsforcoFases(esforcoFases.stream().collect(Collectors.toSet()));
-        linkedManual.setFatoresAjuste(fatorAjustes.stream().collect(Collectors.toSet()));
 
         for(UploadedFile file : files){
             UploadedFile fileNew = new UploadedFile();
             BeanUtils.copyProperties(fileNew, file);
             fileNew.setManuais(Arrays.asList(linkedManual));
-            fileNew.setId(null);
             filesRepository.save(fileNew);
         }
 

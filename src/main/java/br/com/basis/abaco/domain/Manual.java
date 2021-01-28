@@ -61,7 +61,7 @@ public class Manual implements Serializable, ReportObject, Cloneable {
   @JoinTable(name= "manual_files",
       joinColumns = @JoinColumn(name = "manual_id"),
       inverseJoinColumns = @JoinColumn(name = "files_id"))
-  private List<UploadedFile> arquivosManual = new ArrayList<>();
+  private List<UploadedFile> arquivosManual = new LinkedList<>();
 
   @JsonManagedReference
   @OneToMany(mappedBy = "manual", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -161,6 +161,16 @@ public class Manual implements Serializable, ReportObject, Cloneable {
 
     public void setArquivosManual(List<UploadedFile> arquivosManual) {
         this.arquivosManual = arquivosManual;
+    }
+
+    public void addArquivoManual(UploadedFile file){
+      this.arquivosManual.add(file);
+      file.getManuais().add(this);
+    }
+
+    public void removeArquivoManual(UploadedFile file){
+      this.arquivosManual.remove(file);
+      file.getManuais().remove(this);
     }
 
     public Set<EsforcoFase> getEsforcoFases() {

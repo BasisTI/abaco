@@ -1,5 +1,6 @@
 package br.com.basis.abaco.service;
 
+import br.com.basis.abaco.domain.Manual;
 import br.com.basis.abaco.domain.UploadedFile;
 import br.com.basis.abaco.repository.ManualRepository;
 import br.com.basis.abaco.repository.UploadedFilesRepository;
@@ -35,7 +36,7 @@ public class ManualService {
         return manualRepository.getManualDropdow();
     }
 
-    public List<UploadedFile> uploadFiles(List<MultipartFile> files){
+    public List<UploadedFile> uploadFiles(List<MultipartFile> files, Manual manual){
         List<UploadedFile> uploadedFiles = new ArrayList<>();
         try {
             for(MultipartFile file : files) {
@@ -54,7 +55,10 @@ public class ManualService {
                 uploadedFile.setFilename(filename);
                 uploadedFile.setSizeOf(bytes.length);
                 uploadedFiles.add(uploadedFile);
-                filesRepository.save(uploadedFile);
+
+                if(!manual.getArquivosManual().equals(uploadedFile)){
+                    filesRepository.save(uploadedFile);
+                }
             }
         } catch (IOException | NoSuchAlgorithmException e) {
             throw new UploadException("Erro ao efetuar o upload do arquivo", e);
