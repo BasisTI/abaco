@@ -109,17 +109,12 @@ public class ManualResourceIT {
     @Autowired
     private UploadedFilesRepository filesRepository;
 
-    @Autowired
-    private EsforcoFaseResource esforcoFaseResource;
-
-    @Autowired
-    private FatorAjusteResource fatorAjusteResource;
 
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
             ManualResource manualResource = new ManualResource(manualRepository, manualSearchRepository, dynamicExportsService, manualContratoRepository
-            , analiseRepository, fatorAjusteRepository, funcaoTransacaoRepository, manualService, filesRepository, esforcoFaseResource, fatorAjusteResource);
+            , analiseRepository, fatorAjusteRepository, funcaoTransacaoRepository, manualService, filesRepository);
         this.restManualMockMvc = MockMvcBuilders.standaloneSetup(manualResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)

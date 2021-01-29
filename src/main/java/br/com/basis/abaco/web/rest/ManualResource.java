@@ -1,7 +1,17 @@
 package br.com.basis.abaco.web.rest;
 
-import br.com.basis.abaco.domain.*;
-import br.com.basis.abaco.repository.*;
+import br.com.basis.abaco.domain.Analise;
+import br.com.basis.abaco.domain.FatorAjuste;
+import br.com.basis.abaco.domain.FuncaoTransacao;
+import br.com.basis.abaco.domain.Manual;
+import br.com.basis.abaco.domain.ManualContrato;
+import br.com.basis.abaco.domain.UploadedFile;
+import br.com.basis.abaco.repository.AnaliseRepository;
+import br.com.basis.abaco.repository.FatorAjusteRepository;
+import br.com.basis.abaco.repository.FuncaoTransacaoRepository;
+import br.com.basis.abaco.repository.ManualContratoRepository;
+import br.com.basis.abaco.repository.ManualRepository;
+import br.com.basis.abaco.repository.UploadedFilesRepository;
 import br.com.basis.abaco.repository.search.ManualSearchRepository;
 import br.com.basis.abaco.service.ManualService;
 import br.com.basis.abaco.service.dto.DropdownDTO;
@@ -35,7 +45,16 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.mail.Multipart;
@@ -46,7 +65,12 @@ import java.io.ByteArrayOutputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Optional;
 
 import static org.elasticsearch.index.query.QueryBuilders.multiMatchQuery;
 import static org.elasticsearch.index.query.QueryBuilders.queryStringQuery;
@@ -61,6 +85,9 @@ public class ManualResource {
     private final Logger log = LoggerFactory.getLogger(ManualResource.class);
 
     private static final String ENTITY_NAME = "manual";
+
+    private static final String MANUAL_EXISTS = "manualexists";
+    private static final String MANUAL_IN_USE = "Manual already in use";
 
     private final ManualRepository manualRepository;
 
@@ -96,8 +123,7 @@ public class ManualResource {
 
     public ManualResource(ManualRepository manualRepository, ManualSearchRepository manualSearchRepository, DynamicExportsService dynamicExportsService,
                           ManualContratoRepository manualContratoRepository, AnaliseRepository analiseRepository, FatorAjusteRepository fatorAjusteRepository,
-                          FuncaoTransacaoRepository funcaoTransacaoRepository, ManualService manualService, UploadedFilesRepository uploadedFilesRepository,
-                          EsforcoFaseResource esforcoFaseResource, FatorAjusteResource fatorAjusteResource) {
+                          FuncaoTransacaoRepository funcaoTransacaoRepository, ManualService manualService, UploadedFilesRepository uploadedFilesRepository) {
         this.manualRepository = manualRepository;
         this.manualSearchRepository = manualSearchRepository;
         this.dynamicExportsService = dynamicExportsService;
@@ -107,8 +133,6 @@ public class ManualResource {
         this.funcaoTransacaoRepository = funcaoTransacaoRepository;
         this.manualService = manualService;
         this.filesRepository = uploadedFilesRepository;
-        this.esforcoFaseResource = esforcoFaseResource;
-        this.fatorAjusteResource = fatorAjusteResource;
     }
 
     /**
@@ -138,14 +162,13 @@ public class ManualResource {
         Optional<Manual> existingManual = manualRepository.findOneByNome(manual.getNome());
         if (existingManual.isPresent()) {
             return ResponseEntity.badRequest()
-                .headers(HeaderUtil.createFailureAlert(ENTITY_NAME, "manualexists", "Manual already in use"))
+                .headers(HeaderUtil.createFailureAlert(ENTITY_NAME, MANUAL_EXISTS, MANUAL_IN_USE))
                 .body(null);
         }
         Manual linkedManual = linkManualToPhaseEffortsAndAdjustFactors(manual);
         List<UploadedFile> uploadedFiles = manualService.uploadFiles(files, linkedManual);
-        linkedManual.setArquivosManual(uploadedFiles);
         for(UploadedFile file : uploadedFiles){
-            file.getManuais().add(linkedManual);
+            linkedManual.addArquivoManual(file);
         }
         Manual result = manualRepository.save(linkedManual);
         manualSearchRepository.save(result);
@@ -194,15 +217,16 @@ public class ManualResource {
         Optional<Manual> existingManual = manualRepository.findOneByNome(manual.getNome());
         if (existingManual.isPresent() && (!existingManual.get().getId().equals(manual.getId()))) {
             return ResponseEntity.badRequest()
-                .headers(HeaderUtil.createFailureAlert(ENTITY_NAME, "manualexists", "Manual already in use"))
+                .headers(HeaderUtil.createFailureAlert(ENTITY_NAME, MANUAL_EXISTS, MANUAL_IN_USE))
                 .body(null);
         }
-        manual.setArquivosManual(filesRepository.findAllByManuais(manual).get());
+        if(filesRepository.findAllByManuais(manual).isPresent()){
+            manual.setArquivosManual(filesRepository.findAllByManuais(manual).get());
+        }
         List<UploadedFile> uploadedFiles = manualService.uploadFiles(files, manual);
         for(UploadedFile file : uploadedFiles){
-            file.getManuais().add(manual);
+            manual.addArquivoManual(file);
         }
-        manual.getArquivosManual().addAll(uploadedFiles);
         Manual result = manualRepository.save(manual);
         manualSearchRepository.save(result);
         return ResponseEntity.ok().headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, manual.getId().toString()))
@@ -243,8 +267,10 @@ public class ManualResource {
     public ResponseEntity<Manual> getManual(@PathVariable Long id) {
         log.debug("REST request to get Manual : {}", id);
         Manual manual = manualRepository.findOne(id);
-        List<UploadedFile> files = filesRepository.findAllByManuais(manual).get();
-        System.out.println(files);
+        List<UploadedFile> files = new ArrayList<>();
+        if(filesRepository.findAllByManuais(manual).isPresent()){
+            files = filesRepository.findAllByManuais(manual).get();
+        }
         manual.setArquivosManual(files);
         return ResponseUtil.wrapOrNotFound(Optional.ofNullable(manual));
     }
@@ -305,11 +331,13 @@ public class ManualResource {
         Optional<Manual> existingManual = manualRepository.findOneByNome(manual.getNome());
         if (existingManual.isPresent()) {
             return ResponseEntity.badRequest()
-                .headers(HeaderUtil.createFailureAlert(ENTITY_NAME, "manualexists", "Manual already in use"))
+                .headers(HeaderUtil.createFailureAlert(ENTITY_NAME, MANUAL_EXISTS, MANUAL_IN_USE))
                 .body(null);
         }
-
-        List<UploadedFile> files = filesRepository.findAllByManuais(manual).get();
+        List<UploadedFile> files = new ArrayList<>();
+        if(filesRepository.findAllByManuais(manual).isPresent()){
+             files = filesRepository.findAllByManuais(manual).get();
+        }
 
         manual.setId(null);
         Manual linkedManual = linkManualToPhaseEffortsAndAdjustFactors(manual);
@@ -333,7 +361,10 @@ public class ManualResource {
     @GetMapping("/manuals/arquivos/{id}")
     public List<UploadedFile> getFiles(@PathVariable Long id){
         Manual manual = manualRepository.findOne(id);
-        return filesRepository.findAllByManuais(manual).get();
+        if(filesRepository.findAllByManuais(manual).isPresent()){
+            return filesRepository.findAllByManuais(manual).get();
+        }
+        return null;
     }
 
     private boolean verificarManualContrato(Long id) {
