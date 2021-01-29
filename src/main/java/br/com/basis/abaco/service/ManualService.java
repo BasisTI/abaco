@@ -56,7 +56,7 @@ public class ManualService {
                 uploadedFile.setSizeOf(bytes.length);
                 uploadedFiles.add(uploadedFile);
 
-                if(!manual.getArquivosManual().equals(uploadedFile)){
+                if(!manual.getArquivosManual().contains(uploadedFile)){
                     filesRepository.save(uploadedFile);
                 }
             }

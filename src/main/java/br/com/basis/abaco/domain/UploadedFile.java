@@ -4,12 +4,23 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.Lob;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Created by Roman Rogov on 07.07.2017.
@@ -103,11 +114,15 @@ public class UploadedFile implements Serializable {
     }
 
     public List<Manual> getManuais() {
-        return manuais;
+        return Optional.ofNullable(this.manuais)
+            .map(lista -> new LinkedList<Manual>(lista))
+            .orElse(new LinkedList<Manual>());
     }
 
     public void setManuais(List<Manual> manuais) {
-        this.manuais = manuais;
+        this.manuais = Optional.ofNullable(manuais)
+            .map(lista -> new LinkedList<Manual>(lista))
+            .orElse(new LinkedList<Manual>());
     }
 
     public Integer getProcessType() {

@@ -59,23 +59,22 @@ public class UploadController {
     public ResponseEntity<String> singleFileUpload(@RequestParam("file") MultipartFile[] files,
             HttpServletRequest request, RedirectAttributes redirectAttributes) {
         try {
-            for(MultipartFile file : files) {
-                UploadedFile uploadedFile = new UploadedFile();
-                byte[] bytes = file.getBytes();
+            for (MultipartFile obj : files) {
+                UploadedFile upFile = new UploadedFile();
+                byte[] bytes = obj.getBytes();
 
-                byte[] bytesFileName = (file.getOriginalFilename() + String.valueOf(System.currentTimeMillis()))
+                byte[] bytesFileNames = (obj.getOriginalFilename() + String.valueOf(System.currentTimeMillis()))
                     .getBytes("UTF-8");
-                String filename = DatatypeConverter.printHexBinary(MessageDigest.getInstance("MD5").digest(bytesFileName));
-                String ext = FilenameUtils.getExtension(file.getOriginalFilename());
-                filename += "." + ext;
+                String fileName = DatatypeConverter.printHexBinary(MessageDigest.getInstance("MD5").digest(bytesFileNames));
+                String extension = FilenameUtils.getExtension(obj.getOriginalFilename());
+                fileName += "." + extension;
 
-                uploadedFile.setLogo(bytes);
-                uploadedFile.setDateOf(new Date());
-                uploadedFile.setOriginalName(file.getOriginalFilename());
-                uploadedFile.setFilename(filename);
-                uploadedFile.setSizeOf(bytes.length);
-                uploadedFile = filesRepository.save(uploadedFile);
-
+                upFile.setLogo(bytes);
+                upFile.setDateOf(new Date());
+                upFile.setOriginalName(obj.getOriginalFilename());
+                upFile.setFilename(fileName);
+                upFile.setSizeOf(bytes.length);
+                filesRepository.save(upFile);
             }
         } catch (IOException | NoSuchAlgorithmException e) {
             throw new UploadException("Erro ao efetuar o upload do arquivo", e);

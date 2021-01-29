@@ -1,7 +1,6 @@
 package br.com.basis.abaco.domain;
 
 import br.com.basis.dynamicexports.pojo.ReportObject;
-
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
@@ -10,14 +9,31 @@ import org.springframework.data.elasticsearch.annotations.Field;
 import org.springframework.data.elasticsearch.annotations.FieldIndex;
 import org.springframework.data.elasticsearch.annotations.FieldType;
 
-import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
 import javax.validation.constraints.DecimalMax;
 import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.util.*;
+import java.util.LinkedHashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.Set;
 
 /**
  * A Manual.
@@ -156,11 +172,15 @@ public class Manual implements Serializable, ReportObject, Cloneable {
   }
 
     public List<UploadedFile> getArquivosManual() {
-        return arquivosManual;
+        return Optional.ofNullable(this.arquivosManual)
+            .map(lista -> new LinkedList<UploadedFile>(lista))
+            .orElse(new LinkedList<UploadedFile>());
     }
 
     public void setArquivosManual(List<UploadedFile> arquivosManual) {
-        this.arquivosManual = arquivosManual;
+        this.arquivosManual = Optional.ofNullable(arquivosManual)
+            .map(lista -> new LinkedList<UploadedFile>(lista))
+            .orElse(new LinkedList<UploadedFile>());
     }
 
     public void addArquivoManual(UploadedFile file){
