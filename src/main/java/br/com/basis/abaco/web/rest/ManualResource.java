@@ -102,14 +102,11 @@ public class ManualResource {
     private final FatorAjusteRepository fatorAjusteRepository;
 
     private final DynamicExportsService dynamicExportsService;
+    
+    private final ManualService manualService;
 
     private final UploadedFilesRepository filesRepository;
 
-    private final ManualService manualService;
-
-    private final EsforcoFaseResource esforcoFaseResource;
-
-    private final FatorAjusteResource fatorAjusteResource;
 
     private static final String ROLE_ANALISTA = "ROLE_ANALISTA";
 
