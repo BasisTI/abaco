@@ -15,6 +15,7 @@ import br.com.basis.abaco.repository.UploadedFilesRepository;
 import br.com.basis.abaco.repository.search.ManualSearchRepository;
 import br.com.basis.abaco.service.ManualService;
 import br.com.basis.abaco.service.dto.DropdownDTO;
+import br.com.basis.abaco.service.dto.ManualDTO;
 import br.com.basis.abaco.service.exception.RelatorioException;
 import br.com.basis.abaco.service.relatorio.RelatorioManualColunas;
 import br.com.basis.abaco.utils.AbacoUtil;
@@ -107,7 +108,6 @@ public class ManualResource {
 
     private final UploadedFilesRepository filesRepository;
 
-
     private static final String ROLE_ANALISTA = "ROLE_ANALISTA";
 
     private static final String ROLE_ADMIN = "ROLE_ADMIN";
@@ -135,7 +135,7 @@ public class ManualResource {
     /**
      * POST /manuals : Create a new manual.
      *
-     * @param manual
+     * @param manualDTO
      * @param files
      *            the manual to create
      * @return the ResponseEntity with status 201 (Created) and with body the new
@@ -147,7 +147,9 @@ public class ManualResource {
     @PostMapping(path = "/manuals", consumes = {"multipart/form-data"})
     @Timed
     @Secured({ROLE_ADMIN, ROLE_USER, ROLE_GESTOR, ROLE_ANALISTA})
-    public ResponseEntity<Manual> createManual(@Valid @RequestPart("manual") Manual manual, @RequestPart("file") List<MultipartFile> files) throws URISyntaxException {
+    public ResponseEntity<Manual> createManual(@Valid @RequestPart("manual") ManualDTO manualDTO, @RequestPart("file") List<MultipartFile> files) throws URISyntaxException, InvocationTargetException, IllegalAccessException {
+
+        Manual manual = manualDTO.toEntity();
 
         log.debug("REST request to save Manual : {}", manual);
         if (manual.getId() != null) {
@@ -191,7 +193,7 @@ public class ManualResource {
     /**
      * PUT /manuals : Updates an existing manual.
      *
-     * @param manual
+     * @param manualDTO
      * @param files
      *            the manual to update
      * @return the ResponseEntity with status 200 (OK) and with body the updated
@@ -204,11 +206,13 @@ public class ManualResource {
     @PutMapping(path = "/manuals", consumes = {"multipart/form-data"})
     @Timed
     @Secured({ROLE_ADMIN, ROLE_USER, ROLE_GESTOR, ROLE_ANALISTA})
-    public ResponseEntity<Manual> updateManual(@Valid @RequestPart("manual") Manual manual, @RequestPart("file") List<MultipartFile> files) throws URISyntaxException {
+    public ResponseEntity<Manual> updateManual(@Valid @RequestPart("manual") ManualDTO manualDTO, @RequestPart("file") List<MultipartFile> files) throws URISyntaxException, InvocationTargetException, IllegalAccessException {
+
+        Manual manual = manualDTO.toEntity();
 
         log.debug("REST request to update Manual : {}", manual);
         if (manual.getId() == null) {
-            return createManual(manual, files);
+            return createManual(manualDTO, files);
         }
 
         Optional<Manual> existingManual = manualRepository.findOneByNome(manual.getNome());
@@ -217,9 +221,12 @@ public class ManualResource {
                 .headers(HeaderUtil.createFailureAlert(ENTITY_NAME, MANUAL_EXISTS, MANUAL_IN_USE))
                 .body(null);
         }
-        if(filesRepository.findAllByManuais(manual).isPresent()){
-            manual.setArquivosManual(filesRepository.findAllByManuais(manual).get());
+
+        Optional<List<UploadedFile>> existingFiles = filesRepository.findAllByManuais(manual);
+        if(existingFiles.isPresent()){
+            manual.setArquivosManual(existingFiles.get());
         }
+
         List<UploadedFile> uploadedFiles = manualService.uploadFiles(files, manual);
         for(UploadedFile file : uploadedFiles){
             manual.addArquivoManual(file);
@@ -264,11 +271,13 @@ public class ManualResource {
     public ResponseEntity<Manual> getManual(@PathVariable Long id) {
         log.debug("REST request to get Manual : {}", id);
         Manual manual = manualRepository.findOne(id);
-        List<UploadedFile> files = new ArrayList<>();
-        if(filesRepository.findAllByManuais(manual).isPresent()){
-            files = filesRepository.findAllByManuais(manual).get();
+
+
+        Optional<List<UploadedFile>> existingFiles = filesRepository.findAllByManuais(manual);
+        if(existingFiles.isPresent()){
+            manual.setArquivosManual(existingFiles.get());
         }
-        manual.setArquivosManual(files);
+
         return ResponseUtil.wrapOrNotFound(Optional.ofNullable(manual));
     }
 
@@ -313,7 +322,7 @@ public class ManualResource {
     /**
      * POST /manuals/clonar : Clone manual.
      *
-     * @param manual
+     * @param manualDTO
      *
      * @return the ResponseEntity with status 201 (Created) and with body the new
      *         manual, or with status 400 (Bad Request) if the manual has already an
@@ -323,7 +332,9 @@ public class ManualResource {
      */
     @PostMapping("/manuals/clonar")
     @Timed
-    public ResponseEntity<Manual> clonar(@RequestBody Manual manual) throws InvocationTargetException, IllegalAccessException {
+    public ResponseEntity<Manual> clonar(@RequestBody ManualDTO manualDTO) throws InvocationTargetException, IllegalAccessException {
+
+        Manual manual = manualDTO.toEntity();
 
         Optional<Manual> existingManual = manualRepository.findOneByNome(manual.getNome());
         if (existingManual.isPresent()) {
@@ -331,9 +342,10 @@ public class ManualResource {
                 .headers(HeaderUtil.createFailureAlert(ENTITY_NAME, MANUAL_EXISTS, MANUAL_IN_USE))
                 .body(null);
         }
-        List<UploadedFile> files = new ArrayList<>();
-        if(filesRepository.findAllByManuais(manual).isPresent()){
-             files = filesRepository.findAllByManuais(manual).get();
+        List<UploadedFile> files = new ArrayList<UploadedFile>();
+        Optional<List<UploadedFile>> existingFiles = filesRepository.findAllByManuais(manual);
+        if(existingFiles.isPresent()) {
+            files.addAll(existingFiles.get());
         }
 
         manual.setId(null);
@@ -358,10 +370,13 @@ public class ManualResource {
     @GetMapping("/manuals/arquivos/{id}")
     public List<UploadedFile> getFiles(@PathVariable Long id){
         Manual manual = manualRepository.findOne(id);
-        if(filesRepository.findAllByManuais(manual).isPresent()){
-            return filesRepository.findAllByManuais(manual).get();
+
+        Optional<List<UploadedFile>> existingFiles = filesRepository.findAllByManuais(manual);
+        if(existingFiles.isPresent()){
+            return existingFiles.get();
         }
-        return null;
+
+        return Collections.emptyList();
     }
 
     private boolean verificarManualContrato(Long id) {

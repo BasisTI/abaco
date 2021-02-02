@@ -107,7 +107,11 @@ public class UploadController {
         UploadedFile file = filesRepository.findOne(id);
         Manual manual = manualRepository.findOne(manualId);
 
+
+
         manual.removeArquivoManual(file);
+
+
         manualRepository.save(manual);
         filesRepository.save(file);
 

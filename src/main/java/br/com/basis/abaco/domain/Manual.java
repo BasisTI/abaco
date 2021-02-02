@@ -185,12 +185,12 @@ public class Manual implements Serializable, ReportObject, Cloneable {
 
     public void addArquivoManual(UploadedFile file){
       this.arquivosManual.add(file);
-      file.getManuais().add(this);
+      file.addManual(this);
     }
 
     public void removeArquivoManual(UploadedFile file){
       this.arquivosManual.remove(file);
-      file.getManuais().remove(this);
+      file.removeManual(this);
     }
 
     public Set<EsforcoFase> getEsforcoFases() {

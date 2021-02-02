@@ -125,6 +125,14 @@ public class UploadedFile implements Serializable {
             .orElse(new LinkedList<Manual>());
     }
 
+    public void addManual(Manual manual){
+        this.manuais.add(manual);
+    }
+
+    public void removeManual(Manual manual){
+        this.manuais.remove(manual);
+    }
+
     public Integer getProcessType() {
         return processType;
     }
