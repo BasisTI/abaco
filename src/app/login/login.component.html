@@ -1,60 +1,48 @@
-<div class="ui-g ui-fluid login-template" >
+<div class="ui-g ui-fluid login-template">
   <div class="ui-g-12 container-login">
 
     <div class="card card-w-title login-panel">
 
-      <form novalidate #loginForm="ngForm"
-        name="loginForm"
-        role="form"
-        (ngSubmit)="login()">
+      <form novalidate #loginForm="ngForm" name="loginForm" role="form" (ngSubmit)="login()">
 
-        <img class="logo" src="../../assets/layout/images/login/abaco.png">  
+        <img class="logo" src="../../assets/layout/images/login/abaco.png">
 
         <h1 class="title p-b-34 p-t-27">LOGIN</h1>
 
         <div class="ui-g">
 
           <div class="ui-g-12 ui-md-12 ui-sm-12 input">
-            <input
-                required
-                type="text"
-                name="username"
-                [(ngModel)]="username"
-                [placeholder]="this.getLabel('Usuário*')"
-                pInputText />
-                <span class="username" data-placeholder=""></span>
+            <input required type="text" name="username" [(ngModel)]="username" [placeholder]="this.getLabel('Usuário*')"
+              pInputText />
+            <span class="username" data-placeholder=""></span>
 
           </div>
           <div *ngIf="(loginForm.controls['username']
                                         && !loginForm.controls['username'].valid
                                         && (loginForm.controls['username'].touched
                                         || loginForm.submitted))" class="ui-message ui-messages-error">
-                                    Campo obrigatório.
-                </div>
+            Campo obrigatório.
+          </div>
           <div class="ui-g-12 ui-md-12 ui-sm-12 input">
-            <input
-                required
-                pPassword
-                type="password"
-                name="password"
-                [placeholder]="this.getLabel('Senha*')"
-                [(ngModel)]="password"
-                [feedback]="false" />
-                <span class="password" data-placeholder=""></span>
+            <input required pPassword type="password" name="password" [placeholder]="this.getLabel('Senha*')"
+              [(ngModel)]="password" [feedback]="false" />
+            <span class="password" data-placeholder=""></span>
 
           </div>
           <div *ngIf="(loginForm.controls['password']
                                         && !loginForm.controls['password'].valid
                                         && (loginForm.controls['password'].touched
                                         || loginForm.submitted))" class="ui-message ui-messages-error">
-                                    Campo obrigatório.
-                </div>
+            Campo obrigatório.
+          </div>
+          <div class="ui-g-12 login-btn">
+            <a id="rec-login" routerLink="senha/rec"> Esqueceu a Senha? </a>
+          </div>
         </div>
-
         <div class="ui-g-12 login-btn">
-            <button pButton type="submit">
-              <span>Login</span>
-            </button>
+          <button pButton type="submit">
+            <span>Login</span>
+          </button>
         </div>
       </form>
     </div>

@@ -1,0 +1,38 @@
+<div class=" ui-g ui-fluid rec-senha-template  ">
+    <div class="ui-g-12 container-rec-senha">
+        <div class=" card card-w-title rec-senha-red-panel">
+            <form novalidate #recSenhaForm="ngForm" name="rec-senhaForm" (ngSubmit)="finishResetPassword()" role="form">
+
+                <img class="logo" src="../../assets/layout/images/login/abaco.png">
+
+                <h1 style="margin-top: -10px;" class=" title p-b-34 p-t-27 "> Redefinir Senha </h1>
+                <div class="ui-g">
+
+                    <div style="margin-top: -50px; text-align: center;">
+                        <label class="text-label"> Digite uma nova senha para o seu usuário com no minimo 4 digitos.
+                        </label>
+                    </div>
+
+                    <div class="ui-g-12 ui-md-12 ui-sm-12 input">
+                        <input required maxlength="20" type="password" name="newPassword" [(ngModel)]="this.newPassword"
+                            [placeholder]="this.getLabel('Nova Senha')" pInputText />
+                        <span class="password" data-placeeholder=""></span>
+                    </div>
+
+                    <div class="ui-g-12 ui-md-12 ui-sm-12 input">
+                        <input required maxlength="20" type="password" name="newPasswordConfirm"
+                            [(ngModel)]="this.newPasswordConfirm" [placeholder]="this.getLabel('Confirme a Nova Senha')"
+                            pInputText />
+                        <span class="password" data-placeeholder=""></span>
+                    </div>
+
+                    <div style="margin-top: -10px;" class="ui-g-12 rec-senha-btn">
+                        <button pButton type="submit">
+                            <span class="p-text-center">Alterar Senha</span>
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

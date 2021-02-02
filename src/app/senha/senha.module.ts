@@ -6,6 +6,9 @@ import { SenhaComponent, SenhaFormComponent, senhaRoute, SenhaService } from './
 import { HttpClientModule } from '@angular/common/http';
 import { SecurityModule } from '@nuvem/angular-base';
 import { SharedModule } from '../shared/shared.module';
+import { RecuperarSenhaComponent } from './senha-rec/recuperar-senha.component';
+import { RecuperarSenhaFormComponent } from './senha-rec/recuperar-senha-form';
+
 
 @NgModule({
     imports: [
@@ -18,7 +21,9 @@ import { SharedModule } from '../shared/shared.module';
     ],
     declarations: [
         SenhaFormComponent,
-        SenhaComponent
+        SenhaComponent,
+        RecuperarSenhaComponent,
+        RecuperarSenhaFormComponent
     ],
     providers: [
         SenhaService
