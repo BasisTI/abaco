@@ -11,6 +11,8 @@ import { Upload } from '../upload/upload.model';
 
 import { BlockUiService } from '@nuvem/angular-base';
 
+import { BlockUiService } from '@nuvem/angular-base';
+
 @Injectable()
 export class ManualService {
 
@@ -181,9 +183,9 @@ export class ManualService {
         return copy;
     }
 
-    public gerarRelatorioPdfArquivo(id: number): Observable<any> {
+    public gerarRelatorioPdfArquivo() {
         this.blockUiService.show();
-        this.http.request('get',`${this.relatorioManualUrl}/${id}`, {
+        this.http.request('get', this.relatorioManualUrl, {
             responseType: 'blob',
         }).subscribe(
             response => {
@@ -196,8 +198,6 @@ export class ManualService {
                 document.body.appendChild(anchor);
                 anchor.click();
                 this.blockUiService.hide();
-                return null;
             });
-        return null;
     }
 }
