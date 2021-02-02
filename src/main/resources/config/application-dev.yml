@@ -111,8 +111,9 @@ jhipster:
                 token-validity-in-seconds: 2592000
                 token-validity-in-seconds-for-remember-me: 2592000
     mail: # specific JHipster mail property, for standard properties see MailProperties
+          #  baseurl was changed from port 8080 to port 4200.
         from: abaco@basis.com.br
-        base-url: http://127.0.0.1:8080
+        base-url: http://127.0.0.1:4200
     metrics: # DropWizard Metrics configuration, used by MetricsConfiguration
         jmx.enabled: true
         graphite: # Use the "graphite" Maven profile to have the Graphite dependencies
