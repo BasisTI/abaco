@@ -175,9 +175,7 @@ export class ManualListComponent implements OnInit {
     }
 
     public gerarRelatorioPdf(){
-        console.log('entrou gerar PDF');
-        console.log(this.manualSelecionado.id);
-        this.manualService.gerarRelatorioPdfArquivo(this.manualSelecionado.id)
+        this.manualService.gerarRelatorioPdfArquivo()
     }
     
 }
