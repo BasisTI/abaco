@@ -1,0 +1,313 @@
+.rec-senha-template {
+	justify-content: center;
+	margin: 0 auto;
+    background-color:rgb(255, 251, 251);    
+    width:100%; 
+    height:100%; 
+    z-index:1000;
+    top:0; 
+    left:0; 
+    position:absolute;
+
+
+        .container-rec-senha::before {
+	 	content: "";
+	 	display: block;
+	 	position: absolute;
+	 	z-index: -1;
+	 	width: 100%;
+	 	height: 100%;
+	 	top: 0;
+	 	left: 0;
+	 	background-color: rgba(255, 255, 255, .9)
+	}  
+
+	.container-rec-senha {
+        background-color: rgb(175, 172, 172);
+        width: 100%;
+		min-height: 100vh;
+		display: -webkit-box;
+		display: -webkit-flex;
+		display: -moz-box;
+		display: -ms-flexbox;
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: center;
+		align-items: center;
+		padding: 15px;
+		background-repeat: no-repeat;
+		background-position: center;
+		background-size: cover;
+		position: relative;
+		z-index: 1;
+
+		.rec-senha-panel {
+			width: 500px;
+			border-radius: 10px;
+			overflow: hidden;
+			padding: 55px 55px 37px;
+			background: #EF4436;
+			background: -webkit-linear-gradient(top,#FBAD40,#EF4436);
+			background: -o-linear-gradient(top,#FBAD40#EF4436);
+			background: -moz-linear-gradient(top,#FBAD40,#EF4436);
+			background: linear-gradient(top,#FBAD40,#EF4436);
+		}
+
+		.rec-senha-red-panel {
+			width: 500px;
+			border-radius: 10px;
+			overflow: hidden;
+			padding: 55px 55px 37px;
+			background: #0432c9;
+			background: -webkit-linear-gradient(top,#FBAD40,#0432c9);
+			background: -o-linear-gradient(top,#FBAD40#0432c9);
+			background: -moz-linear-gradient(top,#FBAD40,#0432c9);
+			background: linear-gradient(top,#FBAD40,#0432c9);
+		}
+
+		.ui-g .ui-g-12 {
+			padding: 0px !important;
+		}
+
+		.logo {
+			font-size: 60px;
+			color: #333;
+			display: -webkit-box;
+			display: -webkit-flex;
+			display: -moz-box;
+			display: -ms-flexbox;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			width: 150px;
+			height: 150px;
+			border-radius: 50%;
+			margin: 0 auto;
+			/*background-color: #fff;*/
+			background-repeat: no-repeat;
+			background-position: center;
+			background-size: cover;
+		}
+		
+		.title {
+			font-size: 30px;
+			font-weight: bold;
+			color: #fff;
+			line-height: 1.2;
+			text-align: center;
+			text-transform: uppercase;
+			display: block;
+		}
+
+		.p-b-34 {
+			padding-bottom: 34px;
+		}
+		.p-t-27 {
+			padding-top: 27px;
+		}
+
+		.text-label{
+			font-size: 16px;
+			color: #fff;
+		}
+
+		.input {
+			width: 100%;
+			position: relative;
+			border-bottom: 2px solid rgba(253, 252, 252, 0.9);
+			margin-bottom: 30px;
+
+			input {
+				outline: none;
+				border: none;
+			}
+
+			input:focus {
+				border-color: transparent!important
+			}
+
+			input:focus::-webkit-input-placeholder {
+				color: transparent
+			}
+
+			input:focus:-moz-placeholder {
+				color: transparent
+			}
+
+			input:focus::-moz-placeholder {
+				color: transparent
+			}
+
+			input:focus:-ms-input-placeholder {
+				color: transparent
+			}
+
+			input::-webkit-input-placeholder {
+				color: #fff
+			}
+
+			input:-moz-placeholder {
+				color: #fff
+			}
+
+			input::-moz-placeholder {
+				color: #fff
+			}
+
+			input:-ms-input-placeholder {
+				color: #fff
+			}
+
+			input {
+				/*font-family: Poppins-Regular;*/
+				font-size: 16px;
+				color: #fff;
+				line-height: 1.2;
+				display: block;
+				width: 100%;
+				height: 45px;
+				background: 0 0;
+				padding: 0 5px 0 38px;
+			}
+
+			span {
+				position: absolute;
+				display: block;
+				width: 100%;
+				height: 100%;
+				top: 0;
+				left: 0;
+				pointer-events: none;
+				text-align: left;
+			}
+
+			span::before {
+				content: "";
+				display: block;
+				position: absolute;
+				bottom: -2px;
+				left: 0;
+				width: 0;
+				height: 2px;
+				-webkit-transition: all .4s;
+				-o-transition: all .4s;
+				-moz-transition: all .4s;
+				transition: all .4s;
+				background: #fff
+			}
+
+			span::after {
+				font-family: "Material Icons";
+				font-size: 22px;
+				color: #fff;					    
+				display: block;
+				width: 100%;
+				position: absolute;
+				top: 14px;
+				left: 0;
+				padding-left: 5px;
+				-webkit-transition: all .4s;
+				-o-transition: all .4s;
+				-moz-transition: all .4s;
+				transition: all .4s
+			}
+
+			span.email::after{
+				content: "input";
+			}
+
+			span.password::after{
+				content: "lock";
+			}
+
+			input:focus {
+				padding-left: 5px
+			}
+
+			input:focus+span::after {
+				top: -22px;
+				font-size: 18px
+			}
+
+			input:focus+span::before {
+				width: 100%
+			}
+		}
+
+			.rec-senha-btn {
+				width: 100%;
+				display: -webkit-box;
+				display: -webkit-flex;
+				display: -moz-box;
+				display: -ms-flexbox;
+				display: flex;
+				flex-wrap: wrap;
+				justify-content: center;
+
+				button {
+					/*font-family: Poppins-Medium;*/
+					font-size: 14px;
+					font-weight: bold;
+					color: rgb(5, 5, 5);
+					line-height: 1.2;
+					display: -webkit-box;
+					display: -webkit-flex;
+					display: -moz-box;
+					display: -ms-flexbox;
+					display: flex;
+					justify-content:center;
+					align-items:center;
+					padding:  3 250px;
+					min-width: 220px;
+					height: 50px;
+					border-radius: 25px;
+					background: #0a48f5;
+					background: -webkit-linear-gradient(bottom, #FBAD40, #C01E2E);
+					background: -o-linear-gradient(bottom, #FBAD40, #C01E2E);
+					background: -moz-linear-gradient(bottom, #FBAD40, #C01E2E);
+					background: linear-gradient(bottom, #FBAD40, #C01E2E);
+					position: relative;
+					z-index: 1;
+					-webkit-transition: all .4s;
+					-o-transition: all .4s;
+					-moz-transition: all .4s;
+					transition: all .4s;
+					width: 30%;
+				}
+
+				button::before {
+					content: "";
+					display: block;
+					position: absolute;
+					z-index: -1;
+					width: 100%;
+					height: 100%;
+					border-radius: 25px;
+					background-color: rgb(248, 244, 244);
+					top: 0;
+					left: 0;
+					opacity: 1;
+					-webkit-transition: all .4s;
+					-o-transition: all .4s;
+					-moz-transition: all .4s;
+					transition: all .4s;
+				}
+
+				button:hover {
+					color: #fff;
+				}
+
+				button:hover:before {
+					opacity: 0;
+				}
+
+				#button-rec{
+					color: #fff;
+					align-items: center;
+					margin-top: 10px;
+				}
+			
+		}
+
+	}
+ }

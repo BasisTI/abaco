@@ -9,6 +9,7 @@ export const environment = {
     auth: {
         detailsUrl: '/api/user/details',
         loginUrl: '/#/login',
+        resetPasswordUrl: '/#/reset/finish?key=',
         logoutUrl: '/',
         userStorage: localStorage,
         userStorageIndex: 'user',

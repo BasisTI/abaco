@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, NgZone} from '@angular/core';
+import { Component, OnInit, OnDestroy, NgZone } from '@angular/core';
 import { LoginService } from './login.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { environment } from '../../environments/environment';
