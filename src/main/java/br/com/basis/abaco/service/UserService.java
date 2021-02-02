@@ -96,6 +96,15 @@ public class UserService extends BaseService {
         });
     }
 
+    public Optional<User> requestPasswordResetUser(String login) {
+        return userRepository.findOneByLogin(login).filter(User::isActivated).map(user -> {
+            user.setResetKey(RandomUtil.generateResetKey());
+            user.setResetDate(ZonedDateTime.now());
+            return user;
+        });
+    }
+
+
     public User createUser(String login, String password, String firstName, String lastName, String email,
                            String imageUrl, String langKey) {
         User newUser = new User();

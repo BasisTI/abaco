@@ -171,14 +171,22 @@ public class AccountResource {
     @PostMapping(path = "/account/reset_password/init",
         produces = MediaType.TEXT_PLAIN_VALUE)
     @Timed
-    public ResponseEntity requestPasswordReset(@RequestBody String mail) {
-        return userService.requestPasswordReset(mail)
-            .map(user -> {
-                mailService.sendPasswordResetMail(user);
-                return new ResponseEntity<>("e-mail was sent", HttpStatus.OK);
-            }).orElse(new ResponseEntity<>("e-mail address not registered", HttpStatus.BAD_REQUEST));
-    }
+    public ResponseEntity<String> requestPasswordReset(@RequestParam(name = "mail", defaultValue = "") String mail, @RequestParam( name = "login", defaultValue = "") String login) {
 
+        if (!mail.isEmpty() && login.isEmpty()){
+            return userService.requestPasswordReset(mail)
+                .map(user -> {
+                    mailService.sendPasswordResetMail(user);
+                    return new ResponseEntity<>("e-mail was sent", HttpStatus.OK);
+                }).orElse(new ResponseEntity<>("e-mail address not registered", HttpStatus.BAD_REQUEST));
+        }else {
+            return userService.requestPasswordResetUser(login)
+                .map(user -> {
+                    mailService.sendPasswordResetMail(user);
+                    return new ResponseEntity<>("e-mail was sent", HttpStatus.OK);
+                }).orElse(new ResponseEntity<>("e-mail address not registered", HttpStatus.BAD_REQUEST));
+        }
+    }
     /**
      * POST   /account/reset_password/finish : Finish to reset the password of the user
      *
