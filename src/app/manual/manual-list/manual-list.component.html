@@ -59,9 +59,22 @@
 
                     <basis-datatable-button
                             name="clone"
+                            [bTooltip]="relatorioCloneButton()"
                             icon="content-copy"
                             id="idTabelaCloneComponentManual"
-                            disabled="desabilitarBotaoClonar()">
+                            disabled="desabilitarBotaoClonar()"
+                            [disabled]="datatable.selectedRow == null">
+                    </basis-datatable-button>
+
+                     <basis-datatable-button
+                            name="exportPDF"
+                            [bTooltip]="relatorioFatorAjusteButton()"
+                            icon="description"
+                            id="idTabelaCloneComponentManual"
+                            disabled="desabilitarBotaoClonar()"
+                            class="ui-button-danger"
+                            [disabled]="datatable.selectedRow == null">
+                            
                     </basis-datatable-button>
                     
                     <p-column header="Nome" field="nome" [sortable]="true" [style]="{'width': '15%'}" [filterOnColumn]="true">

@@ -28,7 +28,7 @@ export class ManualListComponent implements OnInit {
     myform: FormGroup;
     nomeValido = false;
     urlManualService = this.manualService.resourceUrl;
-    idManual: Number;
+    idManual: Number; 
 
     constructor(
         private router: Router,
@@ -159,6 +159,10 @@ export class ManualListComponent implements OnInit {
                 this.mostrarDialogClonar = true;
                 break;
             }
+            case 'exportPDF': {
+                this.exportarManualFatorAjuste();
+                break;
+            }
             default: {
                 break;
             }
@@ -176,6 +180,25 @@ export class ManualListComponent implements OnInit {
 
     public gerarRelatorioPdf(){
         this.manualService.gerarRelatorioPdfArquivo()
+    }
+
+    public exportarManualFatorAjuste(){
+        console.log(this.manualSelecionado.id);
+        this.manualService.geraRelatorioPdfBrowserFatorAjuste(this.manualSelecionado.id);
+      }
+
+      relatorioCloneButton() {
+        if (!(this.datatable && this.datatable.selectedRow)) {
+            return this.getLabel('Selecione um registro para clonar');
+        }
+        return this.getLabel('Clonar');
+    }
+
+    relatorioFatorAjusteButton() {
+        if (!(this.datatable && this.datatable.selectedRow)) {
+            return this.getLabel('Selecione um registro para gerar o relatório');
+        }
+        return this.getLabel('Relatório Fator Ajuste');
     }
     
 }

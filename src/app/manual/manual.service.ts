@@ -11,8 +11,6 @@ import { Upload } from '../upload/upload.model';
 
 import { BlockUiService } from '@nuvem/angular-base';
 
-import { BlockUiService } from '@nuvem/angular-base';
-
 @Injectable()
 export class ManualService {
 
@@ -20,6 +18,7 @@ export class ManualService {
     resourceUrl = environment.apiUrl + this.resourceName;
     searchUrl = environment.apiUrl + '/_search/manual';
     relatoriosUrl = environment.apiUrl + '/manuals';
+    relatorioFatorAjusteUrl = environment.apiUrl + '/relatorioPdfArquivoFatorAjuste';
 
     relatorioManualUrl = environment.apiUrl + '/manual/exportacaoPDF';
 
@@ -40,9 +39,11 @@ export class ManualService {
 
     create(manual: Manual, files: File[]): Observable<any> {
         let body = new FormData();
-
-        for (let i = 0; i < files.length; i++) {
-            body.append('file', files[i]);
+        
+        if(files){
+            for (let i = 0; i < files.length; i++) {
+                body.append('file', files[i]);
+            }
         }
 
         const json = JSON.stringify(manual);
@@ -143,15 +144,15 @@ export class ManualService {
                     return Observable.throw(new Error(error.status));
                 }
                 if (error.error.message == "ContratoRelacionado") {
-                    this.pageNotificationService.addErrorMessage('Erro de integridade: Manual relacionado com contrato(s)');
+                    this.pageNotificationService.addErrorMessage('Manual relacionado com contrato(s)');
                     return Observable.throw(new Error(error.status));
                 } 
                 if (error.error.message == "AnaliseRelacionada") {
-                    this.pageNotificationService.addErrorMessage('Erro de integridade: Manual relacionado com análise(s)');
+                    this.pageNotificationService.addErrorMessage('Manual relacionado com análise(s)');
                     return Observable.throw(new Error(error.status));
                 }
                 if (error.error.message == "FatorDeAjusteRelacionado") {
-                    this.pageNotificationService.addErrorMessage('Erro de integridade: Manual relacionado com fatore(s) de reajuste');
+                    this.pageNotificationService.addErrorMessage('Manual relacionado com fatore(s) de reajuste');
                     return Observable.throw(new Error(error.status));
                 }
             }
@@ -199,5 +200,24 @@ export class ManualService {
                 anchor.click();
                 this.blockUiService.hide();
             });
+    }
+
+    public geraRelatorioPdfBrowserFatorAjuste(id: number): Observable<string> {
+        this.blockUiService.show();
+        this.http.request('get', `${this.relatorioFatorAjusteUrl}/${id}`, {
+            responseType: 'blob',
+        }).subscribe(
+            (response) => {
+                const mediaType = 'application/pdf';
+                const blob = new Blob([response], {type: mediaType});
+                const fileURL = window.URL.createObjectURL(blob);
+                const anchor = document.createElement('a');
+                anchor.download = 'analise.pdf';
+                anchor.href = fileURL;
+                window.open(fileURL, '_blank', '');
+                this.blockUiService.hide();
+                return null;
+            });
+        return null;
     }
 }
