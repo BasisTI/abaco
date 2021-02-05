@@ -15,3 +15,8 @@ services:
             file: elasticsearch/elasticsearch.yml
             service: abaco-elasticsearch
         container_name: elasticsearch-abaco
+    rabbitmq:
+        extends:
+            file: rabbitmq/rabbitmq.yml
+            service: abaco-rabbitmq
+        container_name: rabbitmq-abaco
