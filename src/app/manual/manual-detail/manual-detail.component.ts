@@ -55,4 +55,5 @@ export class ManualDetailComponent implements OnInit, OnDestroy {
         this.arquivos = response;
     })
   }
+  
 }
