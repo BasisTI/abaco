@@ -20,6 +20,7 @@ import br.com.basis.abaco.service.exception.RelatorioException;
 import br.com.basis.abaco.service.relatorio.RelatorioManualColunas;
 import br.com.basis.abaco.utils.AbacoUtil;
 import br.com.basis.abaco.utils.PageUtils;
+import br.com.basis.abaco.web.rest.errors.CustomParameterizedException;
 import br.com.basis.abaco.web.rest.errors.UploadException;
 import br.com.basis.abaco.web.rest.util.HeaderUtil;
 import br.com.basis.abaco.web.rest.util.PaginationUtil;
@@ -28,6 +29,7 @@ import br.com.basis.dynamicexports.util.DynamicExporter;
 import com.codahale.metrics.annotation.Timed;
 import io.github.jhipster.web.util.ResponseUtil;
 import jdk.nashorn.internal.parser.JSONParser;
+import lombok.SneakyThrows;
 import net.sf.dynamicreports.report.exception.DRException;
 import net.sf.jasperreports.engine.JRException;
 import org.apache.commons.beanutils.BeanUtils;
@@ -103,7 +105,7 @@ public class ManualResource {
     private final FatorAjusteRepository fatorAjusteRepository;
 
     private final DynamicExportsService dynamicExportsService;
-    
+
     private final ManualService manualService;
 
     private final UploadedFilesRepository filesRepository;
@@ -288,34 +290,32 @@ public class ManualResource {
      *            the id of the manual to delete
      * @return the ResponseEntity with status 200 (OK)
      */
+    @SneakyThrows
     @DeleteMapping("/manuals/{id}")
     @Timed
     @Secured({ ROLE_ADMIN, ROLE_USER, ROLE_GESTOR, ROLE_ANALISTA })
     public ResponseEntity<String> deleteManual(@PathVariable Long id) {
-        log.debug("REST request to delete Manual : {}", id);
 
         if (verificarManualContrato(id)) {
-            return ResponseEntity.badRequest().body("contratoexists");
-        }
+            throw new CustomParameterizedException("ContratoRelacionado");
+        } else if (verificarAn(id)) {
+            throw new CustomParameterizedException("AnaliseRelacionada");
+        } else if (verificarFt(id)) {
+            throw new CustomParameterizedException("FatorDeAjusteRelacionado");
+        } else {
+            Manual manual = manualRepository.findOne(id);
 
-        if (verificarAn(id)) {
-            return ResponseEntity.badRequest().body("analiseexists");
-        }
-        if (verificarFt(id)) {
-            return ResponseEntity.badRequest().body("fatorajusteexists");
-        }
-
-        Manual manual = manualRepository.findOne(id);
-
-        for(UploadedFile file : new LinkedList<UploadedFile>(manual.getArquivosManual())){
-            manual.removeArquivoManual(file);
-            if(file.getManuais().isEmpty()){
-                filesRepository.delete(file);
+            for (UploadedFile file : new LinkedList<UploadedFile>(manual.getArquivosManual())) {
+                manual.removeArquivoManual(file);
+                if (file.getManuais().isEmpty()) {
+                    filesRepository.delete(file);
+                }
             }
-        }
 
-        manualRepository.delete(manual);
-        manualSearchRepository.delete(manual);
+            manualRepository.delete(manual);
+
+            manualSearchRepository.delete(manual);
+        }
         return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id.toString())).build();
     }
 
@@ -380,11 +380,11 @@ public class ManualResource {
     }
 
     private boolean verificarManualContrato(Long id) {
-        status=false;
-        List<ManualContrato> lstmanualContrato = manualContratoRepository.findAll();
-        if (!lstmanualContrato.isEmpty()) {
-            for (int i = 0; i < lstmanualContrato.size(); i++) {
-                if (lstmanualContrato.get(i).getManual().getId().equals(id)) {
+        boolean status=false;
+        List<ManualContrato> listmanualContrato = manualContratoRepository.findAll();
+        if (!listmanualContrato.isEmpty()) {
+            for (ManualContrato obj : listmanualContrato) {
+                if (obj.getManual().getId().equals(id)) {
                     status=true;
                     return status;
                 }
@@ -394,11 +394,11 @@ public class ManualResource {
     }
 
     private boolean verificarAn(Long id) {
-        status = false;
+        boolean status = false;
         List<Analise> lstAnalise = analiseRepository.findAll();
         if (!lstAnalise.isEmpty()) {
-            for (int i = 0; i < lstAnalise.size(); i++) {
-                if (lstAnalise.get(i).getManual()!= null && lstAnalise.get(i).getManual().getId().equals(id)) {
+            for (Analise obj : lstAnalise) {
+                if (obj.getManual() != null && obj.getManual().getId().equals(id)) {
                     status = true;
                     return status;
                 }
@@ -408,7 +408,7 @@ public class ManualResource {
     }
 
     private boolean verificarFt(Long id) {
-        status = false;
+        boolean status = false;
         List<FatorAjuste> lstFAjuste = fatorAjusteRepository.findAll();
         List<FuncaoTransacao> lstFt = funcaoTransacaoRepository.findAll();
         if (!lstFAjuste.isEmpty()) {
