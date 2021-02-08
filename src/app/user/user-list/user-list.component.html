@@ -79,6 +79,12 @@
                     </basis-datatable>
 
                     <div class="ui-g-12 ui-md-2">
+                        <app-export-button [dataTable]="datatable" resourceName="users">
+                        </app-export-button>
+                    </div>
+
+
+                    <div class="ui-g-12 ui-md-2">
                         <app-botoes-exportacao [query]="query" resourceName="users" fileName="usuários">
                         </app-botoes-exportacao>
                     </div>
