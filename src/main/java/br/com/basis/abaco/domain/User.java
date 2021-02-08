@@ -147,6 +147,34 @@ public class User extends AbstractAuditingEntity implements Serializable, Report
         return temResposta;
     }
 
+    public String getEquipes(){
+        String ponto = ". ";
+        String nomeEquipe = "";
+
+        if (tipoEquipes != null) {
+            for (TipoEquipe equipe : tipoEquipes) {
+                nomeEquipe = nomeEquipe.concat(equipe.getNome()).concat(ponto);
+            }
+        }
+        return nomeEquipe;
+    }
+    public String getIsActivated(){
+        return activated ? "Ativo" : "Inativo";
+    }
+
+    public String getNomePerfil(){
+        String ponto = ". ";
+        String nomePerfil = "";
+
+        if (authorities != null) {
+            for (Authority perfil : authorities) {
+                nomePerfil = nomePerfil.concat(perfil.getName()).concat(ponto);
+            }
+        }
+
+        return nomePerfil;
+    }
+
     public String getNomeOrg(){
         String ponto = ". ";
         String nomeOrg = "";
