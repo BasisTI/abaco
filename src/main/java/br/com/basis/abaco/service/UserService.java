@@ -11,7 +11,13 @@ import br.com.basis.abaco.security.SecurityUtils;
 import br.com.basis.abaco.service.dto.UserAnaliseDTO;
 import br.com.basis.abaco.service.dto.UserDTO;
 import br.com.basis.abaco.service.dto.UserEditDTO;
+import br.com.basis.abaco.service.exception.RelatorioException;
+import br.com.basis.abaco.service.relatorio.RelatorioUserColunas;
 import br.com.basis.abaco.service.util.RandomUtil;
+import br.com.basis.abaco.utils.AbacoUtil;
+import br.com.basis.dynamicexports.service.DynamicExportsService;
+import net.sf.dynamicreports.report.exception.DRException;
+import net.sf.jasperreports.engine.JRException;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.modelmapper.ModelMapper;
@@ -19,17 +25,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.ByteArrayOutputStream;
 import java.time.ZonedDateTime;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 import static org.elasticsearch.index.query.QueryBuilders.*;
 
@@ -52,13 +55,16 @@ public class UserService extends BaseService {
 
     private final AuthorityRepository authorityRepository;
 
+    private final DynamicExportsService dynamicExportsService;
+
     public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, SocialService socialService,
-                       UserSearchRepository userSearchRepository, AuthorityRepository authorityRepository) {
+                       UserSearchRepository userSearchRepository, AuthorityRepository authorityRepository, DynamicExportsService dynamicExportsService) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.socialService = socialService;
         this.userSearchRepository = userSearchRepository;
         this.authorityRepository = authorityRepository;
+        this.dynamicExportsService = dynamicExportsService;
     }
 
     public Optional<User> activateRegistration(String key) {
@@ -392,6 +398,23 @@ public class UserService extends BaseService {
     public User getLoggedUser() {
         String login = SecurityUtils.getCurrentUserLogin();
         return userRepository.findOneWithAuthoritiesByLogin(login).orElse(null);
+    }
+
+    public ByteArrayOutputStream gerarRelatorio(String query, String tipoRelatorio) throws RelatorioException {
+        ByteArrayOutputStream byteArrayOutputStream;
+        try {
+            new NativeSearchQueryBuilder().withQuery(multiMatchQuery(query)).build();
+            Page<User> result = userSearchRepository.search(queryStringQuery(query),
+                dynamicExportsService.obterPageableMaximoExportacao());
+            byteArrayOutputStream = dynamicExportsService.export(new RelatorioUserColunas(), result, tipoRelatorio,
+                Optional.empty(), Optional.ofNullable(AbacoUtil.REPORT_LOGO_PATH),
+                Optional.ofNullable(AbacoUtil.getReportFooter()));
+        } catch (DRException | ClassNotFoundException | JRException | NoClassDefFoundError e) {
+            log.error(e.getMessage(), e);
+            throw new RelatorioException(e);
+        }
+
+        return byteArrayOutputStream;
     }
 
 }
