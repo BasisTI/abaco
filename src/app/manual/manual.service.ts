@@ -139,6 +139,7 @@ export class ManualService {
     delete(id: number): Observable<Response> {
         return this.http.delete<Response>(`${this.resourceUrl}/${id}`).pipe(
             catchError((error: any) => {
+                
                 if (error.status === 403) {
                     this.pageNotificationService.addErrorMessage(this.getLabel('Você não possui permissão!'));
                     return Observable.throw(new Error(error.status));
