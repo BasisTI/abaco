@@ -3,6 +3,7 @@ import { Component, Input } from '@angular/core';
 import { Router } from '@angular/router';
 import { environment } from 'src/environments/environment';
 import { ExportacaoUtilService } from './export-button.service';
+import { ExportacaoUtil } from './export-button.util';
 
 @Component({
     selector: 'app-export-button',
@@ -74,24 +75,15 @@ export class ExportButtonComponent {
 
 
     exportar(tipoRelatorio: string) {
-
-        // this.exibirBlockUi(GeneralConstants.generate_report);
-        // ExportacaoUtilService.exportReport(tipoRelatorio, this.http, this.resourceName, this.dataTable, this.filter)
-        //     .subscribe((res: Blob) => {
-        //         const file = new Blob([res], { type: tipoRelatorio });
-        //         const url = URL.createObjectURL(file);
-        //         ExportacaoUtil.download(url, this.resourceName + ExportacaoUtilService.getExtension(tipoRelatorio));
-        //     });
+        ExportacaoUtilService.exportReport(tipoRelatorio, this.http, this.resourceName, null, this.filter)
+            .subscribe((res: Blob) => {
+                const file = new Blob([res], { type: tipoRelatorio });
+                const url = URL.createObjectURL(file);
+                ExportacaoUtil.download(url, this.resourceName + ExportacaoUtilService.getExtension(tipoRelatorio));
+            });
     }
 
     imprimir(tipoRelatorio: string) {
-
-        // this.exibirBlockUi(GeneralConstants.generate_report);
-        // ExportacaoUtilService.exportReport(tipoRelatorio, this.http, this.resourceName, this.dataTable, this.filter)
-        // .subscribe( downloadUrl =>  ExportacaoUtil.imprimir(downloadUrl)) ;
+        window.open(`${environment.apiUrl}/${this.resourceName}/exportacao-arquivo`);
     }
-
-    exibirBlockUi(menssagem: string) {
-    }
-
 }
