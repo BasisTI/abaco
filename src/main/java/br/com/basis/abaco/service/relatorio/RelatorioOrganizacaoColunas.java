@@ -10,8 +10,8 @@ public class RelatorioOrganizacaoColunas extends PropriedadesRelatorio {
         super("Listagem de Organizações", "Total de Organizações");
         super.getColunas().add(new ColunasPropriedadeRelatorio("sigla", "Sigla", String.class, 10, DynamicExportsConstants.MASCARA_NULL, DynamicExportsConstants.ALINHAR_ESQUERDA));
         super.getColunas().add(new ColunasPropriedadeRelatorio("nome", "Nome", String.class, 10, DynamicExportsConstants.MASCARA_NULL, DynamicExportsConstants.ALINHAR_ESQUERDA));
-        super.getColunas().add(new ColunasPropriedadeRelatorio("cnpj", "CNPJ", String.class, 10, "##.###.###/####-##", DynamicExportsConstants.ALINHAR_ESQUERDA));
-        super.getColunas().add(new ColunasPropriedadeRelatorio("numeroOcorrencia", "Número da Ocorrência", String.class, 10, DynamicExportsConstants.MASCARA_NULL, DynamicExportsConstants.ALINHAR_ESQUERDA));
+        super.getColunas().add(new ColunasPropriedadeRelatorio("cnpj", "CNPJ", String.class, 10, "##.###.###/####-##", DynamicExportsConstants.ALINHAR_DIREITA));
+        super.getColunas().add(new ColunasPropriedadeRelatorio("numeroOcorrencia", "Número da Ocorrência", String.class, 10, DynamicExportsConstants.MASCARA_NULL, DynamicExportsConstants.ALINHAR_DIREITA));
         super.getColunas().add(new ColunasPropriedadeRelatorio("ativoString", "Ativo?", String.class, 10, DynamicExportsConstants.MASCARA_NULL, DynamicExportsConstants.ALINHAR_ESQUERDA));
 
     }

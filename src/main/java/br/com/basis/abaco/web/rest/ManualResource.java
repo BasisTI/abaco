@@ -233,7 +233,9 @@ public class ManualResource {
         for(UploadedFile file : uploadedFiles){
             manual.addArquivoManual(file);
         }
-        Manual result = manualRepository.save(manual);
+
+        Manual linkedManual = linkManualToPhaseEffortsAndAdjustFactors(manual);
+        Manual result = manualRepository.save(linkedManual);
         manualSearchRepository.save(result);
         return ResponseEntity.ok().headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, manual.getId().toString()))
             .body(result);
