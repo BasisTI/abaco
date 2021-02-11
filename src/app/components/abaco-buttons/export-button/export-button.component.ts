@@ -5,15 +5,15 @@ import { ExportacaoUtilService } from './export-button.service';
 import { ExportacaoUtil } from './export-button.util';
 
 @Component({
-    selector: 'app-export-button',
-    templateUrl: './export-button.component.html',
-    styleUrls: ['./export-button.component.css']
+selector: 'app-export-button',
+templateUrl: './export-button.component.html',
+styleUrls: ['./export-button.component.css']
 })
 export class ExportButtonComponent {
 
-    @Input() resourceName: string;
+@Input() resourceName: string;
 
-    @Input() filter: any;
+@Input() filter: any;
 
     tiposExportacao = [
         {

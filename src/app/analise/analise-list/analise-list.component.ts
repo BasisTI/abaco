@@ -16,6 +16,7 @@ import { BlockUiService } from '@nuvem/angular-base';
 import { StatusService } from 'src/app/status';
 import { Status } from 'src/app/status/status.model';
 import { Divergencia, DivergenciaService } from 'src/app/divergencia';
+import { FaseFilter } from 'src/app/fase/model/fase.filter';
 
 @Component({
     selector: 'app-analise',
@@ -23,6 +24,7 @@ import { Divergencia, DivergenciaService } from 'src/app/divergencia';
     providers: [GrupoService, ConfirmationService],
 })
 export class AnaliseListComponent implements OnInit {
+
 
     @ViewChild(DatatableComponent) datatable: DatatableComponent ;
 
@@ -509,7 +511,6 @@ export class AnaliseListComponent implements OnInit {
             }
         }
     }
-
     public gerarRelatorioPdfArquivo(analise: Analise) {
         this.analiseService.gerarRelatorioPdfArquivo(analise.id);
     }

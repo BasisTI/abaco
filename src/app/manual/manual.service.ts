@@ -9,7 +9,6 @@ import { catchError, retry } from 'rxjs/operators';
 import { createRequestOption, ResponseWrapper } from '../shared';
 import { Upload } from '../upload/upload.model';
 
-import { BlockUiService } from '@nuvem/angular-base';
 
 @Injectable()
 export class ManualService {
