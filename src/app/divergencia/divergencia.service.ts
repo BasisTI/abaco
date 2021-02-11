@@ -10,6 +10,7 @@ import { environment } from '../../environments/environment';
 import { Analise } from '../analise';
 import { Resumo } from '../analise/analise-resumo/resumo.model';
 import { createRequestOption, ResponseWrapper } from '../shared';
+import { Status } from '../status/status.model';
 
 
 @Injectable()
@@ -38,6 +39,8 @@ export class DivergenciaService {
     clonarAnaliseUrl = this.resourceUrl + '/clonar/';
 
     resourceResumoUrl = environment.apiUrl + '/vw-resumo';
+
+    changeStatusUrl = environment.apiUrl + '/analises';
 
 
     constructor(
@@ -337,4 +340,8 @@ export class DivergenciaService {
         }));
     }
 
+    public changeStatusDivergence(id: number, status: Status){
+        const url = `${this.changeStatusUrl}/change-status/${id}/${status.id}`
+        return this.http.get<Analise>(url);
+    }
 }

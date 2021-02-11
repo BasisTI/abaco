@@ -46,6 +46,7 @@ export class DivergenciaListComponent implements OnInit {
         {field: 'pfTotal',  header: 'PF total'},
         {field: 'adjustPFTotal',  header: 'PF Ajustado'},
         {field: 'dataCriacaoOrdemServico',  header: 'Data de criação'},
+        {field: 'status',  header: 'Status'},
     ];
 
     customOptions: Object = {};
@@ -66,7 +67,9 @@ export class DivergenciaListComponent implements OnInit {
     query: String;
     usuarios: String[] = [];
     lstStatus: Status[] = [];
-    idAnaliseCloneToEquipe: number;
+    lstStatusActive: Status[] = [];
+    idDivergenceStatus: number;
+    public statusToChange?: Status;
     public equipeToClone?: TipoEquipe;
 
     translateSusbscriptions: Subscription[] = [];
@@ -85,6 +88,7 @@ export class DivergenciaListComponent implements OnInit {
     notLoadFilterTable = false;
     analisesList: any[] = [];
     isLoadFilter = true;
+    showDialogDivergenceBlock = false;
 
     constructor(
         private router: Router,
@@ -116,6 +120,7 @@ export class DivergenciaListComponent implements OnInit {
         this.recuperarOrganizacoes();
         this.recuperarEquipe();
         this.recuperarSistema();
+        this.recuperarStatus();
         this.inicial = false;
     }
 
@@ -160,6 +165,9 @@ export class DivergenciaListComponent implements OnInit {
             const emptyStatus = new Status();
             this.lstStatus.unshift(emptyStatus);
         });
+        this.statusService.listActive().subscribe(response => {
+            this.lstStatusActive = response;
+        });
     }
 
 
@@ -191,6 +199,11 @@ export class DivergenciaListComponent implements OnInit {
                 }
             });
         }
+    }
+
+    public confirmBlockDivegence(divergence: Analise){
+        
+        this.changeStatus(divergence.id)
     }
 
     public changeUrl() {
@@ -239,6 +252,7 @@ export class DivergenciaListComponent implements OnInit {
         }
     }
     public datatableClick(event: DatatableClickEvent) {
+        
         if (!event.selection) {
             return;
         } else if (event.selection.length === 1) {
@@ -250,6 +264,30 @@ export class DivergenciaListComponent implements OnInit {
             this.pageNotificationService.addErrorMessage('Selecione somente duas Análises para gerar a Validação.');
             return ;
         }
+    }
+    public changeStatus(id: number) {
+        this.statusToChange = undefined;
+        this.idDivergenceStatus = id;
+        this.showDialogDivergenceBlock = true;
+    }
+    
+
+    public divergenceBlock(){
+        if(this.idDivergenceStatus && this.statusToChange){
+            this.divergenciaService.changeStatusDivergence(this.idDivergenceStatus, this.statusToChange).subscribe(data => {
+                this.statusService = undefined;
+                this.idDivergenceStatus = undefined;
+                this.showDialogDivergenceBlock = false;
+                this.datatable._filter();
+                this.pageNotificationService.addSuccessMessage('O status da análise '+ data.identificadorAnalise + ' foi alterado.');
+            },
+            err => this.pageNotificationService.addErrorMessage('Não foi possível alterar o status da Análise.'));
+        }
+        else {
+            this.pageNotificationService.addErrorMessage('Selecione um Status para continuar.');
+
+        }
+
     }
 
 }
