@@ -71,6 +71,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import javax.ws.rs.POST;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.net.URI;
@@ -78,6 +79,8 @@ import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+
+import static org.elasticsearch.index.query.QueryBuilders.multiMatchQuery;
 
 
 @RestController
@@ -110,6 +113,7 @@ public class AnaliseResource {
     private HttpServletResponse response;
     @Autowired
     private UploadedFilesRepository uploadedFilesRepository;
+
 
     public AnaliseResource(AnaliseRepository analiseRepository,
                            AnaliseSearchRepository analiseSearchRepository,
@@ -379,6 +383,8 @@ public class AnaliseResource {
         return relatorioAnaliseRest.downloadPdfBrowser(analise, TipoRelatorio.ANALISE_DETALHADA);
     }
 
+
+
     @GetMapping("/downloadRelatorioExcel/{id}")
     @Timed
     public @ResponseBody
@@ -451,6 +457,42 @@ public class AnaliseResource {
         return DynamicExporter.output(byteArrayOutputStream,
             "relatorio." + tipoRelatorio);
     }
+
+    // Método responsável por gerar a lista de analises em pdf.
+    @GetMapping(value = "/analise/exportaPdf", produces = MediaType.APPLICATION_PDF_VALUE)
+    @Timed
+    public ResponseEntity<InputStreamResource> gerarRelatorioPdf(@RequestParam(defaultValue = "*") String query) throws RelatorioException {
+        ByteArrayOutputStream byteArrayOutputStream;
+        try {
+            new NativeSearchQueryBuilder().withQuery(multiMatchQuery(query)).build();
+            Page<Analise> result = analiseSearchRepository.findAll(dynamicExportsService.obterPageableMaximoExportacao());
+             byteArrayOutputStream = dynamicExportsService.export( new RelatorioAnaliseColunas(), result, "pdf", Optional.empty(),
+                 Optional.ofNullable(AbacoUtil.REPORT_LOGO_PATH),
+                 Optional.ofNullable(AbacoUtil.getReportFooter()));
+        }catch ( DRException | ClassNotFoundException | JRException | NoClassDefFoundError e ){
+            throw new RelatorioException(e);
+        }
+        return DynamicExporter.output(byteArrayOutputStream, "relatorio" + "pdf");
+    }
+
+    //metódo responsavel por gerar lista de analises em pdf,excel.
+    @PostMapping(value = "/analise/exportacao/{tipoRelatorio}", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
+    @Timed
+    public ResponseEntity<InputStreamResource> gerarRelatorioExportacao(@PathVariable String tipoRelatorio,
+                                                                        @RequestParam(defaultValue = "*") String query) throws RelatorioException {
+        ByteArrayOutputStream byteArrayOutputStream = analiseService.gerarRelatorio(query, tipoRelatorio);
+        return DynamicExporter.output(byteArrayOutputStream, "relatorio." + tipoRelatorio);
+    }
+
+    //metódo responsavel por imprimir a lista de analises.
+    @GetMapping(value = "/analise/exportacao-arquivo", produces = MediaType.APPLICATION_PDF_VALUE)
+    @Timed
+    public ResponseEntity<byte[]> gerarRelatorioAnaliseImprimir(@RequestParam(defaultValue = "*") String query) throws RelatorioException {
+        ByteArrayOutputStream byteArrayOutputStream = analiseService.gerarRelatorio(query, "pdf");
+        return new ResponseEntity<byte[]>(byteArrayOutputStream.toByteArray(), HttpStatus.OK);
+    }
+
+
 
     @GetMapping("/analises")
     @Timed

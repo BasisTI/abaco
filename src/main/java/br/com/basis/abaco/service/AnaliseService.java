@@ -33,17 +33,27 @@ import br.com.basis.abaco.security.SecurityUtils;
 import br.com.basis.abaco.service.dto.AnaliseDTO;
 import br.com.basis.abaco.service.dto.AnaliseDivergenceEditDTO;
 import br.com.basis.abaco.service.dto.AnaliseEditDTO;
+import br.com.basis.abaco.service.exception.RelatorioException;
+import br.com.basis.abaco.service.relatorio.RelatorioAnaliseColunas;
+import br.com.basis.abaco.service.relatorio.RelatorioUserColunas;
+import br.com.basis.abaco.utils.AbacoUtil;
 import br.com.basis.abaco.utils.StringUtils;
+import br.com.basis.dynamicexports.service.DynamicExportsService;
+import net.sf.dynamicreports.report.exception.DRException;
+import net.sf.jasperreports.engine.JRException;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
+import java.io.ByteArrayOutputStream;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.sql.Timestamp;
@@ -56,8 +66,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import static org.elasticsearch.index.query.QueryBuilders.boolQuery;
-import static org.elasticsearch.index.query.QueryBuilders.nestedQuery;
+import static org.elasticsearch.index.query.QueryBuilders.*;
 
 @Service
 public class AnaliseService extends BaseService {
@@ -79,6 +88,9 @@ public class AnaliseService extends BaseService {
     private final VwAnaliseSomaPfRepository vwAnaliseSomaPfRepository;
     private final TipoEquipeRepository tipoEquipeRepository;
     private final MailService mailService;
+    private final DynamicExportsService dynamicExportsService;
+
+
     @Autowired
     private UserSearchRepository userSearchRepository;
 
@@ -93,7 +105,8 @@ public class AnaliseService extends BaseService {
                           VwAnaliseSomaPfRepository vwAnaliseSomaPfRepository,
                           TipoEquipeRepository tipoEquipeRepository,
                           VwAnaliseDivergenteSomaPfRepository vwAnaliseDivergenteSomaPfRepository,
-                          MailService mailService) {
+                          MailService mailService
+        ,DynamicExportsService dynamicExportsService) {
         this.analiseRepository = analiseRepository;
         this.funcaoDadosVersionavelRepository = funcaoDadosVersionavelRepository;
         this.userRepository = userRepository;
@@ -105,6 +118,7 @@ public class AnaliseService extends BaseService {
         this.vwAnaliseSomaPfRepository = vwAnaliseSomaPfRepository;
         this.vwAnaliseDivergenteSomaPfRepository = vwAnaliseDivergenteSomaPfRepository;
         this.tipoEquipeRepository = tipoEquipeRepository;
+        this.dynamicExportsService = dynamicExportsService;
     }
 
     public void bindFilterSearch(String identificador, Set<Long> sistema, Set<MetodoContagem> metodo, Set<Long> usuario, Long equipesIds, Set<Long> equipesUsersId, Set<Long> organizacoes, Set<Long> status, BoolQueryBuilder qb) {
@@ -732,5 +746,22 @@ public class AnaliseService extends BaseService {
         analiseRepository.delete(id);
         analiseSearchRepository.delete(id);
     }
+
+    public ByteArrayOutputStream gerarRelatorio(String query, String tipoRelatorio) throws RelatorioException {
+        ByteArrayOutputStream byteArrayOutputStream;
+        try {
+            new NativeSearchQueryBuilder().withQuery(multiMatchQuery(query)).build();
+            Page<Analise> result = analiseSearchRepository.search(queryStringQuery(query),
+                dynamicExportsService.obterPageableMaximoExportacao());
+            byteArrayOutputStream = dynamicExportsService.export(new RelatorioAnaliseColunas(), result, tipoRelatorio,
+                Optional.empty(), Optional.ofNullable(AbacoUtil.REPORT_LOGO_PATH),
+                Optional.ofNullable(AbacoUtil.getReportFooter()));
+        } catch (DRException | ClassNotFoundException | JRException | NoClassDefFoundError e) {
+            throw new RelatorioException(e);
+        }
+
+        return byteArrayOutputStream;
+    }
+
 
 }
