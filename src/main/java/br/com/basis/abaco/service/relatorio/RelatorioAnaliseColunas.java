@@ -13,9 +13,9 @@ public class RelatorioAnaliseColunas extends PropriedadesRelatorio {
         super.getColunas().add(new ColunasPropriedadeRelatorio("equipeResponsavel.nome", "Equipe", String.class, 10, DynamicExportsConstants.MASCARA_NULL, DynamicExportsConstants.ALINHAR_ESQUERDA));
         super.getColunas().add(new ColunasPropriedadeRelatorio("sistema.nome", "Sistema", String.class, 10, DynamicExportsConstants.MASCARA_NULL, DynamicExportsConstants.ALINHAR_ESQUERDA));
         super.getColunas().add(new ColunasPropriedadeRelatorio("metodoContagemString", "Método de contagem", String.class, 10, DynamicExportsConstants.MASCARA_NULL, DynamicExportsConstants.ALINHAR_ESQUERDA));
-        super.getColunas().add(new ColunasPropriedadeRelatorio("pfTotal", "PF Total", String.class, 10, DynamicExportsConstants.MASCARA_NULL, DynamicExportsConstants.ALINHAR_ESQUERDA));
-        super.getColunas().add(new ColunasPropriedadeRelatorio("adjustPFTotal", "PF Ajustado", String.class, 10, DynamicExportsConstants.MASCARA_NULL, DynamicExportsConstants.ALINHAR_ESQUERDA));
-        super.getColunas().add(new ColunasPropriedadeRelatorio("createdOn", "Data Criação", String.class, 10, DynamicExportsConstants.MASCARA_NULL, DynamicExportsConstants.ALINHAR_ESQUERDA));
+        super.getColunas().add(new ColunasPropriedadeRelatorio("pfTotal", "PF Total", String.class, 10, DynamicExportsConstants.MASCARA_NULL, DynamicExportsConstants.ALINHAR_DIREITA ));
+        super.getColunas().add(new ColunasPropriedadeRelatorio("adjustPFTotal", "PF Ajustado", String.class, 10, DynamicExportsConstants.MASCARA_NULL, DynamicExportsConstants.ALINHAR_DIREITA));
+        super.getColunas().add(new ColunasPropriedadeRelatorio("createdOn", "Data Criação", String.class, 10, DynamicExportsConstants.MASCARA_NULL, DynamicExportsConstants.ALINHAR_DIREITA));
         super.getColunas().add(new ColunasPropriedadeRelatorio("bloqueiaString", "Bloqueada?", String.class, 10, DynamicExportsConstants.MASCARA_NULL, DynamicExportsConstants.ALINHAR_ESQUERDA));
     }
 }
