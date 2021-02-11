@@ -113,7 +113,7 @@ public class ManualResourceIT {
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-            ManualResource manualResource = new ManualResource(manualRepository, manualSearchRepository, dynamicExportsService, manualContratoRepository
+        ManualResource manualResource = new ManualResource(manualRepository, manualSearchRepository, dynamicExportsService, manualContratoRepository
             , analiseRepository, fatorAjusteRepository, funcaoTransacaoRepository, manualService, filesRepository);
         this.restManualMockMvc = MockMvcBuilders.standaloneSetup(manualResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
