@@ -7,116 +7,120 @@ import { PageNotificationService } from '@nuvem/primeng-components';
 import { Observable } from 'rxjs';
 import { ResponseWrapper, createRequestOption } from '../shared';
 import { catchError } from 'rxjs/operators';
+import { BlockUiService } from '@nuvem/angular-base';
 
 
 @Injectable()
 export class OrganizacaoService {
 
-  resourceName = '/organizacaos';
+    resourceName = '/organizacaos';
 
-  resourceUrl = environment.apiUrl + this.resourceName;
+    resourceUrl = environment.apiUrl + this.resourceName;
 
-  searchUrl = environment.apiUrl + '/_search' + this.resourceName;
+    searchUrl = environment.apiUrl + '/_search' + this.resourceName;
 
-  findActive = environment.apiUrl + this.resourceName + '/active';
+    findActive = environment.apiUrl + this.resourceName + '/active';
 
-  constructor(
-    private http: HttpClient,
-    private uploadService: UploadService,
-    private pageNotificationService: PageNotificationService,
-  ) { }
+    relatorioOrganizacaoUrl = environment.apiUrl + this.resourceName + "/exportacaoPDF";
 
-  create(organizacao: Organizacao): Observable<any> {
-    const copy = this.convertToJSON(organizacao);
-    return this.http.post(this.resourceUrl, copy).pipe(catchError((error: any) => {
-        if (error.status === 403) {
-            this.pageNotificationService.addErrorMessage('Você não possui permissão!');
-            return Observable.throw(new Error(error.status));
-        }
-    }));
-  }
+    constructor(
+        private http: HttpClient,
+        private uploadService: UploadService,
+        private pageNotificationService: PageNotificationService,
+        private blockUiService: BlockUiService
+    ) { }
 
-  update(organizacao: Organizacao): Observable<Organizacao> {
-    const copy = this.convertToJSON(organizacao);
-    return this.http.put<Organizacao>(this.resourceUrl, copy).pipe(catchError((error: any) => {
-      if (error.status === 403) {
-          this.pageNotificationService.addErrorMessage('Você não possui permissão!');
-          return Observable.throw(new Error(error.status));
-      }
-  }));
-}
+    create(organizacao: Organizacao): Observable<any> {
+        const copy = this.convertToJSON(organizacao);
+        return this.http.post(this.resourceUrl, copy).pipe(catchError((error: any) => {
+            if (error.status === 403) {
+                this.pageNotificationService.addErrorMessage('Você não possui permissão!');
+                return Observable.throw(new Error(error.status));
+            }
+        }));
+    }
 
-  find(id: number): Observable<Organizacao> {
-    return this.http.get<Organizacao>(`${this.resourceUrl}/${id}`).pipe(catchError((error: any) => {
-      if (error.status === 403) {
-          this.pageNotificationService.addErrorMessage('Você não possui permissão!');
-          return Observable.throw(new Error(error.status));
-      }
-  }));
-}
+    update(organizacao: Organizacao): Observable<Organizacao> {
+        const copy = this.convertToJSON(organizacao);
+        return this.http.put<Organizacao>(this.resourceUrl, copy).pipe(catchError((error: any) => {
+            if (error.status === 403) {
+                this.pageNotificationService.addErrorMessage('Você não possui permissão!');
+                return Observable.throw(new Error(error.status));
+            }
+        }));
+    }
+
+    find(id: number): Observable<Organizacao> {
+        return this.http.get<Organizacao>(`${this.resourceUrl}/${id}`).pipe(catchError((error: any) => {
+            if (error.status === 403) {
+                this.pageNotificationService.addErrorMessage('Você não possui permissão!');
+                return Observable.throw(new Error(error.status));
+            }
+        }));
+    }
 
     /**
    * Função que retorna dados do usuário logado somente com as organizações ativas
    */
-  dropDownActiveLoggedUser(): Observable<Organizacao[]> {
-    return this.http.get<Organizacao[]>(this.resourceUrl + '/active-user');
-  }
+    dropDownActiveLoggedUser(): Observable<Organizacao[]> {
+        return this.http.get<Organizacao[]>(this.resourceUrl + '/active-user');
+    }
 
-  dropDown(): Observable<Organizacao[]> {
-      return this.http.get<Organizacao[]>(this.resourceUrl + '/drop-down')
-      .pipe(catchError((error: any) => {
-        if (error.status === 403) {
-            this.pageNotificationService.addErrorMessage('Você não possui permissão!');
-            return Observable.throw(new Error(error.status));
-        }
-    }));
-  }
-
-  dropDownActive(): Observable<Organizacao[]> {
-      return this.http.get<Organizacao[]>(this.resourceUrl + '/drop-down/active')
-      .pipe(catchError((error: any) => {
-        if (error.status === 403) {
-            this.pageNotificationService.addErrorMessage('Você não possui permissão!');
-            return Observable.throw(new Error(error.status));
-        }
-    }));
-  }
-
-    searchActiveOrganizations(req?: any): Observable<ResponseWrapper> {
-        const options = createRequestOption(req);
-        return this.http.get<ResponseWrapper>(this.resourceUrl + '/ativas').pipe(catchError((error: any) => {
+    dropDown(): Observable<Organizacao[]> {
+        return this.http.get<Organizacao[]>(this.resourceUrl + '/drop-down')
+            .pipe(catchError((error: any) => {
                 if (error.status === 403) {
-                    this.pageNotificationService.addErrorMessage('VoceNaoPossuiPermissao');
+                    this.pageNotificationService.addErrorMessage('Você não possui permissão!');
                     return Observable.throw(new Error(error.status));
                 }
             }));
     }
 
-  delete(id: number): Observable<Response> {
-    return this.http.delete<Response>(`${this.resourceUrl}/${id}`).pipe(catchError((error: any) => {
-        if (error.status === 403) {
-            this.pageNotificationService.addErrorMessage('Você não possui permissão!');
-            return Observable.throw(new Error(error.status));
-        }
-    }));
-  }
+    dropDownActive(): Observable<Organizacao[]> {
+        return this.http.get<Organizacao[]>(this.resourceUrl + '/drop-down/active')
+            .pipe(catchError((error: any) => {
+                if (error.status === 403) {
+                    this.pageNotificationService.addErrorMessage('Você não possui permissão!');
+                    return Observable.throw(new Error(error.status));
+                }
+            }));
+    }
 
-  // private convertResponseToResponseWrapper(res: Response): ResponseWrapper {
-  //   const jsonResponse = res.json();
-  //   const result = [];
-  //   for (let i = 0; i < jsonResponse.length; i++) {
-  //     result.push(this.convertFromJSON(jsonResponse[i]));
-  //   }
-  //   return new ResponseWrapper(res.headers, result, res.status);
-  // }
+    searchActiveOrganizations(req?: any): Observable<ResponseWrapper> {
+        const options = createRequestOption(req);
+        return this.http.get<ResponseWrapper>(this.resourceUrl + '/ativas').pipe(catchError((error: any) => {
+            if (error.status === 403) {
+                this.pageNotificationService.addErrorMessage('VoceNaoPossuiPermissao');
+                return Observable.throw(new Error(error.status));
+            }
+        }));
+    }
 
-  // private convertFromJSON(json: any): Organizacao {
-  //   const entity: JSONable<Organizacao> = new Organizacao();
-  //   return entity.copyFromJSON(json);
-  // }
+    delete(id: number): Observable<Response> {
+        return this.http.delete<Response>(`${this.resourceUrl}/${id}`).pipe(catchError((error: any) => {
+            if (error.status === 403) {
+                this.pageNotificationService.addErrorMessage('Você não possui permissão!');
+                return Observable.throw(new Error(error.status));
+            }
+        }));
+    }
 
-  private convertToJSON(organizacao: Organizacao): Organizacao {
-    const copy: Organizacao = Object.assign({}, organizacao);
-    return copy;
-  }
+    // private convertResponseToResponseWrapper(res: Response): ResponseWrapper {
+    //   const jsonResponse = res.json();
+    //   const result = [];
+    //   for (let i = 0; i < jsonResponse.length; i++) {
+    //     result.push(this.convertFromJSON(jsonResponse[i]));
+    //   }
+    //   return new ResponseWrapper(res.headers, result, res.status);
+    // }
+
+    // private convertFromJSON(json: any): Organizacao {
+    //   const entity: JSONable<Organizacao> = new Organizacao();
+    //   return entity.copyFromJSON(json);
+    // }
+
+    private convertToJSON(organizacao: Organizacao): Organizacao {
+        const copy: Organizacao = Object.assign({}, organizacao);
+        return copy;
+    }
 }

@@ -105,7 +105,7 @@ export class OrganizacaoListComponent implements OnInit {
   }
 
   recarregarDataTable() {
-    //Se descrição == CNPJ remove caracteres . - / para fazer pesquisa. 
+    //Se descrição == CNPJ remove caracteres . - / para fazer pesquisa.
     if (this.elasticQuery.value.length == 18 && this.elasticQuery.value[2] == ".") {
       this.elasticQuery.value = this.elasticQuery.value.replace(".", "");
       this.elasticQuery.value = this.elasticQuery.value.replace(".", "");
@@ -121,5 +121,4 @@ export class OrganizacaoListComponent implements OnInit {
           }
       }
   }
-
 }
