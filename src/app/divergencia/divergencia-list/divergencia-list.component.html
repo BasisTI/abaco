@@ -107,6 +107,9 @@
                                     <td >
                                         {{rowData.dataCriacaoOrdemServico | date: 'dd/MM/y - HH:mm' }}
                                     </td>
+                                    <td>
+                                        {{rowData.status.nome }}
+                                    </td>
                                 </tr>
                             </ng-template>
                             <ng-template pTemplate="rowexpansion" let-rowData let-columns="columns">
@@ -153,6 +156,15 @@
                                 (click)="confirmDeleteDivergence(selectedDivergence)"
                                 class="ui-button-danger">
                         </basis-datatable-button>
+                        <basis-datatable-button
+                                name="generateDivergence"
+                                [bTooltip]="selectedDivergence != null ? 'Alterar' : 'Escolha um registro para alterar status.'"
+                                icon="swap-vert"
+                                [disabled]="!selectedDivergence"
+                                (click)="changeStatus(selectedDivergence.id)"
+                                class="ui-button-info">
+                        </basis-datatable-button>
+                       
                     </div>
                     <div class="ui-g-12 ui-md-2">
                         <app-botoes-exportacao [query]="changeUrl()" resourceName="analise" id="idBtnExportacaoComponentAnalise"
@@ -166,6 +178,26 @@
                             <button type="button" pButton icon="fa-check" [label]="'Sim'" (click)="dialog.accept()"></button>
                         </p-footer>
                     </p-confirmDialog>
+                    <!-- Dialog bloquear e alterar status validação-->
+                    <p-dialog header="Alterar status ?" [(visible)]="showDialogDivergenceBlock" [style]="{width: '40vw', minHeight: '200px'}" [modal]="true" >
+                        <div style="min-height:200px">
+                            <div class="ui-g" >
+                                <div class="ui-g-12 ui-md-12 ui-sm-12">
+                                    <p-dropdown
+                                            [style]="{'width':'100%'}"
+                                            [filter]="true"
+                                            optionLabel="nome"
+                                            [options]="lstStatusActive"
+                                            id="idStatusAnalise"
+                                            [(ngModel)]="statusToChange"
+                                            placeholder="Selecione um Status">
+                                    </p-dropdown>
+                                </div>
+                            </div>
+                            <app-green-button buttonLabel="Alterar" (click)="divergenceBlock()" style="float:right; margin-top: 5px"></app-green-button>
+                        </div>
+                    </p-dialog>
+
                 </div>
             </div>
         </div>
