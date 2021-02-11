@@ -1,8 +1,8 @@
-import {Injectable} from '@angular/core';
-import {environment} from '../../environments/environment';
+import { Injectable } from '@angular/core';
+import { environment } from '../../environments/environment';
 
-import {Analise, AnaliseShareEquipe} from './';
-import {TipoEquipe} from '../tipo-equipe';
+import { Analise, AnaliseShareEquipe } from './';
+import { TipoEquipe } from '../tipo-equipe';
 import { Resumo } from './analise-resumo/resumo.model';
 import { HttpClient } from '@angular/common/http';
 import { PageNotificationService } from '@nuvem/primeng-components';
@@ -54,7 +54,7 @@ export class AnaliseService {
         private funcaoDadosService: FuncaoDadosService,
         private funcaoTransacaoService: FuncaoTransacaoService,
         private blockUiService: BlockUiService,
-        ) {
+    ) {
     }
 
     getLabel(label) {
@@ -80,13 +80,13 @@ export class AnaliseService {
                             this.analise.funcaoTransacaos.push(FuncaoTransacao.convertTransacaoJsonToObject(value)))
                         )
                     )).then(
-                    this.funcaoDadosService.getFuncaoDadosByAnalise(this.analise.id)
-                        .subscribe(response => (
-                            response.forEach(value => (
-                                this.analise.funcaoDados.push(FuncaoDados.convertJsonToObject(value)))
-                            )
-                        ))
-                );
+                        this.funcaoDadosService.getFuncaoDadosByAnalise(this.analise.id)
+                            .subscribe(response => (
+                                response.forEach(value => (
+                                    this.analise.funcaoDados.push(FuncaoDados.convertJsonToObject(value)))
+                                )
+                            ))
+                    );
             }));
     }
 
@@ -125,6 +125,7 @@ export class AnaliseService {
         window.open(`${this.relatorioAnaliseUrl}/${id}`);
     }
 
+
     public geraRelatorioPdfBrowser(id: number): Observable<string> {
         this.blockUiService.show();
         this.http.request('get', `${this.relatoriosUrl}/${id}`, {
@@ -132,7 +133,7 @@ export class AnaliseService {
         }).subscribe(
             (response) => {
                 const mediaType = 'application/pdf';
-                const blob = new Blob([response], {type: mediaType});
+                const blob = new Blob([response], { type: mediaType });
                 const fileURL = window.URL.createObjectURL(blob);
                 const anchor = document.createElement('a');
                 anchor.download = 'analise.pdf';
@@ -144,6 +145,9 @@ export class AnaliseService {
         return null;
     }
 
+
+
+   
     /**
      *
      */
@@ -160,7 +164,7 @@ export class AnaliseService {
         })).subscribe(
             (response) => {
                 const mediaType = 'application/pdf';
-                const blob = new Blob([response], {type: mediaType});
+                const blob = new Blob([response], { type: mediaType });
                 const fileURL = window.URL.createObjectURL(blob);
                 const anchor = document.createElement('a');
                 anchor.download = 'analise.pdf';
@@ -178,7 +182,7 @@ export class AnaliseService {
      */
     public gerarRelatorioExcel(id: Number): Observable<string> {
         this.blockUiService.show();
-        this.http.request('get',`${this.relatorioExcelUrl}/${id}`, {
+        this.http.request('get', `${this.relatorioExcelUrl}/${id}`, {
             responseType: 'blob',
         }).pipe(catchError((error: any) => {
             if (error.status === 500) {
@@ -189,7 +193,7 @@ export class AnaliseService {
         })).subscribe(
             (response) => {
                 const mediaType = 'application/vnd.ms-excel';
-                const blob = new Blob([response], {type: mediaType});
+                const blob = new Blob([response], { type: mediaType });
                 const fileURL = window.URL.createObjectURL(blob);
                 const anchor = document.createElement('a');
                 anchor.download = 'analise.xls';
@@ -212,7 +216,7 @@ export class AnaliseService {
         }).subscribe(
             (response) => {
                 const mediaType = 'application/pdf';
-                const blob = new Blob([response], {type: mediaType});
+                const blob = new Blob([response], { type: mediaType });
                 const fileURL = window.URL.createObjectURL(blob);
                 const anchor = document.createElement('a');
                 anchor.download = 'analise.pdf';
@@ -231,7 +235,7 @@ export class AnaliseService {
      */
     public gerarRelatorioContagem(idAnalise: number): Observable<string> {
         this.blockUiService.show();
-        this.http.request('get',`${this.relatorioContagemUrl}/${idAnalise}`, {
+        this.http.request('get', `${this.relatorioContagemUrl}/${idAnalise}`, {
             responseType: 'blob',
         }).pipe(catchError((error: any) => {
             if (error.status === 500) {
@@ -242,7 +246,7 @@ export class AnaliseService {
         })).subscribe(
             (response) => {
                 const mediaType = 'application/pdf';
-                const blob = new Blob([response], {type: mediaType});
+                const blob = new Blob([response], { type: mediaType });
                 const fileURL = window.URL.createObjectURL(blob);
                 const anchor = document.createElement('a');
                 anchor.download = 'analise_contagem.pdf';
@@ -316,7 +320,7 @@ export class AnaliseService {
                     return Observable.throw(new Error(error.status));
                 }
             }
-        ));
+            ));
     }
 
     private convertResponse(res): ResponseWrapper {
@@ -384,22 +388,22 @@ export class AnaliseService {
 
     getResumo(analiseId: Number): Observable<Resumo[]> {
         return this.http.get<Resumo[]>(`${this.resourceResumoUrl}/${analiseId}`,).pipe(
-        catchError((error: any) => {
-            if (error.status === 403) {
-                this.pageNotificationService.addErrorMessage(this.getLabel('Você não possui permissão!'));
-                return Observable.throw(new Error(error.status));
-            }
-        }));
+            catchError((error: any) => {
+                if (error.status === 403) {
+                    this.pageNotificationService.addErrorMessage(this.getLabel('Você não possui permissão!'));
+                    return Observable.throw(new Error(error.status));
+                }
+            }));
     }
 
     getDivergenciaResumo(analiseId: Number): Observable<Resumo[]> {
         return this.http.get<Resumo[]>(`${this.resourceResumoUrl}/divergencia/${analiseId}`,).pipe(
-        catchError((error: any) => {
-            if (error.status === 403) {
-                this.pageNotificationService.addErrorMessage(this.getLabel('Você não possui permissão!'));
-                return Observable.throw(new Error(error.status));
-            }
-        }));
+            catchError((error: any) => {
+                if (error.status === 403) {
+                    this.pageNotificationService.addErrorMessage(this.getLabel('Você não possui permissão!'));
+                    return Observable.throw(new Error(error.status));
+                }
+            }));
     }
 
     public generateDivergence(mainAnalise: Analise, secondaryAnalise: Analise, isUnionFunction: boolean): Observable<Analise> {
@@ -413,15 +417,15 @@ export class AnaliseService {
     public updateDivergence(analise: Analise) {
         return this.http.get<Analise>(`${this.resourceUrl}/divergente/update/${analise.id}/`);
     }
-    
+
     public generateDivergenceFromAnalise(analiseId): Observable<Analise> {
         return this.http.get<Analise>(`${this.resourceUrl}/divergencia/${analiseId}`).pipe(
             catchError((error: any) => {
-            if (error.status === 403) {
-                this.pageNotificationService.addErrorMessage(this.getLabel('Você não possui permissão!'));
-                return Observable.throw(new Error(error.status));
-            }
-        }));
+                if (error.status === 403) {
+                    this.pageNotificationService.addErrorMessage(this.getLabel('Você não possui permissão!'));
+                    return Observable.throw(new Error(error.status));
+                }
+            }));
     }
 
 }
