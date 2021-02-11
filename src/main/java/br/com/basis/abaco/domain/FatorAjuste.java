@@ -29,11 +29,12 @@ import java.util.Objects;
 /**
  * A FatorAjuste.
  */
+@SuppressWarnings("JpaDataSourceORMInspection")
 @Entity
 @Table(name = "fator_ajuste")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 @Document(indexName = "fator_ajuste")
-public class FatorAjuste implements Serializable {
+public class FatorAjuste implements Serializable, Comparable<FatorAjuste> {
 
     private static final long serialVersionUID = 1L;
 
@@ -228,5 +229,79 @@ public class FatorAjuste implements Serializable {
 
     public void setOrdem(Long ordem) {
         this.ordem = ordem;
+    }
+
+    @Override
+    public int compareTo(FatorAjuste o) {
+
+        String[] thisVectString = this.getCodigo().split("\\.");
+        String[] otherVectString = o.getCodigo().split("\\.");
+
+        Integer[] thisVect = new Integer[thisVectString.length];
+        Integer[] otherVect = new Integer[otherVectString.length];
+
+        for(int i=0 ; i< thisVect.length ; i++){
+            if(!Character.isLetter(thisVectString[i].charAt(0))) {
+                thisVect[i] = Integer.parseInt(thisVectString[i]);
+            }
+            else {
+                thisVect[i] = Integer.valueOf((int) thisVectString[i].charAt(0));
+            }
+        }
+        for(int i=0 ; i< otherVect.length ; i++){
+            if(!Character.isLetter(otherVectString[i].charAt(0))) {
+                otherVect[i] = Integer.parseInt(otherVectString[i]);
+            }
+            else {
+                otherVect[i] = Integer.valueOf((int) otherVectString[i].charAt(0));
+            }
+        }
+
+        int countThis = 0;
+        int countOther = 0;
+
+        for(int i=0 ; i<thisVect.length ; i++){
+
+            if(otherVect.length > i){
+                if(thisVect[i].compareTo(otherVect[i]) > 0){
+                    if(i == 0){
+                        countThis = countThis+10000;
+                    }
+                    if(i == 1){
+                        countThis = countThis+100;
+                    }
+                    if(i == 2){
+                        countThis++;
+                    }
+                    if(i == 3){
+                        countThis++;
+                    }
+
+                }
+                if(thisVect[i].compareTo(otherVect[i]) < 0){
+                    if(i == 0){
+                        countOther = countOther+10000;
+                    }
+                    if(i == 1){
+                        countOther = countOther+100;
+                    }
+                    if(i == 2){
+                        countOther++;
+                    }
+                    if(i == 3){
+                        countOther++;
+                    }
+                }
+            }
+        }
+
+        if(countThis > countOther){
+            return 1;
+        }
+        if(countThis < countOther){
+            return -1;
+        }
+
+        return 0;
     }
 }

@@ -11,6 +11,7 @@ import br.com.basis.abaco.repository.FatorAjusteRepository;
 import br.com.basis.abaco.repository.FuncaoTransacaoRepository;
 import br.com.basis.abaco.repository.ManualContratoRepository;
 import br.com.basis.abaco.repository.ManualRepository;
+import br.com.basis.abaco.reports.rest.RelatorioFatorAjusteRest;
 import br.com.basis.abaco.repository.UploadedFilesRepository;
 import br.com.basis.abaco.repository.search.ManualSearchRepository;
 import br.com.basis.abaco.service.ManualService;
@@ -35,8 +36,6 @@ import net.sf.jasperreports.engine.JRException;
 import org.apache.commons.beanutils.BeanUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.boot.json.JsonParserFactory;
-import org.springframework.cloud.cloudfoundry.com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -60,11 +59,9 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.mail.Multipart;
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import javax.xml.bind.DatatypeConverter;
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -483,8 +480,15 @@ public class ManualResource {
         } catch (DRException | ClassNotFoundException | JRException | NoClassDefFoundError e) {
             throw new RelatorioException(e);
         }
-        return DynamicExporter.output(byteArrayOutputStream,
-            "relatorio." + "pdf");
+        return DynamicExporter.output(byteArrayOutputStream, "Manuais_Ativos.pdf");
+    }
+
+    @GetMapping("/relatorioPdfArquivoFatorAjuste/{id}")
+    @Timed
+    public ResponseEntity<byte[]> downloadPdfBrowser(@PathVariable Long id) throws URISyntaxException, IOException, JRException {
+        Manual manual = manualRepository.getOne(id);
+        RelatorioFatorAjusteRest relatorioFatorAjusteRest = new RelatorioFatorAjusteRest();
+        return relatorioFatorAjusteRest.gerarFatorAjustePDF(manual);
     }
 
 }

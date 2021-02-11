@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.16.0.final using JasperReports Library version 6.16.0-48579d909b7943b64690c65c71e07e0b80981928  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Capa" pageWidth="595" pageHeight="842" columnWidth="595" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="4932cfe1-d05f-4fb2-b9fd-71a1d7c6010a">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.topMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.bottomMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.leftMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
+	<parameter name="BookTitle" class="java.lang.String"/>
+	<parameter name="IMAGEMLOGO" class="java.io.InputStream"/>
+	<queryString>
+		<![CDATA[]]>
+	</queryString>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="841" splitType="Stretch">
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<textField textAdjust="StretchHeight" isBlankWhenNull="true">
+				<reportElement x="100" y="290" width="402" height="80" forecolor="#8AA158" uuid="ce36fb6b-f681-4a29-9de3-70ab1a43c4c6">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="28"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{BookTitle}]]></textFieldExpression>
+			</textField>
+			<textField pattern="MMMMM dd, yyyy">
+				<reportElement x="230" y="380" width="265" height="30" forecolor="#FF9100" uuid="4c059f1d-b76a-43f9-86e7-6883a58d1e07"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA["Impresso em: " + new SimpleDateFormat("dd/MM/yyyy - HH:mm:ss").format(new Date())]]></textFieldExpression>
+			</textField>
+			<image>
+				<reportElement x="197" y="700" width="203" height="80" uuid="598d9a79-e397-4a7c-b995-fca0c2e1f5df"/>
+				<imageExpression><![CDATA[$P{IMAGEMLOGO}]]></imageExpression>
+			</image>
+		</band>
+	</title>
+</jasperReport>

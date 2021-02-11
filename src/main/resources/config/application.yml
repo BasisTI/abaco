@@ -131,6 +131,12 @@ jhipster:
 dynamicExports:
     maximoRegistros: 2500
 
+relatorioFatorAjuste:
+    capa: reports/fatorAjuste/Capa.jasper
+    indice: reports/fatorAjuste/Indice.jasper
+    conteudo: reports/fatorAjuste/Conteudo.jasper
+    contraCapa: reports/fatorAjuste/ContraCapa.jasper
+
 # ===================================================================
 # Application specific properties
 # Add your own application properties here, see the ApplicationProperties class
