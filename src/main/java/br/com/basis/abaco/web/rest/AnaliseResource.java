@@ -36,6 +36,7 @@ import br.com.basis.dynamicexports.service.DynamicExportsService;
 import br.com.basis.dynamicexports.util.DynamicExporter;
 import com.codahale.metrics.annotation.Timed;
 import io.github.jhipster.web.util.ResponseUtil;
+import io.swagger.annotations.ApiParam;
 import net.sf.dynamicreports.report.exception.DRException;
 import net.sf.jasperreports.engine.JRException;
 import org.elasticsearch.index.query.BoolQueryBuilder;
@@ -352,6 +353,7 @@ public class AnaliseResource {
         return relatorioAnaliseRest.downloadPdfArquivo(analise, TipoRelatorio.ANALISE);
     }
 
+
     @GetMapping("/relatorioPdfBrowser/{id}")
     @Timed
     public @ResponseBody
@@ -418,6 +420,7 @@ public class AnaliseResource {
     }
 
 
+
     @GetMapping("/relatorioContagemPdf/{id}")
     @Timed
     public @ResponseBody
@@ -431,6 +434,7 @@ public class AnaliseResource {
 
     @GetMapping(value = "/analise/exportacao/{tipoRelatorio}", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
     @Timed
+
     public ResponseEntity<InputStreamResource> gerarRelatorioExportacao(@PathVariable String tipoRelatorio,
                                                                         @RequestParam(defaultValue = "ASC", required = false) String order,
                                                                         @RequestParam(defaultValue = "0", name = PAGE) int pageNumber,
@@ -458,7 +462,7 @@ public class AnaliseResource {
             "relatorio." + tipoRelatorio);
     }
 
-    // Método responsável por gerar a lista de analises em pdf.
+
     @GetMapping(value = "/analise/exportaPdf", produces = MediaType.APPLICATION_PDF_VALUE)
     @Timed
     public ResponseEntity<InputStreamResource> gerarRelatorioPdf(@RequestParam(defaultValue = "*") String query) throws RelatorioException {
@@ -475,23 +479,38 @@ public class AnaliseResource {
         return DynamicExporter.output(byteArrayOutputStream, "relatorio" + "pdf");
     }
 
-    //metódo responsavel por gerar lista de analises em pdf,excel.
     @PostMapping(value = "/analise/exportacao/{tipoRelatorio}", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
     @Timed
     public ResponseEntity<InputStreamResource> gerarRelatorioExportacao(@PathVariable String tipoRelatorio,
-                                                                        @RequestParam(defaultValue = "*") String query) throws RelatorioException {
-        ByteArrayOutputStream byteArrayOutputStream = analiseService.gerarRelatorio(query, tipoRelatorio);
+                                                                        @RequestParam(defaultValue = "*")String query, @ApiParam Pageable pageable) throws RelatorioException {
+        ByteArrayOutputStream byteArrayOutputStream = analiseService.gerarRelatorio(query, tipoRelatorio, pageable);
         return DynamicExporter.output(byteArrayOutputStream, "relatorio." + tipoRelatorio);
     }
 
-    //metódo responsavel por imprimir a lista de analises.
+
     @GetMapping(value = "/analise/exportacao-arquivo", produces = MediaType.APPLICATION_PDF_VALUE)
     @Timed
-    public ResponseEntity<byte[]> gerarRelatorioAnaliseImprimir(@RequestParam(defaultValue = "*") String query) throws RelatorioException {
-        ByteArrayOutputStream byteArrayOutputStream = analiseService.gerarRelatorio(query, "pdf");
+    public ResponseEntity<byte[]> gerarRelatorioAnaliseImprimir(@RequestParam(defaultValue = "*") String query, @ApiParam Pageable pageable) throws RelatorioException {
+        ByteArrayOutputStream byteArrayOutputStream = analiseService.gerarRelatorio(query, "pdf", pageable);
         return new ResponseEntity<byte[]>(byteArrayOutputStream.toByteArray(), HttpStatus.OK);
     }
 
+
+    @GetMapping(value = "/divergencia/exportacao-arquivo", produces = MediaType.APPLICATION_PDF_VALUE)
+    @Timed
+    public ResponseEntity<byte[]> gerarRelatorioDivergenciaImprimir(@RequestParam(defaultValue = "*") String query,  @ApiParam Pageable pageable) throws RelatorioException {
+         ByteArrayOutputStream byteArrayOutputStream = analiseService.gerarRelatorioDivergencia(query, "pdf", pageable );
+         return new ResponseEntity<byte[]>(byteArrayOutputStream.toByteArray(), HttpStatus.OK);
+    }
+
+
+    @PostMapping(value = "/divergencia/exportacao/{tipoRelatorio}", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
+    @Timed
+    public ResponseEntity<InputStreamResource> gerarRelatorioDivergenciaExportacao(@PathVariable String tipoRelatorio,
+                                                                        @RequestParam(defaultValue = "*") String query, @ApiParam Pageable pageable) throws RelatorioException {
+        ByteArrayOutputStream byteArrayOutputStream = analiseService.gerarRelatorioDivergencia(query, tipoRelatorio, pageable);
+        return DynamicExporter.output(byteArrayOutputStream, "relatorio." + tipoRelatorio);
+    }
 
 
     @GetMapping("/analises")
@@ -641,6 +660,7 @@ public class AnaliseResource {
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, API_ANALISES);
         return new ResponseEntity<>(dtoPage.getContent(), headers, HttpStatus.OK);
     }
+
 
     @GetMapping("/divergencia/{id}")
     @Timed

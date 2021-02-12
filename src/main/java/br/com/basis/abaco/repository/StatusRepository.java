@@ -1,5 +1,6 @@
 package br.com.basis.abaco.repository;
 
+import br.com.basis.abaco.domain.Analise;
 import br.com.basis.abaco.domain.Status;
 import br.com.basis.abaco.service.dto.DropdownDTO;
 import org.springframework.data.domain.Page;
@@ -26,4 +27,6 @@ public interface StatusRepository extends JpaRepository<Status, Long> {
     List<Status> findByAtivoTrue();
 
     Status findFirstByDivergenciaTrue();
+
+    
 }
