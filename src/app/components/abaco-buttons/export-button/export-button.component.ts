@@ -15,38 +15,44 @@ export class ExportButtonComponent {
 
 @Input() filter: any;
 
-    tiposExportacao = [
-        {
-            label: 'PDF', icon: '', command: () => {
-                this.exportar(ExportacaoUtilService.PDF);
-            }
-        },
-        {
-            label: 'EXCEL', icon: '', command: () => {
-                this.exportar(ExportacaoUtilService.EXCEL);
-            }
-        },
-        {
-            label: 'IMPRIMIR', icon: '', command: () => {
-                this.imprimir();
-            }
-        },
-    ];
+tiposExportacao = [
+{
+label: 'PDF', icon: '', command: () => {
+this.exportar(ExportacaoUtilService.PDF);
+}
+},
+{
+label: 'EXCEL', icon: '', command: () => {
+this.exportar(ExportacaoUtilService.EXCEL);
+}
+},
+{
+label: 'IMPRIMIR', icon: '', command: () => {
+this.imprimir(ExportacaoUtilService.PDF);
+}
+},
+];
 
-    constructor(
-        private http: HttpClient,
-    ) { }
+constructor(
+private http: HttpClient,
+) { }
 
-    exportar(tipoRelatorio: string) {
-        ExportacaoUtilService.exportReport(tipoRelatorio, this.http, this.resourceName, null, this.filter)
-            .subscribe((res: Blob) => {
-                const file = new Blob([res], { type: tipoRelatorio });
-                const url = URL.createObjectURL(file);
-                ExportacaoUtil.download(url, this.resourceName + ExportacaoUtilService.getExtension(tipoRelatorio));
-            });
-    }
 
-    imprimir(tipoRelatorio: string) {
-        window.open(`${environment.apiUrl}/${this.resourceName}/exportacao-arquivo`);
-    }
+
+exportar(tipoRelatorio: string) {
+ExportacaoUtilService.exportReport(tipoRelatorio, this.http, this.resourceName, null, this.filter)
+.subscribe((res: Blob) => {
+const file = new Blob([res], { type: tipoRelatorio });
+const url = URL.createObjectURL(file);
+ExportacaoUtil.download(url, this.resourceName + ExportacaoUtilService.getExtension(tipoRelatorio));
+});
+}
+
+imprimir(tipoRelatorio: string) {
+window.open(`${environment.apiUrl}/${this.resourceName}/exportacao-arquivo`);
+}
+
+exibirBlockUi(menssagem: string) {
+}
+
 }
