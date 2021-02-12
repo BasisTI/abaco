@@ -167,6 +167,10 @@
                        
                     </div>
                     <div class="ui-g-12 ui-md-2">
+                        <app-export-button [dataTable]="datatable" resourceName="divergencia">
+                        </app-export-button>
+                    </div>
+                    <div class="ui-g-12 ui-md-2">
                         <app-botoes-exportacao [query]="changeUrl()" resourceName="analise" id="idBtnExportacaoComponentAnalise"
                         fileName="analise">
                         </app-botoes-exportacao>
