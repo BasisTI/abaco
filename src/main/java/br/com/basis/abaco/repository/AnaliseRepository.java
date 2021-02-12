@@ -16,6 +16,7 @@ import java.util.List;
 @SuppressWarnings("unused")
 public interface AnaliseRepository extends JpaRepository<Analise, Long> {
 
+
     @Query(value = "SELECT a FROM Analise a WHERE a.createdBy.id = ?1")
     List<Analise> findByCreatedBy(Long userid);
 
@@ -60,6 +61,10 @@ public interface AnaliseRepository extends JpaRepository<Analise, Long> {
     Analise reportContagem(@Param("id") Long id);
 
     List<Analise> findAll();
+    
+    @Query(value = "SELECT a FROM Analise a WHERE a.isDivergence = :divergencia")
+    Page<Analise> pesquisarPorDivergencia(@Param("divergencia") Boolean divergencia, Pageable pageable);
+
 
 
 }
