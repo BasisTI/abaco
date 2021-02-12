@@ -1,0 +1,50 @@
+<div class="ui-g ui-fluid">
+    <div class="ui-g-12 ui-md-12 ui-sm-12">
+        <div class="card card-w-title">
+            <h1 >Tipo de Fase</h1>
+            <div class="ui-g">
+
+            <div class="ui-g">
+                <div class="ui-g ui-md-12 form-buttons-container" style="display: inline-block;">
+                    
+                    <div class="ui-g-2 ui-md-2 ui-sm-12" style="float:right;">
+                        <app-green-button
+                                buttonLabel="Novo"
+                                routerLink="/fase/new"
+                                buttonIcon="ui-icon-add">
+                        </app-green-button>
+                    </div>
+
+                </div>
+
+                <div class="dynamic-table-container">
+                    <div class="table-container">
+                        <basis-datatable
+                            type="server"
+                            [rows]="20"
+                            [url]="urlFaseService"
+                            (dblclick)="onRowDblclick($event)"
+                            (click) = "selectFase()"
+                            (buttonClick)="onClick($event)"
+                            [filterOnColumn]="true"
+                            #dataTable >
+                            <p-column header="Nome" field="nome" [sortable]="true"></p-column>
+                        </basis-datatable>
+                    </div>
+                </div>
+
+                <div class="ui-g-12 ui-md-2">
+                    <app-export-button [dataTable]="dataTable" resourceName="fases" [filter]="filtro">
+                    </app-export-button>
+                </div>
+                
+                <p-confirmDialog #dialog header="Confirmação" icon="pi pi-exclamation-triangle">
+                    <p-footer>
+                        <button type="button" pButton icon="pi pi-times" label="Não" (click)="dialog.reject()"></button>
+                        <button type="button" pButton icon="pi pi-check" label="Sim" (click)="dialog.accept()"></button>
+                    </p-footer>
+                </p-confirmDialog>
+            </div>
+        </div>
+    </div>
+</div>

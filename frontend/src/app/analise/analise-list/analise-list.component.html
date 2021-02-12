@@ -1,0 +1,371 @@
+<div class="ui-g ui-fluid">
+    <div class="ui-g-12 ui-md-12 ui-sm-12">
+        <div class="card card-w-title">
+            <h1>Análise</h1>
+            <div class="ui-g">
+                <div class="ui-g-4 ui-md-4 ui-sm-12">
+                    <span class="md-inputfield">
+                        <input type="text" pInputText class="ui-inputtext"
+                            [(ngModel)]="searchGroup.identificadorAnalise" (keyup.enter)="performSearch()"
+                            id="idIdentificadorComponentAnalise" maxlength="50">
+                        <label>Identificador</label>
+                    </span>
+                </div>
+                <div class="ui-g-4 ui-md-4 ui-sm-12">
+                    <p-dropdown [filter]="true" [options]="nomeSistemas" optionLabel="nome"
+                        id="idNomeSistemaComponentAnalise" [(ngModel)]="searchGroup.sistema" [autoWidth]="false"
+                        [placeholder]="this.getLabel('Sistema')">
+                    </p-dropdown>
+                </div>
+                <div class="ui-g-4 ui-md-4 ui-sm-12">
+                    <p-dropdown id="idUsuarioFiltrotAnalise" [filter]="true" [options]="usuariosOptions"
+                        optionLabel="nome" [autoWidth]="false" [(ngModel)]="searchGroup.usuario"
+                        [placeholder]="this.getLabel('Usuário')">
+                    </p-dropdown>
+                </div>
+            </div>
+            <div class="ui-g">
+                <div class="ui-g-4 ui-md-4 ui-sm-12">
+                    <p-dropdown id="idOrganizacaoComponentAnalise" [filter]="true" [options]="organizations"
+                        optionLabel="nome" [autoWidth]="false" [(ngModel)]="searchGroup.organizacao"
+                        [placeholder]="this.getLabel('Organização')">
+                    </p-dropdown>
+                </div>
+                <div class="ui-g-4 ui-md-4 ui-sm-12">
+                    <p-dropdown [filter]="true" [options]="teams" optionLabel="nome" id="idTimeComponentAnalise"
+                        [autoWidth]="false" [(ngModel)]="searchGroup.equipe" [placeholder]="this.getLabel('Equipe')">
+                    </p-dropdown>
+                </div>
+                <div class="ui-g-4 ui-md-4 ui-sm-12">
+                    <p-dropdown [filter]="true" [options]="metsContagens" id="idMetodoContagemComponentAnalise"
+                        [(ngModel)]="searchGroup.metodoContagem" [autoWidth]="false"
+                        [placeholder]="this.getLabel('Metodo de contagem')">
+                    </p-dropdown>
+                </div>
+            </div>
+            <div class="ui-g">
+                <div class="ui-g-4 ui-md-4 ui-sm-12">
+                    <p-dropdown [filter]="true" [options]="lstStatus" id="idStatusAnalise"
+                        [(ngModel)]="searchGroup.status" [autoWidth]="false" optionLabel="nome"
+                        [placeholder]="this.getLabel('Status')">
+                    </p-dropdown>
+                </div>
+            </div>
+            <div class="ui-g">
+                <div class="ui-g ui-md-12" style="justify-content: center; margin-bottom: 25px; margin-top: 25px">
+                    <div class="ui-g-2 ui-md-2 ui-sm-12">
+                        <app-white-button [buttonLabel]="'Limpar pesquisa' " id="idBtnLimparPesquisaComponentAnalise"
+                            buttonIcon="ui-icon-clear-all" (click)="limparPesquisa()">
+                        </app-white-button>
+                    </div>
+                    <div class="ui-g-2 ui-md-2 ui-sm-12">
+                        <app-blue-button [buttonLabel]="'Pesquisar' " id="idBtnPesquisarComponentAnalise"
+                            buttonIcon="ui-icon-search" (click)="performSearch()">
+                        </app-blue-button>
+                    </div>
+                    <div class="ui-g-2 ui-md-2 ui-sm-12">
+                        <app-green-button [buttonLabel]="'Novo'" id="idBtnNovoComponentAnalise" buttonIcon="ui-icon-add"
+                            routerLink="new">
+                        </app-green-button>
+                    </div>
+                </div>
+                <div>
+                    <div class="ui-g-12 ui-g-nopad">
+                        <div class="ui-g-3 ui-md-offset-6">
+                            <div class="text-right">Visibilidade das Colunas:</div>
+                        </div>
+                        <div class="ui-g-3">
+                            <p-multiSelect defaultLabel="Selecione as colunas a serem exibidas"
+                                [displaySelectedLabel]="false" [ngModelOptions]="{ standalone: true }"
+                                (onChange)="mostrarColunas($event)" [options]="allColumnsTable"
+                                [(ngModel)]="columnsVisible" [style]="{ width: '100%' }">
+                            </p-multiSelect>
+                        </div>
+                    </div>
+                    <basis-datatable type="server" [url]="userAnaliseUrl" (dblclick)="onRowDblclick($event)"
+                        (buttonClick)="datatableClick($event)" (finishedLoading)="setParamsLoad()" [rows]="20"
+                        id="idTabelaComponentAnalise" [rowsPerPageOptions]="rowsPerPageOptions"
+                        (click)="selectAnalise()" [enableScroll]="true" [scrollHeight]="'500px'"
+                        [showPaginationFooter]="true" [selectionMode]="'multiple'" #datatable>
+                        <p-column header="Organização" field="organizacao.nome" [sortable]="true" filterType="select"
+                            [filter]="true">
+                            <ng-template let-col let-analise="rowData" pTemplate="body">
+                                {{ analise.organizacao.nome}}
+                            </ng-template>
+                        </p-column>
+                        <p-column [styleClass]="'organizacao'" header="Identificador Analise"
+                            field="identificadorAnalise" [sortable]="true"></p-column>
+                        <p-column [styleClass]="'numero-os'" header="Número Os." field="numeroOs" [sortable]="true">
+                        </p-column>
+                        <p-column [styleClass]="'equipe'" header="Equipe" field="equipeResponsavel.nome"
+                            [sortable]="true" filterType="select" [filter]="true">
+                            <ng-template let-col let-analise="rowData" pTemplate="body">
+                                {{ analise.equipeResponsavel.nome}}
+                            </ng-template>
+                        </p-column>
+                        <p-column [styleClass]="'sistema'" header="Sistema" field="sistema.nome" [sortable]="true"
+                            filterType="select" [filter]="true">
+                            <ng-template let-col let-analise="rowData" pTemplate="body">
+                                {{ analise.sistema.nome}}
+                            </ng-template>
+                        </p-column>
+                        <p-column [styleClass]="'status'" header="Status" field="status.nome" [sortable]="true"
+                            [filter]="true">
+                            <ng-template let-col let-analise="rowData" pTemplate="body">
+                                {{ analise.status && analise.status.nome? analise.status.nome : ''}}
+                            </ng-template>
+                        </p-column>
+                        <p-column [styleClass]="'metodo-contagem'" header="Metodo Contagem" field="metodoContagem"
+                            [sortable]="true" filterType="select" [filter]="true"></p-column>
+                        <p-column [styleClass]="'pf-total'" header="PF total" field="pfTotal" [sortable]="true"
+                            filterType="">
+                            <ng-template let-col let-analise="rowData" pTemplate="body">
+                                {{ analise.pfTotal > 0 ? analise.pfTotal : 0 | number: '00.00'}}
+                            </ng-template>
+                        </p-column>
+                        <p-column [styleClass]="'pf-ajustado'" header="PF Ajustado" field="adjustPFTotal"
+                            [sortable]="true" filterType="">
+                            <ng-template let-col let-analise="rowData" pTemplate="body">
+                                {{ analise.adjustPFTotal > 0 ? analise.adjustPFTotal : 0 | number: '00.00'}}
+                            </ng-template>
+                        </p-column>
+                        <p-column [styleClass]="'data-criacao'" header="Data de criação" field="dataCriacaoOrdemServico"
+                            [sortable]="true" filterType="">
+                            <ng-template let-col let-analise="rowData" pTemplate="body" filterType="">
+                                {{ analise.dataCriacaoOrdemServico | date: 'dd/MM/y - HH:mm' }}
+                            </ng-template>
+                        </p-column>
+                        <p-column [styleClass]="'bloqueado'" header="Bloqueado" field="bloqueiaAnalise"
+                            [sortable]="true" filterType="">
+                            <ng-template let-col let-analise="rowData" pTemplate="body">
+                                {{ analise.bloqueiaAnalise ? 'Sim' : 'Não' }}
+                            </ng-template>
+                        </p-column>
+                        <p-column [styleClass]="'clonada'" header="Clonada" field="clonadaParaEquipe" [sortable]="true"
+                            filterType="">
+                            <ng-template let-col let-analise="rowData" pTemplate="body">
+                                {{ analise.clonadaParaEquipe ? 'Sim' : 'Não' }}
+                            </ng-template>
+                        </p-column>
+                        <p-column [styleClass]="'usuario'" header="Usuários" field="users" [sortable]="false"
+                            filterType="select" [filter]="true">
+                            <ng-template let-col let-row="rowData" pTemplate="body">
+                                <li *ngFor="let user of row.users">
+                                    {{ user.firstName }}
+                                </li>
+                            </ng-template>
+                        </p-column>
+                        <basis-datatable-button *ngIf="blocked" name="desbloquear"
+                            [bTooltip]="datatable.selectedRow != null ? 'Desbloquear' : 'Escolha um registro para desbloquear.'"
+                            icon="block" (click)="bloqueiaAnalise(blocked)" [disabled]="datatable.selectedRow == null"
+                            class="ui-button-success">
+                        </basis-datatable-button>
+                        <basis-datatable-button *ngIf="!blocked && inicial" name="bloquear"
+                            [bTooltip]="datatable.selectedRow != null ? 'Bloquear' : 'Escolha um registro para bloquear.'"
+                            icon="block" (click)="bloqueiaAnalise(blocked)" [disabled]="datatable.selectedRow == null"
+                            class="ui-button-danger">
+                        </basis-datatable-button>
+                        <basis-datatable-button name="compartilhar" [bTooltip]="compartilharTooltip()" icon="share"
+                            class="ui-button-info" [disabled]="datatable.selectedRow == null">
+                        </basis-datatable-button>
+                        <basis-datatable-button name="clone" [bTooltip]="clonarTooltip()" icon="content-copy"
+                            [disabled]="datatable.selectedRow == null">
+                        </basis-datatable-button>
+                        <basis-datatable-button name="relatorioBrowserDetalhado" [bTooltip]="relatorioTooltip()"
+                            icon="description" [disabled]="datatable.selectedRow == null">
+                        </basis-datatable-button>
+                        <basis-datatable-button name="relatorioExcelDetalhado" [bTooltip]="relatorioExcelTooltip()"
+                            icon="description" [disabled]="datatable.selectedRow == null" class="ui-button-success">
+                        </basis-datatable-button>
+                        <basis-datatable-button name="relatorioAnaliseContagem" [bTooltip]="relatorioContagemTooltip()"
+                            icon="description" [disabled]="datatable.selectedRow == null" class="ui-button-danger">
+                        </basis-datatable-button>
+                        <basis-datatable-button name="cloneParaEquipe" [bTooltip]="clonarParaEquipeTooltip()"
+                            icon="content-copy" [disabled]="datatable.selectedRow == null" class="ui-button-success">
+                        </basis-datatable-button>
+                        <basis-datatable-button name="changeStatus" [bTooltip]="changeStatusTooltip()" icon="swap-vert"
+                            [disabled]="datatable.selectedRow == null" class="ui-button-info">
+                        </basis-datatable-button>
+                        <basis-datatable-button name="generateDivergence" [bTooltip]="changeDivergenceTooltip()"
+                            icon="compare-arrows" [disabled]="datatable.selectedRow == null" class="ui-button-info">
+                        </basis-datatable-button>
+                    </basis-datatable>
+                    <div class="ui-g-12 ui-md-2">
+                        <app-export-button [dataTable]="datatable" resourceName="analise">
+                        </app-export-button>
+                    </div>
+                    <div class="ui-g-12 ui-md-2">
+                        <app-botoes-exportacao [query]="changeUrl()" resourceName="analise"
+                            id="idBtnExportacaoComponentAnalise" fileName="analise">
+                        </app-botoes-exportacao>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<p-confirmDialog header="Confirmação" #dialog>
+    <p-footer>
+        <button type="button" pButton icon="fa-close" label="Não" (click)="dialog.reject()"></button>
+        <button type="button" pButton icon="fa-check" label="Sim" (click)="dialog.accept()"></button>
+    </p-footer>
+</p-confirmDialog>
+<p-dialog *ngIf="equipeShare" header="Compartilhar Análise" [(visible)]="mostrarDialog" [modal]="true"
+    (onHide)="limparSelecaoCompartilhar()" [style]="{width: '50vw'}">
+    <p-table [(value)]="equipeShare" [headerCheckboxToggleAllPages]="true" [(selection)]="selectedEquipes"
+        dataKey="equipeId" emptyMessage="Nenhuma outra equipe na sua organização pode ter acesso à essa análise">
+
+        <ng-template pTemplate="header">
+            <tr>
+                <th style="text-align:left; width: 50px;">
+                    <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+                </th>
+                <th>Equipe</th>
+                <th>Somente visualizar ?</th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-equipe>
+            <tr class="ui-selectable-row">
+                <td>
+                    <p-tableCheckbox [value]=" equipe"></p-tableCheckbox>
+                </td>
+                <td>
+                    {{equipe.nomeEquipe}}
+                </td>
+                <td>
+                    <div class="p-col-12">
+                        <p-radioButton [value]="true" label="Sim" [(ngModel)]="equipe.viewOnly">
+                        </p-radioButton>
+                    </div>
+                    <div class="p-col-12">
+                        <p-radioButton [value]="false" label="Não" [(ngModel)]="equipe.viewOnly">
+                        </p-radioButton>
+                    </div>
+                </td>
+            </tr>
+        </ng-template>
+    </p-table>
+    <app-green-button buttonLabel="Adicionar" (click)="salvarCompartilhar()" style="float:right; margin-top: 5px">
+    </app-green-button>
+    <br />
+    <br />
+
+    <hr />
+    <h3>Compartilhada com:</h3>
+    <p-table [(value)]="analiseTemp.compartilhadas" selectionMode="single" [(selection)]="selectedToDelete"
+        dataKey="equipeId" emptyMessage="Nenhuma outra equipe tem acesso a essa análise">
+        <ng-template pTemplate="header">
+            <tr>
+                <th style="text-align:left; width: 50px;"></th>
+                <th>Equipe</th>
+                <th>Somente visualizar ?</th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-equipe>
+            <tr class="ui-selectable-row">
+                <td>
+                    <p-radioButton [(ngModel)]="selectedToDelete" [value]="equipe"></p-radioButton>
+                </td>
+                <td>
+                    {{equipe.nomeEquipe}}
+                </td>
+                <td>
+                    {{equipe.viewOnly? 'Sim' : 'Não'}}
+                </td>
+            </tr>
+        </ng-template>
+    </p-table>
+    <app-red-button buttonLabel="Remover" (click)="deletarCompartilhar()" style="float:right; margin-top: 5px">
+    </app-red-button>
+</p-dialog>
+<p-dialog header="Clonar para equipe" [(visible)]="showDialogAnaliseCloneTipoEquipe" [style]="{width: '50vw'}"
+    [minHeight]="300" [modal]="true">
+    <div style="min-height:300px">
+        <div class="ui-g">
+            <div class="ui-g-12 ui-md-12 ui-sm-12">
+                <p-dropdown [style]="{'width':'100%'}" [filter]="true" [options]="tipoEquipesToClone" optionLabel="nome"
+                    id="idCloneToTipoEquipe" [(ngModel)]="equipeToClone"
+                    placeholder="- Selecione uma Equipe Responsável">
+                </p-dropdown>
+            </div>
+        </div>
+        <app-green-button buttonLabel="Adicionar" (click)="cloneAnaliseToEquipe()" style="float:right; margin-top: 5px">
+        </app-green-button>
+    </div>
+</p-dialog>
+<p-dialog header="Tem certeza que deseja bloquear o registro ?" [(visible)]="showDialogAnaliseBlock" [modal]="true">
+    <div *ngIf="analiseTemp && analiseTemp && showDialogAnaliseBlock">
+        <div class="ui-g-12 ui-md-12 ui-sm-12 ui-label" style="margin-bottom: 05px; margin-top: 05px;">
+            <label>Data de Homologação: </label>
+            <div class="ui-g-12 ui-md-12 ui-sm-12">
+                <p-calendar name="dataHomologacao" [(ngModel)]="analiseTemp.dataHomologacao" dateFormat="dd/mm/yy"
+                    [inline]="true" showIcon="true">
+                </p-calendar>
+            </div>
+        </div>
+    </div>
+    <div class="ui-g-12 ui-md-6 ui-sm-6 ui-label">
+        <button type="button" pButton icon="fa-close" (click)="showDialogAnaliseBlock=false" label="Cancelar"
+            style="float:right; margin-top: 5px"></button>
+    </div>
+    <div class="ui-g-12 ui-md-6 ui-sm-6 ui-label">
+        <button type="button" pButton icon="fa-check" (click)="alterAnaliseBlock()" label="Bloquear"
+            style="float:right; margin-top: 5px"></button>
+    </div>
+</p-dialog>
+<p-dialog header="Alterar status" [(visible)]="showDialogAnaliseChangeStatus" [style]="{width: '50vw'}"
+    [style]="{width: '250px', minHeight: '200px'}" [modal]="true">
+    <div style="min-height:200px">
+        <div class="ui-g">
+            <div class="ui-g-12 ui-md-12 ui-sm-12">
+                <p-dropdown [style]="{'width':'100%'}" [filter]="true" optionLabel="nome" [options]="lstStatusActive"
+                    id="idStatusAnalise" [(ngModel)]="statusToChange" placeholder="Selecione um Status">
+                </p-dropdown>
+            </div>
+        </div>
+        <app-green-button buttonLabel="Alterar" (click)="alterStatusAnalise()" style="float:right; margin-top: 5px">
+        </app-green-button>
+    </div>
+</p-dialog>
+<p-dialog header="Validação" [(visible)]="showDialogDivergence" [style]="{width: '50vw'}" [minHeight]="300"
+    [modal]="true">
+    <div class="ui-g-12 ui-md-12 ui-sm-12">
+        <div class="p-grid ui-g-12 ui-md-12 ui-sm-12">
+            <div class="p-grid ui-g-12 ui-md-12 ui-sm-12">
+                <label>Deseja mesclar as Funções de Dados e Transações das Análises:</label>
+            </div>
+            <div class="p-grid ui-g-12 ui-md-12 ui-sm-12">
+                <p-inputSwitch [(ngModel)]="setMainAnalise"></p-inputSwitch>
+            </div>
+        </div>
+        <div *ngIf="setMainAnalise">
+            <label>Análises selecionadas para gerar Validação:</label>
+            <div class="p-grid ui-g-12 ui-md-12 ui-sm-12">
+                <li>{{firstAnaliseDivergencia.identificadorAnalise}}</li>
+                <li>{{secondAnaliseDivergencia.identificadorAnalise}}</li>
+            </div>
+        </div>
+        <div *ngIf="!setMainAnalise">
+            <label>Selecione a Análise para importar as funções de dados e transação para Validação:</label>
+            <div class="p-grid ui-g-12 ui-md-12 ui-sm-12">
+                <div class="p-grid" style="width:250px;margin-bottom:10px">
+                    <div class="p-col-12">
+                        <p-radioButton name="mainAnalise" (click)="setFunctionMainAnalise(secondAnaliseDivergencia)"
+                            [value]="firstAnaliseDivergencia" [label]="firstAnaliseDivergencia.identificadorAnalise"
+                            [(ngModel)]="mainAnaliseDivergencia"></p-radioButton>
+                    </div>
+                    <div class="p-col-12">
+                        <p-radioButton name="mainAnalise" (click)="setFunctionMainAnalise(firstAnaliseDivergencia)"
+                            [value]="secondAnaliseDivergencia" [label]="secondAnaliseDivergencia.identificadorAnalise"
+                            [(ngModel)]="mainAnaliseDivergencia"></p-radioButton>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <app-green-button buttonLabel="Gerar Validação" (click)="generateDivergence(setMainAnalise)"
+        style="float:right; margin: 5px"></app-green-button>
+    <app-white-button buttonLabel="Cancelar" (click)="cancelGenerateDivergence()" style="float:right; margin: 5px">
+    </app-white-button>
+</p-dialog>

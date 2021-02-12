@@ -1,0 +1,22 @@
+<div *ngIf="habilitarBotaoSalvar()">
+  <button pButton type="button"
+    class="green-btn flat ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only"
+    [label]="this.getLabel('SalvarAnalise')"
+    icon="ui-icon-save"
+    (click)="salvar()">
+  </button>
+</div>
+
+<div *ngIf="!habilitarBotaoSalvar()"
+  [pTooltip]="motivosDesabilitar()"
+  tooltipPosition="top">
+  
+  <button pButton type="button"
+    class="green-btn flat ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only"
+    [label]="this.getLabel('Salvar')"
+    icon="ui-icon-save"
+    [disabled]="true">
+  </button>
+</div>
+  
+

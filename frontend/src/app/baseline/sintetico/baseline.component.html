@@ -1,0 +1,100 @@
+<div class="ui-g ui-fluid">
+    <div class="ui-g-12 ui-md-12 ui-sm-12">
+        <div class="card card-w-title">
+
+            <h1>Baseline</h1>
+            <div class="ui-g">
+                <div class="ui-g-12 ui-md-12 ui-sm-12">
+                    <p-dropdown
+                            [filter]="true"
+                            [options]="nomeSistemas"
+                            optionLabel="nome"
+                            id="idNomeSistemaComponentAnalise"
+                            [(ngModel)]="sistema"
+                            [placeholder]="this.getLabel('Sistema')">
+                    </p-dropdown>
+                </div>
+            </div>
+            <div class="ui-g">
+                <div class="ui-g ui-md-12" style="justify-content: center; margin-bottom: 25px; margin-top: 25px">
+
+                    <div class="ui-g-2 ui-md-2 ui-sm-12">
+                        <app-white-button
+                                [buttonLabel]="'Limpar Pesquisar'"
+                                id="idBtnLimparPesquisaComponentAnalise"
+                                buttonIcon="ui-icon-clear-all"
+                                (click)="limparPesquisa()">
+                        </app-white-button>
+                    </div>
+                    <div class="ui-g-2 ui-md-2 ui-sm-12">
+                        <app-blue-button
+                                [buttonLabel]="'Pesquisar'"
+                                id="idBtnPesquisarComponentAnalise"
+                                buttonIcon="ui-icon-search"
+                                (click)="performSearch()">
+                        </app-blue-button>
+                    </div>
+                    <div class="ui-g-2 ui-md-2 ui-sm-12">
+                        <app-green-button 
+                            [buttonLabel]="'Atualizar'"
+                            buttonIcon="ui-icon-update"
+                            (click)="atualizarBaseline()">
+                        </app-green-button>
+                    </div>
+                </div>
+                <div class="ui-g">
+                    <div class="ui-g">
+                        <div *ngIf="enableTable">
+                            <basis-datatable
+                                    type="memory"
+                                    [value]="lstBasilineSintetico"
+                                    (buttonClick)="datatableClick($event)"
+                                    [rows]="20"
+                                    [disableDelete]="true"
+                                    [disableEdit]="true"
+                                    [rowsPerPageOptions]="rowsPerPageOptions"
+                                    #datatable>
+
+                                <basis-datatable-button
+                                    name="geraBaselinePdfBrowser"
+                                    tooltip="Relatório Baseline"
+                                    icon="description"
+                                    disabled="selecionada">
+                                </basis-datatable-button>
+
+                                <p-column [header]="this.getLabel('Nome')" field="nome" [sortable]="true"></p-column>
+                                <p-column [header]="this.getLabel('Sigla')" field="sigla" [sortable]="true"></p-column>
+                                <p-column [header]="this.getLabel('NumeroOcorrencia')" field="numeroocorrencia" [sortable]="true"></p-column>
+                                <p-column [header]="this.getLabel('PontosFuncao')" field="sum" [sortable]="true"></p-column>
+                                <p-column [header]="this.getLabel('Equipe')" field="nomeEquipe" [sortable]="true"></p-column>
+                            </basis-datatable>
+                        </div>
+                        <p-dialog header="Atualização de Baseline" [(visible)]="showUpdateBaseline" [style]="{width: '50vw'}" >
+                            <label>Desejar atualizar a Baseline dos Sistemas?</label>
+                            <div class="ui-g">
+                                <div class="ui-g-12 ui-md-12 ui-sm-12">
+                                    <p-listbox [options]="nomeSistemas" [(ngModel)]="sistemaUpdate" [checkbox]="true" [filter]="true" optionLabel="nome" [listStyle]="{'max-height':'300px'}"></p-listbox>
+                                </div>
+                                <div class="ui-g-12 ui-md-12 ui-sm-12">
+                                    <p-listbox [options]="nomeEquipes" [(ngModel)]="equipeUpdate" [checkbox]="true" [filter]="true" optionLabel="nome" [listStyle]="{'max-height':'300px'}"></p-listbox>
+                                </div>
+                                <div>
+                                    <div class="ui-g-6 ui-md-6 ui-sm-6">
+                                        <button type="button" pButton icon="pi pi-times" (click)="showUpdateBaseline=false" label="Cancelar" class="ui-button-secondary ui-g-3 ui-md-3 ui-sm-3"></button>
+                                    </div>
+                                    <div class="ui-g-6 ui-md-6 ui-sm-6">
+                                        <button type="button" pButton icon="ui-icon-update" (click)="updateBaseline(sistemaUpdate, equipeUpdate)" label="Atualizar" class="ui-button-success ui-g-3 ui-md-3 ui-sm-3"></button>
+                                    </div>
+                                </div>
+                            </div>
+                        </p-dialog>
+                        <div class="ui-g-12 ui-md-2" *ngIf="enableTable">
+                            <app-botoes-exportacao resourceName="baseline" fileName="baseline"></app-botoes-exportacao>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

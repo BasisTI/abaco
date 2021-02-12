@@ -1,0 +1,44 @@
+<div class="ui-g ui-fluid" *ngIf="funcionalidade">
+  <div class="ui-g-12">
+    <div class="card card-w-title">
+      <h1 translate="Cadastros.Funcionalidade.VisualizarFuncionalidade">Visualizar Funcionalidade</h1>
+      <div class="ui-g">
+        <div class="ui-g-6">
+          <span class="md-inputfield">
+            <input type="text" class="ui-inputtext" name="id" pInputText [(ngModel)]="funcionalidade.id" readonly/>
+            <label translate="Cadastros.Funcionalidade.ID">ID</label>
+          </span>
+        </div>
+        <div class="ui-g-6">
+          <span class="md-inputfield">
+            <input type="text" name="nome" pInputText [ngModel]="funcionalidade.nome" readonly/>
+            <label translate="Cadastros.Funcionalidade.Nome">Nome</label>
+          </span>
+        </div>
+        <div class="ui-g-6">
+          <span class="md-inputfield">
+            <input type="text" name="modulo" pInputText [ngModel]="funcionalidade.modulo.id" readonly/>
+            <label translate="Cadastros.Funcionalidade.Modulo">Modulo</label>
+          </span>
+        </div>
+        <div class="ui-g-6">
+          <span class="md-inputfield">
+            <input type="text" name="funcaoDados" pInputText [ngModel]="funcionalidade.funcaoDados.id" readonly/>
+            <label translate="Cadastros.Funcionalidade.FuncaoDados">Funcao Dados</label>
+          </span>
+        </div>
+        <div class="ui-g-6">
+          <span class="md-inputfield">
+            <input type="text" name="funcaoTransacao" pInputText [ngModel]="funcionalidade.funcaoTransacao.id" readonly/>
+            <label translate="Cadastros.Funcionalidade.FuncaoTransacao">Funcao Transacao</label>
+          </span>
+        </div>
+      </div>
+      <div class="ui-g">
+        <div class="ui-g-2">
+          <button pButton type="button" [label]="this.getLabel('Voltar')" routerLink="/funcionalidade"></button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

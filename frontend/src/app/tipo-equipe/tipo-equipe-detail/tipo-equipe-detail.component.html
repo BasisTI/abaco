@@ -1,0 +1,46 @@
+<div class="ui-g ui-fluid" *ngIf="tipoEquipe">
+  <div class="ui-g-12">
+    <div class="card card-w-title">
+      <h1 translate="Cadastros.TipoEquipe.Visualizar">Visualizar Tipo Equipe</h1>
+      <div class="ui-g">
+        <div class="ui-g-12">
+          <label>Nome: {{ tipoEquipe.nome }}</label>
+        </div>
+      </div>
+      <div class="ui-g">
+        <div class="ui-g-12">
+          <label>CFPS Responsável: {{ tipoEquipe.cfpsResponsavel.firstName }} {{ tipoEquipe.cfpsResponsavel.lastName }}</label>
+        </div>
+      </div>
+      <div class="ui-g">
+        <div class="ui-g-12">
+          <label>Preposto: {{ tipoEquipe.preposto }}</label>
+        </div>
+      </div>
+      <div class="ui-g">
+        <div class="ui-g-12">
+          <label>E-mail Preposto: {{ tipoEquipe.emailPreposto }}</label>
+        </div>
+      </div>
+      <div class="ui-g" style="margin-bottom: 25px">
+          <h3 class="first">Organização</h3>
+          <basis-datatable 
+                type="memory"
+                [value]="tipoEquipe.organizacoes"
+                disableEdit="true"
+                disableView="true"
+                disableDelete="true"
+                disableClone="true"
+          >
+            <p-column field="nome" header="Nome"></p-column>
+          </basis-datatable >
+      </div>
+
+      <div class="ui-g">
+        <div class="ui-g-2">
+          <button pButton type="button" label="Voltar" (click)="return()"></button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

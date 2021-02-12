@@ -1,0 +1,102 @@
+
+<div class="ui-g ui-fluid">
+
+    <div class="ui-g-12 ui-md-12 ui-sm-12">
+
+        <div class="card card-w-title">
+
+            <div class="ui-g">
+                <div class="ui-g ui-md-6">
+                    <h1>Usuários</h1>
+                </div>
+                <div class="ui-g ui-md-6" style="justify-content: flex-end;">
+                    <app-green-button
+                        buttonLabel="Novo"
+                        id="idBtnNovoComponentAnalise"
+                        buttonIcon="ui-icon-add"
+                        routerLink="new">
+                    </app-green-button>
+                </div>
+            <div>
+                    <basis-datatable
+                            [url]="searchUrl"
+                            (dblclick)="onRowDblclick($event)"
+                            (buttonClick)="datatableClick($event)"
+                            (finishedLoading)="setParamsLoad()"
+                            [rows]="20"
+                            [rowsPerPageOptions]="rowsPerPageOptions"
+                            [showPaginationFooter]="true"
+                            [customFilterOptions]="customOptions"
+                            [filterOnColumn]="true"
+                            [showVisibleColumnsControl]="true"
+                            #datatable>
+
+                        <p-column header="Nome" field="nome" [style]="{width:'15%'}" [sortable]="true">
+                            <ng-template let-user="rowData" pTemplate="body">
+                                {{ user.firstName }} {{ user.lastName }}
+                            </ng-template>
+                        </p-column>
+
+                        <p-column header="Login" field="login" [editable]="false" [sortable]="true" ></p-column>
+
+                        <p-column
+                                header="E-mail"
+                                field="email"
+                                [style]="{'word-wrap':'break-word'}"
+                                [sortable]="true">
+                        </p-column>
+
+                        <p-column header="Organização" field="organizacao" [sortable]="false" filterType="select">
+                            <ng-template let-col let-row="rowData" pTemplate="body" >
+                                <li *ngFor="let org of row.organizacoes">
+                                    {{ org.nome }}
+                                </li>
+                            </ng-template>
+                        </p-column>
+
+                        <p-column header="Perfil" field="perfil" [sortable]="false" filterType="select">
+                            <ng-template let-col let-row="rowData" pTemplate="body">
+                                <li *ngFor="let perfil of row.authorities">
+                                    {{ perfil.description }}
+                                </li>
+                            </ng-template>
+                        </p-column>
+
+                        <p-column header="Equipe" field="equipe" [style]="{width:'15%'}" [sortable]="false" filterType="select">
+                            <ng-template let-col let-row="rowData" pTemplate="body">
+                                <li *ngFor="let equipe of row.tipoEquipes">
+                                    {{ equipe.nome }}
+                                </li>
+                            </ng-template>
+                        </p-column>
+
+                        <p-column header="Ativo" field="activated" [style]="{width:'6.5%'}" [sortable]="true" filterType="">
+                            <ng-template let-col let-user="rowData" pTemplate="body">
+                                {{ user.activated ? 'Sim' : (user.activated != null ? 'Não' : null ) }}
+                            </ng-template>
+                        </p-column>
+
+                    </basis-datatable>
+
+                    <div class="ui-g-12 ui-md-2">
+                        <app-export-button [dataTable]="datatable" resourceName="users">
+                        </app-export-button>
+                    </div>
+
+
+                    <div class="ui-g-12 ui-md-2">
+                        <app-botoes-exportacao [query]="query" resourceName="users" fileName="usuários">
+                        </app-botoes-exportacao>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <p-confirmDialog [header]="this.getLabel('Confirmação')" #dialog>
+        <p-footer>
+            <button type="button" pButton icon="fa-close" [label]="this.getLabel('Não')" (click)="dialog.reject()"></button>
+            <button type="button" pButton icon="fa-check" [label]="this.getLabel('Sim')" (click)="dialog.accept()"></button>
+        </p-footer>
+    </p-confirmDialog>

@@ -1,0 +1,68 @@
+<div class="ui-g ui-fluid">
+
+  <div class="ui-g-12 ui-md-12 ui-sm-12">
+
+    <div class="card card-w-title">
+
+      <div class="ui-g">
+
+        <div class="ui-g">
+          <div class="ui-g ui-md-6">
+            <h1>Sistemas</h1>
+          </div>
+        <div class="ui-g ui-md-6" style="justify-content: flex-end;">
+            <app-green-button
+              buttonLabel="Novo"
+              id="idBtnNovoComponentAnalise"
+              buttonIcon="ui-icon-add"
+              routerLink="/sistema/new">
+          </app-green-button>
+        </div>
+
+        <basis-datatable
+            type="server"
+            [url]="searchUrl"
+            (dblclick)="onRowDblclick($event)"
+            (click) = "selectTipoEquipe()"
+            [filterOnColumn]="true"
+            [customFilterOptions]="customOptions"
+            (buttonClick)="datatableClick($event)"
+            id="idTabelaComponentSistema"
+            [rows]="20"
+            [rowsPerPageOptions]="rowsPerPageOptions"
+            [showPaginationFooter]="true"
+            #datatable>
+          <p-column header="Sigla" field="sigla" [sortable]="true"></p-column>
+          <p-column header="Nome" field="nome" [sortable]="true"></p-column>
+          <p-column header="Número ocorrência" field="numeroOcorrencia" [sortable]="true"></p-column>
+          <p-column header="Organização" field="organizacao" [sortable]="false" filterType="select">
+            <ng-template let-col let-sistema="rowData" pTemplate="body">
+              {{ sistema.organizacao.nome }}
+            </ng-template>
+          </p-column>
+        </basis-datatable>
+
+        <div class="ui-g-12 ui-md-2">
+            <app-export-button [dataTable]="datatable" resourceName="sistema">
+            </app-export-button>
+        </div>
+
+        <div class="ui-g-12 ui-md-2">
+          <app-botoes-exportacao [query]="elasticQuery.value" resourceName="sistema" fileName="sistema" id="idBtnExportacaoComponentSistema">
+          </app-botoes-exportacao>
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+
+<p-confirmDialog [header]="this.getLabel('Confirmação')" #dialog>
+  <p-footer>
+    <button type="button" pButton icon="fa-close" [label]="this.getLabel('Não')" (click)="dialog.reject()"></button>
+    <button type="button" pButton icon="fa-check" [label]="this.getLabel('Sim')" (click)="dialog.accept()"></button>
+  </p-footer>
+</p-confirmDialog>

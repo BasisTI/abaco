@@ -1,0 +1,29 @@
+<h2>{{ label }}</h2>
+
+<div class="ui-g">
+  <div class="ui-g-12">
+    <textarea pInputTextarea
+     maxlength = "8000"
+      [(ngModel)]="text"
+      style="white-space: nowrap; overflow: auto;"
+      [autoResize]="false"
+      (keyup.enter)="textChanged()"
+      (keyup.backspace)="textChanged()"
+      (keyup.delete)="textChanged()"
+      (change)="textChanged()"
+      [rows]="20" [cols]="180"
+      name="{{ label }}">
+    </textarea>
+  </div>
+
+  <div class="ui-g-12">
+    <span>
+      {{this.getLabel('Total')}} {{ showTotal() }}
+    </span>
+  </div>
+  <div class="ui-g-12" *ngIf="deveMostrarDuplicatas()">
+    <span >
+      {{this.getLabel('Valores Duplicados:')}} {{ parseResult.duplicatasFormatadas() }}
+    </span>
+  </div>
+</div>

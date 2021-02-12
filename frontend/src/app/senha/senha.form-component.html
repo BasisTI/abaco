@@ -1,0 +1,65 @@
+<div class="ui-g ui-fluid" style="justify-content: center;">
+  <div class="ui-g-12">
+    <div 
+      class="card card-w-title password-panel" 
+      style="margin: 0px auto 0 auto; min-height: 400px;"
+      *ngIf="authenticated">
+        <div class="ui-g" style="justify-content: center;">
+          <div class="ui-g-12 ui-md-12 ui-sm-12">
+            <form
+              name="passwordForm" 
+              role="form" 
+              (ngSubmit)="senha()">
+
+              <h1 >Alterar Senha</h1>
+
+                <div class="ui-g-12 ui-md-12 ui-sm-12" style="margin-bottom: 25px;">
+                  <span class="md-inputfield">
+                    <input
+                      required
+                      pPassword
+                      maxlength="20"
+                      type="password" 
+                      name="oldPassword" 
+                      [(ngModel)]="this.oldPassword" 
+                      [feedback]="false" />
+                      <label >Senha Atual *</label>
+                  </span>
+                </div>
+
+                <div class="ui-g-12 ui-md-12 ui-sm-12" style="margin-bottom: 25px;">
+                  <span class="md-inputfield">
+                    <input
+                      required
+                      maxlength="20"
+                      pPassword
+                      type="password"
+                      name="newPassword" 
+                      [(ngModel)]="this.newPassword" 
+                      [feedback]="false" />
+                      <label >Digite a Nova Senha *</label>
+                  </span>
+                </div>
+
+                <div class="ui-g-12 ui-md-12 ui-sm-12" style="margin-bottom: 25px;">
+                  <span class="md-inputfield">
+                    <input
+                      required
+                      maxlength="20"
+                      pPassword 
+                      type="password" 
+                      name="newPasswordConfirm" 
+                      [(ngModel)]="this.newPasswordConfirm" 
+                      [feedback]="false" />
+                      <label >Confirme a Nova Senha *</label>
+                  </span>
+                </div>
+                <div class="ui-g-4" style="justify-content: center">
+                  <button pButton type="submit" [label]="this.getLabel('Atualizar senha')"></button>
+                </div>
+            </form>
+          </div>
+        </div>
+    </div>
+  </div>
+</div>

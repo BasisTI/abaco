@@ -1,0 +1,74 @@
+<div class="ui-g ui-fluid" *ngIf="sistema">
+  <div class="ui-g-12">
+    <div class="card card-w-title">
+      <h1 translate="Cadastros.Sistema.VisualizarSistema">Visualizar Sistema</h1>
+      <div class="ui-g">
+        <div class="ui-g-2" style="margin-bottom: 25px">
+          <label>Sigla: {{ sistema.sigla }}</label>
+        </div>
+        <div class="ui-g-10" style="margin-bottom: 25px">
+          <label>Nome do sistema: {{ sistema.nome }}</label>
+        </div>
+        <div class="ui-g-4" style="margin-bottom: 25px">
+          <label>Numero Ocorrência: {{ sistema.numeroOcorrencia }}</label>
+        </div>
+        <div class="ui-g-8" style="margin-bottom: 25px">
+          <label>Organização: {{ sistema.organizacao.nome }}</label>
+        </div>
+      </div>
+
+      <div class="ui-g">
+        <h4 style="margin-top: 0px;">
+          Módulos
+        </h4>
+
+        <basis-datatable
+                type="memory"
+                [value]="sistema.modulos"
+                [immutable]="false" 
+                id="idTabelaModuloDetailSistema"
+                disableEdit="true"
+                disableView="true"
+                disableDelete="true"
+                disableClone="true"
+                #modulosDataTable>
+          <p-column header="Código"
+            [style]="{width: '25%'}" 
+            field="id">
+          </p-column>
+          <p-column header="Nome" field="nome"></p-column>
+        </basis-datatable>
+      </div>
+
+      <div class="ui-g" style="margin-bottom: 25px">
+          <h4 style >Funcionalidades</h4>
+
+          <basis-datatable
+                type="memory"
+                [value]="sistema.funcionalidades"
+                [immutable]="false"
+                id="idTabelaFuncionalidadesDetailSistema"
+                disableEdit="true"
+                disableView="true"
+                disableDelete="true"
+                disableClone="true"
+                #funcionalidadesDataTable>
+            <p-column header="Módulo" field="modulo.nome"></p-column>
+            <p-column header="Nome" field="nome"></p-column>
+          </basis-datatable>
+      </div>
+
+      <div class="ui-g">
+        <div class="ui-g-2">
+          <button 
+            pButton type="button"
+            id="idBtnVoltarDetailSistema" 
+            label="Voltar" 
+            routerLink="/sistema">
+          </button>
+        </div>
+      </div>
+      
+    </div>
+  </div>
+</div>

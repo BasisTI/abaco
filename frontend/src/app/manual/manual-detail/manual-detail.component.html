@@ -1,0 +1,112 @@
+<div class="ui-g ui-fluid" *ngIf="manual && manual.id">
+    <div class="ui-g-12">
+        <div class="card card-w-title">
+            <h1 >Visualizar Manual</h1>
+            <div class="ui-g">
+                <div class="ui-g-6">
+                    <label>ID: {{ manual.id }}</label>
+                </div>
+                <div class="ui-g-6">
+                    <label>Nome: {{ manual.nome }}</label>
+                </div>
+                <div class="ui-g-6">
+                    <label>Observação: {{ manual.observacao }}</label>
+                </div>
+                <div class="ui-g-6">
+                    <label>Valor Variação Estimada: {{ manual.valorVariacaoEstimada }}</label>
+                </div>
+                <div class="ui-g-6">
+                    <label>Valor Variação Indicativa: {{ manual.valorVariacaoIndicativa }}</label>
+                </div>
+                <div class="ui-g-6">
+                    <label>Arquivos Manual:
+                        <ul *ngFor="let arquivo of arquivos">
+                        <li><a  target="_self" href="/api/downloadFile/{{ arquivo.id }}" download="arquivo-manual.pdf">{{arquivo.originalName}}</a></li>
+                        </ul></label>
+                </div>
+            </div>
+
+            <div class="ui-g">
+                <h1>Impacto</h1>
+                <div class="ui-g-12">
+                    <basis-datatable type="memory"
+                                [value]="manualArray"
+                                [rows]="20"
+                                showPaginationFooter="false"
+                                disableEdit="true"
+                                disableView="true"
+                                disableDelete="true"
+                                disableClone="true">
+                        <p-column header="Inclusão(%)" field="parametroInclusao"></p-column>
+                        <p-column header="Alteração(%)" field="parametroAlteracao"></p-column>
+                        <p-column header="Exclusão(%)" field="parametroExclusao"></p-column>
+                        <p-column header="Conversão(%)" field="parametroConversao"></p-column>
+                        <p-column header="Versão CPM" field="versaoCPM"></p-column>
+                    </basis-datatable>
+                </div>
+            </div>
+
+            <div class="ui-g">
+                <h1>Esforços por Fase</h1>
+                <div class="ui-g-12">
+                    <basis-datatable type="memory"
+                                [value]="manual.esforcoFases"
+                                [rows]="10"
+                                showPaginationFooter="false"
+                                disableEdit="true"
+                                disableView="true"
+                                disableDelete="true"
+                                disableClone="true">
+                        <p-column header="Fase" field="fase">
+                            <ng-template let-col let-esforco="rowData" pTemplate="body">
+                                {{esforco.fase.nome}}
+                            </ng-template>
+                        </p-column>
+                        <p-column header="Percentual(%)" field="esforco"></p-column>
+                    </basis-datatable>
+                </div>
+            </div>
+
+            <div class="ui-g">
+                <div class="ui-g-12">
+                    <h1>Fatores de Ajuste</h1>
+                    <basis-datatable type="memory"
+                                [value]="manual.fatoresAjuste"
+                                [rows]="10"
+                                id="idTabelaFatorAjusteDetailManual"
+                                disableEdit="true"
+                                showPaginationFooter="false"
+                                disableView="true"
+                                disableDelete="true"
+                                disableClone="true">
+                        <p-column header="Código" field="codigo">
+                            <ng-template let-col let-fatoresAjuste="rowData" pTemplate="body">
+                                {{ fatoresAjuste.codigo == null ? '---' : fatoresAjuste.codigo}}
+                            </ng-template>
+                        </p-column>
+                        <p-column header="Nome" field="nome">
+                        </p-column>
+                        <p-column header="Fator" field="fator">
+                        </p-column>
+                        <p-column header="Tipo de Ajuste" field="tipoAjuste">
+                            <ng-template let-col let-fatoresAjuste="rowData" pTemplate="body">
+                                {{ fatoresAjuste.tipoAjuste === 'PERCENTUAL' ? 'Percentual' :'Unitario'}}
+                            </ng-template>
+                        </p-column>
+                        <p-column header="Ativo" field="ativo">
+                            <ng-template let-col let-fatoresAjuste="rowData" pTemplate="body">
+                                {{ fatoresAjuste.ativo ? 'S': 'N' }}
+                            </ng-template>
+                        </p-column>
+                    </basis-datatable>
+                </div>
+            </div>
+            <div class="ui-g">
+                <div class="ui-g-2">
+                    <button pButton type="button" label="Voltar" id="idBtnVoltarDetailManual"
+                            routerLink="/manual"></button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

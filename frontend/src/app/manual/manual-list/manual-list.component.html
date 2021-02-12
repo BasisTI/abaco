@@ -1,0 +1,166 @@
+<div class="ui-g ui-fluid">
+    <div class="ui-g-12">
+        <div class="card card-w-title">
+            <h1>Manual</h1>
+            <div class="ui-g">
+                <div class="ui-g-12 ui-md-12 ui-sm-12">
+                    <span class="md-inputfield">
+                        <input
+                                id="descricao"
+                                type="text"
+                                pInputText class="ui-inputtext"
+                                [(ngModel)]="elasticQuery.value"
+                                (keyup.enter)="datatable.refresh(elasticQuery.query)"
+                                maxlength="200"
+                                #filter/>
+                                <label translate="Cadastros.Manual.Descricao">Descrição</label>
+                    </span>
+                </div>
+                <div class="ui-g ui-md-12" style="justify-content: center; margin-bottom: 25px; margin-top: 25px">
+                    <div class="ui-g-2 ui-md-2 ui-sm-12">
+                        <app-white-button
+                            buttonLabel="Limpar Pesquisa"
+                            id="idBtnLimparPesquisaComponentManual"
+                            buttonIcon="ui-icon-clear-all"
+                            (click)="limparPesquisa()">
+                        </app-white-button>
+                    </div>
+                    <div class="ui-g-2 ui-md-2 ui-sm-12">
+                        <app-blue-button
+                                buttonLabel="Pesquisar"
+                                id="idBtnPesquisarComponentManual"
+                                buttonIcon="ui-icon-search"
+                                (click)="search()">
+                        </app-blue-button>
+                    </div>
+
+                    <div class="ui-g-2 ui-md-2 ui-sm-12">
+                        <app-green-button
+                                buttonLabel="Novo"
+                                id="idBtnNovoComponentManual"
+                                buttonIcon="ui-icon-add"
+                                routerLink="/manual/new">
+                        </app-green-button>
+                    </div>
+
+                </div>
+
+                <basis-datatable
+                        [url]="searchUrl"
+                        (dblclick)="onRowDblclick($event)"
+                        (click) = "selectManual()"
+                        (buttonClick)="onClick($event)"
+                        [rows]="20"
+                        id="idTabelaComponentManual"
+                        [rowsPerPageOptions]="rowsPerPageOptions"
+                        [showPaginationFooter]="true"
+                        [showVisibleColumnsControl]="true"
+                        #datatable>
+
+                    <basis-datatable-button
+                            name="clone"
+                            [bTooltip]="relatorioCloneButton()"
+                            icon="content-copy"
+                            id="idTabelaCloneComponentManual"
+                            disabled="desabilitarBotaoClonar()"
+                            [disabled]="datatable.selectedRow == null">
+                    </basis-datatable-button>
+
+                     <basis-datatable-button
+                            name="exportPDF"
+                            [bTooltip]="relatorioFatorAjusteButton()"
+                            icon="description"
+                            id="idTabelaCloneComponentManual"
+                            disabled="desabilitarBotaoClonar()"
+                            class="ui-button-danger"
+                            [disabled]="datatable.selectedRow == null">
+                            
+                    </basis-datatable-button>
+                    
+                    <p-column header="Nome" field="nome" [sortable]="true" [style]="{'width': '15%'}" [filterOnColumn]="true">
+
+                    </p-column>
+                    
+                    <p-column header="Estimada" field="valorVariacaoEstimada" [sortable]="true" [editable]="false" >
+                        <ng-template let-col let-manual="rowData" pTemplate="body">
+                            {{ manual.valorVariacaoEstimada.toString() | slice:0:4}}%
+                        </ng-template>
+                    </p-column>
+
+                    <p-column header="Indicativa" field="valorVariacaoIndicativa" [sortable]="true" filter="false">
+                        <ng-template pTemplate="body" let-col let-manual="rowData">
+                            {{ manual.valorVariacaoIndicativa.toString() | slice:0:4}}%
+                        </ng-template>
+                    </p-column>
+
+                    <p-column header="Inclusão" field="parametroInclusao" [sortable]="true">
+                        <ng-template let-col let-manual="rowData" pTemplate="body">
+                            {{ manual.parametroInclusao.toString() | slice:0:4}}%
+                        </ng-template>
+                    </p-column>
+
+                    <p-column header="Alteração" field="parametroAlteracao" [sortable]="true">
+                        <ng-template let-col let-manual="rowData" pTemplate="body">
+                            {{ manual.parametroAlteracao.toString() | slice:0:4}}%
+                        </ng-template>
+                    </p-column>
+
+                    <p-column header="Exclusão" field="parametroExclusao" [sortable]="true">
+                        <ng-template let-col let-manual="rowData" pTemplate="body">
+                            {{ manual.parametroExclusao.toString() | slice:0:4}}%
+                        </ng-template>
+                    </p-column>
+
+                    <p-column header="Conversão" field="parametroConversao" [sortable]="true">
+                        <ng-template let-col let-manual="rowData" pTemplate="body">
+                            {{ manual.parametroConversao.toString() | slice:0:4}}%
+                        </ng-template>
+                    </p-column>
+
+                    <p-column header="Observação" field="observacao" [style]="{'width': '25%'}" [sortable]="true">
+                        
+                    </p-column>
+
+                </basis-datatable>
+
+                <div class="ui-g-12 ui-md-2 ui-lg-2">
+                    <button pButton name="exportarPdf" id="exportarPdf" label="Exportar PDF" class="btnSim"  (click)="gerarRelatorioPdf()"></button>
+                </div> 
+            </div>
+        </div>
+    </div>
+</div>
+<p-confirmDialog header="Confirmação" #dialog>
+    <p-footer>
+        <app-white-button buttonLabel="Nao" id="idBtnNaoComponentManual" buttonIcon="fa-close" (click)="dialog.reject()"></app-white-button>
+        <app-green-button buttonLabel="Sim" id="idBtnSimComponentManual" buttonIcon="fa-check" (click)="dialog.accept()"></app-green-button>
+    </p-footer>
+</p-confirmDialog>
+
+<p-dialog header="Clonar Manual" [(visible)]="mostrarDialogClonar" [contentStyle]="{'overflow':'visible'}">
+    <div class="ui-g">
+        <div class="ui-g-12 ui-md-12 ui-sm-12" style="margin-bottom: 30px">
+      <span class="md-inputfield">
+        <input
+                id="nome_manual"
+                type="text"
+                name="nomeManualClonado"
+                [(ngModel)]="nomeDoManualClonado"
+                pInputText
+                size="90"
+                maxlength="250"/>
+            <div *ngIf="nomeValido">
+                <span style="color: red">Campo obrigatório.</span>
+            </div>
+      <label>Nome*</label>
+      </span>
+        </div>
+    </div>
+
+    <div class="ui-g ui-md-12" style="justify-content: flex-end">
+        <div>
+            <app-white-button buttonLabel="Cancelar" id="idBtnCancelarCloneComponentManual" buttonIcon="fa-close" (click)="fecharDialogClonar()"></app-white-button>
+            <app-green-button buttonLabel="Salvar" id="idBtnSalvarCloneComponentManual" buttonIcon="ui-icon-save" (click)="clonar()"></app-green-button>
+        </div>
+    </div>
+</p-dialog>

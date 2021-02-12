@@ -1,0 +1,182 @@
+[
+	{
+		"sigla": "ADS China",
+	    "nome": "ADS China",
+	    "tipo": "Legado",
+	    "organizacao": "MTur - Ministério do Turismo",
+
+	    "ocorrencia": "MTUR302019-2",
+	    "modulo": "Único",
+
+	    "nomeFunc": "Painel",
+	    "moduloFunc": "Único"
+	},
+	{
+		"sigla": "Apolo",
+	    "nome": "Apolo",
+	    "tipo": "Legado",
+	    "organizacao": "MTur - Ministério do Turismo",
+
+	    "ocorrencia": "MTUR302019-3",
+	    "modulo": "",
+
+	    "nomeFunc": "",
+	    "moduloFunc": ""
+	},
+	{
+		"sigla": "ANCINE-FRAMEWORK",
+	    "nome": "ANCINE-FRAMEWORK",
+	    "tipo": "Legado",
+	    "organizacao": "ANCINE - Agência Nacional do Cinema",
+
+	    "ocorrencia": "ANCINE112019-14",
+	    "modulo": "",
+
+	    "nomeFunc": "",
+	    "moduloFunc": ""
+	},
+	{
+		"sigla": "BPS",
+	    "nome": "BPS",
+	    "tipo": "Legado",
+	    "organizacao": "FNDE - Fundo Nacional de Desenvolvimento da Educação",
+
+	    "ocorrencia": "FNDE-31",
+	    "modulo": "",
+
+	    "nomeFunc": "",
+	    "moduloFunc": ""
+	},
+	{
+		"sigla": "CACS",
+	    "nome": "CACS",
+	    "tipo": "Legado",
+	    "organizacao": "FNDE - Fundo Nacional de Desenvolvimento da Educação",
+
+	    "ocorrencia": "FNDE-25",
+	    "modulo": "",
+
+	    "nomeFunc": "",
+	    "moduloFunc": ""
+	},
+	{
+		"sigla": "CLIG",
+	    "nome": "CLIG",
+	    "tipo": "Legado",
+	    "organizacao": "Ministério de Minas e Energia",
+
+	    "ocorrencia": "MME372017-26",
+	    "modulo": "",
+
+	    "nomeFunc": "",
+	    "moduloFunc": ""
+	},
+	{
+		"sigla": "ADAWEB",
+	    "nome": "ADAWEB",
+	    "tipo": "Legado",
+	    "organizacao": "IBAMA - Instituto Brasileiro do Meio Ambiente e dos Recursos Naturais Renováveis",
+
+	    "ocorrencia": "IBAMA442017-33",
+	    "modulo": "",
+
+	    "nomeFunc": "",
+	    "moduloFunc": ""
+	},
+	{
+		"sigla": "Barramento",
+	    "nome": "Barramento",
+	    "tipo": "Novo",
+	    "organizacao": "FUNPRESP - FUNPRESP",
+
+	    "ocorrencia": "FUNPRESP072019-120",
+	    "modulo": "",
+
+	    "nomeFunc": "",
+	    "moduloFunc": ""
+	},
+	{
+		"sigla": "APAC",
+	    "nome": "APAC",
+	    "tipo": "Novo",
+	    "organizacao": "CADE - Conselho Administrativo de Defesa Econômica",
+
+	    "ocorrencia": "CADE172019-24",
+	    "modulo": "",
+
+	    "nomeFunc": "",
+	    "moduloFunc": ""
+	},
+	{
+		"sigla": "AGATHA",
+	    "nome": "AGATHA",
+	    "tipo": "Novo",
+	    "organizacao": "MMA - Ministério do Meio Ambiente",
+
+	    "ocorrencia": "MMA202017-116",
+	    "modulo": "",
+
+	    "nomeFunc": "",
+	    "moduloFunc": ""
+	},
+	{
+		"sigla": "IFN",
+	    "nome": "Sistema do Inventário Florestal Nacional",
+	    "tipo": "Legado",
+	    "organizacao": "SFB - Serviço Florestal Brasileiro",
+
+	    "ocorrencia": "SFB082018-7",
+	    "modulo": "",
+
+	    "nomeFunc": "",
+	    "moduloFunc": ""
+	},
+	{
+		"sigla": "Fiscon",
+	    "nome": "Fiscon",
+	    "tipo": "Legado",
+	    "organizacao": "MTur - Ministério do Turismo",
+
+	    "ocorrencia": "MTUR302019-6",
+	    "modulo": "",
+
+	    "nomeFunc": "",
+	    "moduloFunc": ""
+	},
+	{
+		"sigla": "AUDITAR",
+	    "nome": "AUDITAR",
+	    "tipo": "Legado",
+	    "organizacao": "CNJ - Conselho Nacional de Justiça",
+
+	    "ocorrencia": "CNJ-1014",
+	    "modulo": "",
+
+	    "nomeFunc": "",
+	    "moduloFunc": ""
+	},
+	{
+		"sigla": "EB SAÚDE",
+	    "nome": "EB SAÚDE",
+	    "tipo": "Legado",
+	    "organizacao": "EB - EXERCITO BRASILEIRO",
+
+	    "ocorrencia": "EBDCT32017-8",
+	    "modulo": "",
+
+	    "nomeFunc": "",
+	    "moduloFunc": ""
+	},
+	{
+		"sigla": "Caixa Postal",
+	    "nome": "Caixa Postal",
+	    "tipo": "Legado",
+	    "organizacao": "ANVISA - Agência Nacional de Vigilância Sanitária",
+
+	    "ocorrencia": "ANVISA012020-4",
+	    "modulo": "",
+
+	    "nomeFunc": "",
+	    "moduloFunc": ""
+	}
+]

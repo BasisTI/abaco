@@ -1,0 +1,34 @@
+<div class="ui-g ui-fluid">
+  <div class="ui-g-12">
+    <div class="card card-w-title">
+      <h1>{{ modulo.id ? this.getLabel('Cadastros.Modulo.EditarModulo') : this.getLabel('Cadastros.Sistema.CadastrarModulo') }}</h1>
+      <form name="editForm" role="form" novalidate (ngSubmit)="save()" #editForm="ngForm">
+        <div class="ui-g">
+          <div class="ui-g-6" [hidden]="!modulo.id">
+            <span class="md-inputfield">
+              <input type="text" class="ui-inputtext" name="id" pInputText [(ngModel)]="modulo.id" readonly/>
+              <label translate="Cadastros.Modulo.ID">ID</label>
+            </span>
+          </div>
+          <div class="ui-g-6">
+            <span class="md-inputfield">
+              <input type="text" name="nome" [(ngModel)]="modulo.nome" pInputText/>
+              <label translate="Cadastros.Modulo.Nome">Nome</label>
+            </span>
+          </div>
+          <div class="ui-g-6">
+            <p-dropdown [filter]="true" [options]="sistemas" optionLabel="id" [placeholder]="this.getLabel('Cadastros.Modulo.Sistema')" name="sistema" [(ngModel)]="modulo.sistema"  dataKey="id"></p-dropdown>
+          </div>
+        </div>
+        <div class="ui-g">
+          <div class="ui-g-2">
+            <button pButton type="button" [label]="this.getLabel('Cancelar')" routerLink="/modulo"></button>
+          </div>
+          <div class="ui-g-2">
+            <button pButton type="button" [label]="this.getLabel('Salvar')" [disabled]="editForm.form.invalid || isSaving" ></button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

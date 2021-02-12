@@ -1,0 +1,209 @@
+<div class="ui-g ui-fluid">
+    <div class="ui-g-12 ui-md-12 ui-sm-12">
+        <div class="card card-w-title">
+            <h1 >Validação</h1>
+            <div class="ui-g">
+                <div class="ui-g-4 ui-md-4 ui-sm-12">
+                    <span class="md-inputfield">
+                        <input
+                              type="text"
+                              pInputText class="ui-inputtext"
+                              [(ngModel)]="searchDivergence.identificadorAnalise"
+                              (keyup.enter)="performSearch()"
+                              id="idIdentificadorComponentAnalise"
+                              maxlength="50">
+                        <label>Identificador</label>
+                    </span>
+                </div>
+                <div class="ui-g-4 ui-md-4 ui-sm-12">
+                    <p-dropdown
+                            [filter]="true"
+                            [options]="nomeSistemas"
+                            optionLabel="nome"
+                            id="idNomeSistemaComponentAnalise"
+                            [(ngModel)]="searchDivergence.sistema"
+                            [autoWidth]="false"
+                            [placeholder]="this.getLabel('Sistema')">
+                    </p-dropdown>
+                </div>
+                <div class="ui-g-4 ui-md-4 ui-sm-12">
+                    <p-dropdown
+                            id="idOrganizacaoComponentAnalise"
+                            [filter]="true"
+                            [options]="organizations"
+                            optionLabel="nome"
+                            [autoWidth]="false"
+                            [(ngModel)]="searchDivergence.organizacao"
+                            [placeholder]="this.getLabel('Organização')">
+                    </p-dropdown>
+                </div>
+            </div>
+            <div class="ui-g">
+                <div class="ui-g ui-md-12" style="justify-content: center; margin-bottom: 25px; margin-top: 25px">
+                    <div class="ui-g-2 ui-md-2 ui-sm-12">
+                        <app-white-button
+                                [buttonLabel]="'Limpar pesquisa' "
+                                id="idBtnLimparPesquisaComponentAnalise"
+                                buttonIcon="ui-icon-clear-all"
+                                (click)="limparPesquisa()">
+                        </app-white-button>
+                    </div>
+                    <div class="ui-g-2 ui-md-2 ui-sm-12">
+                        <app-blue-button
+                                [buttonLabel]="'Pesquisar' "
+                                id="idBtnPesquisarComponentAnalise"
+                                buttonIcon="ui-icon-search"
+                                (click)="performSearch()">
+                        </app-blue-button>
+                    </div>
+                </div>
+                <div>
+                    <div class="ui-g-12 ui-md-11" >
+                        <p-table [columns]="allColumnsTable" 
+                                    [value]="lstDivergence"
+                                    [lazy]="true"
+                                    [paginator]="true"
+                                    [rows]="20"
+                                    [rowsPerPageOptions]="rowsPerPageOptions"
+                                    selectionMode="single"
+                                    (dblclick)="onRowDblclick($event)"
+                                    [(selection)]="selectedDivergence"
+                                    dataKey="id"
+                                    #data >
+                            <ng-template pTemplate="header" let-columns>
+                                <tr>
+                                    <th style="width: 3em"></th>
+                                    <th *ngFor="let col of columns" [pSortableColumn]="col.field">
+                                        {{col.header}}
+                                        <p-sortIcon [field]="col.field"></p-sortIcon>
+                                    </th>
+                                </tr>
+                            </ng-template>
+                            <ng-template pTemplate="body" let-rowData let-expanded="expanded" let-columns="columns">
+                                <tr [pSelectableRow]="rowData">
+                                    <td>
+                                        <a href="#" [pRowToggler]="rowData">
+                                            <i [ngClass]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'"></i>
+                                        </a>
+                                    </td>
+                                    <td>
+                                        {{rowData.organizacao.nome}}
+                                    </td>
+                                    <td>
+                                        {{rowData.identificadorAnalise}}
+                                    </td>
+                                    <td>
+                                        {{rowData.sistema.nome}}
+                                    </td>
+                                    <td>
+                                        {{rowData.metodoContagem}}
+                                    </td>
+                                    <td>
+                                        {{rowData.pfTotal}}
+                                    </td>
+                                    <td>
+                                        {{rowData.adjustPFTotal}}
+                                    </td>
+                                    <td >
+                                        {{rowData.dataCriacaoOrdemServico | date: 'dd/MM/y - HH:mm' }}
+                                    </td>
+                                    <td>
+                                        {{rowData.status.nome }}
+                                    </td>
+                                </tr>
+                            </ng-template>
+                            <ng-template pTemplate="rowexpansion" let-rowData let-columns="columns">
+                                <tr>
+                                    <td [attr.colspan]="columns.length + 1">
+                                        <div class="p-grid -fluid" style="font-size:16px;padding:20px">
+                                            <div class="ui-g">
+                                                <div class="ui-g-12 ui-md-6" *ngFor="let comp of rowData.analisesComparadas">
+                                                    <div class="ui-g-12">
+                                                        <b>Equipe:</b> {{comp.equipeResponsavel.nome}}
+                                                    </div>
+                                                    <div class="ui-g-12">
+                                                        <b>Identificador:</b> {{comp.identificadorAnalise}}
+                                                    </div>
+                                                    <div class="ui-g-12">
+                                                        <b>Número Os.:</b> {{comp.numeroOs}}
+                                                    </div>
+                                                    <div class="ui-g-12">
+                                                        <b>PF Total:</b> {{comp.pfTotal}}
+                                                    </div>
+                                                    <div class="ui-g-12">
+                                                        <b>PF Ajustado:</b> {{comp.adjustPFTotal}}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </ng-template>
+                        </p-table>
+                    </div>
+                    <div class="ui-g-12 ui-md-1" >
+                        <basis-datatable-button
+                            name="generateDivergence"
+                            icon="edit"
+                            [disabled]="!selectedDivergence"
+                            (click)="editDivergence(selectedDivergence)"
+                            class="ui-button-info">
+                        </basis-datatable-button>
+                        <basis-datatable-button
+                                name="generateDivergence"
+                                icon="delete"
+                                [disabled]="!selectedDivergence"
+                                (click)="confirmDeleteDivergence(selectedDivergence)"
+                                class="ui-button-danger">
+                        </basis-datatable-button>
+                        <basis-datatable-button
+                                name="generateDivergence"
+                                [bTooltip]="selectedDivergence != null ? 'Alterar' : 'Escolha um registro para alterar status.'"
+                                icon="swap-vert"
+                                [disabled]="!selectedDivergence"
+                                (click)="changeStatus(selectedDivergence.id)"
+                                class="ui-button-info">
+                        </basis-datatable-button>
+                       
+                    </div>
+                    <div class="ui-g-12 ui-md-2">
+                        <app-export-button [dataTable]="datatable" resourceName="divergencia">
+                        </app-export-button>
+                    </div>
+                    <div class="ui-g-12 ui-md-2">
+                        <app-botoes-exportacao [query]="changeUrl()" resourceName="analise" id="idBtnExportacaoComponentAnalise"
+                        fileName="analise">
+                        </app-botoes-exportacao>
+                    </div>
+                    <!-- Dialog confirmação deleção -->
+                    <p-confirmDialog [header]="this.getLabel('Confirmação')" #dialog>
+                        <p-footer>
+                            <button type="button" pButton icon="fa-close" [label]="'Não'" (click)="dialog.reject()"></button>
+                            <button type="button" pButton icon="fa-check" [label]="'Sim'" (click)="dialog.accept()"></button>
+                        </p-footer>
+                    </p-confirmDialog>
+                    <!-- Dialog bloquear e alterar status validação-->
+                    <p-dialog header="Alterar status ?" [(visible)]="showDialogDivergenceBlock" [style]="{width: '40vw', minHeight: '200px'}" [modal]="true" >
+                        <div style="min-height:200px">
+                            <div class="ui-g" >
+                                <div class="ui-g-12 ui-md-12 ui-sm-12">
+                                    <p-dropdown
+                                            [style]="{'width':'100%'}"
+                                            [filter]="true"
+                                            optionLabel="nome"
+                                            [options]="lstStatusActive"
+                                            id="idStatusAnalise"
+                                            [(ngModel)]="statusToChange"
+                                            placeholder="Selecione um Status">
+                                    </p-dropdown>
+                                </div>
+                            </div>
+                            <app-green-button buttonLabel="Alterar" (click)="divergenceBlock()" style="float:right; margin-top: 5px"></app-green-button>
+                        </div>
+                    </p-dialog>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

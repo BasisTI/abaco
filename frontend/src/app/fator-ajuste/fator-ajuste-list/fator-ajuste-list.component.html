@@ -1,0 +1,41 @@
+<div class="ui-g ui-fluid">
+  <div class="ui-g-12">
+    <div class="card card-w-title">
+      <h1 translate="Cadastros.FatorAjuste.FatorAjustes">Fator Ajustes</h1>
+      <div class="ui-g">
+        <div class="ui-g-12 ui-md-4">
+            <span class="md-inputfield">
+              <input type="text" pInputText class="ui-inputtext" #filter/>
+              <label translate="Cadastros.FatorAjuste.Filtro">Filtro</label>
+            </span>
+        </div>
+        <div class="ui-g-12 ui-md-2">
+          <button pButton [label]="this.getLabel('Pesquisar')" icon="ui-icon-search" (click)="datatable.refresh(filter.value)"></button>
+        </div>
+        <div class="ui-g-12 ui-md-2">
+          <button pButton type="button" [label]="this.getLabel('Cadastrar')" routerLink="/fatorAjuste/new" icon="ui-icon-add"></button>
+        </div>
+        <basis-datatable [url]="searchUrl" 
+          (buttonClick)="datatableClick($event)" #datatable>
+          <p-column header="#" field="id"></p-column>
+          <p-column [header]="this.getLabel('Cadastros.FatorAJuste.Nome')" field="nome"></p-column>
+          <p-column [header]="this.getLabel('Cadastros.FatorAJuste.Fator')" field="fator"></p-column>
+          <p-column [header]="this.getLabel('Cadastros.FatorAJuste.Ativo')" field="ativo">
+            <ng-template let-col let-ativo="rowData" pTemplate="body">
+              {{ ativo[col.field] ? this.getLabel('Sim') : (ativo[col.field] != null ? this.getLabel('Não') : null) }}
+            </ng-template>
+          </p-column>
+          <p-column [header]="this.getLabel('Cadastros.FatorAJuste.TipoDeflator')" field="tipoAjuste"></p-column>
+          <p-column [header]="this.getLabel('Cadastros.FatorAJuste.Impacto')" field="impacto"></p-column>
+          <p-column [header]="this.getLabel('Cadastros.FatorAJuste.Manual')" field="manual.nome"></p-column>
+        </basis-datatable>
+      </div>
+    </div>
+  </div>
+</div>
+<p-confirmDialog [header]="this.getLabel('Confirmação')" #dialog>
+  <p-footer>
+    <button type="button" pButton icon="fa-close" [label]="this.getLabel('Não')" (click)="dialog.reject()"></button>
+    <button type="button" pButton icon="fa-check" [label]="this.getLabel('Sim')" (click)="dialog.accept()"></button>
+  </p-footer>
+</p-confirmDialog>
