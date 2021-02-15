@@ -1,15 +1,22 @@
 package br.com.basis.abaco.web.rest;
 
-import br.com.basis.abaco.AbacoApp;
-import br.com.basis.abaco.domain.EsforcoFase;
-import br.com.basis.abaco.domain.Fase;
-import br.com.basis.abaco.repository.FaseRepository;
-import br.com.basis.abaco.service.FaseService;
-import br.com.basis.abaco.service.dto.FaseDTO;
-import br.com.basis.abaco.service.dto.filter.FaseFiltroDTO;
-import br.com.basis.abaco.utils.CustomPageImpl;
-import br.com.basis.abaco.web.rest.errors.ExceptionTranslator;
-import com.fasterxml.jackson.core.type.TypeReference;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.everyItem;
+import static org.hamcrest.Matchers.hasItem;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.notNullValue;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import java.math.BigDecimal;
+
+import javax.persistence.EntityManager;
+
 import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Test;
@@ -29,21 +36,19 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.EntityManager;
-import java.math.BigDecimal;
+import com.fasterxml.jackson.core.type.TypeReference;
 
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.everyItem;
-import static org.hamcrest.Matchers.hasItem;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.notNullValue;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import br.com.basis.abaco.AbacoApp;
+import br.com.basis.abaco.domain.EsforcoFase;
+import br.com.basis.abaco.domain.Fase;
+import br.com.basis.abaco.repository.FaseRepository;
+import br.com.basis.abaco.service.FaseService;
+import br.com.basis.abaco.service.dto.FaseDTO;
+import br.com.basis.abaco.service.dto.filter.FaseFiltroDTO;
+import br.com.basis.abaco.utils.CustomPageImpl;
+import br.com.basis.abaco.web.rest.errors.ExceptionTranslator;
+import br.com.basis.dynamicexports.service.DynamicExportsService;
+import br.com.basis.abaco.web.rest.TestUtil;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = AbacoApp.class)
@@ -56,6 +61,9 @@ public class FaseResourceIT {
 
     @Autowired
     private FaseService service;
+    
+    @Autowired
+    private DynamicExportsService dynamicExportsService;
 
     @Autowired
     private MappingJackson2HttpMessageConverter jacksonMessageConverter;
@@ -84,7 +92,7 @@ public class FaseResourceIT {
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-            FaseResource faseResource = new FaseResource(service);
+            FaseResource faseResource = new FaseResource(service, dynamicExportsService);
         this.mockMvc = MockMvcBuilders.standaloneSetup(faseResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)
