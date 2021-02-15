@@ -3,6 +3,7 @@ package br.com.basis.abaco.domain;
 import br.com.basis.dynamicexports.pojo.ReportObject;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
+import org.apache.commons.lang3.BooleanUtils;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.springframework.data.elasticsearch.annotations.Document;
@@ -70,6 +71,13 @@ public class Status implements Serializable, ReportObject {
         return ativo;
     }
 
+    public String getAtivoString() {
+        if (BooleanUtils.isTrue(getAtivo())) {
+            return "Sim";
+        }
+        return "Não";
+    }
+
     public void setAtivo(Boolean ativo) {
         this.ativo = ativo;
     }
@@ -78,7 +86,24 @@ public class Status implements Serializable, ReportObject {
         return divergencia;
     }
 
+    public String getDivergenciaString() {
+        if (BooleanUtils.isTrue(getDivergencia())) {
+            return "Sim";
+        }
+        return "Não";
+    }
+
     public void setDivergencia(Boolean divergencia) {
         this.divergencia = divergencia;
+    }
+
+    @Override
+    public String toString() {
+        return "Status{" +
+            "id=" + id +
+            ", nome='" + nome + '\'' +
+            ", ativo=" + ativo +
+            ", divergencia=" + divergencia +
+            '}';
     }
 }
