@@ -37,7 +37,6 @@ export class DivergenciaListComponent implements OnInit {
 
     loading: boolean;
 
-
     allColumnsTable = [
         {field: 'organizacao.nome',  header: 'Organização'},
         {field: 'identificadorAnalise',  header: 'Identificador da Validação'},
@@ -47,6 +46,7 @@ export class DivergenciaListComponent implements OnInit {
         {field: 'adjustPFTotal',  header: 'PF Ajustado'},
         {field: 'dataCriacaoOrdemServico',  header: 'Data de criação'},
         {field: 'status',  header: 'Status'},
+        {field: 'bloqueiaAnalise',  header: 'Bloqueado'},
     ];
 
     customOptions: Object = {};
@@ -61,7 +61,7 @@ export class DivergenciaListComponent implements OnInit {
     organizations: Array<Organizacao>;
     teams: TipoEquipe[];
     equipeShare;
-    analiseTemp: Divergencia = new Divergencia();
+    analiseTemp: Analise = new Analise();
     tipoEquipesLoggedUser: TipoEquipe[] = [];
     tipoEquipesToClone: TipoEquipe[] = [];
     query: String;
@@ -109,7 +109,6 @@ export class DivergenciaListComponent implements OnInit {
         this.estadoInicial();
         this.datatable.onLazyLoad.subscribe((event: LazyLoadEvent) => this.loadDirvenceLazy(event));
         this.datatable.lazy = true;
-
     }
 
     getLabel(label) {
@@ -117,6 +116,7 @@ export class DivergenciaListComponent implements OnInit {
     }
 
     estadoInicial() {
+        this.getEquipesFromActiveLoggedUser();
         this.recuperarOrganizacoes();
         this.recuperarEquipe();
         this.recuperarSistema();
@@ -129,7 +129,6 @@ export class DivergenciaListComponent implements OnInit {
             this.tipoEquipesLoggedUser = res;
         });
     }
-
 
     recuperarOrganizacoes() {
         this.organizacaoService.dropDown().subscribe(response => {
@@ -148,7 +147,6 @@ export class DivergenciaListComponent implements OnInit {
               });
         });
     }
-
 
     recuperarEquipe() {
         this.tipoEquipeService.dropDown().subscribe(response => {
@@ -170,9 +168,9 @@ export class DivergenciaListComponent implements OnInit {
         });
     }
 
-
     public editDivergence(analiseDivergence: Analise) {
         if (!analiseDivergence) {
+            this.pageNotificationService.addErrorMessage('Nenhuma Validação foi selecionada.');
             return;
         }
         if (analiseDivergence.bloqueiaAnalise) {
@@ -201,11 +199,6 @@ export class DivergenciaListComponent implements OnInit {
         }
     }
 
-    public confirmBlockDivegence(divergence: Analise){
-        
-        this.changeStatus(divergence.id)
-    }
-
     public changeUrl() {
         let querySearch = '&isDivergence=true';
         querySearch = querySearch.concat((this.searchDivergence.identificadorAnalise) ?
@@ -216,13 +209,13 @@ export class DivergenciaListComponent implements OnInit {
             `&organizacao=${this.searchDivergence.organizacao.id}` : '');
         return querySearch;
     }
+
     public limparPesquisa() {
         this.searchDivergence = new SearchGroup();
         sessionStorage.setItem('searchDivergence', JSON.stringify(this.searchDivergence));
         this.event.first = 0;
         this.loadDirvenceLazy(this.event);
     }
-
 
     public performSearch() {
         this.enableTable = true ;
@@ -244,6 +237,7 @@ export class DivergenciaListComponent implements OnInit {
             this.blockUiService.hide();
         });
     }
+
     public onRowDblclick(event) {
         if (event.target.nodeName === 'TD') {
             this.editDivergence(this.selectedDivergence);
@@ -251,8 +245,8 @@ export class DivergenciaListComponent implements OnInit {
             this.editDivergence(this.selectedDivergence);
         }
     }
+
     public datatableClick(event: DatatableClickEvent) {
-        
         if (!event.selection) {
             return;
         } else if (event.selection.length === 1) {
@@ -265,16 +259,29 @@ export class DivergenciaListComponent implements OnInit {
             return ;
         }
     }
+
+    /**
+     * funcionalidade para bloqueio e mudança de status 
+    */
+    public confirmBlockDivegence(divergence: Analise){
+        if (!divergence) {
+            this.pageNotificationService.addErrorMessage('Nenhuma Validação foi selecionada.');
+            return;
+        }
+        // this.changeStatus(divergence.id)
+        this.bloqueiaDivegence(this.blocked)
+    }
+
     public changeStatus(id: number) {
         this.statusToChange = undefined;
         this.idDivergenceStatus = id;
         this.showDialogDivergenceBlock = true;
     }
     
-
-    public divergenceBlock(){
+    public alterStatusAnalise(){
+        console.log(this.lstDivergence);
         if(this.idDivergenceStatus && this.statusToChange){
-            this.divergenciaService.changeStatusDivergence(this.idDivergenceStatus, this.statusToChange).subscribe(data => {
+                this.divergenciaService.changeStatusDivergence(this.idDivergenceStatus, this.statusToChange).subscribe(data => {
                 this.statusService = undefined;
                 this.idDivergenceStatus = undefined;
                 this.showDialogDivergenceBlock = false;
@@ -285,9 +292,95 @@ export class DivergenciaListComponent implements OnInit {
         }
         else {
             this.pageNotificationService.addErrorMessage('Selecione um Status para continuar.');
-
         }
-
     }
 
+    public divergenceBlock(){
+        this.alterStatusAnalise();
+    }
+    /** Visibilidade botão bloqueio / desbloqueio */
+    public selectAnalise() {
+        var values = this.datatable.value;
+        var ind = values.indexOf(this.selectedDivergence)
+        if (this.datatable && this.datatable.value) {
+            this.inicial = true;
+            if (this.datatable.value && this.datatable.value[ind]) {
+                this.analiseSelecionada = this.datatable.value[ind];
+                this.blocked = this.datatable.value[ind].bloqueiaAnalise;
+                console.log(this.analiseSelecionada)
+            }
+        }
+    }
+
+    private mensagemDialogBloquear(retorno: boolean) {
+        if (retorno) {
+            return this.getLabel('Tem certeza que deseja desbloquear o registro ').concat('?');
+        } else {
+            return this.getLabel('Tem certeza que deseja bloquear o registro ?');
+        }
+    }
+
+    private mensagemAnaliseBloqueada(retorno: boolean, nome: string) {
+        if (retorno) {
+            this.pageNotificationService.addSuccessMessage('Registro  desbloqueado com sucesso!');
+        } else {
+            this.pageNotificationService.addSuccessMessage('Registro bloqueado com sucesso!');
+        }
+    }
+
+    public alterAnaliseBlock() {
+        console.log(this.analiseTemp)
+        if (this.analiseTemp && this.analiseTemp.dataHomologacao) {
+            console.log(this.analiseTemp.dataHomologacao)
+            const copy = this.analiseTemp.toJSONState();
+            this.divergenciaService.block(copy).subscribe(() => {
+                const nome = this.analiseTemp.identificadorAnalise;
+                const bloqueado = this.analiseTemp.bloqueiaAnalise;
+                this.mensagemAnaliseBloqueada(bloqueado, nome);
+                this.datatable._filter();
+                this.showDialogAnaliseBlock = false;
+            });
+        }
+    }
+
+    /** Realizar bloqueio da análise. */
+    public bloqueiaDivegence(bloquear: boolean) {
+
+        console.log(this.analiseSelecionada)
+        this.divergenciaService.findAnalise(this.analiseSelecionada.id).subscribe((res) => {
+            // debugger
+            console.log(res)
+            this.analiseTemp = new Analise().copyFromJSON(res);
+            let canBloqued = false;
+            if (this.tipoEquipesLoggedUser) {
+                this.tipoEquipesLoggedUser.forEach(equipe => {
+                    if (equipe.id === this.analiseTemp.equipeResponsavel.id) {
+                        canBloqued = true;
+                    }
+                });
+            }          
+            if (canBloqued) {
+                
+                console.log(this.analiseTemp.dataHomologacao)
+                if (this.analiseTemp.dataHomologacao && !bloquear) {
+                    this.analiseTemp.dataHomologacao  =  new Date();
+                    this.showDialogAnaliseBlock = true;
+                } else {
+                    console.log(this.analiseTemp)
+                    this.confirmationService.confirm({
+                        message: this.mensagemDialogBloquear(bloquear),
+                        accept: () => {
+                            this.alterAnaliseBlock();
+                        }
+                    });
+                }
+            } else {
+                this.pageNotificationService.addErrorMessage(this.getLabel('Somente membros da equipe responsável podem excluir esta análise!'));
+            }
+        },
+        err => {
+            this.pageNotificationService.addErrorMessage(
+                this.getLabel('Somente membros da equipe responsável podem excluir esta análise!'));
+        });
+    }
 }

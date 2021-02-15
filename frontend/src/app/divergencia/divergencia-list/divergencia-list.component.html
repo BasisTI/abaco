@@ -66,6 +66,7 @@
                                     [rows]="20"
                                     [rowsPerPageOptions]="rowsPerPageOptions"
                                     selectionMode="single"
+                                    (click) = "selectAnalise()"
                                     (dblclick)="onRowDblclick($event)"
                                     [(selection)]="selectedDivergence"
                                     dataKey="id"
@@ -110,6 +111,9 @@
                                     <td>
                                         {{rowData.status.nome }}
                                     </td>
+                                    <td>
+                                        {{rowData.bloqueiaAnalise ? 'Sim' : 'Não' }}
+                                    </td>
                                 </tr>
                             </ng-template>
                             <ng-template pTemplate="rowexpansion" let-rowData let-columns="columns">
@@ -150,21 +154,30 @@
                             class="ui-button-info">
                         </basis-datatable-button>
                         <basis-datatable-button
-                                name="generateDivergence"
-                                icon="delete"
-                                [disabled]="!selectedDivergence"
-                                (click)="confirmDeleteDivergence(selectedDivergence)"
-                                class="ui-button-danger">
+                            name="generateDivergence"
+                            icon="delete"
+                            [disabled]="!selectedDivergence"
+                            (click)="confirmDeleteDivergence(selectedDivergence)"
+                            class="ui-button-danger">
                         </basis-datatable-button>
                         <basis-datatable-button
-                                name="generateDivergence"
-                                [bTooltip]="selectedDivergence != null ? 'Alterar' : 'Escolha um registro para alterar status.'"
-                                icon="swap-vert"
-                                [disabled]="!selectedDivergence"
-                                (click)="changeStatus(selectedDivergence.id)"
-                                class="ui-button-info">
+                            *ngIf="blocked"
+                            name="blockDivergence"
+                            [bTooltip]="selectedDivergence != null ? 'Desbloquear' : 'Escolha um registro para desbloquear.'"
+                            icon="block"
+                            [disabled]="!selectedDivergence"
+                            (click)="confirmBlockDivegence(selectedDivergence)"
+                            class="ui-button-success">
                         </basis-datatable-button>
-                       
+                        <basis-datatable-button
+                            *ngIf="!blocked && inicial"
+                            name="unlockDivergemce"
+                            [bTooltip]="selectedDivergence != null ? 'Bloquear' : 'Escolha um registro para bloquear.'"
+                            icon="block"
+                            [disabled]="!selectedDivergence"
+                            (click)="confirmBlockDivegence(selectedDivergence)"
+                            class="ui-button-danger">
+                        </basis-datatable-button>                       
                     </div>
                     <div class="ui-g-12 ui-md-2">
                         <app-export-button [dataTable]="datatable" resourceName="divergencia">
@@ -198,6 +211,7 @@
                                     </p-dropdown>
                                 </div>
                             </div>
+                            <p>Deseja bloquear / desbloquear</p>
                             <app-green-button buttonLabel="Alterar" (click)="divergenceBlock()" style="float:right; margin-top: 5px"></app-green-button>
                         </div>
                     </p-dialog>

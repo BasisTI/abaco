@@ -40,7 +40,7 @@ export class DivergenciaService {
 
     resourceResumoUrl = environment.apiUrl + '/vw-resumo';
 
-    changeStatusUrl = environment.apiUrl + '/analises';
+    analiseResourceUrl = environment.apiUrl + '/analises';
 
 
     constructor(
@@ -64,6 +64,26 @@ export class DivergenciaService {
         }));
     }
 
+    public block(analise: Analise): Observable<Analise> {
+        const copy = analise;
+        return this.http.put<Analise>(`${this.analiseResourceUrl}/${copy.id}/block`, copy).pipe(catchError((error: any) => {
+            switch (error.status) {
+                case 400: {
+                    if (error.headers.toJSON()['x-abacoapp-error'][0] === 'error.notadmin') {
+                        this.pageNotificationService.addErrorMessage(
+                            this.getLabel('Somente administradores podem bloquear/desbloquear análises!')
+                        );
+                    }
+                    break;
+                }
+                case 403: {
+                    this.pageNotificationService.addErrorMessage(this.getLabel('Você não possui permissão!'));
+                    break;
+                }
+            }
+            return Observable.throw(new Error(error.status));
+        }));
+    }
 
     public gerarRelatorioPdfArquivo(id: number) {
         window.open(`${this.relatorioAnaliseUrl}/${id}`);
@@ -73,7 +93,7 @@ export class DivergenciaService {
         this.blockUiService.show();
         this.http.request('get', `${this.relatoriosUrl}/${id}`, {
             responseType: 'blob',
-        }).subscribe(
+        }).subscribe( 
             (response) => {
                 const mediaType = 'application/pdf';
                 const blob = new Blob([response], {type: mediaType});
@@ -203,6 +223,9 @@ export class DivergenciaService {
         return this.http.get<Analise>(`${this.resourceUrl}/${id}`);
     }
 
+    public findAnalise(id: Number): Observable<Analise> {
+        return this.http.get<Analise>(`${this.resourceUrl}/${id}`);
+    }
     public findView(id: Number): Observable<Analise> {
         return this.http.get<Analise>(`${this.resourceUrl}/view/${id}`);
     }
@@ -341,7 +364,7 @@ export class DivergenciaService {
     }
 
     public changeStatusDivergence(id: number, status: Status){
-        const url = `${this.changeStatusUrl}/change-status/${id}/${status.id}`
+        const url = `${this.analiseResourceUrl}/change-status/${id}/${status.id}`
         return this.http.get<Analise>(url);
     }
 }
