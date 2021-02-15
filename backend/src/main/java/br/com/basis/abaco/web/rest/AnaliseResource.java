@@ -353,7 +353,6 @@ public class AnaliseResource {
         return relatorioAnaliseRest.downloadPdfArquivo(analise, TipoRelatorio.ANALISE);
     }
 
-
     @GetMapping("/relatorioPdfBrowser/{id}")
     @Timed
     public @ResponseBody
@@ -384,8 +383,6 @@ public class AnaliseResource {
         relatorioAnaliseRest = new RelatorioAnaliseRest(this.response, this.request);
         return relatorioAnaliseRest.downloadPdfBrowser(analise, TipoRelatorio.ANALISE_DETALHADA);
     }
-
-
 
     @GetMapping("/downloadRelatorioExcel/{id}")
     @Timed
@@ -418,8 +415,6 @@ public class AnaliseResource {
         }
         return relatorioAnaliseRest.downloadExcel(analise, uploadedFiles);
     }
-
-
 
     @GetMapping("/relatorioContagemPdf/{id}")
     @Timed
@@ -461,8 +456,7 @@ public class AnaliseResource {
         return DynamicExporter.output(byteArrayOutputStream,
             "relatorio." + tipoRelatorio);
     }
-
-
+    
     @GetMapping(value = "/analise/exportaPdf", produces = MediaType.APPLICATION_PDF_VALUE)
     @Timed
     public ResponseEntity<InputStreamResource> gerarRelatorioPdf(@RequestParam(defaultValue = "*") String query) throws RelatorioException {

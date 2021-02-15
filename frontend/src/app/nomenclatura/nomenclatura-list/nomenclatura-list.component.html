@@ -51,6 +51,10 @@
             <p-column header="Descrição" field="descricao" [sortable]="true" ></p-column>
           </basis-datatable>
           <div class="ui-g-12 ui-md-2">
+            <app-export-button [dataTable]="datatable" resourceName="nomenclatura">
+            </app-export-button>
+        </div>
+          <div class="ui-g-12 ui-md-2">
             <app-botoes-exportacao [query]="elasticQuery.value" resourceName="tipoEquipe" fileName="TipoEquipe"></app-botoes-exportacao>
           </div>
         </div>
