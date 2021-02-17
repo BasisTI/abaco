@@ -102,6 +102,9 @@ public class AnaliseResource {
     private final FuncaoTransacaoRepository funcaoTransacaoRepository;
     private final DynamicExportsService dynamicExportsService;
     private final ElasticsearchTemplate elasticsearchTemplate;
+    private static final String NOME_RELATORIO = "relatorio.";
+    private HttpServletRequest request;
+    private HttpServletResponse response;
 
     private RelatorioAnaliseRest relatorioAnaliseRest;
     @Autowired
@@ -109,12 +112,7 @@ public class AnaliseResource {
     @Autowired
     private UserSearchRepository userSearchRepository;
     @Autowired
-    private HttpServletRequest request;
-    @Autowired
-    private HttpServletResponse response;
-    @Autowired
     private UploadedFilesRepository uploadedFilesRepository;
-
 
     public AnaliseResource(AnaliseRepository analiseRepository,
                            AnaliseSearchRepository analiseSearchRepository,
@@ -454,9 +452,9 @@ public class AnaliseResource {
             throw new RelatorioException(e);
         }
         return DynamicExporter.output(byteArrayOutputStream,
-            "relatorio." + tipoRelatorio);
+            NOME_RELATORIO + tipoRelatorio);
     }
-    
+
     @GetMapping(value = "/analise/exportaPdf", produces = MediaType.APPLICATION_PDF_VALUE)
     @Timed
     public ResponseEntity<InputStreamResource> gerarRelatorioPdf(@RequestParam(defaultValue = "*") String query) throws RelatorioException {
@@ -478,7 +476,7 @@ public class AnaliseResource {
     public ResponseEntity<InputStreamResource> gerarRelatorioExportacao(@PathVariable String tipoRelatorio,
                                                                         @RequestParam(defaultValue = "*")String query, @ApiParam Pageable pageable) throws RelatorioException {
         ByteArrayOutputStream byteArrayOutputStream = analiseService.gerarRelatorio(query, tipoRelatorio, pageable);
-        return DynamicExporter.output(byteArrayOutputStream, "relatorio." + tipoRelatorio);
+        return DynamicExporter.output(byteArrayOutputStream, NOME_RELATORIO + tipoRelatorio);
     }
 
 
@@ -503,7 +501,7 @@ public class AnaliseResource {
     public ResponseEntity<InputStreamResource> gerarRelatorioDivergenciaExportacao(@PathVariable String tipoRelatorio,
                                                                         @RequestParam(defaultValue = "*") String query, @ApiParam Pageable pageable) throws RelatorioException {
         ByteArrayOutputStream byteArrayOutputStream = analiseService.gerarRelatorioDivergencia(query, tipoRelatorio, pageable);
-        return DynamicExporter.output(byteArrayOutputStream, "relatorio." + tipoRelatorio);
+        return DynamicExporter.output(byteArrayOutputStream, NOME_RELATORIO + tipoRelatorio);
     }
 
 
