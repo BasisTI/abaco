@@ -3,7 +3,6 @@ package br.com.basis.abaco.web.rest;
 import java.io.ByteArrayOutputStream;
 import java.util.List;
 import java.util.Optional;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.InputStreamResource;
@@ -23,9 +22,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
 import com.codahale.metrics.annotation.Timed;
-
 import br.com.basis.abaco.domain.novo.Fase;
 import br.com.basis.abaco.service.FaseService;
 import br.com.basis.abaco.service.dto.FaseDTO;
@@ -39,22 +36,16 @@ import br.com.basis.dynamicexports.service.DynamicExportsService;
 import br.com.basis.dynamicexports.util.DynamicExporter;
 import io.github.jhipster.web.util.ResponseUtil;
 import io.swagger.annotations.ApiParam;
-import lombok.RequiredArgsConstructor;
 import net.sf.dynamicreports.report.exception.DRException;
 import net.sf.jasperreports.engine.JRException;
 
 @RestController
 @RequestMapping("/api")
-//@RequiredArgsConstructor
 public class FaseResource {
 
     private final Logger log = LoggerFactory.getLogger(FaseResource.class);
-
     private final FaseService service;
     private final DynamicExportsService dynamicExportsService;
-    
-    
-
 
     @GetMapping("/fases")
     @Timed
@@ -118,28 +109,21 @@ public class FaseResource {
     public ResponseEntity<InputStreamResource> gerarRelatorioExportacao(
         @PathVariable String tipoRelatorio,
         @RequestBody FaseFiltroDTO filter,
-        @ApiParam Pageable pageable) throws RelatorioException {
+        @ApiParam Pageable pageable) throws RelatorioException, ClassNotFoundException, JRException, DRException {
     	Page<FaseDTO> fasePage = service.getPage(filter, pageable);
-    	
-    	
-    	 ByteArrayOutputStream byteArrayOutputStream = null;
+    	ByteArrayOutputStream byteArrayOutputStream = null;
         try {
 			byteArrayOutputStream = dynamicExportsService.export(new RelatorioFaseColunas(), fasePage, tipoRelatorio, Optional.empty(), Optional.ofNullable(AbacoUtil.REPORT_LOGO_PATH), Optional.ofNullable(AbacoUtil.getReportFooter()));
 		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			throw e;
 		} catch (JRException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+            throw e;
 		} catch (DRException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+            throw e;
 		}
         return DynamicExporter.output(byteArrayOutputStream,
         		"relatorio." + tipoRelatorio);
-
     }
-
 	public FaseResource(FaseService service, DynamicExportsService dynamicExportsService) {
 		this.service = service;
 		this.dynamicExportsService = dynamicExportsService;

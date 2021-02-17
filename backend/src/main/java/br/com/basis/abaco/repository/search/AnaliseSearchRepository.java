@@ -15,6 +15,5 @@ public interface AnaliseSearchRepository extends ElasticsearchRepository<Analise
 
 
     Boolean existsByStatusId(Long id);
-//    Page<Analise> findAllByAnaliseDivergenceIsTrue(Pageable pageable);
 
 }

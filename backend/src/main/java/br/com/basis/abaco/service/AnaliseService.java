@@ -30,7 +30,9 @@ import br.com.basis.abaco.repository.VwAnaliseSomaPfRepository;
 import br.com.basis.abaco.repository.search.AnaliseSearchRepository;
 import br.com.basis.abaco.repository.search.UserSearchRepository;
 import br.com.basis.abaco.security.SecurityUtils;
-import br.com.basis.abaco.service.dto.*;
+import br.com.basis.abaco.service.dto.AnaliseDTO;
+import br.com.basis.abaco.service.dto.AnaliseDivergenceEditDTO;
+import br.com.basis.abaco.service.dto.AnaliseEditDTO;
 import br.com.basis.abaco.service.exception.RelatorioException;
 import br.com.basis.abaco.service.relatorio.RelatorioAnaliseColunas;
 import br.com.basis.abaco.service.relatorio.RelatorioDivergenciaColunas;
@@ -65,7 +67,9 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import static org.elasticsearch.index.query.QueryBuilders.*;
+import static org.elasticsearch.index.query.QueryBuilders.boolQuery;
+import static org.elasticsearch.index.query.QueryBuilders.multiMatchQuery;
+import static org.elasticsearch.index.query.QueryBuilders.nestedQuery;
 
 @Service
 public class AnaliseService extends BaseService {
