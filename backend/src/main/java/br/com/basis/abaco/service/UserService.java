@@ -32,7 +32,12 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.io.ByteArrayOutputStream;
 import java.time.ZonedDateTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 
 import static org.elasticsearch.index.query.QueryBuilders.*;
 
@@ -410,7 +415,6 @@ public class UserService extends BaseService {
                 Optional.empty(), Optional.ofNullable(AbacoUtil.REPORT_LOGO_PATH),
                 Optional.ofNullable(AbacoUtil.getReportFooter()));
         } catch (DRException | ClassNotFoundException | JRException | NoClassDefFoundError e) {
-            log.error(e.getMessage(), e);
             throw new RelatorioException(e);
         }
 

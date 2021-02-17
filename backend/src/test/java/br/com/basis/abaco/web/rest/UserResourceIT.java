@@ -86,7 +86,7 @@ public class UserResourceIT {
     @Before
     public void setup() {
         UserResource userResource = new UserResource(userRepository, mailService, userService, userSearchRepository,
-                authorityRepository, dynamicExportsService, analiseRepository);
+                authorityRepository, analiseRepository);
         this.restUserMockMvc = MockMvcBuilders.standaloneSetup(userResource).build();
     }
 

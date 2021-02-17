@@ -13,8 +13,6 @@ import br.com.basis.abaco.security.AuthoritiesConstants;
 import br.com.basis.abaco.service.SistemaService;
 import br.com.basis.abaco.service.dto.SistemaDropdownDTO;
 import br.com.basis.abaco.service.exception.RelatorioException;
-import br.com.basis.abaco.service.relatorio.RelatorioSistemaColunas;
-import br.com.basis.abaco.utils.AbacoUtil;
 import br.com.basis.abaco.utils.PageUtils;
 import br.com.basis.abaco.web.rest.util.HeaderUtil;
 import br.com.basis.abaco.web.rest.util.PaginationUtil;
@@ -22,8 +20,6 @@ import br.com.basis.dynamicexports.service.DynamicExportsService;
 import br.com.basis.dynamicexports.util.DynamicExporter;
 import com.codahale.metrics.annotation.Timed;
 import io.github.jhipster.web.util.ResponseUtil;
-import net.sf.dynamicreports.report.exception.DRException;
-import net.sf.jasperreports.engine.JRException;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.search.sort.FieldSortBuilder;
 import org.elasticsearch.search.sort.SortOrder;
@@ -62,9 +58,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
-import static org.elasticsearch.index.query.QueryBuilders.multiMatchQuery;
-import static org.elasticsearch.index.query.QueryBuilders.queryStringQuery;
-
 @RestController
 @RequestMapping("/api")
 public class SistemaResource {
@@ -76,7 +69,6 @@ public class SistemaResource {
     private final SistemaSearchRepository sistemaSearchRepository;
     private final FuncaoDadosVersionavelRepository funcaoDadosVersionavelRepository;
     private final FuncaoDadosRepository funcaoDadosRepository;
-    private final DynamicExportsService dynamicExportsService;
     private final SistemaService sistemaService;
     private static final String ROLE_ANALISTA = "ROLE_ANALISTA";
     private static final String ROLE_ADMIN = "ROLE_ADMIN";
@@ -88,14 +80,13 @@ public class SistemaResource {
         SistemaRepository sistemaRepository,
         SistemaSearchRepository sistemaSearchRepository,
         FuncaoDadosVersionavelRepository funcaoDadosVersionavelRepository,
-        FuncaoDadosRepository funcaoDadosRepository, DynamicExportsService dynamicExportsService,
+        FuncaoDadosRepository funcaoDadosRepository,
         SistemaService sistemaService) {
 
         this.sistemaRepository = sistemaRepository;
         this.sistemaSearchRepository = sistemaSearchRepository;
         this.funcaoDadosVersionavelRepository = funcaoDadosVersionavelRepository;
         this.funcaoDadosRepository = funcaoDadosRepository;
-        this.dynamicExportsService = dynamicExportsService;
         this.sistemaService = sistemaService;
     }
 

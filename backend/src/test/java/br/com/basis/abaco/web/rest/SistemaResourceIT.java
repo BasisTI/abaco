@@ -95,7 +95,7 @@ public class SistemaResourceIT {
     public void setup() {
         MockitoAnnotations.initMocks(this);
         SistemaResource sistemaResource = new SistemaResource(sistemaRepository, sistemaSearchRepository,
-                funcaoDadosVersionavelRepository, funcaoDadosRepository, dynamicExportsService, sistemaService);
+                funcaoDadosVersionavelRepository, funcaoDadosRepository, sistemaService);
         this.restSistemaMockMvc = MockMvcBuilders.standaloneSetup(sistemaResource)
                 .setCustomArgumentResolvers(pageableArgumentResolver).setControllerAdvice(exceptionTranslator)
                 .setMessageConverters(jacksonMessageConverter).build();

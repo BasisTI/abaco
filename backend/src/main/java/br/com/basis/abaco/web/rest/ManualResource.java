@@ -6,12 +6,12 @@ import br.com.basis.abaco.domain.FuncaoTransacao;
 import br.com.basis.abaco.domain.Manual;
 import br.com.basis.abaco.domain.ManualContrato;
 import br.com.basis.abaco.domain.UploadedFile;
+import br.com.basis.abaco.reports.rest.RelatorioFatorAjusteRest;
 import br.com.basis.abaco.repository.AnaliseRepository;
 import br.com.basis.abaco.repository.FatorAjusteRepository;
 import br.com.basis.abaco.repository.FuncaoTransacaoRepository;
 import br.com.basis.abaco.repository.ManualContratoRepository;
 import br.com.basis.abaco.repository.ManualRepository;
-import br.com.basis.abaco.reports.rest.RelatorioFatorAjusteRest;
 import br.com.basis.abaco.repository.UploadedFilesRepository;
 import br.com.basis.abaco.repository.search.ManualSearchRepository;
 import br.com.basis.abaco.service.ManualService;
@@ -22,14 +22,12 @@ import br.com.basis.abaco.service.relatorio.RelatorioManualColunas;
 import br.com.basis.abaco.utils.AbacoUtil;
 import br.com.basis.abaco.utils.PageUtils;
 import br.com.basis.abaco.web.rest.errors.CustomParameterizedException;
-import br.com.basis.abaco.web.rest.errors.UploadException;
 import br.com.basis.abaco.web.rest.util.HeaderUtil;
 import br.com.basis.abaco.web.rest.util.PaginationUtil;
 import br.com.basis.dynamicexports.service.DynamicExportsService;
 import br.com.basis.dynamicexports.util.DynamicExporter;
 import com.codahale.metrics.annotation.Timed;
 import io.github.jhipster.web.util.ResponseUtil;
-import jdk.nashorn.internal.parser.JSONParser;
 import lombok.SneakyThrows;
 import net.sf.dynamicreports.report.exception.DRException;
 import net.sf.jasperreports.engine.JRException;
@@ -114,8 +112,6 @@ public class ManualResource {
     private static final String ROLE_USER = "ROLE_USER";
 
     private static final String ROLE_GESTOR = "ROLE_GESTOR";
-
-    private boolean status = false;
 
     public ManualResource(ManualRepository manualRepository, ManualSearchRepository manualSearchRepository, DynamicExportsService dynamicExportsService,
                           ManualContratoRepository manualContratoRepository, AnaliseRepository analiseRepository, FatorAjusteRepository fatorAjusteRepository,
