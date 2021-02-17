@@ -196,13 +196,14 @@
                         </p-footer>
                     </p-confirmDialog>
                     <!-- Dialog bloquear e alterar status validação-->
-                    <p-dialog header="Alterar status ?" [(visible)]="showDialogDivergenceBlock" [style]="{width: '40vw', minHeight: '200px'}" [modal]="true" >
+                    <p-dialog header="Alterar status para bloquear / desbloquear?" [(visible)]="showDialogDivergenceBlock" [style]="{width: '40vw', minHeight: '200px'}" [modal]="true" >
                         <div style="min-height:200px">
                             <div class="ui-g" >
                                 <div class="ui-g-12 ui-md-12 ui-sm-12">
                                     <p-dropdown
                                             [style]="{'width':'100%'}"
                                             [filter]="true"
+                                            dataKey=id
                                             optionLabel="nome"
                                             [options]="lstStatusActive"
                                             id="idStatusAnalise"
@@ -211,8 +212,8 @@
                                     </p-dropdown>
                                 </div>
                             </div>
-                            <p>Deseja bloquear / desbloquear</p>
-                            <app-green-button buttonLabel="Alterar" (click)="divergenceBlock()" style="float:right; margin-top: 5px"></app-green-button>
+                            <app-green-button *ngIf="blocked" buttonLabel="Desbloquear" (click)="divergenceBlock()" style="float:right; margin-top: 5px"></app-green-button>
+                            <app-red-button   *ngIf="!blocked"  buttonLabel="Bloquear" (click)="divergenceBlock()" style="float:right; margin-top: 5px"></app-red-button>
                         </div>
                     </p-dialog>
 

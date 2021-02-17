@@ -169,11 +169,9 @@ export class ManualListComponent implements OnInit {
         }
     }
     public selectManual() {
-        console.log(this.datatable);
         if (this.datatable && this.datatable.selectedRow) {
             if (this.datatable.selectedRow && this.datatable.selectedRow) {
                 this.manualSelecionado = this.datatable.selectedRow;
-                console.log(this.manualSelecionado);
             }
         }
     }
@@ -183,7 +181,6 @@ export class ManualListComponent implements OnInit {
     }
 
     public exportarManualFatorAjuste(){
-        console.log(this.manualSelecionado.id);
         this.manualService.geraRelatorioPdfBrowserFatorAjuste(this.manualSelecionado.id);
       }
 

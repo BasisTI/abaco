@@ -181,6 +181,10 @@ export class DivergenciaListComponent implements OnInit {
     }
 
     public confirmDeleteDivergence(divergence: Analise) {
+        if (divergence.bloqueiaAnalise) {
+            this.pageNotificationService.addErrorMessage('Você não pode excluir uma análise bloqueada!');
+            return;
+        }
         if (!divergence) {
             this.pageNotificationService.addErrorMessage('Nenhuma Validação foi selecionada.');
             return;
@@ -268,19 +272,22 @@ export class DivergenciaListComponent implements OnInit {
             this.pageNotificationService.addErrorMessage('Nenhuma Validação foi selecionada.');
             return;
         }
-        // this.changeStatus(divergence.id)
-        this.bloqueiaDivegence(this.blocked)
+        this.changeStatus(divergence)
     }
 
-    public changeStatus(id: number) {
-        this.statusToChange = undefined;
-        this.idDivergenceStatus = id;
+    public changeStatus(divergence: Analise) {
+        this.statusToChange = divergence.status;
+        this.idDivergenceStatus = divergence.id;
         this.showDialogDivergenceBlock = true;
+    }
+
+    public divergenceBlock(){
+        this.alterStatusAnalise();
     }
     
     public alterStatusAnalise(){
-        console.log(this.lstDivergence);
         if(this.idDivergenceStatus && this.statusToChange){
+                this.bloqueiaDivegence(this.blocked)
                 this.divergenciaService.changeStatusDivergence(this.idDivergenceStatus, this.statusToChange).subscribe(data => {
                 this.statusService = undefined;
                 this.idDivergenceStatus = undefined;
@@ -295,10 +302,6 @@ export class DivergenciaListComponent implements OnInit {
         }
     }
 
-    public divergenceBlock(){
-        this.alterStatusAnalise();
-    }
-    /** Visibilidade botão bloqueio / desbloqueio */
     public selectAnalise() {
         var values = this.datatable.value;
         var ind = values.indexOf(this.selectedDivergence)
@@ -307,31 +310,36 @@ export class DivergenciaListComponent implements OnInit {
             if (this.datatable.value && this.datatable.value[ind]) {
                 this.analiseSelecionada = this.datatable.value[ind];
                 this.blocked = this.datatable.value[ind].bloqueiaAnalise;
-                console.log(this.analiseSelecionada)
             }
         }
     }
 
-    private mensagemDialogBloquear(retorno: boolean) {
-        if (retorno) {
-            return this.getLabel('Tem certeza que deseja desbloquear o registro ').concat('?');
-        } else {
-            return this.getLabel('Tem certeza que deseja bloquear o registro ?');
-        }
-    }
+    public bloqueiaDivegence(bloquear: boolean) {
 
-    private mensagemAnaliseBloqueada(retorno: boolean, nome: string) {
-        if (retorno) {
-            this.pageNotificationService.addSuccessMessage('Registro  desbloqueado com sucesso!');
-        } else {
-            this.pageNotificationService.addSuccessMessage('Registro bloqueado com sucesso!');
-        }
+        this.divergenciaService.findAnalise(this.analiseSelecionada.id).subscribe((res) => {
+            this.analiseTemp = new Analise().copyFromJSON(res);
+            let canBloqued = false;
+            if (this.tipoEquipesLoggedUser) {
+                this.tipoEquipesLoggedUser.forEach(equipe => {
+                    if (equipe.id === this.analiseTemp.equipeResponsavel.id) {
+                        canBloqued = true;
+                    }
+                });
+            }          
+            if (canBloqued) {
+                this.alterAnaliseBlock(); 
+            } else {
+                this.pageNotificationService.addErrorMessage(this.getLabel('Somente membros da equipe responsável podem excluir esta análise!'));
+            }
+        },
+        err => {
+            this.pageNotificationService.addErrorMessage(
+                this.getLabel('Somente membros da equipe responsável podem excluir esta análise!'));
+        });
     }
 
     public alterAnaliseBlock() {
-        console.log(this.analiseTemp)
         if (this.analiseTemp && this.analiseTemp.dataHomologacao) {
-            console.log(this.analiseTemp.dataHomologacao)
             const copy = this.analiseTemp.toJSONState();
             this.divergenciaService.block(copy).subscribe(() => {
                 const nome = this.analiseTemp.identificadorAnalise;
@@ -343,44 +351,12 @@ export class DivergenciaListComponent implements OnInit {
         }
     }
 
-    /** Realizar bloqueio da análise. */
-    public bloqueiaDivegence(bloquear: boolean) {
-
-        console.log(this.analiseSelecionada)
-        this.divergenciaService.findAnalise(this.analiseSelecionada.id).subscribe((res) => {
-            // debugger
-            console.log(res)
-            this.analiseTemp = new Analise().copyFromJSON(res);
-            let canBloqued = false;
-            if (this.tipoEquipesLoggedUser) {
-                this.tipoEquipesLoggedUser.forEach(equipe => {
-                    if (equipe.id === this.analiseTemp.equipeResponsavel.id) {
-                        canBloqued = true;
-                    }
-                });
-            }          
-            if (canBloqued) {
-                
-                console.log(this.analiseTemp.dataHomologacao)
-                if (this.analiseTemp.dataHomologacao && !bloquear) {
-                    this.analiseTemp.dataHomologacao  =  new Date();
-                    this.showDialogAnaliseBlock = true;
-                } else {
-                    console.log(this.analiseTemp)
-                    this.confirmationService.confirm({
-                        message: this.mensagemDialogBloquear(bloquear),
-                        accept: () => {
-                            this.alterAnaliseBlock();
-                        }
-                    });
-                }
-            } else {
-                this.pageNotificationService.addErrorMessage(this.getLabel('Somente membros da equipe responsável podem excluir esta análise!'));
-            }
-        },
-        err => {
-            this.pageNotificationService.addErrorMessage(
-                this.getLabel('Somente membros da equipe responsável podem excluir esta análise!'));
-        });
+    private mensagemAnaliseBloqueada(retorno: boolean, nome: string) {
+        if (retorno) {
+            this.pageNotificationService.addSuccessMessage('Registro  desbloqueado com sucesso!');
+        } else {
+            this.pageNotificationService.addSuccessMessage('Registro bloqueado com sucesso!');
+        }
     }
+
 }

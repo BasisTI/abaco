@@ -224,7 +224,7 @@ export class DivergenciaService {
     }
 
     public findAnalise(id: Number): Observable<Analise> {
-        return this.http.get<Analise>(`${this.resourceUrl}/${id}`);
+        return this.http.get<Analise>(`${this.analiseResourceUrl}/${id}`);
     }
     public findView(id: Number): Observable<Analise> {
         return this.http.get<Analise>(`${this.resourceUrl}/view/${id}`);
