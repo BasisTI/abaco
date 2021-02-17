@@ -7,6 +7,7 @@ import br.com.basis.abaco.service.StatusService;
 import br.com.basis.abaco.service.dto.StatusDTO;
 import br.com.basis.abaco.service.exception.RelatorioException;
 import br.com.basis.abaco.service.relatorio.RelatorioEquipeColunas;
+import br.com.basis.abaco.service.relatorio.RelatorioStatusColunas;
 import br.com.basis.abaco.utils.AbacoUtil;
 import br.com.basis.abaco.utils.PageUtils;
 import br.com.basis.abaco.web.rest.util.HeaderUtil;
@@ -148,19 +149,18 @@ public class StatusResource {
         return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
     }
 
-    @GetMapping(value = "/status/exportacao/{tipoRelatorio}", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
+    @PostMapping(value = "/status/exportacao/{tipoRelatorio}", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
     @Timed
-    public ResponseEntity<InputStreamResource> gerarRelatorioExportacao(@PathVariable String tipoRelatorio, @RequestParam(defaultValue = "*") String query) throws RelatorioException {
-        ByteArrayOutputStream byteArrayOutputStream;
-        try {
-            new NativeSearchQueryBuilder().withQuery(multiMatchQuery(query)).build();
-            Page<Status> result = statusSearchRepository.search(queryStringQuery(query), dynamicExportsService.obterPageableMaximoExportacao());
-            byteArrayOutputStream = dynamicExportsService.export(new RelatorioEquipeColunas(), result, tipoRelatorio, Optional.empty(), Optional.ofNullable(AbacoUtil.REPORT_LOGO_PATH), Optional.ofNullable(AbacoUtil.getReportFooter()));
-        } catch (DRException | ClassNotFoundException | JRException | NoClassDefFoundError e) {
-            log.error(e.getMessage(), e);
-            throw new RelatorioException(e);
-        }
-        return DynamicExporter.output(byteArrayOutputStream,
-            "relatorio." + tipoRelatorio);
+    public ResponseEntity<InputStreamResource> gerarRelatorioExportacao(@PathVariable String tipoRelatorio,
+                                                                        @RequestParam(defaultValue = "*") String query) throws RelatorioException {
+        ByteArrayOutputStream byteArrayOutputStream = statusService.gerarRelatorio(query, tipoRelatorio);
+        return DynamicExporter.output(byteArrayOutputStream, "relatorio." + tipoRelatorio);
+    }
+
+    @GetMapping(value = "/status/exportacao-arquivo", produces = MediaType.APPLICATION_PDF_VALUE)
+    @Timed
+    public ResponseEntity<byte[]> gerarRelatorioImprimir(@RequestParam(defaultValue = "*") String query) throws RelatorioException {
+        ByteArrayOutputStream byteArrayOutputStream = statusService.gerarRelatorio(query, "pdf");
+        return new ResponseEntity<byte[]>(byteArrayOutputStream.toByteArray(), HttpStatus.OK);
     }
 }
