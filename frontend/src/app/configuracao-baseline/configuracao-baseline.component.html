@@ -3,7 +3,7 @@
         <div class="card card-w-title">
             <h1>Configurar Job Baseline</h1>
 
-            <form name="form" (ngSubmit)="save(form)" #form="ngForm" *ngIf="configuracaoSistemaEquipe">
+            <form name="form" (ngSubmit)="save()" #form="ngForm" *ngIf="configuracaoSistemaEquipe">
                 <div class="ui-g-12 ui-md-12 ui-sm-12 form-fields-container" >
                     <p-pickList  [responsive]="true" [source]="configuracaoSistemaEquipe.sistemasDisponiveis" [target]="configuracaoSistemaEquipe.sistemasSelecionados" [targetStyle]="{'width': '100%'}" [sourceStyle]="{'width': '100%'}"
                      filterBy="nome" [showSourceControls]="false" [showTargetControls]="false" style="width: 100%;" sourceHeader="Sistemas" targetHeader="Sistemas selecionados">
