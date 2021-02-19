@@ -85,4 +85,8 @@ public class SistemaService extends BaseService {
         return byteArrayOutputStream;
     }
 
+    public List<Sistema> getAll() {
+        return sistemaRepository.findAll();
+    }
+
 }

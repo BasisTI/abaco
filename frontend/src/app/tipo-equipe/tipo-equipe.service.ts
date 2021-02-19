@@ -60,7 +60,7 @@ export class TipoEquipeService {
         }
     getAll(): Observable<ResponseWrapper> {
         const url = `${this.findByOrganizacaoUrl}`;
-        return this.http.get<ResponseWrapper>(url).pipe(
+        return this.http.get<ResponseWrapper>(url).pipe(    
             catchError((error: any) => {
                 if (error.status === 403) {
                     this.pageNotificationService.addErrorMessage(this.getLabel('Você não possui permissão!'));
