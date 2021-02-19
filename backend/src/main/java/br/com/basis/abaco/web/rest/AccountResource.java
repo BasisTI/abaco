@@ -35,7 +35,7 @@ import java.util.Optional;
 @RequestMapping("/api")
 public class AccountResource {
 
-	private final Logger log = LoggerFactory.getLogger(AccountResource.class);
+    private final Logger log = LoggerFactory.getLogger(AccountResource.class);
 
     private final UserRepository userRepository;
 
@@ -45,8 +45,7 @@ public class AccountResource {
 
     private static final String ENTITY_NAME = "account";
 
-    public AccountResource(UserRepository userRepository, UserService userService,
-                           MailService mailService) {
+    public AccountResource(UserRepository userRepository, UserService userService, MailService mailService) {
 
         this.userRepository = userRepository;
         this.userService = userService;
@@ -54,12 +53,14 @@ public class AccountResource {
     }
 
     /**
-     * POST  /register : register the user.
+     * POST /register : register the user.
      *
      * @param managedUserVM the managed user View Model
-     * @return the ResponseEntity with status 201 (Created) if the user is registered or 400 (Bad Request) if the login or e-mail is already in use
+     * @return the ResponseEntity with status 201 (Created) if the user is
+     *         registered or 400 (Bad Request) if the login or e-mail is already in
+     *         use
      */
-    @PostMapping(path = "/register", produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.TEXT_PLAIN_VALUE})
+    @PostMapping(path = "/register", produces = { MediaType.APPLICATION_JSON_VALUE, MediaType.TEXT_PLAIN_VALUE })
     @Timed
     public ResponseEntity registerAccount(@Valid @RequestBody ManagedUserVM managedUserVM) {
 
@@ -67,37 +68,38 @@ public class AccountResource {
         textPlainHeaders.setContentType(MediaType.TEXT_PLAIN);
 
         return userRepository.findOneByLogin(managedUserVM.getLogin().toLowerCase())
-            .map(user -> new ResponseEntity<>("login already in use", textPlainHeaders, HttpStatus.BAD_REQUEST))
-            .orElseGet(() -> userRepository.findOneByEmail(managedUserVM.getEmail())
-                .map(user -> new ResponseEntity<>("e-mail address already in use", textPlainHeaders, HttpStatus.BAD_REQUEST))
-                .orElseGet(() -> {
-                    User user = userService
-                        .createUser(managedUserVM.getLogin(), managedUserVM.getPassword(),
-                            managedUserVM.getFirstName(), managedUserVM.getLastName(),
-                            managedUserVM.getEmail().toLowerCase(), managedUserVM.getImageUrl(), managedUserVM.getLangKey());
+                .map(user -> new ResponseEntity<>("login already in use", textPlainHeaders, HttpStatus.BAD_REQUEST))
+                .orElseGet(() -> userRepository.findOneByEmail(managedUserVM.getEmail())
+                        .map(user -> new ResponseEntity<>("e-mail address already in use", textPlainHeaders,
+                                HttpStatus.BAD_REQUEST))
+                        .orElseGet(() -> {
+                            User user = userService.createUser(managedUserVM.getLogin(), managedUserVM.getPassword(),
+                                    managedUserVM.getFirstName(), managedUserVM.getLastName(),
+                                    managedUserVM.getEmail().toLowerCase(), managedUserVM.getImageUrl(),
+                                    managedUserVM.getLangKey());
 
-                    mailService.sendActivationEmail(user);
-                    return new ResponseEntity<>(HttpStatus.CREATED);
-                })
-            );
+                            mailService.sendActivationEmail(user);
+                            return new ResponseEntity<>(HttpStatus.CREATED);
+                        }));
     }
 
     /**
-     * GET  /activate : activate the registered user.
+     * GET /activate : activate the registered user.
      *
      * @param key the activation key
-     * @return the ResponseEntity with status 200 (OK) and the activated user in body, or status 500 (Internal Server Error) if the user couldn't be activated
+     * @return the ResponseEntity with status 200 (OK) and the activated user in
+     *         body, or status 500 (Internal Server Error) if the user couldn't be
+     *         activated
      */
     @GetMapping("/activate")
     @Timed
     public ResponseEntity<String> activateAccount(@RequestParam(value = "key") String key) {
-        return userService.activateRegistration(key)
-            .map(user -> new ResponseEntity<String>(HttpStatus.OK))
-            .orElse(new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR));
+        return userService.activateRegistration(key).map(user -> new ResponseEntity<String>(HttpStatus.OK))
+                .orElse(new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR));
     }
 
     /**
-     * GET  /authenticate : check if the user is authenticated, and return its login.
+     * GET /authenticate : check if the user is authenticated, and return its login.
      *
      * @param request the HTTP request
      * @return the login if the user is authenticated
@@ -106,53 +108,55 @@ public class AccountResource {
     @Timed
     public ResponseEntity<String> isAuthenticated(HttpServletRequest request) {
         log.debug("REST request to check if the current user is authenticated");
-        return new ResponseEntity<String>(request.getRemoteUser(), HttpStatus.OK );
+        return new ResponseEntity<String>(request.getRemoteUser(), HttpStatus.OK);
     }
 
     /**
-     * GET  /account : get the current user.
+     * GET /account : get the current user.
      *
-     * @return the ResponseEntity with status 200 (OK) and the current user in body, or status 500 (Internal Server Error) if the user couldn't be returned
+     * @return the ResponseEntity with status 200 (OK) and the current user in body,
+     *         or status 500 (Internal Server Error) if the user couldn't be
+     *         returned
      */
     @GetMapping("/account")
     @Timed
     public ResponseEntity<UserDTO> getAccount() {
         return Optional.ofNullable(userService.getUserWithAuthorities())
-            .map(user -> new ResponseEntity<>(new UserDTO(user), HttpStatus.OK))
-            .orElse(new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR));
+                .map(user -> new ResponseEntity<>(new UserDTO(user), HttpStatus.OK))
+                .orElse(new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR));
     }
 
     /**
-     * POST  /account : update the current user information.
+     * POST /account : update the current user information.
      *
      * @param userDTO the current user information
-     * @return the ResponseEntity with status 200 (OK), or status 400 (Bad Request) or 500 (Internal Server Error) if the user couldn't be updated
+     * @return the ResponseEntity with status 200 (OK), or status 400 (Bad Request)
+     *         or 500 (Internal Server Error) if the user couldn't be updated
      */
     @PostMapping("/account")
     @Timed
     public ResponseEntity saveAccount(@Valid @RequestBody UserDTO userDTO) {
         Optional<User> existingUser = userRepository.findOneByEmail(userDTO.getEmail());
         if (existingUser.isPresent() && (!existingUser.get().getLogin().equalsIgnoreCase(userDTO.getLogin()))) {
-            return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert("user-management", "emailexists", "Email already in use")).body(null);
+            return ResponseEntity.badRequest()
+                    .headers(HeaderUtil.createFailureAlert("user-management", "emailexists", "Email already in use"))
+                    .body(null);
         }
-        return userRepository
-            .findOneByLogin(SecurityUtils.getCurrentUserLogin())
-            .map(u -> {
-                userService.updateUser(userDTO.getFirstName(), userDTO.getLastName(), userDTO.getEmail(),
+        return userRepository.findOneByLogin(SecurityUtils.getCurrentUserLogin()).map(u -> {
+            userService.updateUser(userDTO.getFirstName(), userDTO.getLastName(), userDTO.getEmail(),
                     userDTO.getLangKey());
-                return new ResponseEntity(HttpStatus.OK);
-            })
-            .orElseGet(() -> new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR));
+            return new ResponseEntity(HttpStatus.OK);
+        }).orElseGet(() -> new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR));
     }
 
     /**
-     * POST  /account/change_password : changes the current user's password
+     * POST /account/change_password : changes the current user's password
      *
      * @param password the new password
-     * @return the ResponseEntity with status 200 (OK), or status 400 (Bad Request) if the new password is not strong enough
+     * @return the ResponseEntity with status 200 (OK), or status 400 (Bad Request)
+     *         if the new password is not strong enough
      */
-    @PostMapping(path = "/account/change_password",
-        produces = MediaType.TEXT_PLAIN_VALUE)
+    @PostMapping(path = "/account/change_password", produces = MediaType.TEXT_PLAIN_VALUE)
     @Timed
     public ResponseEntity changePassword(@RequestBody String password) {
         if (!checkPasswordLength(password)) {
@@ -163,58 +167,59 @@ public class AccountResource {
     }
 
     /**
-     * POST   /account/reset_password/init : Send an e-mail to reset the password of the user
+     * POST /account/reset_password/init : Send an e-mail to reset the password of
+     * the user
      *
      * @param mail the mail of the user
-     * @return the ResponseEntity with status 200 (OK) if the e-mail was sent, or status 400 (Bad Request) if the e-mail address is not registered
+     * @return the ResponseEntity with status 200 (OK) if the e-mail was sent, or
+     *         status 400 (Bad Request) if the e-mail address is not registered
      */
-    @PostMapping(path = "/account/reset_password/init",
-        produces = MediaType.TEXT_PLAIN_VALUE)
+    @PostMapping(path = "/account/reset_password/init", produces = MediaType.TEXT_PLAIN_VALUE)
     @Timed
-    public ResponseEntity<String> requestPasswordReset(@RequestParam(name = "mail", defaultValue = "") String mail, @RequestParam( name = "login", defaultValue = "") String login) {
+    public ResponseEntity<String> requestPasswordReset(@RequestParam(name = "mail", defaultValue = "") String mail,
+            @RequestParam(name = "login", defaultValue = "") String login) {
 
-        if (!mail.isEmpty() && login.isEmpty()){
-            return userService.requestPasswordReset(mail)
-                .map(user -> {
-                    mailService.sendPasswordResetMail(user);
-                    return new ResponseEntity<>("e-mail was sent", HttpStatus.OK);
-                }).orElse(new ResponseEntity<>("e-mail address not registered", HttpStatus.BAD_REQUEST));
-        }else {
-            return userService.requestPasswordResetUser(login)
-                .map(user -> {
-                    mailService.sendPasswordResetMail(user);
-                    return new ResponseEntity<>("e-mail was sent", HttpStatus.OK);
-                }).orElse(new ResponseEntity<>("e-mail address not registered", HttpStatus.BAD_REQUEST));
+        if (!mail.isEmpty() && login.isEmpty()) {
+            return userService.requestPasswordReset(mail).map(user -> {
+                mailService.sendPasswordResetMail(user);
+                return new ResponseEntity<>("e-mail was sent", HttpStatus.OK);
+            }).orElse(new ResponseEntity<>("e-mail address not registered", HttpStatus.BAD_REQUEST));
+        } else {
+            return userService.requestPasswordResetUser(login).map(user -> {
+                mailService.sendPasswordResetMail(user);
+                return new ResponseEntity<>("e-mail was sent", HttpStatus.OK);
+            }).orElse(new ResponseEntity<>("e-mail address not registered", HttpStatus.BAD_REQUEST));
         }
     }
+
     /**
-     * POST   /account/reset_password/finish : Finish to reset the password of the user
+     * POST /account/reset_password/finish : Finish to reset the password of the
+     * user
      *
      * @param keyAndPassword the generated key and the new password
-     * @return the ResponseEntity with status 200 (OK) if the password has been reset,
-     * or status 400 (Bad Request) or 500 (Internal Server Error) if the password could not be reset
+     * @return the ResponseEntity with status 200 (OK) if the password has been
+     *         reset, or status 400 (Bad Request) or 500 (Internal Server Error) if
+     *         the password could not be reset
      */
-    @PostMapping(path = "/account/reset_password/finish",
-        produces = MediaType.TEXT_PLAIN_VALUE)
+    @PostMapping(path = "/account/reset_password/finish", produces = MediaType.TEXT_PLAIN_VALUE)
     @Timed
     public ResponseEntity<String> finishPasswordReset(@RequestBody KeyAndPasswordVM keyAndPassword) {
         if (!checkPasswordLength(keyAndPassword.getNewPassword())) {
             return new ResponseEntity<>("Incorrect password", HttpStatus.BAD_REQUEST);
         }
         return userService.completePasswordReset(keyAndPassword.getNewPassword(), keyAndPassword.getKey())
-            .map(user -> new ResponseEntity<String>(HttpStatus.OK))
-            .orElse(new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR));
+                .map(user -> new ResponseEntity<String>(HttpStatus.OK))
+                .orElse(new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR));
     }
 
     private boolean checkPasswordLength(String password) {
-        return !StringUtils.isEmpty(password) &&
-            password.length() >= ManagedUserVM.PASSWORD_MIN_LENGTH &&
-            password.length() <= ManagedUserVM.PASSWORD_MAX_LENGTH;
+        return !StringUtils.isEmpty(password) && password.length() >= ManagedUserVM.PASSWORD_MIN_LENGTH
+                && password.length() <= ManagedUserVM.PASSWORD_MAX_LENGTH;
     }
 
     private ResponseEntity createBadRequest(String errorKey, String defaultMessage) {
         return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert(ENTITY_NAME, errorKey, defaultMessage))
-            .body(null);
+                .body(null);
     }
 
 }
