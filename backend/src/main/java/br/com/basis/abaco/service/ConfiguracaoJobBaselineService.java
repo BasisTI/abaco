@@ -17,45 +17,48 @@ import br.com.basis.abaco.service.dto.SistemaDTO;
 import br.com.basis.abaco.service.dto.TipoEquipeDTO;
 
 @Service
-public class ConfiguracaoJobBaselineService extends BaseService{
-	
-	private final ConfiguracaoJobBaselineRepository configuracaoJobBaselineRepository;
-	
-	public ConfiguracaoJobBaselineService(ConfiguracaoJobBaselineRepository configuracaoJobBaselineRepository) {
-		this.configuracaoJobBaselineRepository = configuracaoJobBaselineRepository;
-	}
+public class ConfiguracaoJobBaselineService extends BaseService {
 
+    private final ConfiguracaoJobBaselineRepository configuracaoJobBaselineRepository;
 
-	@Transactional
-	public List<ConfiguracaoJobBaseline> incluirConfiguracao(ConfiguracaoJobBaselineDTO configuracao) {
-	    configuracaoJobBaselineRepository.deleteAll();
-	    List<ConfiguracaoJobBaseline> configuracoesIncluir = new ArrayList<>();
-	    if(configuracao.getSistemasSelecionados() != null && !configuracao.getSistemasSelecionados().isEmpty()) {
-	        for (SistemaDTO sistema : configuracao.getSistemasSelecionados()) {
-	            if(configuracao.getEquipesSelecionados() == null || configuracao.getEquipesSelecionados().isEmpty()) {
-	                ConfiguracaoJobBaseline config = new ConfiguracaoJobBaseline();
-	                config.setSistema(new ModelMapper().map(sistema, Sistema.class));
-	                configuracoesIncluir.add(config);
-	            }else {
-	                for (TipoEquipeDTO tipoEquipe : configuracao.getEquipesSelecionados()) {
-	                    ConfiguracaoJobBaseline config = new ConfiguracaoJobBaseline();
-	                    config.setSistema(new ModelMapper().map(sistema, Sistema.class));
-	                    config.setTipoEquipe(new ModelMapper().map(tipoEquipe, TipoEquipe.class));
-	                    configuracoesIncluir.add(config);
-	                }
-	            }
-	        }
-	    }else if(configuracao.getEquipesSelecionados() != null && !configuracao.getEquipesSelecionados().isEmpty()){
-	        for (TipoEquipeDTO tipoEquipe : configuracao.getEquipesSelecionados()) {
+    public ConfiguracaoJobBaselineService(ConfiguracaoJobBaselineRepository configuracaoJobBaselineRepository) {
+        this.configuracaoJobBaselineRepository = configuracaoJobBaselineRepository;
+    }
+
+    @Transactional
+    public List<ConfiguracaoJobBaseline> incluirConfiguracao(ConfiguracaoJobBaselineDTO configuracao) {
+        configuracaoJobBaselineRepository.deleteAll();
+        List<ConfiguracaoJobBaseline> configuracoesIncluir = new ArrayList<>();
+        if (configuracao.getSistemasSelecionados() != null && !configuracao.getSistemasSelecionados().isEmpty()) {
+            preencherListaIncluir(configuracao, configuracoesIncluir);
+        } else if (configuracao.getEquipesSelecionados() != null && !configuracao.getEquipesSelecionados().isEmpty()) {
+            for (TipoEquipeDTO tipoEquipe : configuracao.getEquipesSelecionados()) {
                 ConfiguracaoJobBaseline config = new ConfiguracaoJobBaseline();
                 config.setTipoEquipe(new ModelMapper().map(tipoEquipe, TipoEquipe.class));
                 configuracoesIncluir.add(config);
             }
-	    }
-	    
-		return configuracaoJobBaselineRepository.save(configuracoesIncluir);
-	}
+        }
 
+        return configuracaoJobBaselineRepository.save(configuracoesIncluir);
+    }
+
+    private void preencherListaIncluir(ConfiguracaoJobBaselineDTO configuracao,
+            List<ConfiguracaoJobBaseline> configuracoesIncluir) {
+        for (SistemaDTO sistema : configuracao.getSistemasSelecionados()) {
+            if (configuracao.getEquipesSelecionados() == null || configuracao.getEquipesSelecionados().isEmpty()) {
+                ConfiguracaoJobBaseline config = new ConfiguracaoJobBaseline();
+                config.setSistema(new ModelMapper().map(sistema, Sistema.class));
+                configuracoesIncluir.add(config);
+            } else {
+                for (TipoEquipeDTO tipoEquipe : configuracao.getEquipesSelecionados()) {
+                    ConfiguracaoJobBaseline config = new ConfiguracaoJobBaseline();
+                    config.setSistema(new ModelMapper().map(sistema, Sistema.class));
+                    config.setTipoEquipe(new ModelMapper().map(tipoEquipe, TipoEquipe.class));
+                    configuracoesIncluir.add(config);
+                }
+            }
+        }
+    }
 
     public List<ConfiguracaoJobBaseline> consultarTodos() {
         return configuracaoJobBaselineRepository.findAll();
