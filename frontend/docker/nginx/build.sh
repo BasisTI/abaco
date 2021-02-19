@@ -1,7 +1,7 @@
 #!/bin/sh
 
 set -eu
-
+cd frontend
 npm --version
 
 npm install
