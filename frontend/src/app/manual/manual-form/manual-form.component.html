@@ -482,20 +482,32 @@
                     </div>
 
                     <div class="ui-g">
+                        
                         <div class="ui-g-12 ui-md-12 ui-sm-12" style="padding-top: 25px">
-                            <label class="ui-g-12">Descrição</label>
+                            <label class="ui-g-12">Descrição *</label>
                             <textarea [rows]="15" [cols]="90" id="idDescricaoSaveFormManual" pInputTextarea
                                 style="resize: vertical;" maxlength="2000" name="descricaoFatorAjuste"
                                 [(ngModel)]="newAdjustFactor.descricao">
                             </textarea>
+                            <div *ngIf="this.validaTipoDeflator || (editForm2.controls['tipoAjuste']
+                                        && !editForm2.controls['tipoAjuste'].valid
+                                        && editForm2.controls['tipoAjuste'].touched)">
+                                <span style="color: red">Campo obrigatório.</span>
+                        </div>
                         </div>
                     </div>
 
                     <div class="ui-g">
+                        
                         <div class="ui-g-5 ui-md-5 ui-sm-12" style="padding-top: 01px">
-                            <label>Código</label>
+                            <label>Códigos *</label>
                             <input id="codigo_fator" type="text" name="codigo" [(ngModel)]="newAdjustFactor.codigo"
                                 pInputText maxlength="255" />
+                            <div *ngIf="this.validaTipoDeflator || (editForm2.controls['tipoAjuste']
+                                 && !editForm2.controls['codigo'].valid
+                                 && editForm2.controls['codigo'].touched)">
+                                <span style="color: red;">Campo obrigatório.</span>
+                            </div>
                         </div>
 
                         <div class="ui-g-7 ui-md-7 ui-sm-12" style="padding-top: 01px">
@@ -503,7 +515,9 @@
                             <input id="origem_fator" type="text" name="origem" [(ngModel)]="newAdjustFactor.origem"
                                 pInputText maxlength="255" />
                         </div>
+                        
                     </div>
+                    
 
                     <div class="ui-g">
                         <div class="ui-g ui-md-12" style="justify-content: flex-end; padding-top: 25px">
@@ -579,20 +593,32 @@
 
                 <div class="ui-g">
                     <div class="ui-g-12 ui-md-12 ui-sm-12" style="padding-top: 25px">
-                        <label class="ui-g-12">Descrição</label>
+                        <label class="ui-g-12">Descrição *</label>
                         <textarea [rows]="15" [cols]="90" id="idDescricaoEditFormManual" pInputTextarea
                             style="resize: vertical;" name="descricaoEdicaoFatorAjuste"
                             [(ngModel)]="editedAdjustFactor.descricao" maxlength="2000">
                             </textarea>
+                        <div *ngIf="this.validaTipoDeflator || (editForm2.controls['tipoAjuste']
+                            && !editForm2.controls['tipoAjuste'].valid
+                            && editForm2.controls['tipoAjuste'].touched)">
+                            <span style="color: red">Campo obrigatório.</span>
+                        </div>
                     </div>
+                    
                 </div>
 
                 <div class="ui-g">
                     <div class="ui-g-4 ui-md-4 ui-sm-12" style="padding-top: 25px">
-                        <label>Código</label>
+                        <label>Código *</label>
                         <input id="codigo_fator" type="text" name="codigo" [(ngModel)]="editedAdjustFactor.codigo"
                             pInputText maxlength="255" />
+                        <div *ngIf="this.validaTipoDeflator || (editForm2.controls['tipoAjuste']
+                                && !editForm2.controls['tipoAjuste'].valid
+                                && editForm2.controls['tipoAjuste'].touched)">
+                            <span style="color: red">Campo obrigatório.</span>
+                         </div>
                     </div>
+                    
                     <div class="ui-g-8 ui-md-8 ui-sm-12" style="padding-top: 25px">
                         <label>Origem</label>
                         <input id="origem_fator" type="text" name="origem" [(ngModel)]="editedAdjustFactor.origem"
