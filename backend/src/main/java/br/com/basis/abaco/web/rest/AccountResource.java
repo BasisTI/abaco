@@ -35,7 +35,7 @@ import java.util.Optional;
 @RequestMapping("/api")
 public class AccountResource {
 
-    private final Logger log = LoggerFactory.getLogger(AccountResource.class);
+	private final Logger log = LoggerFactory.getLogger(AccountResource.class);
 
     private final UserRepository userRepository;
 
