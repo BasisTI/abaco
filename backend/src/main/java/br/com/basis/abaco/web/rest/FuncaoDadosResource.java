@@ -370,4 +370,5 @@ public class FuncaoDadosResource {
         funcaoDadosOld.updateDers(lstDers);
         funcaoDadosOld.updateRlrs(lstRlrs);
     }
+
 }

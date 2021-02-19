@@ -32,6 +32,8 @@ export class ManualFormComponent implements OnInit, OnDestroy {
     validaTipoFase;
     validaNomeDeflator;
     validaTipoDeflator;
+    validaDescricaoDeflator;
+    validaCodigoDeflator;
     validaDeflator: boolean;
     private routeSub: Subscription;
     arquivoManual: any[];
@@ -461,6 +463,8 @@ export class ManualFormComponent implements OnInit, OnDestroy {
         this.validaTipoDeflator = false;
         this.validaDeflator = false;
         this.validaNomeDeflator = false;
+        this.validaDescricaoDeflator = false;
+        this.validaCodigoDeflator = false;
         this.showDialogCreateAdjustFactor = true;
     }
 
@@ -468,6 +472,8 @@ export class ManualFormComponent implements OnInit, OnDestroy {
         this.validaTipoDeflator = false;
         this.validaDeflator = false;
         this.validaNomeDeflator = false;
+        this.validaDescricaoDeflator = false;
+        this.validaCodigoDeflator = false;
         this.showDialogCreateAdjustFactor = false;
         this.newAdjustFactor = new FatorAjuste();
     }
@@ -476,6 +482,8 @@ export class ManualFormComponent implements OnInit, OnDestroy {
         this.validaTipoDeflator = false;
         this.validaDeflator = false;
         this.validaNomeDeflator = false;
+        this.validaDescricaoDeflator = false;
+        this.validaCodigoDeflator = false;
         this.showDialogEditAdjustFactor = true;
     }
 
@@ -483,6 +491,8 @@ export class ManualFormComponent implements OnInit, OnDestroy {
         this.validaTipoDeflator = false;
         this.validaDeflator = false;
         this.validaNomeDeflator = false;
+        this.validaDescricaoDeflator = false;
+        this.validaCodigoDeflator = false;
         this.showDialogEditAdjustFactor = false;
         this.editedAdjustFactor = new FatorAjuste();
     }
@@ -504,6 +514,8 @@ export class ManualFormComponent implements OnInit, OnDestroy {
         let isAdjustTypeValid = false;
         let isFactorValid = false;
         let isAdjustFactorValid = false;
+        let isDescriptionValid = false;
+        let isCodeValid = false;
 
         (adjustFactor.nome) ? (isNameValid = true) : (isNameValid = false);
 
@@ -528,7 +540,21 @@ export class ManualFormComponent implements OnInit, OnDestroy {
             this.validaDeflator = true;
         }
 
-        (isNameValid && isAdjustTypeValid && isFactorValid) ? (isAdjustFactorValid = true) : (isAdjustFactorValid = false);
+        if (adjustFactor.descricao) {
+            isDescriptionValid = true;
+        } else {
+            isDescriptionValid = false;
+            this.validaDescricaoDeflator = true;
+        }
+
+        if (adjustFactor.codigo) {
+            isCodeValid = true;
+        } else {
+            isCodeValid = false;
+            this.validaCodigoDeflator = true;
+        }
+
+        (isNameValid && isAdjustTypeValid && isFactorValid && isDescriptionValid && isCodeValid) ? (isAdjustFactorValid = true) : (isAdjustFactorValid = false);
 
         return isAdjustFactorValid;
     }
