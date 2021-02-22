@@ -1,10 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { BlockUiService } from '@nuvem/angular-base';
 import { PageNotificationService } from '@nuvem/primeng-components';
-import { Console } from 'console';
-import { ResponseWrapper } from '../shared';
-import { Sistema, SistemaService } from '../sistema';
-import { TipoEquipe, TipoEquipeService } from '../tipo-equipe';
+import { Sistema } from '../sistema';
+import { TipoEquipe } from '../tipo-equipe';
 import { ConfiguracaoBaselineService } from './configuracao-baseline.service';
 import { ConfiguracaoBaseline } from './model/configuracao-baseline.model';
 import { ConfiguracaoSistemaEquipe } from './model/configuracao-sistema-equipe.model';
@@ -31,12 +29,10 @@ export class ConfiguracaoBaselineComponent implements OnInit {
 
   configuracoes :ConfiguracaoBaseline[] = [];
 
-  constructor(private route: ActivatedRoute,
-        private router: Router,
-        private tipoEquipeService: TipoEquipeService,
-        private configuracaoBaselineService: ConfiguracaoBaselineService,
+  constructor(private configuracaoBaselineService: ConfiguracaoBaselineService,
         private pageNotificationService: PageNotificationService,
-        private sistemaService: SistemaService) { 
+        private blockUiService:BlockUiService) { 
+          this.blockUiService.show();
           this.carregarComponentes();
         }
 
@@ -48,44 +44,14 @@ export class ConfiguracaoBaselineComponent implements OnInit {
   carregarComponentes(){
     this.configuracaoBaselineService.getAll().subscribe(res =>{
       this.configuracaoSistemaEquipe = res;
+      this.blockUiService.hide();
     });
   }
-
-  // carregarSistemas(){
-  //   this.sistemaService.dropDown().subscribe(res => {
-  //     console.log('AQUI 2');
-  //     this.sistemasSource = [];
-  //     console.log(res);
-  //     for (let index = 0; index < res.length; index++) {
-  //       const sis = res[index];
-  //       console.log(this.sistemasTarget.indexOf(sis));
-  //       if(this.sistemasTarget.indexOf(sis) == -1){
-  //         this.sistemasSource.push(sis);
-  //       }
-  //     }
-  //   });
-  // }
-
-  // carregarTIpoEquipe(){
-  //   console.log('AQUI 4');
-  //   console.log('carregarTIpoEquipe');
-  //   this.tipoEquipeService.dropDown().subscribe(res =>{
-  //     this.tipoEquipeSource = [];
-  //     console.log(res);
-  //     for (let index = 0; index < res.length; index++) {
-  //       const tp = res[index];
-  //       if(this.tipoEquipeTarget.indexOf(tp) ==-1){
-  //         this.tipoEquipeSource.push(tp);
-  //       }
-  //     }
-  //   });
-  // }
 
   save(){
     this.configuracaoBaselineService.create(this.configuracaoSistemaEquipe).subscribe(res => {
       this.configuracaoSistemaEquipe = res;
       this.pageNotificationService.addSuccessMessage(this.getLabel('Análise salva com sucesso'));
-      // this.router.navigate(['/configuracao-baseline']);
   });
   }
 
