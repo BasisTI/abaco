@@ -3,6 +3,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
+import { BlockUiService } from '@nuvem/angular-base';
 import { DatatableModule, PageNotificationService } from '@nuvem/primeng-components';
 import { MultiSelectModule, PickListModule, SharedModule, TableModule } from 'primeng';
 import { AbacoButtonsModule } from '../components/abaco-buttons/abaco-buttons.module';
@@ -34,7 +35,8 @@ import { ConfiguracaoBaselineService } from './configuracao-baseline.service';
     ConfiguracaoBaselineService,
     SistemaService,
     TipoEquipeService,
-    PageNotificationService
+    PageNotificationService,
+    BlockUiService
 ],
 })
 export class ConfiguracaoBaselineModule { }
