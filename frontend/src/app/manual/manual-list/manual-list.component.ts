@@ -176,10 +176,6 @@ export class ManualListComponent implements OnInit {
         }
     }
 
-    public gerarRelatorioPdf(){
-        this.manualService.gerarRelatorioPdfArquivo()
-    }
-
     public exportarManualFatorAjuste(){
         this.manualService.geraRelatorioPdfBrowserFatorAjuste(this.manualSelecionado.id);
       }
