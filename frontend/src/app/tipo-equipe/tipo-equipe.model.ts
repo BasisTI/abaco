@@ -15,3 +15,11 @@ export class TipoEquipe implements BaseEntity {
 
   ) {}
 }
+
+export class SearchGroup {
+
+  constructor(
+      public nome?: string,
+  ) {
+  }
+}

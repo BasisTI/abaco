@@ -1,44 +1,19 @@
 package br.com.basis.abaco.web.rest;
 
-import br.com.basis.abaco.domain.Analise;
-import br.com.basis.abaco.domain.Compartilhada;
-import br.com.basis.abaco.domain.Status;
-import br.com.basis.abaco.domain.TipoEquipe;
-import br.com.basis.abaco.domain.UploadedFile;
-import br.com.basis.abaco.domain.User;
-import br.com.basis.abaco.domain.enumeration.MetodoContagem;
-import br.com.basis.abaco.domain.enumeration.StatusFuncao;
-import br.com.basis.abaco.domain.enumeration.TipoRelatorio;
-import br.com.basis.abaco.reports.rest.RelatorioAnaliseRest;
-import br.com.basis.abaco.repository.AnaliseRepository;
-import br.com.basis.abaco.repository.CompartilhadaRepository;
-import br.com.basis.abaco.repository.FuncaoDadosRepository;
-import br.com.basis.abaco.repository.FuncaoTransacaoRepository;
-import br.com.basis.abaco.repository.StatusRepository;
-import br.com.basis.abaco.repository.TipoEquipeRepository;
-import br.com.basis.abaco.repository.UploadedFilesRepository;
-import br.com.basis.abaco.repository.UserRepository;
-import br.com.basis.abaco.repository.search.AnaliseSearchRepository;
-import br.com.basis.abaco.repository.search.UserSearchRepository;
-import br.com.basis.abaco.security.AuthoritiesConstants;
-import br.com.basis.abaco.security.SecurityUtils;
-import br.com.basis.abaco.service.AnaliseService;
-import br.com.basis.abaco.service.dto.AnaliseDTO;
-import br.com.basis.abaco.service.dto.AnaliseDivergenceEditDTO;
-import br.com.basis.abaco.service.dto.AnaliseEditDTO;
-import br.com.basis.abaco.service.exception.RelatorioException;
-import br.com.basis.abaco.service.relatorio.RelatorioAnaliseColunas;
-import br.com.basis.abaco.utils.AbacoUtil;
-import br.com.basis.abaco.utils.PageUtils;
-import br.com.basis.abaco.web.rest.util.HeaderUtil;
-import br.com.basis.abaco.web.rest.util.PaginationUtil;
-import br.com.basis.dynamicexports.service.DynamicExportsService;
-import br.com.basis.dynamicexports.util.DynamicExporter;
-import com.codahale.metrics.annotation.Timed;
-import io.github.jhipster.web.util.ResponseUtil;
-import io.swagger.annotations.ApiParam;
-import net.sf.dynamicreports.report.exception.DRException;
-import net.sf.jasperreports.engine.JRException;
+import static org.elasticsearch.index.query.QueryBuilders.multiMatchQuery;
+
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
+
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.search.sort.FieldSortBuilder;
 import org.elasticsearch.search.sort.SortOrder;
@@ -69,19 +44,47 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.validation.Valid;
-import javax.ws.rs.POST;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import com.codahale.metrics.annotation.Timed;
 
-import static org.elasticsearch.index.query.QueryBuilders.multiMatchQuery;
+import br.com.basis.abaco.domain.Analise;
+import br.com.basis.abaco.domain.Compartilhada;
+import br.com.basis.abaco.domain.Status;
+import br.com.basis.abaco.domain.TipoEquipe;
+import br.com.basis.abaco.domain.UploadedFile;
+import br.com.basis.abaco.domain.User;
+import br.com.basis.abaco.domain.enumeration.MetodoContagem;
+import br.com.basis.abaco.domain.enumeration.StatusFuncao;
+import br.com.basis.abaco.domain.enumeration.TipoRelatorio;
+import br.com.basis.abaco.reports.rest.RelatorioAnaliseRest;
+import br.com.basis.abaco.repository.AnaliseRepository;
+import br.com.basis.abaco.repository.CompartilhadaRepository;
+import br.com.basis.abaco.repository.FuncaoDadosRepository;
+import br.com.basis.abaco.repository.FuncaoTransacaoRepository;
+import br.com.basis.abaco.repository.StatusRepository;
+import br.com.basis.abaco.repository.TipoEquipeRepository;
+import br.com.basis.abaco.repository.UploadedFilesRepository;
+import br.com.basis.abaco.repository.UserRepository;
+import br.com.basis.abaco.repository.search.AnaliseSearchRepository;
+import br.com.basis.abaco.security.AuthoritiesConstants;
+import br.com.basis.abaco.security.SecurityUtils;
+import br.com.basis.abaco.service.AnaliseService;
+import br.com.basis.abaco.service.dto.AnaliseDTO;
+import br.com.basis.abaco.service.dto.AnaliseDivergenceEditDTO;
+import br.com.basis.abaco.service.dto.AnaliseEditDTO;
+import br.com.basis.abaco.service.dto.filter.AnaliseFilterDTO;
+import br.com.basis.abaco.service.exception.RelatorioException;
+import br.com.basis.abaco.service.relatorio.RelatorioAnaliseColunas;
+import br.com.basis.abaco.service.relatorio.RelatorioDivergenciaColunas;
+import br.com.basis.abaco.utils.AbacoUtil;
+import br.com.basis.abaco.utils.PageUtils;
+import br.com.basis.abaco.web.rest.util.HeaderUtil;
+import br.com.basis.abaco.web.rest.util.PaginationUtil;
+import br.com.basis.dynamicexports.service.DynamicExportsService;
+import br.com.basis.dynamicexports.util.DynamicExporter;
+import io.github.jhipster.web.util.ResponseUtil;
+import io.swagger.annotations.ApiParam;
+import net.sf.dynamicreports.report.exception.DRException;
+import net.sf.jasperreports.engine.JRException;
 
 
 @RestController
@@ -109,8 +112,6 @@ public class AnaliseResource {
     private RelatorioAnaliseRest relatorioAnaliseRest;
     @Autowired
     private TipoEquipeRepository tipoEquipeRepository;
-    @Autowired
-    private UserSearchRepository userSearchRepository;
     @Autowired
     private UploadedFilesRepository uploadedFilesRepository;
 
@@ -425,36 +426,6 @@ public class AnaliseResource {
         return relatorioAnaliseRest.downloadReportContagem(analise);
     }
 
-    @GetMapping(value = "/analise/exportacao/{tipoRelatorio}", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
-    @Timed
-
-    public ResponseEntity<InputStreamResource> gerarRelatorioExportacao(@PathVariable String tipoRelatorio,
-                                                                        @RequestParam(defaultValue = "ASC", required = false) String order,
-                                                                        @RequestParam(defaultValue = "0", name = PAGE) int pageNumber,
-                                                                        @RequestParam(defaultValue = "20") int size,
-                                                                        @RequestParam(defaultValue = "id") String sort,
-                                                                        @RequestParam(value = "identificador", required = false) String identificador,
-                                                                        @RequestParam(value = "sistema", required = false) Set<Long> sistema,
-                                                                        @RequestParam(value = "metodo", required = false) Set<MetodoContagem> metodo,
-                                                                        @RequestParam(value = "organizacao", required = false) Set<Long> organizacao,
-                                                                        @RequestParam(value = "equipeResponsavel", required = false) Long equipe,
-                                                                        @RequestParam(value = "status", required = false) Set<Long> status,
-                                                                        @RequestParam(value = "users", required = false) Set<Long> usuario) throws RelatorioException {
-        ByteArrayOutputStream byteArrayOutputStream;
-        try {
-            Pageable pageable = dynamicExportsService.obterPageableMaximoExportacao();
-            BoolQueryBuilder qb = analiseService.getBoolQueryBuilder(identificador, sistema, metodo, organizacao, equipe, usuario, status);
-            SearchQuery searchQuery = new NativeSearchQueryBuilder().withQuery(qb).withPageable(pageable).build();
-            Page<Analise> page = elasticsearchTemplate.queryForPage(searchQuery, Analise.class);
-            byteArrayOutputStream = dynamicExportsService.export(new RelatorioAnaliseColunas(), page, tipoRelatorio, Optional.empty(), Optional.ofNullable(AbacoUtil.REPORT_LOGO_PATH), Optional.ofNullable(AbacoUtil.getReportFooter()));
-        } catch (DRException | ClassNotFoundException | JRException | NoClassDefFoundError e) {
-            log.error(e.getMessage(), e);
-            throw new RelatorioException(e);
-        }
-        return DynamicExporter.output(byteArrayOutputStream,
-            NOME_RELATORIO + tipoRelatorio);
-    }
-
     @GetMapping(value = "/analise/exportaPdf", produces = MediaType.APPLICATION_PDF_VALUE)
     @Timed
     public ResponseEntity<InputStreamResource> gerarRelatorioPdf(@RequestParam(defaultValue = "*") String query) throws RelatorioException {
@@ -474,24 +445,41 @@ public class AnaliseResource {
     @PostMapping(value = "/analise/exportacao/{tipoRelatorio}", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
     @Timed
     public ResponseEntity<InputStreamResource> gerarRelatorioExportacao(@PathVariable String tipoRelatorio,
-                                                                        @RequestParam(defaultValue = "*")String query, @ApiParam Pageable pageable) throws RelatorioException {
-        ByteArrayOutputStream byteArrayOutputStream = analiseService.gerarRelatorio(query, tipoRelatorio, pageable);
-        return DynamicExporter.output(byteArrayOutputStream, NOME_RELATORIO + tipoRelatorio);
+            @RequestBody AnaliseFilterDTO filter, @ApiParam Pageable pageable) throws RelatorioException {
+        ByteArrayOutputStream byteArrayOutputStream;
+        try {
+            pageable = dynamicExportsService.obterPageableMaximoExportacao();
+            Page<Analise> page = elasticsearchTemplate.queryForPage(analiseService.getQueryExportRelatorio(filter, dynamicExportsService.obterPageableMaximoExportacao()), Analise.class);
+            byteArrayOutputStream = dynamicExportsService.export(new RelatorioAnaliseColunas(filter.getColumnsVisible()), page, tipoRelatorio, Optional.empty(), Optional.ofNullable(AbacoUtil.REPORT_LOGO_PATH), Optional.ofNullable(AbacoUtil.getReportFooter()));
+        } catch (DRException | ClassNotFoundException | JRException | NoClassDefFoundError e) {
+            log.error(e.getMessage(), e);
+            throw new RelatorioException(e);
+        }
+        return DynamicExporter.output(byteArrayOutputStream,
+            NOME_RELATORIO + tipoRelatorio);
     }
 
 
-    @GetMapping(value = "/analise/exportacao-arquivo", produces = MediaType.APPLICATION_PDF_VALUE)
+    @PostMapping(value = "/analise/exportacao-arquivo", produces = MediaType.APPLICATION_PDF_VALUE)
     @Timed
-    public ResponseEntity<byte[]> gerarRelatorioAnaliseImprimir(@RequestParam(defaultValue = "*") String query, @ApiParam Pageable pageable) throws RelatorioException {
-        ByteArrayOutputStream byteArrayOutputStream = analiseService.gerarRelatorio(query, "pdf", pageable);
+    public ResponseEntity<byte[]> gerarRelatorioAnaliseImprimir(@RequestBody AnaliseFilterDTO filter, @ApiParam Pageable pageable) throws RelatorioException {
+        ByteArrayOutputStream byteArrayOutputStream;
+        try {
+            pageable = dynamicExportsService.obterPageableMaximoExportacao();
+            Page<Analise> page = elasticsearchTemplate.queryForPage(analiseService.getQueryExportRelatorio(filter, dynamicExportsService.obterPageableMaximoExportacao()), Analise.class);
+            byteArrayOutputStream = dynamicExportsService.export(new RelatorioAnaliseColunas(filter.getColumnsVisible()), page, "pdf", Optional.empty(), Optional.ofNullable(AbacoUtil.REPORT_LOGO_PATH), Optional.ofNullable(AbacoUtil.getReportFooter()));
+        } catch (DRException | ClassNotFoundException | JRException | NoClassDefFoundError e) {
+            log.error(e.getMessage(), e);
+            throw new RelatorioException(e);
+        }
         return new ResponseEntity<byte[]>(byteArrayOutputStream.toByteArray(), HttpStatus.OK);
     }
 
 
-    @GetMapping(value = "/divergencia/exportacao-arquivo", produces = MediaType.APPLICATION_PDF_VALUE)
+    @PostMapping(value = "/divergencia/exportacao-arquivo", produces = MediaType.APPLICATION_PDF_VALUE)
     @Timed
-    public ResponseEntity<byte[]> gerarRelatorioDivergenciaImprimir(@RequestParam(defaultValue = "*") String query,  @ApiParam Pageable pageable) throws RelatorioException {
-         ByteArrayOutputStream byteArrayOutputStream = analiseService.gerarRelatorioDivergencia(query, "pdf", pageable );
+    public ResponseEntity<byte[]> gerarRelatorioDivergenciaImprimir(@RequestBody AnaliseFilterDTO filter, @ApiParam Pageable pageable) throws RelatorioException {
+        ByteArrayOutputStream byteArrayOutputStream = gerarRelatorioDivergencia("pdf", filter, dynamicExportsService.obterPageableMaximoExportacao());
          return new ResponseEntity<byte[]>(byteArrayOutputStream.toByteArray(), HttpStatus.OK);
     }
 
@@ -499,9 +487,26 @@ public class AnaliseResource {
     @PostMapping(value = "/divergencia/exportacao/{tipoRelatorio}", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
     @Timed
     public ResponseEntity<InputStreamResource> gerarRelatorioDivergenciaExportacao(@PathVariable String tipoRelatorio,
-                                                                        @RequestParam(defaultValue = "*") String query, @ApiParam Pageable pageable) throws RelatorioException {
-        ByteArrayOutputStream byteArrayOutputStream = analiseService.gerarRelatorioDivergencia(query, tipoRelatorio, pageable);
+            @RequestBody AnaliseFilterDTO filter, @ApiParam Pageable pageable) throws RelatorioException {
+        ByteArrayOutputStream byteArrayOutputStream = gerarRelatorioDivergencia(tipoRelatorio, filter, dynamicExportsService.obterPageableMaximoExportacao());
         return DynamicExporter.output(byteArrayOutputStream, NOME_RELATORIO + tipoRelatorio);
+    }
+
+    
+    private ByteArrayOutputStream gerarRelatorioDivergencia(String tipoRelatorio, AnaliseFilterDTO filter, Pageable pageable)
+            throws RelatorioException {
+        ByteArrayOutputStream byteArrayOutputStream;
+        try {
+            pageable = dynamicExportsService.obterPageableMaximoExportacao();
+            Page<Analise> page = elasticsearchTemplate.queryForPage(analiseService.getQueryExportRelatorioDivergencia(filter, pageable), Analise.class);
+            byteArrayOutputStream = dynamicExportsService.export(new RelatorioDivergenciaColunas(), page, tipoRelatorio,
+                    Optional.empty(), Optional.ofNullable(AbacoUtil.REPORT_LOGO_PATH),
+                    Optional.ofNullable(AbacoUtil.getReportFooter()));
+        } catch (DRException | ClassNotFoundException | JRException | NoClassDefFoundError e) {
+            log.error(e.getMessage(), e);
+            throw new RelatorioException(e);
+        }
+        return byteArrayOutputStream;
     }
 
 

@@ -42,6 +42,7 @@ export class SearchGroup {
         public metodoContagem?: string,
         public usuario?: User,
         public status?: Status,
+        public columnsVisible?: any,
     ) {
     }
 

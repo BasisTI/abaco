@@ -1,5 +1,6 @@
 package br.com.basis.abaco.web.rest;
 
+import static org.elasticsearch.index.query.QueryBuilders.multiMatchQuery;
 import static org.elasticsearch.index.query.QueryBuilders.queryStringQuery;
 
 import java.io.ByteArrayOutputStream;
@@ -18,6 +19,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -44,12 +46,18 @@ import br.com.basis.abaco.security.SecurityUtils;
 import br.com.basis.abaco.service.TipoEquipeService;
 import br.com.basis.abaco.service.dto.DropdownDTO;
 import br.com.basis.abaco.service.dto.TipoEquipeDTO;
+import br.com.basis.abaco.service.dto.filter.SearchFilterDTO;
 import br.com.basis.abaco.service.exception.RelatorioException;
+import br.com.basis.abaco.service.relatorio.RelatorioTipoEquipeColunas;
+import br.com.basis.abaco.utils.AbacoUtil;
 import br.com.basis.abaco.utils.PageUtils;
 import br.com.basis.abaco.web.rest.util.HeaderUtil;
 import br.com.basis.abaco.web.rest.util.PaginationUtil;
+import br.com.basis.dynamicexports.service.DynamicExportsService;
 import br.com.basis.dynamicexports.util.DynamicExporter;
 import io.github.jhipster.web.util.ResponseUtil;
+import net.sf.dynamicreports.report.exception.DRException;
+import net.sf.jasperreports.engine.JRException;
 
 /**
  * REST controller for managing TipoEquipe.
@@ -77,15 +85,19 @@ public class TipoEquipeResource {
     private static final String ROLE_USER = "ROLE_USER";
 
     private static final String ROLE_GESTOR = "ROLE_GESTOR";
+    
+    private final DynamicExportsService dynamicExportsService;
 
     public TipoEquipeResource(TipoEquipeRepository tipoEquipeRepository,
             TipoEquipeSearchRepository tipoEquipeSearchRepository, TipoEquipeService tipoEquipeService,
-            UserRepository userRepository) {
+            UserRepository userRepository, DynamicExportsService dynamicExportsService
+            ) {
 
         this.tipoEquipeRepository = tipoEquipeRepository;
         this.tipoEquipeSearchRepository = tipoEquipeSearchRepository;
         this.tipoEquipeService = tipoEquipeService;
         this.userRepository = userRepository;
+        this.dynamicExportsService = dynamicExportsService;
     }
 
     /**
@@ -273,17 +285,38 @@ public class TipoEquipeResource {
 
     @PostMapping(value = "/tipoEquipe/exportacao/{tipoRelatorio}", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
     @Timed
-    public ResponseEntity<InputStreamResource> gerarRelatorioExportacao(@PathVariable String tipoRelatorio,
-            @RequestParam(defaultValue = "*") String query) throws RelatorioException {
-        ByteArrayOutputStream byteArrayOutputStream = tipoEquipeService.gerarRelatorio(query, tipoRelatorio);
+    public ResponseEntity<InputStreamResource> gerarRelatorioExportacao(@PathVariable String tipoRelatorio, @RequestBody SearchFilterDTO filtro) throws RelatorioException {
+        ByteArrayOutputStream byteArrayOutputStream = getByteArrayOutputStream(tipoRelatorio, filtro);
         return DynamicExporter.output(byteArrayOutputStream, "relatorio." + tipoRelatorio);
     }
 
-    @GetMapping(value = "/tipoEquipe/exportacao-arquivo", produces = MediaType.APPLICATION_PDF_VALUE)
+    @PostMapping(value = "/tipoEquipe/exportacao-arquivo", produces = MediaType.APPLICATION_PDF_VALUE)
     @Timed
-    public ResponseEntity<byte[]> gerarRelatorioImprimir(@RequestParam(defaultValue = "*") String query)
+    public ResponseEntity<byte[]> gerarRelatorioImprimir(@RequestBody SearchFilterDTO filtro)
             throws RelatorioException {
-        ByteArrayOutputStream byteArrayOutputStream = tipoEquipeService.gerarRelatorio(query, "pdf");
+        ByteArrayOutputStream byteArrayOutputStream = getByteArrayOutputStream("pdf", filtro);
         return new ResponseEntity<byte[]>(byteArrayOutputStream.toByteArray(), HttpStatus.OK);
+    }
+    
+    private ByteArrayOutputStream getByteArrayOutputStream(String tipoRelatorio, @RequestBody SearchFilterDTO filter)
+            throws RelatorioException {
+        ByteArrayOutputStream byteArrayOutputStream;
+        String query = "*";
+        if (filter != null && filter.getNome() != null) {
+            query = "*" + filter.getNome().toUpperCase() + "*";
+        }
+        try {
+            new NativeSearchQueryBuilder().withQuery(multiMatchQuery(query)).build();
+            Page<TipoEquipe> result = tipoEquipeSearchRepository.search(queryStringQuery(query),
+                    dynamicExportsService.obterPageableMaximoExportacao());
+
+            byteArrayOutputStream = dynamicExportsService.export(new RelatorioTipoEquipeColunas(), result,
+                    tipoRelatorio, Optional.empty(), Optional.ofNullable(AbacoUtil.REPORT_LOGO_PATH),
+                    Optional.ofNullable(AbacoUtil.getReportFooter()));
+        } catch (DRException | ClassNotFoundException | JRException | NoClassDefFoundError e) {
+            log.error(e.getMessage(), e);
+            throw new RelatorioException(e);
+        }
+        return byteArrayOutputStream;
     }
 }

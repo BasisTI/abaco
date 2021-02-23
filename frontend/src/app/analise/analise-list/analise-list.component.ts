@@ -130,6 +130,7 @@ export class AnaliseListComponent implements OnInit {
         private statusService: StatusService,
         private divergenceServie: DivergenciaService,
     ) {
+
     }
 
     public ngOnInit() {

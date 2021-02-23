@@ -39,7 +39,18 @@
                   routerLink="/organizacao/new"></app-green-button>
               </div>
         </div>
-
+        <div class="ui-g-12 ui-g-nopad">
+          <div class="ui-g-3 ui-md-offset-6">
+              <div class="text-right">Visibilidade das Colunas:</div>
+          </div>
+          <div class="ui-g-3">
+              <p-multiSelect defaultLabel="Selecione as colunas a serem exibidas"
+                  [displaySelectedLabel]="false" [ngModelOptions]="{ standalone: true }"
+                  (onChange)="mostrarColunas($event)" [options]="allColumnsTable"
+                  [(ngModel)]="columnsVisible" [style]="{ width: '100%' }">
+              </p-multiSelect>
+          </div>
+        </div>
         <basis-datatable
             type="server"
             [url]="searchUrl"
@@ -49,7 +60,7 @@
             [rows]="20"
             [rowsPerPageOptions]="rowsPerPageOptions"
             [showPaginationFooter]="true"
-            [showVisibleColumnsControl]="true"
+            [showVisibleColumnsControl]="false"
             #datatable>
           <p-column header="Sigla" field="sigla" [sortable]="true" ></p-column>
           <p-column header="Nome" field="nome" [sortable]="true"></p-column>
@@ -67,7 +78,7 @@
 
         </basis-datatable>
         <div class="ui-g-12 ui-md-2">
-            <app-export-button [dataTable]="datatable" resourceName="organizacaos" >
+            <app-export-button [dataTable]="datatable" resourceName="organizacaos" [columnsVisible]="columnsVisible" [filter]="organizacaoFiltro">
             </app-export-button>
         </div>
       </div>

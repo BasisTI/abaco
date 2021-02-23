@@ -4,7 +4,7 @@ import { ElasticQuery } from 'src/app/shared/elastic-query';
 import { Router } from '@angular/router';
 import { ConfirmationService } from 'primeng';
 import { NomenclaturaService } from '../nomenclatura.service';
-import { Nomenclatura } from '../nomenclatura.model';
+import { Nomenclatura, SearchGroup } from '../nomenclatura.model';
 
 @Component({
   selector: 'app-nomenclatura-list',
@@ -26,6 +26,8 @@ export class NomenclaturaListComponent implements OnInit {
   valueFiltroCampo: string;
 
   nomenclaturaSelecionada: Nomenclatura;
+
+  nomenclaturaFiltro:SearchGroup;
 
   constructor(
     private router: Router,
@@ -52,6 +54,7 @@ export class NomenclaturaListComponent implements OnInit {
         this.nomenclaturaSelecionada = undefined;
       });
     }
+    this.nomenclaturaFiltro = new SearchGroup();
   }
 
   public datatableClick(event: DatatableClickEvent) {
@@ -110,6 +113,7 @@ export class NomenclaturaListComponent implements OnInit {
 
   public recarregarDataTable() {
     this.datatable.refresh(this.elasticQuery.query);
+    this.nomenclaturaFiltro.nome = this.elasticQuery.query;
   }
 
   public selectNomenclatura() {

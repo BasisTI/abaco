@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { environment } from 'src/environments/environment';
 import { ExportacaoUtilService } from './export-button.service';
 import { ExportacaoUtil } from './export-button.util';
@@ -14,6 +14,10 @@ export class ExportButtonComponent {
 @Input() resourceName: string;
 
 @Input() filter: any;
+
+@Input() columnsVisible : any;
+
+@Input() dataTable : any;
 
 tiposExportacao = [
 {
@@ -35,11 +39,15 @@ this.imprimir(ExportacaoUtilService.PDF);
 
 constructor(
 private http: HttpClient,
-) { }
-
-
+) { 
+  
+}
 
 exportar(tipoRelatorio: string) {
+if(this.columnsVisible && this.filter)    {
+    this.filter.columnsVisible = this.columnsVisible;
+}
+
 ExportacaoUtilService.exportReport(tipoRelatorio, this.http, this.resourceName, null, this.filter)
 .subscribe((res: Blob) => {
 const file = new Blob([res], { type: tipoRelatorio });
@@ -49,7 +57,16 @@ ExportacaoUtil.download(url, this.resourceName + ExportacaoUtilService.getExtens
 }
 
 imprimir(tipoRelatorio: string) {
-window.open(`${environment.apiUrl}/${this.resourceName}/exportacao-arquivo`);
+    console.log(this.filter);
+    if(this.columnsVisible)    {
+        this.filter.columnsVisible = this.columnsVisible;
+    }
+    ExportacaoUtilService.imprimir(this.http, this.resourceName, null, this.filter).subscribe(res =>{
+        console.log(res);
+        var file = new Blob([res], { type: 'application/pdf' });
+        var fileURL = URL.createObjectURL(file);
+        window.open(fileURL);
+    })
 }
 
 exibirBlockUi(menssagem: string) {
