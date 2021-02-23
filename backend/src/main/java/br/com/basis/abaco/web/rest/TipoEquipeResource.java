@@ -274,14 +274,15 @@ public class TipoEquipeResource {
     @PostMapping(value = "/tipoEquipe/exportacao/{tipoRelatorio}", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
     @Timed
     public ResponseEntity<InputStreamResource> gerarRelatorioExportacao(@PathVariable String tipoRelatorio,
-                                                                        @RequestParam(defaultValue = "*") String query) throws RelatorioException {
+            @RequestParam(defaultValue = "*") String query) throws RelatorioException {
         ByteArrayOutputStream byteArrayOutputStream = tipoEquipeService.gerarRelatorio(query, tipoRelatorio);
         return DynamicExporter.output(byteArrayOutputStream, "relatorio." + tipoRelatorio);
     }
 
     @GetMapping(value = "/tipoEquipe/exportacao-arquivo", produces = MediaType.APPLICATION_PDF_VALUE)
     @Timed
-    public ResponseEntity<byte[]> gerarRelatorioImprimir(@RequestParam(defaultValue = "*") String query) throws RelatorioException {
+    public ResponseEntity<byte[]> gerarRelatorioImprimir(@RequestParam(defaultValue = "*") String query)
+            throws RelatorioException {
         ByteArrayOutputStream byteArrayOutputStream = tipoEquipeService.gerarRelatorio(query, "pdf");
         return new ResponseEntity<byte[]>(byteArrayOutputStream.toByteArray(), HttpStatus.OK);
     }
