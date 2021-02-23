@@ -69,9 +69,11 @@ public class FatorAjuste implements Serializable, Comparable<FatorAjuste> {
     @JsonBackReference
     private Manual manual;
 
+    @NotNull
     @Column(name = "descricao")
     private String descricao;
 
+    @NotNull
     @Column(name = "codigo")
     @Field (index = FieldIndex.not_analyzed, type = FieldType.String)
     private String codigo;
@@ -231,14 +233,11 @@ public class FatorAjuste implements Serializable, Comparable<FatorAjuste> {
         this.ordem = ordem;
     }
 
-    @Override
-    public int compareTo(FatorAjuste o) {
+    private Integer[] parseThisVectStringToInteger(){
 
         String[] thisVectString = this.getCodigo().split("\\.");
-        String[] otherVectString = o.getCodigo().split("\\.");
 
         Integer[] thisVect = new Integer[thisVectString.length];
-        Integer[] otherVect = new Integer[otherVectString.length];
 
         for(int i=0 ; i< thisVect.length ; i++){
             if(!Character.isLetter(thisVectString[i].charAt(0))) {
@@ -248,6 +247,15 @@ public class FatorAjuste implements Serializable, Comparable<FatorAjuste> {
                 thisVect[i] = Integer.valueOf((int) thisVectString[i].charAt(0));
             }
         }
+        return thisVect;
+    }
+
+    private Integer[] parseOtherVectStringToInteger(FatorAjuste o){
+
+        String[] otherVectString = o.getCodigo().split("\\.");
+
+        Integer[] otherVect = new Integer[otherVectString.length];
+
         for(int i=0 ; i< otherVect.length ; i++){
             if(!Character.isLetter(otherVectString[i].charAt(0))) {
                 otherVect[i] = Integer.parseInt(otherVectString[i]);
@@ -256,6 +264,48 @@ public class FatorAjuste implements Serializable, Comparable<FatorAjuste> {
                 otherVect[i] = Integer.valueOf((int) otherVectString[i].charAt(0));
             }
         }
+        return otherVect;
+    }
+
+    private int measureThis (Integer i){
+        int countThis = 0;
+        if(i == 0){
+            countThis = 10000;
+        }
+        if(i == 1){
+            countThis = 100;
+        }
+        if(i == 2){
+            countThis = 1;
+        }
+        if(i == 3){
+            countThis = 1;
+        }
+        return countThis;
+    }
+
+    private int measureOther(Integer i){
+        int countOther = 0;
+        if(i == 0){
+            countOther = 10000;
+        }
+        if(i == 1){
+            countOther = 100;
+        }
+        if(i == 2){
+            countOther = 1;
+        }
+        if(i == 3){
+            countOther = 1;
+        }
+        return countOther;
+    }
+
+    @Override
+    public int compareTo(FatorAjuste o) {
+
+        Integer thisVect[] = parseThisVectStringToInteger();
+        Integer otherVect[] = parseOtherVectStringToInteger(o);
 
         int countThis = 0;
         int countOther = 0;
@@ -264,33 +314,10 @@ public class FatorAjuste implements Serializable, Comparable<FatorAjuste> {
 
             if(otherVect.length > i){
                 if(thisVect[i].compareTo(otherVect[i]) > 0){
-                    if(i == 0){
-                        countThis = countThis+10000;
-                    }
-                    if(i == 1){
-                        countThis = countThis+100;
-                    }
-                    if(i == 2){
-                        countThis++;
-                    }
-                    if(i == 3){
-                        countThis++;
-                    }
-
+                    countThis += measureThis(i);
                 }
                 if(thisVect[i].compareTo(otherVect[i]) < 0){
-                    if(i == 0){
-                        countOther = countOther+10000;
-                    }
-                    if(i == 1){
-                        countOther = countOther+100;
-                    }
-                    if(i == 2){
-                        countOther++;
-                    }
-                    if(i == 3){
-                        countOther++;
-                    }
+                    countOther += measureOther(i);
                 }
             }
         }

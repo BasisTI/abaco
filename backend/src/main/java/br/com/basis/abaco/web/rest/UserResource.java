@@ -15,18 +15,13 @@ import br.com.basis.abaco.service.dto.UserAnaliseDTO;
 import br.com.basis.abaco.service.dto.UserDTO;
 import br.com.basis.abaco.service.dto.UserEditDTO;
 import br.com.basis.abaco.service.exception.RelatorioException;
-import br.com.basis.abaco.service.relatorio.RelatorioUserColunas;
 import br.com.basis.abaco.service.util.RandomUtil;
-import br.com.basis.abaco.utils.AbacoUtil;
 import br.com.basis.abaco.utils.PageUtils;
 import br.com.basis.abaco.web.rest.util.HeaderUtil;
 import br.com.basis.abaco.web.rest.util.PaginationUtil;
-import br.com.basis.dynamicexports.service.DynamicExportsService;
 import br.com.basis.dynamicexports.util.DynamicExporter;
 import com.codahale.metrics.annotation.Timed;
 import io.swagger.annotations.ApiParam;
-import net.sf.dynamicreports.report.exception.DRException;
-import net.sf.jasperreports.engine.JRException;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.search.sort.FieldSortBuilder;
 import org.elasticsearch.search.sort.SortOrder;
@@ -63,8 +58,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import static org.elasticsearch.index.query.QueryBuilders.*;
-
 @RestController
 @RequestMapping("/api")
 public class UserResource {
@@ -77,7 +70,6 @@ public class UserResource {
     private final UserService userService;
     private final UserSearchRepository userSearchRepository;
     private final AuthorityRepository authorityRepository;
-    private final DynamicExportsService dynamicExportsService;
     private String userexists = "userexists";
 
     public UserResource(UserRepository userRepository,
@@ -85,7 +77,6 @@ public class UserResource {
                         UserService userService,
                         UserSearchRepository userSearchRepository,
                         AuthorityRepository authorityRepository,
-                        DynamicExportsService dynamicExportsService,
                         AnaliseRepository analiseRepository) {
         this.analiseRepository = analiseRepository;
         this.userRepository = userRepository;
@@ -93,7 +84,6 @@ public class UserResource {
         this.userService = userService;
         this.userSearchRepository = userSearchRepository;
         this.authorityRepository = authorityRepository;
-        this.dynamicExportsService = dynamicExportsService;
     }
 
     @PostMapping("/users")

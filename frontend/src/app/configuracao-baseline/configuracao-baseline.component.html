@@ -1,0 +1,38 @@
+<div class="ui-g ui-fluid">
+    <div class="ui-g-12">
+        <div class="card card-w-title">
+            <h1>Configurar Job Baseline</h1>
+
+            <form name="form" (ngSubmit)="save()" #form="ngForm" *ngIf="configuracaoSistemaEquipe">
+                <div class="ui-g-12 ui-md-12 ui-sm-12 form-fields-container" >
+                    <p-pickList  [responsive]="true" [source]="configuracaoSistemaEquipe.sistemasDisponiveis" [target]="configuracaoSistemaEquipe.sistemasSelecionados" 
+                     filterBy="nome" [showSourceControls]="false" [showTargetControls]="false" sourceHeader="Sistemas" targetHeader="Sistemas selecionados">
+                        <ng-template let-sistema pTemplate="item">
+                            <div>
+                                <div>{{sistema.nome}}</div>
+                            </div>
+                        </ng-template>
+                    </p-pickList>
+                </div>
+                <div class="ui-g-12 ui-md-12 ui-sm-12 form-fields-container" *ngIf="configuracaoSistemaEquipe">
+                    <p-pickList  [responsive]="true" [source]="configuracaoSistemaEquipe.equipesDisponiveis" [target]="configuracaoSistemaEquipe.equipesSelecionados" 
+                     filterBy="nome" [showSourceControls]="false" [showTargetControls]="false" sourceHeader="Equipes" targetHeader="Equipes selecionadas">
+                        <ng-template let-equipe pTemplate="item">
+                            <div>
+                                <div>{{equipe.nome}}</div>
+                            </div>
+                        </ng-template>
+                    </p-pickList>
+                </div>
+                <div class="ui-g ui-md-12 form-buttons-container">
+                    
+                    <div class="ui-g-2 ui-md-2 ui-sm-12">
+                        <app-submit-button [buttonLabel]="'Salvar'" [isDisabled]="form.invalid"></app-submit-button>
+                    </div>
+                </div>
+
+            </form>
+
+        </div>
+    </div>
+</div>

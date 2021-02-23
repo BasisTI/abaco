@@ -430,6 +430,7 @@ export class PesquisarFtComponent implements OnInit {
                             this.validaCamposObrigatorios();
                             if (this.verificarCamposObrigatorios()) {
                                 this.blockUiService.show();
+                                funcaoTransacaoResp.sustantation = "";
                                 saveFuncaoTransacoes.push(this.funcaoTransacaoService.create(funcaoTransacaoResp, this.analise.id));
                             }
                         });
@@ -502,6 +503,7 @@ export class PesquisarFtComponent implements OnInit {
                             this.validaCamposObrigatorios();
                             if (this.verificarCamposObrigatorios()) {
                                 this.blockUiService.show();
+                                funcaoDadosResp.sustantation = "";
                                 saveFuncaoDados.push(this.funcaoDadosService.create(funcaoDadosResp, this.analise.id));
                             }
                         });

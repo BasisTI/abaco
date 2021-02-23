@@ -1,0 +1,16 @@
+:host/deep/.ui-multiselect-header .ui-multiselect-filter-container .ui-multiselect-filter-icon {
+    position: absolute;
+    top: 50% !important;
+    left: auto !important;
+}
+
+:host/deep/ .ui-multiselect-panel.ui-widget .ui-multiselect-header .ui-chkbox .ui-chkbox-box {
+    border-color: #a6a6a6 !important;
+}
+
+:host/deep/.ui-picklist-target-wrapper{
+    width: 50%!important;
+}
+:host/deep/.ui-picklist-source-wrapper{
+    width: 50%!important;
+}

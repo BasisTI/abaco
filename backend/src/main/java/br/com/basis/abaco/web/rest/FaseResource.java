@@ -3,7 +3,6 @@ package br.com.basis.abaco.web.rest;
 import java.io.ByteArrayOutputStream;
 import java.util.List;
 import java.util.Optional;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.InputStreamResource;
@@ -23,9 +22,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
 import com.codahale.metrics.annotation.Timed;
-
 import br.com.basis.abaco.domain.novo.Fase;
 import br.com.basis.abaco.service.FaseService;
 import br.com.basis.abaco.service.dto.FaseDTO;
@@ -39,31 +36,24 @@ import br.com.basis.dynamicexports.service.DynamicExportsService;
 import br.com.basis.dynamicexports.util.DynamicExporter;
 import io.github.jhipster.web.util.ResponseUtil;
 import io.swagger.annotations.ApiParam;
-import lombok.RequiredArgsConstructor;
 import net.sf.dynamicreports.report.exception.DRException;
 import net.sf.jasperreports.engine.JRException;
 
 @RestController
 @RequestMapping("/api")
-//@RequiredArgsConstructor
 public class FaseResource {
 
     private final Logger log = LoggerFactory.getLogger(FaseResource.class);
-
     private final FaseService service;
     private final DynamicExportsService dynamicExportsService;
-    
-    
-
 
     @GetMapping("/fases")
     @Timed
-    @Secured({"ROLE_ADMIN", "ROLE_USER", "ROLE_GESTOR"})
+    @Secured({ "ROLE_ADMIN", "ROLE_USER", "ROLE_GESTOR" })
     public ResponseEntity<Page<Fase>> list(@RequestParam(defaultValue = "ASC") String order,
-                                              @RequestParam(defaultValue = "0", name = "page") int pageNumber,
-                                              @RequestParam(defaultValue = "20") int size,
-                                              @RequestParam(defaultValue = "id") String sort,
-                                              @RequestParam(required = false) String nome) {
+            @RequestParam(defaultValue = "0", name = "page") int pageNumber,
+            @RequestParam(defaultValue = "20") int size, @RequestParam(defaultValue = "id") String sort,
+            @RequestParam(required = false) String nome) {
         log.debug("REST request to search Fases for query {}", nome);
         Sort.Direction sortOrder = PageUtils.getSortDirection(order);
         Pageable pageable = new PageRequest(pageNumber, size, sortOrder, sort);
@@ -73,7 +63,7 @@ public class FaseResource {
 
     @PostMapping("/fases")
     @Timed
-    @Secured({"ROLE_ADMIN", "ROLE_USER", "ROLE_GESTOR"})
+    @Secured({ "ROLE_ADMIN", "ROLE_USER", "ROLE_GESTOR" })
     public ResponseEntity<Void> save(@RequestBody Fase fase) {
         log.debug("REST request to save Fase : {}", fase);
         service.save(fase);
@@ -98,7 +88,7 @@ public class FaseResource {
 
     @DeleteMapping("/fases/{id}")
     @Timed
-    @Secured({"ROLE_ADMIN", "ROLE_USER", "ROLE_GESTOR"})
+    @Secured({ "ROLE_ADMIN", "ROLE_USER", "ROLE_GESTOR" })
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         log.debug("REST request to delete Fase : {}", id);
         service.delete(id);
@@ -115,33 +105,27 @@ public class FaseResource {
 
     @PostMapping(value = "/fases/exportacao/{tipoRelatorio}", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
     @Timed
-    public ResponseEntity<InputStreamResource> gerarRelatorioExportacao(
-        @PathVariable String tipoRelatorio,
-        @RequestBody FaseFiltroDTO filter,
-        @ApiParam Pageable pageable) throws RelatorioException {
-    	Page<FaseDTO> fasePage = service.getPage(filter, pageable);
-    	
-    	
-    	 ByteArrayOutputStream byteArrayOutputStream = null;
+    public ResponseEntity<InputStreamResource> gerarRelatorioExportacao(@PathVariable String tipoRelatorio,
+            @RequestBody FaseFiltroDTO filter, @ApiParam Pageable pageable)
+            throws RelatorioException, ClassNotFoundException, JRException, DRException {
+        Page<FaseDTO> fasePage = service.getPage(filter, pageable);
+        ByteArrayOutputStream byteArrayOutputStream = null;
         try {
-			byteArrayOutputStream = dynamicExportsService.export(new RelatorioFaseColunas(), fasePage, tipoRelatorio, Optional.empty(), Optional.ofNullable(AbacoUtil.REPORT_LOGO_PATH), Optional.ofNullable(AbacoUtil.getReportFooter()));
-		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (JRException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (DRException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-        return DynamicExporter.output(byteArrayOutputStream,
-        		"relatorio." + tipoRelatorio);
-
+            byteArrayOutputStream = dynamicExportsService.export(new RelatorioFaseColunas(), fasePage, tipoRelatorio,
+                    Optional.empty(), Optional.ofNullable(AbacoUtil.REPORT_LOGO_PATH),
+                    Optional.ofNullable(AbacoUtil.getReportFooter()));
+        } catch (ClassNotFoundException e) {
+            throw e;
+        } catch (JRException e) {
+            throw e;
+        } catch (DRException e) {
+            throw e;
+        }
+        return DynamicExporter.output(byteArrayOutputStream, "relatorio." + tipoRelatorio);
     }
 
-	public FaseResource(FaseService service, DynamicExportsService dynamicExportsService) {
-		this.service = service;
-		this.dynamicExportsService = dynamicExportsService;
-	}
+    public FaseResource(FaseService service, DynamicExportsService dynamicExportsService) {
+        this.service = service;
+        this.dynamicExportsService = dynamicExportsService;
+    }
 }

@@ -43,8 +43,8 @@
 	</title>
 	<detail>
 		<band height="47" splitType="Stretch">
-			<textField isBlankWhenNull="true">
-				<reportElement x="0" y="4" width="410" height="30" uuid="0c654737-d351-4928-b11b-35ce029a9faf"/>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="ContainerHeight" x="0" y="4" width="410" height="30" uuid="0c654737-d351-4928-b11b-35ce029a9faf"/>
 				<box>
 					<bottomPen lineWidth="0.0"/>
 				</box>

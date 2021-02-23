@@ -39,6 +39,7 @@ import { PesquisarFuncaoTransacaoModule } from './pesquisar-ft/pesquisar-ft.modu
 import { StatusModule } from './status/status.module';
 import { NomenclaturaModule } from './nomenclatura/nomenclatura.module';
 import { DivergenciaModule } from './divergencia/divergencia.module';
+import { ConfiguracaoBaselineModule } from './configuracao-baseline/configuracao-baseline.module';
 
 @NgModule({
     declarations: [
@@ -86,6 +87,7 @@ import { DivergenciaModule } from './divergencia/divergencia.module';
         StatusModule,
         NomenclaturaModule,
         DivergenciaModule,
+        ConfiguracaoBaselineModule,
     ],
     providers: [
         { provide: LocationStrategy, useClass: HashLocationStrategy },
