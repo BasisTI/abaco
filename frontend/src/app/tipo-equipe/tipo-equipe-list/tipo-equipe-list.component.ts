@@ -4,6 +4,7 @@ import { DatatableClickEvent, DatatableComponent, PageNotificationService } from
 import { ConfirmationService } from 'primeng';
 import { ElasticQuery } from 'src/app/shared/elastic-query';
 import { AdminGuard } from 'src/app/util/admin.guard';
+import { SearchGroup } from '..';
 import { TipoEquipe } from '../tipo-equipe.model';
 import { TipoEquipeService } from '../tipo-equipe.service';
 
@@ -31,6 +32,8 @@ export class TipoEquipeListComponent {
 
   valueFiltroCampo: string;
 
+  tipoEquipeFiltro: SearchGroup;
+
   constructor(
     private router: Router,
     private tipoEquipeService: TipoEquipeService,
@@ -56,6 +59,7 @@ export class TipoEquipeListComponent {
         this.equipeSelecionada = undefined;
       });
     }
+    this.tipoEquipeFiltro = new SearchGroup();
   }
 
   public datatableClick(event: DatatableClickEvent) {
@@ -114,6 +118,7 @@ export class TipoEquipeListComponent {
 
   public recarregarDataTable() {
     this.datatable.refresh(this.elasticQuery.query);
+    this.tipoEquipeFiltro.nome = this.elasticQuery.query;
   }
 
   public selectTipoEquipe() {

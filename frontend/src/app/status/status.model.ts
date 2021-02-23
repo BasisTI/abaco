@@ -9,3 +9,11 @@ export class Status implements BaseEntity {
     public divergencia?: boolean,
   ) {}
 }
+
+export class SearchGroup {
+
+  constructor(
+      public nome?: string,
+  ) {
+  }
+}

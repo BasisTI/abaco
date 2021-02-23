@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { DatatableComponent, PageNotificationService, DatatableClickEvent } from '@nuvem/primeng-components';
-import { Status } from '../status.model';
+import { SearchGroup, Status } from '../status.model';
 import { ElasticQuery } from 'src/app/shared/elastic-query';
 import { Router } from '@angular/router';
 import { StatusService } from '../status.service';
@@ -27,6 +27,8 @@ export class StatusListComponent implements OnInit {
 
   valueFiltroCampo: string;
 
+  statusFiltro : SearchGroup;
+
   constructor(
     private router: Router,
     private statusService: StatusService,
@@ -52,6 +54,7 @@ export class StatusListComponent implements OnInit {
         this.statusSelecionada = undefined;
       });
     }
+    this.statusFiltro = new SearchGroup();
   }
 
   public datatableClick(event: DatatableClickEvent) {
@@ -110,6 +113,7 @@ export class StatusListComponent implements OnInit {
 
   public recarregarDataTable() {
     this.datatable.refresh(this.elasticQuery.query);
+    this.statusFiltro.nome = this.elasticQuery.query;
   }
 
   public selectStatus() {

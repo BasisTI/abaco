@@ -43,10 +43,6 @@ public class BaselineSchedule {
         List<TipoEquipe> tipoEquipes = new ArrayList<>();
         if (configuracoes != null && !configuracoes.isEmpty()) {
             atualizaBaseLineConfiguracaoInformada(configuracoes, sistemas, tipoEquipes);
-        } else {
-            sistemas = sistemaRepository.findAll();
-            tipoEquipes = tipoEquipeRepository.findAll();
-            atualizaBaseLineSemSistemaEquipe(sistemas, tipoEquipes);
         }
     }
 
@@ -65,19 +61,6 @@ public class BaselineSchedule {
                 atualizaBaseLineSomenteSistema(tipoEquipes, configuracaoJobBaseline);
             } else {
                 atualizaBaseLineSistemaEquipe(configuracaoJobBaseline);
-            }
-        }
-    }
-
-    private void atualizaBaseLineSemSistemaEquipe(List<Sistema> sistemas, List<TipoEquipe> tipoEquipes) {
-        for (Sistema sistema : sistemas) {
-            for (TipoEquipe tipoEquipe : tipoEquipes) {
-                BaseLineSintetico baseLineSintetico = baselineSinteticoService.getBaseLineSintetico(sistema.getId(),
-                        tipoEquipe.getId());
-                if (baseLineSintetico != null) {
-                    baseLineSintetico = baselineSinteticoService.getBaseLineAnaliticoFDFT(sistema.getId(),
-                            tipoEquipe.getId(), baseLineSintetico);
-                }
             }
         }
     }

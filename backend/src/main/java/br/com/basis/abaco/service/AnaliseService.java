@@ -1,5 +1,34 @@
 package br.com.basis.abaco.service;
 
+import static org.elasticsearch.index.query.QueryBuilders.boolQuery;
+import static org.elasticsearch.index.query.QueryBuilders.nestedQuery;
+
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.sql.Timestamp;
+import java.time.Instant;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
+
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
+
+import org.elasticsearch.index.query.BoolQueryBuilder;
+import org.elasticsearch.index.query.QueryBuilders;
+import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
+import org.springframework.data.elasticsearch.core.query.SearchQuery;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.RequestBody;
+
 import br.com.basis.abaco.domain.Alr;
 import br.com.basis.abaco.domain.Analise;
 import br.com.basis.abaco.domain.Compartilhada;
@@ -33,43 +62,9 @@ import br.com.basis.abaco.security.SecurityUtils;
 import br.com.basis.abaco.service.dto.AnaliseDTO;
 import br.com.basis.abaco.service.dto.AnaliseDivergenceEditDTO;
 import br.com.basis.abaco.service.dto.AnaliseEditDTO;
-import br.com.basis.abaco.service.exception.RelatorioException;
-import br.com.basis.abaco.service.relatorio.RelatorioAnaliseColunas;
-import br.com.basis.abaco.service.relatorio.RelatorioDivergenciaColunas;
-import br.com.basis.abaco.utils.AbacoUtil;
+import br.com.basis.abaco.service.dto.filter.AnaliseFilterDTO;
 import br.com.basis.abaco.utils.StringUtils;
 import br.com.basis.dynamicexports.service.DynamicExportsService;
-import net.sf.dynamicreports.report.exception.DRException;
-import net.sf.jasperreports.engine.JRException;
-import org.elasticsearch.index.query.BoolQueryBuilder;
-import org.elasticsearch.index.query.QueryBuilders;
-import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.RequestBody;
-
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
-import java.io.ByteArrayOutputStream;
-import java.math.BigDecimal;
-import java.math.BigInteger;
-import java.sql.Timestamp;
-import java.time.Instant;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
-
-import static org.elasticsearch.index.query.QueryBuilders.boolQuery;
-import static org.elasticsearch.index.query.QueryBuilders.multiMatchQuery;
-import static org.elasticsearch.index.query.QueryBuilders.nestedQuery;
 
 @Service
 public class AnaliseService extends BaseService {
@@ -750,37 +745,50 @@ public class AnaliseService extends BaseService {
         analiseSearchRepository.delete(id);
     }
 
-    public ByteArrayOutputStream gerarRelatorio(String query, String tipoRelatorio, Pageable pageable) throws RelatorioException {
-        ByteArrayOutputStream byteArrayOutputStream;
-        try {
-            new NativeSearchQueryBuilder().withQuery(multiMatchQuery(query)).build();
-            Page<Analise> result = analiseRepository.pesquisarPorDivergencia( false, pageable );
-                dynamicExportsService.obterPageableMaximoExportacao();
-            byteArrayOutputStream = dynamicExportsService.export(new RelatorioAnaliseColunas(), result, tipoRelatorio,
-                Optional.empty(), Optional.ofNullable(AbacoUtil.REPORT_LOGO_PATH),
-                Optional.ofNullable(AbacoUtil.getReportFooter()));
-        } catch (DRException | ClassNotFoundException | JRException | NoClassDefFoundError e) {
-            throw new RelatorioException(e);
-        }
-
-        return byteArrayOutputStream;
+    
+    public SearchQuery getQueryExportRelatorio(AnaliseFilterDTO filter,  Pageable pageable) {
+        Set<Long> sistema = new HashSet<>();
+        Set<MetodoContagem> metodo = new HashSet<>();
+        Set<Long> organizacao = new HashSet<>();
+        Set<Long> usuario = new HashSet<>();
+        Set<Long> status = new HashSet<>();
+        
+        preencheFiltro(sistema,metodo,organizacao,usuario,status, filter);
+        
+        pageable = dynamicExportsService.obterPageableMaximoExportacao();
+        BoolQueryBuilder qb =  getBoolQueryBuilder(filter.getIdentificadorAnalise(), sistema, metodo, organizacao, filter.getEquipe() == null ? null : filter.getEquipe().getId(), usuario, status);
+        SearchQuery searchQuery = new NativeSearchQueryBuilder().withQuery(qb).withPageable(pageable).build();
+        return searchQuery;
     }
 
-    public ByteArrayOutputStream gerarRelatorioDivergencia(String query, String tipoRelatorio, Pageable pageable) throws RelatorioException {
-        ByteArrayOutputStream byteArrayOutputStream;
-        try {
-
-            new NativeSearchQueryBuilder().withQuery(multiMatchQuery(query)).build();
-               Page<Analise> test = analiseRepository.pesquisarPorDivergencia( true, pageable );
-                dynamicExportsService.obterPageableMaximoExportacao();
-                byteArrayOutputStream = dynamicExportsService.export(new RelatorioDivergenciaColunas(), test, tipoRelatorio,
-                Optional.empty(), Optional.ofNullable(AbacoUtil.REPORT_LOGO_PATH),
-                Optional.ofNullable(AbacoUtil.getReportFooter()));
-        } catch (DRException | ClassNotFoundException | JRException | NoClassDefFoundError e) {
-            throw new RelatorioException(e);
+    private void preencheFiltro(Set<Long> sistema, Set<MetodoContagem> metodo, Set<Long> organizacao, Set<Long> usuario,
+            Set<Long> status, AnaliseFilterDTO filter) {
+        if(filter.getSistema() != null) {
+            sistema.add(filter.getSistema().getId());
         }
+        if(filter.getMetodoContagem() != null) {
+            metodo.add(filter.getMetodoContagem());
+        }
+        if(filter.getOrganizacao() != null) {
+            organizacao.add(filter.getOrganizacao().getId());
+        }
+        if(filter.getUsuario() != null) {
+            usuario.add(filter.getUsuario().getId());
+        }
+        if(filter.getStatus() != null) {
+            status.add(filter.getStatus().getId());
+        }
+        
+    }
 
-        return byteArrayOutputStream;
+    public SearchQuery getQueryExportRelatorioDivergencia(AnaliseFilterDTO filter, Pageable pageable) {
+        Set<Long> sistema = new HashSet<>();
+        Set<Long> organizacao = new HashSet<>();
+        preencheFiltro(sistema,null,organizacao,null,null, filter);
+        
+        BoolQueryBuilder qb = getBoolQueryBuilderDivergence(filter.getIdentificadorAnalise(), sistema, organizacao);
+        SearchQuery searchQuery = new NativeSearchQueryBuilder().withQuery(qb).withPageable(pageable).build();
+        return searchQuery;
     }
 
 

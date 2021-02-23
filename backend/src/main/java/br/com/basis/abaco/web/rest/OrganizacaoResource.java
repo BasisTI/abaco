@@ -1,23 +1,18 @@
 package br.com.basis.abaco.web.rest;
 
-import br.com.basis.abaco.domain.Organizacao;
-import br.com.basis.abaco.repository.OrganizacaoRepository;
-import br.com.basis.abaco.repository.search.OrganizacaoSearchRepository;
-import br.com.basis.abaco.service.OrganizacaoService;
-import br.com.basis.abaco.service.dto.DropdownDTO;
-import br.com.basis.abaco.service.dto.OrganizacaoDropdownDTO;
-import br.com.basis.abaco.service.exception.RelatorioException;
-import br.com.basis.abaco.service.relatorio.RelatorioOrganizacaoColunas;
-import br.com.basis.abaco.utils.AbacoUtil;
-import br.com.basis.abaco.utils.PageUtils;
-import br.com.basis.abaco.web.rest.util.HeaderUtil;
-import br.com.basis.abaco.web.rest.util.PaginationUtil;
-import br.com.basis.dynamicexports.service.DynamicExportsService;
-import br.com.basis.dynamicexports.util.DynamicExporter;
-import com.codahale.metrics.annotation.Timed;
-import io.github.jhipster.web.util.ResponseUtil;
-import net.sf.dynamicreports.report.exception.DRException;
-import net.sf.jasperreports.engine.JRException;
+import static org.elasticsearch.index.query.QueryBuilders.multiMatchQuery;
+import static org.elasticsearch.index.query.QueryBuilders.queryStringQuery;
+
+import java.io.ByteArrayOutputStream;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.List;
+import java.util.Optional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import javax.validation.Valid;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.InputStreamResource;
@@ -41,17 +36,26 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.validation.Valid;
-import java.io.ByteArrayOutputStream;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.List;
-import java.util.Optional;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import com.codahale.metrics.annotation.Timed;
 
-import static org.elasticsearch.index.query.QueryBuilders.multiMatchQuery;
-import static org.elasticsearch.index.query.QueryBuilders.queryStringQuery;
+import br.com.basis.abaco.domain.Organizacao;
+import br.com.basis.abaco.repository.OrganizacaoRepository;
+import br.com.basis.abaco.repository.search.OrganizacaoSearchRepository;
+import br.com.basis.abaco.service.OrganizacaoService;
+import br.com.basis.abaco.service.dto.DropdownDTO;
+import br.com.basis.abaco.service.dto.OrganizacaoDropdownDTO;
+import br.com.basis.abaco.service.dto.filter.SearchFilterDTO;
+import br.com.basis.abaco.service.exception.RelatorioException;
+import br.com.basis.abaco.service.relatorio.RelatorioOrganizacaoColunas;
+import br.com.basis.abaco.utils.AbacoUtil;
+import br.com.basis.abaco.utils.PageUtils;
+import br.com.basis.abaco.web.rest.util.HeaderUtil;
+import br.com.basis.abaco.web.rest.util.PaginationUtil;
+import br.com.basis.dynamicexports.service.DynamicExportsService;
+import br.com.basis.dynamicexports.util.DynamicExporter;
+import io.github.jhipster.web.util.ResponseUtil;
+import net.sf.dynamicreports.report.exception.DRException;
+import net.sf.jasperreports.engine.JRException;
 
 /**
  * REST controller for managing Organizacao.
@@ -285,24 +289,6 @@ public class OrganizacaoResource {
     return this.organizacaoRepository.findByAtivoTrue();
   }
 
-  @GetMapping(value = "/organizacao/exportacao/{tipoRelatorio}", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
-  @Timed
-  public ResponseEntity<InputStreamResource> gerarRelatorioExportacao(@PathVariable String tipoRelatorio,
-      @RequestParam(defaultValue = "*") String query) throws RelatorioException {
-    ByteArrayOutputStream byteArrayOutputStream;
-    try {
-      new NativeSearchQueryBuilder().withQuery(multiMatchQuery(query)).build();
-      Page<Organizacao> result = organizacaoSearchRepository.search(queryStringQuery(query),
-          dynamicExportsService.obterPageableMaximoExportacao());
-
-      byteArrayOutputStream = dynamicExportsService.export(new RelatorioOrganizacaoColunas(), result, tipoRelatorio, Optional.empty(), Optional.ofNullable(AbacoUtil.REPORT_LOGO_PATH), Optional.ofNullable(AbacoUtil.getReportFooter()));
-    } catch (DRException | ClassNotFoundException | JRException | NoClassDefFoundError e) {
-      log.error(e.getMessage(), e);
-      throw new RelatorioException(e);
-    }
-    return DynamicExporter.output(byteArrayOutputStream, "relatorio." + tipoRelatorio);
-  }
-
     @GetMapping("/organizacaos/active-user")
     @Timed
     public List<DropdownDTO> findActiveUserOrganizations() {
@@ -312,15 +298,38 @@ public class OrganizacaoResource {
 
     @PostMapping(value = "/organizacaos/exportacao/{tipoRelatorio}", produces = MediaType.APPLICATION_PDF_VALUE)
     @Timed
-    public ResponseEntity<InputStreamResource> gerarRelatorio(@PathVariable String tipoRelatorio, @RequestParam(defaultValue = "*") String query) throws RelatorioException {
-        ByteArrayOutputStream byteArrayOutputStream = organizacaoService.gerarRelatorio(query, tipoRelatorio);
+    public ResponseEntity<InputStreamResource> gerarRelatorio(@PathVariable String tipoRelatorio, @RequestBody SearchFilterDTO filter) throws RelatorioException {
+        ByteArrayOutputStream byteArrayOutputStream = getByteArrayOutputStream("pdf", filter);
         return DynamicExporter.output(byteArrayOutputStream, "relatorio");
     }
 
-    @GetMapping(value = "/organizacaos/exportacao-arquivo", produces = MediaType.APPLICATION_PDF_VALUE)
+    private ByteArrayOutputStream getByteArrayOutputStream(String tipoRelatorio, SearchFilterDTO filter)
+            throws RelatorioException {
+        ByteArrayOutputStream byteArrayOutputStream;
+        String query = "*";
+        if (filter != null && filter.getNome() != null) {
+            query = "*" + filter.getNome().toUpperCase() + "*";
+        }
+        try {
+            new NativeSearchQueryBuilder().withQuery(multiMatchQuery(query)).build();
+            Page<Organizacao> result = organizacaoSearchRepository.search(queryStringQuery(query),
+                    dynamicExportsService.obterPageableMaximoExportacao());
+
+            byteArrayOutputStream = dynamicExportsService.export(new RelatorioOrganizacaoColunas(filter.getColumnsVisible()), result,
+                    tipoRelatorio, Optional.empty(), Optional.ofNullable(AbacoUtil.REPORT_LOGO_PATH),
+                    Optional.ofNullable(AbacoUtil.getReportFooter()));
+        } catch (DRException | ClassNotFoundException | JRException | NoClassDefFoundError e) {
+            log.error(e.getMessage(), e);
+            throw new RelatorioException(e);
+        }
+        return byteArrayOutputStream;
+    }
+
+    @PostMapping(value = "/organizacaos/exportacao-arquivo", produces = MediaType.APPLICATION_PDF_VALUE)
     @Timed
-    public ResponseEntity<byte[]> gerarRelatorioImprimir(@RequestParam(defaultValue = "*") String query) throws RelatorioException {
-        ByteArrayOutputStream byteArrayOutputStream = organizacaoService.gerarRelatorio(query, "pdf");
+    public ResponseEntity<byte[]> gerarRelatorioImprimir(@RequestBody SearchFilterDTO filter)
+            throws RelatorioException {
+        ByteArrayOutputStream byteArrayOutputStream = getByteArrayOutputStream("pdf", filter);
         return new ResponseEntity<byte[]>(byteArrayOutputStream.toByteArray(), HttpStatus.OK);
     }
 }

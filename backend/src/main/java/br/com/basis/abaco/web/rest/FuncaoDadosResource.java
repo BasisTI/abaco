@@ -1,25 +1,18 @@
 package br.com.basis.abaco.web.rest;
 
-import br.com.basis.abaco.domain.Analise;
-import br.com.basis.abaco.domain.Der;
-import br.com.basis.abaco.domain.FuncaoDados;
-import br.com.basis.abaco.domain.Rlr;
-import br.com.basis.abaco.domain.enumeration.StatusFuncao;
-import br.com.basis.abaco.domain.enumeration.TipoFatorAjuste;
-import br.com.basis.abaco.repository.AnaliseRepository;
-import br.com.basis.abaco.repository.FuncaoDadosRepository;
-import br.com.basis.abaco.repository.search.FuncaoDadosSearchRepository;
-import br.com.basis.abaco.security.AuthoritiesConstants;
-import br.com.basis.abaco.service.FuncaoDadosService;
-import br.com.basis.abaco.service.dto.DropdownDTO;
-import br.com.basis.abaco.service.dto.FuncaoDadoAnaliseDTO;
-import br.com.basis.abaco.service.dto.FuncaoDadoApiDTO;
-import br.com.basis.abaco.service.dto.FuncaoDadosEditDTO;
-import br.com.basis.abaco.service.dto.FuncaoDadosSaveDTO;
-import br.com.basis.abaco.web.rest.util.HeaderUtil;
-import com.codahale.metrics.annotation.Timed;
-import io.github.jhipster.web.util.ResponseUtil;
+import static org.elasticsearch.index.query.QueryBuilders.queryStringQuery;
+
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
+
 import org.modelmapper.ModelMapper;
+import org.modelmapper.PropertyMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -34,16 +27,29 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
+import com.codahale.metrics.annotation.Timed;
 
-import static org.elasticsearch.index.query.QueryBuilders.queryStringQuery;
+import br.com.basis.abaco.domain.Analise;
+import br.com.basis.abaco.domain.Der;
+import br.com.basis.abaco.domain.FuncaoDados;
+import br.com.basis.abaco.domain.Rlr;
+import br.com.basis.abaco.domain.enumeration.StatusFuncao;
+import br.com.basis.abaco.domain.enumeration.TipoFatorAjuste;
+import br.com.basis.abaco.repository.AnaliseRepository;
+import br.com.basis.abaco.repository.FuncaoDadosRepository;
+import br.com.basis.abaco.repository.search.FuncaoDadosSearchRepository;
+import br.com.basis.abaco.security.AuthoritiesConstants;
+import br.com.basis.abaco.service.FuncaoDadosService;
+import br.com.basis.abaco.service.dto.DerDTO;
+import br.com.basis.abaco.service.dto.DerFdDTO;
+import br.com.basis.abaco.service.dto.DropdownDTO;
+import br.com.basis.abaco.service.dto.FuncaoDadoAnaliseDTO;
+import br.com.basis.abaco.service.dto.FuncaoDadoApiDTO;
+import br.com.basis.abaco.service.dto.FuncaoDadosEditDTO;
+import br.com.basis.abaco.service.dto.FuncaoDadosSaveDTO;
+import br.com.basis.abaco.service.dto.RlrDTO;
+import br.com.basis.abaco.web.rest.util.HeaderUtil;
+import io.github.jhipster.web.util.ResponseUtil;
 
 /**
  * REST controller for managing FuncaoDados.
@@ -110,12 +116,29 @@ public class FuncaoDadosResource {
     @PutMapping("/funcao-dados/{id}")
     @Timed
     @Secured({AuthoritiesConstants.ADMIN, AuthoritiesConstants.USER, AuthoritiesConstants.GESTOR, AuthoritiesConstants.ANALISTA})
-    public ResponseEntity<FuncaoDadosEditDTO> updateFuncaoDados(@PathVariable Long id, @RequestBody FuncaoDadosSaveDTO funcaoDadosSaveDTO) throws URISyntaxException {
+    public ResponseEntity<FuncaoDadosEditDTO> updateFuncaoDados(@PathVariable Long id, @RequestBody FuncaoDadoApiDTO funcaoDadosSaveDTO) throws URISyntaxException {
         log.debug("REST request to update FuncaoDados : {}", funcaoDadosSaveDTO);
         FuncaoDados funcaoDadosOld = funcaoDadosRepository.findById(id);
-        FuncaoDados funcaoDados = convertToEntity(funcaoDadosSaveDTO);
+        ModelMapper modelMapper = new ModelMapper();
+        modelMapper.addMappings(new PropertyMap<Rlr, Rlr>() {
+
+            @Override
+            protected void configure() {
+                skip(destination.getFuncaoDados());
+            }
+        });
+        modelMapper.addMappings(new PropertyMap<DerFdDTO, Der>() {
+
+            @Override
+            protected void configure() {
+                skip(destination.getFuncaoDados());
+            }
+        });
+        
+        FuncaoDados funcaoDados = modelMapper.map(funcaoDadosSaveDTO, FuncaoDados.class);
+//        FuncaoDados funcaoDados = convertToEntity(funcaoDadosSaveDTO);
         if (funcaoDados.getId() == null) {
-            return createFuncaoDados(funcaoDados.getAnalise().getId(), funcaoDadosSaveDTO);
+//            return createFuncaoDados(funcaoDados.getAnalise().getId(), funcaoDadosSaveDTO);
         }
         Analise analise = analiseRepository.findOne(funcaoDadosOld.getAnalise().getId());
         funcaoDados.setAnalise(analise);
@@ -330,12 +353,40 @@ public class FuncaoDadosResource {
 
     private FuncaoDadosEditDTO convertFuncaoDadoAEditDTO(FuncaoDados funcaoDados) {
         ModelMapper modelMapper = new ModelMapper();
+        modelMapper.addMappings(new PropertyMap<Rlr,RlrDTO >() {
+
+            @Override
+            protected void configure() {
+                skip(destination.getFuncaoDados());
+            }
+        });
+        modelMapper.addMappings(new PropertyMap<Der, DerDTO>() {
+
+            @Override
+            protected void configure() {
+                skip(destination.getFuncaoDados());
+            }
+        });
         return modelMapper.map(funcaoDados, FuncaoDadosEditDTO.class);
     }
 
 
     private FuncaoDados convertToEntity(FuncaoDadosSaveDTO funcaoDadosSaveDTO){
         ModelMapper modelMapper = new ModelMapper();
+        modelMapper.addMappings(new PropertyMap<RlrDTO, Rlr>() {
+
+            @Override
+            protected void configure() {
+                skip(destination.getFuncaoDados());
+            }
+        });
+        modelMapper.addMappings(new PropertyMap<DerDTO, Der>() {
+
+            @Override
+            protected void configure() {
+                skip(destination.getFuncaoDados());
+            }
+        });
         return modelMapper.map(funcaoDadosSaveDTO, FuncaoDados.class);
     }
 

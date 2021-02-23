@@ -60,3 +60,16 @@ export class User implements BaseEntity {
   }
 
 }
+
+export class SearchGroup{
+  constructor(
+    public nome?: string,
+    public login?: string,
+    public email?: string,
+    public organizacao?:any[],
+    public perfil?:any[],
+    public tipoEquipe?:any[],
+    public columnsVisible?: any,
+) {
+}
+}

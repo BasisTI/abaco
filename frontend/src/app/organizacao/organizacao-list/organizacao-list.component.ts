@@ -4,7 +4,7 @@ import { ConfirmationService } from 'primeng';
 
 import { DomSanitizer } from '@angular/platform-browser';
 import { DatatableComponent, PageNotificationService, DatatableClickEvent } from '@nuvem/primeng-components';
-import { Organizacao } from '../organizacao.model';
+import { Organizacao, SearchGroup } from '../organizacao.model';
 import { ElasticQuery } from 'src/app/shared/elastic-query';
 import { OrganizacaoService } from '../organizacao.service';
 
@@ -28,6 +28,24 @@ export class OrganizacaoListComponent implements OnInit {
 
   rowsPerPageOptions: number[] = [5, 10, 20];
 
+  organizacaoFiltro : SearchGroup;
+
+  allColumnsTable = [
+    {value: 'sigla',  label: 'Sigla'},
+    {value: 'nome',  label: 'Nome'},
+    {value: 'cnpj',  label: 'CNPJ'},
+    {value: 'numeroOcorrencia',  label: 'Número da Ocorrência'},
+    {value: 'ativo',  label: 'Ativo'},
+];
+
+columnsVisible = [
+        'sigla',
+        'nome',
+        'cnpj',
+        'numeroOcorrencia',
+        'ativo'];
+  private lastColumn: any[] = [];
+
   constructor(
     public _DomSanitizer: DomSanitizer,
     private router: Router,
@@ -49,6 +67,7 @@ export class OrganizacaoListComponent implements OnInit {
         this.organizacaoSelecionada = undefined;
       });
     }
+    this.organizacaoFiltro = new SearchGroup();
   }
 
   onClick(event: DatatableClickEvent) {
@@ -113,6 +132,7 @@ export class OrganizacaoListComponent implements OnInit {
       this.elasticQuery.value = this.elasticQuery.value.replace("-", "");
     }
     this.datatable.refresh(this.elasticQuery.query);
+    this.organizacaoFiltro.nome = this.elasticQuery.value;
   }
   public selectOrganizacao() {
     if (this.datatable && this.datatable.selectedRow) {
@@ -121,4 +141,30 @@ export class OrganizacaoListComponent implements OnInit {
           }
       }
   }
+
+  mostrarColunas(event) {
+    if (this.columnsVisible.length) {
+        this.lastColumn = event.value;
+        this.updateVisibleColumns(this.columnsVisible);
+    } else {
+        this.lastColumn.map((item) => this.columnsVisible.push(item));
+        this.pageNotificationService.addErrorMessage('Não é possível exibir menos de uma coluna');
+    }
+}
+
+updateVisibleColumns(columns) {
+    this.allColumnsTable.forEach(col => {
+        if (this.visibleColumnCheck(col.value, columns)) {
+            this.datatable.visibleColumns[col.value] = 'table-cell';
+        } else {
+            this.datatable.visibleColumns[col.value] = 'none';
+        }
+    });
+}
+
+visibleColumnCheck(column: string, visibleColumns: any[]) {
+    return visibleColumns.some((item: any) => {
+        return (item) ? item === column : true;
+    });
+}
 }
