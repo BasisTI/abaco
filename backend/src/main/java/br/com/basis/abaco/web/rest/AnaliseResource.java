@@ -433,7 +433,7 @@ public class AnaliseResource {
         try {
             new NativeSearchQueryBuilder().withQuery(multiMatchQuery(query)).build();
             Page<Analise> result = analiseSearchRepository.findAll(dynamicExportsService.obterPageableMaximoExportacao());
-             byteArrayOutputStream = dynamicExportsService.export( new RelatorioAnaliseColunas(), result, "pdf", Optional.empty(),
+             byteArrayOutputStream = dynamicExportsService.export( new RelatorioAnaliseColunas(null), result, "pdf", Optional.empty(),
                  Optional.ofNullable(AbacoUtil.REPORT_LOGO_PATH),
                  Optional.ofNullable(AbacoUtil.getReportFooter()));
         }catch ( DRException | ClassNotFoundException | JRException | NoClassDefFoundError e ){
@@ -445,10 +445,9 @@ public class AnaliseResource {
     @PostMapping(value = "/analise/exportacao/{tipoRelatorio}", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
     @Timed
     public ResponseEntity<InputStreamResource> gerarRelatorioExportacao(@PathVariable String tipoRelatorio,
-            @RequestBody AnaliseFilterDTO filter, @ApiParam Pageable pageable) throws RelatorioException {
+            @RequestBody AnaliseFilterDTO filter) throws RelatorioException {
         ByteArrayOutputStream byteArrayOutputStream;
         try {
-            pageable = dynamicExportsService.obterPageableMaximoExportacao();
             Page<Analise> page = elasticsearchTemplate.queryForPage(analiseService.getQueryExportRelatorio(filter, dynamicExportsService.obterPageableMaximoExportacao()), Analise.class);
             byteArrayOutputStream = dynamicExportsService.export(new RelatorioAnaliseColunas(filter.getColumnsVisible()), page, tipoRelatorio, Optional.empty(), Optional.ofNullable(AbacoUtil.REPORT_LOGO_PATH), Optional.ofNullable(AbacoUtil.getReportFooter()));
         } catch (DRException | ClassNotFoundException | JRException | NoClassDefFoundError e) {
@@ -462,14 +461,12 @@ public class AnaliseResource {
 
     @PostMapping(value = "/analise/exportacao-arquivo", produces = MediaType.APPLICATION_PDF_VALUE)
     @Timed
-    public ResponseEntity<byte[]> gerarRelatorioAnaliseImprimir(@RequestBody AnaliseFilterDTO filter, @ApiParam Pageable pageable) throws RelatorioException {
+    public ResponseEntity<byte[]> gerarRelatorioAnaliseImprimir(@RequestBody AnaliseFilterDTO filter) throws RelatorioException {
         ByteArrayOutputStream byteArrayOutputStream;
         try {
-            pageable = dynamicExportsService.obterPageableMaximoExportacao();
             Page<Analise> page = elasticsearchTemplate.queryForPage(analiseService.getQueryExportRelatorio(filter, dynamicExportsService.obterPageableMaximoExportacao()), Analise.class);
             byteArrayOutputStream = dynamicExportsService.export(new RelatorioAnaliseColunas(filter.getColumnsVisible()), page, "pdf", Optional.empty(), Optional.ofNullable(AbacoUtil.REPORT_LOGO_PATH), Optional.ofNullable(AbacoUtil.getReportFooter()));
         } catch (DRException | ClassNotFoundException | JRException | NoClassDefFoundError e) {
-            log.error(e.getMessage(), e);
             throw new RelatorioException(e);
         }
         return new ResponseEntity<byte[]>(byteArrayOutputStream.toByteArray(), HttpStatus.OK);
@@ -503,7 +500,6 @@ public class AnaliseResource {
                     Optional.empty(), Optional.ofNullable(AbacoUtil.REPORT_LOGO_PATH),
                     Optional.ofNullable(AbacoUtil.getReportFooter()));
         } catch (DRException | ClassNotFoundException | JRException | NoClassDefFoundError e) {
-            log.error(e.getMessage(), e);
             throw new RelatorioException(e);
         }
         return byteArrayOutputStream;

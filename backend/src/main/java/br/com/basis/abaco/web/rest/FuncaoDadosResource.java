@@ -12,7 +12,6 @@ import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 import org.modelmapper.ModelMapper;
-import org.modelmapper.PropertyMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -40,14 +39,11 @@ import br.com.basis.abaco.repository.FuncaoDadosRepository;
 import br.com.basis.abaco.repository.search.FuncaoDadosSearchRepository;
 import br.com.basis.abaco.security.AuthoritiesConstants;
 import br.com.basis.abaco.service.FuncaoDadosService;
-import br.com.basis.abaco.service.dto.DerDTO;
-import br.com.basis.abaco.service.dto.DerFdDTO;
 import br.com.basis.abaco.service.dto.DropdownDTO;
 import br.com.basis.abaco.service.dto.FuncaoDadoAnaliseDTO;
 import br.com.basis.abaco.service.dto.FuncaoDadoApiDTO;
 import br.com.basis.abaco.service.dto.FuncaoDadosEditDTO;
 import br.com.basis.abaco.service.dto.FuncaoDadosSaveDTO;
-import br.com.basis.abaco.service.dto.RlrDTO;
 import br.com.basis.abaco.web.rest.util.HeaderUtil;
 import io.github.jhipster.web.util.ResponseUtil;
 
@@ -116,29 +112,12 @@ public class FuncaoDadosResource {
     @PutMapping("/funcao-dados/{id}")
     @Timed
     @Secured({AuthoritiesConstants.ADMIN, AuthoritiesConstants.USER, AuthoritiesConstants.GESTOR, AuthoritiesConstants.ANALISTA})
-    public ResponseEntity<FuncaoDadosEditDTO> updateFuncaoDados(@PathVariable Long id, @RequestBody FuncaoDadoApiDTO funcaoDadosSaveDTO) throws URISyntaxException {
+    public ResponseEntity<FuncaoDadosEditDTO> updateFuncaoDados(@PathVariable Long id, @RequestBody FuncaoDadosSaveDTO funcaoDadosSaveDTO) throws URISyntaxException {
         log.debug("REST request to update FuncaoDados : {}", funcaoDadosSaveDTO);
         FuncaoDados funcaoDadosOld = funcaoDadosRepository.findById(id);
-        ModelMapper modelMapper = new ModelMapper();
-        modelMapper.addMappings(new PropertyMap<Rlr, Rlr>() {
-
-            @Override
-            protected void configure() {
-                skip(destination.getFuncaoDados());
-            }
-        });
-        modelMapper.addMappings(new PropertyMap<DerFdDTO, Der>() {
-
-            @Override
-            protected void configure() {
-                skip(destination.getFuncaoDados());
-            }
-        });
-        
-        FuncaoDados funcaoDados = modelMapper.map(funcaoDadosSaveDTO, FuncaoDados.class);
-//        FuncaoDados funcaoDados = convertToEntity(funcaoDadosSaveDTO);
+        FuncaoDados funcaoDados = convertToEntity(funcaoDadosSaveDTO);
         if (funcaoDados.getId() == null) {
-//            return createFuncaoDados(funcaoDados.getAnalise().getId(), funcaoDadosSaveDTO);
+            return createFuncaoDados(funcaoDados.getAnalise().getId(), funcaoDadosSaveDTO);
         }
         Analise analise = analiseRepository.findOne(funcaoDadosOld.getAnalise().getId());
         funcaoDados.setAnalise(analise);
@@ -353,40 +332,12 @@ public class FuncaoDadosResource {
 
     private FuncaoDadosEditDTO convertFuncaoDadoAEditDTO(FuncaoDados funcaoDados) {
         ModelMapper modelMapper = new ModelMapper();
-        modelMapper.addMappings(new PropertyMap<Rlr,RlrDTO >() {
-
-            @Override
-            protected void configure() {
-                skip(destination.getFuncaoDados());
-            }
-        });
-        modelMapper.addMappings(new PropertyMap<Der, DerDTO>() {
-
-            @Override
-            protected void configure() {
-                skip(destination.getFuncaoDados());
-            }
-        });
         return modelMapper.map(funcaoDados, FuncaoDadosEditDTO.class);
     }
 
 
     private FuncaoDados convertToEntity(FuncaoDadosSaveDTO funcaoDadosSaveDTO){
         ModelMapper modelMapper = new ModelMapper();
-        modelMapper.addMappings(new PropertyMap<RlrDTO, Rlr>() {
-
-            @Override
-            protected void configure() {
-                skip(destination.getFuncaoDados());
-            }
-        });
-        modelMapper.addMappings(new PropertyMap<DerDTO, Der>() {
-
-            @Override
-            protected void configure() {
-                skip(destination.getFuncaoDados());
-            }
-        });
         return modelMapper.map(funcaoDadosSaveDTO, FuncaoDados.class);
     }
 

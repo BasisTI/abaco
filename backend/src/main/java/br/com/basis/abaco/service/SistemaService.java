@@ -8,7 +8,6 @@ import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -72,7 +71,7 @@ public class SistemaService extends BaseService {
     }
 
 
-    public ByteArrayOutputStream gerarRelatorio(SistemaFilterDTO filtro, String tipoRelatorio, Pageable pageable) throws RelatorioException {
+    public ByteArrayOutputStream gerarRelatorio(SistemaFilterDTO filtro, String tipoRelatorio) throws RelatorioException {
         ByteArrayOutputStream byteArrayOutputStream;
         try {
             Page<Sistema> result = sistemaRepository.consultarSistemaPorFiltro(filtro.getNome(), filtro.getSigla(), filtro.getNumeroOcorrencia(), filtro.getOrganizacao() == null ? null : filtro.getOrganizacao().get(0), dynamicExportsService.obterPageableMaximoExportacao());

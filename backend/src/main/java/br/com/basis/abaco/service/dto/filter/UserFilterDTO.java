@@ -12,8 +12,8 @@ public class UserFilterDTO {
     private String nome;
     private String login;
     private String email;
-    private Long[] organizacao;
-    private String[] perfil;
-    private Long[] equipe;
+    private List<Long> organizacao;
+    private List<String> perfil;
+    private List<Long> equipe;
     private List<String> columnsVisible; 
 }

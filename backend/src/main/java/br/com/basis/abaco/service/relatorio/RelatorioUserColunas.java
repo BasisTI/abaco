@@ -28,8 +28,9 @@ public class RelatorioUserColunas extends PropriedadesRelatorio {
         if(colunasVisiveis.contains("equipe")) {
             super.getColunas().add(new ColunasPropriedadeRelatorio("equipes", "Equipe", String.class, 10, DynamicExportsConstants.MASCARA_NULL, DynamicExportsConstants.ALINHAR_ESQUERDA));
         }
-        if(colunasVisiveis.contains("activated"))
-        super.getColunas().add(new ColunasPropriedadeRelatorio("isActivated", "Ativo?", String.class, 10, DynamicExportsConstants.MASCARA_NULL, DynamicExportsConstants.ALINHAR_ESQUERDA));
+        if(colunasVisiveis.contains("activated")) {
+            super.getColunas().add(new ColunasPropriedadeRelatorio("isActivated", "Ativo?", String.class, 10, DynamicExportsConstants.MASCARA_NULL, DynamicExportsConstants.ALINHAR_ESQUERDA));
+        }
 
     }
 }

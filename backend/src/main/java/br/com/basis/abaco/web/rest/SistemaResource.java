@@ -60,7 +60,6 @@ import br.com.basis.abaco.web.rest.util.HeaderUtil;
 import br.com.basis.abaco.web.rest.util.PaginationUtil;
 import br.com.basis.dynamicexports.util.DynamicExporter;
 import io.github.jhipster.web.util.ResponseUtil;
-import io.swagger.annotations.ApiParam;
 
 @RestController
 @RequestMapping("/api")
@@ -239,16 +238,16 @@ public class SistemaResource {
 
     @PostMapping(value = "/sistema/exportacao/{tipoRelatorio}", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
     @Timed
-    public ResponseEntity<InputStreamResource> gerarRelatorioExportacao(@PathVariable String tipoRelatorio, @RequestBody SistemaFilterDTO filtro, @ApiParam Pageable pageable) throws RelatorioException {
-        ByteArrayOutputStream byteArrayOutputStream = sistemaService.gerarRelatorio(filtro, tipoRelatorio, pageable);
+    public ResponseEntity<InputStreamResource> gerarRelatorioExportacao(@PathVariable String tipoRelatorio, @RequestBody SistemaFilterDTO filtro) throws RelatorioException {
+        ByteArrayOutputStream byteArrayOutputStream = sistemaService.gerarRelatorio(filtro, tipoRelatorio);
         return DynamicExporter.output(byteArrayOutputStream,
             "relatorio." + tipoRelatorio);
     }
 
     @PostMapping(value = "/sistema/exportacao-arquivo", produces = MediaType.APPLICATION_PDF_VALUE)
     @Timed
-    public ResponseEntity<byte[]> gerarRelatorioImprimir(@RequestBody SistemaFilterDTO filtro, @ApiParam Pageable pageable) throws RelatorioException {
-        ByteArrayOutputStream byteArrayOutputStream = sistemaService.gerarRelatorio(filtro, "pdf", pageable);
+    public ResponseEntity<byte[]> gerarRelatorioImprimir(@RequestBody SistemaFilterDTO filtro) throws RelatorioException {
+        ByteArrayOutputStream byteArrayOutputStream = sistemaService.gerarRelatorio(filtro, "pdf");
         return new ResponseEntity<byte[]>(byteArrayOutputStream.toByteArray(), HttpStatus.OK);
     }
 }

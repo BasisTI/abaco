@@ -412,7 +412,7 @@ public class UserService extends BaseService {
     public ByteArrayOutputStream gerarRelatorio(UserFilterDTO filtro, String tipoRelatorio) throws RelatorioException {
         ByteArrayOutputStream byteArrayOutputStream;
         try {
-            BoolQueryBuilder qb = bindFilterSearch(filtro.getNome(), filtro.getLogin(), filtro.getEmail(), filtro.getOrganizacao(), filtro.getPerfil(), filtro.getEquipe());
+            BoolQueryBuilder qb = bindFilterSearch(filtro.getNome(), filtro.getLogin(), filtro.getEmail(), filtro.getOrganizacao() == null ? null : filtro.getOrganizacao().stream().toArray(Long[]::new), filtro.getPerfil()== null ? null : filtro.getPerfil().stream().toArray(String[]::new), filtro.getEquipe()== null ? null : filtro.getEquipe().stream().toArray(Long[]::new));
             SearchQuery searchQuery = new NativeSearchQueryBuilder().withQuery(qb).withPageable(dynamicExportsService.obterPageableMaximoExportacao()).build();
             Page<User> page = userSearchRepository.search(searchQuery);
             byteArrayOutputStream = dynamicExportsService.export(new RelatorioUserColunas(filtro.getColumnsVisible()), page, tipoRelatorio,
