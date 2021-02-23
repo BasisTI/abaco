@@ -137,7 +137,6 @@ public class FaseResource {
                     Optional.empty(), Optional.ofNullable(AbacoUtil.REPORT_LOGO_PATH),
                     Optional.ofNullable(AbacoUtil.getReportFooter()));
         } catch (DRException | ClassNotFoundException | JRException | NoClassDefFoundError e) {
-            log.error(e.getMessage(), e);
             throw new RelatorioException(e);
         }
         return new ResponseEntity<byte[]>(byteArrayOutputStream.toByteArray(), HttpStatus.OK);

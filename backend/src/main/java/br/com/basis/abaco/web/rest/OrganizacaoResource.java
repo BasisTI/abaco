@@ -307,7 +307,7 @@ public class OrganizacaoResource {
             throws RelatorioException {
         ByteArrayOutputStream byteArrayOutputStream;
         String query = "*";
-        if (filter != null && filter.getNome() != null) {
+        if (filter.getNome() != null) {
             query = "*" + filter.getNome().toUpperCase() + "*";
         }
         try {
