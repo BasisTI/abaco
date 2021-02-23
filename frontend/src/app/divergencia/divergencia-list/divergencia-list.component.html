@@ -177,7 +177,15 @@
                             [disabled]="!selectedDivergence"
                             (click)="confirmBlockDivegence(selectedDivergence)"
                             class="ui-button-danger">
-                        </basis-datatable-button>                       
+                        </basis-datatable-button>        
+                        <basis-datatable-button
+                            name="generateDivergence"
+                            [bTooltip]="selectedDivergence != null ? 'Alterar' : 'Escolha um registro para alterar status.'"
+                            icon="swap-vert"
+                            [disabled]="!selectedDivergence"
+                            (click)="changeStatus(selectedDivergence)"
+                            class="ui-button-info">
+                        </basis-datatable-button>               
                     </div>
                     <div class="ui-g-12 ui-md-2">
                         <app-export-button [dataTable]="datatable" resourceName="divergencia">
@@ -214,6 +222,26 @@
                             </div>
                             <app-green-button *ngIf="blocked" buttonLabel="Desbloquear" (click)="divergenceBlock()" style="float:right; margin-top: 5px"></app-green-button>
                             <app-red-button   *ngIf="!blocked"  buttonLabel="Bloquear" (click)="divergenceBlock()" style="float:right; margin-top: 5px"></app-red-button>
+                        </div>
+                    </p-dialog>
+                     <!-- Dialog Alterar status validação-->
+                     <p-dialog header="Alterar status ?" [(visible)]="showDialogDivergenceStatus" [style]="{width: '40vw', minHeight: '200px'}" [modal]="true" >
+                        <div style="min-height:200px">
+                            <div class="ui-g" >
+                                <div class="ui-g-12 ui-md-12 ui-sm-12">
+                                    <p-dropdown
+                                            [style]="{'width':'100%'}"
+                                            [filter]="true"
+                                            dataKey=id
+                                            optionLabel="nome"
+                                            [options]="lstStatusActive"
+                                            id="idStatusAnalise"
+                                            [(ngModel)]="statusToChange"
+                                            placeholder="Selecione um Status">
+                                    </p-dropdown>
+                                </div>
+                            </div>
+                            <app-green-button buttonLabel="Alterar" (click)="alterStatusAnalise()" style="float:right; margin-top: 5px"></app-green-button>
                         </div>
                     </p-dialog>
 
