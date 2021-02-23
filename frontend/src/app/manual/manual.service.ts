@@ -21,9 +21,7 @@ export class ManualService {
     relatoriosUrl = environment.apiUrl + '/manuals';
     relatorioFatorAjusteUrl = environment.apiUrl + '/relatorioPdfArquivoFatorAjuste';
 
-    relatorioManualUrl = environment.apiUrl + '/manual/exportacaoPDF';
-
-    constructor(
+        constructor(
         private http: HttpClient,
         private pageNotificationService: PageNotificationService,
         private blockUiService: BlockUiService
@@ -184,24 +182,6 @@ export class ManualService {
     private convert(manual: Manual): Manual {
         const copy: Manual = manual.toJSONState();
         return copy;
-    }
-
-    public gerarRelatorioPdfArquivo() {
-        this.blockUiService.show();
-        this.http.request('get', this.relatorioManualUrl, {
-            responseType: 'blob',
-        }).subscribe(
-            response => {
-                const mediaType = 'application/pdf';
-                const blob = new Blob([response], { type: mediaType });
-                const fileURL = window.URL.createObjectURL(blob);
-                const anchor = document.createElement('a');
-                anchor.download = 'Manual.pdf';
-                anchor.href = fileURL;
-                document.body.appendChild(anchor);
-                anchor.click();
-                this.blockUiService.hide();
-            });
     }
 
     public geraRelatorioPdfBrowserFatorAjuste(id: number): Observable<string> {

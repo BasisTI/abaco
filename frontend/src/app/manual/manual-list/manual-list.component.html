@@ -122,10 +122,10 @@
                     </p-column>
 
                 </basis-datatable>
-
-                <div class="ui-g-12 ui-md-2 ui-lg-2">
-                    <button pButton name="exportarPdf" id="exportarPdf" label="Exportar PDF" class="btnSim"  (click)="gerarRelatorioPdf()"></button>
-                </div> 
+                <div class="ui-g-12 ui-md-2">
+                    <app-export-button [dataTable]="datatable" resourceName="manual">
+                    </app-export-button>
+                </div>
             </div>
         </div>
     </div>

@@ -84,8 +84,4 @@ public class TipoEquipeService {
         return byteArrayOutputStream;
     }
 
-    public List<TipoEquipe> getAll() {
-        return tipoEquipeRepository.findAll();
-    }
-
 }
