@@ -873,6 +873,34 @@ export class FuncaoTransacaoDivergenceComponent implements OnInit {
         this.pageNotificationService.addSuccessMessage('Status da(s) funcionalidade(s) alterado(s).');
     }
 
+        });
+        this.pageNotificationService.addSuccessMessage('Status da(s) funcionalidade(s) alterado(s).');
+    } 
+
+    setApproved(funcaoTransacaoSelecionadas: FuncaoTransacao[]) {
+        funcaoTransacaoSelecionadas.forEach(funcaoTransacaoSelecionada => {
+            this.funcaoTransacaoService.approved(funcaoTransacaoSelecionada.id).subscribe(value => {
+                funcaoTransacaoSelecionada = this.funcoesTransacoes.filter((funcaoTransacao) => (funcaoTransacao.id === funcaoTransacaoSelecionada.id))[0];
+                funcaoTransacaoSelecionada['statusFuncao'] = value['statusFuncao'];
+            });
+            
+        });
+        this.pageNotificationService.addSuccessMessage('Status da(s) funcionalidade(s) alterado(s).');
+
+    }
+
+    setDelete(funcaoTransacaoSelecionadas: FuncaoTransacao[]) {
+       
+        funcaoTransacaoSelecionadas.forEach(funcaoTransacaoSelecionada => {
+            this.funcaoTransacaoService.deleteStatus(funcaoTransacaoSelecionada.id).subscribe(value => {
+                funcaoTransacaoSelecionada = this.funcoesTransacoes.filter((funcaoTransacao) => (funcaoTransacao.id === funcaoTransacaoSelecionada.id))[0];
+                funcaoTransacaoSelecionada['statusFuncao'] = value['statusFuncao'];
+            });
+
+        });
+        this.pageNotificationService.addSuccessMessage('Status da(s) funcionalidade(s) alterado(s).');
+    }
+
     formataFatorAjuste(fatorAjuste: FatorAjuste): string {
         return fatorAjuste ? FatorAjusteLabelGenerator.generate(fatorAjuste) : this.getLabel('Nenhum');
     }
