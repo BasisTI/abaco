@@ -6,7 +6,7 @@
                 <div class="ui-g-12 ui-md-12 ui-sm-12">
                     <span class="md-inputfield">
                         <input id="descricao" type="text" pInputText class="ui-inputtext"
-                            [(ngModel)]="elasticQuery.value" (keyup.enter)="datatable.refresh(elasticQuery.query)"
+                            [(ngModel)]="elasticQuery.value" (keyup.enter)="recarregarDataTable()"
                             maxlength="200" #filter />
                         <label translate="Cadastros.Manual.Descricao">Descrição</label>
                     </span>
@@ -30,11 +30,22 @@
                     </div>
 
                 </div>
-
+                <div class="ui-g-12 ui-g-nopad">
+                    <div class="ui-g-3 ui-md-offset-6">
+                        <div class="text-right">Visibilidade das Colunas:</div>
+                    </div>
+                    <div class="ui-g-3">
+                        <p-multiSelect defaultLabel="Selecione as colunas a serem exibidas"
+                            [displaySelectedLabel]="false" [ngModelOptions]="{ standalone: true }"
+                            (onChange)="mostrarColunas($event)" [options]="allColumnsTable"
+                            [(ngModel)]="columnsVisible" [style]="{ width: '100%' }">
+                        </p-multiSelect>
+                    </div>
+                  </div>
                 <basis-datatable [url]="searchUrl" (dblclick)="onRowDblclick($event)" (click)="selectManual()"
                     (buttonClick)="onClick($event)" [rows]="20" id="idTabelaComponentManual"
                     [rowsPerPageOptions]="rowsPerPageOptions" [showPaginationFooter]="true"
-                    [showVisibleColumnsControl]="true" #datatable>
+                     #datatable>
 
                     <basis-datatable-button name="clone" [bTooltip]="relatorioCloneButton()" icon="content-copy"
                         id="idTabelaCloneComponentManual" disabled="desabilitarBotaoClonar()"
@@ -95,7 +106,7 @@
                 </basis-datatable>
 
                 <div class="ui-g-12 ui-md-2">
-                    <app-export-button [dataTable]="datatable" resourceName="manual">
+                    <app-export-button [dataTable]="datatable" resourceName="manual" [filter]="manualFiltro" [columnsVisible]="columnsVisible">
                     </app-export-button>
                 </div>
             </div>

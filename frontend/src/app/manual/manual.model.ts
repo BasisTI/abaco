@@ -172,3 +172,12 @@ export class Manual implements BaseEntity {
     }
 
 }
+
+export class SearchGroup {
+
+    constructor(
+        public nome?: string,
+        public columnsVisible?: any,
+    ) {
+    }
+  }
