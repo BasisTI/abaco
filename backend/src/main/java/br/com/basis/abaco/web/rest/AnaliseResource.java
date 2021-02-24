@@ -355,7 +355,7 @@ public class AnaliseResource {
     @GetMapping("/relatorioPdfBrowser/{id}")
     @Timed
     public @ResponseBody
-    byte[] downloadPdfBrowser(@PathVariable Long id) throws URISyntaxException, IOException, JRException {
+    ResponseEntity<byte[]> downloadPdfBrowser(@PathVariable Long id) throws URISyntaxException, IOException, JRException {
         Analise analise = analiseService.recuperarAnalise(id);
         relatorioAnaliseRest = new RelatorioAnaliseRest(this.response, this.request);
         return relatorioAnaliseRest.downloadPdfBrowser(analise, TipoRelatorio.ANALISE);
@@ -364,7 +364,7 @@ public class AnaliseResource {
     @GetMapping("/downloadPdfDetalhadoBrowser/{id}")
     @Timed
     public @ResponseBody
-    byte[] downloadPdfDetalhadoBrowser(@PathVariable Long id) throws URISyntaxException, IOException, JRException {
+    ResponseEntity<byte[]> downloadPdfDetalhadoBrowser(@PathVariable Long id) throws URISyntaxException, IOException, JRException {
         Analise analise = analiseService.recuperarAnalise(id);
         analise.setFuncaoDados(funcaoDadosRepository.findByAnaliseIdOrderByFuncionalidadeModuloNomeAscFuncionalidadeNomeAscNameAsc(id));
         analise.setFuncaoTransacaos(funcaoTransacaoRepository.findByAnaliseIdOrderByFuncionalidadeModuloNomeAscFuncionalidadeNomeAscNameAsc(id));
@@ -375,7 +375,7 @@ public class AnaliseResource {
     @GetMapping("/divergencia/downloadPdfDetalhadoBrowser/{id}")
     @Timed
     public @ResponseBody
-    byte[] downloadPdfDivergenciaDetalhadoBrowser(@PathVariable Long id) throws URISyntaxException, IOException, JRException {
+    ResponseEntity<byte[]> downloadPdfDivergenciaDetalhadoBrowser(@PathVariable Long id) throws URISyntaxException, IOException, JRException {
         Analise analise = analiseService.recuperarAnalise(id);
         analise.setFuncaoDados(funcaoDadosRepository.findByAnaliseIdAndStatusFuncaoOrderByFuncionalidadeModuloNomeAscFuncionalidadeNomeAscNameAsc(id, StatusFuncao.VALIDADO));
         analise.setFuncaoTransacaos(funcaoTransacaoRepository.findByAnaliseIdAndStatusFuncaoOrderByFuncionalidadeModuloNomeAscFuncionalidadeNomeAscNameAsc(id, StatusFuncao.VALIDADO));
@@ -386,7 +386,7 @@ public class AnaliseResource {
     @GetMapping("/downloadRelatorioExcel/{id}")
     @Timed
     public @ResponseBody
-    byte[] downloadRelatorioExcel(@PathVariable Long id) throws URISyntaxException, IOException, JRException {
+    ResponseEntity<byte[]> downloadRelatorioExcel(@PathVariable Long id) throws URISyntaxException, IOException, JRException {
         Analise analise = analiseService.recuperarAnalise(id);
         analise.setFuncaoDados(funcaoDadosRepository.findByAnaliseIdOrderByFuncionalidadeModuloNomeAscFuncionalidadeNomeAscNameAsc(id));
         analise.setFuncaoTransacaos(funcaoTransacaoRepository.findByAnaliseIdOrderByFuncionalidadeModuloNomeAscFuncionalidadeNomeAscNameAsc(id));
@@ -402,7 +402,7 @@ public class AnaliseResource {
     @GetMapping("/divergencia/downloadRelatorioExcel/{id}")
     @Timed
     public @ResponseBody
-    byte[] downloadDivergenciaRelatorioExcel(@PathVariable Long id) throws URISyntaxException, IOException, JRException {
+    ResponseEntity<byte[]> downloadDivergenciaRelatorioExcel(@PathVariable Long id) throws URISyntaxException, IOException, JRException {
         Analise analise = analiseService.recuperarAnalise(id);
         analise.setFuncaoDados(funcaoDadosRepository.findByAnaliseIdAndStatusFuncaoOrderByFuncionalidadeModuloNomeAscFuncionalidadeNomeAscNameAsc(id, StatusFuncao.VALIDADO));
         analise.setFuncaoTransacaos(funcaoTransacaoRepository.findByAnaliseIdAndStatusFuncaoOrderByFuncionalidadeModuloNomeAscFuncionalidadeNomeAscNameAsc(id, StatusFuncao.VALIDADO));

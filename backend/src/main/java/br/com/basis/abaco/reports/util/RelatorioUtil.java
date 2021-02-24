@@ -140,7 +140,7 @@ public class RelatorioUtil {
      * @throws JRException
      */
     @SuppressWarnings({ RAW_TYPES, UNCHECKED })
-    public @ResponseBody byte[] downloadPdfBrowser(Analise analise, String caminhoJasperResolucao, Map parametrosJasper) throws FileNotFoundException, JRException {
+    public @ResponseBody ResponseEntity<byte[]> downloadPdfBrowser(Analise analise, String caminhoJasperResolucao, Map parametrosJasper) throws FileNotFoundException, JRException {
         return buildPDFBrowser(caminhoJasperResolucao, parametrosJasper, new JREmptyDataSource());
     }
 
@@ -154,12 +154,12 @@ public class RelatorioUtil {
      * @throws JRException
      */
     @SuppressWarnings({ RAW_TYPES, UNCHECKED })
-    public @ResponseBody byte[] downloadPdfBrowser(Analise analise, String caminhoJasperResolucao, JRBeanCollectionDataSource dataSource) throws JRException {
+    public @ResponseBody ResponseEntity<byte[]> downloadPdfBrowser(Analise analise, String caminhoJasperResolucao, JRBeanCollectionDataSource dataSource) throws JRException {
 
         return buildPDFBrowser(caminhoJasperResolucao, new HashMap(), dataSource);
     }
 
-    private @ResponseBody byte[] buildPDFBrowser(String caminhoJasperResolucao, Map parametters, JRDataSource dataSource) throws JRException {
+    private @ResponseBody ResponseEntity<byte[]> buildPDFBrowser(String caminhoJasperResolucao, Map parametters, JRDataSource dataSource) throws JRException {
         InputStream stream = getClass().getClassLoader().getResourceAsStream(caminhoJasperResolucao);
 
         JasperPrint jasperPrint = (JasperPrint) JasperFillManager.fillReport(stream, parametters, dataSource);
@@ -177,12 +177,18 @@ public class RelatorioUtil {
         exporter.exportReport();
 
         JasperExportManager.exportReportToPdfStream(jasperPrint, outputStream);
+        
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_PDF);
+        headers.set(HttpHeaders.CONTENT_DISPOSITION, String.format("attachment; filename=\"%s.pdf\"", "analise"));
+        return new ResponseEntity<byte[]>(outputStream.toByteArray(),headers, HttpStatus.OK);
+        
 
-        response.setContentType("application/pdf");
-
-        response.setHeader(CONTENT_DISP, INLINE_FILENAME + ".pdf");
-
-        return  JasperExportManager.exportReportToPdf(jasperPrint);
+//        response.setContentType("application/pdf");
+//
+//        response.setHeader(CONTENT_DISP, INLINE_FILENAME + ".pdf");
+//
+//        return  JasperExportManager.exportReportToPdf(jasperPrint);
     }
 
 
@@ -361,7 +367,7 @@ public class RelatorioUtil {
      * @throws JRException
      */
     @SuppressWarnings({ RAW_TYPES, UNCHECKED })
-    public @ResponseBody byte[] downloadExcel(Analise analise, String caminhoJasperResolucao, Map parametrosJasper) throws FileNotFoundException, JRException {
+    public @ResponseBody ResponseEntity<byte[]> downloadExcel(Analise analise, String caminhoJasperResolucao, Map parametrosJasper) throws FileNotFoundException, JRException {
 
         InputStream stream = getClass().getClassLoader().getResourceAsStream(caminhoJasperResolucao);
 
@@ -383,12 +389,11 @@ public class RelatorioUtil {
         exporter.setConfiguration(configuration);
 
         exporter.exportReport();
-
-        response.setContentType(EXCEL);
-
-        response.setHeader(CONTENT_DISP, INLINE_FILENAME + analise.getIdentificadorAnalise().trim() + ".xls");
-
-        return outputStream.toByteArray();
+        
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.parseMediaType(EXCEL));
+        headers.set(HttpHeaders.CONTENT_DISPOSITION, String.format("attachment; filename=\"%s.xls\"", analise.getIdentificadorAnalise().trim()));
+        return new ResponseEntity<byte[]>(outputStream.toByteArray(),headers, HttpStatus.OK);
     }
 
     /**
