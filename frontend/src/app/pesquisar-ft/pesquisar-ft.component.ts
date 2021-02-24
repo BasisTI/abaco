@@ -149,6 +149,7 @@ export class PesquisarFtComponent implements OnInit {
             { field: 'classificacao', header: 'Classificação' }
         ];
         this.exportColumns = this.cols.map(col => ({title: col.header, dataKey: col.field}));
+        console.log('FATORES AJUSTES - '+this.fatoresAjuste);
     }
 
     tiposAnalise: SelectItem[] = [
@@ -271,6 +272,14 @@ export class PesquisarFtComponent implements OnInit {
             this.carregaFatorAjusteNaEdicao();
             this.subscribeFuncionalideBaseline();
         }
+
+        const isContratoSelected = this.analiseSharedDataService.isContratoSelected();
+        if (isContratoSelected) {
+            if (this.fatoresAjuste.length === 0) {
+                this.inicializaFatoresAjuste();
+            }
+        }
+        
     }
 
     setSistamaOrganizacao(org: Organizacao) {
@@ -623,11 +632,6 @@ export class PesquisarFtComponent implements OnInit {
 
     isContratoSelected(): boolean {
         const isContratoSelected = this.analiseSharedDataService.isContratoSelected();
-        if (isContratoSelected) {
-            if (this.fatoresAjuste.length === 0) {
-                this.inicializaFatoresAjuste();
-            }
-        }
         return isContratoSelected;
     }
 
