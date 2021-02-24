@@ -6,7 +6,6 @@
 	<property name="net.sf.jasperreports.export.xls.sheet.names.2" value="Função de Transação"/>
 	<property name="net.sf.jasperreports.page.break.no.pagination" value="apply"/>
 	<import value="java.lang.*"/>
-	<import value="br.com.basis.abaco.domain.enumeration.MetodoContagem"/>
 	<style name="Table 2_TH" mode="Opaque" backcolor="#F0F8FF">
 		<box>
 			<pen lineWidth="0.5" lineColor="#000000"/>
