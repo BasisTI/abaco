@@ -113,7 +113,7 @@ jhipster:
     mail: # specific JHipster mail property, for standard properties see MailProperties
           #  baseurl was changed from port 8080 to port 4200.
         from: abaco@basis.com.br
-        base-url: http://127.0.0.1:4200
+        base-url: http://abaco.tst.basis.com.br
     metrics: # DropWizard Metrics configuration, used by MetricsConfiguration
         jmx.enabled: true
         graphite: # Use the "graphite" Maven profile to have the Graphite dependencies
