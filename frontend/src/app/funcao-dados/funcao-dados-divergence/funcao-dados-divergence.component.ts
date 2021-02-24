@@ -993,31 +993,38 @@ export class FuncaoDadosDivergenceComponent implements OnInit {
                 });
             }
         });
-        this.pageNotificationService.addSuccessMessage('Status da(s) funcionalidade(s) alterado(s).');
     }
 
-    setApproved(funcaoDadosSelecionadas: FuncaoDados[]) {
-        funcaoDadosSelecionadas.forEach(funcaoDadosSelecionada => {
-            this.funcaoDadosService.approved(funcaoDadosSelecionada.id).subscribe(value => {
-                funcaoDadosSelecionada = this.funcoesDados.filter((funcaoDados) => (funcaoDados.id === funcaoDadosSelecionada.id))[0];
-                funcaoDadosSelecionada['statusFuncao'] = value['statusFuncao'];
-                this.showDialog = false;
-            });
-            
+    confirmDivergence(funcaoDadosSelecionada: FuncaoDados) {
+        this.confirmationService.confirm({
+            message: `${this.getLabel(
+                'Tem certeza que deseja alterar o status da Função de Dados ')} '${funcaoDadosSelecionada.name}' para Divergente?`,
+            accept: () => {
+                this.funcaoDadosService.pending(funcaoDadosSelecionada.id).subscribe(value => {
+                    funcaoDadosSelecionada = this.funcoesDados.filter((funcaoDados) => (funcaoDados.id === funcaoDadosSelecionada.id))[0];
+                    funcaoDadosSelecionada['statusFuncao'] = value['statusFuncao'];
+                    this.pageNotificationService.addSuccessMessage('Status da funcionalidade ' + funcaoDadosSelecionada.name + ' foi alterado.');
+                    this.showDialog = false;
+                    this.divergenciaService.updateDivergenciaSomaPf(this.analise.id).subscribe();
+                });
+            }
         });
-        this.pageNotificationService.addSuccessMessage('Status da(s) funcionalidade(s) alterado(s).');
     }
 
-
-    setDelete(funcaoDadosSelecionadas: FuncaoDados[]) {
-        funcaoDadosSelecionadas.forEach(funcaoDadosSelecionada => {
-            this.funcaoDadosService.deleteStatus(funcaoDadosSelecionada.id).subscribe(value => {
-                funcaoDadosSelecionada = this.funcoesDados.filter((funcaoDados) => (funcaoDados.id === funcaoDadosSelecionada.id))[0];
-                funcaoDadosSelecionada['statusFuncao'] = value['statusFuncao'];
-            });
-
+    confirmApproved(funcaoDadosSelecionada: FuncaoDados) {
+        this.confirmationService.confirm({
+            message: `${this.getLabel(
+                'Tem certeza que deseja alterar o status da Função de Dados ')} '${funcaoDadosSelecionada.name}' para Aprovado ?`,
+            accept: () => {
+                this.funcaoDadosService.approved(funcaoDadosSelecionada.id).subscribe(value => {
+                    funcaoDadosSelecionada = this.funcoesDados.filter((funcaoDados) => (funcaoDados.id === funcaoDadosSelecionada.id))[0];
+                    funcaoDadosSelecionada['statusFuncao'] = value['statusFuncao'];
+                    this.pageNotificationService.addSuccessMessage('Status da funcionalidade ' + funcaoDadosSelecionada.name + ' foi alterado.');
+                    this.showDialog = false;
+                    this.divergenciaService.updateDivergenciaSomaPf(this.analise.id).subscribe();
+                });
+            }
         });
-        this.pageNotificationService.addSuccessMessage('Status da(s) funcionalidade(s) alterado(s).');
     }
 
     formataFatorAjuste(fatorAjuste: FatorAjuste): string {

@@ -298,6 +298,27 @@
                                     (click)="showDialogAddComent()">
                                 </app-blue-button>
                             </div>
+                            <div class="ui-md-2 ui-sm-12"  >
+                                <app-green-button [buttonLabel]="'Aprovado' "
+                                                    id="idBtnApprovedViewFuncaoTransacao"
+                                                    buttonIcon="ui-icon-done"
+                                                    (click)="confirmApproved(currentFuncaoTransacao)">
+                                </app-green-button>
+                            </div>
+                            <div class="ui-md-2 ui-sm-12" >
+                                <app-gray-button [buttonLabel]="'Divergente' "
+                                                    id="idDvergenceViewFuncaoTransacao"
+                                                    buttonIcon="ui-icon-schedule"
+                                                    (click)="confirmDivergence(currentFuncaoTransacao)">
+                                </app-gray-button>
+                            </div>
+                            <div class="ui-md-2 ui-sm-12" *ngIf="isEdit">
+                                <app-red-button [buttonLabel]="'Excluído' "
+                                    id="idDeleteFormFuncaoDados"
+                                    buttonIcon="ui-icon-delete"
+                                    (click)="confirmDelete(currentFuncaoTransacao)">
+                                </app-red-button>
+                            </div>
                             <div class="ui-md-2 ui-sm-12">
                                 <app-blue-button
                                         [buttonLabel]="'Salvar'"
@@ -305,13 +326,6 @@
                                         buttonIcon="ui-icon-add"
                                         (click)="buttonSaveEdit()">
                                 </app-blue-button>
-                            </div>
-                            <div class="ui-md-2 ui-sm-12" *ngIf="isEdit">
-                                <app-red-button [buttonLabel]="'Delete' "
-                                    id="idDeleteFormFuncaoDados"
-                                    buttonIcon="ui-icon-delete"
-                                    (click)="confirmDelete(currentFuncaoTransacao)">
-                                </app-red-button>
                             </div>
                             <div class="ui-md-2 ui-sm-12">
                                 <app-white-button
@@ -322,8 +336,10 @@
                             </div>
                         </div>
                     </p-dialog>
-                    <!-- Fim Dialog adicionar função de dados  -->
-                    <p-dialog header="Visualizar Função de Dados" [(visible)]="viewFuncaoTransacao"  [style]="{width: '80vw'}" >
+                    <!-- Fim Dialog adicionar Função de Transação  -->
+
+                    <!-- Início Dialog visualisar Função de Transação  -->
+                    <p-dialog header="Visualizar Função de Transação" [(visible)]="viewFuncaoTransacao"  [style]="{width: '80vw'}" >
                         <div *ngIf="currentFuncaoTransacao && currentFuncaoTransacao.funcionalidade && viewFuncaoTransacao">
                              <div class="ui-g">
                                  <div class="ui-md-6 ui-sm-12">
@@ -413,38 +429,13 @@
                          </div> 
                         <div class="ui-g ui-md-12 ui-sm-12" style="justify-content: flex-end">
                             <div class="ui-md-2 ui-sm-12">
-                                <app-white-button [buttonLabel]="'Fechar'" (click)="viewFuncaoTransacao=false" ></app-white-button>
-                            </div>
-                            <div class="ui-md-2 ui-sm-12" >
-                                <app-blue-button [buttonLabel]="'Adicionar Comentário'"
-                                    id="idDeleteFormFuncaoDados"
-                                    buttonIcon="ui-icon-comment"
-                                    (click)="showDialogAddComent()">
-                                </app-blue-button>
-                            </div>
-                            <div class="ui-md-2 ui-sm-12" >
-                                <app-red-button [buttonLabel]="'Delete' "
-                                    id="idDeleteViewFuncaoTransacao"
-                                    buttonIcon="ui-icon-delete"
-                                    (click)="confirmDelete(currentFuncaoTransacao)">
-                                </app-red-button>
-                            </div>
-                            <div class="ui-md-2 ui-sm-12" >
-                                <app-gray-button [buttonLabel]="'Divergente' "
-                                                    id="idDvergenceViewFuncaoTransacao"
-                                                    buttonIcon="ui-icon-schedule"
-                                                    (click)="confirmDivergence(currentFuncaoTransacao)">
-                                </app-gray-button>
-                            </div>
-                            <div class="ui-md-2 ui-sm-12"  >
-                                <app-green-button [buttonLabel]="'Aprovar' "
-                                                    id="idBtnApprovedViewFuncaoTransacao"
-                                                    buttonIcon="ui-icon-done"
-                                                    (click)="confirmApproved(currentFuncaoTransacao)">
-                                </app-green-button>
+                                <app-white-button [buttonLabel]="'Fechar'" 
+                                (click)="viewFuncaoTransacao=false" >
+                                </app-white-button>
                             </div>
                         </div>
                      </p-dialog>
+                     <!-- Fim Dialog visualisar Função de Transação  -->
                      
                      <p-dialog header="Adicionar Comentário" [(visible)]="showAddComent" [style]="{width: '80vw'}" >
                         <div class="ui-md-12 ui-sm-12">
