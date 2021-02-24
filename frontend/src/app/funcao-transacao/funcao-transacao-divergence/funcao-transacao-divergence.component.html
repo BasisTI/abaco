@@ -36,6 +36,10 @@
                                         [filterOnColumn]="true"
                                         [rowsPerPageOptions]="[20,50,100]"
                                         [showVisibleColumnsControl]="true"
+                                        [selectionMode]="'multiple'"
+                                        [disableDelete]="true"
+                                        [disableEdit]= "selectModeButtonsEditAndView"
+                                        [disableView]= "selectModeButtonsEditAndView"
                                         #tables>
                                     <p-column field="statusFuncao" header="Status" [sortable]="true" >
                                         <ng-template let-statusFuncao="rowData.statusFuncao" pTemplate="body">
@@ -59,17 +63,25 @@
                                         <ng-template let-pf="rowData.pf" pTemplate="body"> {{ pf | number }} </ng-template>
                                     </p-column>
                                     <basis-datatable-button
+                                        name="delete"
+                                        *ngIf="!isView"
+                                        [bTooltip]="this.getLabel('Excluído')" 
+                                        [disabled]="FuncaoTransacaoEditar.id == null "
+                                        class="ui-button-danger"
+                                        icon="delete">
+                                    </basis-datatable-button>
+                                    <basis-datatable-button
                                         name="divergence"
                                         *ngIf="!isView"
-                                        [pTooltip]="FuncaoTransacaoEditar.id != null ? this.getLabel('Divergente') : this.getLabel('Escolha um registro para alterar o status.')" 
-                                        [disabled]="FuncaoTransacaoEditar.id == null "
+                                        [bTooltip]="this.getLabel('Pendente')" 
+                                        [disabled]="FuncaoTransacaoEditar.id == null"
                                         class="ui-button-dark"
                                         icon="schedule">
                                     </basis-datatable-button>
                                     <basis-datatable-button
                                         name="approve"
                                         *ngIf="!isView"
-                                        [pTooltip]="FuncaoTransacaoEditar.id != null ? this.getLabel('Aprovar função') : this.getLabel('Escolha um registro para alterar o status.')" 
+                                        [bTooltip]="this.getLabel('Aprovado')" 
                                         [disabled]="FuncaoTransacaoEditar.id == null "
                                         class="ui-button-success"
                                         icon="done">
@@ -300,20 +312,6 @@
                                     buttonIcon="ui-icon-delete"
                                     (click)="confirmDelete(currentFuncaoTransacao)">
                                 </app-red-button>
-                            </div>
-                            <div class="ui-md-2 ui-sm-12" *ngIf="isEdit">
-                                <app-gray-button [buttonLabel]="'Divergente' "
-                                                    id="idDvergenceFormFuncaoDados"
-                                                    buttonIcon="ui-icon-schedule"
-                                                    (click)="confirmDivergence(currentFuncaoTransacao)">
-                                </app-gray-button>
-                            </div>
-                            <div class="ui-md-2 ui-sm-12"  *ngIf="isEdit">
-                                <app-green-button [buttonLabel]="'Aprovar' "
-                                                  id="idBtnApprovedFormFuncaoDados"
-                                                  buttonIcon="ui-icon-done"
-                                                  (click)="confirmApproved(currentFuncaoTransacao)">
-                                </app-green-button>
                             </div>
                             <div class="ui-md-2 ui-sm-12">
                                 <app-white-button
