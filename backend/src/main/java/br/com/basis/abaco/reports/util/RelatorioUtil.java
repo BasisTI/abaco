@@ -56,6 +56,8 @@ import java.util.Set;
  */
 public class RelatorioUtil {
 
+    private static final String ATTACHMENT_FILENAME_S_PDF = "attachment; filename=\"%s.pdf\"";
+
     private static final String INLINE_FILENAME = "inline; filename=";
 
     private static final String CONTENT_DISP = "Content-Disposition";
@@ -105,7 +107,7 @@ public class RelatorioUtil {
         JasperExportManager.exportReportToPdfStream(jasperPrint, outputStream);
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_PDF);
-        headers.set(HttpHeaders.CONTENT_DISPOSITION, String.format("attachment; filename=\"%s.pdf\"", analise.getIdentificadorAnalise().trim()));
+        headers.set(HttpHeaders.CONTENT_DISPOSITION, String.format(ATTACHMENT_FILENAME_S_PDF, analise.getIdentificadorAnalise().trim()));
         return new ResponseEntity<byte[]>(outputStream.toByteArray(),headers, HttpStatus.OK);
     }
 
@@ -126,7 +128,7 @@ public class RelatorioUtil {
         JasperExportManager.exportReportToPdfStream(jasperPrint, outputStream);
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_PDF);
-        headers.set(HttpHeaders.CONTENT_DISPOSITION, String.format("attachment; filename=\"%s.pdf\"", analise.getIdentificadorAnalise().trim()));
+        headers.set(HttpHeaders.CONTENT_DISPOSITION, String.format(ATTACHMENT_FILENAME_S_PDF, analise.getIdentificadorAnalise().trim()));
         return new ResponseEntity<byte[]>(outputStream.toByteArray(),headers, HttpStatus.OK);
     }
 
@@ -180,15 +182,8 @@ public class RelatorioUtil {
         
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_PDF);
-        headers.set(HttpHeaders.CONTENT_DISPOSITION, String.format("attachment; filename=\"%s.pdf\"", "analise"));
+        headers.set(HttpHeaders.CONTENT_DISPOSITION, String.format(ATTACHMENT_FILENAME_S_PDF, "analise"));
         return new ResponseEntity<byte[]>(outputStream.toByteArray(),headers, HttpStatus.OK);
-        
-
-//        response.setContentType("application/pdf");
-//
-//        response.setHeader(CONTENT_DISP, INLINE_FILENAME + ".pdf");
-//
-//        return  JasperExportManager.exportReportToPdf(jasperPrint);
     }
 
 
