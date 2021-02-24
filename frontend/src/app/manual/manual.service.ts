@@ -21,8 +21,6 @@ export class ManualService {
     relatoriosUrl = environment.apiUrl + '/manuals';
     relatorioFatorAjusteUrl = environment.apiUrl + '/relatorioPdfArquivoFatorAjuste';
 
-    relatorioManualUrl = environment.apiUrl + '/manual/exportacaoPDF';
-
     constructor(
         private http: HttpClient,
         private pageNotificationService: PageNotificationService,
@@ -40,8 +38,8 @@ export class ManualService {
 
     create(manual: Manual, files: File[]): Observable<any> {
         let body = new FormData();
-        
-        if(files){
+
+        if (files) {
             for (let i = 0; i < files.length; i++) {
                 body.append('file', files[i]);
             }
@@ -89,7 +87,7 @@ export class ManualService {
         }));
     }
 
-    clonar(manual: Manual): Observable<any>{
+    clonar(manual: Manual): Observable<any> {
         return this.http.post<Manual>(`${this.resourceUrl}/clonar`, manual).pipe(catchError((error: any) => {
             if (error.status === 403) {
                 this.pageNotificationService.addErrorMessage('Você não possui permissão');
@@ -140,7 +138,7 @@ export class ManualService {
     delete(id: number): Observable<Response> {
         return this.http.delete<Response>(`${this.resourceUrl}/${id}`).pipe(
             catchError((error: any) => {
-                
+
                 if (error.status === 403) {
                     this.pageNotificationService.addErrorMessage(this.getLabel('Você não possui permissão!'));
                     return Observable.throw(new Error(error.status));
@@ -148,7 +146,7 @@ export class ManualService {
                 if (error.error.message == "ContratoRelacionado") {
                     this.pageNotificationService.addErrorMessage('Manual relacionado com contrato(s)');
                     return Observable.throw(new Error(error.status));
-                } 
+                }
                 if (error.error.message == "AnaliseRelacionada") {
                     this.pageNotificationService.addErrorMessage('Manual relacionado com análise(s)');
                     return Observable.throw(new Error(error.status));
@@ -186,24 +184,6 @@ export class ManualService {
         return copy;
     }
 
-    public gerarRelatorioPdfArquivo() {
-        this.blockUiService.show();
-        this.http.request('get', this.relatorioManualUrl, {
-            responseType: 'blob',
-        }).subscribe(
-            response => {
-                const mediaType = 'application/pdf';
-                const blob = new Blob([response], { type: mediaType });
-                const fileURL = window.URL.createObjectURL(blob);
-                const anchor = document.createElement('a');
-                anchor.download = 'Manual.pdf';
-                anchor.href = fileURL;
-                document.body.appendChild(anchor);
-                anchor.click();
-                this.blockUiService.hide();
-            });
-    }
-
     public geraRelatorioPdfBrowserFatorAjuste(id: number): Observable<string> {
         this.blockUiService.show();
         this.http.request('get', `${this.relatorioFatorAjusteUrl}/${id}`, {
@@ -211,7 +191,7 @@ export class ManualService {
         }).subscribe(
             (response) => {
                 const mediaType = 'application/pdf';
-                const blob = new Blob([response], {type: mediaType});
+                const blob = new Blob([response], { type: mediaType });
                 const fileURL = window.URL.createObjectURL(blob);
                 const anchor = document.createElement('a');
                 anchor.download = 'analise.pdf';
