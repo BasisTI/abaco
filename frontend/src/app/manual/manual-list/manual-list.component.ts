@@ -28,7 +28,7 @@ export class ManualListComponent implements OnInit {
     myform: FormGroup;
     nomeValido = false;
     urlManualService = this.manualService.resourceUrl;
-    idManual: Number; 
+    idManual: Number;
 
     constructor(
         private router: Router,
@@ -176,15 +176,11 @@ export class ManualListComponent implements OnInit {
         }
     }
 
-    public gerarRelatorioPdf(){
-        this.manualService.gerarRelatorioPdfArquivo()
+    public exportarManualFatorAjuste() {
+        this.manualService.geraRelatorioPdfBrowserFatorAjuste(this.manualSelecionado.id);
     }
 
-    public exportarManualFatorAjuste(){
-        this.manualService.geraRelatorioPdfBrowserFatorAjuste(this.manualSelecionado.id);
-      }
-
-      relatorioCloneButton() {
+    relatorioCloneButton() {
         if (!(this.datatable && this.datatable.selectedRow)) {
             return this.getLabel('Selecione um registro para clonar');
         }
@@ -197,5 +193,5 @@ export class ManualListComponent implements OnInit {
         }
         return this.getLabel('Relatório Fator Ajuste');
     }
-    
+
 }
