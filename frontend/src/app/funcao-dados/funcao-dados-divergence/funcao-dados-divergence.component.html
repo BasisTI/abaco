@@ -86,8 +86,15 @@
                             </div>
                         </div>
                     </div>
-
-                     <!--Início janela editar Função de Dados-->
+                    <!-- <div [hidden]="[true]">
+                        <div class="ui-g" *ngIf="funcoesDados">
+                            <hr>
+                            <div class="ui-g-12">
+                                <app-analise-funcao-resumo-table [linhasResumo]="resumo.all">
+                                </app-analise-funcao-resumo-table>
+                            </div>
+                        </div>
+                    </div> -->
                     <p-dialog [closable]="false" [(visible)]="showDialog" [(header)]="textHeader" [style]="{width: '80vw'}" [contentStyle]="{'height': ['windowHeightDialog']}">
                         <h4>Status: {{seletedFuncaoDados.statusFuncao}}</h4>
                         <div *ngIf="analise && analise.sistema">
@@ -292,32 +299,11 @@
                                     (click)="showDialogAddComent()">
                                 </app-blue-button>
                             </div>
-                            <div class="ui-md-2 ui-sm-12"  >
-                                <app-green-button [buttonLabel]="'Aprovado'"
-                                    id="idBtnApprovedFormFuncaoDados"
-                                    buttonIcon="ui-icon-done"
-                                    (click)="confirmApproved(seletedFuncaoDados)">
-                                </app-green-button>
-                            </div>
-                            <div class="ui-md-2 ui-sm-12" >
-                                <app-gray-button [buttonLabel]="'Divergente'"
-                                    id="idDvergenceFormFuncaoDados"
-                                    buttonIcon="ui-icon-schedule"
-                                    (click)="confirmDivergence(seletedFuncaoDados)">
-                                </app-gray-button>
-                            </div>
-                            <div class="ui-md-2 ui-sm-12" >
-                                <app-red-button [buttonLabel]="'Excluído'"
-                                    id="idDeleteFormFuncaoDados"
-                                    buttonIcon="ui-icon-delete"
-                                    (click)="confirmDelete(seletedFuncaoDados)">
-                                </app-red-button>
-                            </div>
                             <div class="ui-md-2 ui-sm-12">
                                 <app-blue-button [buttonLabel]="'Salvar' "
-                                    id="idSalvarFormFuncaoDados"
-                                    buttonIcon="ui-icon-add"
-                                    (click)="buttonSaveEdit()">
+                                                    id="idSalvarFormFuncaoDados"
+                                                    buttonIcon="ui-icon-add"
+                                                    (click)="buttonSaveEdit()">
                                 </app-blue-button>
                             </div>
                             <div class="ui-md-2 ui-sm-12" >
@@ -334,9 +320,6 @@
                             <app-white-button buttonLabel="Copiar para Evidência" buttonIcon="ui-icon-add"(click)="copyToEvidence()"></app-white-button>
                         </p-footer>
                     </p-dialog>
-                    <!--Fim janela editar Função de Dados-->
-
-                    <!--Início janela visualisar Função de Dados-->
                     <p-dialog header="Visualizar Função de Dados" [(visible)]="viewFuncaoDados" [style]="{width: '80vw'}" >
                        <div *ngIf="seletedFuncaoDados && seletedFuncaoDados.funcionalidade && viewFuncaoDados">
                             <div class="ui-g">
@@ -425,13 +408,46 @@
                         </div> 
                         <div></div>
                         <div class="ui-g ui-md-12 ui-sm-12" style="justify-content: flex-end">
+                            <div class="ui-md-2 ui-sm-12" >
+                                <app-blue-button [buttonLabel]="'Adicionar Comentário'"
+                                    id="idDeleteFormFuncaoDados"
+                                    buttonIcon="ui-icon-comment"
+                                    (click)="showDialogAddComent()">
+                                </app-blue-button>
+                            </div>
                             <div class="ui-md-2 ui-sm-12">
                                 <app-white-button [buttonLabel]="'Fechar'" (click)="viewFuncaoDados=false" ></app-white-button>
                             </div>
+                            <div class="ui-md-2 ui-sm-12" >
+                                <app-blue-button [buttonLabel]="'Adicionar Comentário'"
+                                    id="idDeleteFormFuncaoDados"
+                                    buttonIcon="ui-icon-comment"
+                                    (click)="showDialogAddComent()">
+                                </app-blue-button>
+                            </div>
+                            <div class="ui-md-2 ui-sm-12" >
+                                <app-red-button [buttonLabel]="'Delete'"
+                                    id="idDeleteFormFuncaoDados"
+                                    buttonIcon="ui-icon-delete"
+                                    (click)="confirmDelete(seletedFuncaoDados)">
+                                </app-red-button>
+                            </div>
+                            <div class="ui-md-2 ui-sm-12" >
+                                <app-gray-button [buttonLabel]="'Divergente'"
+                                                    id="idDvergenceFormFuncaoDados"
+                                                    buttonIcon="ui-icon-schedule"
+                                                    (click)="confirmDivergence(seletedFuncaoDados)">
+                                </app-gray-button>
+                            </div>
+                            <div class="ui-md-2 ui-sm-12"  >
+                                <app-green-button [buttonLabel]="'Aprovar'"
+                                                    id="idBtnApprovedFormFuncaoDados"
+                                                    buttonIcon="ui-icon-done"
+                                                    (click)="confirmApproved(seletedFuncaoDados)">
+                                </app-green-button>
+                            </div>
                         </div>
                     </p-dialog>
-                    <!--Fim janela visualisar Função de Dados-->
-
                     <p-dialog header="Adicionar Comentário" [(visible)]="showAddComent" [style]="{width: '80vw'}" >
                         <div class="ui-md-12 ui-sm-12">
                             <textarea rows="5" pInputTextarea [(ngModel)]="divergenceComment" class="ui-md-12 ui-sm-12" style="resize: vertical;"></textarea>
