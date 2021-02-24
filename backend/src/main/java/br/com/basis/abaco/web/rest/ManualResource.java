@@ -17,6 +17,7 @@ import br.com.basis.abaco.repository.search.ManualSearchRepository;
 import br.com.basis.abaco.service.ManualService;
 import br.com.basis.abaco.service.dto.DropdownDTO;
 import br.com.basis.abaco.service.dto.ManualDTO;
+import br.com.basis.abaco.service.dto.filter.SearchFilterDTO;
 import br.com.basis.abaco.service.exception.RelatorioException;
 import br.com.basis.abaco.service.relatorio.RelatorioManualColunas;
 import br.com.basis.abaco.utils.AbacoUtil;
@@ -450,17 +451,16 @@ public class ManualResource {
 
     @PostMapping(value = "/manual/exportacao/{tipoRelatorio}", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
     @Timed
-    public ResponseEntity<InputStreamResource> gerarRelatorioExportacao(@PathVariable String tipoRelatorio,
-                                                                        @RequestParam(defaultValue = "*") String query) throws RelatorioException {
-        ByteArrayOutputStream byteArrayOutputStream = manualService.gerarRelatorio(query, tipoRelatorio);
+    public ResponseEntity<InputStreamResource> gerarRelatorioExportacao(@PathVariable String tipoRelatorio,@RequestBody SearchFilterDTO filter) throws RelatorioException {
+        ByteArrayOutputStream byteArrayOutputStream = manualService.gerarRelatorio(filter, tipoRelatorio);
         return DynamicExporter.output(byteArrayOutputStream, "relatorio." + tipoRelatorio);
     }
 
-    @GetMapping(value = "/manual/exportacao-arquivo", produces = MediaType.APPLICATION_PDF_VALUE)
+    @PostMapping(value = "/manual/exportacao-arquivo", produces = MediaType.APPLICATION_PDF_VALUE)
     @Timed
-    public ResponseEntity<byte[]> gerarRelatorioImprimir(@RequestParam(defaultValue = "*") String query)
+    public ResponseEntity<byte[]> gerarRelatorioImprimir(@RequestBody SearchFilterDTO filter)
         throws RelatorioException {
-        ByteArrayOutputStream byteArrayOutputStream = manualService.gerarRelatorio(query, "pdf");
+        ByteArrayOutputStream byteArrayOutputStream = manualService.gerarRelatorio(filter, "pdf");
         return new ResponseEntity<byte[]>(byteArrayOutputStream.toByteArray(), HttpStatus.OK);
     }
 
