@@ -29,12 +29,6 @@
                         </a>
                     </li>
                     <li role="menuitem">
-                        <a routerLink="/configuracao-baseline">
-                            <i class="material-icons">view_list</i>
-                            <span>Baseline</span>
-                        </a>
-                    </li>
-                    <li role="menuitem">
                         <a logout>
                             <i class="material-icons">power_settings_new</i>
                             <span>Sair</span>
@@ -50,13 +44,15 @@
                 <ul class="ultima-menu animated fadeInDown">
                     <li role="menuitem">
                         <a>
-                            <span user><strong>Usuário: </strong></span>
+                            <strong> Usuário: </strong> {{authenticatedUserFirstName()}}
+                            <!-- <span user><strong>Usuário: </strong> </span> -->
                         </a>
                     </li>
                     <li role="menuitem">
                         <a routerLink="/senha">
                             <i class="material-icons">security</i>
                             <span>Alterar Senha</span>
+
                         </a>
                     </li>
                 </ul>
