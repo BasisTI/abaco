@@ -374,12 +374,17 @@ export class ManualFormComponent implements OnInit, OnDestroy {
     }
 
     editPhaseEffort() {
-        if (this.checkPhaseEffortRequiredFields(this.editedPhaseEffort)) {
+
+        let totalPhase = this.getPhaseEffortTotalPercentual();
+        console.log(this.getPhaseEffortTotalPercentual());
+        if (totalPhase >= 100) {
+            this.pageNotificationService.addErrorMessage('Limite de Esforço Excedido');
+        } else if (this.checkPhaseEffortRequiredFields(this.editedPhaseEffort)) {
             this.manual.updateEsforcoFases(this.editedPhaseEffort);
             this.pageNotificationService.addUpdateMsg();
-            this.closeDialogEditPhaseEffort();
+            this.closeDialogPhaseEffort();
         } else {
-            this.pageNotificationService.addErrorMessage('Por favor preencher campos obrigatórios.');
+            this.pageNotificationService.addErrorMessage('Por favor, preencha campos obrigatórios!');
         }
     }
 
@@ -389,7 +394,7 @@ export class ManualFormComponent implements OnInit, OnDestroy {
             this.pageNotificationService.addUpdateMsg();
             this.closeDialogEditAdjustFactor();
         } else {
-            this.pageNotificationService.addErrorMessage('Por favor preencher campos obrigatórios.');
+            this.pageNotificationService.addErrorMessage('Por favor, preencha campos obrigatórios!');
         }
     }
 
@@ -412,13 +417,13 @@ export class ManualFormComponent implements OnInit, OnDestroy {
             totalPhase = totalPhase + esforcoFase.esforco;
         });
         if (totalPhase > 100) {
-            this.pageNotificationService.addErrorMessage('LimiteEsfocoExcedido');
+            this.pageNotificationService.addErrorMessage('Limite de Esforço Excedido');
         } else if (this.checkPhaseEffortRequiredFields(this.newPhaseEffort)) {
             this.manual.addEsforcoFases(this.newPhaseEffort);
             this.pageNotificationService.addCreateMsg();
             this.closeDialogPhaseEffort();
         } else {
-            this.pageNotificationService.addErrorMessage('Por favor preencher campos obrigatórios.');
+            this.pageNotificationService.addErrorMessage('Por favor, preencha campos obrigatórios!');
         }
     }
 
@@ -505,7 +510,7 @@ export class ManualFormComponent implements OnInit, OnDestroy {
             this.pageNotificationService.addCreateMsg('Deflator incluído com sucesso!');
             this.closeDialogCreateAdjustFactor();
         } else {
-            this.pageNotificationService.addErrorMessage('Por favor preencher campos obrigatórios.');
+            this.pageNotificationService.addErrorMessage('Por favor, preencha campos obrigatórios!');
         }
     }
 
