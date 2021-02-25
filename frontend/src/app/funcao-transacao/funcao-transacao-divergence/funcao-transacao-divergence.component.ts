@@ -25,6 +25,7 @@ import * as _ from 'lodash';
 import { BlockUiService } from '@nuvem/angular-base';
 import { CommentFuncaoTransacao } from '../comment.model';
 import { DivergenciaService } from 'src/app/divergencia';
+import { table } from 'console';
 
 @Component({
     selector: 'app-analise-funcao-transacao',
@@ -61,6 +62,7 @@ export class FuncaoTransacaoDivergenceComponent implements OnInit {
     FuncaoTransacaoEditar: FuncaoTransacao = new FuncaoTransacao();
     translateSubscriptions: Subscription[] = [];
     defaultSort = [{field: 'funcionalidade.nome', order: 1}];
+    selectModeButtonsEditAndView: boolean;
     impacto: SelectItem[] = [
         {label: 'Inclusão', value: 'INCLUSAO'},
         {label: 'Alteração', value: 'ALTERACAO'},
@@ -705,7 +707,7 @@ export class FuncaoTransacaoDivergenceComponent implements OnInit {
         if (!(event.selection) && event.button !== 'filter') {
             return;
         }
-        const funcaoTransacaoSelecionada: FuncaoTransacao = event.selection;
+        const funcaoTransacaoSelecionadas: FuncaoTransacao[] = event.selection;
         const button = event.button;
         if (button !== 'filter' && !event.selection) {
             return;
@@ -714,23 +716,23 @@ export class FuncaoTransacaoDivergenceComponent implements OnInit {
         switch (button) {
             case 'edit':
                 this.isEdit = true;
-                this.prepararParaEdicao(funcaoTransacaoSelecionada);
+                this.prepararParaEdicao(funcaoTransacaoSelecionadas[0]);
                 break;
             case 'filter':
                 this.display = true;
                 break;
             case 'view':
                 this.viewFuncaoTransacao = true;
-                this.prepararParaVisualizar(funcaoTransacaoSelecionada);
+                this.prepararParaVisualizar(funcaoTransacaoSelecionadas[0]);
                 break;
             case 'delete':
-                this.confirmDelete(funcaoTransacaoSelecionada);
+                this.setDelete(funcaoTransacaoSelecionadas);
                 break;
             case 'divergence':
-                this.confirmDivergence(funcaoTransacaoSelecionada);
+                this.setDivergence(funcaoTransacaoSelecionadas);
                 break;
             case 'approve':
-                this.confirmApproved(funcaoTransacaoSelecionada);
+                this.setApproved(funcaoTransacaoSelecionadas);
                     break;
         }
     }
@@ -808,6 +810,40 @@ export class FuncaoTransacaoDivergenceComponent implements OnInit {
         this.fecharDialog();
     }
 
+    setDivergence(funcaoTransacaoSelecionadas: FuncaoTransacao[]) {
+        funcaoTransacaoSelecionadas.forEach(funcaoTransacaoSelecionada => {
+            this.funcaoTransacaoService.pending(funcaoTransacaoSelecionada.id).subscribe(value => {
+                funcaoTransacaoSelecionada = this.funcoesTransacoes.filter((funcaoTransacao) => (funcaoTransacao.id === funcaoTransacaoSelecionada.id))[0];
+                funcaoTransacaoSelecionada['statusFuncao'] = value['statusFuncao'];
+            });
+
+        });
+        this.pageNotificationService.addSuccessMessage('Status da(s) funcionalidade(s) alterado(s).');
+    } 
+
+    setApproved(funcaoTransacaoSelecionadas: FuncaoTransacao[]) {
+        funcaoTransacaoSelecionadas.forEach(funcaoTransacaoSelecionada => {
+            this.funcaoTransacaoService.approved(funcaoTransacaoSelecionada.id).subscribe(value => {
+                funcaoTransacaoSelecionada = this.funcoesTransacoes.filter((funcaoTransacao) => (funcaoTransacao.id === funcaoTransacaoSelecionada.id))[0];
+                funcaoTransacaoSelecionada['statusFuncao'] = value['statusFuncao'];
+            });
+            
+        });
+        this.pageNotificationService.addSuccessMessage('Status da(s) funcionalidade(s) alterado(s).');
+
+    }
+
+    setDelete(funcaoTransacaoSelecionadas: FuncaoTransacao[]) {
+       
+        funcaoTransacaoSelecionadas.forEach(funcaoTransacaoSelecionada => {
+            this.funcaoTransacaoService.deleteStatus(funcaoTransacaoSelecionada.id).subscribe(value => {
+                funcaoTransacaoSelecionada = this.funcoesTransacoes.filter((funcaoTransacao) => (funcaoTransacao.id === funcaoTransacaoSelecionada.id))[0];
+                funcaoTransacaoSelecionada['statusFuncao'] = value['statusFuncao'];
+            });
+
+        });
+        this.pageNotificationService.addSuccessMessage('Status da(s) funcionalidade(s) alterado(s).');
+    }
 
     confirmDelete(funcaoTransacaoSelecionada: FuncaoTransacao) {
         this.confirmationService.confirm({
@@ -857,7 +893,6 @@ export class FuncaoTransacaoDivergenceComponent implements OnInit {
             }
         });
     }
-
 
     formataFatorAjuste(fatorAjuste: FatorAjuste): string {
         return fatorAjuste ? FatorAjusteLabelGenerator.generate(fatorAjuste) : this.getLabel('Nenhum');
@@ -976,9 +1011,11 @@ export class FuncaoTransacaoDivergenceComponent implements OnInit {
         });
     }
     public selectFT() {
+        this.tables.pDatatableComponent.metaKeySelection = true;
         if (this.tables && this.tables.selectedRow) {
             this.FuncaoTransacaoEditar = this.tables.selectedRow;
         }
+        this.disableButtonsEditAndView();
     }
 
     public showDialogAddComent() {
@@ -1002,6 +1039,16 @@ export class FuncaoTransacaoDivergenceComponent implements OnInit {
                 this.pageNotificationService.addSuccessMessage('Comentário adicionado.');
             });
     }
+
+    public disableButtonsEditAndView(): boolean{
+        if(this.tables.selectedRow.length > 1){
+            return this.selectModeButtonsEditAndView = true;
+        }
+        else{
+            return this.selectModeButtonsEditAndView = false;
+        }
+    }
+
     public cancelComment() {
         this.showAddComent = false;
     }

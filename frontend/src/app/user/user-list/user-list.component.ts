@@ -7,6 +7,7 @@ import { Authority } from '../authority.model';
 import { TipoEquipe, TipoEquipeService } from 'src/app/tipo-equipe';
 import { UserService } from '../user.service';
 import { User } from '../user.model';
+import { SearchGroup } from '..';
 
 @Component({
     selector: 'app-user',
@@ -25,6 +26,8 @@ export class UserListComponent implements OnInit {
 
     customOptions: Object = {};
 
+    userFiltro : SearchGroup;
+
     searchParams: any = {
         fullName: undefined,
         login: undefined,
@@ -37,6 +40,24 @@ export class UserListComponent implements OnInit {
     organizations: Array<Organizacao>;
     authorities: Array<Authority>;
     teams: TipoEquipe[];
+
+    allColumnsTable = [
+        {value: 'nome',  label: 'Nome'},
+        {value: 'login',  label: 'Login'},
+        {value: 'organizacao',  label: 'Organização'},
+        {value: 'perfil',  label: 'Perfil'},
+        {value: 'equipe',  label: 'Equipe'},
+        {value: 'activated',  label: 'Ativo'},
+    ];
+    
+    columnsVisible = [
+        'nome',
+        'login',
+        'organizacao',
+        'perfil',
+        'equipe',
+        'activated',];
+    private lastColumn: any[] = [];
 
     constructor(
         private router: Router,
@@ -66,6 +87,8 @@ export class UserListComponent implements OnInit {
                 this.usuarioSelecionado = undefined;
             });
         }
+        this.userFiltro = new SearchGroup();
+        this.userFiltro.columnsVisible = this.columnsVisible;
     }
 
     recuperarOrganizacoes() {
@@ -205,6 +228,27 @@ export class UserListComponent implements OnInit {
         this.datatable.reset();
     }
 
+    public preencheFiltro(){
+        if(this.datatable.filterParams.nome){
+            this.userFiltro.nome = this.datatable.filterParams.nome;
+        }
+        if(this.datatable.filterParams.login){
+            this.userFiltro.login = this.datatable.filterParams.login;
+        }
+        if(this.datatable.filterParams.email){
+            this.userFiltro.email = this.datatable.filterParams.email;
+        }
+        if(this.datatable.filterParams.organizacao){
+            this.userFiltro.organizacao = this.datatable.filterParams.organizacao;
+        }
+        if(this.datatable.filterParams.perfil){
+            this.userFiltro.perfil = this.datatable.filterParams.perfil;
+        }
+        if(this.datatable.filterParams.equipe){
+            this.userFiltro.tipoEquipe = this.datatable.filterParams.equipe;
+        }
+    }
+
     public changeUrl() {
 
         let querySearch = '?nome=';
@@ -232,6 +276,33 @@ export class UserListComponent implements OnInit {
     setParamsLoad() {
         this.datatable.pDatatableComponent.onRowSelect.subscribe((event) => {
             this.usuarioSelecionado = event.data;
+        });
+        this.preencheFiltro();
+    }
+
+    mostrarColunas(event) {
+        if (this.columnsVisible.length) {
+            this.lastColumn = event.value;
+            this.updateVisibleColumns(this.columnsVisible);
+        } else {
+            this.lastColumn.map((item) => this.columnsVisible.push(item));
+            this.pageNotificationService.addErrorMessage('Não é possível exibir menos de uma coluna');
+        }
+    }
+    
+    updateVisibleColumns(columns) {
+        this.allColumnsTable.forEach(col => {
+            if (this.visibleColumnCheck(col.value, columns)) {
+                this.datatable.visibleColumns[col.value] = 'table-cell';
+            } else {
+                this.datatable.visibleColumns[col.value] = 'none';
+            }
+        });
+    }
+    
+    visibleColumnCheck(column: string, visibleColumns: any[]) {
+        return visibleColumns.some((item: any) => {
+            return (item) ? item === column : true;
         });
     }
 

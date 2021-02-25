@@ -1,31 +1,28 @@
 package br.com.basis.abaco.service;
 
-import br.com.basis.abaco.domain.Nomenclatura;
-import br.com.basis.abaco.domain.User;
-import br.com.basis.abaco.repository.NomenclaturaRepository;
-import br.com.basis.abaco.repository.search.NomenclaturaSearchRepository;
-import br.com.basis.abaco.service.dto.NomenclaturaDTO;
-import br.com.basis.abaco.service.exception.RelatorioException;
-import br.com.basis.abaco.service.relatorio.RelatorioNomeclaturaColunas;
-import br.com.basis.abaco.service.relatorio.RelatorioOrganizacaoColunas;
-import br.com.basis.abaco.service.relatorio.RelatorioUserColunas;
-import br.com.basis.abaco.utils.AbacoUtil;
-import br.com.basis.dynamicexports.service.DynamicExportsService;
-import net.sf.dynamicreports.report.exception.DRException;
-import net.sf.jasperreports.engine.JRException;
-import org.modelmapper.ModelMapper;
-import org.springframework.data.domain.Page;
-import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+import static org.elasticsearch.index.query.QueryBuilders.queryStringQuery;
 
 import java.io.ByteArrayOutputStream;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import static org.elasticsearch.index.query.QueryBuilders.multiMatchQuery;
-import static org.elasticsearch.index.query.QueryBuilders.queryStringQuery;
+import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import br.com.basis.abaco.domain.Nomenclatura;
+import br.com.basis.abaco.repository.NomenclaturaRepository;
+import br.com.basis.abaco.repository.search.NomenclaturaSearchRepository;
+import br.com.basis.abaco.service.dto.NomenclaturaDTO;
+import br.com.basis.abaco.service.dto.filter.SearchFilterDTO;
+import br.com.basis.abaco.service.exception.RelatorioException;
+import br.com.basis.abaco.service.relatorio.RelatorioNomeclaturaColunas;
+import br.com.basis.abaco.utils.AbacoUtil;
+import br.com.basis.dynamicexports.service.DynamicExportsService;
+import net.sf.dynamicreports.report.exception.DRException;
+import net.sf.jasperreports.engine.JRException;
 
 @Service
 public class NomenclaturaService {
@@ -65,13 +62,15 @@ public class NomenclaturaService {
             .collect(Collectors.toList());
     }
 
-    public ByteArrayOutputStream gerarRelatorio(String query, String tipoRelatorio) throws RelatorioException {
+    public ByteArrayOutputStream gerarRelatorio(SearchFilterDTO filtro, String tipoRelatorio) throws RelatorioException {
         ByteArrayOutputStream byteArrayOutputStream;
+        String query = "*";
+        if (filtro != null && filtro.getNome() != null) {
+            query = "*" + filtro.getNome().toUpperCase() + "*";
+        }
         try {
-            new NativeSearchQueryBuilder().withQuery(multiMatchQuery(query)).build();
-            Page<Nomenclatura> result = nomenclaturaSearchRepository.search(queryStringQuery(query),
-                dynamicExportsService.obterPageableMaximoExportacao());
-            byteArrayOutputStream = dynamicExportsService.export(new RelatorioNomeclaturaColunas(), result, tipoRelatorio,
+            Page<Nomenclatura> page = nomenclaturaSearchRepository.search(queryStringQuery(query), dynamicExportsService.obterPageableMaximoExportacao());
+            byteArrayOutputStream = dynamicExportsService.export(new RelatorioNomeclaturaColunas(), page, tipoRelatorio,
                 Optional.empty(), Optional.ofNullable(AbacoUtil.REPORT_LOGO_PATH),
                 Optional.ofNullable(AbacoUtil.getReportFooter()));
         } catch (DRException | ClassNotFoundException | JRException | NoClassDefFoundError e) {

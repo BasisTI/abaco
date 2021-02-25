@@ -22,6 +22,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -94,7 +95,7 @@ public class Sistema implements Serializable, ReportObject {
     @JoinColumn(name = "organizacao_id")
     private Organizacao organizacao;
 
-    @OneToMany(mappedBy = SISTEMA, cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = SISTEMA, cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     private Set<Modulo> modulos = new HashSet<>();
 

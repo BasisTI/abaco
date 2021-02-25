@@ -1,25 +1,17 @@
 package br.com.basis.abaco.web.rest;
 
-import br.com.basis.abaco.domain.FuncaoDados;
-import br.com.basis.abaco.domain.FuncaoDadosVersionavel;
-import br.com.basis.abaco.domain.Modulo;
-import br.com.basis.abaco.domain.Organizacao;
-import br.com.basis.abaco.domain.Sistema;
-import br.com.basis.abaco.repository.FuncaoDadosRepository;
-import br.com.basis.abaco.repository.FuncaoDadosVersionavelRepository;
-import br.com.basis.abaco.repository.SistemaRepository;
-import br.com.basis.abaco.repository.search.SistemaSearchRepository;
-import br.com.basis.abaco.security.AuthoritiesConstants;
-import br.com.basis.abaco.service.SistemaService;
-import br.com.basis.abaco.service.dto.SistemaDropdownDTO;
-import br.com.basis.abaco.service.exception.RelatorioException;
-import br.com.basis.abaco.utils.PageUtils;
-import br.com.basis.abaco.web.rest.util.HeaderUtil;
-import br.com.basis.abaco.web.rest.util.PaginationUtil;
-import br.com.basis.dynamicexports.service.DynamicExportsService;
-import br.com.basis.dynamicexports.util.DynamicExporter;
-import com.codahale.metrics.annotation.Timed;
-import io.github.jhipster.web.util.ResponseUtil;
+import java.io.ByteArrayOutputStream;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
+
+import javax.transaction.Transactional;
+import javax.validation.Valid;
+
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.search.sort.FieldSortBuilder;
 import org.elasticsearch.search.sort.SortOrder;
@@ -47,16 +39,27 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.transaction.Transactional;
-import javax.validation.Valid;
-import java.io.ByteArrayOutputStream;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import com.codahale.metrics.annotation.Timed;
+
+import br.com.basis.abaco.domain.FuncaoDados;
+import br.com.basis.abaco.domain.FuncaoDadosVersionavel;
+import br.com.basis.abaco.domain.Modulo;
+import br.com.basis.abaco.domain.Organizacao;
+import br.com.basis.abaco.domain.Sistema;
+import br.com.basis.abaco.repository.FuncaoDadosRepository;
+import br.com.basis.abaco.repository.FuncaoDadosVersionavelRepository;
+import br.com.basis.abaco.repository.SistemaRepository;
+import br.com.basis.abaco.repository.search.SistemaSearchRepository;
+import br.com.basis.abaco.security.AuthoritiesConstants;
+import br.com.basis.abaco.service.SistemaService;
+import br.com.basis.abaco.service.dto.SistemaDropdownDTO;
+import br.com.basis.abaco.service.dto.filter.SistemaFilterDTO;
+import br.com.basis.abaco.service.exception.RelatorioException;
+import br.com.basis.abaco.utils.PageUtils;
+import br.com.basis.abaco.web.rest.util.HeaderUtil;
+import br.com.basis.abaco.web.rest.util.PaginationUtil;
+import br.com.basis.dynamicexports.util.DynamicExporter;
+import io.github.jhipster.web.util.ResponseUtil;
 
 @RestController
 @RequestMapping("/api")
@@ -235,16 +238,16 @@ public class SistemaResource {
 
     @PostMapping(value = "/sistema/exportacao/{tipoRelatorio}", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
     @Timed
-    public ResponseEntity<InputStreamResource> gerarRelatorioExportacao(@PathVariable String tipoRelatorio, @RequestParam(defaultValue = "*") String query) throws RelatorioException {
-        ByteArrayOutputStream byteArrayOutputStream = sistemaService.gerarRelatorio(query, tipoRelatorio);
+    public ResponseEntity<InputStreamResource> gerarRelatorioExportacao(@PathVariable String tipoRelatorio, @RequestBody SistemaFilterDTO filtro) throws RelatorioException {
+        ByteArrayOutputStream byteArrayOutputStream = sistemaService.gerarRelatorio(filtro, tipoRelatorio);
         return DynamicExporter.output(byteArrayOutputStream,
             "relatorio." + tipoRelatorio);
     }
 
-    @GetMapping(value = "/sistema/exportacao-arquivo", produces = MediaType.APPLICATION_PDF_VALUE)
+    @PostMapping(value = "/sistema/exportacao-arquivo", produces = MediaType.APPLICATION_PDF_VALUE)
     @Timed
-    public ResponseEntity<byte[]> gerarRelatorioImprimir(@RequestParam(defaultValue = "*") String query) throws RelatorioException {
-        ByteArrayOutputStream byteArrayOutputStream = sistemaService.gerarRelatorio(query, "pdf");
+    public ResponseEntity<byte[]> gerarRelatorioImprimir(@RequestBody SistemaFilterDTO filtro) throws RelatorioException {
+        ByteArrayOutputStream byteArrayOutputStream = sistemaService.gerarRelatorio(filtro, "pdf");
         return new ResponseEntity<byte[]>(byteArrayOutputStream.toByteArray(), HttpStatus.OK);
     }
 }

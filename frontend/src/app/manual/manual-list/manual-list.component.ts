@@ -9,6 +9,7 @@ import { ElasticQuery } from 'src/app/shared/elastic-query';
 import { FatorAjuste } from 'src/app/fator-ajuste';
 import { EsforcoFase } from 'src/app/esforco-fase';
 import { MessageUtil } from 'src/app/util/message.util';
+import { SearchGroup } from '..';
 
 @Component({
     selector: 'app-manual',
@@ -28,7 +29,31 @@ export class ManualListComponent implements OnInit {
     myform: FormGroup;
     nomeValido = false;
     urlManualService = this.manualService.resourceUrl;
-    idManual: Number; 
+    idManual: Number;
+
+    allColumnsTable = [
+        {value: 'nome',  label: 'Nome'},
+        {value: 'valorVariacaoEstimada',  label: 'Estimada'},
+        {value: 'valorVariacaoIndicativa',  label: 'Indicativa'},
+        {value: 'parametroInclusao',  label: 'Inclusão'},
+        {value: 'parametroAlteracao',  label: 'Alteração'},
+        {value: 'parametroExclusao',  label: 'Exclusão'},
+        {value: 'parametroConversao',  label: 'Conversão'},
+        {value: 'observacao',  label: 'Observação'},
+    ];
+    
+    columnsVisible = [
+        'nome',
+        'valorVariacaoEstimada',
+        'valorVariacaoIndicativa',
+        'parametroInclusao',
+        'parametroAlteracao',
+        'parametroExclusao',
+        'parametroConversao',
+        'observacao'];
+      private lastColumn: any[] = [];
+      
+      manualFiltro : SearchGroup = new SearchGroup();
 
     constructor(
         private router: Router,
@@ -133,6 +158,7 @@ export class ManualListComponent implements OnInit {
 
     public recarregarDataTable() {
         this.datatable.refresh(this.elasticQuery.query);
+        this.manualFiltro.nome = this.elasticQuery.query;
     }
 
     public search() {
@@ -176,15 +202,11 @@ export class ManualListComponent implements OnInit {
         }
     }
 
-    public gerarRelatorioPdf(){
-        this.manualService.gerarRelatorioPdfArquivo()
+    public exportarManualFatorAjuste() {
+        this.manualService.geraRelatorioPdfBrowserFatorAjuste(this.manualSelecionado.id);
     }
 
-    public exportarManualFatorAjuste(){
-        this.manualService.geraRelatorioPdfBrowserFatorAjuste(this.manualSelecionado.id);
-      }
-
-      relatorioCloneButton() {
+    relatorioCloneButton() {
         if (!(this.datatable && this.datatable.selectedRow)) {
             return this.getLabel('Selecione um registro para clonar');
         }
@@ -197,5 +219,31 @@ export class ManualListComponent implements OnInit {
         }
         return this.getLabel('Relatório Fator Ajuste');
     }
+
+    mostrarColunas(event) {
+        if (this.columnsVisible.length) {
+            this.lastColumn = event.value;
+            this.updateVisibleColumns(this.columnsVisible);
+        } else {
+            this.lastColumn.map((item) => this.columnsVisible.push(item));
+            this.pageNotificationService.addErrorMessage('Não é possível exibir menos de uma coluna');
+        }
+    }
     
+    updateVisibleColumns(columns) {
+        this.allColumnsTable.forEach(col => {
+            if (this.visibleColumnCheck(col.value, columns)) {
+                this.datatable.visibleColumns[col.value] = 'table-cell';
+            } else {
+                this.datatable.visibleColumns[col.value] = 'none';
+            }
+        });
+    }
+    
+    visibleColumnCheck(column: string, visibleColumns: any[]) {
+        return visibleColumns.some((item: any) => {
+            return (item) ? item === column : true;
+        });
+    }
+
 }

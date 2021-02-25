@@ -8,3 +8,10 @@ export class Nomenclatura implements BaseEntity {
     public descricao?: string,
   ) {}
 }
+export class SearchGroup {
+
+  constructor(
+      public nome?: string,
+  ) {
+  }
+}

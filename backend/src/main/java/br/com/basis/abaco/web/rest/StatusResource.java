@@ -39,6 +39,7 @@ import br.com.basis.abaco.repository.StatusRepository;
 import br.com.basis.abaco.repository.search.StatusSearchRepository;
 import br.com.basis.abaco.service.StatusService;
 import br.com.basis.abaco.service.dto.StatusDTO;
+import br.com.basis.abaco.service.dto.filter.SearchFilterDTO;
 import br.com.basis.abaco.service.exception.RelatorioException;
 import br.com.basis.abaco.utils.PageUtils;
 import br.com.basis.abaco.web.rest.util.HeaderUtil;
@@ -146,17 +147,16 @@ public class StatusResource {
 
     @PostMapping(value = "/status/exportacao/{tipoRelatorio}", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
     @Timed
-    public ResponseEntity<InputStreamResource> gerarRelatorioExportacao(@PathVariable String tipoRelatorio,
-            @RequestParam(defaultValue = "*") String query) throws RelatorioException {
-        ByteArrayOutputStream byteArrayOutputStream = statusService.gerarRelatorio(query, tipoRelatorio);
+    public ResponseEntity<InputStreamResource> gerarRelatorioExportacao(@PathVariable String tipoRelatorio,@RequestBody SearchFilterDTO filtro) throws RelatorioException {
+        ByteArrayOutputStream byteArrayOutputStream = statusService.gerarRelatorio(filtro, tipoRelatorio);
         return DynamicExporter.output(byteArrayOutputStream, "relatorio." + tipoRelatorio);
     }
 
-    @GetMapping(value = "/status/exportacao-arquivo", produces = MediaType.APPLICATION_PDF_VALUE)
+    @PostMapping(value = "/status/exportacao-arquivo", produces = MediaType.APPLICATION_PDF_VALUE)
     @Timed
-    public ResponseEntity<byte[]> gerarRelatorioImprimir(@RequestParam(defaultValue = "*") String query)
+    public ResponseEntity<byte[]> gerarRelatorioImprimir(@RequestBody SearchFilterDTO filtro)
             throws RelatorioException {
-        ByteArrayOutputStream byteArrayOutputStream = statusService.gerarRelatorio(query, "pdf");
+        ByteArrayOutputStream byteArrayOutputStream = statusService.gerarRelatorio(filtro, "pdf");
         return new ResponseEntity<byte[]>(byteArrayOutputStream.toByteArray(), HttpStatus.OK);
     }
 }

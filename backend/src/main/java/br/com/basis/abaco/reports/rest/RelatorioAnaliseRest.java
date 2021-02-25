@@ -142,7 +142,7 @@ public class RelatorioAnaliseRest {
      * @throws JRException
      */
     public @ResponseBody
-    byte[] downloadPdfBrowser(Analise analise, TipoRelatorio tipo) throws FileNotFoundException, JRException {
+    ResponseEntity<byte[]> downloadPdfBrowser(Analise analise, TipoRelatorio tipo) throws FileNotFoundException, JRException {
         init();
         popularObjeto(analise);
 
@@ -169,7 +169,7 @@ public class RelatorioAnaliseRest {
      * @throws JRException
      */
     public @ResponseBody
-    byte[] downloadExcel(Analise analise, UploadedFile uploadedFiles) throws FileNotFoundException, JRException {
+    ResponseEntity<byte[]> downloadExcel(Analise analise, UploadedFile uploadedFiles) throws FileNotFoundException, JRException {
         init();
         popularObjeto(analise, uploadedFiles);
         return relatorio.downloadExcel(analise, caminhoAnaliseExcel, popularParametroAnalise());

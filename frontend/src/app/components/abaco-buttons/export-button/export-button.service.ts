@@ -35,8 +35,21 @@ export class ExportacaoUtilService {
         );
     }
 
+    static imprimir(http: HttpClient, resourceName: string, params: any, filter: any) {
+        return ExportacaoUtilService.generateImprimir(
+            `${this.resourceUrl}/${resourceName}/exportacao-arquivo/`,
+            http,
+            params,
+            filter
+        );
+    }
+
     static generate(endpoint: string, http: HttpClient, datatable: any, filter: any): Observable<Blob> {
         return http.post(endpoint, filter, {responseType: 'blob', params: datatable });
+    }
+
+    static generateImprimir(endpoint: string, http: HttpClient, datatable: any, filter: any) {
+        return http.post(endpoint, filter, {responseType: 'arraybuffer', params: datatable });
     }
 
     static getExtension(tipoRelatorio: string): string {

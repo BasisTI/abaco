@@ -89,6 +89,7 @@ export class DivergenciaListComponent implements OnInit {
     analisesList: any[] = [];
     isLoadFilter = true;
     showDialogDivergenceBlock = false;
+    showDialogDivergenceStatus = false;
 
     constructor(
         private router: Router,
@@ -272,26 +273,31 @@ export class DivergenciaListComponent implements OnInit {
             this.pageNotificationService.addErrorMessage('Nenhuma Validação foi selecionada.');
             return;
         }
-        this.changeStatus(divergence)
+        this.changeStatusAndBlock(divergence)
     }
 
-    public changeStatus(divergence: Analise) {
+    public changeStatusAndBlock(divergence: Analise) {
         this.statusToChange = divergence.status;
         this.idDivergenceStatus = divergence.id;
         this.showDialogDivergenceBlock = true;
     }
+    public changeStatus(divergence: Analise) {
+        this.statusToChange = divergence.status;
+        this.idDivergenceStatus = divergence.id;
+        this.showDialogDivergenceStatus = true;
+    }
 
     public divergenceBlock(){
-        this.alterStatusAnalise();
+        this.bloqueiaDivegence(this.blocked);
     }
     
     public alterStatusAnalise(){
         if(this.idDivergenceStatus && this.statusToChange){
-                this.bloqueiaDivegence(this.blocked)
                 this.divergenciaService.changeStatusDivergence(this.idDivergenceStatus, this.statusToChange).subscribe(data => {
                 this.statusService = undefined;
                 this.idDivergenceStatus = undefined;
                 this.showDialogDivergenceBlock = false;
+                this.showDialogDivergenceStatus = false;
                 this.datatable._filter();
                 this.pageNotificationService.addSuccessMessage('O status da análise '+ data.identificadorAnalise + ' foi alterado.');
             },
@@ -315,7 +321,7 @@ export class DivergenciaListComponent implements OnInit {
     }
 
     public bloqueiaDivegence(bloquear: boolean) {
-
+        this.alterStatusAnalise();
         this.divergenciaService.findAnalise(this.analiseSelecionada.id).subscribe((res) => {
             this.analiseTemp = new Analise().copyFromJSON(res);
             let canBloqued = false;

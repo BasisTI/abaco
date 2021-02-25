@@ -8,7 +8,6 @@ public class RelatorioNomeclaturaColunas extends PropriedadesRelatorio {
 
     public RelatorioNomeclaturaColunas() {
         super("Listagem de Nomenclatura", "Total de Nomenclatura");
-        super.getColunas().add(new ColunasPropriedadeRelatorio("id", "Código da Nomenclatura", Long.class, 10, "####", DynamicExportsConstants.ALINHAR_ESQUERDA));
         super.getColunas().add(new ColunasPropriedadeRelatorio("nome", "Nome", String.class, 10, DynamicExportsConstants.MASCARA_NULL, DynamicExportsConstants.ALINHAR_ESQUERDA));
         super.getColunas().add(new ColunasPropriedadeRelatorio("descricao", "Descrição", String.class, 10, DynamicExportsConstants.MASCARA_NULL, DynamicExportsConstants.ALINHAR_ESQUERDA));
 

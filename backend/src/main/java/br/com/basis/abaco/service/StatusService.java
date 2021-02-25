@@ -1,28 +1,28 @@
 package br.com.basis.abaco.service;
 
-import br.com.basis.abaco.domain.Status;
-import br.com.basis.abaco.repository.StatusRepository;
-import br.com.basis.abaco.repository.search.StatusSearchRepository;
-import br.com.basis.abaco.service.dto.StatusDTO;
-import br.com.basis.abaco.service.exception.RelatorioException;
-import br.com.basis.abaco.service.relatorio.RelatorioStatusColunas;
-import br.com.basis.abaco.utils.AbacoUtil;
-import br.com.basis.dynamicexports.service.DynamicExportsService;
-import net.sf.dynamicreports.report.exception.DRException;
-import net.sf.jasperreports.engine.JRException;
-import org.modelmapper.ModelMapper;
-import org.springframework.data.domain.Page;
-import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+import static org.elasticsearch.index.query.QueryBuilders.queryStringQuery;
 
 import java.io.ByteArrayOutputStream;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import static org.elasticsearch.index.query.QueryBuilders.multiMatchQuery;
-import static org.elasticsearch.index.query.QueryBuilders.queryStringQuery;
+import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import br.com.basis.abaco.domain.Status;
+import br.com.basis.abaco.repository.StatusRepository;
+import br.com.basis.abaco.repository.search.StatusSearchRepository;
+import br.com.basis.abaco.service.dto.StatusDTO;
+import br.com.basis.abaco.service.dto.filter.SearchFilterDTO;
+import br.com.basis.abaco.service.exception.RelatorioException;
+import br.com.basis.abaco.service.relatorio.RelatorioStatusColunas;
+import br.com.basis.abaco.utils.AbacoUtil;
+import br.com.basis.dynamicexports.service.DynamicExportsService;
+import net.sf.dynamicreports.report.exception.DRException;
+import net.sf.jasperreports.engine.JRException;
 
 @Service
 @Transactional
@@ -70,13 +70,15 @@ public class StatusService {
             .collect(Collectors.toList());
     }
 
-    public ByteArrayOutputStream gerarRelatorio(String query, String tipoRelatorio) throws RelatorioException {
+    public ByteArrayOutputStream gerarRelatorio(SearchFilterDTO filtro, String tipoRelatorio) throws RelatorioException {
         ByteArrayOutputStream byteArrayOutputStream;
+        String query = "*";
+        if (filtro != null && filtro.getNome() != null) {
+            query = "*" + filtro.getNome().toUpperCase() + "*";
+        }
         try {
-            new NativeSearchQueryBuilder().withQuery(multiMatchQuery(query)).build();
-            Page<Status> result = statusSearchRepository.search(queryStringQuery(query),
-                dynamicExportsService.obterPageableMaximoExportacao());
-            byteArrayOutputStream = dynamicExportsService.export(new RelatorioStatusColunas(), result, tipoRelatorio,
+            Page<Status> page = statusSearchRepository.search(queryStringQuery(query), dynamicExportsService.obterPageableMaximoExportacao());
+            byteArrayOutputStream = dynamicExportsService.export(new RelatorioStatusColunas(), page, tipoRelatorio,
                 Optional.empty(), Optional.ofNullable(AbacoUtil.REPORT_LOGO_PATH),
                 Optional.ofNullable(AbacoUtil.getReportFooter()));
         } catch (DRException | ClassNotFoundException | JRException | NoClassDefFoundError e) {

@@ -3,6 +3,7 @@ package br.com.basis.abaco.web.rest;
 import java.io.ByteArrayOutputStream;
 import java.util.List;
 import java.util.Optional;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.InputStreamResource;
@@ -22,7 +23,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
 import com.codahale.metrics.annotation.Timed;
+
 import br.com.basis.abaco.domain.novo.Fase;
 import br.com.basis.abaco.service.FaseService;
 import br.com.basis.abaco.service.dto.FaseDTO;
@@ -122,6 +125,21 @@ public class FaseResource {
             throw e;
         }
         return DynamicExporter.output(byteArrayOutputStream, "relatorio." + tipoRelatorio);
+    }
+    
+    @PostMapping(value = "/fases/exportacao-arquivo", produces = MediaType.APPLICATION_PDF_VALUE)
+    @Timed
+    public ResponseEntity<byte[]> gerarRelatorioFaseImprimir(@RequestBody FaseFiltroDTO filter, @ApiParam Pageable pageable) throws RelatorioException {
+        Page<FaseDTO> fasePage = service.getPage(filter, pageable);
+        ByteArrayOutputStream byteArrayOutputStream = null;
+        try {
+            byteArrayOutputStream = dynamicExportsService.export(new RelatorioFaseColunas(), fasePage, "pdf",
+                    Optional.empty(), Optional.ofNullable(AbacoUtil.REPORT_LOGO_PATH),
+                    Optional.ofNullable(AbacoUtil.getReportFooter()));
+        } catch (DRException | ClassNotFoundException | JRException | NoClassDefFoundError e) {
+            throw new RelatorioException(e);
+        }
+        return new ResponseEntity<byte[]>(byteArrayOutputStream.toByteArray(), HttpStatus.OK);
     }
 
     public FaseResource(FaseService service, DynamicExportsService dynamicExportsService) {

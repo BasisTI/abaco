@@ -17,6 +17,18 @@
                         routerLink="new">
                     </app-green-button>
                 </div>
+                <div class="ui-g-12 ui-g-nopad">
+                    <div class="ui-g-3 ui-md-offset-6">
+                        <div class="text-right">Visibilidade das Colunas:</div>
+                    </div>
+                    <div class="ui-g-3">
+                        <p-multiSelect defaultLabel="Selecione as colunas a serem exibidas"
+                            [displaySelectedLabel]="false" [ngModelOptions]="{ standalone: true }"
+                            (onChange)="mostrarColunas($event)" [options]="allColumnsTable"
+                            [(ngModel)]="columnsVisible" [style]="{ width: '100%' }">
+                        </p-multiSelect>
+                    </div>
+                  </div>
             <div>
                     <basis-datatable
                             [url]="searchUrl"
@@ -28,7 +40,6 @@
                             [showPaginationFooter]="true"
                             [customFilterOptions]="customOptions"
                             [filterOnColumn]="true"
-                            [showVisibleColumnsControl]="true"
                             #datatable>
 
                         <p-column header="Nome" field="nome" [style]="{width:'15%'}" [sortable]="true">
@@ -79,7 +90,7 @@
                     </basis-datatable>
 
                     <div class="ui-g-12 ui-md-2">
-                        <app-export-button [dataTable]="datatable" resourceName="users">
+                        <app-export-button [dataTable]="datatable" resourceName="users" [filter]="userFiltro" [columnsVisible]="columnsVisible">
                         </app-export-button>
                     </div>
 

@@ -1,30 +1,28 @@
 package br.com.basis.abaco.service;
 
+import java.io.ByteArrayOutputStream;
+import java.util.List;
+import java.util.Optional;
+
+import org.elasticsearch.index.query.BoolQueryBuilder;
+import org.elasticsearch.index.query.QueryBuilders;
+import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import br.com.basis.abaco.domain.Sistema;
 import br.com.basis.abaco.repository.SistemaRepository;
 import br.com.basis.abaco.repository.search.SistemaSearchRepository;
 import br.com.basis.abaco.service.dto.SistemaDropdownDTO;
 import br.com.basis.abaco.service.dto.SistemaListDTO;
+import br.com.basis.abaco.service.dto.filter.SistemaFilterDTO;
 import br.com.basis.abaco.service.exception.RelatorioException;
 import br.com.basis.abaco.service.relatorio.RelatorioSistemaColunas;
 import br.com.basis.abaco.utils.AbacoUtil;
 import br.com.basis.dynamicexports.service.DynamicExportsService;
 import net.sf.dynamicreports.report.exception.DRException;
 import net.sf.jasperreports.engine.JRException;
-import org.elasticsearch.index.query.BoolQueryBuilder;
-import org.elasticsearch.index.query.QueryBuilders;
-import org.modelmapper.ModelMapper;
-import org.springframework.data.domain.Page;
-import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.io.ByteArrayOutputStream;
-import java.util.List;
-import java.util.Optional;
-
-import static org.elasticsearch.index.query.QueryBuilders.multiMatchQuery;
-import static org.elasticsearch.index.query.QueryBuilders.queryStringQuery;
 
 @Service
 @Transactional
@@ -73,11 +71,10 @@ public class SistemaService extends BaseService {
     }
 
 
-    public ByteArrayOutputStream gerarRelatorio(String query, String tipoRelatorio) throws RelatorioException {
+    public ByteArrayOutputStream gerarRelatorio(SistemaFilterDTO filtro, String tipoRelatorio) throws RelatorioException {
         ByteArrayOutputStream byteArrayOutputStream;
         try {
-            new NativeSearchQueryBuilder().withQuery(multiMatchQuery(query)).build();
-            Page<Sistema> result = sistemaSearchRepository.search(queryStringQuery(query), dynamicExportsService.obterPageableMaximoExportacao());
+            Page<Sistema> result = sistemaRepository.consultarSistemaPorFiltro(filtro.getNome(), filtro.getSigla(), filtro.getNumeroOcorrencia(), filtro.getOrganizacao() == null ? null : filtro.getOrganizacao().get(0), dynamicExportsService.obterPageableMaximoExportacao());
             byteArrayOutputStream = dynamicExportsService.export(new RelatorioSistemaColunas(), result, tipoRelatorio, Optional.empty(), Optional.ofNullable(AbacoUtil.REPORT_LOGO_PATH), Optional.ofNullable(AbacoUtil.getReportFooter()));
         } catch (DRException | ClassNotFoundException | JRException | NoClassDefFoundError e) {
             throw new RelatorioException(e);
