@@ -376,7 +376,7 @@
             <!-- Dialog Edit  Esforco Fase -->
             <p-dialog [header]="'Esforço Fase'" [(visible)]="showDialogEditPhaseEffort">
                 <div class="ui-g">
-                    <div class="ui-g-12 ui-md-12 ui-sm-12" style="padding-top: 25px">
+                    <div class="ui-g-12 ui-md-12 ui-sm-12" style="padding-top: 25px" [style]="{width:'30vw'}">
                         <label id=idLabelManualFormComponentFase>Fase*</label>
                         <p-dropdown [filter]="true" iid=idDropdownManualFormComponentFase [options]="fases"
                             [(ngModel)]="editedPhaseEffort.fase" optionLabel="nome" [placeholder]="'Fase'" name="fase"
