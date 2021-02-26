@@ -30,8 +30,8 @@ export class DivergenciaResumoComponent implements OnInit {
 
     resumoTotal: ResumoTotal;
     public linhaResumo: Resumo[] = [];
-    public pfTotal: string;
-    public pfAjustada: string;
+    public pfTotal: number;
+    public pfAjustada: number;
     complexidades: string[];
 
     public analise: Analise = null;
@@ -92,8 +92,8 @@ export class DivergenciaResumoComponent implements OnInit {
                         this.complexidades = AnaliseSharedUtils.complexidades;
                         this.resumoTotal = this.analiseSharedDataService.analise.resumoTotal;
                         this.esforcoFases = this.analiseSharedDataService.analise.esforcoFases;
-                        this.pfTotal = analise.pfTotal;
-                        this.pfAjustada = analise.adjustPFTotal;
+                        this.pfTotal = parseFloat(analise.pfTotal);
+                        this.pfAjustada = parseFloat(analise.adjustPFTotal);
                         this.divergenciaService.getDivergenciaResumo(this.idAnalise)
                         .subscribe(res => {
                             const jsonResponse = res;
@@ -124,8 +124,8 @@ export class DivergenciaResumoComponent implements OnInit {
                     this.divergenciaService.findView(this.idAnalise).subscribe(analise => {
                         this.analiseSharedDataService.analise = analise;
                         this.analise = analise;
-                        this.pfTotal = analise.pfTotal;
-                        this.pfAjustada = analise.adjustPFTotal;
+                        this.pfTotal = parseFloat(analise.pfTotal);
+                        this.pfAjustada = parseFloat(analise.adjustPFTotal);
                         this.disableAba = analise.metodoContagem === MessageUtil.INDICATIVA;
                         this.divergenciaService.getDivergenciaResumo(this.idAnalise)
                             .subscribe(res => {
@@ -186,6 +186,26 @@ export class DivergenciaResumoComponent implements OnInit {
                 return;
         }
         this.router.navigate(link);
+    }
+
+    public iteratorLinhaResumoPfTotal(){
+        this.pfTotal = 0;
+        this.linhaResumo.forEach(element => {
+            this.pfTotal = element.pfTotal
+            
+        });
+        
+        return this.pfTotal.toFixed(2);;
+    }
+
+    public iteratorLinhaResumopfAjustada(){
+        this.pfAjustada = 0;
+        this.linhaResumo.forEach(element => {
+            this.pfAjustada = element.pfAjustada
+            
+        });
+        
+        return this.pfAjustada.toFixed(2);
     }
 
     public geraRelatorioExcelBrowser() {
