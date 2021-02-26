@@ -77,7 +77,9 @@ public class FaseService {
 
     public Page<Fase> list(String nome,Pageable page) {
         if(nome!= null && !(nome.isEmpty())){
-            return repository.findByNomeContains(nome, page);
+            FaseFiltroDTO dto = new FaseFiltroDTO();
+            dto.setNome(nome);
+            return repository.findByNomeContainsIlike(dto, page);
         }else{
             return repository.findAll(page);
         }
