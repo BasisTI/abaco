@@ -129,16 +129,9 @@
                             (buttonClick)="datatableClickModulo($event)"
                             disableClone="true"
                             [enableScroll]="false"
-                            (onRowEditEvent)="onRowEditEvent($event)"
-                            editMode="row"
                             [rows]="20"
                             #datatableModulo>
-                        <p-column header="Código"
-                                    [style]="{width: '25%'}">
-                            <ng-template let-codigo="rowData.id" pTemplate="body">
-                                {{ codigo ? codigo : 'Ainda não cadastrado' }}
-                            </ng-template>
-                        </p-column>
+
                         <p-column header="Nome" field="nome"></p-column>
                     </basis-datatable>
                 </div>
@@ -167,8 +160,6 @@
                             disableView="true"
                             disableClone="true"
                             [enableScroll]="false"
-                            (onRowEditEvent)="onRowEditEvent($event)"
-                            editMode="row"
                             [rows]="20"
                             #datatableFuncionaliadade
                             >
@@ -370,6 +361,7 @@
                         </div>
                     </div>
                 </p-dialog>
+                <!-- Fim dialog funcionalidade -->
 
                 <!-- Dialog editar Funcionalidades -->
                 <p-dialog header="Funcionalidade"
@@ -442,6 +434,7 @@
                         </div>
                     </div>
                 </p-dialog>
+                <!-- Fim dialog editar Funcionalidades -->
             </form>
         </div>
     </div>
