@@ -596,8 +596,10 @@ export class ManualFormComponent implements OnInit, OnDestroy {
 
     public onRowDblclickFase(event) {
         if (event.target.nodeName === 'TD') {
+            this.editedPhaseEffort = this.editedPhaseEffort.clone();
             this.openDialogEditPhaseEffort();
         } else if (event.target.parentNode.nodeName === 'TD') {
+            this.editedPhaseEffort = this.editedPhaseEffort.clone();
             this.openDialogEditPhaseEffort();
         }
     }
