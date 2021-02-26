@@ -17,15 +17,21 @@ public class RelatorioAnaliseColunas extends PropriedadesRelatorio {
     private static final String EQUIPE_RESPONSAVEL_NOME = "equipeResponsavel.nome";
     private static final String IDENTIFICADOR_ANALISE = "identificadorAnalise";
     private static final String ORGANIZACAO_NOME = "organizacao.nome";
-    
-    private static final String[][] colunas = {{ORGANIZACAO_NOME, "Organização"},{IDENTIFICADOR_ANALISE,"Identificador"}, {EQUIPE_RESPONSAVEL_NOME,"Equipe"}, {SISTEMA_NOME,"Sistema"}
-    , {METODO_CONTAGEM_STRING,"Método de contagem"}, {PF_TOTAL,"PF Total"},{ ADJUST_PF_TOTAL,"PF Ajustado"},{ CREATED_ON,"Data Criação"},{ BLOQUEIA_STRING,"Bloqueada?"}};
+    private static final String NUMERO_OS = "numeroOs";
+    private static final String STATUS_NOME = "status.nome";
+    private static final String ClONADA_PARA_EQUIPE = "clonadaParaEquipeString";
+    private static final String USERS = "nomeUser";
+
+
+    private static final String[][] colunas = {{ORGANIZACAO_NOME, "Organização","organizacao.nome"},{IDENTIFICADOR_ANALISE,"Identificador","identificadorAnalise"}, {EQUIPE_RESPONSAVEL_NOME,"Equipe","equipeResponsavel.nome"}, {SISTEMA_NOME,"Sistema","sistema.nome"}
+    , {METODO_CONTAGEM_STRING,"Método de contagem","metodoContagem"}, {PF_TOTAL,"PF Total","pfTotal"},{ ADJUST_PF_TOTAL,"PF Ajustado","adjustPFTotal"},{ CREATED_ON,"Data Criação","dataCriacaoOrdemServico"},{ BLOQUEIA_STRING,"Bloqueada?","bloqueiaAnalise"}
+    ,{NUMERO_OS , "Número Os", "numeroOs"},{STATUS_NOME , "Status", "status.nome"},{ClONADA_PARA_EQUIPE ,"Clonada", "clonadaParaEquipe"},{USERS,"Usuários","users"}};
 
 
     public RelatorioAnaliseColunas(List<String> colunasVisiveis) {
         super("Listagem das Analises", "Total de Analises");
         for (String[] string : colunas) {
-            if(colunasVisiveis.contains(string[0])) {
+            if(colunasVisiveis.contains(string[2])) {
                 super.getColunas().add(new ColunasPropriedadeRelatorio(string[0], string[1], String.class, 10, DynamicExportsConstants.MASCARA_NULL, DynamicExportsConstants.ALINHAR_ESQUERDA));
             }
         }

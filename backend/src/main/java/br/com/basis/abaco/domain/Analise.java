@@ -298,4 +298,23 @@ public class Analise implements Serializable, ReportObject {
         }
         return "Não";
     }
+
+    public String getClonadaParaEquipeString(){
+        if (clonadaParaEquipe){
+            return "Sim";
+        }
+        return "Não";
+    }
+
+    public String getNomeUser(){
+        String ponto = ". ";
+        String nomeUser = "";
+        if (users != null) {
+            for(User nome : users){
+                nomeUser = nomeUser.concat(nome.getFirstName()).concat(ponto);
+            }
+        }
+        return nomeUser;
+    }
+
 }
