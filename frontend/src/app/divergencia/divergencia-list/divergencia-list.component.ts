@@ -237,6 +237,7 @@ export class DivergenciaListComponent implements OnInit {
         this.blockUiService.show();
         this.event = event;
         this.analiseService.search(event, event.rows, false, this.changeUrl()).subscribe(response => {
+            console.log(response.body);
             this.lstDivergence = response.body;
             this.datatable.totalRecords = parseInt(response.headers.get('x-total-count'), 10);
             this.blockUiService.hide();

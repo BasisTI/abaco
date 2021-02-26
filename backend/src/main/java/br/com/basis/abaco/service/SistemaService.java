@@ -8,6 +8,8 @@ import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
+import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
+import org.springframework.data.elasticsearch.core.query.SearchQuery;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -74,8 +76,15 @@ public class SistemaService extends BaseService {
     public ByteArrayOutputStream gerarRelatorio(SistemaFilterDTO filtro, String tipoRelatorio) throws RelatorioException {
         ByteArrayOutputStream byteArrayOutputStream;
         try {
-            Page<Sistema> result = sistemaRepository.consultarSistemaPorFiltro(filtro.getNome(), filtro.getSigla(), filtro.getNumeroOcorrencia(), filtro.getOrganizacao() == null ? null : filtro.getOrganizacao().get(0), dynamicExportsService.obterPageableMaximoExportacao());
-            byteArrayOutputStream = dynamicExportsService.export(new RelatorioSistemaColunas(), result, tipoRelatorio, Optional.empty(), Optional.ofNullable(AbacoUtil.REPORT_LOGO_PATH), Optional.ofNullable(AbacoUtil.getReportFooter()));
+            Long[] organizacoes = null;
+            if(filtro.getOrganizacao() != null && !filtro.getOrganizacao().isEmpty()) {
+                organizacoes = new Long[filtro.getOrganizacao().size()];
+            }
+            BoolQueryBuilder qb = bindFilterSearch(filtro.getNome(), filtro.getSigla(), filtro.getNumeroOcorrencia(), organizacoes != null ? filtro.getOrganizacao().toArray(organizacoes) : null);
+            SearchQuery searchQuery = new NativeSearchQueryBuilder().withQuery(qb).withPageable(dynamicExportsService.obterPageableMaximoExportacao()).build();
+            Page<Sistema> page = sistemaSearchRepository.search(searchQuery);
+  
+            byteArrayOutputStream = dynamicExportsService.export(new RelatorioSistemaColunas(), page, tipoRelatorio, Optional.empty(), Optional.ofNullable(AbacoUtil.REPORT_LOGO_PATH), Optional.ofNullable(AbacoUtil.getReportFooter()));
         } catch (DRException | ClassNotFoundException | JRException | NoClassDefFoundError e) {
             throw new RelatorioException(e);
         }
