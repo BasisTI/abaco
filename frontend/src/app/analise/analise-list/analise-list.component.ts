@@ -170,14 +170,6 @@ export class AnaliseListComponent implements OnInit {
         // );
     }
 
-    public carregarDataTable() {
-        this.blockUiService.show();
-        this.grupoService.all().subscribe((res) => {
-            this.datatable.value = res.json;
-            this.blockUiService.hide();
-        });
-    }
-
     clonarTooltip() {
         if (!(this.datatable && this.datatable.selectedRow) ) {
             return this.getLabel('Selecione um registro para clonar');
