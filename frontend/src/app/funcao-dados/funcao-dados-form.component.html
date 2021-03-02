@@ -18,7 +18,7 @@
                             </div>
                             <div >
                                 <basis-datatable
-                                        type="memory" 
+                                        type="memory"
                                         id="idTabelaFuncaoDados"
                                         [disableDelete]="this.isView"
                                         [disableEdit]="this.isView"
@@ -39,7 +39,7 @@
 
                                     <p-column field="nomeModulo" header="Módulo" [filter]="true" [sortable]="true"></p-column>
                                     <p-column field="nomeFuncionalidade" [filter]="true" header="Funcionalidade" [sortable]="true"></p-column>
-                                    <p-column field="name" header="Nome" [sortable]="true"></p-column> 
+                                    <p-column field="name" header="Nome" [sortable]="true"></p-column>
                                     <p-column field="deflator" header="Deflator" [sortable]="true"></p-column>
                                     <p-column field="tipo" header="Classificação" [sortable]="true"></p-column>
                                     <p-column field="totalDers" header="DER (TD)" [sortable]="true" ></p-column>
@@ -56,7 +56,7 @@
                                     <basis-datatable-button
                                         name="crud"
                                         *ngIf="!isView && !(analise && analise.metodoContagem && analise.metodoContagem === 'INDICATIVA') "
-                                        [tooltip]="funcaoDadosEditar.id != null ? this.getLabel('Criar Crud') : this.getLabel('Escolha um registro para criar crud.')" 
+                                        [tooltip]="funcaoDadosEditar.id != null ? this.getLabel('Criar Crud') : this.getLabel('Escolha um registro para criar crud.')"
                                         [disabled]="funcaoDadosEditar.id == null"
                                         class="ui-button-success"
                                         icon="input">
@@ -64,7 +64,7 @@
                                     <basis-datatable-button
                                         name="clone"
                                         *ngIf="!isView"
-                                        [pTooltip]="funcaoDadosEditar.id != null ? this.getLabel('Criar Clone') : this.getLabel('Escolha um registro para criar Clone.')" 
+                                        [pTooltip]="funcaoDadosEditar.id != null ? this.getLabel('Criar Clone') : this.getLabel('Escolha um registro para criar Clone.')"
                                         [disabled]="funcaoDadosEditar.id == null "
                                         class="ui-button-dark"
                                         icon="content-copy">
@@ -72,7 +72,7 @@
                                     <basis-datatable-button
                                         name="filter"
                                         *ngIf="!isView"
-                                        pTooltip="Copiar funções de dados." 
+                                        pTooltip="Copiar funções de dados."
                                         class="ui-button-info"
                                         icon="import-export">
                                     </basis-datatable-button>
@@ -232,6 +232,14 @@
                             </div>
                         </div>
 
+                        <div class="ui-g-12 ui-md-12 ui-sm-12">
+                            <p-fieldset legend="Visão PF" [toggleable]="true" [collapsed]="true">
+                                <div class="ui-g-12 ui-md-12">
+                                    <button pButton style="width: 20%; margin-left: 77%;" type="button" label="Detectar Componentes" (click)="detectarComponentes()"> </button>
+                                </div>
+                            </p-fieldset>
+                        </div>
+
                         <div class="ui-g-6 ui-md-6 ui-sm-12" [hidden]="hideElementTDTR">
                             <h2>RLR (TR) *</h2>
                             <div class="ui-g-12" style="padding: 0px">
@@ -372,7 +380,7 @@
                             buttonIcon="ui-icon-info-outline"
                             (click)="showDeflator()">
                     </app-blue-button>
-                </div>  
+                </div>
             </div>
         </div>
         <div class="ui-g">
@@ -422,7 +430,7 @@
                 </span>
             </div>
         </div>
-    </div> 
+    </div>
     <p-footer>
         <div class="ui-g ui-md-12 ui-sm-12" style="justify-content: flex-end">
             <div class="ui-md-3 ui-sm-12">

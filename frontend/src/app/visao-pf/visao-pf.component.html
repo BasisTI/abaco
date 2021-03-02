@@ -1,0 +1,90 @@
+
+<p-messages [(value)]="msgs"></p-messages>
+
+<div class="card ui-g-12 ui-md-12 ui-sm-12">
+
+    <div class="ui-g-12 ui-md-12">
+        <div class="ui-g-6 ui-md-6">
+            <button pButton style="width: 20%; margin-left: 3.5%;" type="button" label="Continuar contagem" (click)="continuarContagem()"> </button>
+        </div>
+        <div class="ui-g-6 ui-md-6">
+            <button pButton style="width: 40%; margin-left: 58.5%;" type="button" label="Detectar Componentes" (click)="detectarComponentes()"> </button>
+        </div>
+
+    </div>
+    <p-fieldset legend="Imagens" [toggleable]="true" >
+        <div class="ui-g-12 ui-md-12">
+            <p-fileUpload chooseLabel="Adicionar protótipo" name="demo[]"
+                (uploadHandler)="addTela($event)" [customUpload]="true" [auto]="true"
+                [showUploadButton]="false" [maxFileSize]="20000000"
+                (onRemove)="deleteFileCadastro($event)" [multiple]="true">
+            </p-fileUpload>
+        </div>
+    </p-fieldset>
+
+    <div *ngIf="visaopf.processosContagem">
+        <p-fieldset legend="Processos" [toggleable]="true" [collapsed]="visaopf.showProcess">
+            <div class="ui-md-11" style="margin-left: 3%">
+                <h4 class="first" > Processos concluídos  {{ visaopf.qtdFinalizados | number:'1.' }}%</h4>
+            </div>
+            <div class="ui-md-11" style="margin-bottom: 2%;margin-left: 3%">
+                <p-progressBar [value]="visaopf.qtdFinalizados" [style]="" ></p-progressBar>
+            </div>
+
+            <i *ngIf="true" class="pi pi-spin pi-spinner" style="margin-left: 48.4% ;font-size: 3em; margin-top: 1%"></i>
+
+            <div class="ui-md-12" style="margin-top: 1%; margin-bottom: 4%">
+                <p-table #dt [value] = "visaopf.processosContagem" dataKey="id" [rowHover]="false"
+                    [rows]="5" [showCurrentPageReport]="false" [rowsPerPageOptions]="[5,10,25,50]"
+                    [paginator]="true" styleClass = ".ui-table-customers" >
+
+                    <ng-template pTemplate="header">
+                        <tr>
+                            <th pSortableColumn="status">Status <p-sortIcon field="status"></p-sortIcon></th>
+                            <th pSortableColumn="dataInicio">Iniciado <p-sortIcon field="dataInicio"></p-sortIcon></th>
+                            <th pSortableColumn="dataFim">Finalizado <p-sortIcon field="dataFim"></p-sortIcon></th>
+                            <th>Imagem</th>
+                        </tr>
+                    </ng-template>
+
+                    <ng-template pTemplate="body" let-processo>
+                        <tr>
+                            <td>
+                                <div class="ui-g-12 ui-md-8" style="margin-left: 15%">
+                                    <div  [class]="'customer-badge status-' + processo.status" >{{processo.status}}</div>
+                                </div>
+
+                            </td>
+                            <td>
+                                <div class="ui-g-12 ui-md-8" style="margin-left: 15%">
+                                    <p class ="style-td">{{ processo.dataInicio | date: 'dd/MM/yy - HH:mm:ss'}}</p>
+                                </div>
+
+                            </td>
+                            <td>
+                                <div class="ui-g-12 ui-md-8" style="margin-left: 15%">
+                                    <p class ="style-td" >{{ processo.dataFim | date: 'dd/MM/yy - HH:mm:ss'}}</p>
+                                </div>
+                            </td>
+                            <td>
+
+                                <div class="ui-g-12 ui-md-12'">
+                                    <div class ="style-td" style="text-align: left">{{ processo.imagem }}</div>
+                                </div>
+                            </td>
+                        </tr>
+                    </ng-template>
+                </p-table>
+            </div>
+        </p-fieldset>
+    </div>
+
+    <div *ngIf="visaopf.telaResult">
+        <p-fieldset legend="Resultado" [toggleable]="true">
+
+            <app-canvas-visaopf  *ngIf="visaopf.telaResult.bucketName" id="canvas" telaID="{{visaopf.telaResult.id}}" toolbar="True"  canvasWidth="1320" canvasHeight="630"  imageHeight="{{visaopf.telaResult.height}}" imageWidth="{{visaopf.telaResult.width}}" [tipos]= "visaopf.tiposComponents" [components]="visaopf.telaResult.componentes" imageUrl="/visaopf/component/detection/image/{{visaopf.telaResult.bucketName}}/{{visaopf.telaResult.originalImageName}}"> </app-canvas-visaopf>
+
+        </p-fieldset>
+    </div>
+</div>
+

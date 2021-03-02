@@ -25,6 +25,8 @@ services:
       SPRING_MAIL_PORT: '25'
       SPRING_MAIL_USERNAME: '""'
       SPRING_PROFILES_ACTIVE: prod,swagger
+    ports:
+      - 8080:8080
   pgsql-abaco:
     image: postgres:11.7-alpine
     environment:
@@ -33,7 +35,8 @@ services:
       POSTGRES_USER: abaco
       TZ: America/Sao_Paulo
     volumes:
-    - abaco-pgsql-vol:/var/lib/postgresql/data
+    - ./abaco-pgsql-vol:/var/lib/postgresql/data
+    - ./postgresql/dump20210113.dmp:/dump20210113.dmp
   es-abaco:
     image: elasticsearch:2.4-alpine
     environment:
