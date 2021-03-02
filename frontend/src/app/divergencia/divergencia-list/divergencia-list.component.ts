@@ -178,7 +178,7 @@ export class DivergenciaListComponent implements OnInit {
             this.pageNotificationService.addErrorMessage('Você não pode editar uma análise bloqueada!');
             return;
         }
-        this.router.navigate(['/divergencia', analiseDivergence.id, 'edit']);
+        this.router.navigate(['/divergencia', this.analiseSelecionada.id, 'edit']);
     }
 
     public confirmDeleteDivergence(divergence: Analise) {
@@ -237,7 +237,6 @@ export class DivergenciaListComponent implements OnInit {
         this.blockUiService.show();
         this.event = event;
         this.analiseService.search(event, event.rows, false, this.changeUrl()).subscribe(response => {
-            console.log(response.body);
             this.lstDivergence = response.body;
             this.datatable.totalRecords = parseInt(response.headers.get('x-total-count'), 10);
             this.blockUiService.hide();
@@ -246,9 +245,9 @@ export class DivergenciaListComponent implements OnInit {
 
     public onRowDblclick(event) {
         if (event.target.nodeName === 'TD') {
-            this.editDivergence(this.selectedDivergence);
+            this.editDivergence(this.analiseSelecionada);
         } else if (event.target.parentNode.nodeName === 'TD') {
-            this.editDivergence(this.selectedDivergence);
+            this.editDivergence(this.analiseSelecionada);
         }
     }
 
