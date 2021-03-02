@@ -8,6 +8,10 @@ import br.com.basis.dynamicexports.pojo.PropriedadesRelatorio;
 
 public class RelatorioAnaliseColunas extends PropriedadesRelatorio {
 
+    private static final String USERS_COLUNA = "users";
+    private static final String BLOQUEIA_ANALISE_COLUNA = "bloqueiaAnalise";
+    private static final String DATA_CRIACAO_ORDEM_SERVICO_COLUNA = "dataCriacaoOrdemServico";
+    private static final String METODO_CONTAGEM_COLUNA = "metodoContagem";
     private static final String BLOQUEIA_STRING = "bloqueiaString";
     private static final String CREATED_ON = "createdOn";
     private static final String ADJUST_PF_TOTAL = "adjustPFTotal";
@@ -19,13 +23,13 @@ public class RelatorioAnaliseColunas extends PropriedadesRelatorio {
     private static final String ORGANIZACAO_NOME = "organizacao.nome";
     private static final String NUMERO_OS = "numeroOs";
     private static final String STATUS_NOME = "status.nome";
-    private static final String ClONADA_PARA_EQUIPE = "clonadaParaEquipeString";
+    private static final String CLONADA_PARA_EQUIPE = "clonadaParaEquipeString";
     private static final String USERS = "nomeUser";
 
 
-    private static final String[][] colunas = {{ORGANIZACAO_NOME, "Organização","organizacao.nome"},{IDENTIFICADOR_ANALISE,"Identificador","identificadorAnalise"}, {EQUIPE_RESPONSAVEL_NOME,"Equipe","equipeResponsavel.nome"}, {SISTEMA_NOME,"Sistema","sistema.nome"}
-    , {METODO_CONTAGEM_STRING,"Método de contagem","metodoContagem"}, {PF_TOTAL,"PF Total","pfTotal"},{ ADJUST_PF_TOTAL,"PF Ajustado","adjustPFTotal"},{ CREATED_ON,"Data Criação","dataCriacaoOrdemServico"},{ BLOQUEIA_STRING,"Bloqueada?","bloqueiaAnalise"}
-    ,{NUMERO_OS , "Número Os", "numeroOs"},{STATUS_NOME , "Status", "status.nome"},{ClONADA_PARA_EQUIPE ,"Clonada", "clonadaParaEquipe"},{USERS,"Usuários","users"}};
+    private static final String[][] colunas = {{ORGANIZACAO_NOME, "Organização",ORGANIZACAO_NOME},{IDENTIFICADOR_ANALISE,"Identificador",IDENTIFICADOR_ANALISE}, {EQUIPE_RESPONSAVEL_NOME,"Equipe",EQUIPE_RESPONSAVEL_NOME}, {SISTEMA_NOME,"Sistema",SISTEMA_NOME}
+    , {METODO_CONTAGEM_STRING,"Método de contagem",METODO_CONTAGEM_COLUNA}, {PF_TOTAL,"PF Total",PF_TOTAL},{ ADJUST_PF_TOTAL,"PF Ajustado",ADJUST_PF_TOTAL},{ CREATED_ON,"Data Criação",DATA_CRIACAO_ORDEM_SERVICO_COLUNA},{ BLOQUEIA_STRING,"Bloqueada?",BLOQUEIA_ANALISE_COLUNA}
+    ,{NUMERO_OS , "Número Os", NUMERO_OS},{STATUS_NOME , "Status", STATUS_NOME},{CLONADA_PARA_EQUIPE ,"Clonada", CLONADA_PARA_EQUIPE},{USERS,"Usuários",USERS_COLUNA}};
 
 
     public RelatorioAnaliseColunas(List<String> colunasVisiveis) {
