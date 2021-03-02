@@ -125,14 +125,14 @@ public class AnaliseService extends BaseService {
                 .must(
                     nestedQuery(
                         "analisesComparadas",
-                        boolQuery().must(QueryBuilders.matchPhraseQuery("analisesComparadas.identificadorAnalise", identificador)
+                        boolQuery().must(QueryBuilders.matchPhrasePrefixQuery("analisesComparadas.identificadorAnalise", identificador)
                         )
                     )
                 );
             BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery()
                 .should(queryBuilderIdentificador)
-                .should(QueryBuilders.matchPhraseQuery("numeroOs", identificador))
-                .should(QueryBuilders.matchPhraseQuery("identificadorAnalise", identificador));
+                .should(QueryBuilders.matchPhrasePrefixQuery("numeroOs", identificador))
+                .should(QueryBuilders.matchPhrasePrefixQuery("identificadorAnalise", identificador));
             qb.must(boolQueryBuilder);
         }
         bindFilterEquipeAndOrganizacao(equipesIds, equipesUsersId, organizacoes, qb);
