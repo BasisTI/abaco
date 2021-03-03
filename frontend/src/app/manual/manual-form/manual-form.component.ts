@@ -51,6 +51,8 @@ export class ManualFormComponent implements OnInit, OnDestroy {
     showEditOrderDeflator = false;
     fatorAjusteSelected?: FatorAjuste = new FatorAjuste();
     esforcoFaseSelected?: EsforcoFase = new EsforcoFase();
+    esforcoFaseEdit: EsforcoFase[] =  [];
+
 
     adjustTypes: Array<any> = [
         { label: 'Percentual', value: 'PERCENTUAL' },
@@ -375,17 +377,30 @@ export class ManualFormComponent implements OnInit, OnDestroy {
 
     editPhaseEffort() {
 
-        let totalPhase = this.getPhaseEffortTotalPercentual();
-        console.log(this.getPhaseEffortTotalPercentual());
-        if (totalPhase >= 100) {
+        let totalPhase = this.checkEsforcoFase();
+        if (totalPhase > 100) {
             this.pageNotificationService.addErrorMessage('Limite de Esforço Excedido');
         } else if (this.checkPhaseEffortRequiredFields(this.editedPhaseEffort)) {
             this.manual.updateEsforcoFases(this.editedPhaseEffort);
             this.pageNotificationService.addUpdateMsg();
-            this.closeDialogPhaseEffort();
+            this.closeDialogEditPhaseEffort();
         } else {
             this.pageNotificationService.addErrorMessage('Por favor, preencha campos obrigatórios!');
         }
+        console.log(this.manual.esforcoFases);
+    }
+    checkEsforcoFase(){
+        
+        let total = 0;
+        this.esforcoFaseEdit = this.manual.esforcoFases;
+        for(let i =0; i < this.esforcoFaseEdit.length; i++){
+            if(this.esforcoFaseEdit[i].id == this.editedPhaseEffort.id){
+                total += this.editedPhaseEffort.esforco
+            }else {
+                total += this.esforcoFaseEdit[i].esforco;
+            }
+        }
+        return total;
     }
 
     editAdjustFactor() {
@@ -613,7 +628,7 @@ export class ManualFormComponent implements OnInit, OnDestroy {
     }
     public onRowDblclickFator(event) {
         if (event.target.nodeName === 'TD') {
-            this.editedAdjustFactor = this.editedAdjustFactor.clone();            
+            this.editedAdjustFactor = this.editedAdjustFactor.clone()            
             this.openDialogEditAdjustFactor();
         } else if (event.target.parentNode.nodeName === 'TD') {
             this.editedAdjustFactor = this.editedAdjustFactor.clone();
