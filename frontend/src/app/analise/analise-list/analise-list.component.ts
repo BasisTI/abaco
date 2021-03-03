@@ -170,14 +170,6 @@ export class AnaliseListComponent implements OnInit {
         // );
     }
 
-    public carregarDataTable() {
-        this.blockUiService.show();
-        this.grupoService.all().subscribe((res) => {
-            this.datatable.value = res.json;
-            this.blockUiService.hide();
-        });
-    }
-
     clonarTooltip() {
         if (!(this.datatable && this.datatable.selectedRow) ) {
             return this.getLabel('Selecione um registro para clonar');
@@ -720,8 +712,8 @@ export class AnaliseListComponent implements OnInit {
         if (this.isLoadFilter) {
             this.searchGroup = this.loadingGroupSearch();
             this.searchGroup.usuario = null;
-            this.recarregarDataTable();
-            this.datatable.filter();
+            // this.recarregarDataTable();
+            // this.datatable.filter();
             this.isLoadFilter = false;
             this.datatable.pDatatableComponent.metaKeySelection = true;
             this.updateVisibleColumns(this.columnsVisible);

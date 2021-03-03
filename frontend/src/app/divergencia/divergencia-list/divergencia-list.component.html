@@ -191,11 +191,6 @@
                         <app-export-button [dataTable]="datatable" resourceName="divergencia" [filter]="searchDivergence">
                         </app-export-button>
                     </div>
-                    <div class="ui-g-12 ui-md-2">
-                        <app-botoes-exportacao [query]="changeUrl()" resourceName="analise" id="idBtnExportacaoComponentAnalise"
-                        fileName="analise">
-                        </app-botoes-exportacao>
-                    </div>
                     <!-- Dialog confirmação deleção -->
                     <p-confirmDialog [header]="this.getLabel('Confirmação')" #dialog>
                         <p-footer>

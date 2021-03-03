@@ -520,13 +520,16 @@ public class AnaliseResource {
                                                                   @RequestParam(value = "status", required = false) Set<Long> status,
                                                                   @RequestParam(value = "usuario", required = false) Set<Long> usuario)
         throws URISyntaxException {
+        log.debug("DEBUG Consulta Analises - Inicio metodo");
         Sort.Direction sortOrder = PageUtils.getSortDirection(order);
         Pageable pageable = new PageRequest(pageNumber, size, sortOrder, sort);
         FieldSortBuilder sortBuilder = new FieldSortBuilder(sort).order(SortOrder.ASC);
         BoolQueryBuilder qb = analiseService.getBoolQueryBuilder(identificador, sistema, metodo, organizacao, equipe, usuario, status);
         SearchQuery searchQuery = new NativeSearchQueryBuilder().withQuery(qb).withPageable(pageable).withSort(sortBuilder).build();
         Page<Analise> page = elasticsearchTemplate.queryForPage(searchQuery, Analise.class);
+        log.debug("DEBUG Consulta Analises -  Consulta realizada");
         Page<AnaliseDTO> dtoPage = page.map(analise -> analiseService.convertToDto(analise));
+        log.debug("DEBUG Consulta Analises -  Conversão realizada");
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, API_ANALISES);
         return new ResponseEntity<>(dtoPage.getContent(), headers, HttpStatus.OK);
     }
@@ -643,13 +646,16 @@ public class AnaliseResource {
                                                                   @RequestParam(value = "sistema", required = false) Set<Long> sistema,
                                                                   @RequestParam(value = "organizacao", required = false) Set<Long> organizacao)
         throws URISyntaxException {
+        log.debug("DEBUG Consulta Validação -  Inicio método");
         Sort.Direction sortOrder = PageUtils.getSortDirection(order);
         Pageable pageable = new PageRequest(pageNumber, size, sortOrder, sort);
         FieldSortBuilder sortBuilder = new FieldSortBuilder(sort).order(SortOrder.ASC);
         BoolQueryBuilder qb = analiseService.getBoolQueryBuilderDivergence(identificador, sistema, organizacao);
         SearchQuery searchQuery = new NativeSearchQueryBuilder().withQuery(qb).withPageable(pageable).withSort(sortBuilder).build();
         Page<Analise> page = elasticsearchTemplate.queryForPage(searchQuery, Analise.class);
+        log.debug("DEBUG Consulta Validação -  Consulta realizada");
         Page<AnaliseDTO> dtoPage = page.map(analise -> analiseService.convertToDto(analise));
+        log.debug("DEBUG Consulta Validação -  Conversão realizada");
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, API_ANALISES);
         return new ResponseEntity<>(dtoPage.getContent(), headers, HttpStatus.OK);
     }
