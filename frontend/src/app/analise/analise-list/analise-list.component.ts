@@ -751,6 +751,7 @@ export class AnaliseListComponent implements OnInit {
 
     public setParamsLoad() {
         if (this.isLoadFilter) {
+
             this.searchGroup = this.loadingGroupSearch();
             this.searchGroup.usuario = null;
             // this.recarregarDataTable();

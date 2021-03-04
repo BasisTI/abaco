@@ -149,7 +149,6 @@ export class PesquisarFtComponent implements OnInit {
             { field: 'classificacao', header: 'Classificação' }
         ];
         this.exportColumns = this.cols.map(col => ({title: col.header, dataKey: col.field}));
-        console.log('FATORES AJUSTES - '+this.fatoresAjuste);
     }
 
     tiposAnalise: SelectItem[] = [
