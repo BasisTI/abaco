@@ -478,7 +478,6 @@ export class OrganizacaoFormComponent implements OnInit, OnDestroy {
                 }
             });
         }
-        console.log(invalidFieldsString);
         return invalidFieldsString;
     }
 

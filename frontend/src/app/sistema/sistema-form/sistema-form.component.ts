@@ -413,9 +413,4 @@ export class SistemaFormComponent implements OnInit, OnDestroy {
     ngOnDestroy() {
         this.routeSub.unsubscribe();
     }
-    onRowEditEvent(event) {
-        console.log(event);
-
-    }
-
 }
