@@ -19,6 +19,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -55,6 +56,7 @@ public class BaseLineSinteticoResource {
 
     @GetMapping("/baseline-sinteticos")
     @Timed
+    @Secured("ROLE_ABACO_BASELINE_ACESSAR")
     public List<BaseLineSintetico> getAllBaseLineSinteticos(@RequestParam(value = "idSistema", required = false) Long idSistema) {
         log.debug("REST request to get all BaseLineSinteticos");
         if (idSistema != null) {
@@ -70,6 +72,7 @@ public class BaseLineSinteticoResource {
     @GetMapping("/baseline-sinteticos/update/{id}/{idEquipe}")
     @Timed
     @Transactional
+    @Secured("ROLE_ABACO_BASELINE_EDITAR")
     public ResponseEntity<BaseLineSintetico> updateBaseLineSintetico(@PathVariable(value = "id") Long id, @PathVariable(value = "idEquipe") Long idEquipe) {
         log.debug("REST request to update BaseLineSinteticos");
         if (id == null) {
@@ -89,6 +92,7 @@ public class BaseLineSinteticoResource {
 
     @GetMapping("/baseline-sinteticos/{id}")
     @Timed
+    @Secured("ROLE_ABACO_BASELINE_CONSULTAR")
     public ResponseEntity<BaseLineSintetico> getBaseLineSintetico(@PathVariable Long id) {
         log.debug("REST request to get all BaseLineSinteticos: {}", id);
         BaseLineSintetico funcaoDados = baseLineSinteticoSearchRepository.findOneByIdsistema(id);
@@ -97,6 +101,7 @@ public class BaseLineSinteticoResource {
 
     @GetMapping("/baseline-sinteticos/{id}/equipe/{idEquipe}")
     @Timed
+    @Secured("ROLE_ABACO_BASELINE_CONSULTAR")
     public ResponseEntity<BaseLineSintetico> getBaseLineSinteticoEquipe(
         @PathVariable Long id, @PathVariable Long idEquipe) {
         log.debug("REST request to get all BaseLineSinteticos: {}", id);
@@ -106,6 +111,7 @@ public class BaseLineSinteticoResource {
 
     @GetMapping(value = "/baseline/exportacao/{tipoRelatorio}", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
     @Timed
+    @Secured("ROLE_ABACO_BASELINE_EXPORTAR")
     public ResponseEntity<InputStreamResource> gerarRelatorioExportacao(@PathVariable String tipoRelatorio, @RequestParam(defaultValue = "*") String query) throws RelatorioException {
         ByteArrayOutputStream byteArrayOutputStream;
         try {

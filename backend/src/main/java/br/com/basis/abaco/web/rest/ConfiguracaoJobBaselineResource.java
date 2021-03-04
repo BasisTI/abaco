@@ -20,11 +20,9 @@ import com.codahale.metrics.annotation.Timed;
 import br.com.basis.abaco.domain.ConfiguracaoJobBaseline;
 import br.com.basis.abaco.domain.Sistema;
 import br.com.basis.abaco.domain.TipoEquipe;
-import br.com.basis.abaco.security.AuthoritiesConstants;
 import br.com.basis.abaco.service.ConfiguracaoJobBaselineService;
 import br.com.basis.abaco.service.SistemaService;
 import br.com.basis.abaco.service.TipoEquipeService;
-import br.com.basis.abaco.service.dto.AnaliseEditDTO;
 import br.com.basis.abaco.service.dto.ConfiguracaoJobBaselineDTO;
 import br.com.basis.abaco.service.dto.SistemaDTO;
 import br.com.basis.abaco.service.dto.TipoEquipeDTO;
@@ -46,24 +44,23 @@ public class ConfiguracaoJobBaselineResource {
 
     @PostMapping("/configuracao-baseline")
     @Timed
-    @Secured({ AuthoritiesConstants.ADMIN, AuthoritiesConstants.USER, AuthoritiesConstants.GESTOR,
-            AuthoritiesConstants.ANALISTA })
+    @Secured("ROLE_ABACO_BASELINE_ACESSAR")
     public ConfiguracaoJobBaselineDTO createConfiguracoes(
             @Valid @RequestBody ConfiguracaoJobBaselineDTO configuracao) throws URISyntaxException {
         ConfiguracaoJobBaselineDTO configuracaoDTO = new ConfiguracaoJobBaselineDTO();
-        
+
         List<ConfiguracaoJobBaseline> configuracoes = configuracaoJobBaselineService.incluirConfiguracao(configuracao);
-        
+
         return getConfiguracaoSistemaEquipeDTO(configuracaoDTO, configuracoes);
     }
 
     @GetMapping("/configuracao-baseline")
     @Timed
-    @Secured({AuthoritiesConstants.ADMIN, AuthoritiesConstants.USER, AuthoritiesConstants.GESTOR, AuthoritiesConstants.ANALISTA})
+    @Secured("ROLE_ABACO_BASELINE_ACESSAR")
     public ConfiguracaoJobBaselineDTO getAll() throws URISyntaxException {
         ConfiguracaoJobBaselineDTO configuracaoDTO = new ConfiguracaoJobBaselineDTO();
         List<ConfiguracaoJobBaseline> configuracoes = configuracaoJobBaselineService.consultarTodos();
-        
+
         return getConfiguracaoSistemaEquipeDTO(configuracaoDTO, configuracoes);
 
     }
@@ -73,15 +70,15 @@ public class ConfiguracaoJobBaselineResource {
         List<TipoEquipe> equipes = tipoEquipeService.getAll();
         List<Sistema> sistemasIncluidos = configuracoes.stream().map(config -> config.getSistema()).distinct().collect(Collectors.toList());
         List<TipoEquipe> tipoEquipeIncluida = configuracoes.stream().map(config -> config.getTipoEquipe()).distinct().collect(Collectors.toList());
-        
+
         sistemas.removeAll(sistemasIncluidos);
         configuracaoDTO.setSistemasDisponiveis(sistemas.stream().map(sis -> new ModelMapper().map(sis, SistemaDTO.class)).collect(Collectors.toList()));
         configuracaoDTO.setSistemasSelecionados(sistemasIncluidos.stream().distinct().map(sis -> new ModelMapper().map(sis, SistemaDTO.class)).collect(Collectors.toList()));
-        
+
         List<TipoEquipe> equipesDisponiveis = equipes.stream().filter(eq -> tipoEquipeIncluida.indexOf(eq) == -1).collect(Collectors.toList());
         configuracaoDTO.setEquipesDisponiveis(equipesDisponiveis.stream().map(eq -> new ModelMapper().map(eq, TipoEquipeDTO.class)).collect(Collectors.toList()));
         configuracaoDTO.setEquipesSelecionados(tipoEquipeIncluida.stream().distinct().map(eq -> new ModelMapper().map(eq, TipoEquipeDTO.class)).collect(Collectors.toList()));
-        
+
         return configuracaoDTO;
     }
 

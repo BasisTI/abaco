@@ -17,6 +17,7 @@ import { StatusService } from 'src/app/status';
 import { Status } from 'src/app/status/status.model';
 import { Divergencia, DivergenciaService } from 'src/app/divergencia';
 import { FaseFilter } from 'src/app/fase/model/fase.filter';
+import { AuthService } from 'src/app/util/auth.service';
 
 @Component({
     selector: 'app-analise',
@@ -129,6 +130,7 @@ export class AnaliseListComponent implements OnInit {
         private blockUiService: BlockUiService,
         private statusService: StatusService,
         private divergenceServie: DivergenciaService,
+        private authService: AuthService
     ) {
 
     }
@@ -292,6 +294,9 @@ export class AnaliseListComponent implements OnInit {
         }
         switch (event.button) {
             case 'edit':
+                if (this.authService.possuiRole(AuthService.PREFIX_ROLE + "ANALISE_EDITAR") == false) {
+                    break;
+                }
                 if (event.selection.bloqueiaAnalise) {
                     this.pageNotificationService.addErrorMessage('Você não pode editar uma análise bloqueada!');
                     return;
@@ -299,9 +304,15 @@ export class AnaliseListComponent implements OnInit {
                 this.router.navigate(['/analise', event.selection.id, 'edit']);
                 break;
             case 'view':
+                if (this.authService.possuiRole(AuthService.PREFIX_ROLE + "ANALISE_CONSULTAR") == false) {
+                    break;
+                }
                 this.router.navigate(['/analise', event.selection.id, 'view']);
                 break;
             case 'delete':
+                if (this.authService.possuiRole(AuthService.PREFIX_ROLE + "ANALISE_EXCLUIR") == false) {
+                    break;
+                }
                 this.confirmDelete(event.selection);
                 break;
             case 'relatorioBrowser':
@@ -311,30 +322,54 @@ export class AnaliseListComponent implements OnInit {
                 this.gerarRelatorioPdfArquivo(event.selection);
                 break;
             case 'relatorioBrowserDetalhado':
+                if (this.authService.possuiRole(AuthService.PREFIX_ROLE + "ANALISE_EXPORTAR_RELATORIO_DETALHADO") == false) {
+                    break;
+                }
                 this.geraRelatorioPdfDetalhadoBrowser(event.selection);
                 break;
             case 'relatorioExcelDetalhado':
+                if (this.authService.possuiRole(AuthService.PREFIX_ROLE + "ANALISE_EXPORTAR_RELATORIO_EXCEL") == false) {
+                    break;
+                }
                 this.gerarRelatorioExcel(event.selection);
                 break;
             case 'clone':
+                if (this.authService.possuiRole(AuthService.PREFIX_ROLE + "ANALISE_CLONAR") == false) {
+                    break;
+                }
                 this.clonar(event.selection.id);
                 break;
             case 'geraBaselinePdfBrowser':
                 this.geraBaselinePdfBrowser();
                 break;
             case 'cloneParaEquipe':
+                if (this.authService.possuiRole(AuthService.PREFIX_ROLE + "ANALISE_CLONAR_EQUIPE") == false) {
+                    break;
+                }
                 this.openModalCloneAnaliseEquipe(event.selection.id);
                 break;
             case 'compartilhar':
+                if (this.authService.possuiRole(AuthService.PREFIX_ROLE + "ANALISE_COMPARTILHAR") == false) {
+                    break;
+                }
                this.compartilharAnalise();
                 break;
             case 'relatorioAnaliseContagem':
+                if (this.authService.possuiRole(AuthService.PREFIX_ROLE + "ANALISE_RELATORIO_FUNDAMENTACAO") == false) {
+                    break;
+                }
                 this.gerarRelatorioContagem(event.selection);
                 break;
             case 'changeStatus':
+                if (this.authService.possuiRole(AuthService.PREFIX_ROLE + "ANALISE_ALTERAR_STATUS") == false) {
+                    break;
+                }
                 this.openModalChangeStatus(event.selection.id);
                 break;
             case 'generateDivergence':
+                if (this.authService.possuiRole(AuthService.PREFIX_ROLE + "ANALISE_GERAR_VALIDACAO") == false) {
+                    break;
+                }
                 if (event.selection.id) {
                     this.confirmDivergenceGenerate(event.selection);
                 } else {
@@ -411,6 +446,9 @@ export class AnaliseListComponent implements OnInit {
     }
 
     abrirEditar() {
+        if (this.authService.possuiRole(AuthService.PREFIX_ROLE + "ANALISE_EDITAR") == false) {
+            return false;
+        }
         this.router.navigate(['/analise', this.analiseSelecionada.id, 'edit']);
     }
 
@@ -555,6 +593,9 @@ export class AnaliseListComponent implements OnInit {
     }
 
     public performSearch() {
+        if (this.authService.possuiRole(AuthService.PREFIX_ROLE + "ANALISE_PESQUISAR") == false) {
+            return false;
+        }
         this.enableTable = true ;
         sessionStorage.setItem('searchGroup', JSON.stringify(this.searchGroup));
         this.recarregarDataTable();
@@ -844,5 +885,12 @@ export class AnaliseListComponent implements OnInit {
 
     setFunctionMainAnalise( auxiliaryAnalise: Analise) {
         this.auxiliaryAnaliseDivergencia = auxiliaryAnalise;
+    }
+
+    criarAnalise(){
+        if (this.authService.possuiRole(AuthService.PREFIX_ROLE + "ANALISE_CADASTRAR") == false) {
+            return false;
+        }
+        this.router.navigate(["/analise/new"])
     }
 }

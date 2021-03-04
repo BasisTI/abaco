@@ -6,11 +6,11 @@
 
             <div class="ui-g">
                 <div class="ui-g ui-md-12 form-buttons-container" style="display: inline-block;">
-                    
+
                     <div class="ui-g-2 ui-md-2 ui-sm-12" style="float:right;">
                         <app-green-button
                                 buttonLabel="Novo"
-                                routerLink="/fase/new"
+                                (click)="criarFase()"
                                 buttonIcon="ui-icon-add">
                         </app-green-button>
                     </div>
@@ -34,10 +34,10 @@
                 </div>
 
                 <div class="ui-g-12 ui-md-2">
-                    <app-export-button [dataTable]="dataTable" resourceName="fases" [filter]="dataTable.filterParams">
+                    <app-export-button [dataTable]="dataTable" resourceName="fases" [filter]="dataTable.filterParams" funcionalidadeName="fase">
                     </app-export-button>
                 </div>
-                
+
                 <p-confirmDialog #dialog header="Confirmação" icon="pi pi-exclamation-triangle">
                     <p-footer>
                         <button type="button" pButton icon="pi pi-times" label="Não" (click)="dialog.reject()"></button>

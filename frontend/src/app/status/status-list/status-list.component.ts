@@ -5,6 +5,7 @@ import { ElasticQuery } from 'src/app/shared/elastic-query';
 import { Router } from '@angular/router';
 import { StatusService } from '../status.service';
 import { ConfirmationService } from 'primeng';
+import { AuthService } from 'src/app/util/auth.service';
 
 @Component({
   selector: 'app-status-list',
@@ -25,7 +26,7 @@ export class StatusListComponent implements OnInit {
 
   rowsPerPageOptions: number[] = [5, 10, 20];
 
-  valueFiltroCampo: string;
+  valueFiltroCampo;
 
   statusFiltro : SearchGroup;
 
@@ -34,15 +35,15 @@ export class StatusListComponent implements OnInit {
     private statusService: StatusService,
     private confirmationService: ConfirmationService,
     private pageNotificationService: PageNotificationService,
+    private authService: AuthService
   ) { }
 
   getLabel(label) {
     return label;
   }
 
-  valueFiltro(valuefiltro: string) {
-    this.valueFiltroCampo = valuefiltro;
-    this.datatable.refresh(valuefiltro);
+  valueFiltro() {
+    this.datatable.refresh(this.elasticQuery.query);
   }
 
   public ngOnInit() {
@@ -63,12 +64,18 @@ export class StatusListComponent implements OnInit {
     }
     switch (event.button) {
       case 'edit':
+        if (this.authService.possuiRole(AuthService.PREFIX_ROLE + "STATUS_EDITAR") == false) {
+            break;
+        }
         this.router.navigate(['/status', event.selection.id, 'edit']);
         break;
       case 'delete':
         this.confirmDelete(event.selection.id);
         break;
       case 'view':
+        if (this.authService.possuiRole(AuthService.PREFIX_ROLE + "STATUS_CONSULTAR") == false) {
+            break;
+        }
         this.router.navigate(['/status', event.selection.id, 'view']);
         break;
     }
@@ -84,10 +91,16 @@ export class StatusListComponent implements OnInit {
   }
 
   abrirEditar() {
+    if (this.authService.possuiRole(AuthService.PREFIX_ROLE + "STATUS_EDITAR") == false) {
+        return false;
+    }
     this.router.navigate(['/status', this.statusSelecionada.id, 'edit']);
   }
 
   public confirmDelete(id: any) {
+    if (this.authService.possuiRole(AuthService.PREFIX_ROLE + "STATUS_EXCLUIR") == false) {
+        return false;
+    }
     this.confirmationService.confirm({
       message: this.getLabel('Tem certeza que deseja excluir o registro?'),
       accept: () => {
@@ -112,6 +125,9 @@ export class StatusListComponent implements OnInit {
   }
 
   public recarregarDataTable() {
+    if (this.authService.possuiRole(AuthService.PREFIX_ROLE + "STATUS_PESQUISAR") == false) {
+        return false;
+    }
     this.datatable.refresh(this.elasticQuery.query);
     this.statusFiltro.nome = this.elasticQuery.query;
   }
@@ -122,6 +138,13 @@ export class StatusListComponent implements OnInit {
             this.statusSelecionada = this.datatable.selectedRow;
           }
       }
+  }
+
+  criarStatus(){
+    if (this.authService.possuiRole(AuthService.PREFIX_ROLE + "STATUS_CADASTRAR") == false) {
+        return false;
+    }
+    this.router.navigate(["/status/new"]);
   }
 
 }

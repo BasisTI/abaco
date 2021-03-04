@@ -82,14 +82,6 @@ public class OrganizacaoResource {
 
     private final OrganizacaoService organizacaoService;
 
-    private static final String ROLE_ADMIN = "ROLE_ADMIN";
-
-  private static final String ROLE_ANALISTA = "ROLE_ANALISTA";
-
-  private static final String ROLE_USER = "ROLE_USER";
-
-  private static final String ROLE_GESTOR = "ROLE_GESTOR";
-
     public OrganizacaoResource(OrganizacaoRepository organizacaoRepository,
             OrganizacaoSearchRepository organizacaoSearchRepository, DynamicExportsService dynamicExportsService,
             OrganizacaoService organizacaoService) {
@@ -155,7 +147,7 @@ public class OrganizacaoResource {
    */
   @PostMapping("/organizacaos")
   @Timed
-  @Secured({ ROLE_ADMIN, ROLE_USER, ROLE_GESTOR, ROLE_ANALISTA })
+  @Secured("ROLE_ABACO_ORGANIZACAO_CADASTRAR")
   public ResponseEntity<Organizacao> createOrganizacao(@Valid @RequestBody Organizacao organizacao)
       throws URISyntaxException {
     int i;
@@ -187,7 +179,7 @@ public class OrganizacaoResource {
    */
   @PutMapping("/organizacaos")
   @Timed
-  @Secured({ ROLE_ADMIN, ROLE_USER, ROLE_GESTOR, ROLE_ANALISTA })
+  @Secured("ROLE_ABACO_ORGANIZACAO_EDITAR")
   public ResponseEntity<Organizacao> updateOrganizacao(@Valid @RequestBody Organizacao organizacao)
       throws URISyntaxException {
     int i;
@@ -238,6 +230,7 @@ public class OrganizacaoResource {
    */
   @GetMapping("/organizacaos/{id}")
   @Timed
+  @Secured("ROLE_ABACO_ORGANIZACAO_CONSULTAR")
   public ResponseEntity<Organizacao> getOrganizacao(@PathVariable Long id) {
     log.debug("REST request to get Organizacao : {}", id);
     Organizacao organizacao = organizacaoRepository.findOne(id);
@@ -252,7 +245,7 @@ public class OrganizacaoResource {
    */
   @DeleteMapping("/organizacaos/{id}")
   @Timed
-  @Secured({ ROLE_ADMIN, ROLE_USER, ROLE_GESTOR, ROLE_ANALISTA })
+  @Secured("ROLE_ABACO_ORGANIZACAO_EXCLUIR")
   public ResponseEntity<Void> deleteOrganizacao(@PathVariable Long id) {
     log.debug("REST request to delete Organizacao : {}", id);
     organizacaoRepository.delete(id);
@@ -270,6 +263,7 @@ public class OrganizacaoResource {
    */
   @GetMapping("/_search/organizacaos")
   @Timed
+  @Secured({"ROLE_ABACO_ORGANIZACAO_PESQUISAR", "ROLE_ABACO_ORGANIZACAO_ACESSAR"})
   public ResponseEntity<List<Organizacao>> searchOrganizacaos(@RequestParam(defaultValue = "*") String query,
       @RequestParam(defaultValue = "ASC") String order, @RequestParam(name = "page") int pageNumber, @RequestParam int size,
       @RequestParam(defaultValue = "id", required = false) String sort) throws URISyntaxException {
@@ -298,6 +292,7 @@ public class OrganizacaoResource {
 
     @PostMapping(value = "/organizacaos/exportacao/{tipoRelatorio}", produces = MediaType.APPLICATION_PDF_VALUE)
     @Timed
+    @Secured("ROLE_ABACO_ORGANIZACAO_EXPORTAR")
     public ResponseEntity<InputStreamResource> gerarRelatorio(@PathVariable String tipoRelatorio, @RequestBody SearchFilterDTO filter) throws RelatorioException {
         ByteArrayOutputStream byteArrayOutputStream = getByteArrayOutputStream("pdf", filter);
         return DynamicExporter.output(byteArrayOutputStream, "relatorio");
@@ -327,6 +322,7 @@ public class OrganizacaoResource {
 
     @PostMapping(value = "/organizacaos/exportacao-arquivo", produces = MediaType.APPLICATION_PDF_VALUE)
     @Timed
+    @Secured("ROLE_ABACO_ORGANIZACAO_EXPORTAR")
     public ResponseEntity<byte[]> gerarRelatorioImprimir(@RequestBody SearchFilterDTO filter)
             throws RelatorioException {
         ByteArrayOutputStream byteArrayOutputStream = getByteArrayOutputStream("pdf", filter);

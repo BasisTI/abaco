@@ -43,14 +43,6 @@ public class ContratoResource {
 
     private final ContratoRepository contratoRepository;
 
-    private static final String ROLE_ANALISTA = "ROLE_ANALISTA";
-
-    private static final String ROLE_ADMIN = "ROLE_ADMIN";
-
-    private static final String ROLE_USER = "ROLE_USER";
-
-    private static final String ROLE_GESTOR = "ROLE_GESTOR";
-
     private final ContratoSearchRepository contratoSearchRepository;
 
     public ContratoResource(ContratoRepository contratoRepository, ContratoSearchRepository contratoSearchRepository) {
@@ -78,7 +70,6 @@ public class ContratoResource {
      */
     @PostMapping("/contratoes")
     @Timed
-    @Secured({ROLE_ADMIN, ROLE_USER, ROLE_GESTOR, ROLE_ANALISTA})
     public ResponseEntity<Contrato> createContrato(@RequestBody Contrato contrato) throws URISyntaxException {
         log.debug("REST request to save Contrato : {}", contrato);
         if (contrato.getId() != null) {
@@ -108,7 +99,6 @@ public class ContratoResource {
      */
     @PutMapping("/contratoes")
     @Timed
-    @Secured({ROLE_ADMIN, ROLE_USER, ROLE_GESTOR, ROLE_ANALISTA})
     public ResponseEntity<Contrato> updateContrato(@RequestBody Contrato contrato) throws URISyntaxException {
         log.debug("REST request to update Contrato : {}", contrato);
 
@@ -136,7 +126,6 @@ public class ContratoResource {
      */
     @PostMapping("/contratoes/organizations")
     @Timed
-    @Secured({ROLE_ADMIN, ROLE_USER, ROLE_GESTOR, ROLE_ANALISTA})
     public List<Contrato> getAllContratoesByOrganization(@RequestBody Organizacao organizacao) {
         log.debug("REST request to get all Contratoes");
         return contratoRepository.findAllByOrganization(organizacao);
@@ -177,7 +166,6 @@ public class ContratoResource {
      */
     @DeleteMapping("/contratoes/{id}")
     @Timed
-    @Secured({ROLE_ADMIN, ROLE_USER, ROLE_GESTOR, ROLE_ANALISTA})
     public ResponseEntity<Void> deleteContrato(@PathVariable Long id) {
         log.debug("REST request to delete Contrato : {}", id);
         contratoRepository.delete(id);

@@ -1,7 +1,6 @@
 package br.com.basis.abaco.service.dto;
 
 import br.com.basis.abaco.config.Constants;
-import br.com.basis.abaco.domain.Authority;
 import br.com.basis.abaco.domain.User;
 import org.hibernate.validator.constraints.Email;
 
@@ -46,7 +45,6 @@ public class UserDTO {
 
     private ZonedDateTime lastModifiedDate;
 
-    private Set<String> authorities;
 
     public UserDTO() {
         // Empty constructor needed for MapStruct.
@@ -55,15 +53,14 @@ public class UserDTO {
     public UserDTO(User user) {
         this(user.getId(), user.getLogin(), user.getFirstName(), user.getLastName(),
                 user.getEmail(), user.isActivated(), user.getImageUrl(), user.getLangKey(),
-                user.getCreatedBy(), user.getCreatedDate(), user.getLastModifiedBy(), user.getLastModifiedDate(),
-                user.getAuthorities().stream().map(Authority::getName)
-                        .collect(Collectors.toSet()));
+                user.getCreatedBy(), user.getCreatedDate(), user.getLastModifiedBy(), user.getLastModifiedDate()
+                );
     }
 
     public UserDTO(Long id, String login, String firstName, String lastName,
                    String email, boolean activated, String imageUrl, String langKey,
-                   String createdBy, ZonedDateTime createdDate, String lastModifiedBy, ZonedDateTime lastModifiedDate,
-                   Set<String> authorities) {
+                   String createdBy, ZonedDateTime createdDate, String lastModifiedBy, ZonedDateTime lastModifiedDate
+                   ) {
 
         this.id = id;
         this.login = login;
@@ -77,9 +74,6 @@ public class UserDTO {
         this.createdDate = createdDate;
         this.lastModifiedBy = lastModifiedBy;
         this.lastModifiedDate = lastModifiedDate;
-        Set<String> authoritiesCopy = new LinkedHashSet<>();
-        authoritiesCopy.addAll(authorities);
-        this.authorities = authoritiesCopy;
     }
 
     public Long getId() {
@@ -142,11 +136,6 @@ public class UserDTO {
         this.lastModifiedDate = lastModifiedDate;
     }
 
-    public Set<String> getAuthorities() {
-        Set<String> copy = new LinkedHashSet<>();
-        copy.addAll(authorities);
-        return copy;
-    }
 
     @Override
     public String toString() {
@@ -162,7 +151,6 @@ public class UserDTO {
                 ", createdDate=" + createdDate +
                 ", lastModifiedBy='" + lastModifiedBy + '\'' +
                 ", lastModifiedDate=" + lastModifiedDate +
-                ", authorities=" + authorities +
                 "}";
     }
 }

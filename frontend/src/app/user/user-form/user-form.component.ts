@@ -2,13 +2,13 @@ import {Component, OnInit, OnDestroy, OnChanges} from '@angular/core';
 import {ActivatedRoute, Router, UrlSegment} from '@angular/router';
 import { TipoEquipe, TipoEquipeService } from 'src/app/tipo-equipe';
 import { Organizacao, OrganizacaoService } from 'src/app/organizacao';
-import { Authority } from '../authority.model';
 import { User } from '../user.model';
 import { Subscription, Observable } from 'rxjs';
 import { UserService } from '../user.service';
 import { PageNotificationService } from '@nuvem/primeng-components';
 import { AuthorizationService, Authorization, Authentication, AuthGuard } from '@nuvem/angular-base';
 import { ResponseWrapper } from 'src/app/shared';
+import { Perfil, PerfilService } from 'src/app/perfil';
 
 
 @Component({
@@ -19,7 +19,7 @@ export class UserFormComponent implements OnInit, OnDestroy {
 
     tipoEquipes: TipoEquipe[];
     organizacoes: Organizacao[];
-    authorities: Authority[];
+    perfils: Perfil[];
     user: User;
     isSaving: boolean;
     isEdit: boolean;
@@ -37,6 +37,7 @@ export class UserFormComponent implements OnInit, OnDestroy {
         private tipoEquipeService: TipoEquipeService,
         private organizacaoService: OrganizacaoService,
         private pageNotificationService: PageNotificationService,
+        private perfilService: PerfilService
     ) {
         this.isAdmin = this.isUserAdmin();
         this.recuperarUrl();
@@ -54,15 +55,16 @@ export class UserFormComponent implements OnInit, OnDestroy {
         this.recuperarListaPerfis();
         this.recuperarUsuarioPeloId();
     }
+
+    private recuperarListaPerfis(){
+        this.perfilService.getAllPerfisAtivo().subscribe((response) => {
+            this.perfils = response;
+        })
+    }
+
     private recuperarListaOrganizacao() {
         this.organizacaoService.dropDownActive().subscribe((res) => {
             this.organizacoes = res;
-        });
-    }
-    private recuperarListaPerfis() {
-        this.userService.authorities().subscribe((res: Authority[]) => {
-            this.authorities = res;
-            this.populateAuthoritiesArtificialIds();
         });
     }
     private recuperarUrl() {
@@ -78,81 +80,11 @@ export class UserFormComponent implements OnInit, OnDestroy {
                 this.userService.find(params['id']).subscribe(user => {
                     this.user = user;
                     this.setEquipeOrganizacao(this.user.organizacoes);
-                    this.populateUserAuthoritiesWithArtificialId();
                 });
             }
         });
     }
-    // FIXME parte da solução rápida e ruim, porém dinâmica
-    // Horrível para muitas permissões
-    private populateAuthoritiesArtificialIds() {
-        if (this.authorities) {
-            this.authorities.forEach((authority, index) => {
-                authority.artificialId = index;
-                switch (index) {
-                    case 0: {
-                        authority.description ='Administrador';
-                        break;
-                    }
-                    case 1: {
-                        authority.description = 'Usuário';
-                        break;
-                    }
-                    case 2: {
-                        authority.description = 'Observador';
-                        break;
-                    }
-                    case 3: {
-                        authority.description = 'Analista';
-                        break;
-                    }
-                    case 4: {
-                        authority.description = 'Gestor';
-                        break;
-                    }
-                }
-            });
-        }
-    }
-    // FIXME Solução rápida e ruim. O(n^2) no pior caso
-    // Funciona para qualquer autoridade que vier no banco
-    // Em oposição a uma solução mais simples porém hardcoded.
-    private populateUserAuthoritiesWithArtificialId() {
-        if (this.user.authorities) {
-            this.user.authorities.forEach(authority => {
-                switch (authority.name) {
-                    case 'ROLE_ADMIN': {
-                        authority.description = 'Administrador';
-                        authority.artificialId = 0;
-                        break;
-                    }
 
-                    case 'ROLE_USER': {
-                        authority.description = 'Usuário';
-                        authority.artificialId = 1;
-                        break;
-                    }
-
-                    case 'ROLE_VIEW': {
-                        authority.description = 'Observador';
-                        authority.artificialId = 2;
-                        break;
-                    }
-                    case 'ROLE_ANALISTA': {
-                        authority.description = 'Analista';
-                        authority.artificialId = 3;
-                        break;
-                    }
-                    case 'ROLE_GESTOR': {
-                        authority.description = 'Gestor';
-                        authority.artificialId = 4;
-                        break;
-                    }
-
-                }
-            });
-        }
-    }
     save(form) {
         if (!form.controls.email.valid && this.user.email) {
             this.pageNotificationService.addErrorMessage('E-mail Inválido');
@@ -250,7 +182,6 @@ export class UserFormComponent implements OnInit, OnDestroy {
         this.userService.findCurrentUser().subscribe((res: User) => {
             this.user = res;
             this.setEquipeOrganizacao(this.user.organizacoes);
-            this.populateUserAuthoritiesWithArtificialId();
         });
     }
 

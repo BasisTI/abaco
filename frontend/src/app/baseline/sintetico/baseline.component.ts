@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { DatatableClickEvent, DatatableComponent, PageNotificationService } from '@nuvem/primeng-components';
 import { ElasticQuery } from 'src/app/shared/elastic-query';
 import { TipoEquipe, TipoEquipeService } from 'src/app/tipo-equipe';
+import { AuthService } from 'src/app/util/auth.service';
 import { Sistema } from '../../sistema';
 import { SistemaService } from '../../sistema/sistema.service';
 import { BaselineSintetico } from '../baseline-sintetico.model';
@@ -37,6 +38,7 @@ export class BaselineComponent implements OnInit {
         private sistemaService: SistemaService,
         private equipeService: TipoEquipeService,
         private pageNotificationService: PageNotificationService,
+        private authService: AuthService
     ) {
     }
 
@@ -68,9 +70,15 @@ export class BaselineComponent implements OnInit {
         }
         switch (event.button) {
             case 'view':
+                if (this.authService.possuiRole(AuthService.PREFIX_ROLE + "BASELINE_CONSULTAR") == false) {
+                    break;
+                }
                 this.router.navigate(['/baseline', event.selection.idsistema, event.selection.equipeResponsavelId]);
                 break;
             case 'geraBaselinePdfBrowser':
+                if (this.authService.possuiRole(AuthService.PREFIX_ROLE + "BASELINE_EXPORTAR") == false) {
+                    break;
+                }
                 this.geraBaselinePdfBrowser(event.selection.idsistema);
                 break;
         }
@@ -108,6 +116,9 @@ export class BaselineComponent implements OnInit {
     }
 
     public performSearch() {
+        if (this.authService.possuiRole(AuthService.PREFIX_ROLE + "BASELINE_PESQUISAR") == false) {
+            return false;
+        }
         this.enableTable = true ;
         this.baselineService.allBaselineSintetico(this.sistema).subscribe((res) => {
             this.lstBasilineSintetico = res;
@@ -131,10 +142,16 @@ export class BaselineComponent implements OnInit {
     }
 
     public atualizarBaseline() {
+        if (this.authService.possuiRole(AuthService.PREFIX_ROLE + "BASELINE_ATUALIZAR") == false) {
+            return false;
+        }
         this.showUpdateBaseline = true;
     }
 
     public updateBaseline(sistema: Sistema, equipe: TipoEquipe) {
+        if (this.authService.possuiRole(AuthService.PREFIX_ROLE + "BASELINE_ATUALIZAR") == false) {
+            return false;
+        }
         if  (!sistema || !sistema.id) {
             this.pageNotificationService.addErrorMessage(
                 this.getLabel('Selecione um Sistema para atualizar!')

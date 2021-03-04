@@ -3,13 +3,13 @@ import { FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
 import { DatatableClickEvent, DatatableComponent, PageNotificationService } from '@nuvem/primeng-components';
 import { ConfirmationService } from 'primeng';
-import { Manual } from '../manual.model';
+import { Manual, SearchGroup } from '../manual.model';
 import { ManualService } from '../manual.service';
 import { ElasticQuery } from 'src/app/shared/elastic-query';
 import { FatorAjuste } from 'src/app/fator-ajuste';
 import { EsforcoFase } from 'src/app/esforco-fase';
 import { MessageUtil } from 'src/app/util/message.util';
-import { SearchGroup } from '..';
+import { AuthService } from 'src/app/util/auth.service';
 
 @Component({
     selector: 'app-manual',
@@ -41,7 +41,7 @@ export class ManualListComponent implements OnInit {
         {value: 'parametroConversao',  label: 'Conversão'},
         {value: 'observacao',  label: 'Observação'},
     ];
-    
+
     columnsVisible = [
         'nome',
         'valorVariacaoEstimada',
@@ -52,7 +52,7 @@ export class ManualListComponent implements OnInit {
         'parametroConversao',
         'observacao'];
       private lastColumn: any[] = [];
-      
+
       manualFiltro : SearchGroup = new SearchGroup();
 
     constructor(
@@ -60,6 +60,7 @@ export class ManualListComponent implements OnInit {
         private manualService: ManualService,
         private confirmationService: ConfirmationService,
         private pageNotificationService: PageNotificationService,
+        private authService: AuthService
     ) {
     }
 
@@ -96,10 +97,16 @@ export class ManualListComponent implements OnInit {
     }
 
     abrirEditar(manual: Manual) {
+        if (this.authService.possuiRole(AuthService.PREFIX_ROLE + "MANUAL_EDITAR") == false) {
+            return false;
+        }
         this.router.navigate(['/manual', manual.id, 'edit']);
     }
 
     abrirVisualizar(manual: Manual) {
+        if (this.authService.possuiRole(AuthService.PREFIX_ROLE + "MANUAL_CONSULTAR") == false) {
+            return false;
+        }
         this.router.navigate(['/manual', manual.id, 'view']);
     }
 
@@ -162,6 +169,9 @@ export class ManualListComponent implements OnInit {
     }
 
     public search() {
+        if (this.authService.possuiRole(AuthService.PREFIX_ROLE + "MANUAL_PESQUISAR") == false) {
+            return false;
+        }
         this.datatable.refresh(this.elasticQuery.query);
     }
 
@@ -176,16 +186,25 @@ export class ManualListComponent implements OnInit {
                 break;
             }
             case 'delete': {
+                if (this.authService.possuiRole(AuthService.PREFIX_ROLE + "MANUAL_EXCLUIR") == false) {
+                    break;
+                }
                 this.confirmDelete(event.selection);
                 break;
             }
             case 'clone': {
+                if (this.authService.possuiRole(AuthService.PREFIX_ROLE + "MANUAL_CLONAR") == false) {
+                    break;
+                }
                 this.manualSelecionado.id = event.selection.id;
                 this.manualSelecionado = event.selection;
                 this.mostrarDialogClonar = true;
                 break;
             }
             case 'exportPDF': {
+                if (this.authService.possuiRole(AuthService.PREFIX_ROLE + "MANUAL_EXPORTAR_FATOR_AJUSTE") == false) {
+                    break;
+                }
                 this.exportarManualFatorAjuste();
                 break;
             }
@@ -229,7 +248,7 @@ export class ManualListComponent implements OnInit {
             this.pageNotificationService.addErrorMessage('Não é possível exibir menos de uma coluna');
         }
     }
-    
+
     updateVisibleColumns(columns) {
         this.allColumnsTable.forEach(col => {
             if (this.visibleColumnCheck(col.value, columns)) {
@@ -239,11 +258,18 @@ export class ManualListComponent implements OnInit {
             }
         });
     }
-    
+
     visibleColumnCheck(column: string, visibleColumns: any[]) {
         return visibleColumns.some((item: any) => {
             return (item) ? item === column : true;
         });
     }
 
+
+    criarManual(){
+        if (this.authService.possuiRole(AuthService.PREFIX_ROLE + "MANUAL_CADASTRAR") == false) {
+            return false;
+        }
+        this.router.navigate(["/manual/new"])
+    }
 }

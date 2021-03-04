@@ -14,7 +14,7 @@
                         buttonLabel="Novo"
                         id="idBtnNovoComponentAnalise"
                         buttonIcon="ui-icon-add"
-                        routerLink="new">
+                        (click)="criarUsuario()">
                     </app-green-button>
                 </div>
                 <div class="ui-g-12 ui-g-nopad">
@@ -67,8 +67,8 @@
 
                         <p-column header="Perfil" field="perfil" [sortable]="false" filterType="select">
                             <ng-template let-col let-row="rowData" pTemplate="body">
-                                <li *ngFor="let perfil of row.authorities">
-                                    {{ perfil.description }}
+                                <li *ngFor="let perfil of row.perfils">
+                                    {{ perfil.nome }}
                                 </li>
                             </ng-template>
                         </p-column>
@@ -90,13 +90,13 @@
                     </basis-datatable>
 
                     <div class="ui-g-12 ui-md-2">
-                        <app-export-button [dataTable]="datatable" resourceName="users" [filter]="userFiltro" [columnsVisible]="columnsVisible">
+                        <app-export-button [dataTable]="datatable" resourceName="users" funcionalidadeName="usuario" [filter]="userFiltro" [columnsVisible]="columnsVisible">
                         </app-export-button>
                     </div>
 
 
                     <div class="ui-g-12 ui-md-2">
-                        <app-botoes-exportacao [query]="query" resourceName="users" fileName="usuários">
+                        <app-botoes-exportacao [query]="query" resourceName="users" fileName="usuario">
                         </app-botoes-exportacao>
                     </div>
 

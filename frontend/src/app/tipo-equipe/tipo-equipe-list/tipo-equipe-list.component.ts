@@ -1,10 +1,11 @@
 import { Component, ViewChild } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, ROUTER_CONFIGURATION } from '@angular/router';
 import { DatatableClickEvent, DatatableComponent, PageNotificationService } from '@nuvem/primeng-components';
 import { ConfirmationService } from 'primeng';
 import { ElasticQuery } from 'src/app/shared/elastic-query';
 import { AdminGuard } from 'src/app/util/admin.guard';
 import { SearchGroup } from '..';
+import { AuthService } from 'src/app/util/auth.service';
 import { TipoEquipe } from '../tipo-equipe.model';
 import { TipoEquipeService } from '../tipo-equipe.service';
 
@@ -39,6 +40,7 @@ export class TipoEquipeListComponent {
     private tipoEquipeService: TipoEquipeService,
     private confirmationService: ConfirmationService,
     private pageNotificationService: PageNotificationService,
+    private authService: AuthService
   ) { }
 
   getLabel(label) {
@@ -68,12 +70,18 @@ export class TipoEquipeListComponent {
     }
     switch (event.button) {
       case 'edit':
+        if (this.authService.possuiRole(AuthService.PREFIX_ROLE + "TIPO_EQUIPE_EDITAR") == false) {
+            break;
+        }
         this.router.navigate(['/admin/tipoEquipe', event.selection.id, 'edit']);
         break;
       case 'delete':
         this.confirmDelete(event.selection.id);
         break;
       case 'view':
+        if (this.authService.possuiRole(AuthService.PREFIX_ROLE + "TIPO_EQUIPE_CONSULTAR") == false) {
+            break;
+        }
         this.router.navigate(['/admin/tipoEquipe', event.selection.id]);
         break;
     }
@@ -89,10 +97,16 @@ export class TipoEquipeListComponent {
   }
 
   abrirEditar() {
+    if (this.authService.possuiRole(AuthService.PREFIX_ROLE + "TIPO_EQUIPE_EDITAR") == false) {
+        return false;
+    }
     this.router.navigate(['/admin/tipoEquipe', this.equipeSelecionada.id, 'edit']);
   }
 
   public confirmDelete(id: any) {
+    if (this.authService.possuiRole(AuthService.PREFIX_ROLE + "TIPO_EQUIPE_EXCLUIR") == false) {
+        return false;
+    }
     this.confirmationService.confirm({
       message: this.getLabel('Tem certeza que deseja excluir o registro?'),
       accept: () => {
@@ -117,6 +131,9 @@ export class TipoEquipeListComponent {
   }
 
   public recarregarDataTable() {
+    if (this.authService.possuiRole(AuthService.PREFIX_ROLE + "TIPO_EQUIPE_PESQUISAR") == false) {
+        return false;
+    }
     this.datatable.refresh(this.elasticQuery.query);
     this.tipoEquipeFiltro.nome = this.elasticQuery.query;
   }
@@ -127,6 +144,13 @@ export class TipoEquipeListComponent {
             this.equipeSelecionada = this.datatable.selectedRow;
           }
       }
+  }
+
+  criarTipoEquipe(){
+    if (this.authService.possuiRole(AuthService.PREFIX_ROLE + "TIPO_EQUIPE_CADASTRAR") == false) {
+        return false;
+    }
+    this.router.navigate(["/admin/tipoEquipe/new"])
   }
 
 }

@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import { ConfirmationService } from 'primeng';
 import { NomenclaturaService } from '../nomenclatura.service';
 import { Nomenclatura, SearchGroup } from '../nomenclatura.model';
+import { AuthService } from 'src/app/util/auth.service';
 
 @Component({
   selector: 'app-nomenclatura-list',
@@ -34,6 +35,7 @@ export class NomenclaturaListComponent implements OnInit {
     private nomenclaturaService: NomenclaturaService,
     private confirmationService: ConfirmationService,
     private pageNotificationService: PageNotificationService,
+    private authService: AuthService
   ) { }
 
   getLabel(label) {
@@ -63,12 +65,21 @@ export class NomenclaturaListComponent implements OnInit {
     }
     switch (event.button) {
       case 'edit':
+        if (this.authService.possuiRole(AuthService.PREFIX_ROLE + "NOMENCLATURA_EDITAR") == false) {
+            break;
+        }
         this.router.navigate(['/nomenclatura', event.selection.id, 'edit']);
         break;
       case 'delete':
+        if (this.authService.possuiRole(AuthService.PREFIX_ROLE + "NOMENCLATURA_EXCLUIR") == false) {
+            break;
+        }
         this.confirmDelete(event.selection.id);
         break;
       case 'view':
+        if (this.authService.possuiRole(AuthService.PREFIX_ROLE + "NOMENCLATURA_CONSULTAR") == false) {
+            break;
+        }
         this.router.navigate(['/nomenclatura', event.selection.id, 'view']);
         break;
     }
@@ -84,6 +95,9 @@ export class NomenclaturaListComponent implements OnInit {
   }
 
   abrirEditar() {
+    if (this.authService.possuiRole(AuthService.PREFIX_ROLE + "NOMENCLATURA_EDITAR") == false) {
+        return false;
+    }
     this.router.navigate(['/nomenclatura', this.nomenclaturaSelecionada.id, 'edit']);
   }
 
@@ -112,6 +126,9 @@ export class NomenclaturaListComponent implements OnInit {
   }
 
   public recarregarDataTable() {
+    if (this.authService.possuiRole(AuthService.PREFIX_ROLE + "NOMENCLATURA_PESQUISAR") == false) {
+        return false;
+    }
     this.datatable.refresh(this.elasticQuery.query);
     this.nomenclaturaFiltro.nome = this.elasticQuery.query;
   }
@@ -122,5 +139,12 @@ export class NomenclaturaListComponent implements OnInit {
             this.nomenclaturaSelecionada = this.datatable.selectedRow;
           }
       }
+  }
+
+  criarNomenclatura(){
+    if (this.authService.possuiRole(AuthService.PREFIX_ROLE + "NOMENCLATURA_CADASTRAR") == false) {
+        return false;
+    }
+    this.router.navigate(["/nomenclatura/new"])
   }
 }

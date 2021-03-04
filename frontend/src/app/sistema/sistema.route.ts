@@ -6,26 +6,39 @@ import { SistemaFormComponent } from './sistema-form/sistema-form.component';
 
 import { SistemaListComponent } from './sistema-list/sistema-list.component';
 import { AuthGuard } from '@nuvem/angular-base';
+import { AuthGuardService } from '../util/auth.guard.service';
 
 export const sistemaRoute: Routes = [
   {
     path: 'sistema',
     component: SistemaListComponent,
-    canActivate: [AuthGuard]
+    canActivate: [AuthGuard, AuthGuardService],
+    data: {
+        roleParaVerificar: 'ROLE_ABACO_SISTEMA_ACESSAR'
+    }
   },
   {
     path: 'sistema/new',
     component: SistemaFormComponent,
-    canActivate: [AuthGuard]
+    canActivate: [AuthGuard, AuthGuardService],
+    data: {
+        roleParaVerificar: 'ROLE_ABACO_SISTEMA_CADASTRAR'
+    }
   },
   {
     path: 'sistema/:id/edit',
     component: SistemaFormComponent,
-    canActivate: [AuthGuard]
+    canActivate: [AuthGuard, AuthGuardService],
+    data: {
+        roleParaVerificar: 'ROLE_ABACO_SISTEMA_EDITAR'
+    }
   },
   {
     path: 'sistema/:id',
     component: SistemaDetailComponent,
-    canActivate: [AuthGuard]
+    canActivate: [AuthGuard, AuthGuardService],
+    data: {
+        roleParaVerificar: 'ROLE_ABACO_SISTEMA_CONSULTAR'
+    }
   },
 ];

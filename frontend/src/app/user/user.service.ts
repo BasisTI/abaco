@@ -5,12 +5,12 @@ import {environment} from '../../environments/environment';
 
 
 import { User } from './user.model';
-import {Authority} from './authority.model';
 import { HttpClient } from '@angular/common/http';
 import { PageNotificationService } from '@nuvem/primeng-components';
 import { Observable } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { ResponseWrapper, createRequestOption } from '../shared';
+import { Perfil } from '../perfil/perfil.model';
 
 @Injectable()
 export class UserService {
@@ -18,8 +18,6 @@ export class UserService {
     resourceUrl = environment.apiUrl + '/users/';
 
     resourceDtoUrl = environment.apiUrl + '/users-dto/';
-
-    authoritiesUrl = this.resourceUrl + '/authorities';
 
     searchUrl = environment.apiUrl + '/_search/users';
 
@@ -101,12 +99,6 @@ export class UserService {
         return this.http.delete<Response>(`${this.resourceUrl}/${user.id}`);
     }
 
-    authorities(): Observable<Authority[]> {
-        return this.http.get<Authority[]>(`${this.authoritiesUrl}`).pipe(
-            catchError((error: any) => {
-            return this.handlerError(error)}));
-    }
-
     getLoggedUserWithId(): Observable<User> {
         return this.http.get<User>(this.resourceUrl + '/active-user').pipe(
         catchError((error: any) => {
@@ -123,7 +115,7 @@ export class UserService {
 
     private convertItemFromServer(json: any): User {
         const entity: User = Object.assign(new User(), json);
-        entity.authorities = this.generateAuthorities(json);
+        entity.perfils  = this.generateAuthorities(json);
         return entity;
     }
 
@@ -131,7 +123,7 @@ export class UserService {
         const users: User[] = [];
         json.map(item => {
             const entity: User = Object.assign(new User(), item);
-            entity.authorities = this.generateAuthorities(item);
+            entity.perfils = this.generateAuthorities(item);
             users.push(entity);
         });
         return users;
@@ -139,11 +131,11 @@ export class UserService {
 
     // TODO User implements JSONable
     private generateAuthorities(json: any) {
-        let authorities: Authority[] = [];
-        if (json.authorities) {
-            authorities = json.authorities.map(a => new Authority(a.name));
+        let perfils: Perfil[] = [];
+        if (json.perfils) {
+            perfils = json.perfils.map(a => new Perfil(a.nome));
         }
-        return authorities;
+        return perfils;
     }
 
     private convert(user: User): User {

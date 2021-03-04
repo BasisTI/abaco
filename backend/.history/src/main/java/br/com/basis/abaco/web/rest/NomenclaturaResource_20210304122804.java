@@ -1,0 +1,196 @@
+package br.com.basis.abaco.web.rest;
+
+<<<<<<< HEAD
+import static org.elasticsearch.index.query.QueryBuilders.queryStringQuery;
+
+import java.io.ByteArrayOutputStream;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.List;
+import java.util.Optional;
+
+import javax.validation.Valid;
+
+=======
+import br.com.basis.abaco.domain.Nomenclatura;
+import br.com.basis.abaco.repository.NomenclaturaRepository;
+import br.com.basis.abaco.repository.search.NomenclaturaSearchRepository;
+import br.com.basis.abaco.service.NomenclaturaService;
+import br.com.basis.abaco.service.dto.NomenclaturaDTO;
+import br.com.basis.abaco.service.exception.RelatorioException;
+import br.com.basis.abaco.utils.PageUtils;
+import br.com.basis.abaco.web.rest.util.HeaderUtil;
+import br.com.basis.abaco.web.rest.util.PaginationUtil;
+import br.com.basis.dynamicexports.service.DynamicExportsService;
+import br.com.basis.dynamicexports.util.DynamicExporter;
+import com.codahale.metrics.annotation.Timed;
+import io.github.jhipster.web.util.ResponseUtil;
+>>>>>>> Criar cadastro de perfil dinamicamente - BASIS-175045
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
+import org.springframework.web.bind.annotation.*;
+
+import com.codahale.metrics.annotation.Timed;
+
+<<<<<<< HEAD
+import br.com.basis.abaco.domain.Nomenclatura;
+import br.com.basis.abaco.repository.NomenclaturaRepository;
+import br.com.basis.abaco.repository.search.NomenclaturaSearchRepository;
+import br.com.basis.abaco.security.AuthoritiesConstants;
+import br.com.basis.abaco.service.NomenclaturaService;
+import br.com.basis.abaco.service.dto.NomenclaturaDTO;
+import br.com.basis.abaco.service.dto.filter.SearchFilterDTO;
+import br.com.basis.abaco.service.exception.RelatorioException;
+import br.com.basis.abaco.utils.PageUtils;
+import br.com.basis.abaco.web.rest.util.HeaderUtil;
+import br.com.basis.abaco.web.rest.util.PaginationUtil;
+import br.com.basis.dynamicexports.util.DynamicExporter;
+import io.github.jhipster.web.util.ResponseUtil;
+=======
+import static org.elasticsearch.index.query.QueryBuilders.queryStringQuery;
+>>>>>>> Criar cadastro de perfil dinamicamente - BASIS-175045
+
+@RestController
+@RequestMapping("/api")
+public class NomenclaturaResource {
+
+    private final Logger log = LoggerFactory.getLogger(Nomenclatura.class);
+    private static final String ENTITY_NAME = "Nomenclatura";
+    private final NomenclaturaRepository nomenclaturaRepository;
+    private final NomenclaturaSearchRepository nomenclaturaSearchRepository;
+    private final NomenclaturaService nomenclaturaService;
+
+    public NomenclaturaResource(NomenclaturaRepository nomenclaturaRepository,
+            NomenclaturaSearchRepository nomenclaturaSearchRepository, NomenclaturaService nomenclaturaService) {
+
+        this.nomenclaturaRepository = nomenclaturaRepository;
+        this.nomenclaturaSearchRepository = nomenclaturaSearchRepository;
+        this.nomenclaturaService = nomenclaturaService;
+
+    }
+
+    @PostMapping("/nomenclatura")
+    @Timed
+<<<<<<< HEAD
+    @Secured({ AuthoritiesConstants.ADMIN, AuthoritiesConstants.USER, AuthoritiesConstants.GESTOR,
+            AuthoritiesConstants.ANALISTA })
+=======
+    @Secured("ROLE_ABACO_NOMENCLATURA_CADASTRAR")
+>>>>>>> Criar cadastro de perfil dinamicamente - BASIS-175045
+    public ResponseEntity<NomenclaturaDTO> createNomenclatura(@Valid @RequestBody NomenclaturaDTO nomenclaturaDTO)
+            throws URISyntaxException {
+        log.debug("REST request to save Nomenclatura : {}", nomenclaturaDTO);
+        if (nomenclaturaDTO.getId() != null) {
+            return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert(ENTITY_NAME, "idexists",
+                    "A new Nomenclatura cannot already have an ID")).body(null);
+        }
+        NomenclaturaDTO result = nomenclaturaService.save(nomenclaturaDTO);
+        return ResponseEntity.created(new URI("/api/nomenclatura/" + result.getId()))
+                .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString())).body(result);
+    }
+
+    @PutMapping("/nomenclatura")
+    @Timed
+<<<<<<< HEAD
+    @Secured({ AuthoritiesConstants.ADMIN, AuthoritiesConstants.USER, AuthoritiesConstants.GESTOR,
+            AuthoritiesConstants.ANALISTA })
+=======
+    @Secured("ROLE_ABACO_NOMENCLATURA_EDITAR")
+>>>>>>> Criar cadastro de perfil dinamicamente - BASIS-175045
+    public ResponseEntity<NomenclaturaDTO> updateNomenclatura(@Valid @RequestBody NomenclaturaDTO nomenclatura)
+            throws URISyntaxException {
+        log.debug("REST request to update Nomenclatura : {}", nomenclatura);
+        if (nomenclatura.getId() == null) {
+            return createNomenclatura(nomenclatura);
+        }
+        NomenclaturaDTO result = nomenclaturaService.save(nomenclatura);
+        return ResponseEntity.ok()
+                .headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, nomenclatura.getId().toString())).body(result);
+    }
+
+    @GetMapping("/nomenclatura/{id}")
+    @Timed
+    @Secured("ROLE_ABACO_NOMENCLATURA_CONSULTAR")
+    public ResponseEntity<Nomenclatura> getNomenclatura(@PathVariable Long id) {
+        log.debug("REST request to get Nomenclatura : {}", id);
+        Nomenclatura nomenclatura = nomenclaturaRepository.findOne(id);
+        return ResponseUtil.wrapOrNotFound(Optional.ofNullable(nomenclatura));
+    }
+
+    @DeleteMapping("/nomenclatura/{id}")
+    @Timed
+<<<<<<< HEAD
+    @Secured({ AuthoritiesConstants.ADMIN, AuthoritiesConstants.USER, AuthoritiesConstants.GESTOR,
+            AuthoritiesConstants.ANALISTA })
+=======
+    @Secured("ROLE_ABACO_NOMENCLATURA_EXCLUIR")
+>>>>>>> Criar cadastro de perfil dinamicamente - BASIS-175045
+    public ResponseEntity<Void> deleteNomenclatura(@PathVariable Long id) {
+        log.debug("REST request to delete Nomenclatura : {}", id);
+
+        nomenclaturaRepository.delete(id);
+        nomenclaturaSearchRepository.delete(id);
+        return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id.toString())).build();
+    }
+
+    @GetMapping("/_search/nomenclatura")
+    @Timed
+<<<<<<< HEAD
+    public ResponseEntity<List<Nomenclatura>> searchNomenclatura(@RequestParam(defaultValue = "*") String query,
+            @RequestParam(defaultValue = "ASC", required = false) String order,
+            @RequestParam(name = "page") int pageNumber, @RequestParam int size,
+            @RequestParam(defaultValue = "id") String sort) throws URISyntaxException {
+=======
+    @Secured({"ROLE_ABACO_NOMENCLATURA_PESQUISAR", "ROLE_ABACO_NOMENCLATURA_ACESSAR"})
+    public ResponseEntity<List<Nomenclatura>> searchNomenclatura(@RequestParam(defaultValue = "*") String query, @RequestParam(defaultValue = "ASC", required = false) String order, @RequestParam(name = "page") int pageNumber, @RequestParam int size, @RequestParam(defaultValue = "id") String sort) throws URISyntaxException {
+>>>>>>> Criar cadastro de perfil dinamicamente - BASIS-175045
+        log.debug("REST request to search for a page of Nomenclatura for query {}", query);
+
+        Sort.Direction sortOrder = PageUtils.getSortDirection(order);
+        Pageable newPageable = new PageRequest(pageNumber, size, sortOrder, sort);
+
+        Page<Nomenclatura> page = nomenclaturaSearchRepository.search(queryStringQuery(query), newPageable);
+        HttpHeaders headers = PaginationUtil.generateSearchPaginationHttpHeaders(query, page,
+                "/api/_search/nomenclatura");
+        return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
+    }
+
+    @PostMapping(value = "/nomenclatura/exportacao/{tipoRelatorio}", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
+    @Timed
+<<<<<<< HEAD
+    public ResponseEntity<InputStreamResource> gerarRelatorioExportacao(@PathVariable String tipoRelatorio,@RequestBody SearchFilterDTO filtro) throws RelatorioException {
+        ByteArrayOutputStream byteArrayOutputStream = nomenclaturaService.gerarRelatorio(filtro, tipoRelatorio);
+=======
+    @Secured("ROLE_ABACO_NOMENCLATURA_EXPORTAR")
+    public ResponseEntity<InputStreamResource> gerarRelatorioExportacao(@PathVariable String tipoRelatorio,
+                                                                        @RequestParam(defaultValue = "*") String query) throws RelatorioException {
+        ByteArrayOutputStream byteArrayOutputStream = nomenclaturaService.gerarRelatorio(query, tipoRelatorio);
+>>>>>>> Criar cadastro de perfil dinamicamente - BASIS-175045
+        return DynamicExporter.output(byteArrayOutputStream, "relatorio." + tipoRelatorio);
+    }
+
+    @PostMapping(value = "/nomenclatura/exportacao-arquivo", produces = MediaType.APPLICATION_PDF_VALUE)
+    @Timed
+<<<<<<< HEAD
+    public ResponseEntity<byte[]> gerarRelatorioImprimir(@RequestBody SearchFilterDTO filtro)
+            throws RelatorioException {
+        ByteArrayOutputStream byteArrayOutputStream = nomenclaturaService.gerarRelatorio(filtro, "pdf");
+=======
+    @Secured("ROLE_ABACO_NOMENCLATURA_EXPORTAR")
+    public ResponseEntity<byte[]> gerarRelatorioImprimir(@RequestParam(defaultValue = "*") String query) throws RelatorioException {
+        ByteArrayOutputStream byteArrayOutputStream = nomenclaturaService.gerarRelatorio(query, "pdf");
+>>>>>>> Criar cadastro de perfil dinamicamente - BASIS-175045
+        return new ResponseEntity<byte[]>(byteArrayOutputStream.toByteArray(), HttpStatus.OK);
+    }
+
+}

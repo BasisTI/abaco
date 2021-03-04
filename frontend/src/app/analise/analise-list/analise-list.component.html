@@ -65,7 +65,7 @@
                     </div>
                     <div class="ui-g-2 ui-md-2 ui-sm-12">
                         <app-green-button [buttonLabel]="'Novo'" id="idBtnNovoComponentAnalise" buttonIcon="ui-icon-add"
-                            routerLink="new">
+                            (click)="criarAnalise()">
                         </app-green-button>
                     </div>
                 </div>
@@ -191,7 +191,7 @@
                         </basis-datatable-button>
                     </basis-datatable>
                     <div class="ui-g-12 ui-md-2">
-                        <app-export-button [dataTable]="datatable" resourceName="analise" [columnsVisible]="columnsVisible" [filter]="searchGroup">
+                        <app-export-button [dataTable]="datatable" resourceName="analise" [columnsVisible]="columnsVisible" [filter]="searchGroup" funcionalidadeName="analise">
                         </app-export-button>
                     </div>
                 </div>
