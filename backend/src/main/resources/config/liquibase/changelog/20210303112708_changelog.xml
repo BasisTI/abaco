@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+   <changeSet author="basis (generated)" id="1614770838060-1">
+      <createTable tableName="acao">
+         <column autoIncrement="true" name="id" type="BIGINT">
+            <constraints primaryKey="true" primaryKeyName="acaoPK"/>
+         </column>
+         <column name="descricao" type="VARCHAR(255)">
+            <constraints nullable="false"/>
+         </column>
+         <column name="sigla" type="VARCHAR(255)">
+            <constraints nullable="false"/>
+         </column>
+      </createTable>
+   </changeSet>
+
+   <changeSet author="basis (generated)" id="1614770838060-5">
+      <createTable tableName="funcionalidade_abaco">
+         <column autoIncrement="true" name="id" type="BIGINT">
+            <constraints primaryKey="true" primaryKeyName="funcionalidade_abacoPK"/>
+         </column>
+         <column name="nome" type="VARCHAR(255)">
+            <constraints nullable="false"/>
+         </column>
+         <column name="sigla" type="VARCHAR(255)">
+            <constraints nullable="false"/>
+         </column>
+      </createTable>
+   </changeSet>
+
+   <changeSet author="basis (generated)" id="1614770838060-9">
+      <createTable tableName="perfil">
+         <column autoIncrement="true" name="id" type="BIGINT">
+            <constraints primaryKey="true" primaryKeyName="perfilPK"/>
+         </column>
+         <column name="descricao" type="VARCHAR(255)">
+            <constraints nullable="false"/>
+         </column>
+         <column name="flg_ativo" type="BOOLEAN"/>
+         <column name="nome" type="VARCHAR(255)">
+            <constraints nullable="false"/>
+         </column>
+      </createTable>
+   </changeSet>
+   <changeSet author="basis (generated)" id="1614770838060-10">
+      <createTable tableName="perfil_permissao">
+         <column name="perfil_id" type="BIGINT">
+            <constraints nullable="false"/>
+         </column>
+         <column name="permissao_id" type="BIGINT">
+            <constraints nullable="false"/>
+         </column>
+      </createTable>
+   </changeSet>
+   <changeSet author="basis (generated)" id="1614770838060-11">
+      <createTable tableName="permissao">
+         <column autoIncrement="true" name="id" type="BIGINT">
+            <constraints primaryKey="true" primaryKeyName="permissaoPK"/>
+         </column>
+         <column name="acao_id" type="BIGINT">
+            <constraints nullable="false"/>
+         </column>
+         <column name="funcionalidade_abaco_id" type="BIGINT">
+            <constraints nullable="false"/>
+         </column>
+      </createTable>
+   </changeSet>
+   <changeSet author="basis (generated)" id="1614770838060-12">
+      <createTable tableName="user_perfil">
+         <column name="user_id" type="BIGINT">
+            <constraints nullable="false"/>
+         </column>
+         <column name="perfil_id" type="BIGINT">
+            <constraints nullable="false"/>
+         </column>
+      </createTable>
+   </changeSet>
+   <changeSet author="basis (generated)" id="1614770838060-19">
+      <addPrimaryKey columnNames="perfil_id, permissao_id" tableName="perfil_permissao"/>
+   </changeSet>
+   <changeSet author="basis (generated)" id="1614770838060-20">
+      <addPrimaryKey columnNames="user_id, perfil_id" tableName="user_perfil"/>
+   </changeSet>
+
+   <changeSet author="basis (generated)" id="1614770838060-39">
+      <addForeignKeyConstraint baseColumnNames="perfil_id"
+                               baseTableName="perfil_permissao"
+                               constraintName="FKae12hkpoxg80wb2dn1cog5y55"
+                               deferrable="false"
+                               initiallyDeferred="false"
+                               referencedColumnNames="id"
+                               referencedTableName="perfil"/>
+   </changeSet>
+   <changeSet author="basis (generated)" id="1614770838060-40">
+      <addForeignKeyConstraint baseColumnNames="funcionalidade_abaco_id"
+                               baseTableName="permissao"
+                               constraintName="FKc545nemy22iadr1gewwfyxfi8"
+                               deferrable="false"
+                               initiallyDeferred="false"
+                               referencedColumnNames="id"
+                               referencedTableName="funcionalidade_abaco"/>
+   </changeSet>
+   <changeSet author="basis (generated)" id="1614770838060-41">
+      <addForeignKeyConstraint baseColumnNames="permissao_id"
+                               baseTableName="perfil_permissao"
+                               constraintName="FKdjkaj85jgqb28eu3a4n9siqee"
+                               deferrable="false"
+                               initiallyDeferred="false"
+                               referencedColumnNames="id"
+                               referencedTableName="permissao"/>
+   </changeSet>
+   <changeSet author="basis (generated)" id="1614770838060-42">
+      <addForeignKeyConstraint baseColumnNames="acao_id"
+                               baseTableName="permissao"
+                               constraintName="FKdwn5rkdc5rs0o8ptj56p3733y"
+                               deferrable="false"
+                               initiallyDeferred="false"
+                               referencedColumnNames="id"
+                               referencedTableName="acao"/>
+   </changeSet>
+   <changeSet author="basis (generated)" id="1614770838060-43">
+      <addForeignKeyConstraint baseColumnNames="user_id"
+                               baseTableName="user_perfil"
+                               constraintName="FKexems285wqt1bsfdl3ux1xjsl"
+                               deferrable="false"
+                               initiallyDeferred="false"
+                               referencedColumnNames="id"
+                               referencedTableName="jhi_user"/>
+   </changeSet>
+   <changeSet author="basis (generated)" id="1614770838060-44">
+      <addForeignKeyConstraint baseColumnNames="perfil_id"
+                               baseTableName="user_perfil"
+                               constraintName="FKso6jevks1x6may02n9s1j0vll"
+                               deferrable="false"
+                               initiallyDeferred="false"
+                               referencedColumnNames="id"
+                               referencedTableName="perfil"/>
+
+
+
+       <loadData encoding="UTF-8"
+                 file="config/liquibase/acoes.csv"
+                 separator=";"
+                 tableName="acao"/>
+
+
+       <loadData encoding="UTF-8"
+                 file="config/liquibase/funcionalidades.csv"
+                 separator=";"
+                 tableName="funcionalidade_abaco"/>
+
+
+       <loadData encoding="UTF-8"
+                 file="config/liquibase/permissoes.csv"
+                 separator=";"
+                 tableName="permissao"/>
+
+
+       <loadData encoding="UTF-8"
+                 file="config/liquibase/perfis.csv"
+                 separator=";"
+                 tableName="perfil"/>
+
+
+
+       <loadData encoding="UTF-8"
+                 file="config/liquibase/perfis_permissoes.csv"
+                 separator=";"
+                 tableName="perfil_permissao"/>
+
+
+
+       <loadData encoding="UTF-8"
+                 file="config/liquibase/users_perfis.csv"
+                 separator=";"
+                 tableName="user_perfil"/>
+   </changeSet>
+
+   <changeSet author="basis (generated)" id="1614770838060-46">
+      <dropForeignKeyConstraint baseTableName="jhi_user_authority" constraintName="fk_authority_name"/>
+   </changeSet>
+
+   <changeSet author="basis (generated)" id="1614770838060-62">
+      <dropTable tableName="jhi_user_authority"/>
+   </changeSet>
+
+   <changeSet author="basis (generated)" id="1614770838060-73">
+      <dropNotNullConstraint columnDataType="varchar(255)"
+                             columnName="description"
+                             tableName="jhi_authority"/>
+   </changeSet>
+</databaseChangeLog>

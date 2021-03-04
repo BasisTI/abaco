@@ -1,12 +1,25 @@
 package br.com.basis.abaco.web.rest;
 
-import java.io.ByteArrayOutputStream;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
+import br.com.basis.abaco.domain.Organizacao;
+import br.com.basis.abaco.domain.User;
+import br.com.basis.abaco.repository.AnaliseRepository;
+import br.com.basis.abaco.repository.UserRepository;
+import br.com.basis.abaco.repository.search.UserSearchRepository;
+import br.com.basis.abaco.security.SecurityUtils;
+import br.com.basis.abaco.service.MailService;
+import br.com.basis.abaco.service.UserService;
+import br.com.basis.abaco.service.dto.UserAnaliseDTO;
+import br.com.basis.abaco.service.dto.UserDTO;
+import br.com.basis.abaco.service.dto.UserEditDTO;
+import br.com.basis.abaco.service.dto.filter.UserFilterDTO;
+import br.com.basis.abaco.service.exception.RelatorioException;
+import br.com.basis.abaco.service.util.RandomUtil;
+import br.com.basis.abaco.utils.PageUtils;
+import br.com.basis.abaco.web.rest.util.HeaderUtil;
+import br.com.basis.abaco.web.rest.util.PaginationUtil;
+import br.com.basis.dynamicexports.util.DynamicExporter;
+import com.codahale.metrics.annotation.Timed;
+import io.swagger.annotations.ApiParam;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.search.sort.FieldSortBuilder;
 import org.elasticsearch.search.sort.SortOrder;
@@ -26,40 +39,16 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.codahale.metrics.annotation.Timed;
 
-import br.com.basis.abaco.domain.Authority;
-import br.com.basis.abaco.domain.Organizacao;
-import br.com.basis.abaco.domain.User;
-import br.com.basis.abaco.repository.AnaliseRepository;
-import br.com.basis.abaco.repository.AuthorityRepository;
-import br.com.basis.abaco.repository.UserRepository;
-import br.com.basis.abaco.repository.search.UserSearchRepository;
-import br.com.basis.abaco.security.AuthoritiesConstants;
-import br.com.basis.abaco.security.SecurityUtils;
-import br.com.basis.abaco.service.MailService;
-import br.com.basis.abaco.service.UserService;
-import br.com.basis.abaco.service.dto.UserAnaliseDTO;
-import br.com.basis.abaco.service.dto.UserDTO;
-import br.com.basis.abaco.service.dto.UserEditDTO;
-import br.com.basis.abaco.service.dto.filter.UserFilterDTO;
-import br.com.basis.abaco.service.exception.RelatorioException;
-import br.com.basis.abaco.service.util.RandomUtil;
-import br.com.basis.abaco.utils.PageUtils;
-import br.com.basis.abaco.web.rest.util.HeaderUtil;
-import br.com.basis.abaco.web.rest.util.PaginationUtil;
-import br.com.basis.dynamicexports.util.DynamicExporter;
-import io.swagger.annotations.ApiParam;
+import java.io.ByteArrayOutputStream;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api")
@@ -72,26 +61,23 @@ public class UserResource {
     private final MailService mailService;
     private final UserService userService;
     private final UserSearchRepository userSearchRepository;
-    private final AuthorityRepository authorityRepository;
     private String userexists = "userexists";
 
     public UserResource(UserRepository userRepository,
                         MailService mailService,
                         UserService userService,
                         UserSearchRepository userSearchRepository,
-                        AuthorityRepository authorityRepository,
                         AnaliseRepository analiseRepository) {
         this.analiseRepository = analiseRepository;
         this.userRepository = userRepository;
         this.mailService = mailService;
         this.userService = userService;
         this.userSearchRepository = userSearchRepository;
-        this.authorityRepository = authorityRepository;
     }
 
     @PostMapping("/users")
     @Timed
-    @Secured({AuthoritiesConstants.ADMIN, AuthoritiesConstants.GESTOR})
+    @Secured("ROLE_ABACO_USUARIO_CADASTRAR")
     public ResponseEntity createUser(@RequestBody User user) throws URISyntaxException {
         log.debug("REST request to save User : {}", user);
         if (userRepository.findOneByLogin(user.getLogin().toLowerCase()).isPresent()) {
@@ -114,7 +100,7 @@ public class UserResource {
 
     @PutMapping("/users")
     @Timed
-    @Secured({AuthoritiesConstants.USER, AuthoritiesConstants.ADMIN, AuthoritiesConstants.GESTOR, AuthoritiesConstants.VIEW, AuthoritiesConstants.ANALISTA})
+    @Secured("ROLE_ABACO_USUARIO_EDITAR")
     public ResponseEntity<User> updateUser(@RequestBody User user) {
         Optional<User> existingUser = userRepository.findOneByEmail(user.getEmail());
         if (existingUser.isPresent() && (!existingUser.get().getId().equals(user.getId()))) {
@@ -132,7 +118,7 @@ public class UserResource {
 
     @GetMapping("/users")
     @Timed
-    @Secured({AuthoritiesConstants.ADMIN, AuthoritiesConstants.GESTOR})
+    @Secured("ROLE_ABACO_USUARIO_ACESSAR")
     public ResponseEntity<List<UserDTO>> getAllUsers(@ApiParam Pageable pageable) throws URISyntaxException {
         final Page<UserDTO> page = userService.getAllManagedUsers(pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/users");
@@ -141,42 +127,35 @@ public class UserResource {
 
     @GetMapping("/users/{organizacaoId}/{equipeId}")
     @Timed
-    @Secured({AuthoritiesConstants.ADMIN, AuthoritiesConstants.GESTOR, AuthoritiesConstants.ANALISTA})
+    @Secured("ROLE_ABACO_USUARIO_ACESSAR")
     public List<UserDTO> getAllUsersFronSistemaAndOrganizacao(@PathVariable Long organizacaoId, @PathVariable Long equipeId) throws URISyntaxException {
         return userService.getAllUsersOrgEquip(organizacaoId, equipeId);
     }
     @GetMapping("/users-dto/{organizacaoId}/{equipeId}")
     @Timed
-    @Secured({AuthoritiesConstants.ADMIN, AuthoritiesConstants.GESTOR, AuthoritiesConstants.ANALISTA})
+    @Secured("ROLE_ABACO_USUARIO_ACESSAR")
     public List<UserAnaliseDTO> getAllUserDtosFronSistemaAndOrganizacao(@PathVariable Long organizacaoId, @PathVariable Long equipeId) throws URISyntaxException {
         return userService.getAllUserDtosOrgEquip(organizacaoId, equipeId);
     }
 
     @GetMapping("/users/{id}")
     @Timed
-    @Secured({AuthoritiesConstants.ADMIN, AuthoritiesConstants.GESTOR})
+    @Secured("ROLE_ABACO_USUARIO_CONSULTAR")
     public UserEditDTO getUser(@PathVariable Long id) {
         return  userService.convertToDto(userService.getUserWithAuthorities(id));
     }
 
     @GetMapping("/users/logged")
     @Timed
+    @Secured("ROLE_ABACO_USUARIO_CONSULTAR")
     public UserEditDTO getLoggedUser() {
         String login = SecurityUtils.getCurrentUserLogin();
         return userService.convertToDto(userRepository.findOneWithAuthoritiesByLogin(login).orElse(null));
     }
 
-    @GetMapping("/users/authorities")
-    @Timed
-    public ResponseEntity<List<Authority>> getAllAuthorities(@ApiParam Pageable pageable) throws URISyntaxException {
-        final Page<Authority> page = authorityRepository.findAll(pageable);
-        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/users/authorities");
-        return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
-    }
-
     @DeleteMapping("/users/{id}")
     @Timed
-    @Secured({AuthoritiesConstants.ADMIN, AuthoritiesConstants.GESTOR})
+    @Secured("ROLE_ABACO_USUARIO_EXCLUIR")
     public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
         if (id == 3l) {
             return ResponseEntity.badRequest()
@@ -193,7 +172,7 @@ public class UserResource {
 
     @GetMapping("/_search/users")
     @Timed
-    @Secured({AuthoritiesConstants.ADMIN, AuthoritiesConstants.GESTOR})
+    @Secured({"ROLE_ABACO_USUARIO_PESQUISAR", "ROLE_ABACO_USUARIO_ACESSAR"})
     public ResponseEntity<List<User>> search(@RequestParam (defaultValue = "ASC", required = false)String order,
                                              @RequestParam(name = "page", defaultValue = "0" ,required = false) int pageNumber,
                                              @RequestParam int size,
@@ -216,6 +195,7 @@ public class UserResource {
 
     @PostMapping(value = "/users/exportacao/{tipoRelatorio}", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
     @Timed
+    @Secured("ROLE_ABACO_USUARIO_EXPORTAR")
     public ResponseEntity<InputStreamResource> gerarRelatorioExportacao(@PathVariable String tipoRelatorio,@RequestBody UserFilterDTO filtro) throws RelatorioException {
         ByteArrayOutputStream byteArrayOutputStream = userService.gerarRelatorio(filtro, tipoRelatorio);
         return DynamicExporter.output(byteArrayOutputStream, "relatorio." + tipoRelatorio);
@@ -223,12 +203,13 @@ public class UserResource {
 
     @PostMapping(value = "/users/exportacao-arquivo", produces = MediaType.APPLICATION_PDF_VALUE)
     @Timed
+    @Secured("ROLE_ABACO_USUARIO_EXPORTAR")
     public ResponseEntity<byte[]> gerarRelatorioImprimir(@RequestBody UserFilterDTO filtro) throws RelatorioException {
         ByteArrayOutputStream byteArrayOutputStream = userService.gerarRelatorio(filtro, "pdf");
         return new ResponseEntity<byte[]>(byteArrayOutputStream.toByteArray(), HttpStatus.OK);
     }
-    
-    
+
+
 
     @GetMapping("/users/active-user")
     @Timed

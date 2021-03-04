@@ -117,10 +117,10 @@
                                     [disabled]="this.desabilitado()"
                                     name="authoritiesMultiselect"
                                     defaultLabel="Selecione ao menos um perfil"
-                                    [options]="authorities"
-                                    [(ngModel)]="user.authorities"
-                                    dataKey="artificialId"
-                                    optionLabel="description"
+                                    [options]="perfils"
+                                    [(ngModel)]="user.perfils"
+                                    dataKey="id"
+                                    optionLabel="nome"
                                     selectedItemsLabel="{0} perfis selecionados"
                                     #authoritiesMultiselect='ngModel'
                                     required>
@@ -190,7 +190,7 @@
                                             routerLink="/admin/user"></app-white-button>
                     </div>
                     <div class="ui-g-2 ui-md-2 ui-sm-12">
-                        <app-submit-button buttonLabel="Salvar" 
+                        <app-submit-button buttonLabel="Salvar"
                                            [disabled]="editForm.form.invalid || isSaving"></app-submit-button>
                     </div>
                 </div>

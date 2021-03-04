@@ -21,6 +21,11 @@
     <include file="classpath:config/liquibase/changelog/20201124192213_add_view_baseline_analitico_fd_ft.xml" relativeToChangelogFile="false"/>
     <include file="classpath:config/liquibase/changelog/20201129204722_alter_view_for_function.xml" relativeToChangelogFile="false"/>
     <include file="classpath:config/liquibase/changelog/20210114160352_add_many_to_many_manual_files.xml" relativeToChangelogFile="false"/>
+<<<<<<< HEAD
     <include file="classpath:config/liquibase/changelog/20210217170852_add_table_config_baseline_sistema_tipo_equipe.xml" relativeToChangelogFile="false"/>
+    <include file="classpath:config/liquibase/changelog/20210223174132_changelog.xml" relativeToChangelogFile="false"/>
+=======
+    <include file="classpath:config/liquibase/changelog/20210303112708_changelog.xml" relativeToChangelogFile="false"/>
+>>>>>>> Criar cadastro de perfil dinamicamente - BASIS-175045
 
 </databaseChangeLog>

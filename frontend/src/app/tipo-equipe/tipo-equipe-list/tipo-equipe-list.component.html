@@ -30,12 +30,12 @@
 
           <div class="ui-g-2 ui-md-2 ui-sm-12">
             <app-blue-button [buttonLabel]="'Pesquisar'" buttonIcon="ui-icon-search"
-              (click)="datatable.refresh(elasticQuery.query)">
+              (click)="recarregarDataTable()">
             </app-blue-button>
           </div>
 
           <div class="uui-g-2 ui-md-2 ui-sm-12">
-            <app-green-button [buttonLabel]="'Novo'" buttonIcon="ui-icon-add" routerLink="/admin/tipoEquipe/new">
+            <app-green-button [buttonLabel]="'Novo'" buttonIcon="ui-icon-add" (click)="criarTipoEquipe()">
             </app-green-button>
           </div>
 
@@ -70,7 +70,7 @@
           </p-column>
         </basis-datatable>
         <div class="ui-g-12 ui-md-2">
-          <app-export-button [dataTable]="datatable" resourceName="tipoEquipe" [filter]="tipoEquipeFiltro">
+          <app-export-button [dataTable]="datatable" resourceName="tipoEquipe" [filter]="tipoEquipeFiltro" funcionalidadeName="tipoequipe">
           </app-export-button>
         </div>
         <div class="ui-g-12 ui-md-2">

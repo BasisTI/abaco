@@ -78,15 +78,8 @@ public class TipoEquipeResource {
 
     private final UserRepository userRepository;
 
-    private static final String ROLE_ANALISTA = "ROLE_ANALISTA";
-
-    private static final String ROLE_ADMIN = "ROLE_ADMIN";
-
-    private static final String ROLE_USER = "ROLE_USER";
-
-    private static final String ROLE_GESTOR = "ROLE_GESTOR";
-    
     private final DynamicExportsService dynamicExportsService;
+
 
     public TipoEquipeResource(TipoEquipeRepository tipoEquipeRepository,
             TipoEquipeSearchRepository tipoEquipeSearchRepository, TipoEquipeService tipoEquipeService,
@@ -111,7 +104,7 @@ public class TipoEquipeResource {
      */
     @PostMapping("/tipo-equipes")
     @Timed
-    @Secured({ ROLE_ADMIN, ROLE_USER, ROLE_GESTOR, ROLE_ANALISTA })
+    @Secured("ROLE_ABACO_TIPO_EQUIPE_CADASTRAR")
     public ResponseEntity<TipoEquipe> createTipoEquipe(@Valid @RequestBody TipoEquipe tipoEquipe)
             throws URISyntaxException {
         log.debug("REST request to save TipoEquipe : {}", tipoEquipe);
@@ -137,7 +130,7 @@ public class TipoEquipeResource {
      */
     @PutMapping("/tipo-equipes")
     @Timed
-    @Secured({ ROLE_ADMIN, ROLE_USER, ROLE_GESTOR, ROLE_ANALISTA })
+    @Secured("ROLE_ABACO_TIPO_EQUIPE_EDITAR")
     public ResponseEntity<TipoEquipe> updateTipoEquipe(@Valid @RequestBody TipoEquipe tipoEquipe)
             throws URISyntaxException {
         log.debug("REST request to update TipoEquipe : {}", tipoEquipe);
@@ -153,6 +146,7 @@ public class TipoEquipeResource {
 
     @GetMapping("/tipo-equipes/drop-down")
     @Timed
+    @Secured("ROLE_ABACO_TIPO_EQUIPE_ACESSAR")
     public List<DropdownDTO> getTipoEquipeDropdown() {
         log.debug("REST request to get dropdown TipoEquipes");
         return tipoEquipeService.getTipoEquipeDropdown();
@@ -167,6 +161,7 @@ public class TipoEquipeResource {
      */
     @GetMapping("/tipo-equipes/{id}")
     @Timed
+    @Secured("ROLE_ABACO_TIPO_EQUIPE_CONSULTAR")
     public ResponseEntity<TipoEquipeDTO> getTipoEquipe(@PathVariable Long id) {
         log.debug("REST request to get TipoEquipe : {}", id);
         TipoEquipe tipoEquipe = tipoEquipeRepository.findById(id);
@@ -183,6 +178,7 @@ public class TipoEquipeResource {
      */
     @GetMapping("/tipo-equipes/user/{idUser}")
     @Timed
+    @Secured("ROLE_ABACO_TIPO_EQUIPE_ACESSAR")
     public ResponseEntity<List<Long>> getTipoEquipeByUser(@PathVariable Long idUser) {
         log.debug("REST request to get TipoEquipe : {}", idUser);
         List<Long> idTipoEquipe = tipoEquipeRepository.findAllByUserId(idUser);
@@ -195,6 +191,7 @@ public class TipoEquipeResource {
      */
     @GetMapping("/tipo-equipes/organizacoes/{idOrganizacao}")
     @Timed
+    @Secured("ROLE_ABACO_TIPO_EQUIPE_ACESSAR")
     public List<TipoEquipeDTO> getAllTipoEquipeByOrganizacao(@PathVariable Long idOrganizacao) {
         log.debug("REST request to get all TipoEquipes by org id");
         List<TipoEquipe> lstTipoEquipe = tipoEquipeRepository.findAllEquipesByOrganizacaoId(idOrganizacao);
@@ -207,6 +204,7 @@ public class TipoEquipeResource {
      */
     @GetMapping("/tipo-equipes/current-user/{idOrganizacao}")
     @Timed
+    @Secured("ROLE_ABACO_TIPO_EQUIPE_ACESSAR")
     public List<TipoEquipeDTO> getAllTipoEquipeByOrganizacaoAndLoggedUser(@PathVariable Long idOrganizacao) {
         log.debug("REST request to get all TipoEquipes by logged user login");
         List<TipoEquipe> lstTipoEquipe = tipoEquipeRepository
@@ -216,8 +214,8 @@ public class TipoEquipeResource {
 
     @GetMapping("/tipo-equipes/compartilhar/{idOrganizacao}/{idAnalise}/{idEquipe}")
     @Timed
-    public List<TipoEquipeDTO> getAllTipoEquipeCompartilhavel(@PathVariable Long idOrganizacao,
-            @PathVariable Long idAnalise, @PathVariable Long idEquipe) {
+    @Secured("ROLE_ABACO_TIPO_EQUIPE_ACESSAR")
+    public List<TipoEquipeDTO> getAllTipoEquipeCompartilhavel(@PathVariable Long idOrganizacao, @PathVariable Long idAnalise, @PathVariable Long idEquipe) {
         log.debug("REST request to get all TipoEquipes");
         List<TipoEquipe> lstTipoEquipe = tipoEquipeRepository.findAllEquipesCompartilhaveis(idOrganizacao, idEquipe,
                 idAnalise);
@@ -232,7 +230,7 @@ public class TipoEquipeResource {
      */
     @DeleteMapping("/tipo-equipes/{id}")
     @Timed
-    @Secured({ ROLE_ADMIN, ROLE_USER, ROLE_GESTOR, ROLE_ANALISTA })
+    @Secured("ROLE_ABACO_TIPO_EQUIPE_EXCLUIR")
     public ResponseEntity<Void> deleteTipoEquipe(@PathVariable Long id) {
         log.debug("REST request to delete TipoEquipe : {}", id);
 
@@ -251,10 +249,8 @@ public class TipoEquipeResource {
      */
     @GetMapping("/_search/tipo-equipes")
     @Timed
-    public ResponseEntity<List<TipoEquipe>> searchTipoEquipes(@RequestParam(defaultValue = "*") String query,
-            @RequestParam(defaultValue = "ASC", required = false) String order,
-            @RequestParam(name = "page") int pageNumber, @RequestParam int size,
-            @RequestParam(defaultValue = "id") String sort) throws URISyntaxException {
+    @Secured({"ROLE_ABACO_TIPO_EQUIPE_PESQUISAR", "ROLE_ABACO_TIPO_EQUIPE_ACESSAR"})
+    public ResponseEntity<List<TipoEquipe>> searchTipoEquipes(@RequestParam(defaultValue = "*") String query, @RequestParam(defaultValue = "ASC", required = false) String order, @RequestParam(name = "page") int pageNumber, @RequestParam int size, @RequestParam(defaultValue = "id") String sort) throws URISyntaxException {
         log.debug("REST request to search for a page of TipoEquipes for query {}", query);
 
         Sort.Direction sortOrder = PageUtils.getSortDirection(order);
@@ -285,6 +281,7 @@ public class TipoEquipeResource {
 
     @PostMapping(value = "/tipoEquipe/exportacao/{tipoRelatorio}", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
     @Timed
+    @Secured("ROLE_ABACO_TIPO_EQUIPE_EXPORTAR")
     public ResponseEntity<InputStreamResource> gerarRelatorioExportacao(@PathVariable String tipoRelatorio, @RequestBody SearchFilterDTO filtro) throws RelatorioException {
         ByteArrayOutputStream byteArrayOutputStream = getByteArrayOutputStream(tipoRelatorio, filtro);
         return DynamicExporter.output(byteArrayOutputStream, "relatorio." + tipoRelatorio);
@@ -292,12 +289,13 @@ public class TipoEquipeResource {
 
     @PostMapping(value = "/tipoEquipe/exportacao-arquivo", produces = MediaType.APPLICATION_PDF_VALUE)
     @Timed
+    @Secured("ROLE_ABACO_TIPO_EQUIPE_EXPORTAR")
     public ResponseEntity<byte[]> gerarRelatorioImprimir(@RequestBody SearchFilterDTO filtro)
             throws RelatorioException {
         ByteArrayOutputStream byteArrayOutputStream = getByteArrayOutputStream("pdf", filtro);
         return new ResponseEntity<byte[]>(byteArrayOutputStream.toByteArray(), HttpStatus.OK);
     }
-    
+
     private ByteArrayOutputStream getByteArrayOutputStream(String tipoRelatorio, @RequestBody SearchFilterDTO filter)
             throws RelatorioException {
         ByteArrayOutputStream byteArrayOutputStream;

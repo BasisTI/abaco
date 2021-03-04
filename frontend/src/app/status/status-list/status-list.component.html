@@ -30,11 +30,11 @@
 
           <div class="ui-g-2 ui-md-2 ui-sm-12">
             <app-blue-button [buttonLabel]="'Pesquisar'" buttonIcon="ui-icon-search"
-              (click)="datatable.refresh(elasticQuery.query)"></app-blue-button>
+              (click)="valueFiltro()"></app-blue-button>
           </div>
 
           <div class="uui-g-2 ui-md-2 ui-sm-12">
-            <app-green-button [buttonLabel]="'Novo'" buttonIcon="ui-icon-add" routerLink="/status/new">
+            <app-green-button [buttonLabel]="'Novo'" buttonIcon="ui-icon-add" (click)="criarStatus()">
             </app-green-button>
           </div>
 
@@ -58,7 +58,7 @@
 
         </basis-datatable>
         <div class="ui-g-12 ui-md-2">
-          <app-export-button [dataTable]="datatable" resourceName="status" [filter]="statusFiltro">
+          <app-export-button [dataTable]="datatable" resourceName="status" [filter]="statusFiltro" funcionalidadeName="status">
           </app-export-button>
         </div>
         <div class="ui-g-12 ui-md-2">

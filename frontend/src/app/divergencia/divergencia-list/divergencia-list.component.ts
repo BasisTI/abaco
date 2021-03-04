@@ -12,6 +12,7 @@ import { StatusService } from 'src/app/status';
 import { Status } from 'src/app/status/status.model';
 import { TipoEquipe, TipoEquipeService } from 'src/app/tipo-equipe';
 import { User } from 'src/app/user';
+import { AuthService } from 'src/app/util/auth.service';
 import { Divergencia } from '../divergencia.model';
 import { DivergenciaService } from '../divergencia.service';
 
@@ -103,6 +104,7 @@ export class DivergenciaListComponent implements OnInit {
         private statusService: StatusService,
         private confirmationService: ConfirmationService,
         private divergenciaService: DivergenciaService,
+        private authService: AuthService
     ) {
     }
 
@@ -178,13 +180,15 @@ export class DivergenciaListComponent implements OnInit {
             this.pageNotificationService.addErrorMessage('Você não pode editar uma análise bloqueada!');
             return;
         }
-        this.router.navigate(['/divergencia', this.analiseSelecionada.id, 'edit']);
+        if (this.authService.possuiRole(AuthService.PREFIX_ROLE + "DIVERGENCIA_EDITAR") == false) {
+            return false;
+        }
+        this.router.navigate(['/divergencia', analiseDivergence.id, 'edit']);
     }
 
     public confirmDeleteDivergence(divergence: Analise) {
-        if (divergence.bloqueiaAnalise) {
-            this.pageNotificationService.addErrorMessage('Você não pode excluir uma análise bloqueada!');
-            return;
+        if (this.authService.possuiRole(AuthService.PREFIX_ROLE + "DIVERGENCIA_EXCLUIR") == false) {
+            return false;
         }
         if (!divergence) {
             this.pageNotificationService.addErrorMessage('Nenhuma Validação foi selecionada.');
@@ -223,6 +227,9 @@ export class DivergenciaListComponent implements OnInit {
     }
 
     public performSearch() {
+        if (this.authService.possuiRole(AuthService.PREFIX_ROLE + "DIVERGENCIA_PESQUISAR") == false) {
+            return false;
+        }
         this.enableTable = true ;
         sessionStorage.setItem('searchDivergence', JSON.stringify(this.searchDivergence));
         this.event.first = 0;
@@ -244,6 +251,9 @@ export class DivergenciaListComponent implements OnInit {
     }
 
     public onRowDblclick(event) {
+        if (this.authService.possuiRole(AuthService.PREFIX_ROLE + "DIVERGENCIA_EDITAR") == false) {
+            return false;
+        }
         if (event.target.nodeName === 'TD') {
             this.editDivergence(this.analiseSelecionada);
         } else if (event.target.parentNode.nodeName === 'TD') {
@@ -266,9 +276,12 @@ export class DivergenciaListComponent implements OnInit {
     }
 
     /**
-     * funcionalidade para bloqueio e mudança de status 
+     * funcionalidade para bloqueio e mudança de status
     */
     public confirmBlockDivegence(divergence: Analise){
+        if (this.authService.possuiRole(AuthService.PREFIX_ROLE + "DIVERGENCIA_ALTERAR_STATUS") == false) {
+            return false;
+        }
         if (!divergence) {
             this.pageNotificationService.addErrorMessage('Nenhuma Validação foi selecionada.');
             return;
@@ -290,7 +303,7 @@ export class DivergenciaListComponent implements OnInit {
     public divergenceBlock(){
         this.bloqueiaDivegence(this.blocked);
     }
-    
+
     public alterStatusAnalise(){
         if(this.idDivergenceStatus && this.statusToChange){
                 this.divergenciaService.changeStatusDivergence(this.idDivergenceStatus, this.statusToChange).subscribe(data => {
@@ -331,9 +344,9 @@ export class DivergenciaListComponent implements OnInit {
                         canBloqued = true;
                     }
                 });
-            }          
+            }
             if (canBloqued) {
-                this.alterAnaliseBlock(); 
+                this.alterAnaliseBlock();
             } else {
                 this.pageNotificationService.addErrorMessage(this.getLabel('Somente membros da equipe responsável podem excluir esta análise!'));
             }

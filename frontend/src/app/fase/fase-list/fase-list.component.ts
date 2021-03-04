@@ -2,6 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { DatatableClickEvent, DatatablePaginationParameters, PageNotificationService, DatatableComponent } from '@nuvem/primeng-components';
 import { ConfirmationService } from 'primeng/api';
+import { AuthService } from 'src/app/util/auth.service';
 import { FaseService } from '../fase.service';
 import { FaseFilter } from '../model/fase.filter';
 import { Fase } from '../model/fase.model';
@@ -25,7 +26,7 @@ export class FaseListComponent implements OnInit {
         private tipoFaseService: FaseService,
         private pageNotificationService: PageNotificationService,
         private confirmationService: ConfirmationService,
-
+        private authService: AuthService
     ) {}
 
     public ngOnInit() {
@@ -69,14 +70,23 @@ export class FaseListComponent implements OnInit {
     onClick(event: DatatableClickEvent) {
         switch (event.button) {
             case 'edit': {
+                if (this.authService.possuiRole(AuthService.PREFIX_ROLE+"FASE_EDITAR") == false) {
+                    break;
+                }
                 this.abrirEditar(event.selection);
                break;
             }
             case 'view': {
+                if (this.authService.possuiRole(AuthService.PREFIX_ROLE+"FASE_CONSULTAR") == false) {
+                    break;
+                }
                 this.abrirVisualizar(event.selection);
                 break;
             }
             case 'delete': {
+                if (this.authService.possuiRole(AuthService.PREFIX_ROLE+"FASE_EXCLUIR") == false) {
+                    break;
+                }
                 this.confirmDelete(event.selection);
                break;
             }
@@ -87,6 +97,9 @@ export class FaseListComponent implements OnInit {
     }
 
     public onRowDblclick(event) {
+        if (this.authService.possuiRole(AuthService.PREFIX_ROLE + "FASE_EDITAR") == false) {
+            return false;
+        }
         if (event.target.nodeName === 'TD') {
             this.abrirEditar(this.tipoFaseSelecionada);
         } else if (event.target.parentNode.nodeName === 'TD') {
@@ -101,6 +114,13 @@ export class FaseListComponent implements OnInit {
                 this.tipoFaseSelecionada = this.dataTable.selectedRow;
             }
         }
+    }
+
+    public criarFase(){
+        if (this.authService.possuiRole(AuthService.PREFIX_ROLE+"FASE_CADASTRAR") == false) {
+            return false
+        }
+        this.router.navigate(["/fase/new"]);
     }
 }
 

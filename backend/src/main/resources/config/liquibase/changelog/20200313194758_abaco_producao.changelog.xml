@@ -1009,15 +1009,6 @@
       </loadData>
       <dropDefaultValue tableName="jhi_user" columnName="created_date" columnDataType="datetime"/>
 
-      <loadData encoding="UTF-8"
-                file="config/liquibase/authorities.csv"
-                separator=";"
-                tableName="jhi_authority"/>
-
-      <loadData encoding="UTF-8"
-                file="config/liquibase/users_authorities.csv"
-                separator=";"
-                tableName="jhi_user_authority"/>
    </changeSet>
    <changeSet author="basis (generated)" id="1584128930494-101">
       <addForeignKeyConstraint baseColumnNames="manual_id"

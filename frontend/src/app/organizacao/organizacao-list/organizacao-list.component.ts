@@ -7,6 +7,7 @@ import { DatatableComponent, PageNotificationService, DatatableClickEvent } from
 import { Organizacao, SearchGroup } from '../organizacao.model';
 import { ElasticQuery } from 'src/app/shared/elastic-query';
 import { OrganizacaoService } from '../organizacao.service';
+import { AuthService } from 'src/app/util/auth.service';
 
 
 @Component({
@@ -52,6 +53,7 @@ columnsVisible = [
     private organizacaoService: OrganizacaoService,
     private confirmationService: ConfirmationService,
     private pageNotificationService: PageNotificationService,
+    private authService: AuthService
   ) { }
 
   getLabel(label) {
@@ -77,12 +79,18 @@ columnsVisible = [
     }
     switch (event.button) {
       case 'edit':
+        if (this.authService.possuiRole(AuthService.PREFIX_ROLE + "ORGANIZACAO_EDITAR") == false) {
+            break;
+        }
         this.router.navigate(['/organizacao', event.selection.id, 'edit']);
         break;
       case 'delete':
         this.confirmDelete(event.selection.id);
         break;
       case 'view':
+        if (this.authService.possuiRole(AuthService.PREFIX_ROLE + "ORGANIZACAO_CONSULTAR") == false) {
+            break;
+        }
         this.router.navigate(['/organizacao', event.selection.id]);
         break;
     }
@@ -98,10 +106,16 @@ columnsVisible = [
   }
 
   abrirEditar() {
+    if (this.authService.possuiRole(AuthService.PREFIX_ROLE + "ORGANIZACAO_EDITAR") == false) {
+        return false;
+    }
     this.router.navigate(['/organizacao', this.organizacaoSelecionada.id, 'edit']);
   }
 
   confirmDelete(id: any) {
+    if (this.authService.possuiRole(AuthService.PREFIX_ROLE + "ORGANIZACAO_EXCLUIR") == false) {
+        return false;
+    }
     this.confirmationService.confirm({
       message: this.getLabel('Tem certeza que deseja excluir o registro?'),
       accept: () => {
@@ -124,6 +138,9 @@ columnsVisible = [
   }
 
   recarregarDataTable() {
+    if (this.authService.possuiRole(AuthService.PREFIX_ROLE + "ORGANIZACAO_PESQUISAR") == false) {
+        return false;
+    }
     //Se descrição == CNPJ remove caracteres . - / para fazer pesquisa.
     if (this.elasticQuery.value.length == 18 && this.elasticQuery.value[2] == ".") {
       this.elasticQuery.value = this.elasticQuery.value.replace(".", "");
@@ -167,4 +184,10 @@ visibleColumnCheck(column: string, visibleColumns: any[]) {
         return (item) ? item === column : true;
     });
 }
+  criarOrganizacao(){
+    if (this.authService.possuiRole(AuthService.PREFIX_ROLE + "ORGANIZACAO_CADASTRAR") == false) {
+        return false;
+    }
+    this.router.navigate(["/organizacao/new"])
+  }
 }

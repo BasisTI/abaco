@@ -56,10 +56,6 @@ public class StatusResource {
     private final StatusRepository statusRepository;
     private final StatusSearchRepository statusSearchRepository;
     private final StatusService statusService;
-    private static final String ROLE_ANALISTA = "ROLE_ANALISTA";
-    private static final String ROLE_ADMIN = "ROLE_ADMIN";
-    private static final String ROLE_USER = "ROLE_USER";
-    private static final String ROLE_GESTOR = "ROLE_GESTOR";
 
     public StatusResource(StatusRepository statusRepository, StatusSearchRepository statusSearchRepository,
             StatusService statusService) {
@@ -70,8 +66,9 @@ public class StatusResource {
 
     @PostMapping("/status")
     @Timed
-    @Secured({ ROLE_ADMIN, ROLE_USER, ROLE_GESTOR, ROLE_ANALISTA })
-    public ResponseEntity<StatusDTO> createStatus(@Valid @RequestBody StatusDTO status) throws URISyntaxException {
+    @Secured("ROLE_ABACO_STATUS_CADASTRAR")
+    public ResponseEntity<StatusDTO> createStatus(@Valid @RequestBody StatusDTO status)
+        throws URISyntaxException {
         log.debug("REST request to save Status : {}", status);
         if (status.getId() != null) {
             return ResponseEntity.badRequest().headers(
@@ -85,8 +82,9 @@ public class StatusResource {
 
     @PutMapping("/status")
     @Timed
-    @Secured({ ROLE_ADMIN, ROLE_USER, ROLE_GESTOR, ROLE_ANALISTA })
-    public ResponseEntity<StatusDTO> updateStatus(@Valid @RequestBody StatusDTO status) throws URISyntaxException {
+    @Secured("ROLE_ABACO_STATUS_EDITAR")
+    public ResponseEntity<StatusDTO> updateStatus(@Valid @RequestBody StatusDTO status)
+        throws URISyntaxException {
         log.debug("REST request to update Status : {}", status);
         if (status.getId() == null) {
             return createStatus(status);
@@ -120,7 +118,7 @@ public class StatusResource {
 
     @DeleteMapping("/status/{id}")
     @Timed
-    @Secured({ ROLE_ADMIN, ROLE_USER, ROLE_GESTOR, ROLE_ANALISTA })
+    @Secured("ROLE_ABACO_STATUS_EXCLUIR")
     public ResponseEntity<Void> deleteStatus(@PathVariable Long id) {
         log.debug("REST request to delete Status : {}", id);
 
@@ -131,10 +129,8 @@ public class StatusResource {
 
     @GetMapping("/_search/status")
     @Timed
-    public ResponseEntity<List<Status>> searchStatus(@RequestParam(defaultValue = "*") String query,
-            @RequestParam(defaultValue = "ASC", required = false) String order,
-            @RequestParam(name = "page") int pageNumber, @RequestParam int size,
-            @RequestParam(defaultValue = "id") String sort) throws URISyntaxException {
+    @Secured({"ROLE_ABACO_STATUS_PESQUISAR", "ROLE_ABACO_STATUS_ACESSAR"})
+    public ResponseEntity<List<Status>> searchStatus(@RequestParam(defaultValue = "*") String query, @RequestParam(defaultValue = "ASC", required = false) String order, @RequestParam(name = "page") int pageNumber, @RequestParam int size, @RequestParam(defaultValue = "id") String sort) throws URISyntaxException {
         log.debug("REST request to search for a page of Status for query {}", query);
 
         Sort.Direction sortOrder = PageUtils.getSortDirection(order);
@@ -147,6 +143,7 @@ public class StatusResource {
 
     @PostMapping(value = "/status/exportacao/{tipoRelatorio}", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
     @Timed
+    @Secured("ROLE_ABACO_STATUS_EXPORTAR")
     public ResponseEntity<InputStreamResource> gerarRelatorioExportacao(@PathVariable String tipoRelatorio,@RequestBody SearchFilterDTO filtro) throws RelatorioException {
         ByteArrayOutputStream byteArrayOutputStream = statusService.gerarRelatorio(filtro, tipoRelatorio);
         return DynamicExporter.output(byteArrayOutputStream, "relatorio." + tipoRelatorio);
@@ -154,6 +151,7 @@ public class StatusResource {
 
     @PostMapping(value = "/status/exportacao-arquivo", produces = MediaType.APPLICATION_PDF_VALUE)
     @Timed
+    @Secured("ROLE_ABACO_STATUS_EXPORTAR")
     public ResponseEntity<byte[]> gerarRelatorioImprimir(@RequestBody SearchFilterDTO filtro)
             throws RelatorioException {
         ByteArrayOutputStream byteArrayOutputStream = statusService.gerarRelatorio(filtro, "pdf");

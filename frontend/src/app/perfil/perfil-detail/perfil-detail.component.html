@@ -1,0 +1,53 @@
+<div class="ui-g ui-fluid" *ngIf="perfil">
+    <div class="ui-g-12">
+        <div class="card card-w-title">
+            <h1 >Visualizar Perfil</h1>
+            <div class="ui-g">
+                <div class="ui-g-12 ui-md-12 ui-sm-12">
+                    <label>Nome: {{ perfil.nome }}</label>
+                </div>
+            </div>
+            <div class="ui-g">
+                <div class="ui-g-12 ui-md-12 ui-sm-12">
+                    <label>Descrição: {{ perfil.descricao }}</label>
+                </div>
+            </div>
+            <div class="ui-g">
+                <div class="ui-g-12 ui-md-12 ui-sm-12">
+                    <label>Ativo: {{ perfil.flgAtivo ? 'Sim' : 'Não' }}</label>
+                </div>
+            </div>
+
+            <div class="ui-g">
+                <h2>Permissões: </h2>
+                <div class="ui-g-11">
+                    <basis-datatable type="memory"
+                                [value]="perfil.permissaos"
+                                [rows]="10"
+                                showPaginationFooter="false"
+                                disableEdit="true"
+                                disableView="true"
+                                disableDelete="true"
+                                disableClone="true">
+                                <p-column header="Ação" field="permissoes">
+                                    <ng-template let-row="rowData" pTemplate="body">
+                                        {{row.acao.descricao}}
+                                    </ng-template>
+                                </p-column>
+                                <p-column header="Funcionalidade" field="permissoes">
+                                    <ng-template let-row="rowData" pTemplate="body">
+                                        {{row.funcionalidadeAbaco.nome}}
+                                    </ng-template>
+                                </p-column>
+                    </basis-datatable>
+                </div>
+            </div>
+
+            <div class="ui-g">
+                <div class="ui-g-2">
+                    <button pButton type="button" label="Voltar" routerLink="/perfil"></button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
