@@ -1,12 +1,25 @@
-<div class="ui-g-12" style="margin-left:65%; margin-top: 1%; " *ngIf="toolbar" >
-    <button pButton type="button" icon="pi pi-check" label="Salvar" [disabled]="!markDisable" (click)="saveMark()"></button>
-    <button  style="margin-left: 2%;" pButton type="button" icon="pi pi-times" label="Cancelar Marcação" [disabled]="!markDisable" (click)="cancelMark()"></button>
-    <p-toggleButton [style]="{'margin-left': '2%'}" (click)="markComponent()" onLabel="Parar Marcação" offLabel="Iniciar Marcação" [(ngModel)]="markDisable" ></p-toggleButton>
+<div class="ui-g-12" *ngIf="toolbar" >
+    <div class="ui-g-6">
+        <div *ngIf="imageName">
+            <p class="imgName"> <strong>Imagem:</strong> {{imageName}}</p>
+        </div>
+    </div>
+    <div class="ui-g-2" style="text-align: right">
+        <button pButton type="button" icon="pi pi-check" label="Salvar" [disabled]="!markDisable" (click)="saveMark()"></button>
+    </div>
+    <div class="ui-g-2" style="text-align: right">
+        <button pButton type="button" icon="pi pi-times" label="Cancelar Marcação" [disabled]="!markDisable" (click)="cancelMark()"></button>
+    </div>
+    <div class="ui-g-2" style="text-align: center; ">
+        <p-toggleButton (click)="markComponent()" onLabel="Parar Marcação" offLabel="Iniciar Marcação" [(ngModel)]="markDisable" ></p-toggleButton>
+    </div>
 
 </div>
-<div class="ui-g-12" >
 
+<div class="ui-g-12" >
     <canvas #canvas width="{{canvasWidth}}" height="{{canvasHeight}}"></canvas>
+    <p-paginator [rows]="1" [totalRecords]="telasResult.length" (onPageChange)="paginatorCanvas($event)"
+                 [showJumpToPageDropdown]="true" [showPageLinks]="false"></p-paginator>
 </div>
 
 <p-dialog *ngIf="componente" [(visible)]="dialogComponent" [style]="{width: '40vw'}" >

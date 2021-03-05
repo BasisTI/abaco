@@ -19,6 +19,7 @@ import { SharedModule } from '../shared/shared.module';
 import { PesquisarFuncaoTransacaoModule } from '../pesquisar-ft/pesquisar-ft.module';
 import { FuncaoTransacaoDivergenceComponent } from '../funcao-transacao';
 import { FuncaoDadosDivergenceComponent } from './funcao-dados-divergence/funcao-dados-divergence.component';
+import { PaginatorModule } from 'primeng';
 
 
 
@@ -39,6 +40,7 @@ import { FuncaoDadosDivergenceComponent } from './funcao-dados-divergence/funcao
         ReactiveFormsModule,
         SharedModule,
         PesquisarFuncaoTransacaoModule,
+        PaginatorModule,
     ],
   declarations: [
     FuncaoDadosFormComponent,
