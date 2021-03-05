@@ -179,7 +179,7 @@ public class RelatorioUtil {
         exporter.exportReport();
 
         JasperExportManager.exportReportToPdfStream(jasperPrint, outputStream);
-        
+
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_PDF);
         headers.set(HttpHeaders.CONTENT_DISPOSITION, String.format(ATTACHMENT_FILENAME_S_PDF, "analise"));
@@ -362,7 +362,7 @@ public class RelatorioUtil {
      * @throws JRException
      */
     @SuppressWarnings({ RAW_TYPES, UNCHECKED })
-    public @ResponseBody ResponseEntity<byte[]> downloadExcel(Analise analise, String caminhoJasperResolucao, Map parametrosJasper) throws FileNotFoundException, JRException {
+    public @ResponseBody ResponseEntity<byte[]> downloadExcel(Analise analise, String caminhoJasperResolucao, Map<String, Object> parametrosJasper) throws FileNotFoundException, JRException {
 
         InputStream stream = getClass().getClassLoader().getResourceAsStream(caminhoJasperResolucao);
 
@@ -384,7 +384,7 @@ public class RelatorioUtil {
         exporter.setConfiguration(configuration);
 
         exporter.exportReport();
-        
+
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.parseMediaType(EXCEL));
         headers.set(HttpHeaders.CONTENT_DISPOSITION, String.format("attachment; filename=\"%s.xls\"", analise.getIdentificadorAnalise().trim()));

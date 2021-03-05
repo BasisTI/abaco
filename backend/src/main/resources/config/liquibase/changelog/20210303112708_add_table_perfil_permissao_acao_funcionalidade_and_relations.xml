@@ -139,25 +139,20 @@
                                referencedColumnNames="id"
                                referencedTableName="perfil"/>
 
-
-
        <loadData encoding="UTF-8"
                  file="config/liquibase/acoes.csv"
                  separator=";"
                  tableName="acao"/>
-
 
        <loadData encoding="UTF-8"
                  file="config/liquibase/funcionalidades.csv"
                  separator=";"
                  tableName="funcionalidade_abaco"/>
 
-
        <loadData encoding="UTF-8"
                  file="config/liquibase/permissoes.csv"
                  separator=";"
                  tableName="permissao"/>
-
 
        <loadData encoding="UTF-8"
                  file="config/liquibase/perfis.csv"
@@ -165,13 +160,10 @@
                  tableName="perfil"/>
 
 
-
        <loadData encoding="UTF-8"
                  file="config/liquibase/perfis_permissoes.csv"
                  separator=";"
                  tableName="perfil_permissao"/>
-
-
 
        <loadData encoding="UTF-8"
                  file="config/liquibase/users_perfis.csv"
@@ -187,9 +179,7 @@
       <dropTable tableName="jhi_user_authority"/>
    </changeSet>
 
-   <changeSet author="basis (generated)" id="1614770838060-73">
-      <dropNotNullConstraint columnDataType="varchar(255)"
-                             columnName="description"
-                             tableName="jhi_authority"/>
-   </changeSet>
+    <changeSet author="basis (generated)" id="1614946165563-46">
+        <dropTable tableName="jhi_authority"/>
+    </changeSet>
 </databaseChangeLog>

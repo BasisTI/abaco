@@ -278,10 +278,10 @@ public class OrganizacaoResource {
     return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
   }
 
-  @GetMapping("/organizacaos/active")
-  public List<Organizacao> getAllOrganizationsActive() {
-    return this.organizacaoRepository.findByAtivoTrue();
-  }
+    @GetMapping("/organizacaos/active")
+    public List<Organizacao> getAllOrganizationsActive() {
+        return this.organizacaoRepository.findByAtivoTrue();
+    }
 
     @GetMapping("/organizacaos/active-user")
     @Timed
@@ -299,7 +299,7 @@ public class OrganizacaoResource {
     }
 
     private ByteArrayOutputStream getByteArrayOutputStream(String tipoRelatorio, SearchFilterDTO filter)
-            throws RelatorioException {
+        throws RelatorioException {
         ByteArrayOutputStream byteArrayOutputStream;
         String query = "*";
         if (filter.getNome() != null) {
@@ -308,11 +308,11 @@ public class OrganizacaoResource {
         try {
             new NativeSearchQueryBuilder().withQuery(multiMatchQuery(query)).build();
             Page<Organizacao> result = organizacaoSearchRepository.search(queryStringQuery(query),
-                    dynamicExportsService.obterPageableMaximoExportacao());
+                dynamicExportsService.obterPageableMaximoExportacao());
 
             byteArrayOutputStream = dynamicExportsService.export(new RelatorioOrganizacaoColunas(filter.getColumnsVisible()), result,
-                    tipoRelatorio, Optional.empty(), Optional.ofNullable(AbacoUtil.REPORT_LOGO_PATH),
-                    Optional.ofNullable(AbacoUtil.getReportFooter()));
+                tipoRelatorio, Optional.empty(), Optional.ofNullable(AbacoUtil.REPORT_LOGO_PATH),
+                Optional.ofNullable(AbacoUtil.getReportFooter()));
         } catch (DRException | ClassNotFoundException | JRException | NoClassDefFoundError e) {
             log.error(e.getMessage(), e);
             throw new RelatorioException(e);
@@ -324,7 +324,7 @@ public class OrganizacaoResource {
     @Timed
     @Secured("ROLE_ABACO_ORGANIZACAO_EXPORTAR")
     public ResponseEntity<byte[]> gerarRelatorioImprimir(@RequestBody SearchFilterDTO filter)
-            throws RelatorioException {
+        throws RelatorioException {
         ByteArrayOutputStream byteArrayOutputStream = getByteArrayOutputStream("pdf", filter);
         return new ResponseEntity<byte[]>(byteArrayOutputStream.toByteArray(), HttpStatus.OK);
     }

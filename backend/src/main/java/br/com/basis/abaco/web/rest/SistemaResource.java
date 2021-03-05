@@ -1,6 +1,10 @@
 package br.com.basis.abaco.web.rest;
 
-import br.com.basis.abaco.domain.*;
+import br.com.basis.abaco.domain.FuncaoDados;
+import br.com.basis.abaco.domain.FuncaoDadosVersionavel;
+import br.com.basis.abaco.domain.Modulo;
+import br.com.basis.abaco.domain.Organizacao;
+import br.com.basis.abaco.domain.Sistema;
 import br.com.basis.abaco.repository.FuncaoDadosRepository;
 import br.com.basis.abaco.repository.FuncaoDadosVersionavelRepository;
 import br.com.basis.abaco.repository.SistemaRepository;
@@ -12,7 +16,6 @@ import br.com.basis.abaco.service.exception.RelatorioException;
 import br.com.basis.abaco.utils.PageUtils;
 import br.com.basis.abaco.web.rest.util.HeaderUtil;
 import br.com.basis.abaco.web.rest.util.PaginationUtil;
-import br.com.basis.dynamicexports.service.DynamicExportsService;
 import br.com.basis.dynamicexports.util.DynamicExporter;
 import com.codahale.metrics.annotation.Timed;
 import io.github.jhipster.web.util.ResponseUtil;
@@ -33,14 +36,26 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.transaction.Transactional;
 import javax.validation.Valid;
 import java.io.ByteArrayOutputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.*;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/api")
@@ -150,6 +165,7 @@ public class SistemaResource {
 
     @GetMapping("/sistemas/{id}")
     @Timed
+    @Secured("ROLE_ABACO_SISTEMA_CONSULTAR")
     public ResponseEntity<Sistema> getSistema(@PathVariable Long id) {
         log.debug("REST request to get Sistema : {}", id);
         Sistema sistema = sistemaRepository.findOne(id);

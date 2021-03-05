@@ -210,7 +210,6 @@ public class UserService extends BaseService {
         copy.setActivationKey(user.getActivationKey());
         copy.setResetKey(user.getResetKey());
         copy.setResetDate(user.getResetDate());
-//        copy.setAuthorities(user.getAuthorities());
         copy.setPerfils(user.getPerfils());
         copy.setTipoEquipes(user.getTipoEquipes());
         copy.setOrganizacoes(user.getOrganizacoes());
@@ -285,7 +284,9 @@ public class UserService extends BaseService {
     public User getUserWithAuthorities(Long id) {
         User user = userRepository.findOneWithAuthoritiesById(id);
         Optional<List<Perfil>> listPerfil = perfilRepository.findAllByUsers(user);
-        user.setPerfils(listPerfil.get().stream().collect(Collectors.toSet()));
+        if(listPerfil.isPresent()){
+            user.setPerfils(listPerfil.get().stream().collect(Collectors.toSet()));
+        }
         return user;
     }
 
@@ -350,8 +351,7 @@ public class UserService extends BaseService {
 
     public User setUserToSave(User user) {
         Optional<User> oldUserdata = userRepository.findOneById(user.getId());
-        User loggedUser = getLoggedUser();
-        User userTmp = bindUser(user, oldUserdata, loggedUser);
+        User userTmp = bindUser(user, oldUserdata);
         User updatableUser = generateUpdatableUser(userTmp);
         updatableUser.setPerfils(user.getPerfils());
         updatableUser.setOrganizacoes(user.getOrganizacoes());
@@ -360,7 +360,7 @@ public class UserService extends BaseService {
         return userSearchRepository.save(bindUserForSaveElatiscSearch(updatedUser));
     }
 
-    private User bindUser(User user, Optional<User> oldUserdata, User loggedUser) {
+    private User bindUser(User user, Optional<User> oldUserdata) {
         User userTmp;
         if (oldUserdata.isPresent()) {
             String newFirstName = user.getFirstName();

@@ -24,14 +24,6 @@ import java.util.stream.Collectors;
 @RequestMapping("/management")
 public class LogsResource {
 
-    private static final String ROLE_ADMIN = "ROLE_ADMIN";
-
-    private static final String ROLE_ANALISTA = "ROLE_ANALISTA";
-
-    private static final String ROLE_USER = "ROLE_USER";
-
-    private static final String ROLE_GESTOR = "ROLE_GESTOR";
-
     @GetMapping("/logs")
     @Timed
     public List<LoggerVM> getList() {

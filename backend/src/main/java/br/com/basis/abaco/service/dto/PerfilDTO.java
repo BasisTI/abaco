@@ -2,6 +2,8 @@ package br.com.basis.abaco.service.dto;
 
 import br.com.basis.abaco.domain.Perfil;
 import br.com.basis.abaco.domain.Permissao;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
@@ -11,6 +13,8 @@ import java.util.Set;
 /**
  * A DTO for the {@link Perfil} entity.
  */
+@Getter
+@Setter
 public class PerfilDTO implements Serializable {
 
     private Long id;
@@ -24,46 +28,6 @@ public class PerfilDTO implements Serializable {
     private Boolean flgAtivo;
 
     private Set<Permissao> permissaos = new HashSet<>();
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getNome() {
-        return nome;
-    }
-
-    public void setNome(String nome) {
-        this.nome = nome;
-    }
-
-    public String getDescricao() {
-        return descricao;
-    }
-
-    public void setDescricao(String descricao) {
-        this.descricao = descricao;
-    }
-
-    public Boolean isFlgAtivo() {
-        return flgAtivo;
-    }
-
-    public void setFlgAtivo(Boolean flgAtivo) {
-        this.flgAtivo = flgAtivo;
-    }
-
-    public Set<Permissao> getPermissaos() {
-        return permissaos;
-    }
-
-    public void setPermissaos(Set<Permissao> permissoes) {
-        this.permissaos = permissoes;
-    }
 
     @Override
     public boolean equals(Object o) {
@@ -89,7 +53,7 @@ public class PerfilDTO implements Serializable {
             "id=" + getId() +
             ", nome='" + getNome() + "'" +
             ", descricao='" + getDescricao() + "'" +
-            ", flgAtivo='" + isFlgAtivo() + "'" +
+            ", flgAtivo='" + getFlgAtivo() + "'" +
             ", permissaos='" + getPermissaos() + "'" +
             "}";
     }

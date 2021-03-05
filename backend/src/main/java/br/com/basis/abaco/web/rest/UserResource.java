@@ -39,9 +39,16 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
-import com.codahale.metrics.annotation.Timed;
 
 import java.io.ByteArrayOutputStream;
 import java.net.URI;
@@ -127,13 +134,11 @@ public class UserResource {
 
     @GetMapping("/users/{organizacaoId}/{equipeId}")
     @Timed
-    @Secured("ROLE_ABACO_USUARIO_ACESSAR")
     public List<UserDTO> getAllUsersFronSistemaAndOrganizacao(@PathVariable Long organizacaoId, @PathVariable Long equipeId) throws URISyntaxException {
         return userService.getAllUsersOrgEquip(organizacaoId, equipeId);
     }
     @GetMapping("/users-dto/{organizacaoId}/{equipeId}")
     @Timed
-    @Secured("ROLE_ABACO_USUARIO_ACESSAR")
     public List<UserAnaliseDTO> getAllUserDtosFronSistemaAndOrganizacao(@PathVariable Long organizacaoId, @PathVariable Long equipeId) throws URISyntaxException {
         return userService.getAllUserDtosOrgEquip(organizacaoId, equipeId);
     }
@@ -147,7 +152,6 @@ public class UserResource {
 
     @GetMapping("/users/logged")
     @Timed
-    @Secured("ROLE_ABACO_USUARIO_CONSULTAR")
     public UserEditDTO getLoggedUser() {
         String login = SecurityUtils.getCurrentUserLogin();
         return userService.convertToDto(userRepository.findOneWithAuthoritiesByLogin(login).orElse(null));

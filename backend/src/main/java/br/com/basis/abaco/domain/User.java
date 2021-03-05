@@ -32,6 +32,8 @@ import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.time.ZonedDateTime;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
+import java.util.Optional;
 import java.util.Set;
 
 import static java.util.Collections.unmodifiableSet;
@@ -298,10 +300,14 @@ public class User extends AbstractAuditingEntity implements Serializable, Report
     }
 
     public Set<Perfil> getPerfils() {
-        return perfils;
+        return Optional.ofNullable(this.perfils)
+            .map(lista -> new LinkedHashSet<Perfil>(lista))
+            .orElse(new LinkedHashSet<Perfil>());
     }
 
     public void setPerfils(Set<Perfil> perfils) {
-        this.perfils = perfils;
+        this.perfils = Optional.ofNullable(perfils)
+            .map(lista -> new LinkedHashSet<Perfil>(lista))
+            .orElse(new LinkedHashSet<Perfil>());
     }
 }

@@ -1,7 +1,16 @@
 package br.com.basis.abaco.web.rest;
 
-import br.com.basis.abaco.domain.*;
-import br.com.basis.abaco.repository.*;
+import br.com.basis.abaco.domain.DivergenceComment;
+import br.com.basis.abaco.domain.DivergenceCommentFuncaoDados;
+import br.com.basis.abaco.domain.DivergenceCommentFuncaoTransacao;
+import br.com.basis.abaco.domain.FuncaoDados;
+import br.com.basis.abaco.domain.FuncaoTransacao;
+import br.com.basis.abaco.domain.User;
+import br.com.basis.abaco.repository.DivergenceCommentFuncaoDadosRepository;
+import br.com.basis.abaco.repository.DivergenceCommentFuncaoTransacaoRepository;
+import br.com.basis.abaco.repository.FuncaoDadosRepository;
+import br.com.basis.abaco.repository.FuncaoTransacaoRepository;
+import br.com.basis.abaco.repository.UserRepository;
 import br.com.basis.abaco.security.SecurityUtils;
 import br.com.basis.abaco.service.DivergenceCommentService;
 import br.com.basis.abaco.service.dto.DivergenceCommentDTO;
@@ -11,7 +20,14 @@ import io.github.jhipster.web.util.ResponseUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.net.URI;
 import java.net.URISyntaxException;
