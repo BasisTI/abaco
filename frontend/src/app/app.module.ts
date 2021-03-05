@@ -40,6 +40,7 @@ import { StatusModule } from './status/status.module';
 import { NomenclaturaModule } from './nomenclatura/nomenclatura.module';
 import { DivergenciaModule } from './divergencia/divergencia.module';
 import { ConfiguracaoBaselineModule } from './configuracao-baseline/configuracao-baseline.module';
+import { VisaopfModule } from './visao-pf/visao-pf.module';
 
 @NgModule({
     declarations: [
@@ -88,6 +89,7 @@ import { ConfiguracaoBaselineModule } from './configuracao-baseline/configuracao
         NomenclaturaModule,
         DivergenciaModule,
         ConfiguracaoBaselineModule,
+        VisaopfModule,
     ],
     providers: [
         { provide: LocationStrategy, useClass: HashLocationStrategy },

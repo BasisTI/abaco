@@ -9,3 +9,4 @@ services:
             - 5432:5432
         volumes:
             - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+            - ./abaco-2020-out-20.backup:/abaco-2020-out-20.backup

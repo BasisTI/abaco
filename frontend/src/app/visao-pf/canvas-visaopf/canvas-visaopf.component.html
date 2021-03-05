@@ -1,0 +1,66 @@
+<div class="ui-g-12" style="margin-left:65%; margin-top: 1%; " *ngIf="toolbar" >
+    <button pButton type="button" icon="pi pi-check" label="Salvar" [disabled]="!markDisable" (click)="saveMark()"></button>
+    <button  style="margin-left: 2%;" pButton type="button" icon="pi pi-times" label="Cancelar Marcação" [disabled]="!markDisable" (click)="cancelMark()"></button>
+    <p-toggleButton [style]="{'margin-left': '2%'}" (click)="markComponent()" onLabel="Parar Marcação" offLabel="Iniciar Marcação" [(ngModel)]="markDisable" ></p-toggleButton>
+
+</div>
+<div class="ui-g-12" >
+
+    <canvas #canvas width="{{canvasWidth}}" height="{{canvasHeight}}"></canvas>
+</div>
+
+<p-dialog *ngIf="componente" [(visible)]="dialogComponent" [style]="{width: '40vw'}" >
+
+    <div class="ui-g-12 ui-md-12">
+        <div [class]="'customer-component tipo-' + componente.tipo"> {{componente.tipo}} </div>
+    </div>
+    <div class="ui-g-12 ui-md-12" >
+        <div class="ui-g-12 ui-md-8" style="margin-top:5%; margin-left: 24%">
+            <div class="ui-float-label ui-label-dialog-componente ui-g-12 ui-md-10">
+                <input id="float-input" ngDefaultControl [(ngModel)]="componente.nome" type="text" size="30" pInputText>
+                <label for="float-input">Nome</label>
+            </div>
+            <div class="ui-float-label ui-label-dialog-componente ui-g-12 ui-md-10" style="margin-top: 10%">
+                <textarea cols="30" ngDefaultControl [(ngModel)]="componente.descricao" pInputTextarea></textarea>
+                <label for="float-input">Descrição</label>
+            </div>
+            <div class="ui-float-label ui-label-dialog-componente ui-g-12 ui-md-10" style="margin-top: 8%">
+                <div class="ui-g-12 ui-md-2" >
+                    <p class="style-tipo">Tipo:</p>
+
+                </div>
+                <div class="ui-g-12 ui-md-10" style="margin-left:-7%">
+                    <p-dropdown appendTo="body"  [options]="tipos" ngDefaultControl [(ngModel)]="componente.tipo" editable="true" ></p-dropdown>
+                </div>
+            </div>
+            <div class="ui-g-12 ui-md-12" style="width: 80%; height: 50%;" >
+                <p-messages  [(value)]="msgs"></p-messages>
+            </div>
+        </div>
+        <div class="ui-g-12 ui-md-6" style="margin-left: 25%">
+            <button style="width: 104%;" (click) = "saveComponent()" type="button"  pButton label="Salvar"></button>
+        </div>
+
+        <div class="ui-g-12 ui-md-6" style="margin-left: 25%; margin-top: 1%">
+            <button style="width: 104%;" (click) ="removeComponent(componente)" pButton type="button" label="Excluir" class="ui-button-danger"></button>
+        </div>
+
+    </div>
+</p-dialog>
+
+<div class="tooltip" *ngIf="showTooltip && componentTooltip " tooltip [component]="componentTooltip" [proporcaoW]="proporcaoW" [proporcaoH]="proporcaoH" >
+    <ng-template [ngIf]="componentTooltip.nome || componentTooltip.descricao" [ngIfElse]="showTipo">
+        <div>
+            <p [class]="'tooltip-tipo '+ componentTooltip.tipo">{{componentTooltip.tipo}}</p>
+            <p *ngIf="componentTooltip.nome">{{componentTooltip.nome}}</p>
+            <p *ngIf="componentTooltip.descricao">{{componentTooltip.descricao}}</p>
+        </div>
+    </ng-template>
+
+    <ng-template #showTipo>
+        <div>
+            <p [class]="'tooltip-tipo '+componentTooltip.tipo">{{componentTooltip.tipo}}</p>
+        </div>
+    </ng-template>
+</div>
+

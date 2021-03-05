@@ -1,0 +1,80 @@
+::ng-deep .ui-fileupload-files img{
+    width:350px;
+}
+
+::ng-deep .ui-fileupload-row>div {
+    padding: .5em 4em;
+}
+
+#uploadFileDropdown{
+    padding:1%;
+    margin-top:5%
+}
+
+#uploadFileTipo{
+    position: absolute;
+    top: 0;
+    right: 0;
+    margin-right: 2%;
+    margin-top:2.5%;
+}
+
+.title-contagem{
+    font-family: Roboto, "Helvetica Neue", sans-serif;
+    font-style: normal;
+    font-weight: 600;
+    font-size: 20px;
+    line-height: 33px;
+    letter-spacing: 0.2px;
+    text-transform: uppercase;
+    color: #1E2F40;
+    margin-left: 1%;
+}
+
+.style-td{
+    text-align: center;
+    font-weight: 650;
+    font-size: 14px;
+    height: 100%;
+    width: 100%;
+}
+
+.customer-badge {
+    padding: .25em .5em;
+    text-transform: uppercase;
+    font-weight: 700;
+    font-size: 12px;
+    letter-spacing: .3px;
+    text-align: center;
+
+    &.status-CONTAGEM_TERMINADA {
+        background-color: #C8E6C9;
+        color: #256029;
+    }
+
+    &.status-ENVIADO_DETECCAO {
+        background-color: #2A369B;
+        color: whitesmoke;
+    }
+
+    &.status-DETECCAO_TERMINADA {
+        background-color: #FFC107;
+        color: black;
+    }
+
+    &.status-ERRO {
+        background-color: #FFCDD2;
+        color: #C63737;
+    }
+
+    &.status-ENVIADO_OCR {
+        background-color: #404040;
+        color: whitesmoke;
+    }
+
+    &.status-OCR_TERMINADO {
+        background-color: #C8E6C9;
+        color: #256029;
+    }
+
+}

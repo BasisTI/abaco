@@ -1,0 +1,141 @@
+::ng-deep .ui-progressbar .ui-progressbar-value{
+    background-color: #8BC34A
+}
+
+canvas {
+    border: 1px solid #000;
+    // width:1550px;
+    // height:600px;
+}
+
+.ui-label-dialog-componente{
+    margin-left: 8% ;
+}
+
+.customer-component:before{
+    overflow: hidden;
+}
+.customer-component{
+    padding: .25em .5em;
+    text-transform: uppercase;
+    font-weight: 700;
+    font-size: 12px;
+    letter-spacing: .3px;
+    text-align: center;
+    width: 50%;
+    margin-left: 25%;
+    text-indent: 1ch;
+
+    &.tipo-campo{
+        background-color: #C8E6C9;
+    }
+
+    &.tipo-dropdown {
+        background-color: #FFC107;
+    }
+
+    &.tipo-incluir {
+        background-color: #73D2FF;
+    }
+
+    &.tipo-editar {
+        background-color: #AD01C1;
+    }
+
+    &.tipo-excluir {
+        background-color: #D2691E;
+    }
+
+    &.tipo-visualizar {
+        background-color: #6495ED;
+    }
+    &.tipo-exportar {
+        background-color: #BDB76B;
+    }
+
+    &.tipo-radio.button {
+
+        background-color: #91908d;
+    }
+
+    &.tipo-checkbox {
+        background-color:#EF7C8E
+    }
+}
+
+.style-tipo{
+    color: #898989;
+    margin-top: 1%;
+    margin-left: -16%
+}
+
+
+
+.tooltip {
+    position: absolute;
+    max-width: 150px;
+    font-size: 14px;
+    text-align: left;
+    color: #f8f8f2;
+    padding: 3px 8px;
+    background: #282a36;
+    border-radius: 4px;
+    z-index: 1000;
+    opacity: 0;
+    margin-left: -5px;
+    border-width: 5px;
+    border-color: black transparent transparent transparent;
+    opacity: 1;
+    -webkit-transition: opacity 1500ms;
+    -moz-transition: opacity 1500ms;
+    -o-transition: opacity 1500ms;
+    transition: opacity 1500ms;
+
+
+}
+
+.tooltip-tipo {
+    padding: .25em .5em;
+    text-transform: uppercase;
+    letter-spacing: .3px;
+    font-size: 13px;
+    text-align: center;
+    color: #0D0D0D;
+    font-weight: 600;
+
+    &.campo {
+        background-color: #15C101;
+    }
+
+    &.dropdown {
+        background-color: #FFC300;
+    }
+
+    &.incluir {
+        background-color: #73D2FF;
+    }
+
+    &.editar {
+        background-color: #AD01C1;
+    }
+
+    &.excluir {
+        background-color: #C10101;
+    }
+
+    &.visualizar {
+        background-color: #6495ED;
+    }
+    &.exportar {
+        background-color: #BDB76B;
+    }
+
+    &.radiobutton {
+        background-color: #91908d;
+    }
+
+    &.checkbox {
+        background-color:#EF7C8E
+    }
+
+}
