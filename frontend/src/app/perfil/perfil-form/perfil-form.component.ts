@@ -1,10 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { AuthenticationService, AuthorizationService, BlockUiService } from '@nuvem/angular-base';
+import { BlockUiService } from '@nuvem/angular-base';
 import { DatatableClickEvent, PageNotificationService } from '@nuvem/primeng-components';
 import { ConfirmationService, SelectItem } from 'primeng';
 import { Subscription } from 'rxjs';
-import { User } from 'src/app/user/user.model';
 import { Perfil } from '../perfil.model';
 import { PerfilService } from '../perfil.service';
 import { Permissao } from '../permissao.model';
@@ -41,8 +40,7 @@ export class PerfilFormComponent implements OnInit {
         private router: Router,
         private confirmationService: ConfirmationService,
         private route: ActivatedRoute,
-        private blockUiService: BlockUiService,
-        private authService: AuthenticationService<User>
+        private blockUiService: BlockUiService
     ) { }
 
 
@@ -53,7 +51,9 @@ export class PerfilFormComponent implements OnInit {
                 this.perfilService.find(params['id']).subscribe(
                     perfil => {
                         this.perfil = perfil;
+                        this.perfil.id = params['id'];
                         this.blockUiService.hide();
+                        this.perfil.permissaos.sort((a, b) => a.funcionalidadeAbaco.nome.localeCompare(b.funcionalidadeAbaco.nome));
                     });
             }
         });
@@ -151,6 +151,7 @@ export class PerfilFormComponent implements OnInit {
         for (let novaPermissao of this.novasPermissoes) {
             this.perfil.permissaos.push(novaPermissao);
         }
+        this.perfil.permissaos.sort((a, b) => a.funcionalidadeAbaco.nome.localeCompare(b.funcionalidadeAbaco.nome));
         this.doFecharDialogPermissao();
     }
 }
