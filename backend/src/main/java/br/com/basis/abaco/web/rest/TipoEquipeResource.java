@@ -146,7 +146,6 @@ public class TipoEquipeResource {
 
     @GetMapping("/tipo-equipes/drop-down")
     @Timed
-    @Secured("ROLE_ABACO_TIPO_EQUIPE_ACESSAR")
     public List<DropdownDTO> getTipoEquipeDropdown() {
         log.debug("REST request to get dropdown TipoEquipes");
         return tipoEquipeService.getTipoEquipeDropdown();
@@ -178,7 +177,6 @@ public class TipoEquipeResource {
      */
     @GetMapping("/tipo-equipes/user/{idUser}")
     @Timed
-    @Secured("ROLE_ABACO_TIPO_EQUIPE_ACESSAR")
     public ResponseEntity<List<Long>> getTipoEquipeByUser(@PathVariable Long idUser) {
         log.debug("REST request to get TipoEquipe : {}", idUser);
         List<Long> idTipoEquipe = tipoEquipeRepository.findAllByUserId(idUser);
@@ -191,7 +189,6 @@ public class TipoEquipeResource {
      */
     @GetMapping("/tipo-equipes/organizacoes/{idOrganizacao}")
     @Timed
-    @Secured("ROLE_ABACO_TIPO_EQUIPE_ACESSAR")
     public List<TipoEquipeDTO> getAllTipoEquipeByOrganizacao(@PathVariable Long idOrganizacao) {
         log.debug("REST request to get all TipoEquipes by org id");
         List<TipoEquipe> lstTipoEquipe = tipoEquipeRepository.findAllEquipesByOrganizacaoId(idOrganizacao);
@@ -204,7 +201,6 @@ public class TipoEquipeResource {
      */
     @GetMapping("/tipo-equipes/current-user/{idOrganizacao}")
     @Timed
-    @Secured("ROLE_ABACO_TIPO_EQUIPE_ACESSAR")
     public List<TipoEquipeDTO> getAllTipoEquipeByOrganizacaoAndLoggedUser(@PathVariable Long idOrganizacao) {
         log.debug("REST request to get all TipoEquipes by logged user login");
         List<TipoEquipe> lstTipoEquipe = tipoEquipeRepository
@@ -214,7 +210,6 @@ public class TipoEquipeResource {
 
     @GetMapping("/tipo-equipes/compartilhar/{idOrganizacao}/{idAnalise}/{idEquipe}")
     @Timed
-    @Secured("ROLE_ABACO_TIPO_EQUIPE_ACESSAR")
     public List<TipoEquipeDTO> getAllTipoEquipeCompartilhavel(@PathVariable Long idOrganizacao, @PathVariable Long idAnalise, @PathVariable Long idEquipe) {
         log.debug("REST request to get all TipoEquipes");
         List<TipoEquipe> lstTipoEquipe = tipoEquipeRepository.findAllEquipesCompartilhaveis(idOrganizacao, idEquipe,

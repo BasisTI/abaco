@@ -123,7 +123,6 @@ public class SocialService {
         newUser.setLastName(userProfile.getLastName());
         newUser.setEmail(email);
         newUser.setActivated(true);
-//        newUser.setAuthorities(authorities);
         newUser.setLangKey(langKey);
         newUser.setImageUrl(imageUrl);
         return newUser;

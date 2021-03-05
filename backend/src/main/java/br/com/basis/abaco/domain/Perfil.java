@@ -20,8 +20,7 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 /**
  * A Perfil.
@@ -112,12 +111,15 @@ public class Perfil implements Serializable, ReportObject {
     }
 
     public Set<Permissao> getPermissaos() {
-        return permissaos;
+        return Optional.ofNullable(this.permissaos)
+            .map(lista -> new LinkedHashSet<Permissao>(lista))
+            .orElse(new LinkedHashSet<Permissao>());
     }
 
-    public Perfil permissaos(Set<Permissao> permissaos) {
-        this.permissaos = permissaos;
-        return this;
+    public void setPermissaos(Set<Permissao> permissaos) {
+        this.permissaos = Optional.ofNullable(permissaos)
+            .map(lista -> new LinkedHashSet<Permissao>(lista))
+            .orElse(new LinkedHashSet<Permissao>());
     }
 
     public Perfil addPermissao(Permissao permissao) {
@@ -132,16 +134,16 @@ public class Perfil implements Serializable, ReportObject {
         return this;
     }
 
-    public void setPermissaos(Set<Permissao> permissaos) {
-        this.permissaos = permissaos;
-    }
-
     public Set<User> getUsers() {
-        return users;
+        return Optional.ofNullable(this.users)
+            .map(lista -> new LinkedHashSet<User>(lista))
+            .orElse(new LinkedHashSet<User>());
     }
 
     public void setUsers(Set<User> users) {
-        this.users = users;
+        this.users = Optional.ofNullable(users)
+            .map(lista -> new LinkedHashSet<User>(lista))
+            .orElse(new LinkedHashSet<User>());
     }
 
     @Override

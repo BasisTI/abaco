@@ -99,7 +99,6 @@ public class BaseLineAnaliticoResource {
      */
     @GetMapping("/baseline-analiticos")
     @Timed
-    @Secured("ROLE_ABACO_BASELINE_ACESSAR")
     public Set<BaseLineAnaliticoFD> getAllBaseLineAnaliticos() {
         log.debug("REST request to get all BaseLineAnaliticos");
         return new HashSet<>(baseLineAnaliticoFDSearchRepository.findAll());

@@ -100,18 +100,15 @@ public class ManualResource {
 
     private final FatorAjusteRepository fatorAjusteRepository;
 
-    private final DynamicExportsService dynamicExportsService;
-
     private final ManualService manualService;
 
     private final UploadedFilesRepository filesRepository;
 
-    public ManualResource(ManualRepository manualRepository, ManualSearchRepository manualSearchRepository, DynamicExportsService dynamicExportsService,
+    public ManualResource(ManualRepository manualRepository, ManualSearchRepository manualSearchRepository,
                           ManualContratoRepository manualContratoRepository, AnaliseRepository analiseRepository, FatorAjusteRepository fatorAjusteRepository,
                           FuncaoTransacaoRepository funcaoTransacaoRepository, ManualService manualService, UploadedFilesRepository uploadedFilesRepository) {
         this.manualRepository = manualRepository;
         this.manualSearchRepository = manualSearchRepository;
-        this.dynamicExportsService = dynamicExportsService;
         this.manualContratoRepository = manualContratoRepository;
         this.analiseRepository = analiseRepository;
         this.fatorAjusteRepository = fatorAjusteRepository;
@@ -235,7 +232,6 @@ public class ManualResource {
      */
     @GetMapping("/manuals")
     @Timed
-    @Secured("ROLE_ABACO_MANUAL_ACESSAR")
     public List<Manual> getAllManuals() {
         log.debug("REST request to get all Manuals");
         return manualRepository.findAll();
@@ -244,7 +240,6 @@ public class ManualResource {
 
     @GetMapping("/manuals/dropdown")
     @Timed
-    @Secured("ROLE_ABACO_MANUAL_ACESSAR")
     public List<DropdownDTO> getManualsDropdown() {
         log.debug("REST request to get all Manuals Dropdown");
         return manualService.getManuaisDropdown();

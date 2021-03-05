@@ -49,9 +49,12 @@ public class PermissaoService {
         }
         Optional<Acao> acao = acaoRepository.findById(permissaoDTO.getAcaoId());
         Optional<FuncionalidadeAbaco> funcionalidadeAbaco = funcionalidadeAbacoRepository.findById(permissaoDTO.getFuncionalidadeId());
-        permissao.setAcao(acao.get());
-        permissao.setFuncionalidadeAbaco(funcionalidadeAbaco.get());
-        permissao = permissaoRepository.save(permissao);
+
+        if(acao.isPresent() && funcionalidadeAbaco.isPresent()){
+            permissao.setAcao(acao.get());
+            permissao.setFuncionalidadeAbaco(funcionalidadeAbaco.get());
+            permissao = permissaoRepository.save(permissao);
+        }
         return permissao;
     }
 

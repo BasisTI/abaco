@@ -65,7 +65,7 @@ public class PerfilService {
         Perfil perfil = new Perfil();
         BeanUtils.copyProperties(perfil, perfilDTO);
         perfil.setPermissaos(perfilDTO.getPermissaos());
-        perfil.setFlgAtivo(perfilDTO.isFlgAtivo());
+        perfil.setFlgAtivo(perfilDTO.getFlgAtivo());
         Perfil result = perfilRepository.save(perfil);
         perfilSearchRepository.save(result);
         return result;
@@ -94,7 +94,9 @@ public class PerfilService {
         log.debug("Request to get FuncionalidadeAbaco : {}", id);
         Optional<Perfil> perfil = perfilRepository.findById(id);
         Optional<List<Permissao>> permissaoList = permissaoRepository.findAllByPerfils(perfil.get());
-        perfil.get().setPermissaos(permissaoList.get().stream().collect(Collectors.toSet()));
+        if(perfil.isPresent() && permissaoList.isPresent()){
+            perfil.get().setPermissaos(permissaoList.get().stream().collect(Collectors.toSet()));
+        }
         return perfil;
     }
 

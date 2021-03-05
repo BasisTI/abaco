@@ -27,7 +27,15 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 import java.io.ByteArrayOutputStream;
@@ -108,7 +116,6 @@ public class PerfilResource {
     @Secured({"ROLE_ABACO_PERFIL_PESQUISAR", "ROLE_ABACO_PERFIL_ACESSAR"})
     public ResponseEntity<List<Perfil>> searchPerfil(@RequestParam(defaultValue = "*") String query, @RequestParam(defaultValue = "ASC", required = false) String order, @RequestParam(name = "page") int pageNumber, @RequestParam int size, @RequestParam(defaultValue = "id") String sort) throws URISyntaxException {
         log.debug("REST request to search for a page of Perfil for query {}", query);
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         Sort.Direction sortOrder = PageUtils.getSortDirection(order);
         Pageable newPageable = new PageRequest(pageNumber, size, sortOrder, sort);
 
@@ -165,10 +172,8 @@ public class PerfilResource {
         log.debug("REST request to delete Perfil : {}", id);
 
         Optional<Perfil> perfil = perfilRepository.findById(id);
-        if(perfil.isPresent()){
-            if(!perfil.get().getUsers().isEmpty()){
-                throw new CustomParameterizedException("UsuarioRelacionado");
-            }
+        if(perfil.isPresent() && !perfil.get().getUsers().isEmpty()){
+            throw new CustomParameterizedException("UsuarioRelacionado");
         }
 
         perfilService.delete(id);

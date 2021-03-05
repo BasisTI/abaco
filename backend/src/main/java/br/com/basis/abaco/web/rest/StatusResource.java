@@ -110,6 +110,7 @@ public class StatusResource {
 
     @GetMapping("/status/{id}")
     @Timed
+    @Secured("ROLE_ABACO_STATUS_CONSULTAR")
     public ResponseEntity<Status> getStatus(@PathVariable Long id) {
         log.debug("REST request to get Status : {}", id);
         Status status = statusRepository.findById(id);

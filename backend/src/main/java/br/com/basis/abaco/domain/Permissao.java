@@ -6,9 +6,19 @@ import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.springframework.data.elasticsearch.annotations.Document;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
 import java.io.Serializable;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
+import java.util.Optional;
 import java.util.Set;
 
 /**
@@ -70,12 +80,9 @@ public class Permissao implements Serializable {
     }
 
     public Set<Perfil> getPerfils() {
-        return perfils;
-    }
-
-    public Permissao perfils(Set<Perfil> perfils) {
-        this.perfils = perfils;
-        return this;
+        return Optional.ofNullable(this.perfils)
+            .map(lista -> new LinkedHashSet<Perfil>(lista))
+            .orElse(new LinkedHashSet<Perfil>());
     }
 
     public Permissao addPerfil(Perfil perfil) {
@@ -91,7 +98,9 @@ public class Permissao implements Serializable {
     }
 
     public void setPerfils(Set<Perfil> perfils) {
-        this.perfils = perfils;
+        this.perfils = Optional.ofNullable(perfils)
+            .map(lista -> new LinkedHashSet<Perfil>(lista))
+            .orElse(new LinkedHashSet<Perfil>());
     }
 
     @Override

@@ -101,7 +101,6 @@ public class BaseLineSinteticoResource {
 
     @GetMapping("/baseline-sinteticos/{id}/equipe/{idEquipe}")
     @Timed
-    @Secured("ROLE_ABACO_BASELINE_CONSULTAR")
     public ResponseEntity<BaseLineSintetico> getBaseLineSinteticoEquipe(
         @PathVariable Long id, @PathVariable Long idEquipe) {
         log.debug("REST request to get all BaseLineSinteticos: {}", id);
