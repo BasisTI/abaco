@@ -4,8 +4,6 @@
 
 canvas {
     border: 1px solid #000;
-    // width:1550px;
-    // height:600px;
 }
 
 .ui-label-dialog-componente{
@@ -90,8 +88,6 @@ canvas {
     -moz-transition: opacity 1500ms;
     -o-transition: opacity 1500ms;
     transition: opacity 1500ms;
-
-
 }
 
 .tooltip-tipo {
@@ -138,4 +134,9 @@ canvas {
         background-color:#EF7C8E
     }
 
+}
+
+.imgName{
+    font-family: Arial;
+    font-size: 1.15rem;
 }

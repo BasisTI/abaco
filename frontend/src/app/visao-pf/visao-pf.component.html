@@ -79,11 +79,10 @@
         </p-fieldset>
     </div>
 
-    <div *ngIf="visaopf.telaResult">
+    <div *ngIf="visaopf.cenario.telasResult.length > 0">
         <p-fieldset legend="Resultado" [toggleable]="true">
-
-            <app-canvas-visaopf  *ngIf="visaopf.telaResult.bucketName" id="canvas" telaID="{{visaopf.telaResult.id}}" toolbar="True"  canvasWidth="1320" canvasHeight="630"  imageHeight="{{visaopf.telaResult.height}}" imageWidth="{{visaopf.telaResult.width}}" [tipos]= "visaopf.tiposComponents" [components]="visaopf.telaResult.componentes" imageUrl="/visaopf/component/detection/image/{{visaopf.telaResult.bucketName}}/{{visaopf.telaResult.originalImageName}}"> </app-canvas-visaopf>
-
+            <app-canvas-visaopf id="canvas" [telasResult]=visaopf.cenario.telasResult toolbar="True"
+            canvasWidth="1320" canvasHeight="630" [tipos]= "visaopf.tiposComponents"> </app-canvas-visaopf>
         </p-fieldset>
     </div>
 </div>

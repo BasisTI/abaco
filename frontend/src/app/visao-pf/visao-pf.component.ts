@@ -14,7 +14,6 @@ import { Message } from 'primeng/api'
 })
 export class VisaoPfComponent implements OnInit {
 
-
     msgs: Message[] = []
     visaopf: Visaopf = new Visaopf();
     routeState:any
@@ -22,46 +21,57 @@ export class VisaoPfComponent implements OnInit {
     idTela:any
 
     constructor(private activedRoute: ActivatedRoute, private router: Router, private visaoPfService: VisaoPfService) {
-        this.idTela = this.activedRoute.snapshot.paramMap.get('idTela')
-        if(this.idTela){
-            this.visaopf.telaResult = this.visaoPfService.getTela(this.idTela).subscribe( resp => {
-                this.visaopf.telaResult = resp
-
-            })
-        }
-
         if (this.router.getCurrentNavigation().extras.state) {
             this.routeState = this.router.getCurrentNavigation().extras.state;
         }
-
     }
 
     ngOnInit(): void {
         this.getTipos()
+        this.visaopf = new Visaopf();
+    }
+
+    validacaoContinuar(){
+        var valido = true
+        for(var tela of this.visaopf.cenario.telasResult){
+            if(!tela.dataUrlResult){
+                valido = false
+                this.showErrorMsg(`A imagem de resultado ${tela.originalImageName.split("@")[1] } não foi conferida. Favor verifique os componentes encontrados.`)
+                break
+            }
+        }
+        if(valido){
+            this.showSucessMsg("")
+        }
+        return valido
     }
 
     continuarContagem(){
-        this.visaoPfService.getTela(this.visaopf.telaResult.id).subscribe((resp:any) => {
-            if(resp){
-                this.router.navigate([`analise/${this.routeState.idAnalise}/funcao-dados`], {
-                    state: {
-                        isEdit : this.routeState.isEdit,
-                        idAnalise : this.routeState.idAnalise,
-                        seletedFuncaoDados : this.routeState.seletedFuncaoDados,
-                        telaResult : JSON.stringify(resp),
-                        dataUrl : JSON.stringify(this.visaopf.cenario.telas[0].dataUrl),
-                        telasResult: JSON.stringify(this.visaopf.cenario.telasResult),
-                    }
-
-                })
+        var state
+        if(this.validacaoContinuar()){
+            if(this.visaopf.cenario.telasResult.length > 0){
+                state = {
+                    isEdit : this.routeState.isEdit,
+                    idAnalise : this.routeState.idAnalise,
+                    seletedFuncaoDados : this.routeState.seletedFuncaoDados,
+                    telasResult: JSON.stringify(this.visaopf.cenario.telasResult),
+                }
+            }else{
+                state = {
+                    isEdit : this.routeState.isEdit,
+                    idAnalise : this.routeState.idAnalise,
+                    seletedFuncaoDados : this.routeState.seletedFuncaoDados
+                }
             }
-        })
+            this.router.navigate([`analise/${this.routeState.idAnalise}/funcao-dados`], {
+                state: state
+            })
+        }
+
     }
 
     detectarComponentes(){
-
-        if(this.visaopf.tela == undefined ){ this.showErrorMsg('É necessário imagens para a detecção de componentes!'); return}
-
+        if(this.visaopf.cenario.telas.length==0 ){ this.showErrorMsg('É necessário imagens para a detecção de componentes!'); return}
         this.visaoPfService.sendComponentDetection(this.visaopf).subscribe(uuid =>{
             if(uuid){
                 this.updateProcessos(uuid)
@@ -91,7 +101,6 @@ export class VisaoPfComponent implements OnInit {
                                 this.visaopf.qtdFinalizados = Math.trunc( (qtd*100)/response.length )
                                 this.visaopf.uuidProcesso =processo.uuidProcesso
                                 this.visaoPfService.getTelaByUuid(processo.uuidImagem).subscribe((res:any) => {
-                                    this.visaopf.telaResult = res
                                     this.visaopf.cenario.telasResult.push(res)
                                 })
                             }

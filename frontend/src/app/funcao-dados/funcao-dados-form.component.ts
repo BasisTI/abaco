@@ -165,47 +165,49 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
         });
     }
 
+    paginatorVisaopfResult(event){
+        this.seletedFuncaoDados.sustantation=  '<img src="'+this.visaopf.cenario.telasResult[event.page].dataUrlResult+'" width="1222">'
+    }
+
     detectarComponentes(){
         var routerNavigate = `visaopf/deteccomponentes`
-        if(this.visaopf.telaResult){
-            routerNavigate = `visaopf/deteccomponentes/${this.visaopf.telaResult.id}`
-        }
+        var funcDados = this.seletedFuncaoDados
         this.desconverterChips()
+        if(this.visaopf){
+            funcDados.ders = []
+            funcDados.sustantation= ""
+        }
         this.router.navigate([routerNavigate], {
             state: {
                 isEdit : this.isEdit,
                 idAnalise : this.idAnalise,
-                seletedFuncaoDados : JSON.stringify(this.seletedFuncaoDados),
+                seletedFuncaoDados : JSON.stringify(funcDados),
             }
         })
     }
 
     updateVisaopfResults(){
         if(this.routeState){
-            let funcDados: FuncaoDados = JSON.parse(this.routeState.seletedFuncaoDados )
-            this.seletedFuncaoDados = funcDados
-            this.visaopf.telaResult = JSON.parse(this.routeState.telaResult)
-            this.visaopf.cenario.telasResult = JSON.parse(this.routeState.telasResult)
-            if(this.routeState.dataUrl){
-                this.seletedFuncaoDados.sustantation=  '<img src="'+JSON.parse(this.routeState.dataUrl)+'" width="1222">'
-            }
-            this.seletedFuncaoDados.ders = []
-
-            for(const tela of this.visaopf.cenario.telasResult){
-                tela.componentes.forEach( comp => {
-                    if(comp.tipo === "campo" || comp.tipo ==="dropdown" || comp.tipo ==="checkbox" ){
-                        if(comp.nome == null){
-                            this.seletedFuncaoDados.ders.push(new Der(undefined,"Sem nome - " + comp.tipo ))
-                        }else{
-                            this.seletedFuncaoDados.ders.push(new Der(undefined, comp.nome ))
+            this.seletedFuncaoDados = JSON.parse(this.routeState.seletedFuncaoDados)
+            if(this.routeState.telasResult){
+                this.visaopf.cenario.telasResult = JSON.parse(this.routeState.telasResult)
+                this.seletedFuncaoDados.sustantation=  '<img src="'+this.visaopf.cenario.telasResult[0].dataUrlResult+'" width="1222">'
+                this.seletedFuncaoDados.ders = []
+                for(const tela of this.visaopf.cenario.telasResult){
+                    tela.componentes.forEach( comp => {
+                        if(comp.tipo === "campo" || comp.tipo ==="dropdown" || comp.tipo ==="checkbox" || comp.tipo ==="radio button"  ){
+                            if(comp.nome == null){
+                                this.seletedFuncaoDados.ders.push(new Der(undefined,"Sem nome - " + comp.tipo ))
+                            }else{
+                                this.seletedFuncaoDados.ders.push(new Der(undefined, comp.nome ))
+                            }
                         }
-                    }
-                })
+                    })
+                }
             }
-
             if(this.routeState.isEdit){
                 this.carregarValoresNaPaginaParaEdicao(this.seletedFuncaoDados)
-            }else{
+            }else if(this.seletedFuncaoDados.ders.length > 0 ){
                 this.carregarDerERlr(this.seletedFuncaoDados)
                 this.carregarFatorDeAjusteNaEdicao(this.seletedFuncaoDados)
             }

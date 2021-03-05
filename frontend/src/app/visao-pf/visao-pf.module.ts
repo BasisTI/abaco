@@ -20,6 +20,7 @@ import { DialogModule } from 'primeng/dialog';
 import { InputTextModule } from 'primeng/inputtext';
 import { InputTextareaModule } from 'primeng/inputtextarea';
 import { ToggleButtonModule, DropdownModule } from 'primeng';
+import { PaginatorModule } from 'primeng/paginator';
 
 
 @NgModule({
@@ -40,6 +41,7 @@ import { ToggleButtonModule, DropdownModule } from 'primeng';
         InputTextareaModule,
         ToggleButtonModule,
         DropdownModule,
+        PaginatorModule,
     ],
   declarations: [
     VisaoPfComponent,

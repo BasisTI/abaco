@@ -13,17 +13,15 @@ import {CanvasService} from './canvas-visaopf.service'
 
 export class CanvasVisaopfComponent implements OnInit {
     @ViewChild('canvas', { static: true }) canvas: any
-    @Input() imageUrl:any
-    @Input() imageHeight:any
-    @Input() imageWidth:any
+
+    @Input() telasResult:Array<any>
     @Input() canvasWidth:any
     @Input() canvasHeight:any
     @Input() toolbar=false
-    @Input() components: Array<Componente>
     @Input() tipos: Array<any>
-    @Input() telaID:string
 
-
+    tela:any
+    imageName: string
     private ctx: CanvasRenderingContext2D
     markDisable=false
     image:any
@@ -42,6 +40,10 @@ export class CanvasVisaopfComponent implements OnInit {
     }
 
     ngOnInit(): void {
+        this.canvas = this.canvas.nativeElement
+        this.ctx = this.canvas.getContext('2d')
+        this.tela = this.telasResult[0]
+        this.imageName=this.tela.originalImageName.split("@")[1]
         this.startCanvas()
         this.getEventClickPosition()
     }
@@ -50,6 +52,11 @@ export class CanvasVisaopfComponent implements OnInit {
         this.componentTooltip = comp
     }
 
+    paginatorCanvas(event){
+        this.tela = this.telasResult[event.page]
+        this.imageName=this.tela.originalImageName.split("@")[1]
+        this.startCanvas()
+    }
 
     getEventClickPosition(){
 
@@ -86,7 +93,6 @@ export class CanvasVisaopfComponent implements OnInit {
     clickInComponente(initPos){
         this.msgs = []
         var comp = this.findComponenteByPosition(initPos)
-        console.log(comp)
         if(comp){
             this.componente = comp
             this.dialogComponent = true
@@ -94,7 +100,7 @@ export class CanvasVisaopfComponent implements OnInit {
     }
 
     findComponenteByPosition(clickposition):any{
-        return this.components.filter(component => this.isClickInsideComponent(component, clickposition))[0]
+        return this.tela.componentes.filter(component => this.isClickInsideComponent(component, clickposition))[0]
     }
 
     isClickInsideComponent(component, position): any{
@@ -107,21 +113,30 @@ export class CanvasVisaopfComponent implements OnInit {
     saveComponent(){
         this.msgs=[]
         if(this.markDisable){
-            this.saveNewComponent()
+
+            if(this.saveNewComponent()){
+                this.showSucessMsg("Componente salvo. ")
+                setTimeout(e => this.dialogComponent=false, 850)
+            }
         }else{
-            this.updateComponent()
+            if(this.updateComponent()){
+                this.showSucessMsg("Componente atualizado. ")
+                setTimeout(e => this.dialogComponent=false, 850)
+            }
         }
         this.draw()
-        setTimeout(e => this.dialogComponent=false, 850)
 
     }
 
     updateComponent(){
+        var updated = false
         if(this.componente){
             this.service.updateComponent(this.componente).subscribe( () => {
                 this.showSucessMsg('Atualizado')
             })
+            updated = true
         }
+        return updated
     }
 
     cancelMark(){
@@ -130,11 +145,11 @@ export class CanvasVisaopfComponent implements OnInit {
     }
 
     removeComponent(componente){
-        const index = this.components.indexOf(componente)
+        const index = this.tela.componentes.indexOf(componente)
         if(index !=-1){
-            this.components.splice(index, 1)
-            this.service.deleteComponent(this.telaID,componente.id).subscribe( (resp:any) =>{
-                this.components=resp.componentes
+            this.tela.componentes.splice(index, 1)
+            this.service.deleteComponent(this.tela.id,componente.id).subscribe( (resp:any) =>{
+                this.tela.componentes=resp.componentes
                 this.showSucessMsg('Componente removido!')
             })
         }
@@ -145,18 +160,19 @@ export class CanvasVisaopfComponent implements OnInit {
     }
 
     saveNewComponent(){
-        if(this.componente.coordenada.xmax == undefined){ this.showErrorMsg('É necessário marcar o Componente!');  return}
-        if(this.componente.tipo == undefined){ this.showErrorMsg('É necessário informar o Tipo do Componente!');  return}
-        if(this.componente.nome == undefined){this.showErrorMsg('É necessário informar o Nome para o Componente!');  return}
-        if(this.componente.descricao == undefined){this.showErrorMsg('É necessário informar uma descrição para o Componente!');  return}
+        var saved = false
+        if(this.componente.coordenada.xmax == undefined){ this.showErrorMsg('É necessário marcar o Componente!');  return saved}
+        if(this.componente.tipo == undefined){ this.showErrorMsg('É necessário informar o Tipo do Componente!');  return saved}
+        if(this.componente.nome == undefined){this.showErrorMsg('É necessário informar o Nome para o Componente!');  return saved}
 
-        this.dialogComponent = false
+        // this.dialogComponent = false
         this.markDisable = false
-        this.service.setComponenteTela(this.telaID, this.componente).subscribe( (resp:any) => {
-            this.components=resp.componentes
+        this.service.setComponenteTela(this.tela.id, this.componente).subscribe( (resp:any) => {
+            this.tela.componentes=resp.componentes
             this.draw()
         })
-
+        saved=true
+        return saved
     }
 
     saveMark(){
@@ -208,24 +224,24 @@ export class CanvasVisaopfComponent implements OnInit {
     }
 
     startCanvas(){
-        this.canvas = this.canvas.nativeElement
-        this.ctx = this.canvas.getContext('2d')
         this.image = new Image(this.canvasWidth, this.canvasHeight)
         this.image.onload = setTimeout(e => this.draw(), CanvasVisaopfComponent.TIMEOUTCANVAS)
-        this.image.src = this.imageUrl
-        this.proporcaoW = this.imageWidth/this.canvasWidth
-        this.proporcaoH = this.imageHeight/this.canvasHeight
+        this.image.src = `/visaopf/component/detection/image/${this.tela.bucketName}/${this.tela.originalImageName}`
+        this.proporcaoW = this.tela.width/this.canvasWidth
+        this.proporcaoH = this.tela.height/this.canvasHeight
+
     }
 
     draw(){
         this.ctx.drawImage(this.image, 0, 0, this.canvasWidth, this.canvasHeight)
         this.drawComponents()
+        this.tela.dataUrlResult = this.canvas.toDataURL()
     }
 
     drawComponents(){
         this.ctx.fillStyle = "transparent"
-        this.ctx.lineWidth = 5
-        for(var comp of this.components){
+        this.ctx.lineWidth = 2.5
+        for(var comp of this.tela.componentes){
             this.ctx.strokeStyle = this.colorByTipo(comp.tipo)
             this.ctx.strokeRect(comp.coordenada.xmin/this.proporcaoW, comp.coordenada.ymin /this.proporcaoH, (comp.coordenada.xmax - comp.coordenada.xmin )/this.proporcaoW , (comp.coordenada.ymax - comp.coordenada.ymin)/this.proporcaoH)
         }
