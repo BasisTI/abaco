@@ -3,1263 +3,1263 @@
                    xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
                    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
-    <property name="now" value="current_timestamp" dbms="postgresql"/>
-    <changeSet author="basis (generated)" id="1584128930494-1">
-        <createSequence sequenceName="hibernate_sequence"/>
-    </changeSet>
-    <changeSet author="basis (generated)" id="1584128930494-2">
-        <createTable tableName="alr">
-            <column name="id" type="BIGINT">
-                <constraints nullable="false"/>
-            </column>
-            <column name="funcao_transacao_id" type="BIGINT"/>
-            <column name="nome" type="VARCHAR(255)"/>
-            <column name="valor" type="INT"/>
-        </createTable>
-    </changeSet>
-    <changeSet author="basis (generated)" id="1584128930494-3">
-        <createTable tableName="analise">
-            <column name="id" type="BIGINT">
-                <constraints nullable="false"/>
-            </column>
-            <column name="numero_os" type="VARCHAR(255)"/>
-            <column name="metodo_contagem" type="VARCHAR(255)"/>
-            <column name="valor_ajuste" type="numeric(10, 4)"/>
-            <column name="pf_total" type="VARCHAR(255)"/>
-            <column name="escopo" type="VARCHAR(4000)"/>
-            <column name="fronteiras" type="VARCHAR(4000)"/>
-            <column name="documentacao" type="VARCHAR(4000)"/>
-            <column name="tipo_analise" type="VARCHAR(255)"/>
-            <column name="proposito_contagem" type="VARCHAR(4000)"/>
-            <column name="sistema_id" type="BIGINT"/>
-            <column name="organizacao_id" type="BIGINT"/>
-            <column name="contrato_id" type="BIGINT"/>
-            <column name="pf_total_adjust" type="VARCHAR(255)"/>
-            <column name="created_by_id" type="BIGINT"/>
-            <column name="edited_by_id" type="BIGINT"/>
-            <column name="fator_ajuste_id" type="BIGINT"/>
-            <column name="observacoes" type="VARCHAR(4000)"/>
-            <column name="baseline_imediatamente" type="BOOLEAN"/>
-            <column name="data_homologacao_software" type="TIMESTAMP WITH TIME ZONE"/>
-            <column name="identificador_analise" type="VARCHAR(100)"/>
-            <column name="equipe_responsavel_id" type="BIGINT"/>
-            <column defaultValueComputed="now()"
-                    name="created_on"
-                    type="TIMESTAMP WITH TIME ZONE">
-                <constraints nullable="false"/>
-            </column>
-            <column defaultValueComputed="now()"
-                    name="updated_on"
-                    type="TIMESTAMP WITH TIME ZONE">
-                <constraints nullable="false"/>
-            </column>
-            <column defaultValueBoolean="false" name="bloqueado" type="BOOLEAN">
-                <constraints nullable="false"/>
-            </column>
-            <column defaultValueBoolean="false" name="enviar_baseline" type="BOOLEAN">
-                <constraints nullable="false"/>
-            </column>
-            <column name="data_criacao_ordem_servico" type="TIMESTAMP WITH TIME ZONE"/>
-            <column name="manual_id" type="BIGINT"/>
-            <column defaultValueBoolean="false"
-                    name="clonada_para_equipe"
-                    type="BOOLEAN"/>
-        </createTable>
-    </changeSet>
-    <changeSet author="basis (generated)" id="1584128930494-4">
-        <createTable tableName="analise_compartilhada">
-            <column name="id" type="BIGINT">
-                <constraints nullable="false"/>
-            </column>
-            <column name="equipe_id" type="BIGINT">
-                <constraints nullable="false"/>
-            </column>
-            <column name="analise_id" type="BIGINT">
-                <constraints nullable="false"/>
-            </column>
-            <column defaultValueBoolean="false" name="view_only" type="BOOLEAN">
-                <constraints nullable="false"/>
-            </column>
-            <column name="equipe_nome" type="VARCHAR(255)">
-                <constraints nullable="false"/>
-            </column>
-        </createTable>
-    </changeSet>
-    <changeSet author="basis (generated)" id="1584128930494-5">
-        <createTable tableName="analise_esforco_fases">
-            <column name="analise_id" type="BIGINT">
-                <constraints nullable="false"/>
-            </column>
-            <column name="esforco_fases_id" type="BIGINT">
-                <constraints nullable="false"/>
-            </column>
-        </createTable>
-    </changeSet>
-    <changeSet author="basis (generated)" id="1584128930494-6">
-        <createTable tableName="contrato">
-            <column name="id" type="BIGINT">
-                <constraints nullable="false"/>
-            </column>
-            <column name="numero_contrato" type="VARCHAR(30)"/>
-            <column name="data_inicio_vigencia" type="date"/>
-            <column name="data_fim_vigencia" type="date"/>
-            <column name="manual_id" type="BIGINT"/>
-            <column name="organization_id" type="BIGINT"/>
-            <column name="ativo" type="BOOLEAN"/>
-            <column name="dias_de_garantia" type="INT"/>
-        </createTable>
-    </changeSet>
-    <changeSet author="basis (generated)" id="1584128930494-7">
-        <createTable tableName="der">
-            <column name="id" type="BIGINT">
-                <constraints nullable="false"/>
-            </column>
-            <column name="nome" type="VARCHAR(255)"/>
-            <column name="rlr_id" type="BIGINT"/>
-            <column name="funcao_dados_id" type="BIGINT"/>
-            <column name="funcao_transacao_id" type="BIGINT"/>
-            <column name="valor" type="INT"/>
-        </createTable>
-    </changeSet>
-    <changeSet author="basis (generated)" id="1584128930494-8">
-        <createTable tableName="esforco_fase">
-            <column name="id" type="BIGINT">
-                <constraints nullable="false"/>
-            </column>
-            <column name="esforco" type="numeric(10, 4)"/>
-            <column name="manual_id" type="BIGINT"/>
-            <column name="fase_id" type="BIGINT"/>
-        </createTable>
-    </changeSet>
-    <changeSet author="basis (generated)" id="1584128930494-9">
-        <createTable tableName="fase">
-            <column name="id" type="BIGINT">
-                <constraints nullable="false"/>
-            </column>
-            <column name="nome" type="VARCHAR(255)"/>
-        </createTable>
-    </changeSet>
-    <changeSet author="basis (generated)" id="1584128930494-10">
-        <createTable tableName="fator_ajuste">
-            <column name="id" type="BIGINT">
-                <constraints nullable="false"/>
-            </column>
-            <column name="nome" type="VARCHAR(255)">
-                <constraints nullable="false"/>
-            </column>
-            <column name="fator" type="numeric(10, 4)">
-                <constraints nullable="false"/>
-            </column>
-            <column name="ativo" type="BOOLEAN">
-                <constraints nullable="false"/>
-            </column>
-            <column name="tipo_ajuste" type="VARCHAR(255)"/>
-            <column name="impacto" type="VARCHAR(255)"/>
-            <column name="manual_id" type="BIGINT"/>
-            <column name="codigo" type="VARCHAR(255)"/>
-            <column name="descricao" type="VARCHAR(2000)"/>
-            <column name="origem" type="VARCHAR(255)"/>
-        </createTable>
-    </changeSet>
-    <changeSet author="basis (generated)" id="1584128930494-11">
-        <createTable tableName="files">
-            <column autoIncrement="true" name="id" type="BIGSERIAL">
-                <constraints primaryKey="true" primaryKeyName="filesPK"/>
-            </column>
-            <column name="date_of" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
-            <column name="filename" type="VARCHAR(255)"/>
-            <column name="original_name" type="VARCHAR(255)"/>
-            <column name="process_type" type="INT"/>
-            <column name="size_of" type="INT"/>
-            <column name="process_id" type="BIGINT"/>
-            <column name="tran_id" type="BIGINT"/>
-            <column name="logo" type="BYTEA"/>
-        </createTable>
-    </changeSet>
-    <changeSet author="basis (generated)" id="1584128930494-12">
-        <createTable tableName="funcao_dados">
-            <column name="id" type="BIGINT">
-                <constraints nullable="false"/>
-            </column>
-            <column name="tipo" type="VARCHAR(255)"/>
-            <column name="complexidade" type="VARCHAR(255)"/>
-            <column name="pf" type="numeric(10, 4)"/>
-            <column name="analise_id" type="BIGINT"/>
-            <column name="fator_ajuste_id" type="BIGINT"/>
-            <column name="alr_id" type="BIGINT"/>
-            <column name="funcionalidade_id" type="BIGINT"/>
-            <column name="det_str" type="VARCHAR(2000)"/>
-            <column name="ret_str" type="VARCHAR(2000)"/>
-            <column name="name" type="VARCHAR(2000)"/>
-            <column name="sustantation" type="TEXT"/>
-            <column name="grosspf" type="numeric(10, 4)"/>
-            <column defaultValueComputed="now()"
-                    name="created_on"
-                    type="TIMESTAMP WITH TIME ZONE">
-                <constraints nullable="false"/>
-            </column>
-            <column defaultValueComputed="now()"
-                    name="updated_on"
-                    type="TIMESTAMP WITH TIME ZONE">
-                <constraints nullable="false"/>
-            </column>
-            <column name="funcao_dados_versionavel_id" type="BIGINT"/>
-            <column name="impacto" type="VARCHAR(30)"/>
-            <column name="quantidade" type="BIGINT"/>
-        </createTable>
-    </changeSet>
-    <changeSet author="basis (generated)" id="1584128930494-13">
-        <createTable tableName="funcao_dados_versionavel">
-            <column autoIncrement="true" name="id" type="BIGSERIAL">
-                <constraints primaryKey="true" primaryKeyName="funcao_dados_versionavelPK"/>
-            </column>
-            <column name="nome" type="VARCHAR(255)"/>
-            <column name="sistema_id" type="BIGINT"/>
-        </createTable>
-    </changeSet>
-    <changeSet author="basis (generated)" id="1584128930494-14">
-        <createTable tableName="funcao_transacao">
-            <column name="id" type="BIGINT">
-                <constraints nullable="false"/>
-            </column>
-            <column name="tipo" type="VARCHAR(255)"/>
-            <column name="complexidade" type="VARCHAR(255)"/>
-            <column name="pf" type="numeric(10, 4)"/>
-            <column name="analise_id" type="BIGINT"/>
-            <column name="fator_ajuste_id" type="BIGINT"/>
-            <column name="funcionalidade_id" type="BIGINT"/>
-            <column name="det_str" type="VARCHAR(2000)"/>
-            <column name="name" type="VARCHAR(2000)"/>
-            <column name="sustantation" type="TEXT"/>
-            <column name="grosspf" type="numeric(10, 4)"/>
-            <column name="ftr_str" type="VARCHAR(2000)"/>
-            <column defaultValueComputed="now()"
-                    name="created_on"
-                    type="TIMESTAMP WITH TIME ZONE">
-                <constraints nullable="false"/>
-            </column>
-            <column defaultValueComputed="now()"
-                    name="updated_on"
-                    type="TIMESTAMP WITH TIME ZONE">
-                <constraints nullable="false"/>
-            </column>
-            <column name="impacto" type="VARCHAR(255)"/>
-            <column name="quantidade" type="BIGINT"/>
-        </createTable>
-    </changeSet>
-    <changeSet author="basis (generated)" id="1584128930494-15">
-        <createTable tableName="funcionalidade">
-            <column name="id" type="BIGINT">
-                <constraints nullable="false"/>
-            </column>
-            <column name="nome" type="VARCHAR(255)">
-                <constraints nullable="false"/>
-            </column>
-            <column name="modulo_id" type="BIGINT"/>
-            <column name="funcao_dados_id" type="BIGINT"/>
-            <column name="funcao_transacao_id" type="BIGINT"/>
-        </createTable>
-    </changeSet>
-    <changeSet author="basis (generated)" id="1584128930494-16">
-        <createTable tableName="jhi_authority">
-            <column name="name" type="VARCHAR(50)">
-                <constraints nullable="false"/>
-            </column>
-            <column name="description" type="VARCHAR(100)">
-                <constraints nullable="false"/>
-            </column>
-        </createTable>
-    </changeSet>
-    <changeSet author="basis (generated)" id="1584128930494-17">
-        <createTable tableName="jhi_persistent_audit_event">
-            <column name="event_id" type="BIGINT">
-                <constraints nullable="false"/>
-            </column>
-            <column name="principal" type="VARCHAR(100)">
-                <constraints nullable="false"/>
-            </column>
-            <column name="event_date" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
-            <column name="event_type" type="VARCHAR(255)"/>
-        </createTable>
-    </changeSet>
-    <changeSet author="basis (generated)" id="1584128930494-18">
-        <createTable tableName="jhi_persistent_audit_evt_data">
-            <column name="event_id" type="BIGINT">
-                <constraints nullable="false"/>
-            </column>
-            <column name="name" type="VARCHAR(150)">
-                <constraints nullable="false"/>
-            </column>
-            <column name="value" type="VARCHAR(255)"/>
-        </createTable>
-    </changeSet>
-    <changeSet author="basis (generated)" id="1584128930494-19">
-        <createTable tableName="jhi_social_user_connection">
-            <column name="id" type="BIGINT">
-                <constraints nullable="false"/>
-            </column>
-            <column name="user_id" type="VARCHAR(255)">
-                <constraints nullable="false"/>
-            </column>
-            <column name="provider_id" type="VARCHAR(255)">
-                <constraints nullable="false"/>
-            </column>
-            <column name="provider_user_id" type="VARCHAR(255)">
-                <constraints nullable="false"/>
-            </column>
-            <column name="rank" type="BIGINT">
-                <constraints nullable="false"/>
-            </column>
-            <column name="display_name" type="VARCHAR(255)"/>
-            <column name="profile_url" type="VARCHAR(255)"/>
-            <column name="image_url" type="VARCHAR(255)"/>
-            <column name="access_token" type="VARCHAR(255)">
-                <constraints nullable="false"/>
-            </column>
-            <column name="secret" type="VARCHAR(255)"/>
-            <column name="refresh_token" type="VARCHAR(255)"/>
-            <column name="expire_time" type="BIGINT"/>
-        </createTable>
-    </changeSet>
-    <changeSet author="basis (generated)" id="1584128930494-20">
-        <createTable tableName="jhi_user">
-            <column name="id" type="BIGINT">
-                <constraints nullable="false"/>
-            </column>
-            <column name="login" type="VARCHAR(100)">
-                <constraints nullable="false"/>
-            </column>
-            <column name="password_hash" type="VARCHAR(60)"/>
-            <column name="first_name" type="VARCHAR(50)"/>
-            <column name="last_name" type="VARCHAR(50)"/>
-            <column name="email" type="VARCHAR(100)"/>
-            <column name="image_url" type="VARCHAR(256)"/>
-            <column name="activated" type="BOOLEAN">
-                <constraints nullable="false"/>
-            </column>
-            <column name="lang_key" type="VARCHAR(5)"/>
-            <column name="activation_key" type="VARCHAR(20)"/>
-            <column name="reset_key" type="VARCHAR(20)"/>
-            <column name="created_by" type="VARCHAR(50)">
-                <constraints nullable="false"/>
-            </column>
-            <column name="created_date" type="TIMESTAMP(6) WITHOUT TIME ZONE" defaultValueDate="${now}">
-                <constraints nullable="false"/>
-            </column>
-            <column name="reset_date" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
-            <column name="last_modified_by" type="VARCHAR(50)"/>
-            <column name="last_modified_date" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
-        </createTable>
-    </changeSet>
-    <changeSet author="basis (generated)" id="1584128930494-21">
-        <createTable tableName="jhi_user_authority">
-            <column name="user_id" type="BIGINT">
-                <constraints nullable="false"/>
-            </column>
-            <column name="authority_name" type="VARCHAR(50)">
-                <constraints nullable="false"/>
-            </column>
-        </createTable>
-    </changeSet>
-    <changeSet author="basis (generated)" id="1584128930494-22">
-        <createTable tableName="manual">
-            <column name="id" type="BIGINT">
-                <constraints nullable="false"/>
-            </column>
-            <column name="nome" type="VARCHAR(255)"/>
-            <column name="observacao" type="VARCHAR(4000)"/>
-            <column name="valor_variacao_estimada" type="numeric(10, 4)">
-                <constraints nullable="false"/>
-            </column>
-            <column name="valor_variacao_indicativa" type="numeric(10, 4)">
-                <constraints nullable="false"/>
-            </column>
-            <column name="arquivo_manual_id" type="BIGINT"/>
-            <column name="parametro_alteracao" type="numeric(10, 4)"/>
-            <column name="parametro_conversao" type="numeric(10, 4)"/>
-            <column name="parametro_exclusao" type="numeric(10, 4)"/>
-            <column name="parametro_inclusao" type="numeric(10, 4)"/>
-            <column name="versao_cpm" type="BIGINT"/>
-        </createTable>
-    </changeSet>
-    <changeSet author="basis (generated)" id="1584128930494-23">
-        <createTable tableName="manual_contrato">
-            <column name="id" type="BIGINT">
-                <constraints nullable="false"/>
-            </column>
-            <column name="manual_id" type="BIGINT">
-                <constraints nullable="false"/>
-            </column>
-            <column name="contratos_id" type="BIGINT">
-                <constraints nullable="false"/>
-            </column>
-            <column name="data_inicio_vigencia" type="date"/>
-            <column name="data_fim_vigencia" type="date"/>
-            <column name="ativo" type="BOOLEAN"/>
-        </createTable>
-    </changeSet>
-    <changeSet author="basis (generated)" id="1584128930494-24">
-        <createTable tableName="modulo">
-            <column name="id" type="BIGINT">
-                <constraints nullable="false"/>
-            </column>
-            <column name="nome" type="VARCHAR(255)">
-                <constraints nullable="false"/>
-            </column>
-            <column name="sistema_id" type="BIGINT"/>
-        </createTable>
-    </changeSet>
-    <changeSet author="basis (generated)" id="1584128930494-25">
-        <createTable tableName="organizacao">
-            <column name="id" type="BIGINT">
-                <constraints nullable="false"/>
-            </column>
-            <column name="nome" type="VARCHAR(80)"/>
-            <column name="cnpj" type="VARCHAR(14)"/>
-            <column name="ativo" type="BOOLEAN">
-                <constraints nullable="false"/>
-            </column>
-            <column name="numero_ocorrencia" type="VARCHAR(255)"/>
-            <column name="sigla" type="VARCHAR(255)"/>
-            <column name="logo_id" type="BIGINT"/>
-        </createTable>
-    </changeSet>
-    <changeSet author="basis (generated)" id="1584128930494-26">
-        <createTable tableName="rlr">
-            <column name="id" type="BIGINT">
-                <constraints nullable="false"/>
-            </column>
-            <column name="nome" type="VARCHAR(255)"/>
-            <column name="funcao_dados_id" type="BIGINT"/>
-            <column name="valor" type="INT"/>
-        </createTable>
-    </changeSet>
-    <changeSet author="basis (generated)" id="1584128930494-27">
-        <createTable tableName="sistema">
-            <column name="id" type="BIGINT">
-                <constraints nullable="false"/>
-            </column>
-            <column name="sigla" type="VARCHAR(255)"/>
-            <column name="nome" type="VARCHAR(255)">
-                <constraints nullable="false"/>
-            </column>
-            <column name="numero_ocorrencia" type="VARCHAR(255)"/>
-            <column name="organizacao_id" type="BIGINT"/>
-            <column name="tipo_sistema" type="VARCHAR(255)"/>
-        </createTable>
-    </changeSet>
-    <changeSet author="basis (generated)" id="1584128930494-28">
-        <createTable tableName="tipo_equipe">
-            <column name="id" type="BIGINT">
-                <constraints nullable="false"/>
-            </column>
-            <column name="nome" type="VARCHAR(255)">
-                <constraints nullable="false"/>
-            </column>
-        </createTable>
-    </changeSet>
-    <changeSet author="basis (generated)" id="1584128930494-29">
-        <createTable tableName="tipoequipe_organizacao">
-            <column name="tipoequipe_id" type="BIGINT">
-                <constraints nullable="false"/>
-            </column>
-            <column name="organizacao_id" type="BIGINT">
-                <constraints nullable="false"/>
-            </column>
-        </createTable>
-    </changeSet>
-    <changeSet author="basis (generated)" id="1584128930494-30">
-        <createTable tableName="user_analise">
-            <column name="analise_id" type="BIGINT">
-                <constraints nullable="false"/>
-            </column>
-            <column name="user_id" type="BIGINT">
-                <constraints nullable="false"/>
-            </column>
-        </createTable>
-    </changeSet>
-    <changeSet author="basis (generated)" id="1584128930494-31">
-        <createTable tableName="user_organizacao">
-            <column name="user_id" type="BIGINT">
-                <constraints nullable="false"/>
-            </column>
-            <column name="organizacao_id" type="BIGINT">
-                <constraints nullable="false"/>
-            </column>
-        </createTable>
-    </changeSet>
-    <changeSet author="basis (generated)" id="1584128930494-32">
-        <createTable tableName="user_tipo_equipe">
-            <column name="user_id" type="BIGINT">
-                <constraints nullable="false"/>
-            </column>
-            <column name="tipo_equipe_id" type="BIGINT">
-                <constraints nullable="false"/>
-            </column>
-        </createTable>
-    </changeSet>
-    <changeSet author="basis (generated)" id="1584128930494-33">
-        <addPrimaryKey columnNames="analise_id, esforco_fases_id"
-                       constraintName="analise_esforco_fases_pkey"
-                       tableName="analise_esforco_fases"/>
-    </changeSet>
-    <changeSet author="basis (generated)" id="1584128930494-34">
-        <addPrimaryKey columnNames="event_id, name"
-                       constraintName="jhi_persistent_audit_evt_data_pkey"
-                       tableName="jhi_persistent_audit_evt_data"/>
-    </changeSet>
-    <changeSet author="basis (generated)" id="1584128930494-35">
-        <addPrimaryKey columnNames="user_id, authority_name"
-                       constraintName="jhi_user_authority_pkey"
-                       tableName="jhi_user_authority"/>
-    </changeSet>
-    <changeSet author="basis (generated)" id="1584128930494-36">
-        <addPrimaryKey columnNames="id" constraintName="pk_alr" tableName="alr"/>
-    </changeSet>
-    <changeSet author="basis (generated)" id="1584128930494-37">
-        <addPrimaryKey columnNames="id" constraintName="pk_analise" tableName="analise"/>
-    </changeSet>
-    <changeSet author="basis (generated)" id="1584128930494-38">
-        <addPrimaryKey columnNames="id"
-                       constraintName="pk_analise_compartilhada"
-                       tableName="analise_compartilhada"/>
-    </changeSet>
-    <changeSet author="basis (generated)" id="1584128930494-39">
-        <addPrimaryKey columnNames="id" constraintName="pk_contrato" tableName="contrato"/>
-    </changeSet>
-    <changeSet author="basis (generated)" id="1584128930494-40">
-        <addPrimaryKey columnNames="id" constraintName="pk_der" tableName="der"/>
-    </changeSet>
-    <changeSet author="basis (generated)" id="1584128930494-41">
-        <addPrimaryKey columnNames="id"
-                       constraintName="pk_esforco_fase"
-                       tableName="esforco_fase"/>
-    </changeSet>
-    <changeSet author="basis (generated)" id="1584128930494-42">
-        <addPrimaryKey columnNames="id" constraintName="pk_fase" tableName="fase"/>
-    </changeSet>
-    <changeSet author="basis (generated)" id="1584128930494-43">
-        <addPrimaryKey columnNames="id"
-                       constraintName="pk_fator_ajuste"
-                       tableName="fator_ajuste"/>
-    </changeSet>
-    <changeSet author="basis (generated)" id="1584128930494-44">
-        <addPrimaryKey columnNames="id"
-                       constraintName="pk_funcao_dados"
-                       tableName="funcao_dados"/>
-    </changeSet>
-    <changeSet author="basis (generated)" id="1584128930494-45">
-        <addPrimaryKey columnNames="id"
-                       constraintName="pk_funcao_transacao"
-                       tableName="funcao_transacao"/>
-    </changeSet>
-    <changeSet author="basis (generated)" id="1584128930494-46">
-        <addPrimaryKey columnNames="id"
-                       constraintName="pk_funcionalidade"
-                       tableName="funcionalidade"/>
-    </changeSet>
-    <changeSet author="basis (generated)" id="1584128930494-47">
-        <addPrimaryKey columnNames="name"
-                       constraintName="pk_jhi_authority"
-                       tableName="jhi_authority"/>
-    </changeSet>
-    <changeSet author="basis (generated)" id="1584128930494-48">
-        <addPrimaryKey columnNames="event_id"
-                       constraintName="pk_jhi_persistent_audit_event"
-                       tableName="jhi_persistent_audit_event"/>
-    </changeSet>
-    <changeSet author="basis (generated)" id="1584128930494-49">
-        <addPrimaryKey columnNames="id"
-                       constraintName="pk_jhi_social_user_connection"
-                       tableName="jhi_social_user_connection"/>
-    </changeSet>
-    <changeSet author="basis (generated)" id="1584128930494-50">
-        <addPrimaryKey columnNames="id" constraintName="pk_jhi_user" tableName="jhi_user"/>
-    </changeSet>
-    <changeSet author="basis (generated)" id="1584128930494-51">
-        <addPrimaryKey columnNames="id" constraintName="pk_manual" tableName="manual"/>
-    </changeSet>
-    <changeSet author="basis (generated)" id="1584128930494-52">
-        <addPrimaryKey columnNames="id"
-                       constraintName="pk_manual_contrato"
-                       tableName="manual_contrato"/>
-    </changeSet>
-    <changeSet author="basis (generated)" id="1584128930494-53">
-        <addPrimaryKey columnNames="id" constraintName="pk_modulo" tableName="modulo"/>
-    </changeSet>
-    <changeSet author="basis (generated)" id="1584128930494-54">
-        <addPrimaryKey columnNames="id"
-                       constraintName="pk_organizacao"
-                       tableName="organizacao"/>
-    </changeSet>
-    <changeSet author="basis (generated)" id="1584128930494-55">
-        <addPrimaryKey columnNames="id" constraintName="pk_rlr" tableName="rlr"/>
-    </changeSet>
-    <changeSet author="basis (generated)" id="1584128930494-56">
-        <addPrimaryKey columnNames="id" constraintName="pk_sistema" tableName="sistema"/>
-    </changeSet>
-    <changeSet author="basis (generated)" id="1584128930494-57">
-        <addPrimaryKey columnNames="id"
-                       constraintName="pk_tipo_equipe"
-                       tableName="tipo_equipe"/>
-    </changeSet>
-    <changeSet author="basis (generated)" id="1584128930494-58">
-        <addPrimaryKey columnNames="tipoequipe_id, organizacao_id"
-                       constraintName="tipoequipe_organizacao_pkey"
-                       tableName="tipoequipe_organizacao"/>
-    </changeSet>
-    <changeSet author="basis (generated)" id="1584128930494-59">
-        <addPrimaryKey columnNames="analise_id, user_id"
-                       constraintName="user_analise_pkey"
-                       tableName="user_analise"/>
-    </changeSet>
-    <changeSet author="basis (generated)" id="1584128930494-60">
-        <addPrimaryKey columnNames="user_id, organizacao_id"
-                       constraintName="user_organizacao_pkey"
-                       tableName="user_organizacao"/>
-    </changeSet>
-    <changeSet author="basis (generated)" id="1584128930494-61">
-        <addPrimaryKey columnNames="user_id, tipo_equipe_id"
-                       constraintName="user_tipo_equipe_pkey"
-                       tableName="user_tipo_equipe"/>
-    </changeSet>
-    <changeSet author="basis (generated)" id="1584128930494-62">
-        <addUniqueConstraint columnNames="sistema_id, nome"
-                             constraintName="UKlpdfu81ehislc02nbvr4i3hql"
-                             tableName="funcao_dados_versionavel"/>
-    </changeSet>
-    <changeSet author="basis (generated)" id="1584128930494-63">
-        <addUniqueConstraint columnNames="user_id, provider_id, provider_user_id"
-                             constraintName="jhi_social_user_connection_user_id_provider_id_provider_use_key"
-                             tableName="jhi_social_user_connection"/>
-    </changeSet>
-    <changeSet author="basis (generated)" id="1584128930494-64">
-        <addUniqueConstraint columnNames="user_id, provider_id, rank"
-                             constraintName="jhi_social_user_connection_user_id_provider_id_rank_key"
-                             tableName="jhi_social_user_connection"/>
-    </changeSet>
-    <changeSet author="basis (generated)" id="1584128930494-65">
-        <addUniqueConstraint columnNames="email"
-                             constraintName="jhi_user_email_key"
-                             tableName="jhi_user"/>
-    </changeSet>
-    <changeSet author="basis (generated)" id="1584128930494-66">
-        <addUniqueConstraint columnNames="login"
-                             constraintName="jhi_user_login_key"
-                             tableName="jhi_user"/>
-    </changeSet>
-    <changeSet author="basis (generated)" id="1584128930494-67">
-        <addUniqueConstraint columnNames="nome"
-                             constraintName="uc_fasenome_col"
-                             tableName="fase"/>
-    </changeSet>
-    <changeSet author="basis (generated)" id="1584128930494-68">
-        <addUniqueConstraint columnNames="nome"
-                             constraintName="uc_tipo_equipenome_col"
-                             tableName="tipo_equipe"/>
-    </changeSet>
-    <changeSet author="basis (generated)" id="1584128930494-69">
-        <createIndex indexName="idx_persistent_audit_event"
-                     tableName="jhi_persistent_audit_event">
-            <column name="principal"/>
-            <column name="event_date"/>
-        </createIndex>
-    </changeSet>
-    <changeSet author="basis (generated)" id="1584128930494-70">
-        <createIndex indexName="idx_persistent_audit_evt_data"
-                     tableName="jhi_persistent_audit_evt_data">
-            <column name="event_id"/>
-        </createIndex>
-    </changeSet>
-    <changeSet author="basis (generated)" id="1584128930494-71">
-        <addForeignKeyConstraint baseColumnNames="organizacao_id"
-                                 baseTableName="tipoequipe_organizacao"
-                                 constraintName="FK1k27nhx1xvc73iru672xhyj1e"
-                                 deferrable="false"
-                                 initiallyDeferred="false"
-                                 onDelete="NO ACTION"
-                                 onUpdate="NO ACTION"
-                                 referencedColumnNames="id"
-                                 referencedTableName="organizacao"/>
-    </changeSet>
-    <changeSet author="basis (generated)" id="1584128930494-72">
-        <addForeignKeyConstraint baseColumnNames="funcao_dados_versionavel_id"
-                                 baseTableName="funcao_dados"
-                                 constraintName="FK3763c7dgcmitpgu205i5posn"
-                                 deferrable="false"
-                                 initiallyDeferred="false"
-                                 onDelete="NO ACTION"
-                                 onUpdate="NO ACTION"
-                                 referencedColumnNames="id"
-                                 referencedTableName="funcao_dados_versionavel"/>
-    </changeSet>
-    <changeSet author="basis (generated)" id="1584128930494-73">
-        <addForeignKeyConstraint baseColumnNames="created_by_id"
-                                 baseTableName="analise"
-                                 constraintName="FK3i4glie9mrl6uoqyerqmr210f"
-                                 deferrable="false"
-                                 initiallyDeferred="false"
-                                 onDelete="NO ACTION"
-                                 onUpdate="NO ACTION"
-                                 referencedColumnNames="id"
-                                 referencedTableName="jhi_user"/>
-    </changeSet>
-    <changeSet author="basis (generated)" id="1584128930494-74">
-        <addForeignKeyConstraint baseColumnNames="user_id"
-                                 baseTableName="user_tipo_equipe"
-                                 constraintName="FK3vepa2amkigo8amphycrkxjb8"
-                                 deferrable="false"
-                                 initiallyDeferred="false"
-                                 onDelete="NO ACTION"
-                                 onUpdate="NO ACTION"
-                                 referencedColumnNames="id"
-                                 referencedTableName="jhi_user"/>
-    </changeSet>
-    <changeSet author="basis (generated)" id="1584128930494-75">
-        <addForeignKeyConstraint baseColumnNames="tran_id"
-                                 baseTableName="files"
-                                 constraintName="FK3vuh146nnilw71xrdtw3qsk6a"
-                                 deferrable="false"
-                                 initiallyDeferred="false"
-                                 onDelete="NO ACTION"
-                                 onUpdate="NO ACTION"
-                                 referencedColumnNames="id"
-                                 referencedTableName="funcao_transacao"/>
-    </changeSet>
-    <changeSet author="basis (generated)" id="1584128930494-76">
-        <addForeignKeyConstraint baseColumnNames="analise_id"
-                                 baseTableName="analise_esforco_fases"
-                                 constraintName="FK53g42229mml5detlnudnatppr"
-                                 deferrable="false"
-                                 initiallyDeferred="false"
-                                 onDelete="NO ACTION"
-                                 onUpdate="NO ACTION"
-                                 referencedColumnNames="id"
-                                 referencedTableName="analise"/>
-    </changeSet>
-    <changeSet author="basis (generated)" id="1584128930494-77">
-        <addForeignKeyConstraint baseColumnNames="organization_id"
-                                 baseTableName="contrato"
-                                 constraintName="FK8f7f3fr2obx8bxhayq67vrpsb"
-                                 deferrable="false"
-                                 initiallyDeferred="false"
-                                 onDelete="NO ACTION"
-                                 onUpdate="NO ACTION"
-                                 referencedColumnNames="id"
-                                 referencedTableName="organizacao"/>
-    </changeSet>
-    <changeSet author="basis (generated)" id="1584128930494-78">
-        <addForeignKeyConstraint baseColumnNames="equipe_responsavel_id"
-                                 baseTableName="analise"
-                                 constraintName="FK8ixrdevp960j30nkcv3w3uk8t"
-                                 deferrable="false"
-                                 initiallyDeferred="false"
-                                 onDelete="NO ACTION"
-                                 onUpdate="NO ACTION"
-                                 referencedColumnNames="id"
-                                 referencedTableName="tipo_equipe"/>
-    </changeSet>
-    <changeSet author="basis (generated)" id="1584128930494-79">
-        <addForeignKeyConstraint baseColumnNames="analise_id"
-                                 baseTableName="user_analise"
-                                 constraintName="FK_analise_id"
-                                 deferrable="false"
-                                 initiallyDeferred="false"
-                                 onDelete="NO ACTION"
-                                 onUpdate="NO ACTION"
-                                 referencedColumnNames="id"
-                                 referencedTableName="analise"/>
-    </changeSet>
-    <changeSet author="basis (generated)" id="1584128930494-80">
-        <addForeignKeyConstraint baseColumnNames="user_id"
-                                 baseTableName="user_analise"
-                                 constraintName="FK_user_id"
-                                 deferrable="false"
-                                 initiallyDeferred="false"
-                                 onDelete="NO ACTION"
-                                 onUpdate="NO ACTION"
-                                 referencedColumnNames="id"
-                                 referencedTableName="jhi_user"/>
-    </changeSet>
-    <changeSet author="basis (generated)" id="1584128930494-81">
-        <addForeignKeyConstraint baseColumnNames="funcao_transacao_id"
-                                 baseTableName="der"
-                                 constraintName="FKayqppy6meuevbyobw0fx46nxu"
-                                 deferrable="false"
-                                 initiallyDeferred="false"
-                                 onDelete="NO ACTION"
-                                 onUpdate="NO ACTION"
-                                 referencedColumnNames="id"
-                                 referencedTableName="funcao_transacao"/>
-    </changeSet>
-    <changeSet author="basis (generated)" id="1584128930494-82">
-        <addForeignKeyConstraint baseColumnNames="user_id"
-                                 baseTableName="user_organizacao"
-                                 constraintName="FKbrn32srhmmf7mcw034e6xigaj"
-                                 deferrable="false"
-                                 initiallyDeferred="false"
-                                 onDelete="NO ACTION"
-                                 onUpdate="NO ACTION"
-                                 referencedColumnNames="id"
-                                 referencedTableName="jhi_user"/>
-    </changeSet>
-    <changeSet author="basis (generated)" id="1584128930494-83">
-        <addForeignKeyConstraint baseColumnNames="funcionalidade_id"
-                                 baseTableName="funcao_transacao"
-                                 constraintName="FKd22neyo2pgt9fsy5n5o5mryrs"
-                                 deferrable="false"
-                                 initiallyDeferred="false"
-                                 onDelete="NO ACTION"
-                                 onUpdate="NO ACTION"
-                                 referencedColumnNames="id"
-                                 referencedTableName="funcionalidade"/>
-    </changeSet>
-    <changeSet author="basis (generated)" id="1584128930494-84">
-        <addForeignKeyConstraint baseColumnNames="tipoequipe_id"
-                                 baseTableName="tipoequipe_organizacao"
-                                 constraintName="FKd411uc0ic9rq87n708i245kbv"
-                                 deferrable="false"
-                                 initiallyDeferred="false"
-                                 onDelete="NO ACTION"
-                                 onUpdate="NO ACTION"
-                                 referencedColumnNames="id"
-                                 referencedTableName="tipo_equipe"/>
-    </changeSet>
-    <changeSet author="basis (generated)" id="1584128930494-85">
-        <addForeignKeyConstraint baseColumnNames="esforco_fases_id"
-                                 baseTableName="analise_esforco_fases"
-                                 constraintName="FKeixd86qmwh9pbyl7ugncm1dap"
-                                 deferrable="false"
-                                 initiallyDeferred="false"
-                                 onDelete="NO ACTION"
-                                 onUpdate="NO ACTION"
-                                 referencedColumnNames="id"
-                                 referencedTableName="esforco_fase"/>
-    </changeSet>
-    <changeSet author="basis (generated)" id="1584128930494-86">
-        <addForeignKeyConstraint baseColumnNames="fator_ajuste_id"
-                                 baseTableName="analise"
-                                 constraintName="FKf1xaruefvu8h3gaxeeeuhi6ux"
-                                 deferrable="false"
-                                 initiallyDeferred="false"
-                                 onDelete="NO ACTION"
-                                 onUpdate="NO ACTION"
-                                 referencedColumnNames="id"
-                                 referencedTableName="fator_ajuste"/>
-    </changeSet>
-    <changeSet author="basis (generated)" id="1584128930494-87">
-        <addForeignKeyConstraint baseColumnNames="organizacao_id"
-                                 baseTableName="user_organizacao"
-                                 constraintName="FKfoo82lf8q54al87elp26maamq"
-                                 deferrable="false"
-                                 initiallyDeferred="false"
-                                 onDelete="NO ACTION"
-                                 onUpdate="NO ACTION"
-                                 referencedColumnNames="id"
-                                 referencedTableName="organizacao"/>
-    </changeSet>
-    <changeSet author="basis (generated)" id="1584128930494-88">
-        <addForeignKeyConstraint baseColumnNames="funcao_dados_id"
-                                 baseTableName="der"
-                                 constraintName="FKmfd6jrwyrjxtw2citbw8lgm82"
-                                 deferrable="false"
-                                 initiallyDeferred="false"
-                                 onDelete="NO ACTION"
-                                 onUpdate="NO ACTION"
-                                 referencedColumnNames="id"
-                                 referencedTableName="funcao_dados"/>
-    </changeSet>
-    <changeSet author="basis (generated)" id="1584128930494-89">
-        <addForeignKeyConstraint baseColumnNames="organizacao_id"
-                                 baseTableName="analise"
-                                 constraintName="FKmsbisww5l4ixb456nvv4sdkl5"
-                                 deferrable="false"
-                                 initiallyDeferred="false"
-                                 onDelete="NO ACTION"
-                                 onUpdate="NO ACTION"
-                                 referencedColumnNames="id"
-                                 referencedTableName="organizacao"/>
-    </changeSet>
-    <changeSet author="basis (generated)" id="1584128930494-90">
-        <addForeignKeyConstraint baseColumnNames="contrato_id"
-                                 baseTableName="analise"
-                                 constraintName="FKn8mf9hxtivvxvewkpymp7li9u"
-                                 deferrable="false"
-                                 initiallyDeferred="false"
-                                 onDelete="NO ACTION"
-                                 onUpdate="NO ACTION"
-                                 referencedColumnNames="id"
-                                 referencedTableName="contrato"/>
-    </changeSet>
-    <changeSet author="basis (generated)" id="1584128930494-91">
-        <addForeignKeyConstraint baseColumnNames="edited_by_id"
-                                 baseTableName="analise"
-                                 constraintName="FKnlyrisuykdyne3qadmx0clqx9"
-                                 deferrable="false"
-                                 initiallyDeferred="false"
-                                 onDelete="NO ACTION"
-                                 onUpdate="NO ACTION"
-                                 referencedColumnNames="id"
-                                 referencedTableName="jhi_user"/>
-    </changeSet>
-    <changeSet author="basis (generated)" id="1584128930494-92">
-        <addForeignKeyConstraint baseColumnNames="process_id"
-                                 baseTableName="files"
-                                 constraintName="FKoot6w9lan9ehwjvrnsklh3sj9"
-                                 deferrable="false"
-                                 initiallyDeferred="false"
-                                 onDelete="NO ACTION"
-                                 onUpdate="NO ACTION"
-                                 referencedColumnNames="id"
-                                 referencedTableName="funcao_dados"/>
-    </changeSet>
-    <changeSet author="basis (generated)" id="1584128930494-93">
-        <addForeignKeyConstraint baseColumnNames="tipo_equipe_id"
-                                 baseTableName="user_tipo_equipe"
-                                 constraintName="FKr58k6pdcd07k6pa156j9sufgw"
-                                 deferrable="false"
-                                 initiallyDeferred="false"
-                                 onDelete="NO ACTION"
-                                 onUpdate="NO ACTION"
-                                 referencedColumnNames="id"
-                                 referencedTableName="tipo_equipe"/>
-    </changeSet>
-    <changeSet author="basis (generated)" id="1584128930494-94">
-        <addForeignKeyConstraint baseColumnNames="sistema_id"
-                                 baseTableName="funcao_dados_versionavel"
-                                 constraintName="FKrhwjm6e9u6bk30t7ajctl6xpo"
-                                 deferrable="false"
-                                 initiallyDeferred="false"
-                                 onDelete="NO ACTION"
-                                 onUpdate="NO ACTION"
-                                 referencedColumnNames="id"
-                                 referencedTableName="sistema"/>
-    </changeSet>
-    <changeSet author="basis (generated)" id="1584128930494-95">
-        <addForeignKeyConstraint baseColumnNames="funcionalidade_id"
-                                 baseTableName="funcao_dados"
-                                 constraintName="FKt5c47kdxpmnsphovprdefgxp1"
-                                 deferrable="false"
-                                 initiallyDeferred="false"
-                                 onDelete="NO ACTION"
-                                 onUpdate="NO ACTION"
-                                 referencedColumnNames="id"
-                                 referencedTableName="funcionalidade"/>
-    </changeSet>
-    <changeSet author="basis (generated)" id="1584128930494-96">
-        <addForeignKeyConstraint baseColumnNames="funcao_transacao_id"
-                                 baseTableName="alr"
-                                 constraintName="fk_alr_funcao_transacao_id"
-                                 deferrable="false"
-                                 initiallyDeferred="false"
-                                 onDelete="NO ACTION"
-                                 onUpdate="NO ACTION"
-                                 referencedColumnNames="id"
-                                 referencedTableName="funcao_transacao"/>
-    </changeSet>
-    <changeSet author="basis (generated)" id="1584128930494-97">
-        <addForeignKeyConstraint baseColumnNames="analise_id"
-                                 baseTableName="analise_compartilhada"
-                                 constraintName="fk_analise_compartilhada_id"
-                                 deferrable="false"
-                                 initiallyDeferred="false"
-                                 onDelete="NO ACTION"
-                                 onUpdate="NO ACTION"
-                                 referencedColumnNames="id"
-                                 referencedTableName="analise"/>
-    </changeSet>
-    <changeSet author="basis (generated)" id="1584128930494-98">
-        <addForeignKeyConstraint baseColumnNames="manual_id"
-                                 baseTableName="analise"
-                                 constraintName="fk_analise_manual_id"
-                                 deferrable="false"
-                                 initiallyDeferred="false"
-                                 onDelete="NO ACTION"
-                                 onUpdate="NO ACTION"
-                                 referencedColumnNames="id"
-                                 referencedTableName="manual"/>
-    </changeSet>
-    <changeSet author="basis (generated)" id="1584128930494-99">
-        <addForeignKeyConstraint baseColumnNames="sistema_id"
-                                 baseTableName="analise"
-                                 constraintName="fk_analise_sistema_id"
-                                 deferrable="false"
-                                 initiallyDeferred="false"
-                                 onDelete="NO ACTION"
-                                 onUpdate="NO ACTION"
-                                 referencedColumnNames="id"
-                                 referencedTableName="sistema"/>
-    </changeSet>
-    <changeSet author="basis (generated)" id="1584128930494-100">
-        <addForeignKeyConstraint baseColumnNames="authority_name"
-                                 baseTableName="jhi_user_authority"
-                                 constraintName="fk_authority_name"
-                                 deferrable="false"
-                                 initiallyDeferred="false"
-                                 onDelete="NO ACTION"
-                                 onUpdate="NO ACTION"
-                                 referencedColumnNames="name"
-                                 referencedTableName="jhi_authority"/>
-        <loadData encoding="UTF-8"
-                  file="config/liquibase/users.csv"
-                  separator=";"
-                  tableName="jhi_user">
-            <column name="activated" type="boolean"/>
-            <column name="created_date" type="timestamp"/>
-        </loadData>
-        <dropDefaultValue tableName="jhi_user" columnName="created_date" columnDataType="datetime"/>
+   <property name="now" value="current_timestamp" dbms="postgresql"/>
+   <changeSet author="basis (generated)" id="1584128930494-1">
+      <createSequence sequenceName="hibernate_sequence"/>
+   </changeSet>
+   <changeSet author="basis (generated)" id="1584128930494-2">
+      <createTable tableName="alr">
+         <column name="id" type="BIGINT">
+            <constraints nullable="false"/>
+         </column>
+         <column name="funcao_transacao_id" type="BIGINT"/>
+         <column name="nome" type="VARCHAR(255)"/>
+         <column name="valor" type="INT"/>
+      </createTable>
+   </changeSet>
+   <changeSet author="basis (generated)" id="1584128930494-3">
+      <createTable tableName="analise">
+         <column name="id" type="BIGINT">
+            <constraints nullable="false"/>
+         </column>
+         <column name="numero_os" type="VARCHAR(255)"/>
+         <column name="metodo_contagem" type="VARCHAR(255)"/>
+         <column name="valor_ajuste" type="numeric(10, 4)"/>
+         <column name="pf_total" type="VARCHAR(255)"/>
+         <column name="escopo" type="VARCHAR(4000)"/>
+         <column name="fronteiras" type="VARCHAR(4000)"/>
+         <column name="documentacao" type="VARCHAR(4000)"/>
+         <column name="tipo_analise" type="VARCHAR(255)"/>
+         <column name="proposito_contagem" type="VARCHAR(4000)"/>
+         <column name="sistema_id" type="BIGINT"/>
+         <column name="organizacao_id" type="BIGINT"/>
+         <column name="contrato_id" type="BIGINT"/>
+         <column name="pf_total_adjust" type="VARCHAR(255)"/>
+         <column name="created_by_id" type="BIGINT"/>
+         <column name="edited_by_id" type="BIGINT"/>
+         <column name="fator_ajuste_id" type="BIGINT"/>
+         <column name="observacoes" type="VARCHAR(4000)"/>
+         <column name="baseline_imediatamente" type="BOOLEAN"/>
+         <column name="data_homologacao_software" type="TIMESTAMP WITH TIME ZONE"/>
+         <column name="identificador_analise" type="VARCHAR(100)"/>
+         <column name="equipe_responsavel_id" type="BIGINT"/>
+         <column defaultValueComputed="now()"
+                 name="created_on"
+                 type="TIMESTAMP WITH TIME ZONE">
+            <constraints nullable="false"/>
+         </column>
+         <column defaultValueComputed="now()"
+                 name="updated_on"
+                 type="TIMESTAMP WITH TIME ZONE">
+            <constraints nullable="false"/>
+         </column>
+         <column defaultValueBoolean="false" name="bloqueado" type="BOOLEAN">
+            <constraints nullable="false"/>
+         </column>
+         <column defaultValueBoolean="false" name="enviar_baseline" type="BOOLEAN">
+            <constraints nullable="false"/>
+         </column>
+         <column name="data_criacao_ordem_servico" type="TIMESTAMP WITH TIME ZONE"/>
+         <column name="manual_id" type="BIGINT"/>
+         <column defaultValueBoolean="false"
+                 name="clonada_para_equipe"
+                 type="BOOLEAN"/>
+      </createTable>
+   </changeSet>
+   <changeSet author="basis (generated)" id="1584128930494-4">
+      <createTable tableName="analise_compartilhada">
+         <column name="id" type="BIGINT">
+            <constraints nullable="false"/>
+         </column>
+         <column name="equipe_id" type="BIGINT">
+            <constraints nullable="false"/>
+         </column>
+         <column name="analise_id" type="BIGINT">
+            <constraints nullable="false"/>
+         </column>
+         <column defaultValueBoolean="false" name="view_only" type="BOOLEAN">
+            <constraints nullable="false"/>
+         </column>
+         <column name="equipe_nome" type="VARCHAR(255)">
+            <constraints nullable="false"/>
+         </column>
+      </createTable>
+   </changeSet>
+   <changeSet author="basis (generated)" id="1584128930494-5">
+      <createTable tableName="analise_esforco_fases">
+         <column name="analise_id" type="BIGINT">
+            <constraints nullable="false"/>
+         </column>
+         <column name="esforco_fases_id" type="BIGINT">
+            <constraints nullable="false"/>
+         </column>
+      </createTable>
+   </changeSet>
+   <changeSet author="basis (generated)" id="1584128930494-6">
+      <createTable tableName="contrato">
+         <column name="id" type="BIGINT">
+            <constraints nullable="false"/>
+         </column>
+         <column name="numero_contrato" type="VARCHAR(30)"/>
+         <column name="data_inicio_vigencia" type="date"/>
+         <column name="data_fim_vigencia" type="date"/>
+         <column name="manual_id" type="BIGINT"/>
+         <column name="organization_id" type="BIGINT"/>
+         <column name="ativo" type="BOOLEAN"/>
+         <column name="dias_de_garantia" type="INT"/>
+      </createTable>
+   </changeSet>
+   <changeSet author="basis (generated)" id="1584128930494-7">
+      <createTable tableName="der">
+         <column name="id" type="BIGINT">
+            <constraints nullable="false"/>
+         </column>
+         <column name="nome" type="VARCHAR(255)"/>
+         <column name="rlr_id" type="BIGINT"/>
+         <column name="funcao_dados_id" type="BIGINT"/>
+         <column name="funcao_transacao_id" type="BIGINT"/>
+         <column name="valor" type="INT"/>
+      </createTable>
+   </changeSet>
+   <changeSet author="basis (generated)" id="1584128930494-8">
+      <createTable tableName="esforco_fase">
+         <column name="id" type="BIGINT">
+            <constraints nullable="false"/>
+         </column>
+         <column name="esforco" type="numeric(10, 4)"/>
+         <column name="manual_id" type="BIGINT"/>
+         <column name="fase_id" type="BIGINT"/>
+      </createTable>
+   </changeSet>
+   <changeSet author="basis (generated)" id="1584128930494-9">
+      <createTable tableName="fase">
+         <column name="id" type="BIGINT">
+            <constraints nullable="false"/>
+         </column>
+         <column name="nome" type="VARCHAR(255)"/>
+      </createTable>
+   </changeSet>
+   <changeSet author="basis (generated)" id="1584128930494-10">
+      <createTable tableName="fator_ajuste">
+         <column name="id" type="BIGINT">
+            <constraints nullable="false"/>
+         </column>
+         <column name="nome" type="VARCHAR(255)">
+            <constraints nullable="false"/>
+         </column>
+         <column name="fator" type="numeric(10, 4)">
+            <constraints nullable="false"/>
+         </column>
+         <column name="ativo" type="BOOLEAN">
+            <constraints nullable="false"/>
+         </column>
+         <column name="tipo_ajuste" type="VARCHAR(255)"/>
+         <column name="impacto" type="VARCHAR(255)"/>
+         <column name="manual_id" type="BIGINT"/>
+         <column name="codigo" type="VARCHAR(255)"/>
+         <column name="descricao" type="VARCHAR(2000)"/>
+         <column name="origem" type="VARCHAR(255)"/>
+      </createTable>
+   </changeSet>
+   <changeSet author="basis (generated)" id="1584128930494-11">
+      <createTable tableName="files">
+         <column autoIncrement="true" name="id" type="BIGSERIAL">
+            <constraints primaryKey="true" primaryKeyName="filesPK"/>
+         </column>
+         <column name="date_of" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+         <column name="filename" type="VARCHAR(255)"/>
+         <column name="original_name" type="VARCHAR(255)"/>
+         <column name="process_type" type="INT"/>
+         <column name="size_of" type="INT"/>
+         <column name="process_id" type="BIGINT"/>
+         <column name="tran_id" type="BIGINT"/>
+         <column name="logo" type="BYTEA"/>
+      </createTable>
+   </changeSet>
+   <changeSet author="basis (generated)" id="1584128930494-12">
+      <createTable tableName="funcao_dados">
+         <column name="id" type="BIGINT">
+            <constraints nullable="false"/>
+         </column>
+         <column name="tipo" type="VARCHAR(255)"/>
+         <column name="complexidade" type="VARCHAR(255)"/>
+         <column name="pf" type="numeric(10, 4)"/>
+         <column name="analise_id" type="BIGINT"/>
+         <column name="fator_ajuste_id" type="BIGINT"/>
+         <column name="alr_id" type="BIGINT"/>
+         <column name="funcionalidade_id" type="BIGINT"/>
+         <column name="det_str" type="VARCHAR(2000)"/>
+         <column name="ret_str" type="VARCHAR(2000)"/>
+         <column name="name" type="VARCHAR(2000)"/>
+         <column name="sustantation" type="TEXT"/>
+         <column name="grosspf" type="numeric(10, 4)"/>
+         <column defaultValueComputed="now()"
+                 name="created_on"
+                 type="TIMESTAMP WITH TIME ZONE">
+            <constraints nullable="false"/>
+         </column>
+         <column defaultValueComputed="now()"
+                 name="updated_on"
+                 type="TIMESTAMP WITH TIME ZONE">
+            <constraints nullable="false"/>
+         </column>
+         <column name="funcao_dados_versionavel_id" type="BIGINT"/>
+         <column name="impacto" type="VARCHAR(30)"/>
+         <column name="quantidade" type="BIGINT"/>
+      </createTable>
+   </changeSet>
+   <changeSet author="basis (generated)" id="1584128930494-13">
+      <createTable tableName="funcao_dados_versionavel">
+         <column autoIncrement="true" name="id" type="BIGSERIAL">
+            <constraints primaryKey="true" primaryKeyName="funcao_dados_versionavelPK"/>
+         </column>
+         <column name="nome" type="VARCHAR(255)"/>
+         <column name="sistema_id" type="BIGINT"/>
+      </createTable>
+   </changeSet>
+   <changeSet author="basis (generated)" id="1584128930494-14">
+      <createTable tableName="funcao_transacao">
+         <column name="id" type="BIGINT">
+            <constraints nullable="false"/>
+         </column>
+         <column name="tipo" type="VARCHAR(255)"/>
+         <column name="complexidade" type="VARCHAR(255)"/>
+         <column name="pf" type="numeric(10, 4)"/>
+         <column name="analise_id" type="BIGINT"/>
+         <column name="fator_ajuste_id" type="BIGINT"/>
+         <column name="funcionalidade_id" type="BIGINT"/>
+         <column name="det_str" type="VARCHAR(2000)"/>
+         <column name="name" type="VARCHAR(2000)"/>
+         <column name="sustantation" type="TEXT"/>
+         <column name="grosspf" type="numeric(10, 4)"/>
+         <column name="ftr_str" type="VARCHAR(2000)"/>
+         <column defaultValueComputed="now()"
+                 name="created_on"
+                 type="TIMESTAMP WITH TIME ZONE">
+            <constraints nullable="false"/>
+         </column>
+         <column defaultValueComputed="now()"
+                 name="updated_on"
+                 type="TIMESTAMP WITH TIME ZONE">
+            <constraints nullable="false"/>
+         </column>
+         <column name="impacto" type="VARCHAR(255)"/>
+         <column name="quantidade" type="BIGINT"/>
+      </createTable>
+   </changeSet>
+   <changeSet author="basis (generated)" id="1584128930494-15">
+      <createTable tableName="funcionalidade">
+         <column name="id" type="BIGINT">
+            <constraints nullable="false"/>
+         </column>
+         <column name="nome" type="VARCHAR(255)">
+            <constraints nullable="false"/>
+         </column>
+         <column name="modulo_id" type="BIGINT"/>
+         <column name="funcao_dados_id" type="BIGINT"/>
+         <column name="funcao_transacao_id" type="BIGINT"/>
+      </createTable>
+   </changeSet>
+   <changeSet author="basis (generated)" id="1584128930494-16">
+      <createTable tableName="jhi_authority">
+         <column name="name" type="VARCHAR(50)">
+            <constraints nullable="false"/>
+         </column>
+         <column name="description" type="VARCHAR(100)">
+            <constraints nullable="false"/>
+         </column>
+      </createTable>
+   </changeSet>
+   <changeSet author="basis (generated)" id="1584128930494-17">
+      <createTable tableName="jhi_persistent_audit_event">
+         <column name="event_id" type="BIGINT">
+            <constraints nullable="false"/>
+         </column>
+         <column name="principal" type="VARCHAR(100)">
+            <constraints nullable="false"/>
+         </column>
+         <column name="event_date" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+         <column name="event_type" type="VARCHAR(255)"/>
+      </createTable>
+   </changeSet>
+   <changeSet author="basis (generated)" id="1584128930494-18">
+      <createTable tableName="jhi_persistent_audit_evt_data">
+         <column name="event_id" type="BIGINT">
+            <constraints nullable="false"/>
+         </column>
+         <column name="name" type="VARCHAR(150)">
+            <constraints nullable="false"/>
+         </column>
+         <column name="value" type="VARCHAR(255)"/>
+      </createTable>
+   </changeSet>
+   <changeSet author="basis (generated)" id="1584128930494-19">
+      <createTable tableName="jhi_social_user_connection">
+         <column name="id" type="BIGINT">
+            <constraints nullable="false"/>
+         </column>
+         <column name="user_id" type="VARCHAR(255)">
+            <constraints nullable="false"/>
+         </column>
+         <column name="provider_id" type="VARCHAR(255)">
+            <constraints nullable="false"/>
+         </column>
+         <column name="provider_user_id" type="VARCHAR(255)">
+            <constraints nullable="false"/>
+         </column>
+         <column name="rank" type="BIGINT">
+            <constraints nullable="false"/>
+         </column>
+         <column name="display_name" type="VARCHAR(255)"/>
+         <column name="profile_url" type="VARCHAR(255)"/>
+         <column name="image_url" type="VARCHAR(255)"/>
+         <column name="access_token" type="VARCHAR(255)">
+            <constraints nullable="false"/>
+         </column>
+         <column name="secret" type="VARCHAR(255)"/>
+         <column name="refresh_token" type="VARCHAR(255)"/>
+         <column name="expire_time" type="BIGINT"/>
+      </createTable>
+   </changeSet>
+   <changeSet author="basis (generated)" id="1584128930494-20">
+      <createTable tableName="jhi_user">
+         <column name="id" type="BIGINT">
+            <constraints nullable="false"/>
+         </column>
+         <column name="login" type="VARCHAR(100)">
+            <constraints nullable="false"/>
+         </column>
+         <column name="password_hash" type="VARCHAR(60)"/>
+         <column name="first_name" type="VARCHAR(50)"/>
+         <column name="last_name" type="VARCHAR(50)"/>
+         <column name="email" type="VARCHAR(100)"/>
+         <column name="image_url" type="VARCHAR(256)"/>
+         <column name="activated" type="BOOLEAN">
+            <constraints nullable="false"/>
+         </column>
+         <column name="lang_key" type="VARCHAR(5)"/>
+         <column name="activation_key" type="VARCHAR(20)"/>
+         <column name="reset_key" type="VARCHAR(20)"/>
+         <column name="created_by" type="VARCHAR(50)">
+            <constraints nullable="false"/>
+         </column>
+         <column name="created_date" type="TIMESTAMP(6) WITHOUT TIME ZONE" defaultValueDate="${now}">
+            <constraints nullable="false"/>
+         </column>
+         <column name="reset_date" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+         <column name="last_modified_by" type="VARCHAR(50)"/>
+         <column name="last_modified_date" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+      </createTable>
+   </changeSet>
+   <changeSet author="basis (generated)" id="1584128930494-21">
+      <createTable tableName="jhi_user_authority">
+         <column name="user_id" type="BIGINT">
+            <constraints nullable="false"/>
+         </column>
+         <column name="authority_name" type="VARCHAR(50)">
+            <constraints nullable="false"/>
+         </column>
+      </createTable>
+   </changeSet>
+   <changeSet author="basis (generated)" id="1584128930494-22">
+      <createTable tableName="manual">
+         <column name="id" type="BIGINT">
+            <constraints nullable="false"/>
+         </column>
+         <column name="nome" type="VARCHAR(255)"/>
+         <column name="observacao" type="VARCHAR(4000)"/>
+         <column name="valor_variacao_estimada" type="numeric(10, 4)">
+            <constraints nullable="false"/>
+         </column>
+         <column name="valor_variacao_indicativa" type="numeric(10, 4)">
+            <constraints nullable="false"/>
+         </column>
+         <column name="arquivo_manual_id" type="BIGINT"/>
+         <column name="parametro_alteracao" type="numeric(10, 4)"/>
+         <column name="parametro_conversao" type="numeric(10, 4)"/>
+         <column name="parametro_exclusao" type="numeric(10, 4)"/>
+         <column name="parametro_inclusao" type="numeric(10, 4)"/>
+         <column name="versao_cpm" type="BIGINT"/>
+      </createTable>
+   </changeSet>
+   <changeSet author="basis (generated)" id="1584128930494-23">
+      <createTable tableName="manual_contrato">
+         <column name="id" type="BIGINT">
+            <constraints nullable="false"/>
+         </column>
+         <column name="manual_id" type="BIGINT">
+            <constraints nullable="false"/>
+         </column>
+         <column name="contratos_id" type="BIGINT">
+            <constraints nullable="false"/>
+         </column>
+         <column name="data_inicio_vigencia" type="date"/>
+         <column name="data_fim_vigencia" type="date"/>
+         <column name="ativo" type="BOOLEAN"/>
+      </createTable>
+   </changeSet>
+   <changeSet author="basis (generated)" id="1584128930494-24">
+      <createTable tableName="modulo">
+         <column name="id" type="BIGINT">
+            <constraints nullable="false"/>
+         </column>
+         <column name="nome" type="VARCHAR(255)">
+            <constraints nullable="false"/>
+         </column>
+         <column name="sistema_id" type="BIGINT"/>
+      </createTable>
+   </changeSet>
+   <changeSet author="basis (generated)" id="1584128930494-25">
+      <createTable tableName="organizacao">
+         <column name="id" type="BIGINT">
+            <constraints nullable="false"/>
+         </column>
+         <column name="nome" type="VARCHAR(80)"/>
+         <column name="cnpj" type="VARCHAR(14)"/>
+         <column name="ativo" type="BOOLEAN">
+            <constraints nullable="false"/>
+         </column>
+         <column name="numero_ocorrencia" type="VARCHAR(255)"/>
+         <column name="sigla" type="VARCHAR(255)"/>
+         <column name="logo_id" type="BIGINT"/>
+      </createTable>
+   </changeSet>
+   <changeSet author="basis (generated)" id="1584128930494-26">
+      <createTable tableName="rlr">
+         <column name="id" type="BIGINT">
+            <constraints nullable="false"/>
+         </column>
+         <column name="nome" type="VARCHAR(255)"/>
+         <column name="funcao_dados_id" type="BIGINT"/>
+         <column name="valor" type="INT"/>
+      </createTable>
+   </changeSet>
+   <changeSet author="basis (generated)" id="1584128930494-27">
+      <createTable tableName="sistema">
+         <column name="id" type="BIGINT">
+            <constraints nullable="false"/>
+         </column>
+         <column name="sigla" type="VARCHAR(255)"/>
+         <column name="nome" type="VARCHAR(255)">
+            <constraints nullable="false"/>
+         </column>
+         <column name="numero_ocorrencia" type="VARCHAR(255)"/>
+         <column name="organizacao_id" type="BIGINT"/>
+         <column name="tipo_sistema" type="VARCHAR(255)"/>
+      </createTable>
+   </changeSet>
+   <changeSet author="basis (generated)" id="1584128930494-28">
+      <createTable tableName="tipo_equipe">
+         <column name="id" type="BIGINT">
+            <constraints nullable="false"/>
+         </column>
+         <column name="nome" type="VARCHAR(255)">
+            <constraints nullable="false"/>
+         </column>
+      </createTable>
+   </changeSet>
+   <changeSet author="basis (generated)" id="1584128930494-29">
+      <createTable tableName="tipoequipe_organizacao">
+         <column name="tipoequipe_id" type="BIGINT">
+            <constraints nullable="false"/>
+         </column>
+         <column name="organizacao_id" type="BIGINT">
+            <constraints nullable="false"/>
+         </column>
+      </createTable>
+   </changeSet>
+   <changeSet author="basis (generated)" id="1584128930494-30">
+      <createTable tableName="user_analise">
+         <column name="analise_id" type="BIGINT">
+            <constraints nullable="false"/>
+         </column>
+         <column name="user_id" type="BIGINT">
+            <constraints nullable="false"/>
+         </column>
+      </createTable>
+   </changeSet>
+   <changeSet author="basis (generated)" id="1584128930494-31">
+      <createTable tableName="user_organizacao">
+         <column name="user_id" type="BIGINT">
+            <constraints nullable="false"/>
+         </column>
+         <column name="organizacao_id" type="BIGINT">
+            <constraints nullable="false"/>
+         </column>
+      </createTable>
+   </changeSet>
+   <changeSet author="basis (generated)" id="1584128930494-32">
+      <createTable tableName="user_tipo_equipe">
+         <column name="user_id" type="BIGINT">
+            <constraints nullable="false"/>
+         </column>
+         <column name="tipo_equipe_id" type="BIGINT">
+            <constraints nullable="false"/>
+         </column>
+      </createTable>
+   </changeSet>
+   <changeSet author="basis (generated)" id="1584128930494-33">
+      <addPrimaryKey columnNames="analise_id, esforco_fases_id"
+                     constraintName="analise_esforco_fases_pkey"
+                     tableName="analise_esforco_fases"/>
+   </changeSet>
+   <changeSet author="basis (generated)" id="1584128930494-34">
+      <addPrimaryKey columnNames="event_id, name"
+                     constraintName="jhi_persistent_audit_evt_data_pkey"
+                     tableName="jhi_persistent_audit_evt_data"/>
+   </changeSet>
+   <changeSet author="basis (generated)" id="1584128930494-35">
+      <addPrimaryKey columnNames="user_id, authority_name"
+                     constraintName="jhi_user_authority_pkey"
+                     tableName="jhi_user_authority"/>
+   </changeSet>
+   <changeSet author="basis (generated)" id="1584128930494-36">
+      <addPrimaryKey columnNames="id" constraintName="pk_alr" tableName="alr"/>
+   </changeSet>
+   <changeSet author="basis (generated)" id="1584128930494-37">
+      <addPrimaryKey columnNames="id" constraintName="pk_analise" tableName="analise"/>
+   </changeSet>
+   <changeSet author="basis (generated)" id="1584128930494-38">
+      <addPrimaryKey columnNames="id"
+                     constraintName="pk_analise_compartilhada"
+                     tableName="analise_compartilhada"/>
+   </changeSet>
+   <changeSet author="basis (generated)" id="1584128930494-39">
+      <addPrimaryKey columnNames="id" constraintName="pk_contrato" tableName="contrato"/>
+   </changeSet>
+   <changeSet author="basis (generated)" id="1584128930494-40">
+      <addPrimaryKey columnNames="id" constraintName="pk_der" tableName="der"/>
+   </changeSet>
+   <changeSet author="basis (generated)" id="1584128930494-41">
+      <addPrimaryKey columnNames="id"
+                     constraintName="pk_esforco_fase"
+                     tableName="esforco_fase"/>
+   </changeSet>
+   <changeSet author="basis (generated)" id="1584128930494-42">
+      <addPrimaryKey columnNames="id" constraintName="pk_fase" tableName="fase"/>
+   </changeSet>
+   <changeSet author="basis (generated)" id="1584128930494-43">
+      <addPrimaryKey columnNames="id"
+                     constraintName="pk_fator_ajuste"
+                     tableName="fator_ajuste"/>
+   </changeSet>
+   <changeSet author="basis (generated)" id="1584128930494-44">
+      <addPrimaryKey columnNames="id"
+                     constraintName="pk_funcao_dados"
+                     tableName="funcao_dados"/>
+   </changeSet>
+   <changeSet author="basis (generated)" id="1584128930494-45">
+      <addPrimaryKey columnNames="id"
+                     constraintName="pk_funcao_transacao"
+                     tableName="funcao_transacao"/>
+   </changeSet>
+   <changeSet author="basis (generated)" id="1584128930494-46">
+      <addPrimaryKey columnNames="id"
+                     constraintName="pk_funcionalidade"
+                     tableName="funcionalidade"/>
+   </changeSet>
+   <changeSet author="basis (generated)" id="1584128930494-47">
+      <addPrimaryKey columnNames="name"
+                     constraintName="pk_jhi_authority"
+                     tableName="jhi_authority"/>
+   </changeSet>
+   <changeSet author="basis (generated)" id="1584128930494-48">
+      <addPrimaryKey columnNames="event_id"
+                     constraintName="pk_jhi_persistent_audit_event"
+                     tableName="jhi_persistent_audit_event"/>
+   </changeSet>
+   <changeSet author="basis (generated)" id="1584128930494-49">
+      <addPrimaryKey columnNames="id"
+                     constraintName="pk_jhi_social_user_connection"
+                     tableName="jhi_social_user_connection"/>
+   </changeSet>
+   <changeSet author="basis (generated)" id="1584128930494-50">
+      <addPrimaryKey columnNames="id" constraintName="pk_jhi_user" tableName="jhi_user"/>
+   </changeSet>
+   <changeSet author="basis (generated)" id="1584128930494-51">
+      <addPrimaryKey columnNames="id" constraintName="pk_manual" tableName="manual"/>
+   </changeSet>
+   <changeSet author="basis (generated)" id="1584128930494-52">
+      <addPrimaryKey columnNames="id"
+                     constraintName="pk_manual_contrato"
+                     tableName="manual_contrato"/>
+   </changeSet>
+   <changeSet author="basis (generated)" id="1584128930494-53">
+      <addPrimaryKey columnNames="id" constraintName="pk_modulo" tableName="modulo"/>
+   </changeSet>
+   <changeSet author="basis (generated)" id="1584128930494-54">
+      <addPrimaryKey columnNames="id"
+                     constraintName="pk_organizacao"
+                     tableName="organizacao"/>
+   </changeSet>
+   <changeSet author="basis (generated)" id="1584128930494-55">
+      <addPrimaryKey columnNames="id" constraintName="pk_rlr" tableName="rlr"/>
+   </changeSet>
+   <changeSet author="basis (generated)" id="1584128930494-56">
+      <addPrimaryKey columnNames="id" constraintName="pk_sistema" tableName="sistema"/>
+   </changeSet>
+   <changeSet author="basis (generated)" id="1584128930494-57">
+      <addPrimaryKey columnNames="id"
+                     constraintName="pk_tipo_equipe"
+                     tableName="tipo_equipe"/>
+   </changeSet>
+   <changeSet author="basis (generated)" id="1584128930494-58">
+      <addPrimaryKey columnNames="tipoequipe_id, organizacao_id"
+                     constraintName="tipoequipe_organizacao_pkey"
+                     tableName="tipoequipe_organizacao"/>
+   </changeSet>
+   <changeSet author="basis (generated)" id="1584128930494-59">
+      <addPrimaryKey columnNames="analise_id, user_id"
+                     constraintName="user_analise_pkey"
+                     tableName="user_analise"/>
+   </changeSet>
+   <changeSet author="basis (generated)" id="1584128930494-60">
+      <addPrimaryKey columnNames="user_id, organizacao_id"
+                     constraintName="user_organizacao_pkey"
+                     tableName="user_organizacao"/>
+   </changeSet>
+   <changeSet author="basis (generated)" id="1584128930494-61">
+      <addPrimaryKey columnNames="user_id, tipo_equipe_id"
+                     constraintName="user_tipo_equipe_pkey"
+                     tableName="user_tipo_equipe"/>
+   </changeSet>
+   <changeSet author="basis (generated)" id="1584128930494-62">
+      <addUniqueConstraint columnNames="sistema_id, nome"
+                           constraintName="UKlpdfu81ehislc02nbvr4i3hql"
+                           tableName="funcao_dados_versionavel"/>
+   </changeSet>
+   <changeSet author="basis (generated)" id="1584128930494-63">
+      <addUniqueConstraint columnNames="user_id, provider_id, provider_user_id"
+                           constraintName="jhi_social_user_connection_user_id_provider_id_provider_use_key"
+                           tableName="jhi_social_user_connection"/>
+   </changeSet>
+   <changeSet author="basis (generated)" id="1584128930494-64">
+      <addUniqueConstraint columnNames="user_id, provider_id, rank"
+                           constraintName="jhi_social_user_connection_user_id_provider_id_rank_key"
+                           tableName="jhi_social_user_connection"/>
+   </changeSet>
+   <changeSet author="basis (generated)" id="1584128930494-65">
+      <addUniqueConstraint columnNames="email"
+                           constraintName="jhi_user_email_key"
+                           tableName="jhi_user"/>
+   </changeSet>
+   <changeSet author="basis (generated)" id="1584128930494-66">
+      <addUniqueConstraint columnNames="login"
+                           constraintName="jhi_user_login_key"
+                           tableName="jhi_user"/>
+   </changeSet>
+   <changeSet author="basis (generated)" id="1584128930494-67">
+      <addUniqueConstraint columnNames="nome"
+                           constraintName="uc_fasenome_col"
+                           tableName="fase"/>
+   </changeSet>
+   <changeSet author="basis (generated)" id="1584128930494-68">
+      <addUniqueConstraint columnNames="nome"
+                           constraintName="uc_tipo_equipenome_col"
+                           tableName="tipo_equipe"/>
+   </changeSet>
+   <changeSet author="basis (generated)" id="1584128930494-69">
+      <createIndex indexName="idx_persistent_audit_event"
+                   tableName="jhi_persistent_audit_event">
+         <column name="principal"/>
+         <column name="event_date"/>
+      </createIndex>
+   </changeSet>
+   <changeSet author="basis (generated)" id="1584128930494-70">
+      <createIndex indexName="idx_persistent_audit_evt_data"
+                   tableName="jhi_persistent_audit_evt_data">
+         <column name="event_id"/>
+      </createIndex>
+   </changeSet>
+   <changeSet author="basis (generated)" id="1584128930494-71">
+      <addForeignKeyConstraint baseColumnNames="organizacao_id"
+                               baseTableName="tipoequipe_organizacao"
+                               constraintName="FK1k27nhx1xvc73iru672xhyj1e"
+                               deferrable="false"
+                               initiallyDeferred="false"
+                               onDelete="NO ACTION"
+                               onUpdate="NO ACTION"
+                               referencedColumnNames="id"
+                               referencedTableName="organizacao"/>
+   </changeSet>
+   <changeSet author="basis (generated)" id="1584128930494-72">
+      <addForeignKeyConstraint baseColumnNames="funcao_dados_versionavel_id"
+                               baseTableName="funcao_dados"
+                               constraintName="FK3763c7dgcmitpgu205i5posn"
+                               deferrable="false"
+                               initiallyDeferred="false"
+                               onDelete="NO ACTION"
+                               onUpdate="NO ACTION"
+                               referencedColumnNames="id"
+                               referencedTableName="funcao_dados_versionavel"/>
+   </changeSet>
+   <changeSet author="basis (generated)" id="1584128930494-73">
+      <addForeignKeyConstraint baseColumnNames="created_by_id"
+                               baseTableName="analise"
+                               constraintName="FK3i4glie9mrl6uoqyerqmr210f"
+                               deferrable="false"
+                               initiallyDeferred="false"
+                               onDelete="NO ACTION"
+                               onUpdate="NO ACTION"
+                               referencedColumnNames="id"
+                               referencedTableName="jhi_user"/>
+   </changeSet>
+   <changeSet author="basis (generated)" id="1584128930494-74">
+      <addForeignKeyConstraint baseColumnNames="user_id"
+                               baseTableName="user_tipo_equipe"
+                               constraintName="FK3vepa2amkigo8amphycrkxjb8"
+                               deferrable="false"
+                               initiallyDeferred="false"
+                               onDelete="NO ACTION"
+                               onUpdate="NO ACTION"
+                               referencedColumnNames="id"
+                               referencedTableName="jhi_user"/>
+   </changeSet>
+   <changeSet author="basis (generated)" id="1584128930494-75">
+      <addForeignKeyConstraint baseColumnNames="tran_id"
+                               baseTableName="files"
+                               constraintName="FK3vuh146nnilw71xrdtw3qsk6a"
+                               deferrable="false"
+                               initiallyDeferred="false"
+                               onDelete="NO ACTION"
+                               onUpdate="NO ACTION"
+                               referencedColumnNames="id"
+                               referencedTableName="funcao_transacao"/>
+   </changeSet>
+   <changeSet author="basis (generated)" id="1584128930494-76">
+      <addForeignKeyConstraint baseColumnNames="analise_id"
+                               baseTableName="analise_esforco_fases"
+                               constraintName="FK53g42229mml5detlnudnatppr"
+                               deferrable="false"
+                               initiallyDeferred="false"
+                               onDelete="NO ACTION"
+                               onUpdate="NO ACTION"
+                               referencedColumnNames="id"
+                               referencedTableName="analise"/>
+   </changeSet>
+   <changeSet author="basis (generated)" id="1584128930494-77">
+      <addForeignKeyConstraint baseColumnNames="organization_id"
+                               baseTableName="contrato"
+                               constraintName="FK8f7f3fr2obx8bxhayq67vrpsb"
+                               deferrable="false"
+                               initiallyDeferred="false"
+                               onDelete="NO ACTION"
+                               onUpdate="NO ACTION"
+                               referencedColumnNames="id"
+                               referencedTableName="organizacao"/>
+   </changeSet>
+   <changeSet author="basis (generated)" id="1584128930494-78">
+      <addForeignKeyConstraint baseColumnNames="equipe_responsavel_id"
+                               baseTableName="analise"
+                               constraintName="FK8ixrdevp960j30nkcv3w3uk8t"
+                               deferrable="false"
+                               initiallyDeferred="false"
+                               onDelete="NO ACTION"
+                               onUpdate="NO ACTION"
+                               referencedColumnNames="id"
+                               referencedTableName="tipo_equipe"/>
+   </changeSet>
+   <changeSet author="basis (generated)" id="1584128930494-79">
+      <addForeignKeyConstraint baseColumnNames="analise_id"
+                               baseTableName="user_analise"
+                               constraintName="FK_analise_id"
+                               deferrable="false"
+                               initiallyDeferred="false"
+                               onDelete="NO ACTION"
+                               onUpdate="NO ACTION"
+                               referencedColumnNames="id"
+                               referencedTableName="analise"/>
+   </changeSet>
+   <changeSet author="basis (generated)" id="1584128930494-80">
+      <addForeignKeyConstraint baseColumnNames="user_id"
+                               baseTableName="user_analise"
+                               constraintName="FK_user_id"
+                               deferrable="false"
+                               initiallyDeferred="false"
+                               onDelete="NO ACTION"
+                               onUpdate="NO ACTION"
+                               referencedColumnNames="id"
+                               referencedTableName="jhi_user"/>
+   </changeSet>
+   <changeSet author="basis (generated)" id="1584128930494-81">
+      <addForeignKeyConstraint baseColumnNames="funcao_transacao_id"
+                               baseTableName="der"
+                               constraintName="FKayqppy6meuevbyobw0fx46nxu"
+                               deferrable="false"
+                               initiallyDeferred="false"
+                               onDelete="NO ACTION"
+                               onUpdate="NO ACTION"
+                               referencedColumnNames="id"
+                               referencedTableName="funcao_transacao"/>
+   </changeSet>
+   <changeSet author="basis (generated)" id="1584128930494-82">
+      <addForeignKeyConstraint baseColumnNames="user_id"
+                               baseTableName="user_organizacao"
+                               constraintName="FKbrn32srhmmf7mcw034e6xigaj"
+                               deferrable="false"
+                               initiallyDeferred="false"
+                               onDelete="NO ACTION"
+                               onUpdate="NO ACTION"
+                               referencedColumnNames="id"
+                               referencedTableName="jhi_user"/>
+   </changeSet>
+   <changeSet author="basis (generated)" id="1584128930494-83">
+      <addForeignKeyConstraint baseColumnNames="funcionalidade_id"
+                               baseTableName="funcao_transacao"
+                               constraintName="FKd22neyo2pgt9fsy5n5o5mryrs"
+                               deferrable="false"
+                               initiallyDeferred="false"
+                               onDelete="NO ACTION"
+                               onUpdate="NO ACTION"
+                               referencedColumnNames="id"
+                               referencedTableName="funcionalidade"/>
+   </changeSet>
+   <changeSet author="basis (generated)" id="1584128930494-84">
+      <addForeignKeyConstraint baseColumnNames="tipoequipe_id"
+                               baseTableName="tipoequipe_organizacao"
+                               constraintName="FKd411uc0ic9rq87n708i245kbv"
+                               deferrable="false"
+                               initiallyDeferred="false"
+                               onDelete="NO ACTION"
+                               onUpdate="NO ACTION"
+                               referencedColumnNames="id"
+                               referencedTableName="tipo_equipe"/>
+   </changeSet>
+   <changeSet author="basis (generated)" id="1584128930494-85">
+      <addForeignKeyConstraint baseColumnNames="esforco_fases_id"
+                               baseTableName="analise_esforco_fases"
+                               constraintName="FKeixd86qmwh9pbyl7ugncm1dap"
+                               deferrable="false"
+                               initiallyDeferred="false"
+                               onDelete="NO ACTION"
+                               onUpdate="NO ACTION"
+                               referencedColumnNames="id"
+                               referencedTableName="esforco_fase"/>
+   </changeSet>
+   <changeSet author="basis (generated)" id="1584128930494-86">
+      <addForeignKeyConstraint baseColumnNames="fator_ajuste_id"
+                               baseTableName="analise"
+                               constraintName="FKf1xaruefvu8h3gaxeeeuhi6ux"
+                               deferrable="false"
+                               initiallyDeferred="false"
+                               onDelete="NO ACTION"
+                               onUpdate="NO ACTION"
+                               referencedColumnNames="id"
+                               referencedTableName="fator_ajuste"/>
+   </changeSet>
+   <changeSet author="basis (generated)" id="1584128930494-87">
+      <addForeignKeyConstraint baseColumnNames="organizacao_id"
+                               baseTableName="user_organizacao"
+                               constraintName="FKfoo82lf8q54al87elp26maamq"
+                               deferrable="false"
+                               initiallyDeferred="false"
+                               onDelete="NO ACTION"
+                               onUpdate="NO ACTION"
+                               referencedColumnNames="id"
+                               referencedTableName="organizacao"/>
+   </changeSet>
+   <changeSet author="basis (generated)" id="1584128930494-88">
+      <addForeignKeyConstraint baseColumnNames="funcao_dados_id"
+                               baseTableName="der"
+                               constraintName="FKmfd6jrwyrjxtw2citbw8lgm82"
+                               deferrable="false"
+                               initiallyDeferred="false"
+                               onDelete="NO ACTION"
+                               onUpdate="NO ACTION"
+                               referencedColumnNames="id"
+                               referencedTableName="funcao_dados"/>
+   </changeSet>
+   <changeSet author="basis (generated)" id="1584128930494-89">
+      <addForeignKeyConstraint baseColumnNames="organizacao_id"
+                               baseTableName="analise"
+                               constraintName="FKmsbisww5l4ixb456nvv4sdkl5"
+                               deferrable="false"
+                               initiallyDeferred="false"
+                               onDelete="NO ACTION"
+                               onUpdate="NO ACTION"
+                               referencedColumnNames="id"
+                               referencedTableName="organizacao"/>
+   </changeSet>
+   <changeSet author="basis (generated)" id="1584128930494-90">
+      <addForeignKeyConstraint baseColumnNames="contrato_id"
+                               baseTableName="analise"
+                               constraintName="FKn8mf9hxtivvxvewkpymp7li9u"
+                               deferrable="false"
+                               initiallyDeferred="false"
+                               onDelete="NO ACTION"
+                               onUpdate="NO ACTION"
+                               referencedColumnNames="id"
+                               referencedTableName="contrato"/>
+   </changeSet>
+   <changeSet author="basis (generated)" id="1584128930494-91">
+      <addForeignKeyConstraint baseColumnNames="edited_by_id"
+                               baseTableName="analise"
+                               constraintName="FKnlyrisuykdyne3qadmx0clqx9"
+                               deferrable="false"
+                               initiallyDeferred="false"
+                               onDelete="NO ACTION"
+                               onUpdate="NO ACTION"
+                               referencedColumnNames="id"
+                               referencedTableName="jhi_user"/>
+   </changeSet>
+   <changeSet author="basis (generated)" id="1584128930494-92">
+      <addForeignKeyConstraint baseColumnNames="process_id"
+                               baseTableName="files"
+                               constraintName="FKoot6w9lan9ehwjvrnsklh3sj9"
+                               deferrable="false"
+                               initiallyDeferred="false"
+                               onDelete="NO ACTION"
+                               onUpdate="NO ACTION"
+                               referencedColumnNames="id"
+                               referencedTableName="funcao_dados"/>
+   </changeSet>
+   <changeSet author="basis (generated)" id="1584128930494-93">
+      <addForeignKeyConstraint baseColumnNames="tipo_equipe_id"
+                               baseTableName="user_tipo_equipe"
+                               constraintName="FKr58k6pdcd07k6pa156j9sufgw"
+                               deferrable="false"
+                               initiallyDeferred="false"
+                               onDelete="NO ACTION"
+                               onUpdate="NO ACTION"
+                               referencedColumnNames="id"
+                               referencedTableName="tipo_equipe"/>
+   </changeSet>
+   <changeSet author="basis (generated)" id="1584128930494-94">
+      <addForeignKeyConstraint baseColumnNames="sistema_id"
+                               baseTableName="funcao_dados_versionavel"
+                               constraintName="FKrhwjm6e9u6bk30t7ajctl6xpo"
+                               deferrable="false"
+                               initiallyDeferred="false"
+                               onDelete="NO ACTION"
+                               onUpdate="NO ACTION"
+                               referencedColumnNames="id"
+                               referencedTableName="sistema"/>
+   </changeSet>
+   <changeSet author="basis (generated)" id="1584128930494-95">
+      <addForeignKeyConstraint baseColumnNames="funcionalidade_id"
+                               baseTableName="funcao_dados"
+                               constraintName="FKt5c47kdxpmnsphovprdefgxp1"
+                               deferrable="false"
+                               initiallyDeferred="false"
+                               onDelete="NO ACTION"
+                               onUpdate="NO ACTION"
+                               referencedColumnNames="id"
+                               referencedTableName="funcionalidade"/>
+   </changeSet>
+   <changeSet author="basis (generated)" id="1584128930494-96">
+      <addForeignKeyConstraint baseColumnNames="funcao_transacao_id"
+                               baseTableName="alr"
+                               constraintName="fk_alr_funcao_transacao_id"
+                               deferrable="false"
+                               initiallyDeferred="false"
+                               onDelete="NO ACTION"
+                               onUpdate="NO ACTION"
+                               referencedColumnNames="id"
+                               referencedTableName="funcao_transacao"/>
+   </changeSet>
+   <changeSet author="basis (generated)" id="1584128930494-97">
+      <addForeignKeyConstraint baseColumnNames="analise_id"
+                               baseTableName="analise_compartilhada"
+                               constraintName="fk_analise_compartilhada_id"
+                               deferrable="false"
+                               initiallyDeferred="false"
+                               onDelete="NO ACTION"
+                               onUpdate="NO ACTION"
+                               referencedColumnNames="id"
+                               referencedTableName="analise"/>
+   </changeSet>
+   <changeSet author="basis (generated)" id="1584128930494-98">
+      <addForeignKeyConstraint baseColumnNames="manual_id"
+                               baseTableName="analise"
+                               constraintName="fk_analise_manual_id"
+                               deferrable="false"
+                               initiallyDeferred="false"
+                               onDelete="NO ACTION"
+                               onUpdate="NO ACTION"
+                               referencedColumnNames="id"
+                               referencedTableName="manual"/>
+   </changeSet>
+   <changeSet author="basis (generated)" id="1584128930494-99">
+      <addForeignKeyConstraint baseColumnNames="sistema_id"
+                               baseTableName="analise"
+                               constraintName="fk_analise_sistema_id"
+                               deferrable="false"
+                               initiallyDeferred="false"
+                               onDelete="NO ACTION"
+                               onUpdate="NO ACTION"
+                               referencedColumnNames="id"
+                               referencedTableName="sistema"/>
+   </changeSet>
+   <changeSet author="basis (generated)" id="1584128930494-100">
+      <addForeignKeyConstraint baseColumnNames="authority_name"
+                               baseTableName="jhi_user_authority"
+                               constraintName="fk_authority_name"
+                               deferrable="false"
+                               initiallyDeferred="false"
+                               onDelete="NO ACTION"
+                               onUpdate="NO ACTION"
+                               referencedColumnNames="name"
+                               referencedTableName="jhi_authority"/>
+      <loadData encoding="UTF-8"
+                file="config/liquibase/users.csv"
+                separator=";"
+                tableName="jhi_user">
+         <column name="activated" type="boolean"/>
+         <column name="created_date" type="timestamp"/>
+      </loadData>
+      <dropDefaultValue tableName="jhi_user" columnName="created_date" columnDataType="datetime"/>
 
-        <loadData encoding="UTF-8"
-                  file="config/liquibase/authorities.csv"
-                  separator=";"
-                  tableName="jhi_authority"/>
+      <loadData encoding="UTF-8"
+                file="config/liquibase/authorities.csv"
+                separator=";"
+                tableName="jhi_authority"/>
 
-        <loadData encoding="UTF-8"
-                  file="config/liquibase/users_authorities.csv"
-                  separator=";"
-                  tableName="jhi_user_authority"/>
-    </changeSet>
-    <changeSet author="basis (generated)" id="1584128930494-101">
-        <addForeignKeyConstraint baseColumnNames="manual_id"
-                                 baseTableName="contrato"
-                                 constraintName="fk_contrato_manual_id"
-                                 deferrable="false"
-                                 initiallyDeferred="false"
-                                 onDelete="NO ACTION"
-                                 onUpdate="NO ACTION"
-                                 referencedColumnNames="id"
-                                 referencedTableName="manual"/>
-    </changeSet>
-    <changeSet author="basis (generated)" id="1584128930494-102">
-        <addForeignKeyConstraint baseColumnNames="rlr_id"
-                                 baseTableName="der"
-                                 constraintName="fk_der_rlr_id"
-                                 deferrable="false"
-                                 initiallyDeferred="false"
-                                 onDelete="NO ACTION"
-                                 onUpdate="NO ACTION"
-                                 referencedColumnNames="id"
-                                 referencedTableName="rlr"/>
-    </changeSet>
-    <changeSet author="basis (generated)" id="1584128930494-103">
-        <addForeignKeyConstraint baseColumnNames="equipe_id"
-                                 baseTableName="analise_compartilhada"
-                                 constraintName="fk_equipe_analise_id"
-                                 deferrable="false"
-                                 initiallyDeferred="false"
-                                 onDelete="NO ACTION"
-                                 onUpdate="NO ACTION"
-                                 referencedColumnNames="id"
-                                 referencedTableName="tipo_equipe"/>
-    </changeSet>
-    <changeSet author="basis (generated)" id="1584128930494-104">
-        <addForeignKeyConstraint baseColumnNames="fase_id"
-                                 baseTableName="esforco_fase"
-                                 constraintName="fk_esforco_fase_fase_id"
-                                 deferrable="false"
-                                 initiallyDeferred="false"
-                                 onDelete="NO ACTION"
-                                 onUpdate="NO ACTION"
-                                 referencedColumnNames="id"
-                                 referencedTableName="fase"/>
-    </changeSet>
-    <changeSet author="basis (generated)" id="1584128930494-105">
-        <addForeignKeyConstraint baseColumnNames="manual_id"
-                                 baseTableName="esforco_fase"
-                                 constraintName="fk_esforco_fase_manual_id"
-                                 deferrable="false"
-                                 initiallyDeferred="false"
-                                 onDelete="NO ACTION"
-                                 onUpdate="NO ACTION"
-                                 referencedColumnNames="id"
-                                 referencedTableName="manual"/>
-    </changeSet>
-    <changeSet author="basis (generated)" id="1584128930494-106">
-        <addForeignKeyConstraint baseColumnNames="event_id"
-                                 baseTableName="jhi_persistent_audit_evt_data"
-                                 constraintName="fk_evt_pers_audit_evt_data"
-                                 deferrable="false"
-                                 initiallyDeferred="false"
-                                 onDelete="NO ACTION"
-                                 onUpdate="NO ACTION"
-                                 referencedColumnNames="event_id"
-                                 referencedTableName="jhi_persistent_audit_event"/>
-    </changeSet>
-    <changeSet author="basis (generated)" id="1584128930494-107">
-        <addForeignKeyConstraint baseColumnNames="manual_id"
-                                 baseTableName="fator_ajuste"
-                                 constraintName="fk_fator_ajuste_manual_id"
-                                 deferrable="false"
-                                 initiallyDeferred="false"
-                                 onDelete="NO ACTION"
-                                 onUpdate="NO ACTION"
-                                 referencedColumnNames="id"
-                                 referencedTableName="manual"/>
-    </changeSet>
-    <changeSet author="basis (generated)" id="1584128930494-108">
-        <addForeignKeyConstraint baseColumnNames="alr_id"
-                                 baseTableName="funcao_dados"
-                                 constraintName="fk_funcao_dados_alr_id"
-                                 deferrable="false"
-                                 initiallyDeferred="false"
-                                 onDelete="NO ACTION"
-                                 onUpdate="NO ACTION"
-                                 referencedColumnNames="id"
-                                 referencedTableName="alr"/>
-    </changeSet>
-    <changeSet author="basis (generated)" id="1584128930494-109">
-        <addForeignKeyConstraint baseColumnNames="analise_id"
-                                 baseTableName="funcao_dados"
-                                 constraintName="fk_funcao_dados_analise_id"
-                                 deferrable="false"
-                                 initiallyDeferred="false"
-                                 onDelete="NO ACTION"
-                                 onUpdate="NO ACTION"
-                                 referencedColumnNames="id"
-                                 referencedTableName="analise"/>
-    </changeSet>
-    <changeSet author="basis (generated)" id="1584128930494-110">
-        <addForeignKeyConstraint baseColumnNames="fator_ajuste_id"
-                                 baseTableName="funcao_dados"
-                                 constraintName="fk_funcao_dados_fator_ajuste_id"
-                                 deferrable="false"
-                                 initiallyDeferred="false"
-                                 onDelete="NO ACTION"
-                                 onUpdate="NO ACTION"
-                                 referencedColumnNames="id"
-                                 referencedTableName="fator_ajuste"/>
-    </changeSet>
-    <changeSet author="basis (generated)" id="1584128930494-111">
-        <addForeignKeyConstraint baseColumnNames="analise_id"
-                                 baseTableName="funcao_transacao"
-                                 constraintName="fk_funcao_transacao_analise_id"
-                                 deferrable="false"
-                                 initiallyDeferred="false"
-                                 onDelete="NO ACTION"
-                                 onUpdate="NO ACTION"
-                                 referencedColumnNames="id"
-                                 referencedTableName="analise"/>
-    </changeSet>
-    <changeSet author="basis (generated)" id="1584128930494-112">
-        <addForeignKeyConstraint baseColumnNames="fator_ajuste_id"
-                                 baseTableName="funcao_transacao"
-                                 constraintName="fk_funcao_transacao_fator_ajuste_id"
-                                 deferrable="false"
-                                 initiallyDeferred="false"
-                                 onDelete="NO ACTION"
-                                 onUpdate="NO ACTION"
-                                 referencedColumnNames="id"
-                                 referencedTableName="fator_ajuste"/>
-    </changeSet>
-    <changeSet author="basis (generated)" id="1584128930494-113">
-        <addForeignKeyConstraint baseColumnNames="funcao_dados_id"
-                                 baseTableName="funcionalidade"
-                                 constraintName="fk_funcionalidade_funcao_dados_id"
-                                 deferrable="false"
-                                 initiallyDeferred="false"
-                                 onDelete="NO ACTION"
-                                 onUpdate="NO ACTION"
-                                 referencedColumnNames="id"
-                                 referencedTableName="funcao_dados"/>
-    </changeSet>
-    <changeSet author="basis (generated)" id="1584128930494-114">
-        <addForeignKeyConstraint baseColumnNames="funcao_transacao_id"
-                                 baseTableName="funcionalidade"
-                                 constraintName="fk_funcionalidade_funcao_transacao_id"
-                                 deferrable="false"
-                                 initiallyDeferred="false"
-                                 onDelete="NO ACTION"
-                                 onUpdate="NO ACTION"
-                                 referencedColumnNames="id"
-                                 referencedTableName="funcao_transacao"/>
-    </changeSet>
-    <changeSet author="basis (generated)" id="1584128930494-115">
-        <addForeignKeyConstraint baseColumnNames="modulo_id"
-                                 baseTableName="funcionalidade"
-                                 constraintName="fk_funcionalidade_modulo_id"
-                                 deferrable="false"
-                                 initiallyDeferred="false"
-                                 onDelete="NO ACTION"
-                                 onUpdate="NO ACTION"
-                                 referencedColumnNames="id"
-                                 referencedTableName="modulo"/>
-    </changeSet>
-    <changeSet author="basis (generated)" id="1584128930494-116">
-        <addForeignKeyConstraint baseColumnNames="contratos_id"
-                                 baseTableName="manual_contrato"
-                                 constraintName="fk_manual_contrato_contrato_id"
-                                 deferrable="false"
-                                 initiallyDeferred="false"
-                                 onDelete="NO ACTION"
-                                 onUpdate="NO ACTION"
-                                 referencedColumnNames="id"
-                                 referencedTableName="contrato"/>
-    </changeSet>
-    <changeSet author="basis (generated)" id="1584128930494-117">
-        <addForeignKeyConstraint baseColumnNames="manual_id"
-                                 baseTableName="manual_contrato"
-                                 constraintName="fk_manual_contrato_manual_id"
-                                 deferrable="false"
-                                 initiallyDeferred="false"
-                                 onDelete="NO ACTION"
-                                 onUpdate="NO ACTION"
-                                 referencedColumnNames="id"
-                                 referencedTableName="manual"/>
-    </changeSet>
-    <changeSet author="basis (generated)" id="1584128930494-118">
-        <addForeignKeyConstraint baseColumnNames="sistema_id"
-                                 baseTableName="modulo"
-                                 constraintName="fk_modulo_sistema_id"
-                                 deferrable="false"
-                                 initiallyDeferred="false"
-                                 onDelete="NO ACTION"
-                                 onUpdate="NO ACTION"
-                                 referencedColumnNames="id"
-                                 referencedTableName="sistema"/>
-    </changeSet>
-    <changeSet author="basis (generated)" id="1584128930494-119">
-        <addForeignKeyConstraint baseColumnNames="funcao_dados_id"
-                                 baseTableName="rlr"
-                                 constraintName="fk_rlr_funcao_dados_id"
-                                 deferrable="false"
-                                 initiallyDeferred="false"
-                                 onDelete="NO ACTION"
-                                 onUpdate="NO ACTION"
-                                 referencedColumnNames="id"
-                                 referencedTableName="funcao_dados"/>
-    </changeSet>
-    <changeSet author="basis (generated)" id="1584128930494-120">
-        <addForeignKeyConstraint baseColumnNames="organizacao_id"
-                                 baseTableName="sistema"
-                                 constraintName="fk_sistema_organizacao_id"
-                                 deferrable="false"
-                                 initiallyDeferred="false"
-                                 onDelete="NO ACTION"
-                                 onUpdate="NO ACTION"
-                                 referencedColumnNames="id"
-                                 referencedTableName="organizacao"/>
-    </changeSet>
-    <changeSet author="basis (generated)" id="1584128930494-121">
-        <createView fullDefinition="false" viewName="baseline_analitico"> SELECT row_number() OVER (ORDER BY fdt.id_funcao_dados) AS row_number,
-            fdt.tipo,
-            fdt.classificacao,
-            fdt.impacto,
-            fdt.analise_id,
-            fdt.data_homologacao_software,
-            fdt.id_sistema,
-            fdt.nome,
-            fdt.sigla,
-            fdt.name,
-            fdt.pf,
-            fdt.id_funcao_dados,
-            fdt.complexidade,
-            fdt.nome_equipe,
-            fdt.equipe_responsavel_id,
-            fdt.nome_funcionalidade,
-            fdt.nome_modulo,
-            fdt.der,
-            fdt.rlr_alr
-            FROM ( SELECT 'fd'::text AS tipo,
+      <loadData encoding="UTF-8"
+                file="config/liquibase/users_authorities.csv"
+                separator=";"
+                tableName="jhi_user_authority"/>
+   </changeSet>
+   <changeSet author="basis (generated)" id="1584128930494-101">
+      <addForeignKeyConstraint baseColumnNames="manual_id"
+                               baseTableName="contrato"
+                               constraintName="fk_contrato_manual_id"
+                               deferrable="false"
+                               initiallyDeferred="false"
+                               onDelete="NO ACTION"
+                               onUpdate="NO ACTION"
+                               referencedColumnNames="id"
+                               referencedTableName="manual"/>
+   </changeSet>
+   <changeSet author="basis (generated)" id="1584128930494-102">
+      <addForeignKeyConstraint baseColumnNames="rlr_id"
+                               baseTableName="der"
+                               constraintName="fk_der_rlr_id"
+                               deferrable="false"
+                               initiallyDeferred="false"
+                               onDelete="NO ACTION"
+                               onUpdate="NO ACTION"
+                               referencedColumnNames="id"
+                               referencedTableName="rlr"/>
+   </changeSet>
+   <changeSet author="basis (generated)" id="1584128930494-103">
+      <addForeignKeyConstraint baseColumnNames="equipe_id"
+                               baseTableName="analise_compartilhada"
+                               constraintName="fk_equipe_analise_id"
+                               deferrable="false"
+                               initiallyDeferred="false"
+                               onDelete="NO ACTION"
+                               onUpdate="NO ACTION"
+                               referencedColumnNames="id"
+                               referencedTableName="tipo_equipe"/>
+   </changeSet>
+   <changeSet author="basis (generated)" id="1584128930494-104">
+      <addForeignKeyConstraint baseColumnNames="fase_id"
+                               baseTableName="esforco_fase"
+                               constraintName="fk_esforco_fase_fase_id"
+                               deferrable="false"
+                               initiallyDeferred="false"
+                               onDelete="NO ACTION"
+                               onUpdate="NO ACTION"
+                               referencedColumnNames="id"
+                               referencedTableName="fase"/>
+   </changeSet>
+   <changeSet author="basis (generated)" id="1584128930494-105">
+      <addForeignKeyConstraint baseColumnNames="manual_id"
+                               baseTableName="esforco_fase"
+                               constraintName="fk_esforco_fase_manual_id"
+                               deferrable="false"
+                               initiallyDeferred="false"
+                               onDelete="NO ACTION"
+                               onUpdate="NO ACTION"
+                               referencedColumnNames="id"
+                               referencedTableName="manual"/>
+   </changeSet>
+   <changeSet author="basis (generated)" id="1584128930494-106">
+      <addForeignKeyConstraint baseColumnNames="event_id"
+                               baseTableName="jhi_persistent_audit_evt_data"
+                               constraintName="fk_evt_pers_audit_evt_data"
+                               deferrable="false"
+                               initiallyDeferred="false"
+                               onDelete="NO ACTION"
+                               onUpdate="NO ACTION"
+                               referencedColumnNames="event_id"
+                               referencedTableName="jhi_persistent_audit_event"/>
+   </changeSet>
+   <changeSet author="basis (generated)" id="1584128930494-107">
+      <addForeignKeyConstraint baseColumnNames="manual_id"
+                               baseTableName="fator_ajuste"
+                               constraintName="fk_fator_ajuste_manual_id"
+                               deferrable="false"
+                               initiallyDeferred="false"
+                               onDelete="NO ACTION"
+                               onUpdate="NO ACTION"
+                               referencedColumnNames="id"
+                               referencedTableName="manual"/>
+   </changeSet>
+   <changeSet author="basis (generated)" id="1584128930494-108">
+      <addForeignKeyConstraint baseColumnNames="alr_id"
+                               baseTableName="funcao_dados"
+                               constraintName="fk_funcao_dados_alr_id"
+                               deferrable="false"
+                               initiallyDeferred="false"
+                               onDelete="NO ACTION"
+                               onUpdate="NO ACTION"
+                               referencedColumnNames="id"
+                               referencedTableName="alr"/>
+   </changeSet>
+   <changeSet author="basis (generated)" id="1584128930494-109">
+      <addForeignKeyConstraint baseColumnNames="analise_id"
+                               baseTableName="funcao_dados"
+                               constraintName="fk_funcao_dados_analise_id"
+                               deferrable="false"
+                               initiallyDeferred="false"
+                               onDelete="NO ACTION"
+                               onUpdate="NO ACTION"
+                               referencedColumnNames="id"
+                               referencedTableName="analise"/>
+   </changeSet>
+   <changeSet author="basis (generated)" id="1584128930494-110">
+      <addForeignKeyConstraint baseColumnNames="fator_ajuste_id"
+                               baseTableName="funcao_dados"
+                               constraintName="fk_funcao_dados_fator_ajuste_id"
+                               deferrable="false"
+                               initiallyDeferred="false"
+                               onDelete="NO ACTION"
+                               onUpdate="NO ACTION"
+                               referencedColumnNames="id"
+                               referencedTableName="fator_ajuste"/>
+   </changeSet>
+   <changeSet author="basis (generated)" id="1584128930494-111">
+      <addForeignKeyConstraint baseColumnNames="analise_id"
+                               baseTableName="funcao_transacao"
+                               constraintName="fk_funcao_transacao_analise_id"
+                               deferrable="false"
+                               initiallyDeferred="false"
+                               onDelete="NO ACTION"
+                               onUpdate="NO ACTION"
+                               referencedColumnNames="id"
+                               referencedTableName="analise"/>
+   </changeSet>
+   <changeSet author="basis (generated)" id="1584128930494-112">
+      <addForeignKeyConstraint baseColumnNames="fator_ajuste_id"
+                               baseTableName="funcao_transacao"
+                               constraintName="fk_funcao_transacao_fator_ajuste_id"
+                               deferrable="false"
+                               initiallyDeferred="false"
+                               onDelete="NO ACTION"
+                               onUpdate="NO ACTION"
+                               referencedColumnNames="id"
+                               referencedTableName="fator_ajuste"/>
+   </changeSet>
+   <changeSet author="basis (generated)" id="1584128930494-113">
+      <addForeignKeyConstraint baseColumnNames="funcao_dados_id"
+                               baseTableName="funcionalidade"
+                               constraintName="fk_funcionalidade_funcao_dados_id"
+                               deferrable="false"
+                               initiallyDeferred="false"
+                               onDelete="NO ACTION"
+                               onUpdate="NO ACTION"
+                               referencedColumnNames="id"
+                               referencedTableName="funcao_dados"/>
+   </changeSet>
+   <changeSet author="basis (generated)" id="1584128930494-114">
+      <addForeignKeyConstraint baseColumnNames="funcao_transacao_id"
+                               baseTableName="funcionalidade"
+                               constraintName="fk_funcionalidade_funcao_transacao_id"
+                               deferrable="false"
+                               initiallyDeferred="false"
+                               onDelete="NO ACTION"
+                               onUpdate="NO ACTION"
+                               referencedColumnNames="id"
+                               referencedTableName="funcao_transacao"/>
+   </changeSet>
+   <changeSet author="basis (generated)" id="1584128930494-115">
+      <addForeignKeyConstraint baseColumnNames="modulo_id"
+                               baseTableName="funcionalidade"
+                               constraintName="fk_funcionalidade_modulo_id"
+                               deferrable="false"
+                               initiallyDeferred="false"
+                               onDelete="NO ACTION"
+                               onUpdate="NO ACTION"
+                               referencedColumnNames="id"
+                               referencedTableName="modulo"/>
+   </changeSet>
+   <changeSet author="basis (generated)" id="1584128930494-116">
+      <addForeignKeyConstraint baseColumnNames="contratos_id"
+                               baseTableName="manual_contrato"
+                               constraintName="fk_manual_contrato_contrato_id"
+                               deferrable="false"
+                               initiallyDeferred="false"
+                               onDelete="NO ACTION"
+                               onUpdate="NO ACTION"
+                               referencedColumnNames="id"
+                               referencedTableName="contrato"/>
+   </changeSet>
+   <changeSet author="basis (generated)" id="1584128930494-117">
+      <addForeignKeyConstraint baseColumnNames="manual_id"
+                               baseTableName="manual_contrato"
+                               constraintName="fk_manual_contrato_manual_id"
+                               deferrable="false"
+                               initiallyDeferred="false"
+                               onDelete="NO ACTION"
+                               onUpdate="NO ACTION"
+                               referencedColumnNames="id"
+                               referencedTableName="manual"/>
+   </changeSet>
+   <changeSet author="basis (generated)" id="1584128930494-118">
+      <addForeignKeyConstraint baseColumnNames="sistema_id"
+                               baseTableName="modulo"
+                               constraintName="fk_modulo_sistema_id"
+                               deferrable="false"
+                               initiallyDeferred="false"
+                               onDelete="NO ACTION"
+                               onUpdate="NO ACTION"
+                               referencedColumnNames="id"
+                               referencedTableName="sistema"/>
+   </changeSet>
+   <changeSet author="basis (generated)" id="1584128930494-119">
+      <addForeignKeyConstraint baseColumnNames="funcao_dados_id"
+                               baseTableName="rlr"
+                               constraintName="fk_rlr_funcao_dados_id"
+                               deferrable="false"
+                               initiallyDeferred="false"
+                               onDelete="NO ACTION"
+                               onUpdate="NO ACTION"
+                               referencedColumnNames="id"
+                               referencedTableName="funcao_dados"/>
+   </changeSet>
+   <changeSet author="basis (generated)" id="1584128930494-120">
+      <addForeignKeyConstraint baseColumnNames="organizacao_id"
+                               baseTableName="sistema"
+                               constraintName="fk_sistema_organizacao_id"
+                               deferrable="false"
+                               initiallyDeferred="false"
+                               onDelete="NO ACTION"
+                               onUpdate="NO ACTION"
+                               referencedColumnNames="id"
+                               referencedTableName="organizacao"/>
+   </changeSet>
+   <changeSet author="basis (generated)" id="1584128930494-121">
+      <createView fullDefinition="false" viewName="baseline_analitico"> SELECT row_number() OVER (ORDER BY fdt.id_funcao_dados) AS row_number,
+    fdt.tipo,
+    fdt.classificacao,
+    fdt.impacto,
+    fdt.analise_id,
+    fdt.data_homologacao_software,
+    fdt.id_sistema,
+    fdt.nome,
+    fdt.sigla,
+    fdt.name,
+    fdt.pf,
+    fdt.id_funcao_dados,
+    fdt.complexidade,
+    fdt.nome_equipe,
+    fdt.equipe_responsavel_id,
+    fdt.nome_funcionalidade,
+    fdt.nome_modulo,
+    fdt.der,
+    fdt.rlr_alr
+   FROM ( SELECT 'fd'::text AS tipo,
             c.tipo AS classificacao,
             c.impacto,
             c.analise_id,
@@ -1276,29 +1276,29 @@
             fc.nome AS nome_funcionalidade,
             m.nome AS nome_modulo,
             ( SELECT count(d_1.id) AS count
-            FROM der d_1
-            WHERE (d_1.funcao_dados_id = c.id)) AS der,
+                   FROM der d_1
+                  WHERE (d_1.funcao_dados_id = c.id)) AS der,
             ( SELECT count(e_1.id) AS count
-            FROM rlr e_1
-            WHERE (e_1.funcao_dados_id = c.id)) AS rlr_alr
-            FROM (((((((analise a
-            JOIN sistema b ON ((a.sistema_id = b.id)))
-            JOIN funcao_dados c ON (((c.analise_id = a.id) AND ((c.impacto)::text &lt;&gt; 'EXCLUSAO'::text))))
-            JOIN tipo_equipe f ON ((a.equipe_responsavel_id = f.id)))
-            LEFT JOIN der d ON ((d.funcao_dados_id = c.id)))
-            LEFT JOIN rlr e ON ((e.funcao_dados_id = c.id)))
-            LEFT JOIN funcionalidade fc ON ((c.funcionalidade_id = fc.id)))
-            LEFT JOIN modulo m ON ((fc.modulo_id = m.id)))
-            WHERE ((c.grosspf &gt; (0)::numeric) AND (a.data_homologacao_software IS NOT NULL) AND (a.data_homologacao_software = ( SELECT max(a1.data_homologacao_software) AS max
-            FROM (analise a1
-            JOIN funcao_dados c1 ON (((c1.analise_id = a1.id) AND ((c1.name)::text = (c.name)::text))))
-            WHERE (a1.bloqueado = true))) AND (NOT (a.id IN ( SELECT a2.id
-            FROM analise a2
-            WHERE ((a2.baseline_imediatamente = true) AND (now() &lt;= ((a2.data_homologacao_software)::date + ( SELECT contrato.dias_de_garantia
-            FROM contrato
-            WHERE (contrato.id = a2.contrato_id)))))))) AND ((upper((a.metodo_contagem)::text) = 'DETALHADA'::text) OR ((a.enviar_baseline = true) AND (upper((a.metodo_contagem)::text) = 'ESTIMADA'::text))) AND (a.bloqueado = true))
-            UNION
-            SELECT 'ft'::text AS tipo,
+                   FROM rlr e_1
+                  WHERE (e_1.funcao_dados_id = c.id)) AS rlr_alr
+           FROM (((((((analise a
+             JOIN sistema b ON ((a.sistema_id = b.id)))
+             JOIN funcao_dados c ON (((c.analise_id = a.id) AND ((c.impacto)::text &lt;&gt; 'EXCLUSAO'::text))))
+             JOIN tipo_equipe f ON ((a.equipe_responsavel_id = f.id)))
+             LEFT JOIN der d ON ((d.funcao_dados_id = c.id)))
+             LEFT JOIN rlr e ON ((e.funcao_dados_id = c.id)))
+             LEFT JOIN funcionalidade fc ON ((c.funcionalidade_id = fc.id)))
+             LEFT JOIN modulo m ON ((fc.modulo_id = m.id)))
+          WHERE ((c.grosspf &gt; (0)::numeric) AND (a.data_homologacao_software IS NOT NULL) AND (a.data_homologacao_software = ( SELECT max(a1.data_homologacao_software) AS max
+                   FROM (analise a1
+                     JOIN funcao_dados c1 ON (((c1.analise_id = a1.id) AND ((c1.name)::text = (c.name)::text))))
+                  WHERE (a1.bloqueado = true))) AND (NOT (a.id IN ( SELECT a2.id
+                   FROM analise a2
+                  WHERE ((a2.baseline_imediatamente = true) AND (now() &lt;= ((a2.data_homologacao_software)::date + ( SELECT contrato.dias_de_garantia
+                           FROM contrato
+                          WHERE (contrato.id = a2.contrato_id)))))))) AND ((upper((a.metodo_contagem)::text) = 'DETALHADA'::text) OR ((a.enviar_baseline = true) AND (upper((a.metodo_contagem)::text) = 'ESTIMADA'::text))) AND (a.bloqueado = true))
+        UNION
+         SELECT 'ft'::text AS tipo,
             c.tipo AS classificacao,
             c.impacto,
             c.analise_id,
@@ -1315,155 +1315,155 @@
             fc.nome AS nome_funcionalidade,
             m.nome AS nome_modulo,
             ( SELECT count(d.id) AS count
-            FROM der d
-            WHERE (d.funcao_transacao_id = c.id)) AS der,
+                   FROM der d
+                  WHERE (d.funcao_transacao_id = c.id)) AS der,
             ( SELECT count(e.id) AS count
-            FROM alr e
-            WHERE (e.funcao_transacao_id = c.id)) AS rlr_alr
-            FROM (((((analise a
-            JOIN sistema b ON ((a.sistema_id = b.id)))
-            JOIN funcao_transacao c ON (((c.analise_id = a.id) AND ((c.impacto)::text &lt;&gt; 'EXCLUSAO'::text))))
-            JOIN tipo_equipe f ON ((a.equipe_responsavel_id = f.id)))
-            LEFT JOIN funcionalidade fc ON ((c.funcionalidade_id = fc.id)))
-            LEFT JOIN modulo m ON ((fc.modulo_id = m.id)))
-            WHERE ((c.grosspf &gt; (0)::numeric) AND (a.data_homologacao_software IS NOT NULL) AND (a.data_homologacao_software = ( SELECT max(a1.data_homologacao_software) AS max
-            FROM (analise a1
-            JOIN funcao_transacao c1 ON (((c1.analise_id = a1.id) AND ((c1.name)::text = (c.name)::text))))
-            WHERE (a1.bloqueado = true))) AND (NOT (a.id IN ( SELECT a2.id
-            FROM analise a2
-            WHERE ((a2.baseline_imediatamente = true) AND (now() &lt;= ((a2.data_homologacao_software)::date + ( SELECT contrato.dias_de_garantia
-            FROM contrato
-            WHERE (contrato.id = a2.contrato_id)))))))) AND ((upper((a.metodo_contagem)::text) = 'DETALHADA'::text) OR ((a.enviar_baseline = true) AND (upper((a.metodo_contagem)::text) = 'ESTIMADA'::text))) AND (a.bloqueado = true))) fdt;</createView>
-    </changeSet>
-    <changeSet author="basis (generated)" id="1584128930494-122">
-        <createView fullDefinition="false" viewName="baseline_sintetico"> SELECT row_number() OVER (ORDER BY sistema.id_sistema) AS row_number,
-            sistema.id_sistema,
-            sistema.sigla,
-            sistema.nome,
-            sistema.numero_ocorrencia,
-            sistema.sum,
-            sistema.equipe_responsavel_id,
-            sistema.nome_equipe
-            FROM ( SELECT w.id_sistema,
+                   FROM alr e
+                  WHERE (e.funcao_transacao_id = c.id)) AS rlr_alr
+           FROM (((((analise a
+             JOIN sistema b ON ((a.sistema_id = b.id)))
+             JOIN funcao_transacao c ON (((c.analise_id = a.id) AND ((c.impacto)::text &lt;&gt; 'EXCLUSAO'::text))))
+             JOIN tipo_equipe f ON ((a.equipe_responsavel_id = f.id)))
+             LEFT JOIN funcionalidade fc ON ((c.funcionalidade_id = fc.id)))
+             LEFT JOIN modulo m ON ((fc.modulo_id = m.id)))
+          WHERE ((c.grosspf &gt; (0)::numeric) AND (a.data_homologacao_software IS NOT NULL) AND (a.data_homologacao_software = ( SELECT max(a1.data_homologacao_software) AS max
+                   FROM (analise a1
+                     JOIN funcao_transacao c1 ON (((c1.analise_id = a1.id) AND ((c1.name)::text = (c.name)::text))))
+                  WHERE (a1.bloqueado = true))) AND (NOT (a.id IN ( SELECT a2.id
+                   FROM analise a2
+                  WHERE ((a2.baseline_imediatamente = true) AND (now() &lt;= ((a2.data_homologacao_software)::date + ( SELECT contrato.dias_de_garantia
+                           FROM contrato
+                          WHERE (contrato.id = a2.contrato_id)))))))) AND ((upper((a.metodo_contagem)::text) = 'DETALHADA'::text) OR ((a.enviar_baseline = true) AND (upper((a.metodo_contagem)::text) = 'ESTIMADA'::text))) AND (a.bloqueado = true))) fdt;</createView>
+   </changeSet>
+   <changeSet author="basis (generated)" id="1584128930494-122">
+      <createView fullDefinition="false" viewName="baseline_sintetico"> SELECT row_number() OVER (ORDER BY sistema.id_sistema) AS row_number,
+    sistema.id_sistema,
+    sistema.sigla,
+    sistema.nome,
+    sistema.numero_ocorrencia,
+    sistema.sum,
+    sistema.equipe_responsavel_id,
+    sistema.nome_equipe
+   FROM ( SELECT w.id_sistema,
             w.sigla,
             w.nome,
             w.numero_ocorrencia,
             sum(w.pf) AS sum,
             w.equipe_responsavel_id,
             w.nome_equipe
-            FROM ( SELECT 'fd'::text AS tipo,
-            c.impacto,
-            c.tipo,
-            c.analise_id,
-            a.data_homologacao_software,
-            b.id AS id_sistema,
-            b.nome,
-            b.sigla,
-            c.name,
-            c.grosspf AS pf,
-            c.id AS id_dados_trans,
-            c.complexidade,
-            b.numero_ocorrencia,
-            f.nome AS nome_equipe,
-            a.equipe_responsavel_id,
-            ( SELECT count(d_1.id) AS count
-            FROM der d_1
-            WHERE (d_1.funcao_dados_id = c.id)) AS der,
-            ( SELECT count(e_1.id) AS count
-            FROM rlr e_1
-            WHERE (e_1.funcao_dados_id = c.id)) AS rlr_alr
-            FROM (((((analise a
-            JOIN sistema b ON ((a.sistema_id = b.id)))
-            JOIN funcao_dados c ON (((c.analise_id = a.id) AND ((c.impacto)::text &lt;&gt; 'EXCLUSAO'::text))))
-            JOIN tipo_equipe f ON ((a.equipe_responsavel_id = f.id)))
-            LEFT JOIN der d ON ((d.funcao_dados_id = c.id)))
-            LEFT JOIN rlr e ON ((e.funcao_dados_id = c.id)))
-            WHERE ((c.grosspf &gt; (0)::numeric) AND (a.data_homologacao_software IS NOT NULL) AND (a.data_homologacao_software = ( SELECT max(a1.data_homologacao_software) AS max
-            FROM (analise a1
-            JOIN funcao_dados c1 ON (((c1.analise_id = a1.id) AND ((c1.name)::text = (c.name)::text))))
-            WHERE (a1.bloqueado = true))) AND (NOT (a.id IN ( SELECT a2.id
-            FROM analise a2
-            WHERE ((a2.baseline_imediatamente = true) AND (now() &lt;= ((a2.data_homologacao_software)::date + ( SELECT contrato.dias_de_garantia
-            FROM contrato
-            WHERE (contrato.id = a2.contrato_id)))))))) AND ((upper((a.metodo_contagem)::text) = 'DETALHADA'::text) OR ((a.enviar_baseline = true) AND (upper((a.metodo_contagem)::text) = 'ESTIMADA'::text))) AND (a.bloqueado = true))
-            UNION
-            SELECT 'ft'::text AS tipo,
-            c.impacto,
-            c.tipo,
-            c.analise_id,
-            a.data_homologacao_software,
-            b.id AS id_sistema,
-            b.nome,
-            b.sigla,
-            c.name,
-            c.grosspf AS pf,
-            c.id AS id_dados_trans,
-            c.complexidade,
-            b.numero_ocorrencia,
-            f.nome AS nome_equipe,
-            a.equipe_responsavel_id,
-            ( SELECT count(d.id) AS count
-            FROM der d
-            WHERE (d.funcao_transacao_id = c.id)) AS der,
-            ( SELECT count(e.id) AS count
-            FROM alr e
-            WHERE (e.funcao_transacao_id = c.id)) AS rlr_alr
-            FROM (((analise a
-            JOIN sistema b ON ((a.sistema_id = b.id)))
-            JOIN funcao_transacao c ON (((c.analise_id = a.id) AND ((c.impacto)::text &lt;&gt; 'EXCLUSAO'::text))))
-            JOIN tipo_equipe f ON ((a.equipe_responsavel_id = f.id)))
-            WHERE ((c.grosspf &gt; (0)::numeric) AND (a.data_homologacao_software IS NOT NULL) AND (a.data_homologacao_software = ( SELECT max(a1.data_homologacao_software) AS max
-            FROM (analise a1
-            JOIN funcao_transacao c1 ON (((c1.analise_id = a1.id) AND ((c1.name)::text = (c.name)::text))))
-            WHERE (a1.bloqueado = true))) AND (NOT (a.id IN ( SELECT a2.id
-            FROM analise a2
-            WHERE ((a2.baseline_imediatamente = true) AND (now() &lt;= ((a2.data_homologacao_software)::date + ( SELECT contrato.dias_de_garantia
-            FROM contrato
-            WHERE (contrato.id = a2.contrato_id)))))))) AND ((upper((a.metodo_contagem)::text) = 'DETALHADA'::text) OR ((a.enviar_baseline = true) AND (upper((a.metodo_contagem)::text) = 'ESTIMADA'::text))) AND (a.bloqueado = true))) w(tipo, impacto, tipo_1, analise_id, data_homologacao_software, id_sistema, nome, sigla, name, pf, id_dados_trans, complexidade, numero_ocorrencia, nome_equipe, equipe_responsavel_id, der, rlr_alr)
-            GROUP BY w.id_sistema, w.sigla, w.nome, w.numero_ocorrencia, w.equipe_responsavel_id, w.nome_equipe) sistema;</createView>
-    </changeSet>
-    <changeSet author="basis (generated)" id="1584128930494-123">
-        <createView fullDefinition="false" viewName="grupo"> SELECT a.id AS id_analise,
-            o.nome AS organizacao,
-            a.identificador_analise,
-            te.nome AS equipe,
-            s.nome AS sistema,
-            a.metodo_contagem,
-            a.pf_total,
-            a.pf_total_adjust AS pf_ajustado,
-            c.dias_de_garantia,
-            a.data_homologacao_software AS data_homologacao,
-            a.created_on AS data_criacao,
-            a.bloqueado
-            FROM ((((((analise a
-            LEFT JOIN jhi_user ju ON ((ju.id = a.created_by_id)))
-            LEFT JOIN tipo_equipe te ON ((te.id = a.equipe_responsavel_id)))
-            LEFT JOIN user_tipo_equipe ute ON ((ute.user_id = te.id)))
-            LEFT JOIN organizacao o ON ((o.id = a.organizacao_id)))
-            LEFT JOIN sistema s ON ((s.id = a.sistema_id)))
-            LEFT JOIN contrato c ON ((c.id = a.contrato_id)));</createView>
-    </changeSet>
-    <changeSet author="basis (generated)" id="1584128930494-124">
-        <createView fullDefinition="false" viewName="pe_analitico"> SELECT row_number() OVER (ORDER BY fdt.id_funcao_dados) AS row_number,
-            fdt.tipo,
-            fdt.classificacao,
-            fdt.impacto,
-            fdt.analise_id,
-            fdt.data_homologacao_software,
-            fdt.id_sistema,
-            fdt.nome,
-            fdt.sigla,
-            fdt.name,
-            fdt.pf,
-            fdt.id_funcao_dados,
-            fdt.complexidade,
-            fdt.nome_equipe,
-            fdt.equipe_responsavel_id,
-            fdt.nome_funcionalidade,
-            fdt.nome_modulo,
-            fdt.der,
-            fdt.rlr_alr
-            FROM ( SELECT 'fd'::text AS tipo,
+           FROM ( SELECT 'fd'::text AS tipo,
+                    c.impacto,
+                    c.tipo,
+                    c.analise_id,
+                    a.data_homologacao_software,
+                    b.id AS id_sistema,
+                    b.nome,
+                    b.sigla,
+                    c.name,
+                    c.grosspf AS pf,
+                    c.id AS id_dados_trans,
+                    c.complexidade,
+                    b.numero_ocorrencia,
+                    f.nome AS nome_equipe,
+                    a.equipe_responsavel_id,
+                    ( SELECT count(d_1.id) AS count
+                           FROM der d_1
+                          WHERE (d_1.funcao_dados_id = c.id)) AS der,
+                    ( SELECT count(e_1.id) AS count
+                           FROM rlr e_1
+                          WHERE (e_1.funcao_dados_id = c.id)) AS rlr_alr
+                   FROM (((((analise a
+                     JOIN sistema b ON ((a.sistema_id = b.id)))
+                     JOIN funcao_dados c ON (((c.analise_id = a.id) AND ((c.impacto)::text &lt;&gt; 'EXCLUSAO'::text))))
+                     JOIN tipo_equipe f ON ((a.equipe_responsavel_id = f.id)))
+                     LEFT JOIN der d ON ((d.funcao_dados_id = c.id)))
+                     LEFT JOIN rlr e ON ((e.funcao_dados_id = c.id)))
+                  WHERE ((c.grosspf &gt; (0)::numeric) AND (a.data_homologacao_software IS NOT NULL) AND (a.data_homologacao_software = ( SELECT max(a1.data_homologacao_software) AS max
+                           FROM (analise a1
+                             JOIN funcao_dados c1 ON (((c1.analise_id = a1.id) AND ((c1.name)::text = (c.name)::text))))
+                          WHERE (a1.bloqueado = true))) AND (NOT (a.id IN ( SELECT a2.id
+                           FROM analise a2
+                          WHERE ((a2.baseline_imediatamente = true) AND (now() &lt;= ((a2.data_homologacao_software)::date + ( SELECT contrato.dias_de_garantia
+                                   FROM contrato
+                                  WHERE (contrato.id = a2.contrato_id)))))))) AND ((upper((a.metodo_contagem)::text) = 'DETALHADA'::text) OR ((a.enviar_baseline = true) AND (upper((a.metodo_contagem)::text) = 'ESTIMADA'::text))) AND (a.bloqueado = true))
+                UNION
+                 SELECT 'ft'::text AS tipo,
+                    c.impacto,
+                    c.tipo,
+                    c.analise_id,
+                    a.data_homologacao_software,
+                    b.id AS id_sistema,
+                    b.nome,
+                    b.sigla,
+                    c.name,
+                    c.grosspf AS pf,
+                    c.id AS id_dados_trans,
+                    c.complexidade,
+                    b.numero_ocorrencia,
+                    f.nome AS nome_equipe,
+                    a.equipe_responsavel_id,
+                    ( SELECT count(d.id) AS count
+                           FROM der d
+                          WHERE (d.funcao_transacao_id = c.id)) AS der,
+                    ( SELECT count(e.id) AS count
+                           FROM alr e
+                          WHERE (e.funcao_transacao_id = c.id)) AS rlr_alr
+                   FROM (((analise a
+                     JOIN sistema b ON ((a.sistema_id = b.id)))
+                     JOIN funcao_transacao c ON (((c.analise_id = a.id) AND ((c.impacto)::text &lt;&gt; 'EXCLUSAO'::text))))
+                     JOIN tipo_equipe f ON ((a.equipe_responsavel_id = f.id)))
+                  WHERE ((c.grosspf &gt; (0)::numeric) AND (a.data_homologacao_software IS NOT NULL) AND (a.data_homologacao_software = ( SELECT max(a1.data_homologacao_software) AS max
+                           FROM (analise a1
+                             JOIN funcao_transacao c1 ON (((c1.analise_id = a1.id) AND ((c1.name)::text = (c.name)::text))))
+                          WHERE (a1.bloqueado = true))) AND (NOT (a.id IN ( SELECT a2.id
+                           FROM analise a2
+                          WHERE ((a2.baseline_imediatamente = true) AND (now() &lt;= ((a2.data_homologacao_software)::date + ( SELECT contrato.dias_de_garantia
+                                   FROM contrato
+                                  WHERE (contrato.id = a2.contrato_id)))))))) AND ((upper((a.metodo_contagem)::text) = 'DETALHADA'::text) OR ((a.enviar_baseline = true) AND (upper((a.metodo_contagem)::text) = 'ESTIMADA'::text))) AND (a.bloqueado = true))) w(tipo, impacto, tipo_1, analise_id, data_homologacao_software, id_sistema, nome, sigla, name, pf, id_dados_trans, complexidade, numero_ocorrencia, nome_equipe, equipe_responsavel_id, der, rlr_alr)
+          GROUP BY w.id_sistema, w.sigla, w.nome, w.numero_ocorrencia, w.equipe_responsavel_id, w.nome_equipe) sistema;</createView>
+   </changeSet>
+   <changeSet author="basis (generated)" id="1584128930494-123">
+      <createView fullDefinition="false" viewName="grupo"> SELECT a.id AS id_analise,
+    o.nome AS organizacao,
+    a.identificador_analise,
+    te.nome AS equipe,
+    s.nome AS sistema,
+    a.metodo_contagem,
+    a.pf_total,
+    a.pf_total_adjust AS pf_ajustado,
+    c.dias_de_garantia,
+    a.data_homologacao_software AS data_homologacao,
+    a.created_on AS data_criacao,
+    a.bloqueado
+   FROM ((((((analise a
+     LEFT JOIN jhi_user ju ON ((ju.id = a.created_by_id)))
+     LEFT JOIN tipo_equipe te ON ((te.id = a.equipe_responsavel_id)))
+     LEFT JOIN user_tipo_equipe ute ON ((ute.user_id = te.id)))
+     LEFT JOIN organizacao o ON ((o.id = a.organizacao_id)))
+     LEFT JOIN sistema s ON ((s.id = a.sistema_id)))
+     LEFT JOIN contrato c ON ((c.id = a.contrato_id)));</createView>
+   </changeSet>
+   <changeSet author="basis (generated)" id="1584128930494-124">
+      <createView fullDefinition="false" viewName="pe_analitico"> SELECT row_number() OVER (ORDER BY fdt.id_funcao_dados) AS row_number,
+    fdt.tipo,
+    fdt.classificacao,
+    fdt.impacto,
+    fdt.analise_id,
+    fdt.data_homologacao_software,
+    fdt.id_sistema,
+    fdt.nome,
+    fdt.sigla,
+    fdt.name,
+    fdt.pf,
+    fdt.id_funcao_dados,
+    fdt.complexidade,
+    fdt.nome_equipe,
+    fdt.equipe_responsavel_id,
+    fdt.nome_funcionalidade,
+    fdt.nome_modulo,
+    fdt.der,
+    fdt.rlr_alr
+   FROM ( SELECT 'fd'::text AS tipo,
             c.tipo AS classificacao,
             c.impacto,
             c.analise_id,
@@ -1480,22 +1480,22 @@
             fc.nome AS nome_funcionalidade,
             m.nome AS nome_modulo,
             ( SELECT count(d_1.id) AS count
-            FROM der d_1
-            WHERE (d_1.funcao_dados_id = c.id)) AS der,
+                   FROM der d_1
+                  WHERE (d_1.funcao_dados_id = c.id)) AS der,
             ( SELECT count(e_1.id) AS count
-            FROM rlr e_1
-            WHERE (e_1.funcao_dados_id = c.id)) AS rlr_alr
-            FROM (((((analise a
-            JOIN sistema b ON ((a.sistema_id = b.id)))
-            JOIN funcao_dados c ON (((c.analise_id = a.id) AND ((c.impacto)::text &lt;&gt; 'EXCLUSAO'::text))))
-            JOIN tipo_equipe f ON ((a.equipe_responsavel_id = f.id)))
-            LEFT JOIN funcionalidade fc ON ((c.funcionalidade_id = fc.id)))
-            LEFT JOIN modulo m ON ((fc.modulo_id = m.id)))
-            WHERE ((c.grosspf &gt; (0)::numeric) AND (upper((a.metodo_contagem)::text) = 'DETALHADA'::text) AND (c.id IN ( SELECT max(fds.id) AS max
-            FROM funcao_dados fds
-            WHERE (((fds.name)::text = (c.name)::text) AND (c.funcionalidade_id = fds.funcionalidade_id)))))
-            UNION
-            SELECT 'ft'::text AS tipo,
+                   FROM rlr e_1
+                  WHERE (e_1.funcao_dados_id = c.id)) AS rlr_alr
+           FROM (((((analise a
+             JOIN sistema b ON ((a.sistema_id = b.id)))
+             JOIN funcao_dados c ON (((c.analise_id = a.id) AND ((c.impacto)::text &lt;&gt; 'EXCLUSAO'::text))))
+             JOIN tipo_equipe f ON ((a.equipe_responsavel_id = f.id)))
+             LEFT JOIN funcionalidade fc ON ((c.funcionalidade_id = fc.id)))
+             LEFT JOIN modulo m ON ((fc.modulo_id = m.id)))
+          WHERE ((c.grosspf &gt; (0)::numeric) AND (upper((a.metodo_contagem)::text) = 'DETALHADA'::text) AND (c.id IN ( SELECT max(fds.id) AS max
+                   FROM funcao_dados fds
+                  WHERE (((fds.name)::text = (c.name)::text) AND (c.funcionalidade_id = fds.funcionalidade_id)))))
+        UNION
+         SELECT 'ft'::text AS tipo,
             c.tipo AS classificacao,
             c.impacto,
             c.analise_id,
@@ -1512,17 +1512,17 @@
             fc.nome AS nome_funcionalidade,
             m.nome AS nome_modulo,
             ( SELECT count(d.id) AS count
-            FROM der d
-            WHERE (d.funcao_transacao_id = c.id)) AS der,
+                   FROM der d
+                  WHERE (d.funcao_transacao_id = c.id)) AS der,
             ( SELECT count(e.id) AS count
-            FROM alr e
-            WHERE (e.funcao_transacao_id = c.id)) AS rlr_alr
-            FROM (((((analise a
-            JOIN sistema b ON ((a.sistema_id = b.id)))
-            JOIN funcao_transacao c ON (((c.analise_id = a.id) AND ((c.impacto)::text &lt;&gt; 'EXCLUSAO'::text))))
-            JOIN tipo_equipe f ON ((a.equipe_responsavel_id = f.id)))
-            LEFT JOIN funcionalidade fc ON ((c.funcionalidade_id = fc.id)))
-            LEFT JOIN modulo m ON ((fc.modulo_id = m.id)))
-            WHERE ((c.grosspf &gt; (0)::numeric) AND (upper((a.metodo_contagem)::text) = 'DETALHADA'::text))) fdt;</createView>
-    </changeSet>
+                   FROM alr e
+                  WHERE (e.funcao_transacao_id = c.id)) AS rlr_alr
+           FROM (((((analise a
+             JOIN sistema b ON ((a.sistema_id = b.id)))
+             JOIN funcao_transacao c ON (((c.analise_id = a.id) AND ((c.impacto)::text &lt;&gt; 'EXCLUSAO'::text))))
+             JOIN tipo_equipe f ON ((a.equipe_responsavel_id = f.id)))
+             LEFT JOIN funcionalidade fc ON ((c.funcionalidade_id = fc.id)))
+             LEFT JOIN modulo m ON ((fc.modulo_id = m.id)))
+          WHERE ((c.grosspf &gt; (0)::numeric) AND (upper((a.metodo_contagem)::text) = 'DETALHADA'::text))) fdt;</createView>
+   </changeSet>
 </databaseChangeLog>
