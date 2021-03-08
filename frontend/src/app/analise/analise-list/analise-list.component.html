@@ -155,9 +155,6 @@
                                 </li>
                             </ng-template>
                         </p-column>
-                        
-                    </basis-datatable>
-                    <div class="ui-g-12 ui-md-1" style="padding: 0;">
                         <basis-datatable-button *ngIf="blocked" name="desbloquear"
                         [bTooltip]="datatable.selectedRow != null ? 'Desbloquear' : 'Escolha um registro para desbloquear.'"
                         icon="block" (click)="bloqueiaAnalise(blocked)" [disabled]="datatable.selectedRow == null"
@@ -192,6 +189,9 @@
                     <basis-datatable-button name="generateDivergence" [bTooltip]="changeDivergenceTooltip()"
                         icon="compare-arrows" [disabled]="datatable.selectedRow == null" class="ui-button-info">
                     </basis-datatable-button>
+                    </basis-datatable>
+                    <div class="ui-g-12 ui-md-1" style="padding: 0;">
+                        
                     </div>
                     <div class="ui-g-12 ui-md-2">
                         <app-export-button [dataTable]="datatable" resourceName="analise" [columnsVisible]="columnsVisible" [filter]="searchGroup" funcionalidadeName="analise">
