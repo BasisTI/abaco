@@ -1,14 +1,11 @@
 package br.com.basis.abaco.service.mapper;
 
-import br.com.basis.abaco.domain.Authority;
 import br.com.basis.abaco.domain.User;
 import br.com.basis.abaco.service.dto.UserDTO;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
 import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 /**
  * Mapper for the entity User and its DTO UserDTO.
@@ -39,18 +36,5 @@ public interface UserMapper {
         User user = new User();
         user.setId(id);
         return user;
-    }
-
-    default Set<String> stringsFromAuthorities(Set<Authority> authorities) {
-        return authorities.stream().map(Authority::getName)
-            .collect(Collectors.toSet());
-    }
-
-    default Set<Authority> authoritiesFromStrings(Set<String> strings) {
-        return strings.stream().map(string -> {
-            Authority auth = new Authority();
-            auth.setName(string);
-            return auth;
-        }).collect(Collectors.toSet());
     }
 }

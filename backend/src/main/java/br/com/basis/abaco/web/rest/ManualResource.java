@@ -100,26 +100,15 @@ public class ManualResource {
 
     private final FatorAjusteRepository fatorAjusteRepository;
 
-    private final DynamicExportsService dynamicExportsService;
-
     private final ManualService manualService;
 
     private final UploadedFilesRepository filesRepository;
 
-    private static final String ROLE_ANALISTA = "ROLE_ANALISTA";
-
-    private static final String ROLE_ADMIN = "ROLE_ADMIN";
-
-    private static final String ROLE_USER = "ROLE_USER";
-
-    private static final String ROLE_GESTOR = "ROLE_GESTOR";
-
-    public ManualResource(ManualRepository manualRepository, ManualSearchRepository manualSearchRepository, DynamicExportsService dynamicExportsService,
+    public ManualResource(ManualRepository manualRepository, ManualSearchRepository manualSearchRepository,
                           ManualContratoRepository manualContratoRepository, AnaliseRepository analiseRepository, FatorAjusteRepository fatorAjusteRepository,
                           FuncaoTransacaoRepository funcaoTransacaoRepository, ManualService manualService, UploadedFilesRepository uploadedFilesRepository) {
         this.manualRepository = manualRepository;
         this.manualSearchRepository = manualSearchRepository;
-        this.dynamicExportsService = dynamicExportsService;
         this.manualContratoRepository = manualContratoRepository;
         this.analiseRepository = analiseRepository;
         this.fatorAjusteRepository = fatorAjusteRepository;
@@ -142,7 +131,7 @@ public class ManualResource {
      */
     @PostMapping(path = "/manuals", consumes = {"multipart/form-data"})
     @Timed
-    @Secured({ROLE_ADMIN, ROLE_USER, ROLE_GESTOR, ROLE_ANALISTA})
+    @Secured("ROLE_ABACO_MANUAL_CADASTRAR")
     public ResponseEntity<Manual> createManual(@Valid @RequestPart("manual") ManualDTO manualDTO, @RequestPart("file") List<MultipartFile> files) throws URISyntaxException, InvocationTargetException, IllegalAccessException {
 
         Manual manual = manualDTO.toEntity();
@@ -201,7 +190,7 @@ public class ManualResource {
      */
     @PutMapping(path = "/manuals", consumes = {"multipart/form-data"})
     @Timed
-    @Secured({ROLE_ADMIN, ROLE_USER, ROLE_GESTOR, ROLE_ANALISTA})
+    @Secured("ROLE_ABACO_MANUAL_EDITAR")
     public ResponseEntity<Manual> updateManual(@Valid @RequestPart("manual") ManualDTO manualDTO, @RequestPart("file") List<MultipartFile> files) throws URISyntaxException, InvocationTargetException, IllegalAccessException {
 
         Manual manual = manualDTO.toEntity();
@@ -266,6 +255,7 @@ public class ManualResource {
      */
     @GetMapping("/manuals/{id}")
     @Timed
+    @Secured("ROLE_ABACO_MANUAL_CONSULTAR")
     public ResponseEntity<Manual> getManual(@PathVariable Long id) {
         log.debug("REST request to get Manual : {}", id);
         Manual manual = manualRepository.findOne(id);
@@ -289,7 +279,7 @@ public class ManualResource {
     @SneakyThrows
     @DeleteMapping("/manuals/{id}")
     @Timed
-    @Secured({ ROLE_ADMIN, ROLE_USER, ROLE_GESTOR, ROLE_ANALISTA })
+    @Secured("ROLE_ABACO_MANUAL_EXCLUIR")
     public ResponseEntity<String> deleteManual(@PathVariable Long id) {
 
         if (verificarManualContrato(id)) {
@@ -328,6 +318,7 @@ public class ManualResource {
      */
     @PostMapping("/manuals/clonar")
     @Timed
+    @Secured("ROLE_ABACO_MANUAL_CLONAR")
     public ResponseEntity<Manual> clonar(@RequestBody ManualDTO manualDTO) throws InvocationTargetException, IllegalAccessException {
 
         Manual manual = manualDTO.toEntity();
@@ -364,6 +355,7 @@ public class ManualResource {
     }
 
     @GetMapping("/manuals/arquivos/{id}")
+    @Secured("ROLE_ABACO_MANUAL_CONSULTAR")
     public List<UploadedFile> getFiles(@PathVariable Long id){
         Manual manual = manualRepository.findOne(id);
 
@@ -433,6 +425,7 @@ public class ManualResource {
      */
     @GetMapping("/_search/manual")
     @Timed
+    @Secured({"ROLE_ABACO_MANUAL_ACESSAR", "ROLE_ABACO_MANUAL_PESQUISAR"})
     public ResponseEntity<List<Manual>> searchManuals(
         @RequestParam(defaultValue = "*") String query,
         @RequestParam(defaultValue = "ASC")String order,
@@ -451,6 +444,7 @@ public class ManualResource {
 
     @PostMapping(value = "/manual/exportacao/{tipoRelatorio}", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
     @Timed
+    @Secured("ROLE_ABACO_MANUAL_EXPORTAR")
     public ResponseEntity<InputStreamResource> gerarRelatorioExportacao(@PathVariable String tipoRelatorio,@RequestBody SearchFilterDTO filter) throws RelatorioException {
         ByteArrayOutputStream byteArrayOutputStream = manualService.gerarRelatorio(filter, tipoRelatorio);
         return DynamicExporter.output(byteArrayOutputStream, "relatorio." + tipoRelatorio);
@@ -458,6 +452,7 @@ public class ManualResource {
 
     @PostMapping(value = "/manual/exportacao-arquivo", produces = MediaType.APPLICATION_PDF_VALUE)
     @Timed
+    @Secured("ROLE_ABACO_MANUAL_EXPORTAR")
     public ResponseEntity<byte[]> gerarRelatorioImprimir(@RequestBody SearchFilterDTO filter)
         throws RelatorioException {
         ByteArrayOutputStream byteArrayOutputStream = manualService.gerarRelatorio(filter, "pdf");
@@ -466,6 +461,7 @@ public class ManualResource {
 
     @GetMapping("/relatorioPdfArquivoFatorAjuste/{id}")
     @Timed
+    @Secured("ROLE_ABACO_MANUAL_EXPORTAR_FATOR_AJUSTE")
     public ResponseEntity<byte[]> downloadPdfBrowser(@PathVariable Long id) throws URISyntaxException, IOException, JRException {
         Manual manual = manualRepository.getOne(id);
         RelatorioFatorAjusteRest relatorioFatorAjusteRest = new RelatorioFatorAjusteRest();

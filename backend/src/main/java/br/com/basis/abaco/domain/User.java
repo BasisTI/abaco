@@ -1,14 +1,12 @@
 package br.com.basis.abaco.domain;
 
 import br.com.basis.abaco.config.Constants;
-import br.com.basis.abaco.security.AuthoritiesConstants;
 import br.com.basis.dynamicexports.pojo.ReportObject;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.validator.constraints.Email;
@@ -34,10 +32,11 @@ import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.time.ZonedDateTime;
 import java.util.HashSet;
-import java.util.Iterator;
+import java.util.LinkedHashSet;
+import java.util.Optional;
 import java.util.Set;
 
-import static java.util.Collections.*;
+import static java.util.Collections.unmodifiableSet;
 
 @Entity
 @Table(name = "jhi_user")
@@ -113,13 +112,10 @@ public class User extends AbstractAuditingEntity implements Serializable, Report
     private ZonedDateTime resetDate = null;
 
     @ManyToMany
-    @JoinTable(name = "jhi_user_authority", joinColumns = {
-            @JoinColumn(name = "user_id", referencedColumnName = "id")}, inverseJoinColumns = {
-            @JoinColumn(name = "authority_name", referencedColumnName = "name")})
-    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-    @BatchSize(size = 20)
-    @Field(type = FieldType.Nested, index = FieldIndex.not_analyzed)
-    private Set<Authority> authorities = new HashSet<>();
+    @JoinTable(name = "user_perfil", joinColumns = {
+        @JoinColumn(name = "user_id", referencedColumnName = "id")}, inverseJoinColumns = {
+        @JoinColumn(name = "perfil_id", referencedColumnName = "id")})
+    private Set<Perfil> perfils = new HashSet<>();
 
     @Field(type = FieldType.Nested)
     @ManyToMany
@@ -137,15 +133,6 @@ public class User extends AbstractAuditingEntity implements Serializable, Report
     private Set<Organizacao> organizacoes = new HashSet<>();
 
 
-    public boolean verificarAuthority() {
-        boolean temResposta = false;
-        Iterator<Authority> i = this.authorities.iterator();
-        while (i.hasNext() && !temResposta) {
-            Authority a = i.next();
-            temResposta = (a.contain(AuthoritiesConstants.ADMIN) || a.contain(AuthoritiesConstants.GESTOR));
-        }
-        return temResposta;
-    }
 
     public String getEquipes(){
         String ponto = ". ";
@@ -163,12 +150,12 @@ public class User extends AbstractAuditingEntity implements Serializable, Report
     }
 
     public String getNomePerfil(){
-        String ponto = ". ";
+        String ponto = " | ";
         String nomePerfil = "";
 
-        if (authorities != null) {
-            for (Authority perfil : authorities) {
-                nomePerfil = nomePerfil.concat(perfil.getName()).concat(ponto);
+        if (perfils != null) {
+            for (Perfil perfil : perfils) {
+                nomePerfil = nomePerfil.concat(perfil.getNome()).concat(ponto);
             }
         }
 
@@ -288,14 +275,6 @@ public class User extends AbstractAuditingEntity implements Serializable, Report
         this.resetDate = resetDate;
     }
 
-    public Set<Authority> getAuthorities() {
-        return unmodifiableSet(authorities);
-    }
-
-    public void setAuthorities(Set<Authority> authorities) {
-        this.authorities = unmodifiableSet(authorities);
-    }
-
     public Set<TipoEquipe> getTipoEquipes() {
         return unmodifiableSet(tipoEquipes);
     }
@@ -320,4 +299,15 @@ public class User extends AbstractAuditingEntity implements Serializable, Report
         this.organizacoes = unmodifiableSet(organizacoes);
     }
 
+    public Set<Perfil> getPerfils() {
+        return Optional.ofNullable(this.perfils)
+            .map(lista -> new LinkedHashSet<Perfil>(lista))
+            .orElse(new LinkedHashSet<Perfil>());
+    }
+
+    public void setPerfils(Set<Perfil> perfils) {
+        this.perfils = Optional.ofNullable(perfils)
+            .map(lista -> new LinkedHashSet<Perfil>(lista))
+            .orElse(new LinkedHashSet<Perfil>());
+    }
 }

@@ -65,7 +65,7 @@
                     </div>
                     <div class="ui-g-2 ui-md-2 ui-sm-12">
                         <app-green-button [buttonLabel]="'Novo'" id="idBtnNovoComponentAnalise" buttonIcon="ui-icon-add"
-                            routerLink="new">
+                            (click)="criarAnalise()">
                         </app-green-button>
                     </div>
                 </div>
@@ -155,49 +155,47 @@
                                 </li>
                             </ng-template>
                         </p-column>
-                        <basis-datatable-button *ngIf="blocked" name="desbloquear"
-                            [bTooltip]="datatable.selectedRow != null ? 'Desbloquear' : 'Escolha um registro para desbloquear.'"
-                            icon="block" (click)="bloqueiaAnalise(blocked)" [disabled]="datatable.selectedRow == null"
-                            class="ui-button-success">
-                        </basis-datatable-button>
-                        <basis-datatable-button *ngIf="!blocked && inicial" name="bloquear"
-                            [bTooltip]="datatable.selectedRow != null ? 'Bloquear' : 'Escolha um registro para bloquear.'"
-                            icon="block" (click)="bloqueiaAnalise(blocked)" [disabled]="datatable.selectedRow == null"
-                            class="ui-button-danger">
-                        </basis-datatable-button>
-                        <basis-datatable-button name="compartilhar" [bTooltip]="compartilharTooltip()" icon="share"
-                            class="ui-button-info" [disabled]="datatable.selectedRow == null">
-                        </basis-datatable-button>
-                        <basis-datatable-button name="clone" [bTooltip]="clonarTooltip()" icon="content-copy"
-                            [disabled]="datatable.selectedRow == null">
-                        </basis-datatable-button>
-                        <basis-datatable-button name="relatorioBrowserDetalhado" [bTooltip]="relatorioTooltip()"
-                            icon="description" [disabled]="datatable.selectedRow == null">
-                        </basis-datatable-button>
-                        <basis-datatable-button name="relatorioExcelDetalhado" [bTooltip]="relatorioExcelTooltip()"
-                            icon="description" [disabled]="datatable.selectedRow == null" class="ui-button-success">
-                        </basis-datatable-button>
-                        <basis-datatable-button name="relatorioAnaliseContagem" [bTooltip]="relatorioContagemTooltip()"
-                            icon="description" [disabled]="datatable.selectedRow == null" class="ui-button-danger">
-                        </basis-datatable-button>
-                        <basis-datatable-button name="cloneParaEquipe" [bTooltip]="clonarParaEquipeTooltip()"
-                            icon="content-copy" [disabled]="datatable.selectedRow == null" class="ui-button-success">
-                        </basis-datatable-button>
-                        <basis-datatable-button name="changeStatus" [bTooltip]="changeStatusTooltip()" icon="swap-vert"
-                            [disabled]="datatable.selectedRow == null" class="ui-button-info">
-                        </basis-datatable-button>
-                        <basis-datatable-button name="generateDivergence" [bTooltip]="changeDivergenceTooltip()"
-                            icon="compare-arrows" [disabled]="datatable.selectedRow == null" class="ui-button-info">
-                        </basis-datatable-button>
+                        
                     </basis-datatable>
-                    <div class="ui-g-12 ui-md-2">
-                        <app-export-button [dataTable]="datatable" resourceName="analise" [columnsVisible]="columnsVisible" [filter]="searchGroup">
-                        </app-export-button>
+                    <div class="ui-g-12 ui-md-1" style="padding: 0;">
+                        <basis-datatable-button *ngIf="blocked" name="desbloquear"
+                        [bTooltip]="datatable.selectedRow != null ? 'Desbloquear' : 'Escolha um registro para desbloquear.'"
+                        icon="block" (click)="bloqueiaAnalise(blocked)" [disabled]="datatable.selectedRow == null"
+                        class="ui-button-success">
+                    </basis-datatable-button>
+                    <basis-datatable-button *ngIf="!blocked && inicial" name="bloquear"
+                        [bTooltip]="datatable.selectedRow != null ? 'Bloquear' : 'Escolha um registro para bloquear.'"
+                        icon="block" (click)="bloqueiaAnalise(blocked)" [disabled]="datatable.selectedRow == null"
+                        class="ui-button-danger">
+                    </basis-datatable-button>
+                    <basis-datatable-button name="compartilhar" [bTooltip]="compartilharTooltip()" icon="share"
+                        class="ui-button-info" [disabled]="datatable.selectedRow == null">
+                    </basis-datatable-button>
+                    <basis-datatable-button name="clone" [bTooltip]="clonarTooltip()" icon="content-copy"
+                        [disabled]="datatable.selectedRow == null">
+                    </basis-datatable-button>
+                    <basis-datatable-button name="relatorioBrowserDetalhado" [bTooltip]="relatorioTooltip()"
+                        icon="description" [disabled]="datatable.selectedRow == null">
+                    </basis-datatable-button>
+                    <basis-datatable-button name="relatorioExcelDetalhado" [bTooltip]="relatorioExcelTooltip()"
+                        icon="description" [disabled]="datatable.selectedRow == null" class="ui-button-success">
+                    </basis-datatable-button>
+                    <basis-datatable-button name="relatorioAnaliseContagem" [bTooltip]="relatorioContagemTooltip()"
+                        icon="description" [disabled]="datatable.selectedRow == null" class="ui-button-danger">
+                    </basis-datatable-button>
+                    <basis-datatable-button name="cloneParaEquipe" [bTooltip]="clonarParaEquipeTooltip()"
+                        icon="content-copy" [disabled]="datatable.selectedRow == null" class="ui-button-success">
+                    </basis-datatable-button>
+                    <basis-datatable-button name="changeStatus" [bTooltip]="changeStatusTooltip()" icon="swap-vert"
+                        [disabled]="datatable.selectedRow == null" class="ui-button-info">
+                    </basis-datatable-button>
+                    <basis-datatable-button name="generateDivergence" [bTooltip]="changeDivergenceTooltip()"
+                        icon="compare-arrows" [disabled]="datatable.selectedRow == null" class="ui-button-info">
+                    </basis-datatable-button>
                     </div>
                     <div class="ui-g-12 ui-md-2">
-                        <app-botoes-exportacao [query]="changeUrl()" resourceName="analise"
-                            id="idBtnExportacaoComponentAnalise" fileName="analise">
-                        </app-botoes-exportacao>
+                        <app-export-button [dataTable]="datatable" resourceName="analise" [columnsVisible]="columnsVisible" [filter]="searchGroup" funcionalidadeName="analise">
+                        </app-export-button>
                     </div>
                 </div>
             </div>

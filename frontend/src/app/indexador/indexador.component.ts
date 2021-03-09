@@ -34,6 +34,7 @@ export class IndexadorComponent {
         { value: 'MODULO', label: 'Modulo' },
         { value: 'NOMENCLATURA', label: 'Nomenclatura' },
         { value: 'ORGANIZACAO', label: 'Organização' },
+        { value: 'PERFIL', label: 'Perfil' },
         //{value: 'PE_ANALITICO', label: 'PE Analítico'},// (NPE)
         { value: 'RLR', label: 'Rlr' },
         { value: 'SISTEMA', label: 'Sistema' },

@@ -68,7 +68,6 @@ public class EsforcoFaseResource {
      */
     @PostMapping("/esforco-fases")
     @Timed
-    @Secured({"ROLE_ADMIN", "ROLE_USER", "ROLE_GESTOR"})
     public ResponseEntity<EsforcoFase> createEsforcoFase(@RequestBody EsforcoFase esforcoFase)
             throws URISyntaxException {
         log.debug("REST request to save EsforcoFase : {}", esforcoFase);
@@ -96,7 +95,6 @@ public class EsforcoFaseResource {
      */
     @PutMapping("/esforco-fases")
     @Timed
-    @Secured({"ROLE_ADMIN", "ROLE_USER", "ROLE_GESTOR"})
     public ResponseEntity<EsforcoFase> updateEsforcoFase(@RequestBody EsforcoFase esforcoFase)
             throws URISyntaxException {
         log.debug("REST request to update EsforcoFase : {}", esforcoFase);
@@ -151,7 +149,6 @@ public class EsforcoFaseResource {
      */
     @DeleteMapping("/esforco-fases/{id}")
     @Timed
-    @Secured({"ROLE_ADMIN", "ROLE_USER", "ROLE_GESTOR"})
     public ResponseEntity<Void> deleteEsforcoFase(@PathVariable Long id) {
         log.debug("REST request to delete EsforcoFase : {}", id);
         esforcoFaseRepository.delete(id);
@@ -166,13 +163,13 @@ public class EsforcoFaseResource {
      * @param query
      *            the query of the esforcoFase search
      * @return the result of the search
-     * @throws URISyntaxException 
+     * @throws URISyntaxException
      */
     @GetMapping("/_search/esforco-fases")
     @Timed
     public ResponseEntity<List<EsforcoFase>> searchEsforcoFases(@RequestParam(defaultValue = "*") String query, @ApiParam Pageable pageable) throws URISyntaxException {
         log.debug("REST request to search EsforcoFases for query {}", query);
-        
+
         Page<EsforcoFase> page = esforcoFaseSearchRepository.search(queryStringQuery(query), pageable);
         HttpHeaders headers = PaginationUtil.generateSearchPaginationHttpHeaders(query, page, "/api/_search/esforco-fases");
         return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);

@@ -70,7 +70,7 @@ public class CacheConfiguration {
     private void configureCache(CacheManager cm) {
         cm.createCache(br.com.basis.abaco.domain.FatorAjuste.class.getName(), jcacheConfiguration);
         cm.createCache(br.com.basis.abaco.domain.User.class.getName(), jcacheConfiguration);
-        cm.createCache(br.com.basis.abaco.domain.Authority.class.getName(), jcacheConfiguration);
+        cm.createCache(br.com.basis.abaco.domain.Perfil.class.getName(), jcacheConfiguration);
         cm.createCache(br.com.basis.abaco.domain.User.class.getName() + ".authorities", jcacheConfiguration);
         cm.createCache(br.com.basis.abaco.domain.SocialUserConnection.class.getName(), jcacheConfiguration);
         cm.createCache(br.com.basis.abaco.domain.Organizacao.class.getName(), jcacheConfiguration);

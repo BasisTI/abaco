@@ -1,0 +1,15 @@
+id;nome;sigla
+0;Análise;ANALISE
+1;Baseline;BASELINE
+2;Fase;FASE
+3;Nomenclatura;NOMENCLATURA
+4;Manual;MANUAL
+5;Organização;ORGANIZACAO
+6;Perfil;PERFIL
+7;Sistema;SISTEMA
+8;Status;STATUS
+9;Tipo Equipe;TIPO_EQUIPE
+10;Usuário;USUARIO
+11;Divergência;DIVERGENCIA
+
+

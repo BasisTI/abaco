@@ -15,7 +15,7 @@
               buttonLabel="Novo"
               id="idBtnNovoComponentAnalise"
               buttonIcon="ui-icon-add"
-              routerLink="/sistema/new">
+              (click)="criarSistema()">
           </app-green-button>
         </div>
 
@@ -43,7 +43,7 @@
         </basis-datatable>
 
         <div class="ui-g-12 ui-md-2">
-            <app-export-button [dataTable]="datatable" resourceName="sistema" [filter]="datatable.filterParams">
+            <app-export-button [dataTable]="datatable" resourceName="sistema" [filter]="datatable.filterParams" funcionalidadeName="sistema">
             </app-export-button>
         </div>
 
