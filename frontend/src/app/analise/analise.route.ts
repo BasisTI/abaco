@@ -14,7 +14,7 @@ export const analiseRoute: Routes = [
         component: AnaliseListComponent,
         canActivate: [AuthGuard, AuthGuardService],
         data: {
-            roleParaVerificar: 'ROLE_ABACO_ANALISE_ACESSAR'
+            roleParaVerificar: ['ROLE_ABACO_ANALISE_ACESSAR']
         }
     },
     {
@@ -22,7 +22,7 @@ export const analiseRoute: Routes = [
         component: AnaliseFormComponent,
         canActivate: [AuthGuard, AuthGuardService],
         data: {
-            roleParaVerificar: 'ROLE_ABACO_ANALISE_CADASTRAR'
+            roleParaVerificar: ['ROLE_ABACO_ANALISE_CADASTRAR']
         }
     },
     {
@@ -30,7 +30,7 @@ export const analiseRoute: Routes = [
         component: AnaliseFormComponent,
         canActivate: [AuthGuard, AuthGuardService],
         data: {
-            roleParaVerificar: 'ROLE_ABACO_ANALISE_EDITAR'
+            roleParaVerificar:['ROLE_ABACO_ANALISE_EDITAR']
         }
     },
     {
@@ -38,7 +38,7 @@ export const analiseRoute: Routes = [
         component: AnaliseDetailComponent,
         canActivate: [AuthGuard, AuthGuardService],
         data: {
-            roleParaVerificar: 'ROLE_ABACO_ANALISE_CONSULTAR'
+            roleParaVerificar: ['ROLE_ABACO_ANALISE_CONSULTAR']
         }
     },
     {
@@ -46,7 +46,8 @@ export const analiseRoute: Routes = [
         component: AnaliseViewComponent,
         canActivate: [AuthGuard, AuthGuardService],
         data: {
-            roleParaVerificar: 'ROLE_ABACO_ANALISE_CONSULTAR'
+            roleParaVerificar: ['ROLE_ABACO_ANALISE_CONSULTAR',
+            'ROLE_ABACO_ANALISE_EDITAR']
         }
     },
     {
@@ -54,7 +55,8 @@ export const analiseRoute: Routes = [
         component: AnaliseResumoComponent,
         canActivate: [AuthGuard, AuthGuardService],
         data: {
-            roleParaVerificar: 'ROLE_ABACO_ANALISE_CONSULTAR'
+            roleParaVerificar: ['ROLE_ABACO_ANALISE_CONSULTAR',
+            'ROLE_ABACO_ANALISE_EDITAR']
         }
     },
     {
@@ -62,7 +64,8 @@ export const analiseRoute: Routes = [
         component: AnaliseResumoComponent,
         canActivate: [AuthGuard, AuthGuardService],
         data: {
-            roleParaVerificar: 'ROLE_ABACO_ANALISE_CONSULTAR'
+            roleParaVerificar: ['ROLE_ABACO_ANALISE_CONSULTAR',
+            'ROLE_ABACO_ANALISE_EDITAR']
         }
     },
 ];

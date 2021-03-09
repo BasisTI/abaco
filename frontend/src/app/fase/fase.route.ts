@@ -11,7 +11,7 @@ export const FaseRoute: Routes = [
     component: FaseListComponent,
     canActivate: [AuthGuard, AuthGuardService],
     data: {
-        roleParaVerificar: 'ROLE_ABACO_FASE_ACESSAR'
+        roleParaVerificar: ['ROLE_ABACO_FASE_ACESSAR']
     }
   },
   {
@@ -19,7 +19,7 @@ export const FaseRoute: Routes = [
     component: FaseFormComponent,
     canActivate: [AuthGuard, AuthGuardService],
     data: {
-        roleParaVerificar: 'ROLE_ABACO_FASE_CADASTRAR'
+        roleParaVerificar: ['ROLE_ABACO_FASE_CADASTRAR']
     }
   },
   {
@@ -27,7 +27,7 @@ export const FaseRoute: Routes = [
     component: FaseFormComponent,
     canActivate: [AuthGuard, AuthGuardService],
     data: {
-        roleParaVerificar: 'ROLE_ABACO_FASE_EDITAR'
+        roleParaVerificar: ['ROLE_ABACO_FASE_EDITAR']
     }
   },
   {
@@ -35,7 +35,7 @@ export const FaseRoute: Routes = [
     component: FaseDetailComponent,
     canActivate: [AuthGuard, AuthGuardService],
     data: {
-        roleParaVerificar: 'ROLE_ABACO_FASE_CONSULTAR'
+        roleParaVerificar: ['ROLE_ABACO_FASE_CONSULTAR']
     }
   },
 ];

@@ -14,7 +14,7 @@ export const tipoEquipeRoute: Routes = [
     component: TipoEquipeListComponent,
     canActivate: [AuthGuard, AuthGuardService],
     data: {
-        roleParaVerificar: 'ROLE_ABACO_TIPO_EQUIPE_ACESSAR'
+        roleParaVerificar: ['ROLE_ABACO_TIPO_EQUIPE_ACESSAR']
     }
   },
   {
@@ -22,7 +22,7 @@ export const tipoEquipeRoute: Routes = [
     component: TipoEquipeFormComponent,
     canActivate: [AuthGuard, AuthGuardService],
     data: {
-        roleParaVerificar: 'ROLE_ABACO_TIPO_EQUIPE_CADASTRAR'
+        roleParaVerificar: ['ROLE_ABACO_TIPO_EQUIPE_CADASTRAR']
     }
   },
   {
@@ -30,7 +30,7 @@ export const tipoEquipeRoute: Routes = [
     component: TipoEquipeFormComponent,
     canActivate: [AuthGuard, AuthGuardService],
     data: {
-        roleParaVerificar: 'ROLE_ABACO_TIPO_EQUIPE_EDITAR'
+        roleParaVerificar: ['ROLE_ABACO_TIPO_EQUIPE_EDITAR']
     }
   },
   {
@@ -38,7 +38,7 @@ export const tipoEquipeRoute: Routes = [
     component: TipoEquipeDetailComponent,
     canActivate: [AuthGuard, AuthGuardService],
     data: {
-        roleParaVerificar: 'ROLE_ABACO_TIPO_EQUIPE_CONSULTAR'
+        roleParaVerificar: ['ROLE_ABACO_TIPO_EQUIPE_CONSULTAR']
     }
   },
 ];

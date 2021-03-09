@@ -12,8 +12,15 @@ export class AuthGuardService implements CanActivate {
         ){}
 
     canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean | UrlTree | Observable<boolean | UrlTree> | Promise<boolean | UrlTree> {
-        const roleParaVerificar = route.data.roleParaVerificar;
-        return this.authService.possuiRole(roleParaVerificar);
+        const roleParaVerificar: string[] = route.data.roleParaVerificar;
+        let can: boolean = false;
+
+        roleParaVerificar.forEach(role => {
+            if(this.authService.possuiRole(role)){
+                can = true;
+            }
+        })
+        return can;
     }
 
 }

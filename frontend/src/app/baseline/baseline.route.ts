@@ -12,7 +12,7 @@ export const baselineRoute: Routes = [
     component: BaselineComponent,
     canActivate: [AuthGuard, AuthGuardService],
     data: {
-        roleParaVerificar: 'ROLE_ABACO_BASELINE_ACESSAR'
+        roleParaVerificar: ['ROLE_ABACO_BASELINE_ACESSAR']
     }
   },
   {
@@ -20,7 +20,7 @@ export const baselineRoute: Routes = [
     component: BaselineViewComponent,
     canActivate: [AuthGuard, AuthGuardService],
     data: {
-        roleParaVerificar: 'ROLE_ABACO_BASELINE_CONSULTAR'
+        roleParaVerificar: ['ROLE_ABACO_BASELINE_CONSULTAR']
     }
   }
 ];

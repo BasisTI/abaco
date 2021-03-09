@@ -14,7 +14,7 @@ export const userRoute: Routes = [
     component: UserListComponent,
     canActivate: [AuthGuard, AuthGuardService],
     data: {
-        roleParaVerificar: 'ROLE_ABACO_USUARIO_ACESSAR'
+        roleParaVerificar: ['ROLE_ABACO_USUARIO_ACESSAR']
     }
   },
   {
@@ -22,7 +22,7 @@ export const userRoute: Routes = [
     component: UserFormComponent,
     canActivate: [AuthGuard, AuthGuardService],
     data: {
-        roleParaVerificar: 'ROLE_ABACO_USUARIO_CADASTRAR'
+        roleParaVerificar: ['ROLE_ABACO_USUARIO_CADASTRAR']
     }
   },
   {
@@ -30,7 +30,7 @@ export const userRoute: Routes = [
     component: UserFormComponent,
     canActivate: [AuthGuard, AuthGuardService],
     data: {
-        roleParaVerificar: 'ROLE_ABACO_USUARIO_EDITAR'
+        roleParaVerificar: ['ROLE_ABACO_USUARIO_EDITAR']
     }
   },
   {
@@ -38,7 +38,7 @@ export const userRoute: Routes = [
     component: UserDetailComponent,
     canActivate: [AuthGuard, AuthGuardService],
     data: {
-        roleParaVerificar: 'ROLE_ABACO_USUARIO_CONSULTAR'
+        roleParaVerificar: ['ROLE_ABACO_USUARIO_CONSULTAR']
     }
   },
   {
@@ -46,7 +46,7 @@ export const userRoute: Routes = [
     component: UserFormComponent,
     canActivate: [AuthGuard, AuthGuardService],
     data: {
-        roleParaVerificar: 'ROLE_ABACO_USUARIO_EDITAR'
+        roleParaVerificar: ['ROLE_ABACO_USUARIO_EDITAR']
     }
  },
 ];
