@@ -1,9 +1,9 @@
 import { BaseEntity } from '../shared';
-import { Authority } from './authority.model';
 import { TipoEquipe } from '../tipo-equipe';
 import { Organizacao } from '../organizacao';
 import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 import { UserService } from './user.service';
+import { Perfil } from '../perfil/perfil.model';
 
 
 export class User implements BaseEntity {
@@ -17,7 +17,7 @@ export class User implements BaseEntity {
     public activated?: boolean,
     public imageUrl?: string,
     public tipoEquipes?: TipoEquipe[],
-    public authorities?: Authority[],
+    public perfils?: Perfil[],
     public organizacoes?: Organizacao[]
   ) { }
 
@@ -40,11 +40,11 @@ export class User implements BaseEntity {
   }
 
   get roles(): string[] {
-    return this.authorities.map(a => a.name);
+    return this.perfils.map(a => a.nome);
   }
 
   set roles(roles: string[]) {
-    this.authorities = roles.map(r => new Authority(r));
+    this.perfils = roles.map(r => new Perfil());
   }
 
   toJSONState() {

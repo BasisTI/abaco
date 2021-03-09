@@ -36,7 +36,7 @@
                   [buttonLabel]="'Novo'"
                   id="idBtnNovoComponentOrganizacao"
                   buttonIcon="ui-icon-add"
-                  routerLink="/organizacao/new"></app-green-button>
+                  (click)="criarOrganizacao()"></app-green-button>
               </div>
         </div>
         <div class="ui-g-12 ui-g-nopad">
@@ -78,7 +78,7 @@
 
         </basis-datatable>
         <div class="ui-g-12 ui-md-2">
-            <app-export-button [dataTable]="datatable" resourceName="organizacaos" [columnsVisible]="columnsVisible" [filter]="organizacaoFiltro">
+            <app-export-button [dataTable]="datatable" resourceName="organizacaos" [columnsVisible]="columnsVisible" [filter]="organizacaoFiltro" funcionalidadeName="organizacao">
             </app-export-button>
         </div>
       </div>

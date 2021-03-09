@@ -42,9 +42,6 @@ public class UploadController {
     private final Logger log = LoggerFactory.getLogger(UploadController.class);
 
     @Autowired
-    private ServletContext servletContext;
-
-    @Autowired
     private UploadedFilesRepository filesRepository;
 
     @Autowired
@@ -134,7 +131,6 @@ public class UploadController {
     }
 
     @PostMapping("/uploadLogo")
-    @Secured({ "ROLE_ADMIN", "ROLE_USER", "ROLE_GESTOR" })
     public ResponseEntity<UploadedFile> singleFileUpload(@RequestParam("file") MultipartFile file) throws IOException {
         this.bytes = file.getBytes();
 

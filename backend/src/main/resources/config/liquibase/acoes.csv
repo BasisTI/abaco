@@ -1,0 +1,20 @@
+id;descricao;sigla
+0;Cadastrar;CADASTRAR
+1;Editar;EDITAR
+2;Excluir;EXCLUIR
+3;Acessar;ACESSAR
+4;Clonar;CLONAR
+5;Consultar;CONSULTAR
+6;Exportar;EXPORTAR
+7;Pesquisar;PESQUISAR
+8;Atualizar;ATUALIZAR
+9;Compartilhar;COMPARTILHAR
+10;Bloquear / Desbloquear;BLOQUEAR_DESBLOQUEAR
+11;Exportar Relatório Detalhado;EXPORTAR_RELATORIO_DETALHADO
+12;Exportar Relatório de Fundamentação;EXPORTAR_RELATORIO_FUNDAMENTACAO
+13;Exportar Relatório Excel;EXPORTAR_RELATORIO_EXCEL
+14;Clonar para equipe;CLONAR_EQUIPE
+15;Alterar status;ALTERAR_STATUS
+16;Gerar validação;GERAR_VALIDACAO
+17;Exportar Fator Ajuste;EXPORTAR_FATOR_AJUSTE
+

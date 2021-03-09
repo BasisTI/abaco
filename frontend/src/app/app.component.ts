@@ -61,6 +61,7 @@ export class AppComponent implements AfterViewInit, OnDestroy, OnInit {
                     { label: 'Usuários', routerLink: 'admin/user', icon: 'person' },
                     { label: 'Status', routerLink: 'status', icon: 'assignment' },
                     { label: 'Nomenclatura', routerLink: 'nomenclatura', icon: 'comment_bank' },
+                    { label: 'Perfil', routerLink: 'perfil', icon: 'assignment_ind' },
                 ]
             },
             {

@@ -1,0 +1,77 @@
+<div class="ui-g ui-fluid">
+    <div class="ui-g-12 ui-md-12 ui-sm-12">
+        <div class="card card-w-title">
+            <h1>Perfil</h1>
+            <div class="ui-g">
+                <div class="ui-g-12 ui-md-12 ui-sm-12">
+                    <span class="md-inputfield">
+                        <input type="text" pInputText class="ui-inputtext"
+                            (input)="elasticQuery.value = $event.target.value" (keyup.enter)="recarregarDataTable()"
+                            #filter maxlength="80" />
+                        <label translate="Cadastros.Perfil.Descricao">Descrição</label>
+                    </span>
+                </div>
+            </div>
+            <div class="ui-g">
+
+                <div class="ui-g ui-md-12" style="justify-content: center; margin-bottom: 25px; margin-top: 25px">
+                    <div class="ui-g-2 ui-md-2 ui-sm-12">
+                        <app-white-button [buttonLabel]="'Limpar Pesquisa'" id="idBtnLimparPesquisaComponentPerfil"
+                            buttonIcon="ui-icon-clear-all" (click)="limparPesquisa()">
+                        </app-white-button>
+                    </div>
+                    <div class="ui-g-2 ui-md-2 ui-sm-12">
+                        <app-blue-button [buttonLabel]="'Pesquisar' " buttonIcon="ui-icon-search"
+                            id="idBtnPesquisarComponentPerfil" (click)="recarregarDataTable()">
+                        </app-blue-button>
+                    </div>
+                    <div class="ui-g-2 ui-md-2 ui-sm-12">
+                        <app-green-button [buttonLabel]="'Novo'" id="idBtnNovoComponentPerfil" buttonIcon="ui-icon-add"
+                            (click)="criarPerfil()"></app-green-button>
+                    </div>
+                </div>
+
+                <basis-datatable type="server" [url]="searchUrl" (dblclick)="onRowDblclick($event)"
+                    (click)="selectPerfil()" (buttonClick)="onClick($event)" [rows]="20"
+                    [rowsPerPageOptions]="rowsPerPageOptions" [showPaginationFooter]="true"
+                    [showVisibleColumnsControl]="true" #datatable>
+
+                    <p-column header="Nome" field="nome" [sortable]="true">
+                        <ng-template let-row="rowData" pTemplate="body">
+                            <li>
+                              {{ row.nome }}
+                            </li>
+                          </ng-template>
+                    </p-column>
+                    <p-column header="Descrição" field="descricao" [sortable]="true">
+                        <ng-template let-row="rowData" pTemplate="body">
+                            <li>
+                               {{ row.descricao }}
+                            </li>
+                          </ng-template>
+                    </p-column>
+                    <p-column header="Ativo" field="ativo" [sortable]="true">
+                        <ng-template let-row="rowData" pTemplate="body">
+                            <li>
+                               {{ row.flgAtivo ? 'Sim' : 'Não'}}
+                            </li>
+                          </ng-template>
+                    </p-column>
+                </basis-datatable>
+
+                <div class="ui-g-12 ui-md-2">
+                    <app-export-button [dataTable]="datatable" resourceName="perfils" funcionalidadeName="perfil">
+                    </app-export-button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<p-confirmDialog header="Confirmação" #dialog>
+    <p-footer>
+        <button type="button" id="idBtnNaoDeleteComponentPerfil" pButton icon="fa-close" label="Não"
+            (click)="dialog.reject()"></button>
+        <button type="button" id="idBtnSimDeleteComponentPerfil" pButton icon="fa-check" label="Sim"
+            (click)="dialog.accept()"></button>
+    </p-footer>
+</p-confirmDialog>

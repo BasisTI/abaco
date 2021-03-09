@@ -22,7 +22,8 @@ public enum IndexadoresUtil {
     BASE_LINE_SINTETICO("baseline_sintetico"),
     FUNCAO_TRANSACAO("função_transação"),
     STATUS("status"),
-    NOMENCLATURA("nomenclatura");
+    NOMENCLATURA("nomenclatura"),
+    PERFIL("perfil");
 
     public final String label;
 

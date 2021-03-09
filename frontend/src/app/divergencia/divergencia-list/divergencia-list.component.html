@@ -59,7 +59,7 @@
                 </div>
                 <div>
                     <div class="ui-g-12 ui-md-11" >
-                        <p-table [columns]="allColumnsTable" 
+                        <p-table [columns]="allColumnsTable"
                                     [value]="lstDivergence"
                                     [lazy]="true"
                                     [paginator]="true"
@@ -177,7 +177,7 @@
                             [disabled]="!selectedDivergence"
                             (click)="confirmBlockDivegence(selectedDivergence)"
                             class="ui-button-danger">
-                        </basis-datatable-button>        
+                        </basis-datatable-button>
                         <basis-datatable-button
                             name="generateDivergence"
                             [bTooltip]="selectedDivergence != null ? 'Alterar' : 'Escolha um registro para alterar status.'"
@@ -185,16 +185,11 @@
                             [disabled]="!selectedDivergence"
                             (click)="changeStatus(selectedDivergence)"
                             class="ui-button-info">
-                        </basis-datatable-button>               
+                        </basis-datatable-button>
                     </div>
                     <div class="ui-g-12 ui-md-2">
-                        <app-export-button [dataTable]="datatable" resourceName="divergencia" [filter]="searchDivergence">
+                        <app-export-button [dataTable]="datatable" resourceName="divergencia" [filter]="searchDivergence" funcionalidadeName="divergencia">
                         </app-export-button>
-                    </div>
-                    <div class="ui-g-12 ui-md-2">
-                        <app-botoes-exportacao [query]="changeUrl()" resourceName="analise" id="idBtnExportacaoComponentAnalise"
-                        fileName="analise">
-                        </app-botoes-exportacao>
                     </div>
                     <!-- Dialog confirmação deleção -->
                     <p-confirmDialog [header]="this.getLabel('Confirmação')" #dialog>

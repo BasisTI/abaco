@@ -11,7 +11,6 @@ import br.com.basis.abaco.repository.DivergenceCommentFuncaoTransacaoRepository;
 import br.com.basis.abaco.repository.FuncaoDadosRepository;
 import br.com.basis.abaco.repository.FuncaoTransacaoRepository;
 import br.com.basis.abaco.repository.UserRepository;
-import br.com.basis.abaco.security.AuthoritiesConstants;
 import br.com.basis.abaco.security.SecurityUtils;
 import br.com.basis.abaco.service.DivergenceCommentService;
 import br.com.basis.abaco.service.dto.DivergenceCommentDTO;
@@ -21,7 +20,6 @@ import io.github.jhipster.web.util.ResponseUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -67,7 +65,6 @@ public class DivergenceCommentsResource {
 
     @PostMapping("/comment/funcao-dados/{id}")
     @Timed
-    @Secured({AuthoritiesConstants.ADMIN, AuthoritiesConstants.USER, AuthoritiesConstants.GESTOR, AuthoritiesConstants.ANALISTA})
     public ResponseEntity<DivergenceCommentDTO> createDivergenceCommentFuncaoDados(@PathVariable Long id, @RequestBody String comment) throws URISyntaxException {
         log.debug("REST request to save DivergenceComment : {}", comment);
         FuncaoDados funcaoDados = funcaoDadosRepository.findById(id);
@@ -88,7 +85,6 @@ public class DivergenceCommentsResource {
 
     @PostMapping("/comment/funcao-transacao/{id}")
     @Timed
-    @Secured({AuthoritiesConstants.ADMIN, AuthoritiesConstants.USER, AuthoritiesConstants.GESTOR, AuthoritiesConstants.ANALISTA})
     public ResponseEntity<DivergenceCommentDTO> createDivergenceCommentFuncaoTranscao(@PathVariable Long id, @RequestBody String comment) throws URISyntaxException {
         log.debug("REST request to save DivergenceComment : {}", comment);
         FuncaoTransacao funcaoTransacao = funcaoTransacaoRepository.findOne(id);
@@ -109,7 +105,6 @@ public class DivergenceCommentsResource {
 
     @PutMapping("/comment/funcao-dados/{id}")
     @Timed
-    @Secured({AuthoritiesConstants.ADMIN, AuthoritiesConstants.USER, AuthoritiesConstants.GESTOR, AuthoritiesConstants.ANALISTA})
     public ResponseEntity<DivergenceCommentDTO> updateDivergenceCommentFuncaoDados(@PathVariable Long id, @RequestBody String comment) throws URISyntaxException {
         log.debug("REST request to update DivergenceComment : {}", id);
         DivergenceCommentFuncaoDados divergenceCommentFuncaoDados = divergenceCommentFuncaoDadosRepository.findOne(id);
@@ -123,7 +118,6 @@ public class DivergenceCommentsResource {
 
     @PutMapping("/comment/funcao-transacao/{id}")
     @Timed
-    @Secured({AuthoritiesConstants.ADMIN, AuthoritiesConstants.USER, AuthoritiesConstants.GESTOR, AuthoritiesConstants.ANALISTA})
     public ResponseEntity<DivergenceCommentDTO> updateDivergenceCommentFuncaoTransacao(@PathVariable Long id, @RequestBody String comment) throws URISyntaxException {
         log.debug("REST request to update DivergenceComment : {}", id);
         DivergenceCommentFuncaoTransacao divergenceCommentFuncaoTransacao = divergenceCommentFuncaoTransacaoRepository.findOne(id);
@@ -153,7 +147,6 @@ public class DivergenceCommentsResource {
 
     @DeleteMapping("/comment/funcao-dados/{id}")
     @Timed
-    @Secured({AuthoritiesConstants.ADMIN, AuthoritiesConstants.USER, AuthoritiesConstants.GESTOR, AuthoritiesConstants.ANALISTA})
     public ResponseEntity<Void> deleteDivergenceCommentFuncaoDados(@PathVariable Long id) {
         log.debug("REST request to delete DivergenceComment : {}", id);
         divergenceCommentFuncaoDadosRepository.delete(id);
@@ -162,7 +155,6 @@ public class DivergenceCommentsResource {
 
     @DeleteMapping("/comment/funcao-transacao/{id}")
     @Timed
-    @Secured({AuthoritiesConstants.ADMIN, AuthoritiesConstants.USER, AuthoritiesConstants.GESTOR, AuthoritiesConstants.ANALISTA})
     public ResponseEntity<Void> deleteDivergenceCommentFuncaoTrasacao(@PathVariable Long id) {
         log.debug("REST request to delete DivergenceComment : {}", id);
         divergenceCommentFuncaoTransacaoRepository.delete(id);

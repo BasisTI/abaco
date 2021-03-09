@@ -1,6 +1,5 @@
 package br.com.basis.abaco.config;
 
-import br.com.basis.abaco.security.AuthoritiesConstants;
 import br.com.basis.abaco.security.jwt.JWTConfigurer;
 import br.com.basis.abaco.security.jwt.TokenProvider;
 import io.github.jhipster.security.Http401UnauthorizedEntryPoint;
@@ -103,10 +102,10 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
             .antMatchers("/api/profile-info").permitAll()
             .antMatchers("/api/**").authenticated()
             .antMatchers("/management/health").permitAll()
-            .antMatchers("/management/**").hasAuthority(AuthoritiesConstants.ADMIN)
+            .antMatchers("/management/**").authenticated()
             .antMatchers("/v2/api-docs/**").permitAll()
             .antMatchers("/swagger-resources/configuration/ui").permitAll()
-            .antMatchers("/swagger-ui/index.html").hasAuthority(AuthoritiesConstants.ADMIN)
+            .antMatchers("/swagger-ui/index.html").authenticated()
             .and()
             .apply(securityConfigurerAdapter());
     }

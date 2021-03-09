@@ -40,6 +40,9 @@ import { StatusModule } from './status/status.module';
 import { NomenclaturaModule } from './nomenclatura/nomenclatura.module';
 import { DivergenciaModule } from './divergencia/divergencia.module';
 import { ConfiguracaoBaselineModule } from './configuracao-baseline/configuracao-baseline.module';
+import { PerfilModule } from './perfil/perfil.module';
+import { AuthService } from './util/auth.service';
+import { AuthGuardService } from './util/auth.guard.service';
 
 @NgModule({
     declarations: [
@@ -48,7 +51,7 @@ import { ConfiguracaoBaselineModule } from './configuracao-baseline/configuracao
         AppFooterComponent,
         AppRightpanelComponent,
         AppInlineProfileComponent,
-        DiarioErrosComponent,
+        DiarioErrosComponent
     ],
     imports: [
         BrowserModule,
@@ -88,10 +91,11 @@ import { ConfiguracaoBaselineModule } from './configuracao-baseline/configuracao
         NomenclaturaModule,
         DivergenciaModule,
         ConfiguracaoBaselineModule,
+        PerfilModule
     ],
     providers: [
         { provide: LocationStrategy, useClass: HashLocationStrategy },
-        UploadService,
+        UploadService, AuthService, AuthGuardService
     ],
     bootstrap: [AppComponent],
     exports: [ RouterModule]

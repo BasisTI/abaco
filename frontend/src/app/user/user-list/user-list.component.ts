@@ -3,11 +3,11 @@ import { Router } from '@angular/router';
 import { ConfirmationService } from 'primeng';
 import { DatatableComponent, PageNotificationService, DatatableClickEvent } from '@nuvem/primeng-components';
 import { Organizacao, OrganizacaoService } from 'src/app/organizacao';
-import { Authority } from '../authority.model';
 import { TipoEquipe, TipoEquipeService } from 'src/app/tipo-equipe';
 import { UserService } from '../user.service';
 import { User } from '../user.model';
 import { SearchGroup } from '..';
+import { AuthService } from 'src/app/util/auth.service';
 
 @Component({
     selector: 'app-user',
@@ -38,7 +38,6 @@ export class UserListComponent implements OnInit {
     };
     query: string;
     organizations: Array<Organizacao>;
-    authorities: Array<Authority>;
     teams: TipoEquipe[];
 
     allColumnsTable = [
@@ -49,7 +48,7 @@ export class UserListComponent implements OnInit {
         {value: 'equipe',  label: 'Equipe'},
         {value: 'activated',  label: 'Ativo'},
     ];
-    
+
     columnsVisible = [
         'nome',
         'login',
@@ -66,6 +65,7 @@ export class UserListComponent implements OnInit {
         private organizacaoService: OrganizacaoService,
         private tipoEquipeService: TipoEquipeService,
         private pageNotificationService: PageNotificationService,
+        private authService: AuthService
     ) {
     }
 
@@ -75,7 +75,6 @@ export class UserListComponent implements OnInit {
 
     ngOnInit() {
         this.recuperarOrganizacoes();
-        this.recuperarAutorizacoes();
         this.recuperarEquipe();
         this.query = this.changeUrl();
         if (this.datatable) {
@@ -100,16 +99,6 @@ export class UserListComponent implements OnInit {
         });
     }
 
-    recuperarAutorizacoes() {
-        this.userService.authorities().subscribe(response => {
-            this.authorities = response;
-            this.popularNomesAuthorities();
-            this.customOptions['perfil'] = this.authorities.map((item) => {
-                return {label: item.description, value: item.name};
-              });
-        });
-    }
-
     recuperarEquipe() {
         this.tipoEquipeService.dropDown().subscribe(response => {
             this.teams = response;
@@ -120,47 +109,24 @@ export class UserListComponent implements OnInit {
         });
     }
 
-    popularNomesAuthorities() {
-        if (this.authorities) {
-            this.authorities.forEach((authority) => {
-                switch (authority.name) {
-                    case 'ROLE_ADMIN': {
-                        authority.description = this.getLabel('Administrador');
-                        break;
-                    }
-                    case 'ROLE_USER': {
-                        authority.description = this.getLabel('Usuário');
-                        break;
-                    }
-                    case 'ROLE_VIEW': {
-                        authority.description = this.getLabel('Observador');
-                        break;
-                    }
-                    case 'ROLE_ANALISTA': {
-                        authority.description = this.getLabel('Analista');
-                        break;
-                    }
-                    case 'ROLE_GESTOR': {
-                        authority.description = this.getLabel('Gestor');
-                        break;
-                    }
-                }
-            });
-        }
-    }
-
     datatableClick(event: DatatableClickEvent) {
         if (!event.selection) {
             return;
         }
         switch (event.button) {
             case 'edit':
+                if (this.authService.possuiRole(AuthService.PREFIX_ROLE + "USUARIO_EDITAR") == false) {
+                    break;
+                }
                 this.router.navigate(['/admin/user', event.selection.id, 'edit']);
                 break;
             case 'delete':
                 this.confirmDelete(event.selection);
                 break;
             case 'view':
+                if (this.authService.possuiRole(AuthService.PREFIX_ROLE + "USUARIO_CONSULTAR") == false) {
+                    break;
+                }
                 this.router.navigate(['/admin/user', event.selection.id]);
                 break;
         }
@@ -175,6 +141,9 @@ export class UserListComponent implements OnInit {
     }
 
     abrirEditar() {
+        if (this.authService.possuiRole(AuthService.PREFIX_ROLE + "USUARIO_EDITAR") == false) {
+            return false;
+        }
         const id = this.usuarioSelecionado.id;
         if (id > 0 ) {
             this.router.navigate(['/admin/user', id, 'edit']);
@@ -182,6 +151,9 @@ export class UserListComponent implements OnInit {
     }
 
     confirmDelete(user: User) {
+        if (this.authService.possuiRole(AuthService.PREFIX_ROLE + "USUARIO_EXCLUIR") == false) {
+            return false;
+        }
         this.confirmationService.confirm({
             message: this.getLabel('Tem certeza que deseja excluir o registro?'),
             accept: () => {
@@ -289,7 +261,7 @@ export class UserListComponent implements OnInit {
             this.pageNotificationService.addErrorMessage('Não é possível exibir menos de uma coluna');
         }
     }
-    
+
     updateVisibleColumns(columns) {
         this.allColumnsTable.forEach(col => {
             if (this.visibleColumnCheck(col.value, columns)) {
@@ -299,11 +271,17 @@ export class UserListComponent implements OnInit {
             }
         });
     }
-    
+
     visibleColumnCheck(column: string, visibleColumns: any[]) {
         return visibleColumns.some((item: any) => {
             return (item) ? item === column : true;
         });
     }
 
+    criarUsuario(){
+        if (this.authService.possuiRole(AuthService.PREFIX_ROLE + "USUARIO_CADASTRAR") == false) {
+            return false;
+        }
+        this.router.navigate(["/admin/user/new"])
+    }
 }

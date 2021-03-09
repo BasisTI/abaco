@@ -1,8 +1,6 @@
 package br.com.basis.abaco.service;
 
-import br.com.basis.abaco.domain.Authority;
 import br.com.basis.abaco.domain.User;
-import br.com.basis.abaco.repository.AuthorityRepository;
 import br.com.basis.abaco.repository.UserRepository;
 import br.com.basis.abaco.repository.search.UserSearchRepository;
 import org.apache.commons.lang3.RandomStringUtils;
@@ -17,10 +15,8 @@ import org.springframework.social.connect.UsersConnectionRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.HashSet;
 import java.util.Locale;
 import java.util.Optional;
-import java.util.Set;
 
 @Service
 @Transactional
@@ -30,8 +26,6 @@ public class SocialService {
 
     private final UsersConnectionRepository usersConnectionRepository;
 
-    private final AuthorityRepository authorityRepository;
-
     private final PasswordEncoder passwordEncoder;
 
     private final UserRepository userRepository;
@@ -40,12 +34,11 @@ public class SocialService {
 
     private final UserSearchRepository userSearchRepository;
 
-    public SocialService(UsersConnectionRepository usersConnectionRepository, AuthorityRepository authorityRepository,
+    public SocialService(UsersConnectionRepository usersConnectionRepository,
                          PasswordEncoder passwordEncoder, UserRepository userRepository,
                          MailService mailService, UserSearchRepository userSearchRepository) {
 
         this.usersConnectionRepository = usersConnectionRepository;
-        this.authorityRepository = authorityRepository;
         this.passwordEncoder = passwordEncoder;
         this.userRepository = userRepository;
         this.mailService = mailService;
@@ -82,10 +75,8 @@ public class SocialService {
 
         String login = getLoginDependingOnProviderId(userProfile, providerId);
         String encryptedPassword = passwordEncoder.encode(RandomStringUtils.random(10));
-        Set<Authority> authorities = new HashSet<>(1);
-        authorities.add(authorityRepository.findOne("ROLE_USER"));
 
-        User newUser = getUser(userProfile, langKey, imageUrl, email, login, encryptedPassword, authorities);
+        User newUser = getUser(userProfile, langKey, imageUrl, email, login, encryptedPassword);
         userRepository.save(newUser);
         return userSearchRepository.save(newUser);
     }
@@ -124,7 +115,7 @@ public class SocialService {
         return null;
     }
 
-    private User getUser(UserProfile userProfile, String langKey, String imageUrl, String email, String login, String encryptedPassword, Set<Authority> authorities) {
+    private User getUser(UserProfile userProfile, String langKey, String imageUrl, String email, String login, String encryptedPassword) {
         User newUser = new User();
         newUser.setLogin(login);
         newUser.setPassword(encryptedPassword);
@@ -132,7 +123,6 @@ public class SocialService {
         newUser.setLastName(userProfile.getLastName());
         newUser.setEmail(email);
         newUser.setActivated(true);
-        newUser.setAuthorities(authorities);
         newUser.setLangKey(langKey);
         newUser.setImageUrl(imageUrl);
         return newUser;

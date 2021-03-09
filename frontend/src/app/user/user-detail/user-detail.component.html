@@ -24,18 +24,18 @@
             <h3 class="first">Perfil</h3>
             <basis-datatable
                 type="memory"
-                [value]="user.authorities"
+                [value]="user.perfils"
                 disableEdit="true"
                 disableView="true"
                 disableDelete="true"
                 disableClone="true">
-              <p-column field="description" header="Nome"></p-column>
+              <p-column field="nome" header="Nome"></p-column>
             </basis-datatable>
           </div>
 
           <div class="ui-g-6" style="margin-bottom: 25px">
             <h3 class="first" >Organização</h3>
-            <basis-datatable 
+            <basis-datatable
                   type="memory"
                   [value]="user.organizacoes"
                   disableEdit="true"

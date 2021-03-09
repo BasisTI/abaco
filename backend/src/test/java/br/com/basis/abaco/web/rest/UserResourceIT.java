@@ -3,19 +3,16 @@ package br.com.basis.abaco.web.rest;
 import br.com.basis.abaco.AbacoApp;
 import br.com.basis.abaco.domain.User;
 import br.com.basis.abaco.repository.AnaliseRepository;
-import br.com.basis.abaco.repository.AuthorityRepository;
 import br.com.basis.abaco.repository.UserRepository;
 import br.com.basis.abaco.repository.search.UserSearchRepository;
 import br.com.basis.abaco.service.MailService;
 import br.com.basis.abaco.service.UserService;
-import br.com.basis.dynamicexports.service.DynamicExportsService;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.elasticsearch.core.ElasticsearchTemplate;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
@@ -26,9 +23,7 @@ import javax.persistence.EntityManager;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 /**
  * Test class for the UserResource REST controller.
@@ -48,17 +43,12 @@ public class UserResourceIT {
     @Autowired
     private MailService mailService;
 
-    @Autowired
-    private DynamicExportsService dynamicExportsService;
 
     @Autowired
     private UserService userService;
 
     @Autowired
     private UserSearchRepository userSearchRepository;
-
-    @Autowired
-    private AuthorityRepository authorityRepository;
 
     private MockMvc restUserMockMvc;
 
@@ -85,8 +75,7 @@ public class UserResourceIT {
 
     @Before
     public void setup() {
-        UserResource userResource = new UserResource(userRepository, mailService, userService, userSearchRepository,
-                authorityRepository, analiseRepository);
+        UserResource userResource = new UserResource(userRepository, mailService, userService, userSearchRepository, analiseRepository);
         this.restUserMockMvc = MockMvcBuilders.standaloneSetup(userResource).build();
     }
 
