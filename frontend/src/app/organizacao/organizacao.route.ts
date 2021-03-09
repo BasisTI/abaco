@@ -12,7 +12,7 @@ export const organizacaoRoute: Routes = [
     component: OrganizacaoListComponent,
     canActivate: [AuthGuard, AuthGuardService],
     data: {
-        roleParaVerificar: 'ROLE_ABACO_ORGANIZACAO_ACESSAR'
+        roleParaVerificar: ['ROLE_ABACO_ORGANIZACAO_ACESSAR']
     }
   },
   {
@@ -20,7 +20,7 @@ export const organizacaoRoute: Routes = [
     component: OrganizacaoFormComponent,
     canActivate: [AuthGuard, AuthGuardService],
     data: {
-        roleParaVerificar: 'ROLE_ABACO_ORGANIZACAO_CADASTRAR'
+        roleParaVerificar: ['ROLE_ABACO_ORGANIZACAO_CADASTRAR']
     }
   },
   {
@@ -28,7 +28,7 @@ export const organizacaoRoute: Routes = [
     component: OrganizacaoFormComponent,
     canActivate: [AuthGuard, AuthGuardService],
     data: {
-        roleParaVerificar: 'ROLE_ABACO_ORGANIZACAO_EDITAR'
+        roleParaVerificar: ['ROLE_ABACO_ORGANIZACAO_EDITAR']
     }
   },
   {
@@ -36,7 +36,7 @@ export const organizacaoRoute: Routes = [
     component: OrganizacaoDetailComponent,
     canActivate: [AuthGuard, AuthGuardService],
     data: {
-        roleParaVerificar: 'ROLE_ABACO_ORGANIZACAO_CONSULTAR'
+        roleParaVerificar: ['ROLE_ABACO_ORGANIZACAO_CONSULTAR']
     }
   },
 ];

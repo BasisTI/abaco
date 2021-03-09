@@ -23,5 +23,6 @@
     <include file="classpath:config/liquibase/changelog/20210114160352_add_many_to_many_manual_files.xml" relativeToChangelogFile="false"/>
     <include file="classpath:config/liquibase/changelog/20210217170852_add_table_config_baseline_sistema_tipo_equipe.xml" relativeToChangelogFile="false"/>
     <include file="classpath:config/liquibase/changelog/20210303112708_add_table_perfil_permissao_acao_funcionalidade_and_relations.xml" relativeToChangelogFile="false"/>
+    <include file="classpath:config/liquibase/changelog/20210309164436_add_permissao_perfil_permissao.xml" relativeToChangelogFile="false"/>
 
 </databaseChangeLog>

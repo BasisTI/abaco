@@ -13,7 +13,7 @@ export const divergenciaRoute: Routes = [
         component: DivergenciaListComponent,
         canActivate: [AuthGuard, AuthGuardService],
         data: {
-            roleParaVerificar: 'ROLE_ABACO_DIVERGENCIA_ACESSAR'
+            roleParaVerificar: ['ROLE_ABACO_DIVERGENCIA_ACESSAR']
         }
     },
     {
@@ -21,20 +21,23 @@ export const divergenciaRoute: Routes = [
         component: DivergenciaFormComponent,
         canActivate: [AuthGuard, AuthGuardService],
         data: {
-            roleParaVerificar: 'ROLE_ABACO_DIVERGENCIA_EDITAR'
+            roleParaVerificar: ['ROLE_ABACO_DIVERGENCIA_CADASTRAR']
         }
     },
     {
         path: 'divergencia/:id/edit',
         component: DivergenciaFormComponent,
-        canActivate: [AuthGuard]
+        canActivate: [AuthGuard, AuthGuardService],
+        data: {
+            roleParaVerificar: ['ROLE_ABACO_DIVERGENCIA_EDITAR']
+        }
     },
     {
         path: 'divergencia/:id/view',
         component: DivergenciaDetailComponent,
         canActivate: [AuthGuard, AuthGuardService],
         data: {
-            roleParaVerificar: 'ROLE_ABACO_DIVERGENCIA_ACESSAR'
+            roleParaVerificar: ['ROLE_ABACO_DIVERGENCIA_ACESSAR']
         }
     },
     {
@@ -42,7 +45,7 @@ export const divergenciaRoute: Routes = [
         component: DivergenciaResumoComponent,
         canActivate: [AuthGuard, AuthGuardService],
         data: {
-            roleParaVerificar: 'ROLE_ABACO_DIVERGENCIA_ACESSAR'
+            roleParaVerificar: ['ROLE_ABACO_DIVERGENCIA_ACESSAR']
         }
     },
 

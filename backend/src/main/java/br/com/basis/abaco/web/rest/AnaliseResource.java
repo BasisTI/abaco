@@ -674,7 +674,7 @@ public class AnaliseResource {
 
     @GetMapping("/divergencia/{id}")
     @Timed
-    @Secured("ROLE_ABACO_DIVERGENCIA_CONSULTAR")
+    @Secured({"ROLE_ABACO_DIVERGENCIA_CONSULTAR", "ROLE_ABACO_DIVERGENCIA_EDITAR"})
     public ResponseEntity<AnaliseDivergenceEditDTO> getDivergence(@PathVariable Long id) {
         Analise analise = analiseService.recuperarAnaliseDivergence(id);
         if (analise != null) {

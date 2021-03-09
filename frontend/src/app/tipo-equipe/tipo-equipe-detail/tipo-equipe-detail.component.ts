@@ -33,6 +33,8 @@ export class TipoEquipeDetailComponent implements OnInit, OnDestroy {
   load(id) {
     this.tipoEquipeService.find(id).subscribe((tipoEquipe) => {
       this.tipoEquipe = tipoEquipe;
+      console.log(this.tipoEquipe);
+
     });
   }
 
