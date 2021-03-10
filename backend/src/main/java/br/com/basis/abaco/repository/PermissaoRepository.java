@@ -4,6 +4,7 @@ import br.com.basis.abaco.domain.Perfil;
 import br.com.basis.abaco.domain.Permissao;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -23,4 +24,9 @@ public interface PermissaoRepository extends JpaRepository<Permissao, Long> {
 
     @Query("SELECT p from Permissao p ORDER BY p.funcionalidadeAbaco.nome, p.acao.descricao")
     List<Permissao> findAllByFuncionalidadeAbaco();
+
+    @Query("SELECT DISTINCT p FROM Permissao p " +
+        "INNER JOIN p.perfils perfil " +
+        "WHERE perfil.nome in(:perfis)")
+    List<Permissao> pesquisarPermissoesPorPerfil(@Param("perfis") Set<String> perfis);
 }

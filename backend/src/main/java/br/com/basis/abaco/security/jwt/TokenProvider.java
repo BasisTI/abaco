@@ -1,5 +1,8 @@
 package br.com.basis.abaco.security.jwt;
 
+import br.com.basis.abaco.domain.Permissao;
+import br.com.basis.abaco.domain.User;
+import br.com.basis.abaco.repository.PermissaoRepository;
 import br.com.basis.abaco.repository.UserRepository;
 import br.com.basis.abaco.security.UserDetailsCustom;
 import io.github.jhipster.config.JHipsterProperties;
@@ -21,10 +24,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Date;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Component
@@ -45,6 +45,9 @@ public class TokenProvider {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private PermissaoRepository permissaoRepository;
+
     public TokenProvider(JHipsterProperties jHipsterProperties) {
         this.jHipsterProperties = jHipsterProperties;
     }
@@ -61,9 +64,12 @@ public class TokenProvider {
     }
 
     public String createToken(Authentication authentication, Boolean rememberMe) {
-        String authorities = authentication.getAuthorities().stream()
-            .map(GrantedAuthority::getAuthority)
-            .collect(Collectors.joining(","));
+        User user = userRepository.findByLogin(authentication.getName());
+
+        String authorities2 = user.getPerfils().stream()
+                            .map(item -> item.getNome())
+                            .collect(Collectors.joining(","));
+
 
         long now = (new Date()).getTime();
         Date validity;
@@ -75,7 +81,7 @@ public class TokenProvider {
 
         return Jwts.builder()
             .setSubject(authentication.getName())
-            .claim(AUTHORITIES_KEY, authorities)
+            .claim(AUTHORITIES_KEY, authorities2)
             .signWith(SignatureAlgorithm.HS512, secretKey)
             .setExpiration(validity)
             .compact();
@@ -87,12 +93,16 @@ public class TokenProvider {
             .parseClaimsJws(token)
             .getBody();
 
+        Optional<br.com.basis.abaco.domain.User> userFromDatabase = userRepository.findOneWithAuthoritiesByLogin(claims.getSubject().toLowerCase());
+
+        Set<String> listPerfil = userFromDatabase.get().getPerfils().stream().map(perfil -> perfil.getNome()).collect(Collectors.toSet());
+        List<Permissao> listPermissao = permissaoRepository.pesquisarPermissoesPorPerfil(listPerfil);
+
         Collection<? extends GrantedAuthority> authorities =
-            Arrays.stream(claims.get(AUTHORITIES_KEY).toString().split(","))
-                .map(SimpleGrantedAuthority::new)
+            listPermissao.stream()
+                .map(permissao -> new SimpleGrantedAuthority("ROLE_ABACO_" + permissao.getFuncionalidadeAbaco().getSigla() + "_"+ permissao.getAcao().getSigla()))
                 .collect(Collectors.toList());
 
-        Optional<br.com.basis.abaco.domain.User> userFromDatabase = userRepository.findOneWithAuthoritiesByLogin(claims.getSubject().toLowerCase());
 
         UserDetailsCustom principal = new UserDetailsCustom(claims.getSubject(), "", authorities, userFromDatabase.get());
 

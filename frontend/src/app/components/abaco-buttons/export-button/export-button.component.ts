@@ -71,7 +71,6 @@ export class ExportButtonComponent {
             this.filter.columnsVisible = this.columnsVisible;
         }
         ExportacaoUtilService.imprimir(this.http, this.resourceName, null, this.filter).subscribe(res => {
-            console.log(res);
             var file = new Blob([res], { type: 'application/pdf' });
             var fileURL = URL.createObjectURL(file);
             window.open(fileURL);

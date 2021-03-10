@@ -9,19 +9,14 @@ import io.github.jhipster.web.util.ResponseUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 /**
  * REST controller for managing {@link Permissao}.
@@ -91,6 +86,16 @@ public class PermissaoResource {
     public List<Permissao> getAllPermissaos() {
         log.debug("REST request to get a page of Permissaos");
         return permissaoRepository.findAllByFuncionalidadeAbaco();
+    }
+
+    @GetMapping("/permissaos/perfis")
+    public Set<String> getAllPermissaosByPerfil(@RequestParam(value = "perfis", required = true) Set<String> perfis) {
+        List<Permissao> permissoes = permissaoRepository.pesquisarPermissoesPorPerfil(perfis);
+        Set<String> listPermissoes = new HashSet<>();
+        permissoes.forEach(permissao -> {
+            listPermissoes.add("ROLE_ABACO_"+permissao.getFuncionalidadeAbaco().getSigla()+"_"+permissao.getAcao().getSigla());
+        });
+        return listPermissoes;
     }
 
     /**
