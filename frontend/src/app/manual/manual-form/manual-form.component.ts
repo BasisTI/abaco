@@ -306,7 +306,7 @@ export class ManualFormComponent implements OnInit, OnDestroy {
     }
 
     adjustFactorDatatableClick(event: DatatableClickEvent) {
-    
+
         if (!event.selection) {
             return;
         }
@@ -387,10 +387,9 @@ export class ManualFormComponent implements OnInit, OnDestroy {
         } else {
             this.pageNotificationService.addErrorMessage('Por favor, preencha campos obrigatórios!');
         }
-        console.log(this.manual.esforcoFases);
     }
     checkEsforcoFase(){
-        
+
         let total = 0;
         this.esforcoFaseEdit = this.manual.esforcoFases;
         for(let i =0; i < this.esforcoFaseEdit.length; i++){
@@ -628,7 +627,7 @@ export class ManualFormComponent implements OnInit, OnDestroy {
     }
     public onRowDblclickFator(event) {
         if (event.target.nodeName === 'TD') {
-            this.editedAdjustFactor = this.editedAdjustFactor.clone()            
+            this.editedAdjustFactor = this.editedAdjustFactor.clone()
             this.openDialogEditAdjustFactor();
         } else if (event.target.parentNode.nodeName === 'TD') {
             this.editedAdjustFactor = this.editedAdjustFactor.clone();
@@ -651,9 +650,9 @@ export class ManualFormComponent implements OnInit, OnDestroy {
             temp++
         }
     }
-    
+
     public orderList(event){
-     
+
         let i = this.manual.fatoresAjuste.indexOf(event.selection)
         let del = i
 
@@ -664,7 +663,7 @@ export class ManualFormComponent implements OnInit, OnDestroy {
                 this.manual.fatoresAjuste.splice(del, 1);
                 this.manual.fatoresAjuste.unshift(event.selection);
             }
-        } 
+        }
 
         if(event.button == 'order-up' && event.selection != null){
             if(i == 0){
@@ -676,18 +675,18 @@ export class ManualFormComponent implements OnInit, OnDestroy {
                 this.manual.fatoresAjuste.indexOf(event.selection)
             }
         }
-        
+
         if (event.button == 'order-down' && event.selection != null) {
             if(i == this.manual.fatoresAjuste.length -1){
-                return 
+                return
             } else{
-                let pos = i +1; 
+                let pos = i +1;
                 this.manual.fatoresAjuste.splice(del, 1);
                 this.manual.fatoresAjuste.splice( pos,0, event.selection);
                 this.manual.fatoresAjuste.indexOf(event.selection);
             }
 
-        } 
+        }
 
         if(event.button == 'order-botton' && event.selection != null){
             if(i == this.manual.fatoresAjuste.length-1){
@@ -697,7 +696,7 @@ export class ManualFormComponent implements OnInit, OnDestroy {
             this.manual.fatoresAjuste.push(event.selection);
             this.manual.fatoresAjuste.indexOf(event.selection);
         }
-        
+
         this.updateIndex()
     }
 }
