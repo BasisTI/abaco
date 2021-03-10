@@ -1,5 +1,22 @@
 package br.com.basis.abaco.security.jwt;
 
+import java.util.Collection;
+import java.util.Date;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
+
+import javax.annotation.PostConstruct;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.stereotype.Component;
+
 import br.com.basis.abaco.domain.Permissao;
 import br.com.basis.abaco.domain.User;
 import br.com.basis.abaco.repository.PermissaoRepository;
@@ -13,19 +30,6 @@ import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.SignatureException;
 import io.jsonwebtoken.UnsupportedJwtException;
-import org.apache.http.auth.AUTH;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.stereotype.Component;
-
-import javax.annotation.PostConstruct;
-import java.util.*;
-import java.util.stream.Collectors;
 
 @Component
 public class TokenProvider {
@@ -42,14 +46,15 @@ public class TokenProvider {
 
     private final JHipsterProperties jHipsterProperties;
 
-    @Autowired
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
 
-    @Autowired
-    private PermissaoRepository permissaoRepository;
+    private final PermissaoRepository permissaoRepository;
 
-    public TokenProvider(JHipsterProperties jHipsterProperties) {
+    public TokenProvider(JHipsterProperties jHipsterProperties, UserRepository userRepository,
+            PermissaoRepository permissaoRepository) {
         this.jHipsterProperties = jHipsterProperties;
+        this.userRepository = userRepository;
+        this.permissaoRepository = permissaoRepository;
     }
 
     @PostConstruct
