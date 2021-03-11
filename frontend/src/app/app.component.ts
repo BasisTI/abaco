@@ -1,6 +1,7 @@
 import { Component, AfterViewInit, ElementRef, Renderer2, ViewChild, OnDestroy, OnInit, NgZone } from '@angular/core';
 import { ScrollPanel } from 'primeng';
 import { MenusService, MenuOrientation } from '@nuvem/primeng-components';
+import { AuthService } from './util/auth.service';
 
 @Component({
     selector: 'app-root',
@@ -44,32 +45,31 @@ export class AppComponent implements AfterViewInit, OnDestroy, OnInit {
 
     rippleMouseDownListener: EventListenerOrEventListenerObject;
 
-    constructor(public renderer2: Renderer2, public zone: NgZone, public menuService: MenusService) { }
+    constructor(public renderer2: Renderer2, public zone: NgZone, public menuService: MenusService, private authService : AuthService) { }
 
     ngOnInit() {
         this.zone.runOutsideAngular(() => { this.bindRipple(); });
-
         this.menuService.itens =  [
             {
-                label: 'Cadastros', icon: 'description',
+                label: 'Cadastros', icon: 'description',  visible : false, 
                 items: [
-                    { label: 'Fase', routerLink: 'fase', icon: 'beenhere' },
-                    { label: 'Manual', routerLink: 'manual', icon: 'description' },
-                    { label: 'Organização', routerLink: 'organizacao', icon: 'business' },
-                    { label: 'Sistema', routerLink: 'sistema', icon: 'laptop' },
-                    { label: 'Tipo Equipe', routerLink: 'admin/tipoEquipe', icon: 'people' },
-                    { label: 'Usuários', routerLink: 'admin/user', icon: 'person' },
-                    { label: 'Status', routerLink: 'status', icon: 'assignment' },
-                    { label: 'Nomenclatura', routerLink: 'nomenclatura', icon: 'comment_bank' },
-                    { label: 'Perfil', routerLink: 'perfil', icon: 'assignment_ind' },
+                    { label: 'Fase', routerLink: 'fase', icon: 'beenhere', visible : false },
+                    { label: 'Manual', routerLink: 'manual', icon: 'description', visible : false },
+                    { label: 'Organização', routerLink: 'organizacao', icon: 'business', visible : false },
+                    { label: 'Sistema', routerLink: 'sistema', icon: 'laptop', visible : false },
+                    { label: 'Tipo Equipe', routerLink: 'admin/tipoEquipe', icon: 'people', visible :false },
+                    { label: 'Usuários', routerLink: 'admin/user', icon: 'person', visible : false },
+                    { label: 'Status', routerLink: 'status', icon: 'assignment', visible : false },
+                    { label: 'Nomenclatura', routerLink: 'nomenclatura', icon: 'comment_bank', visible : false },
+                    { label: 'Perfil', routerLink: 'perfil', icon: 'assignment_ind', visible : false },
                 ]
             },
             {
-                label: 'Análise', icon: 'insert_chart',
+                label: 'Análise', icon: 'insert_chart',visible : false,
                 items: [
-                    { label: 'Análise', routerLink: 'analise', icon: 'description' },
-                    { label: 'Baseline', routerLink: 'baseline', icon: 'view_list' },
-                    { label: 'Validação', routerLink: 'divergencia', icon: 'compare_arrows' },
+                    { label: 'Análise', routerLink: 'analise', icon: 'description', visible : false },
+                    { label: 'Baseline', routerLink: 'baseline', icon: 'view_list' , visible : false},
+                    { label: 'Validação', routerLink: 'divergencia', icon: 'compare_arrows', visible : false },
                 ]
             }
         ];

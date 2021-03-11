@@ -19,13 +19,34 @@ export class AuthService {
     }
 
     possuiRole(role: string): boolean {
+        if(!this.authService.getUser()){
+            return false;
+        }
         for (let permissao of this.authService.getUser().roles) {
             if (role === permissao) {
                 return true;
             }
         }
-        this.pageNotificationService.addErrorMessage("Você não tem autorização para essa ação.");
         return false;
+    }
+
+    possuiAlgumaRoles(role: string[]): boolean {
+        if(!this.authService.getUser()){
+            return false;
+        }
+        for (let permissao of this.authService.getUser().roles) {
+            for (let index = 0; index < role.length; index++) {
+                const element = role[index];
+                if (element === permissao) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    getRoles(){
+        return this.authService.getUserDetails();
     }
 
 }
