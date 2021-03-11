@@ -30,6 +30,7 @@ export class PerfilDetailComponent implements OnInit, OnDestroy {
     load(id) {
         this.perfilService.find(id).subscribe((perfil) => {
             this.perfil = perfil;
+            this.perfil.permissaos.sort((a, b) => a.funcionalidadeAbaco.nome.localeCompare(b.funcionalidadeAbaco.nome));
         });
     }
 

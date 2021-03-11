@@ -20,4 +20,6 @@ public interface PerfilRepository extends JpaRepository<Perfil, Long> {
     Optional<List<Perfil>> findAllByUsers(User user);
 
     List<Perfil> findAllByFlgAtivoIsTrue();
+
+    Optional<Perfil> findByNome(String name);
 }
