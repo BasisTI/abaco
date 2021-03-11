@@ -27,9 +27,11 @@ export class PerfilService {
 
     create(perfil: Perfil): Observable<Perfil> {
         return this.http.post<Perfil>(this.resourceUrl, perfil).pipe(catchError((error: any) => {
-            if (error.status === 403) {
-                this.pageNotificationService.addErrorMessage(this.getLabel('Você não possui permissão!'));
-                return Observable.throw(new Error(error.status));
+            switch(error.headers.get('x-abacoapp-error')){
+                case 'error.nameexists':
+                    this.pageNotificationService.addErrorMessage(this.getLabel('Este nome de perfil já existe.'));
+                    return Observable.throw(new Error(error.status));
+                    break;
             }
         }));
     }
@@ -45,9 +47,11 @@ export class PerfilService {
 
     update(perfil: Perfil): Observable<Perfil> {
         return this.http.put<Perfil>(this.resourceUrl, perfil).pipe(catchError((error: any) => {
-            if (error.status === 403) {
-                this.pageNotificationService.addErrorMessage(this.getLabel('Você não possui permissão!'));
-                return Observable.throw(new Error(error.status));
+            switch(error.headers.get('x-abacoapp-error')){
+                case 'error.nameexists':
+                    this.pageNotificationService.addErrorMessage(this.getLabel('Este nome de perfil já existe.'));
+                    return Observable.throw(new Error(error.status));
+                    break;
             }
         }));
     }
@@ -106,4 +110,6 @@ export class PerfilService {
     getLabel(label) {
         return label;
     }
+
+
 }

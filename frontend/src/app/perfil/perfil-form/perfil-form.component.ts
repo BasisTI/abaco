@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BlockUiService } from '@nuvem/angular-base';
 import { DatatableClickEvent, PageNotificationService } from '@nuvem/primeng-components';
+import { timingSafeEqual } from 'crypto';
 import { ConfirmationService, SelectItem } from 'primeng';
 import { Subscription } from 'rxjs';
 import { Perfil } from '../perfil.model';
@@ -45,6 +46,7 @@ export class PerfilFormComponent implements OnInit {
 
 
     ngOnInit() {
+        this.perfil.permissaos = [];
         this.routeSub = this.route.params.subscribe(params => {
             if (params['id']) {
                 this.blockUiService.show();
@@ -64,6 +66,12 @@ export class PerfilFormComponent implements OnInit {
 
     save(form) {
         if (this.perfil) {
+            if(this.perfil.flgAtivo === undefined){
+                this.perfil.flgAtivo = true;
+            }
+            if(!this.perfil.permissaos.length){
+                return this.pageNotificationService.addErrorMessage("Nenhuma permissão selecionada!");
+            }
             if (this.perfil.id) {
                 this.perfilService.update(this.perfil).subscribe(() => {
                     this.router.navigate(['/perfil']);

@@ -84,6 +84,9 @@ public class PerfilResource {
         if (perfilDTO.getId() != null) {
             return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert(ENTITY_NAME, "idexists",
                 "A new perfil cannot already have an ID")).body(null);
+        }else if(perfilRepository.findByNome(perfilDTO.getNome()).isPresent()){
+            return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert(ENTITY_NAME, "nameexists", "Nome do perfil já existe."))
+                .body(null);
         }
         Perfil result = perfilService.save(perfilDTO);
         return ResponseEntity.created(new URI("/api/perfils/" + result.getId()))
@@ -103,6 +106,11 @@ public class PerfilResource {
     @Secured("ROLE_ABACO_PERFIL_EDITAR")
     public ResponseEntity<Perfil> updatePerfil(@Valid @RequestBody PerfilDTO perfilDTO) throws URISyntaxException, InvocationTargetException, IllegalAccessException {
         log.debug("REST request to update Perfil : {}", perfilDTO);
+        Optional<Perfil> existingPerfil = perfilRepository.findByNome(perfilDTO.getNome());
+        if(existingPerfil.isPresent() && !existingPerfil.get().getId().equals(perfilDTO.getId())){
+            return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert(ENTITY_NAME, "nameexists", "Nome do perfil já existe."))
+                .body(null);
+        }
         if (perfilDTO.getId() == null) {
             createPerfil(perfilDTO);
         }
@@ -188,7 +196,7 @@ public class PerfilResource {
         return DynamicExporter.output(byteArrayOutputStream, "relatorio");
     }
 
-    @GetMapping(value = "/perfils/exportacao-arquivo", produces = MediaType.APPLICATION_PDF_VALUE)
+    @PostMapping(value = "/perfils/exportacao-arquivo", produces = MediaType.APPLICATION_PDF_VALUE)
     @Timed
     @Secured("ROLE_ABACO_PERFIL_EXPORTAR")
     public ResponseEntity<byte[]> gerarRelatorioImprimir(@RequestParam(defaultValue = "*") String query) throws RelatorioException {
