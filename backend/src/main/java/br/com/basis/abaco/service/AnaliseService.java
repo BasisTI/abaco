@@ -92,6 +92,9 @@ public class AnaliseService extends BaseService {
     @Autowired
     private UserSearchRepository userSearchRepository;
 
+    @Autowired
+    private ModelMapper modelMapper;
+
 
     public AnaliseService(AnaliseRepository analiseRepository,
                           FuncaoDadosVersionavelRepository funcaoDadosVersionavelRepository,
@@ -479,7 +482,7 @@ public class AnaliseService extends BaseService {
     }
 
     public AnaliseDTO convertToDto(Analise analise) {
-        return new ModelMapper().map(analise, AnaliseDTO.class);
+        return modelMapper.map(analise, AnaliseDTO.class);
     }
 
     public Analise convertToEntity(AnaliseDTO analiseDTO) {
@@ -745,16 +748,16 @@ public class AnaliseService extends BaseService {
         analiseSearchRepository.delete(id);
     }
 
-    
+
     public SearchQuery getQueryExportRelatorio(AnaliseFilterDTO filter,  Pageable pageable) {
         Set<Long> sistema = new HashSet<>();
         Set<MetodoContagem> metodo = new HashSet<>();
         Set<Long> organizacao = new HashSet<>();
         Set<Long> usuario = new HashSet<>();
         Set<Long> status = new HashSet<>();
-        
+
         preencheFiltro(sistema,metodo,organizacao,usuario,status, filter);
-        
+
         pageable = dynamicExportsService.obterPageableMaximoExportacao();
         BoolQueryBuilder qb =  getBoolQueryBuilder(filter.getIdentificadorAnalise(), sistema, metodo, organizacao, filter.getEquipe() == null ? null : filter.getEquipe().getId(), usuario, status);
         SearchQuery searchQuery = new NativeSearchQueryBuilder().withQuery(qb).withPageable(pageable).build();
@@ -778,14 +781,14 @@ public class AnaliseService extends BaseService {
         if(filter.getStatus() != null) {
             status.add(filter.getStatus().getId());
         }
-        
+
     }
 
     public SearchQuery getQueryExportRelatorioDivergencia(AnaliseFilterDTO filter, Pageable pageable) {
         Set<Long> sistema = new HashSet<>();
         Set<Long> organizacao = new HashSet<>();
         preencheFiltro(sistema,null,organizacao,null,null, filter);
-        
+
         BoolQueryBuilder qb = getBoolQueryBuilderDivergence(filter.getIdentificadorAnalise(), sistema, organizacao);
         SearchQuery searchQuery = new NativeSearchQueryBuilder().withQuery(qb).withPageable(pageable).build();
         return searchQuery;
