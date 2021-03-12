@@ -169,6 +169,7 @@ export class PerfilFormComponent implements OnInit {
             this.perfil.permissaos.push(novaPermissao);
         }
         this.perfil.permissaos.sort((a, b) => a.funcionalidadeAbaco.nome.localeCompare(b.funcionalidadeAbaco.nome));
+        this.tables.refresh();
         this.doFecharDialogPermissao();
     }
 }
