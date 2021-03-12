@@ -1,7 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { BlockUiService } from '@nuvem/angular-base';
-import { DatatableClickEvent, PageNotificationService } from '@nuvem/primeng-components';
+import { DatatableClickEvent, DatatableComponent, PageNotificationService } from '@nuvem/primeng-components';
 import { timingSafeEqual } from 'crypto';
 import { ConfirmationService, SelectItem } from 'primeng';
 import { Subscription } from 'rxjs';
@@ -19,15 +18,18 @@ export class PerfilFormComponent implements OnInit {
     perfil: Perfil = new Perfil();
 
     novasPermissoes: Permissao[] = [];
-    idEditPermissao: number;
+    editPermissoes: Permissao[] = [];
 
     isSaving: boolean;
     mostrarDialogPermissao: boolean;
     mostrarDialogEditarPermissao: boolean;
     valido: boolean;
+    isEdit: boolean;
 
     permissoesOptions: SelectItem[] = [];
     permissoes: Permissao[];
+
+    @ViewChild(DatatableComponent) tables: DatatableComponent;
 
 
     readonly edit = 'edit';
@@ -40,8 +42,7 @@ export class PerfilFormComponent implements OnInit {
         private pageNotificationService: PageNotificationService,
         private router: Router,
         private confirmationService: ConfirmationService,
-        private route: ActivatedRoute,
-        private blockUiService: BlockUiService
+        private route: ActivatedRoute
     ) { }
 
 
@@ -49,12 +50,10 @@ export class PerfilFormComponent implements OnInit {
         this.perfil.permissaos = [];
         this.routeSub = this.route.params.subscribe(params => {
             if (params['id']) {
-                this.blockUiService.show();
                 this.perfilService.find(params['id']).subscribe(
                     perfil => {
                         this.perfil = perfil;
                         this.perfil.id = params['id'];
-                        this.blockUiService.hide();
                         this.perfil.permissaos.sort((a, b) => a.funcionalidadeAbaco.nome.localeCompare(b.funcionalidadeAbaco.nome));
                     });
             }
@@ -105,6 +104,7 @@ export class PerfilFormComponent implements OnInit {
                 this.permissoesOptions.push({
                     value: permissao,
                     label: permissao.acao.descricao + ' ' + permissao.funcionalidadeAbaco.nome
+
                 });
             }
         }
@@ -124,7 +124,7 @@ export class PerfilFormComponent implements OnInit {
         }
         switch (event.button) {
             case this.delete:
-                this.confirmDeletePermissao(event.selection);
+                this.confirmDeletePermissao(this.editPermissoes);
                 break;
             default:
                 break;
@@ -139,9 +139,18 @@ export class PerfilFormComponent implements OnInit {
                     for (let i = 0; i < listPermissoes.length; i++) {
                         const permissao = listPermissoes[i];
                         this.perfil.permissaos.splice(this.perfil.permissaos.indexOf(permissao), 1);
+                        this.tables.refresh();
+
                     }
                 }
             });
+        }
+    }
+
+    public selectFT() {
+        this.tables.pDatatableComponent.metaKeySelection = true;
+        if (this.tables && this.tables.selectedRow) {
+            this.editPermissoes = this.tables.selectedRow;
         }
     }
 

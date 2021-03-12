@@ -355,7 +355,7 @@ export class AnaliseListComponent implements OnInit {
                this.compartilharAnalise();
                 break;
             case 'relatorioAnaliseContagem':
-                if (this.authService.possuiRole(AuthService.PREFIX_ROLE + "ANALISE_RELATORIO_FUNDAMENTACAO") == false) {
+                if (this.authService.possuiRole(AuthService.PREFIX_ROLE + "ANALISE_EXPORTAR_RELATORIO_FUNDAMENTACAO") == false) {
                     break;
                 }
                 this.gerarRelatorioContagem(event.selection);
