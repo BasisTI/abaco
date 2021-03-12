@@ -21,6 +21,7 @@ import io.github.jhipster.web.util.ResponseUtil;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -61,6 +62,8 @@ public class FuncaoDadosResource {
     private final FuncaoDadosService funcaoDadosService;
     private final AnaliseRepository analiseRepository;
 
+    @Autowired
+    private ModelMapper modelMapper;
     public FuncaoDadosResource(FuncaoDadosRepository funcaoDadosRepository,
                                FuncaoDadosSearchRepository funcaoDadosSearchRepository, FuncaoDadosService funcaoDadosService, AnaliseRepository analiseRepository) {
         this.funcaoDadosRepository = funcaoDadosRepository;
@@ -262,7 +265,7 @@ public class FuncaoDadosResource {
 
 
     private FuncaoDadoAnaliseDTO convertToDto(FuncaoDados funcaoDados) {
-        FuncaoDadoAnaliseDTO funcaoDadoAnaliseDTO = new ModelMapper().map(funcaoDados, FuncaoDadoAnaliseDTO.class);
+        FuncaoDadoAnaliseDTO funcaoDadoAnaliseDTO = modelMapper.map(funcaoDados, FuncaoDadoAnaliseDTO.class);
         funcaoDadoAnaliseDTO.setRlrFilter(getValueRlr(funcaoDados));
         funcaoDadoAnaliseDTO.setDerFilter(getValueDer(funcaoDados));
         funcaoDadoAnaliseDTO.setFatorAjusteFilter(getFatorAjusteFilter(funcaoDados));
@@ -318,18 +321,15 @@ public class FuncaoDadosResource {
     }
 
     private FuncaoDadoApiDTO getFuncaoDadoApiDTO(FuncaoDados funcaoDados) {
-        ModelMapper modelMapper = new ModelMapper();
         return modelMapper.map(funcaoDados, FuncaoDadoApiDTO.class);
     }
 
     private FuncaoDadosEditDTO convertFuncaoDadoAEditDTO(FuncaoDados funcaoDados) {
-        ModelMapper modelMapper = new ModelMapper();
         return modelMapper.map(funcaoDados, FuncaoDadosEditDTO.class);
     }
 
 
     private FuncaoDados convertToEntity(FuncaoDadosSaveDTO funcaoDadosSaveDTO){
-        ModelMapper modelMapper = new ModelMapper();
         return modelMapper.map(funcaoDadosSaveDTO, FuncaoDados.class);
     }
 

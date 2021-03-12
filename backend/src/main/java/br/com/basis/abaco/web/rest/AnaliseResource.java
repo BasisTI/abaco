@@ -663,10 +663,10 @@ public class AnaliseResource {
         FieldSortBuilder sortBuilder = new FieldSortBuilder(sort).order(SortOrder.ASC);
         BoolQueryBuilder qb = analiseService.getBoolQueryBuilderDivergence(identificador, sistema, organizacao);
         SearchQuery searchQuery = new NativeSearchQueryBuilder().withQuery(qb).withPageable(pageable).withSort(sortBuilder).build();
-
         Page<Analise> page = elasticsearchTemplate.queryForPage(searchQuery, Analise.class);
+        log.debug("DEBUG Consulta Validação -  Consulta realizada");
         Page<AnaliseDTO> dtoPage = page.map(analise -> analiseService.convertToDto(analise));
-
+        log.debug("DEBUG Consulta Validação -  Conversão realizada");
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, API_ANALISES);
         return new ResponseEntity<>(dtoPage.getContent(), headers, HttpStatus.OK);
     }
