@@ -19,7 +19,6 @@ export class LoginService {
 
     logout(): Observable<any> {
         // this.cookieService.deleteAll();
-        sessionStorage.removeItem("roles");
         return this.http.get(this.logoutUrl);
     }
 }

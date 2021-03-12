@@ -43,9 +43,5 @@ export class AppTopbarComponent {
         return storageUser.firstName;
     }
 
-    sair() {
-        this.pageNotificationService.addInfoMessage("Saindo da conta...");
-        this.loginService.logout().subscribe(() => {});
-    }
 }
 
