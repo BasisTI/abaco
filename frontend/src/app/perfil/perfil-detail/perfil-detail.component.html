@@ -24,11 +24,11 @@
                     <basis-datatable type="memory"
                                 [value]="perfil.permissaos"
                                 [rows]="10"
-                                showPaginationFooter="false"
-                                disableEdit="true"
-                                disableView="true"
-                                disableDelete="true"
-                                disableClone="true">
+                                [showPaginationFooter]="false"
+                                [disableEdit]="true"
+                                [disableView]="true"
+                                [disableDelete]="true"
+                                [disableClone]="true">
                                 <p-column header="Ação" field="permissoes">
                                     <ng-template let-row="rowData" pTemplate="body">
                                         {{row.acao.descricao}}

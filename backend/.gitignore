@@ -130,6 +130,7 @@ backend_start.sh
 *.*~
 *~
 .merge_file*
+/.history
 
 ######################
 # Gradle Wrapper
@@ -147,4 +148,4 @@ backend_start.sh
 .eslintcache
 /.apt_generated/
 scripts.sh
-
+/.history

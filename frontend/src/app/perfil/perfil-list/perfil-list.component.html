@@ -33,6 +33,7 @@
 
                 <basis-datatable type="server" [url]="searchUrl" (dblclick)="onRowDblclick($event)"
                     (click)="selectPerfil()" (buttonClick)="onClick($event)" [rows]="20"
+                    [disableLoadingBlockUI]="true"
                     [rowsPerPageOptions]="rowsPerPageOptions" [showPaginationFooter]="true"
                     [showVisibleColumnsControl]="true" #datatable>
 
