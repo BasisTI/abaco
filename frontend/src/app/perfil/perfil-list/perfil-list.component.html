@@ -35,7 +35,7 @@
                     (click)="selectPerfil()" (buttonClick)="onClick($event)" [rows]="20"
                     [disableLoadingBlockUI]="true"
                     [rowsPerPageOptions]="rowsPerPageOptions" [showPaginationFooter]="true"
-                    [showVisibleColumnsControl]="true" #datatable>
+                    #datatable>
 
                     <p-column header="Nome" field="nome" [sortable]="true">
                         <ng-template let-row="rowData" pTemplate="body">
