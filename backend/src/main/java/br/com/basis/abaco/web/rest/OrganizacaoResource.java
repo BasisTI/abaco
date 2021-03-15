@@ -230,7 +230,7 @@ public class OrganizacaoResource {
    */
   @GetMapping("/organizacaos/{id}")
   @Timed
-  @Secured("ROLE_ABACO_ORGANIZACAO_CONSULTAR")
+  @Secured({"ROLE_ABACO_ORGANIZACAO_CONSULTAR", "ROLE_ABACO_ORGANIZACAO_EDITAR"})
   public ResponseEntity<Organizacao> getOrganizacao(@PathVariable Long id) {
     log.debug("REST request to get Organizacao : {}", id);
     Organizacao organizacao = organizacaoRepository.findOne(id);

@@ -58,6 +58,12 @@ export class UserListComponent implements OnInit {
         'activated',];
     private lastColumn: any[] = [];
 
+    canCadastrar: boolean = false;
+    canEditar: boolean = false;
+    canConsultar: boolean = false;
+    canDeletar: boolean = false;
+    canPesquisar: boolean = false;
+
     constructor(
         private router: Router,
         private userService: UserService,
@@ -88,6 +94,26 @@ export class UserListComponent implements OnInit {
         }
         this.userFiltro = new SearchGroup();
         this.userFiltro.columnsVisible = this.columnsVisible;
+
+        this.verificarPermissoes();
+    }
+
+    verificarPermissoes(){
+        if (this.authService.possuiRole(AuthService.PREFIX_ROLE + "USUARIO_EDITAR") == true) {
+            this.canEditar = true;
+        }
+        if (this.authService.possuiRole(AuthService.PREFIX_ROLE + "USUARIO_CONSULTAR") == true) {
+            this.canConsultar = true;
+        }
+        if (this.authService.possuiRole(AuthService.PREFIX_ROLE + "USUARIO_EXCLUIR") == true) {
+            this.canDeletar = true;
+        }
+        if (this.authService.possuiRole(AuthService.PREFIX_ROLE + "USUARIO_CADASTRAR") == true) {
+            this.canCadastrar = true;
+        }
+        if (this.authService.possuiRole(AuthService.PREFIX_ROLE + "USUARIO_PESQUISAR") == true) {
+            this.canPesquisar = true;
+        }
     }
 
     recuperarOrganizacoes() {
@@ -115,18 +141,12 @@ export class UserListComponent implements OnInit {
         }
         switch (event.button) {
             case 'edit':
-                if (this.authService.possuiRole(AuthService.PREFIX_ROLE + "USUARIO_EDITAR") == false) {
-                    break;
-                }
                 this.router.navigate(['/admin/user', event.selection.id, 'edit']);
                 break;
             case 'delete':
                 this.confirmDelete(event.selection);
                 break;
             case 'view':
-                if (this.authService.possuiRole(AuthService.PREFIX_ROLE + "USUARIO_CONSULTAR") == false) {
-                    break;
-                }
                 this.router.navigate(['/admin/user', event.selection.id]);
                 break;
         }
@@ -141,7 +161,7 @@ export class UserListComponent implements OnInit {
     }
 
     abrirEditar() {
-        if (this.authService.possuiRole(AuthService.PREFIX_ROLE + "USUARIO_EDITAR") == false) {
+        if (!this.canEditar) {
             return false;
         }
         const id = this.usuarioSelecionado.id;
@@ -151,9 +171,6 @@ export class UserListComponent implements OnInit {
     }
 
     confirmDelete(user: User) {
-        if (this.authService.possuiRole(AuthService.PREFIX_ROLE + "USUARIO_EXCLUIR") == false) {
-            return false;
-        }
         this.confirmationService.confirm({
             message: this.getLabel('Tem certeza que deseja excluir o registro?'),
             accept: () => {
@@ -279,9 +296,6 @@ export class UserListComponent implements OnInit {
     }
 
     criarUsuario(){
-        if (this.authService.possuiRole(AuthService.PREFIX_ROLE + "USUARIO_CADASTRAR") == false) {
-            return false;
-        }
         this.router.navigate(["/admin/user/new"])
     }
 }

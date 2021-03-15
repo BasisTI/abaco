@@ -165,7 +165,7 @@ public class SistemaResource {
 
     @GetMapping("/sistemas/{id}")
     @Timed
-    @Secured("ROLE_ABACO_SISTEMA_CONSULTAR")
+    @Secured({"ROLE_ABACO_SISTEMA_CONSULTAR", "ROLE_ABACO_SISTEMA_EDITAR"})
     public ResponseEntity<Sistema> getSistema(@PathVariable Long id) {
         log.debug("REST request to get Sistema : {}", id);
         Sistema sistema = sistemaRepository.findOne(id);

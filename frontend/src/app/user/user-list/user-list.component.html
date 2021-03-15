@@ -14,6 +14,7 @@
                         buttonLabel="Novo"
                         id="idBtnNovoComponentAnalise"
                         buttonIcon="ui-icon-add"
+                        *ngIf="canCadastrar"
                         (click)="criarUsuario()">
                     </app-green-button>
                 </div>
@@ -39,7 +40,10 @@
                             [rowsPerPageOptions]="rowsPerPageOptions"
                             [showPaginationFooter]="true"
                             [customFilterOptions]="customOptions"
-                            [filterOnColumn]="true"
+                            [filterOnColumn]="canPesquisar"
+                            [disableDelete]="!canDeletar"
+                            [disableEdit]="!canEditar"
+                            [disableView]="!canConsultar"
                             #datatable>
 
                         <p-column header="Nome" field="nome" [style]="{width:'15%'}" [sortable]="true">

@@ -55,6 +55,14 @@ export class ManualListComponent implements OnInit {
 
       manualFiltro : SearchGroup = new SearchGroup();
 
+    canPesquisar: boolean = false;
+    canCadastrar: boolean = false;
+    canEditar: boolean = false;
+    canConsultar: boolean = false;
+    canDeletar: boolean = false;
+    canClonar: boolean = false;
+    canExportarFatorAjuste: boolean = false;
+
     constructor(
         private router: Router,
         private manualService: ManualService,
@@ -75,6 +83,31 @@ export class ManualListComponent implements OnInit {
                 this.manualSelecionado = undefined;
             });
         }
+        this.verificarPermissoes();
+    }
+
+    verificarPermissoes(){
+        if (this.authService.possuiRole(AuthService.PREFIX_ROLE + "MANUAL_EDITAR") == true) {
+            this.canEditar = true;
+        }
+        if (this.authService.possuiRole(AuthService.PREFIX_ROLE + "MANUAL_CONSULTAR") == true) {
+            this.canConsultar = true;
+        }
+        if (this.authService.possuiRole(AuthService.PREFIX_ROLE + "MANUAL_PESQUISAR") == true) {
+            this.canPesquisar = true;
+        }
+        if (this.authService.possuiRole(AuthService.PREFIX_ROLE + "MANUAL_EXCLUIR") == true) {
+            this.canDeletar = true;
+        }
+        if (this.authService.possuiRole(AuthService.PREFIX_ROLE + "MANUAL_CLONAR") == true) {
+            this.canClonar = true;
+        }
+        if (this.authService.possuiRole(AuthService.PREFIX_ROLE + "MANUAL_EXPORTAR_FATOR_AJUSTE") == true) {
+            this.canExportarFatorAjuste = true;
+        }
+        if (this.authService.possuiRole(AuthService.PREFIX_ROLE + "MANUAL_CADASTRAR") == true) {
+            this.canCadastrar = true;
+        }
     }
 
     getLabel(label) {
@@ -82,6 +115,9 @@ export class ManualListComponent implements OnInit {
     }
 
     public onRowDblclick(event) {
+        if (this.authService.possuiRole(AuthService.PREFIX_ROLE + "MANUAL_EDITAR") == false) {
+            return false;
+        }
         if (event.target.nodeName === 'TD') {
             this.abrirEditar(this.manualSelecionado);
         } else if (event.target.parentNode.nodeName === 'TD') {
@@ -97,16 +133,10 @@ export class ManualListComponent implements OnInit {
     }
 
     abrirEditar(manual: Manual) {
-        if (this.authService.possuiRole(AuthService.PREFIX_ROLE + "MANUAL_EDITAR") == false) {
-            return false;
-        }
         this.router.navigate(['/manual', manual.id, 'edit']);
     }
 
     abrirVisualizar(manual: Manual) {
-        if (this.authService.possuiRole(AuthService.PREFIX_ROLE + "MANUAL_CONSULTAR") == false) {
-            return false;
-        }
         this.router.navigate(['/manual', manual.id, 'view']);
     }
 
@@ -169,9 +199,6 @@ export class ManualListComponent implements OnInit {
     }
 
     public search() {
-        if (this.authService.possuiRole(AuthService.PREFIX_ROLE + "MANUAL_PESQUISAR") == false) {
-            return false;
-        }
         this.datatable.refresh(this.elasticQuery.query);
     }
 
@@ -186,25 +213,16 @@ export class ManualListComponent implements OnInit {
                 break;
             }
             case 'delete': {
-                if (this.authService.possuiRole(AuthService.PREFIX_ROLE + "MANUAL_EXCLUIR") == false) {
-                    break;
-                }
                 this.confirmDelete(event.selection);
                 break;
             }
             case 'clone': {
-                if (this.authService.possuiRole(AuthService.PREFIX_ROLE + "MANUAL_CLONAR") == false) {
-                    break;
-                }
                 this.manualSelecionado.id = event.selection.id;
                 this.manualSelecionado = event.selection;
                 this.mostrarDialogClonar = true;
                 break;
             }
             case 'exportPDF': {
-                if (this.authService.possuiRole(AuthService.PREFIX_ROLE + "MANUAL_EXPORTAR_FATOR_AJUSTE") == false) {
-                    break;
-                }
                 this.exportarManualFatorAjuste();
                 break;
             }
@@ -268,9 +286,6 @@ export class ManualListComponent implements OnInit {
 
 
     criarManual(){
-        if (this.authService.possuiRole(AuthService.PREFIX_ROLE + "MANUAL_CADASTRAR") == false) {
-            return false;
-        }
         this.router.navigate(["/manual/new"])
     }
 }

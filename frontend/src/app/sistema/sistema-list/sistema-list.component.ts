@@ -33,6 +33,12 @@ export class SistemaListComponent {
 
     fieldName: string;
 
+    canCadastrar: boolean = false;
+    canEditar: boolean = false;
+    canConsultar: boolean = false;
+    canDeletar: boolean = false;
+    canPesquisar: boolean = false;
+
     constructor(
         private router: Router,
         private sistemaService: SistemaService,
@@ -43,7 +49,6 @@ export class SistemaListComponent {
     ) {
         const emptyOrganization = new Organizacao();
         this.organizacaoService.dropDown().subscribe(response => {
-
             this.customOptions['organizacao'] = response.map((item) => {
                 return { label: item.nome, value: item.id };
             });
@@ -65,8 +70,26 @@ export class SistemaListComponent {
                 this.sistemaSelecionado = undefined;
             });
         }
+        this.verificarPermissoes();
     }
 
+    verificarPermissoes() {
+        if (this.authService.possuiRole(AuthService.PREFIX_ROLE + "SISTEMA_EDITAR") == true) {
+            this.canEditar = true;
+        }
+        if (this.authService.possuiRole(AuthService.PREFIX_ROLE + "SISTEMA_CONSULTAR") == true) {
+            this.canConsultar = true;
+        }
+        if (this.authService.possuiRole(AuthService.PREFIX_ROLE + "SISTEMA_EXCLUIR") == true) {
+            this.canDeletar = true;
+        }
+        if (this.authService.possuiRole(AuthService.PREFIX_ROLE + "SISTEMA_CADASTRAR") == true) {
+            this.canCadastrar = true;
+        }
+        if (this.authService.possuiRole(AuthService.PREFIX_ROLE + "SISTEMA_PESQUISAR") == true) {
+            this.canPesquisar = true;
+        }
+    }
 
     public datatableClick(event: DatatableClickEvent) {
         if (!event.selection) {
@@ -74,25 +97,18 @@ export class SistemaListComponent {
         }
         switch (event.button) {
             case 'edit':
-                if (this.authService.possuiRole(AuthService.PREFIX_ROLE + "SISTEMA_EDITAR") == false) {
-                    break;
-                }
                 this.router.navigate(['/sistema', event.selection.id, 'edit']);
                 break;
             case 'delete':
                 this.confirmDelete(event.selection.id);
                 break;
             case 'view':
-                if (this.authService.possuiRole(AuthService.PREFIX_ROLE + "SISTEMA_CONSULTAR") == false) {
-                    break;
-                }
                 this.router.navigate(['/sistema', event.selection.id]);
                 break;
         }
     }
 
     public onRowDblclick(event) {
-
         if (event.target.nodeName === 'TD') {
             this.abrirEditar();
         } else if (event.target.parentNode.nodeName === 'TD') {
@@ -101,16 +117,13 @@ export class SistemaListComponent {
     }
 
     abrirEditar() {
-        if (this.authService.possuiRole(AuthService.PREFIX_ROLE + "SISTEMA_EDITAR") == false) {
+        if (!this.canEditar) {
             return false;
         }
         this.router.navigate(['/sistema', this.sistemaSelecionado.id, 'edit']);
     }
 
     public confirmDelete(id: any) {
-        if (this.authService.possuiRole(AuthService.PREFIX_ROLE + "SISTEMA_EXCLUIR") == false) {
-            return false;
-        }
         this.confirmationService.confirm({
             message: this.getLabel('Tem certeza que deseja excluir o registro?'),
             accept: () => {
@@ -179,9 +192,6 @@ export class SistemaListComponent {
     }
 
     public recarregarDataTable() {
-        if (this.authService.possuiRole(AuthService.PREFIX_ROLE + "SISTEMA_PESQUISAR") == false) {
-            return false;
-        }
         this.datatable.url = this.searchUrl;
         this.datatable.refresh(this.elasticQuery.value ? this.elasticQuery.value : this.elasticQuery.query);
     }
@@ -218,11 +228,7 @@ export class SistemaListComponent {
         }
     }
 
-    criarSistema(){
-        if (this.authService.possuiRole(AuthService.PREFIX_ROLE + "SISTEMA_CADASTRAR") == false) {
-            return false;
-        }
-
+    criarSistema() {
         this.router.navigate(["/sistema/new"]);
     }
 }

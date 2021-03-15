@@ -239,7 +239,7 @@ public class AnaliseResource {
 
     @GetMapping("/analises/{id}")
     @Timed
-    @Secured("ROLE_ABACO_ANALISE_CONSULTAR")
+    @Secured({"ROLE_ABACO_ANALISE_CONSULTAR", "ROLE_ABACO_ANALISE_EDITAR"})
     public ResponseEntity<AnaliseEditDTO> getAnalise(@PathVariable Long id) {
         Analise analise = analiseService.recuperarAnalise(id);
         if (analise != null) {

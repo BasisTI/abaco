@@ -95,7 +95,7 @@ public class NomenclaturaResource {
 
     @GetMapping("/nomenclatura/{id}")
     @Timed
-    @Secured("ROLE_ABACO_NOMENCLATURA_CONSULTAR")
+    @Secured({"ROLE_ABACO_NOMENCLATURA_CONSULTAR", "ROLE_ABACO_NOMENCLATURA_EDITAR"})
     public ResponseEntity<Nomenclatura> getNomenclatura(@PathVariable Long id) {
         log.debug("REST request to get Nomenclatura : {}", id);
         Nomenclatura nomenclatura = nomenclaturaRepository.findOne(id);

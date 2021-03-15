@@ -1,6 +1,7 @@
-<p-splitButton 
-    label="Exportar" 
-    icon="ui-icon-document" 
+<p-splitButton
+    label="Exportar"
+    icon="ui-icon-document"
     [model]="tiposExportacao"
+    *ngIf="isDisabled"
     >
 </p-splitButton>
