@@ -51,7 +51,7 @@
                 </div>
                 <!-- Permissao -->
                 <div class="ui-g">
-                    <h4 style="margin-bottom: 0px; margin-top: 0px;">Permissões* <span *ngIf="perfil.permissaos.length > 1">(Segura ctrl para selecionar mais de uma)</span></h4>
+                    <h4 style="margin-bottom: 0px; margin-top: 0px;">Permissões*</h4>
                     <div class="ui-g ui-md-12" style="justify-content: flex-end">
                         <div class="ui-g-2 ui-md-3 ui-sm-12">
                             <app-blue-button [buttonLabel]="'Nova Permissão'" buttonIcon="ui-icon-add"
@@ -64,6 +64,7 @@
                         (buttonClick)="datatableClickPermissao($event)" [disableClone]="true" [disableEdit]="true"
                         [selectionMode]="'multiple'"
                         [filterOnColumn]="true"
+                        [rowsPerPageOptions]="rowsPerPageOptions"
                         ([disableLoadingBlockUI])="true"
                         [rows]="20" #datatablePermissao>
                         <p-column header="Ação" field="acao.descricao" [sortable]="true">

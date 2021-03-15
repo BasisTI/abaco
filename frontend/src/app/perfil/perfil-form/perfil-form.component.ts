@@ -20,6 +20,8 @@ export class PerfilFormComponent implements OnInit {
     novasPermissoes: Permissao[] = [];
     editPermissoes: Permissao[] = [];
 
+    rowsPerPageOptions: number[] = [5, 10, 20, 50];
+
     isSaving: boolean;
     mostrarDialogPermissao: boolean;
     mostrarDialogEditarPermissao: boolean;
@@ -30,7 +32,6 @@ export class PerfilFormComponent implements OnInit {
     permissoes: Permissao[];
 
     @ViewChild(DatatableComponent) tables: DatatableComponent;
-
 
     readonly edit = 'edit';
     readonly delete = 'delete';
