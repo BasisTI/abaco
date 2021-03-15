@@ -486,19 +486,19 @@ public class AnaliseService extends BaseService {
     }
 
     public Analise convertToEntity(AnaliseDTO analiseDTO) {
-        return new ModelMapper().map(analiseDTO, Analise.class);
+        return modelMapper.map(analiseDTO, Analise.class);
     }
 
     public AnaliseEditDTO convertToAnaliseEditDTO(Analise analise) {
-        return new ModelMapper().map(analise, AnaliseEditDTO.class);
+        return modelMapper.map(analise, AnaliseEditDTO.class);
     }
 
     public AnaliseDivergenceEditDTO convertToAnaliseDivergenceEditDTO(Analise analise) {
-        return new ModelMapper().map(analise, AnaliseDivergenceEditDTO.class);
+        return modelMapper.map(analise, AnaliseDivergenceEditDTO.class);
     }
 
     public Analise convertToEntity(AnaliseEditDTO analiseEditDTO) {
-        return new ModelMapper().map(analiseEditDTO, Analise.class);
+        return modelMapper.map(analiseEditDTO, Analise.class);
     }
 
     public void bindAnalise(@RequestBody @Valid Analise analiseUpdate, Analise analise) {
