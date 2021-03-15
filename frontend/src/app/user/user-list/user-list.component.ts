@@ -8,6 +8,7 @@ import { UserService } from '../user.service';
 import { User } from '../user.model';
 import { SearchGroup } from '..';
 import { AuthService } from 'src/app/util/auth.service';
+import { PerfilService } from 'src/app/perfil';
 
 @Component({
     selector: 'app-user',
@@ -26,7 +27,7 @@ export class UserListComponent implements OnInit {
 
     customOptions: Object = {};
 
-    userFiltro : SearchGroup;
+    userFiltro: SearchGroup;
 
     searchParams: any = {
         fullName: undefined,
@@ -41,12 +42,12 @@ export class UserListComponent implements OnInit {
     teams: TipoEquipe[];
 
     allColumnsTable = [
-        {value: 'nome',  label: 'Nome'},
-        {value: 'login',  label: 'Login'},
-        {value: 'organizacao',  label: 'Organização'},
-        {value: 'perfil',  label: 'Perfil'},
-        {value: 'equipe',  label: 'Equipe'},
-        {value: 'activated',  label: 'Ativo'},
+        { value: 'nome', label: 'Nome' },
+        { value: 'login', label: 'Login' },
+        { value: 'organizacao', label: 'Organização' },
+        { value: 'perfil', label: 'Perfil' },
+        { value: 'equipe', label: 'Equipe' },
+        { value: 'activated', label: 'Ativo' },
     ];
 
     columnsVisible = [
@@ -71,7 +72,8 @@ export class UserListComponent implements OnInit {
         private organizacaoService: OrganizacaoService,
         private tipoEquipeService: TipoEquipeService,
         private pageNotificationService: PageNotificationService,
-        private authService: AuthService
+        private authService: AuthService,
+        private perfilService: PerfilService
     ) {
     }
 
@@ -82,6 +84,7 @@ export class UserListComponent implements OnInit {
     ngOnInit() {
         this.recuperarOrganizacoes();
         this.recuperarEquipe();
+        this.recuperarPerfis();
         this.query = this.changeUrl();
         if (this.datatable) {
 
@@ -98,7 +101,7 @@ export class UserListComponent implements OnInit {
         this.verificarPermissoes();
     }
 
-    verificarPermissoes(){
+    verificarPermissoes() {
         if (this.authService.possuiRole(AuthService.PREFIX_ROLE + "USUARIO_EDITAR") == true) {
             this.canEditar = true;
         }
@@ -119,9 +122,17 @@ export class UserListComponent implements OnInit {
     recuperarOrganizacoes() {
         this.organizacaoService.dropDown().subscribe(response => {
             this.organizations = response;
-            this.customOptions['organizacao.nome'] = response.map((item) => {
-                return {label: item.nome, value: item.id};
-              });
+            this.customOptions['organizacao'] = response.map((item) => {
+                return { label: item.nome, value: item.id };
+            });
+        });
+    }
+
+    recuperarPerfis() {
+        this.perfilService.dropDown().subscribe(response => {
+            this.customOptions['perfil'] = response.map((item) => {
+                return { label: item.nome, value: item.id };
+            });
         });
     }
 
@@ -130,8 +141,8 @@ export class UserListComponent implements OnInit {
             this.teams = response;
             const emptyTeam = new TipoEquipe();
             this.customOptions['equipe'] = response.map((item) => {
-                return {label: item.nome, value: item.id};
-              });
+                return { label: item.nome, value: item.id };
+            });
         });
     }
 
@@ -165,7 +176,7 @@ export class UserListComponent implements OnInit {
             return false;
         }
         const id = this.usuarioSelecionado.id;
-        if (id > 0 ) {
+        if (id > 0) {
             this.router.navigate(['/admin/user', id, 'edit']);
         }
     }
@@ -217,23 +228,23 @@ export class UserListComponent implements OnInit {
         this.datatable.reset();
     }
 
-    public preencheFiltro(){
-        if(this.datatable.filterParams.nome){
+    public preencheFiltro() {
+        if (this.datatable.filterParams.nome) {
             this.userFiltro.nome = this.datatable.filterParams.nome;
         }
-        if(this.datatable.filterParams.login){
+        if (this.datatable.filterParams.login) {
             this.userFiltro.login = this.datatable.filterParams.login;
         }
-        if(this.datatable.filterParams.email){
+        if (this.datatable.filterParams.email) {
             this.userFiltro.email = this.datatable.filterParams.email;
         }
-        if(this.datatable.filterParams.organizacao){
+        if (this.datatable.filterParams.organizacao) {
             this.userFiltro.organizacao = this.datatable.filterParams.organizacao;
         }
-        if(this.datatable.filterParams.perfil){
+        if (this.datatable.filterParams.perfil) {
             this.userFiltro.perfil = this.datatable.filterParams.perfil;
         }
-        if(this.datatable.filterParams.equipe){
+        if (this.datatable.filterParams.equipe) {
             this.userFiltro.tipoEquipe = this.datatable.filterParams.equipe;
         }
     }
@@ -295,7 +306,7 @@ export class UserListComponent implements OnInit {
         });
     }
 
-    criarUsuario(){
+    criarUsuario() {
         this.router.navigate(["/admin/user/new"])
     }
 }

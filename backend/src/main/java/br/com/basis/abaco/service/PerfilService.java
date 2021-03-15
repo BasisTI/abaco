@@ -5,6 +5,7 @@ import br.com.basis.abaco.domain.Permissao;
 import br.com.basis.abaco.repository.PerfilRepository;
 import br.com.basis.abaco.repository.PermissaoRepository;
 import br.com.basis.abaco.repository.search.PerfilSearchRepository;
+import br.com.basis.abaco.service.dto.DropdownDTO;
 import br.com.basis.abaco.service.dto.PerfilDTO;
 import br.com.basis.abaco.service.exception.RelatorioException;
 import br.com.basis.abaco.service.relatorio.RelatorioPerfilColunas;
@@ -123,4 +124,9 @@ public class PerfilService {
         return byteArrayOutputStream;
     }
 
+
+    @Transactional(readOnly = true)
+    public List<DropdownDTO> getPerfilDropdown() {
+        return perfilRepository.getPerfilDropdown();
+    }
 }
