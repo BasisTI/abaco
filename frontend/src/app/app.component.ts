@@ -45,7 +45,7 @@ export class AppComponent implements AfterViewInit, OnDestroy, OnInit {
 
     rippleMouseDownListener: EventListenerOrEventListenerObject;
 
-    constructor(public renderer2: Renderer2, public zone: NgZone, public menuService: MenusService, private authService : AuthService) { }
+    constructor(public renderer2: Renderer2, public zone: NgZone, public menuService: MenusService, private authAbacoService : AuthService) { }
 
     ngOnInit() {
         this.zone.runOutsideAngular(() => { this.bindRipple(); });
@@ -187,6 +187,57 @@ export class AppComponent implements AfterViewInit, OnDestroy, OnInit {
         this.layoutContainer = this.layourContainerViewChild.nativeElement as HTMLDivElement;
         const time = 100;
         setTimeout(() => { this.layoutMenuScrollerViewChild.moveBar(); }, time);
+        this.carregarMenu();
+    }
+
+
+    carregarMenu() {
+        for (let index = 0; index < this.menuService.itens.length; index++) {
+            const menu = this.menuService.itens[index];
+            if (menu.label == 'Análise' && this.authAbacoService.possuiAlgumaRoles([AuthService.PREFIX_ROLE + 'ANALISE_ACESSAR',
+            AuthService.PREFIX_ROLE + 'BASELINE_ACESSAR',
+            AuthService.PREFIX_ROLE + 'DIVERGENCIA_ACESSAR'])) {
+                menu.visible = true;
+            } else if (menu.label == 'Cadastros' && this.authAbacoService.possuiAlgumaRoles([AuthService.PREFIX_ROLE + 'FASE_ACESSAR',
+            AuthService.PREFIX_ROLE + 'MANUAL_ACESSAR',
+            AuthService.PREFIX_ROLE + 'ORGANIZACAO_ACESSAR',
+            AuthService.PREFIX_ROLE + 'SISTEMA_ACESSAR',
+            AuthService.PREFIX_ROLE + 'TIPO_EQUIPE_ACESSAR',
+            AuthService.PREFIX_ROLE + 'USUARIO_ACESSAR',
+            AuthService.PREFIX_ROLE + 'STATUS_ACESSAR',
+            AuthService.PREFIX_ROLE + 'NOMENCLATURA_ACESSAR',
+            AuthService.PREFIX_ROLE + 'PERFIL_ACESSAR'])) {
+                menu.visible = true;
+            }
+            for (let index = 0; index < menu.items.length; index++) {
+                const submenu = menu.items[index];
+                if (submenu.label == 'Fase') {
+                    submenu.visible = this.authAbacoService.possuiRole(AuthService.PREFIX_ROLE + 'FASE_ACESSAR');
+                } else if (submenu.label == 'Manual') {
+                    submenu.visible = this.authAbacoService.possuiRole(AuthService.PREFIX_ROLE + 'MANUAL_ACESSAR');
+                } else if (submenu.label == 'Organização') {
+                    submenu.visible = this.authAbacoService.possuiRole(AuthService.PREFIX_ROLE + 'ORGANIZACAO_ACESSAR');
+                } else if (submenu.label == 'Sistema') {
+                    submenu.visible = this.authAbacoService.possuiRole(AuthService.PREFIX_ROLE + 'SISTEMA_ACESSAR');
+                } else if (submenu.label == 'Tipo Equipe') {
+                    submenu.visible = this.authAbacoService.possuiRole(AuthService.PREFIX_ROLE + 'TIPO_EQUIPE_ACESSAR');
+                } else if (submenu.label == 'Usuários') {
+                    submenu.visible = this.authAbacoService.possuiRole(AuthService.PREFIX_ROLE + 'USUARIO_ACESSAR');
+                } else if (submenu.label == 'Status') {
+                    submenu.visible = this.authAbacoService.possuiRole(AuthService.PREFIX_ROLE + 'STATUS_ACESSAR');
+                } else if (submenu.label == 'Nomenclatura') {
+                    submenu.visible = this.authAbacoService.possuiRole(AuthService.PREFIX_ROLE + 'NOMENCLATURA_ACESSAR');
+                } else if (submenu.label == 'Perfil') {
+                    submenu.visible = this.authAbacoService.possuiRole(AuthService.PREFIX_ROLE + 'PERFIL_ACESSAR');
+                } else if (submenu.label == 'Análise') {
+                    submenu.visible = this.authAbacoService.possuiRole(AuthService.PREFIX_ROLE + 'ANALISE_ACESSAR');
+                } else if (submenu.label == 'Baseline') {
+                    submenu.visible = this.authAbacoService.possuiRole(AuthService.PREFIX_ROLE + 'BASELINE_ACESSAR');
+                } else if (submenu.label == 'Validação' && this.authAbacoService.possuiRole(AuthService.PREFIX_ROLE + 'DIVERGENCIA_ACESSAR')) {
+                    submenu.visible = true;
+                }
+            }
+        }
     }
 
     onLayoutClick() {
@@ -215,7 +266,6 @@ export class AppComponent implements AfterViewInit, OnDestroy, OnInit {
         this.menuClick = false;
         this.rightPanelClick = false;
     }
-
 
     onMenuButtonClick(event) {
         this.menuClick = true;

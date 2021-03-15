@@ -40,25 +40,23 @@ export class DashboardComponent implements OnInit, AfterViewInit {
 
   ngOnInit() {
     this.authenticated = this.authService.isAuthenticated();
-    
-
   }
   carregarMenu() {
     this.authAbacoService.getRoles().subscribe(res =>{
       for (let index = 0; index < this.menuService.itens.length; index++) {
         const menu = this.menuService.itens[index];
         if(menu.label == 'Análise' && this.authAbacoService.possuiAlgumaRoles([AuthService.PREFIX_ROLE+'ANALISE_ACESSAR',
-        AuthService.PREFIX_ROLE+'BASELINE_ACESSAR', 
+        AuthService.PREFIX_ROLE+'BASELINE_ACESSAR',
         AuthService.PREFIX_ROLE+'DIVERGENCIA_ACESSAR'])){
           menu.visible = true;
         }else if(menu.label == 'Cadastros' && this.authAbacoService.possuiAlgumaRoles([AuthService.PREFIX_ROLE+'FASE_ACESSAR',
-        AuthService.PREFIX_ROLE+'MANUAL_ACESSAR', 
-        AuthService.PREFIX_ROLE+'ORGANIZACAO_ACESSAR', 
-        AuthService.PREFIX_ROLE+'SISTEMA_ACESSAR', 
-        AuthService.PREFIX_ROLE+'TIPO_EQUIPE_ACESSAR', 
-        AuthService.PREFIX_ROLE+'USUARIO_ACESSAR', 
-        AuthService.PREFIX_ROLE+'STATUS_ACESSAR', 
-        AuthService.PREFIX_ROLE+'NOMENCLATURA_ACESSAR', 
+        AuthService.PREFIX_ROLE+'MANUAL_ACESSAR',
+        AuthService.PREFIX_ROLE+'ORGANIZACAO_ACESSAR',
+        AuthService.PREFIX_ROLE+'SISTEMA_ACESSAR',
+        AuthService.PREFIX_ROLE+'TIPO_EQUIPE_ACESSAR',
+        AuthService.PREFIX_ROLE+'USUARIO_ACESSAR',
+        AuthService.PREFIX_ROLE+'STATUS_ACESSAR',
+        AuthService.PREFIX_ROLE+'NOMENCLATURA_ACESSAR',
         AuthService.PREFIX_ROLE+'PERFIL_ACESSAR'])){
           menu.visible = true;
         }
