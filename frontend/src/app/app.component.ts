@@ -51,7 +51,7 @@ export class AppComponent implements AfterViewInit, OnDestroy, OnInit {
         this.zone.runOutsideAngular(() => { this.bindRipple(); });
         this.menuService.itens =  [
             {
-                label: 'Cadastros', icon: 'description',  visible : false, 
+                label: 'Cadastros', icon: 'description',  visible : false,
                 items: [
                     { label: 'Fase', routerLink: 'fase', icon: 'beenhere', visible : false },
                     { label: 'Manual', routerLink: 'manual', icon: 'description', visible : false },
@@ -215,6 +215,7 @@ export class AppComponent implements AfterViewInit, OnDestroy, OnInit {
         this.menuClick = false;
         this.rightPanelClick = false;
     }
+
 
     onMenuButtonClick(event) {
         this.menuClick = true;
