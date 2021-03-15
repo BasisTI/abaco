@@ -236,7 +236,8 @@ export class ManualListComponent implements OnInit {
         if (!(this.datatable && this.datatable.selectedRow)) {
             return this.getLabel('Selecione um registro para gerar o relatório');
         }
-        return this.getLabel('Relatório Fator Ajuste');
+
+        return this.getLabel('Guia de Métricas');
     }
 
     mostrarColunas(event) {
