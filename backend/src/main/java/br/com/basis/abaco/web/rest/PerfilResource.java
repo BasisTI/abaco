@@ -4,6 +4,7 @@ import br.com.basis.abaco.domain.Perfil;
 import br.com.basis.abaco.repository.PerfilRepository;
 import br.com.basis.abaco.repository.search.PerfilSearchRepository;
 import br.com.basis.abaco.service.PerfilService;
+import br.com.basis.abaco.service.dto.DropdownDTO;
 import br.com.basis.abaco.service.dto.PerfilDTO;
 import br.com.basis.abaco.service.exception.RelatorioException;
 import br.com.basis.abaco.utils.PageUtils;
@@ -202,5 +203,12 @@ public class PerfilResource {
     public ResponseEntity<byte[]> gerarRelatorioImprimir(@RequestParam(defaultValue = "*") String query) throws RelatorioException {
         ByteArrayOutputStream byteArrayOutputStream = perfilService.gerarRelatorio(query, "pdf");
         return new ResponseEntity<byte[]>(byteArrayOutputStream.toByteArray(), HttpStatus.OK);
+    }
+
+    @GetMapping("/perfils/drop-down")
+    @Timed
+    public List<DropdownDTO> getPerfilDropdown() {
+        log.debug("REST request to get dropdown Perfil");
+        return perfilService.getPerfilDropdown();
     }
 }

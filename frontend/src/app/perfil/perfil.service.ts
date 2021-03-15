@@ -111,5 +111,7 @@ export class PerfilService {
         return label;
     }
 
-
+    dropDown(): Observable<Perfil[]> {
+        return this.http.get<Perfil[]>(this.resourceUrl + '/drop-down');
+    }
 }
