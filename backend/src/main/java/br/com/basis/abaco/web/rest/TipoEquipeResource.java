@@ -160,7 +160,7 @@ public class TipoEquipeResource {
      */
     @GetMapping("/tipo-equipes/{id}")
     @Timed
-    @Secured("ROLE_ABACO_TIPO_EQUIPE_CONSULTAR")
+    @Secured({"ROLE_ABACO_TIPO_EQUIPE_CONSULTAR", "ROLE_ABACO_TIPO_EQUIPE_EDITAR"})
     public ResponseEntity<TipoEquipeDTO> getTipoEquipe(@PathVariable Long id) {
         log.debug("REST request to get TipoEquipe : {}", id);
         TipoEquipe tipoEquipe = tipoEquipeRepository.findById(id);

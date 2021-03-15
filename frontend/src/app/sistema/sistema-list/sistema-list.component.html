@@ -12,6 +12,7 @@
           </div>
         <div class="ui-g ui-md-6" style="justify-content: flex-end;">
             <app-green-button
+                *ngIf="canCadastrar"
               buttonLabel="Novo"
               id="idBtnNovoComponentAnalise"
               buttonIcon="ui-icon-add"
@@ -24,11 +25,14 @@
             [url]="searchUrl"
             (dblclick)="onRowDblclick($event)"
             (click) = "selectTipoEquipe()"
-            [filterOnColumn]="true"
+            [filterOnColumn]="canPesquisar"
             [customFilterOptions]="customOptions"
             (buttonClick)="datatableClick($event)"
             id="idTabelaComponentSistema"
             [rows]="20"
+            [disableDelete]="!canDeletar"
+            [disableEdit]="!canEditar"
+            [disableView]="!canConsultar"
             [rowsPerPageOptions]="rowsPerPageOptions"
             [showPaginationFooter]="true"
             #datatable>

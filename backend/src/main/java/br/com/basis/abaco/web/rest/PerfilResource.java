@@ -161,7 +161,7 @@ public class PerfilResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the perfilDTO, or with status {@code 404 (Not Found)}.
      */
     @GetMapping("/perfils/{id}")
-    @Secured("ROLE_ABACO_PERFIL_CONSULTAR")
+    @Secured({"ROLE_ABACO_PERFIL_CONSULTAR", "ROLE_ABACO_PERFIL_EDITAR"})
     public ResponseEntity<Perfil> getPerfil(@PathVariable Long id) {
         log.debug("REST request to get Perfil : {}", id);
         Optional<Perfil> perfil = perfilService.findOne(id);

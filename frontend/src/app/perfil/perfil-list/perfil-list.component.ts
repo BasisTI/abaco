@@ -23,6 +23,12 @@ export class PerfilListComponent implements OnInit {
 
     rowsPerPageOptions: number[] = [5, 10, 20];
 
+    canPesquisar: boolean = false;
+    canCadastrar: boolean = false;
+    canEditar: boolean = false;
+    canConsultar: boolean = false;
+    canDeletar: boolean = false;
+
     constructor(
         private perfilService: PerfilService,
         private router: Router,
@@ -33,12 +39,28 @@ export class PerfilListComponent implements OnInit {
     }
 
     public ngOnInit() {
+        this.verificarPermissoes();
+    }
+
+    verificarPermissoes(){
+        if (this.authService.possuiRole(AuthService.PREFIX_ROLE + "PERFIL_PESQUISAR") == true) {
+            this.canPesquisar = true;
+        }
+        if (this.authService.possuiRole(AuthService.PREFIX_ROLE + "PERFIL_EDITAR") == true) {
+            this.canEditar = true;
+        }
+        if (this.authService.possuiRole(AuthService.PREFIX_ROLE + "PERFIL_CONSULTAR") == true) {
+            this.canConsultar = true;
+        }
+        if (this.authService.possuiRole(AuthService.PREFIX_ROLE + "PERFIL_EXCLUIR") == true) {
+            this.canDeletar = true;
+        }
+        if (this.authService.possuiRole(AuthService.PREFIX_ROLE + "PERFIL_CADASTRAR") == true) {
+            this.canCadastrar = true;
+        }
     }
 
     public recarregarDataTable() {
-        if (this.authService.possuiRole(AuthService.PREFIX_ROLE + "PERFIL_PESQUISAR") == false) {
-            return false;
-        }
         this.datatable.refresh(this.elasticQuery.query);
     }
 
@@ -48,6 +70,9 @@ export class PerfilListComponent implements OnInit {
     }
 
     public onRowDblclick(event) {
+        if (this.authService.possuiRole(AuthService.PREFIX_ROLE + "PERFIL_EDITAR") == false) {
+            return false;
+        }
         if (event.target.nodeName === 'TD') {
             this.abrirEditar(this.perfilSelecionado);
         } else if (event.target.parentNode.nodeName === 'TD') {
@@ -77,23 +102,14 @@ export class PerfilListComponent implements OnInit {
         }
         switch (event.button) {
             case 'edit': {
-                if (this.authService.possuiRole(AuthService.PREFIX_ROLE + "PERFIL_EDITAR") == false) {
-                    break;
-                }
                 this.abrirEditar(event.selection);
                 break;
             }
             case 'view': {
-                if (this.authService.possuiRole(AuthService.PREFIX_ROLE + "PERFIL_CONSULTAR") == false) {
-                    break;
-                }
                 this.abrirVisualizar(event.selection);
                 break;
             }
             case 'delete': {
-                if (this.authService.possuiRole(AuthService.PREFIX_ROLE + "PERFIL_EXCLUIR") == false) {
-                    break;
-                }
                 this.confirmDelete(event.selection);
                 break;
             }
@@ -104,9 +120,6 @@ export class PerfilListComponent implements OnInit {
     }
 
     public criarPerfil() {
-        if (this.authService.possuiRole(AuthService.PREFIX_ROLE + "PERFIL_CADASTRAR") == false) {
-            return false;
-        }
         this.router.navigate(["/perfil/new"])
     }
 

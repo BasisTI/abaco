@@ -21,6 +21,11 @@ export class FaseListComponent implements OnInit {
     filtro: FaseFilter = new FaseFilter();
     urlFaseService = this.tipoFaseService.resourceUrl;
 
+    canCadastrar: boolean = false;
+    canEditar: boolean = false;
+    canConsultar: boolean = false;
+    canDeletar: boolean = false;
+
     constructor(
         private router: Router,
         private tipoFaseService: FaseService,
@@ -30,6 +35,24 @@ export class FaseListComponent implements OnInit {
     ) {}
 
     public ngOnInit() {
+        this.verificarPermissoes();
+    }
+
+    verificarPermissoes(){
+        if (this.authService.possuiRole(AuthService.PREFIX_ROLE+"FASE_EDITAR") == true) {
+            this.canEditar = true;
+        }
+
+        if (this.authService.possuiRole(AuthService.PREFIX_ROLE+"FASE_CONSULTAR") == true) {
+            this.canConsultar = true;
+        }
+
+        if (this.authService.possuiRole(AuthService.PREFIX_ROLE+"FASE_EXCLUIR") == true) {
+            this.canDeletar = true;
+        }
+        if (this.authService.possuiRole(AuthService.PREFIX_ROLE+"FASE_CADASTRAR") == true) {
+            this.canCadastrar = true;
+        }
     }
 
     susbcribeSelectRow(data): any {
@@ -70,23 +93,14 @@ export class FaseListComponent implements OnInit {
     onClick(event: DatatableClickEvent) {
         switch (event.button) {
             case 'edit': {
-                if (this.authService.possuiRole(AuthService.PREFIX_ROLE+"FASE_EDITAR") == false) {
-                    break;
-                }
                 this.abrirEditar(event.selection);
                break;
             }
             case 'view': {
-                if (this.authService.possuiRole(AuthService.PREFIX_ROLE+"FASE_CONSULTAR") == false) {
-                    break;
-                }
                 this.abrirVisualizar(event.selection);
                 break;
             }
             case 'delete': {
-                if (this.authService.possuiRole(AuthService.PREFIX_ROLE+"FASE_EXCLUIR") == false) {
-                    break;
-                }
                 this.confirmDelete(event.selection);
                break;
             }
@@ -117,9 +131,6 @@ export class FaseListComponent implements OnInit {
     }
 
     public criarFase(){
-        if (this.authService.possuiRole(AuthService.PREFIX_ROLE+"FASE_CADASTRAR") == false) {
-            return false
-        }
         this.router.navigate(["/fase/new"]);
     }
 }

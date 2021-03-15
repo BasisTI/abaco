@@ -78,7 +78,7 @@ public class FaseResource {
 
     @GetMapping("/fases/{id}")
     @Timed
-    @Secured("ROLE_ABACO_FASE_CONSULTAR")
+    @Secured({"ROLE_ABACO_FASE_CONSULTAR", "ROLE_ABACO_FASE_EDITAR"})
     public ResponseEntity<Fase> findOne(@PathVariable Long id) {
         log.debug("REST request to get Fase : {}", id);
         Fase fase = service.findOne(id);

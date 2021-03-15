@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { AuthService } from 'src/app/util/auth.service';
 import { environment } from 'src/environments/environment';
 import { ExportacaoUtilService } from './export-button.service';
@@ -10,7 +10,7 @@ import { ExportacaoUtil } from './export-button.util';
     templateUrl: './export-button.component.html',
     styleUrls: ['./export-button.component.css']
 })
-export class ExportButtonComponent {
+export class ExportButtonComponent implements OnInit {
 
     @Input() resourceName: string;
 
@@ -21,6 +21,8 @@ export class ExportButtonComponent {
     @Input() dataTable: any;
 
     @Input() filter;
+
+    @Input() isDisabled: boolean;
 
     tiposExportacao = [
         {
@@ -45,6 +47,12 @@ export class ExportButtonComponent {
         private authService: AuthService
     ) {
 
+    }
+    ngOnInit(): void {
+        (this.isDisabled === undefined) ? (this.isDisabled = false) : (this.isDisabled = this.isDisabled);
+        if (this.authService.possuiRole(AuthService.PREFIX_ROLE + "" + this.funcionalidadeName.toUpperCase() + "_EXPORTAR") == true) {
+            this.isDisabled = true;
+        }
     }
 
     exportar(tipoRelatorio: string) {

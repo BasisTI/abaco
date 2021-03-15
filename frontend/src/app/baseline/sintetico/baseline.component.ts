@@ -32,6 +32,11 @@ export class BaselineComponent implements OnInit {
     lstBasilineSintetico: BaselineSintetico[];
     showUpdateBaseline: boolean = false;
 
+    canPesquisar: boolean = false;
+    canAtualizar: boolean = false;
+    canConsultar: boolean = false;
+    canExportar: boolean = false;
+
     constructor(
         private router: Router,
         private baselineService: BaselineService,
@@ -49,6 +54,22 @@ export class BaselineComponent implements OnInit {
     ngOnInit(): void {
         this.recuperarSistema();
         this. recuperarEquipe();
+        this.verificarPermissoes();
+    }
+
+    verificarPermissoes(){
+        if (this.authService.possuiRole(AuthService.PREFIX_ROLE + "BASELINE_CONSULTAR") == true) {
+            this.canConsultar = true;
+        }
+        if (this.authService.possuiRole(AuthService.PREFIX_ROLE + "BASELINE_EXPORTAR") == true) {
+            this.canExportar = true;
+        }
+        if (this.authService.possuiRole(AuthService.PREFIX_ROLE + "BASELINE_PESQUISAR") == true) {
+            this.canPesquisar = true;
+        }
+        if (this.authService.possuiRole(AuthService.PREFIX_ROLE + "BASELINE_ATUALIZAR") == true) {
+            this.canAtualizar = true;
+        }
     }
 
     public carregarDataTable() {
@@ -70,15 +91,9 @@ export class BaselineComponent implements OnInit {
         }
         switch (event.button) {
             case 'view':
-                if (this.authService.possuiRole(AuthService.PREFIX_ROLE + "BASELINE_CONSULTAR") == false) {
-                    break;
-                }
                 this.router.navigate(['/baseline', event.selection.idsistema, event.selection.equipeResponsavelId]);
                 break;
             case 'geraBaselinePdfBrowser':
-                if (this.authService.possuiRole(AuthService.PREFIX_ROLE + "BASELINE_EXPORTAR") == false) {
-                    break;
-                }
                 this.geraBaselinePdfBrowser(event.selection.idsistema);
                 break;
         }
@@ -116,9 +131,6 @@ export class BaselineComponent implements OnInit {
     }
 
     public performSearch() {
-        if (this.authService.possuiRole(AuthService.PREFIX_ROLE + "BASELINE_PESQUISAR") == false) {
-            return false;
-        }
         this.enableTable = true ;
         this.baselineService.allBaselineSintetico(this.sistema).subscribe((res) => {
             this.lstBasilineSintetico = res;
@@ -142,16 +154,10 @@ export class BaselineComponent implements OnInit {
     }
 
     public atualizarBaseline() {
-        if (this.authService.possuiRole(AuthService.PREFIX_ROLE + "BASELINE_ATUALIZAR") == false) {
-            return false;
-        }
         this.showUpdateBaseline = true;
     }
 
     public updateBaseline(sistema: Sistema, equipe: TipoEquipe) {
-        if (this.authService.possuiRole(AuthService.PREFIX_ROLE + "BASELINE_ATUALIZAR") == false) {
-            return false;
-        }
         if  (!sistema || !sistema.id) {
             this.pageNotificationService.addErrorMessage(
                 this.getLabel('Selecione um Sistema para atualizar!')

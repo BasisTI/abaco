@@ -145,7 +145,7 @@ public class UserResource {
 
     @GetMapping("/users/{id}")
     @Timed
-    @Secured("ROLE_ABACO_USUARIO_CONSULTAR")
+    @Secured({"ROLE_ABACO_USUARIO_CONSULTAR", "ROLE_ABACO_USUARIO_EDITAR"})
     public UserEditDTO getUser(@PathVariable Long id) {
         return  userService.convertToDto(userService.getUserWithAuthorities(id));
     }

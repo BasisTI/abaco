@@ -255,7 +255,7 @@ public class ManualResource {
      */
     @GetMapping("/manuals/{id}")
     @Timed
-    @Secured("ROLE_ABACO_MANUAL_CONSULTAR")
+    @Secured({"ROLE_ABACO_MANUAL_CONSULTAR", "ROLE_ABACO_MANUAL_EDITAR"})
     public ResponseEntity<Manual> getManual(@PathVariable Long id) {
         log.debug("REST request to get Manual : {}", id);
         Manual manual = manualRepository.findOne(id);

@@ -10,7 +10,6 @@
                                 type="text"
                                 pInputText class="ui-inputtext"
                                 [(ngModel)]="elasticQuery.value"
-                                (keyup.enter)="search()"
                                 maxlength="200"
                                 #filter/>
                                 <label translate="Cadastros.Manual.Descricao">Descrição</label>
@@ -23,13 +22,16 @@
                         </app-white-button>
                     </div>
                     <div class="ui-g-2 ui-md-2 ui-sm-12">
-                        <app-blue-button buttonLabel="Pesquisar" id="idBtnPesquisarComponentManual"
+                        <app-blue-button
+                            *ngIf="canPesquisar"
+                            buttonLabel="Pesquisar" id="idBtnPesquisarComponentManual"
                             buttonIcon="ui-icon-search" (click)="search()">
                         </app-blue-button>
                     </div>
 
                     <div class="ui-g-2 ui-md-2 ui-sm-12">
                         <app-green-button
+                                *ngIf="canCadastrar"
                                 buttonLabel="Novo"
                                 id="idBtnNovoComponentManual"
                                 buttonIcon="ui-icon-add"
@@ -52,15 +54,20 @@
                   </div>
                 <basis-datatable [url]="searchUrl" (dblclick)="onRowDblclick($event)" (click)="selectManual()"
                     (buttonClick)="onClick($event)" [rows]="20" id="idTabelaComponentManual"
+                    [disableDelete]="!canDeletar" [disableEdit]="!canEditar" [disableView]="!canConsultar"
                     [rowsPerPageOptions]="rowsPerPageOptions" [showPaginationFooter]="true"
                      #datatable>
 
-                    <basis-datatable-button name="clone" [bTooltip]="relatorioCloneButton()" icon="content-copy"
+                    <basis-datatable-button
+                        *ngIf="canClonar"
+                        name="clone" [bTooltip]="relatorioCloneButton()" icon="content-copy"
                         id="idTabelaCloneComponentManual" disabled="desabilitarBotaoClonar()"
                         [disabled]="datatable.selectedRow == null">
                     </basis-datatable-button>
 
-                    <basis-datatable-button name="exportPDF" [bTooltip]="relatorioFatorAjusteButton()"
+                    <basis-datatable-button
+                        *ngIf="canExportarFatorAjuste"
+                        name="exportPDF" [bTooltip]="relatorioFatorAjusteButton()"
                         icon="description" id="idTabelaCloneComponentManual" disabled="desabilitarBotaoClonar()"
                         class="ui-button-danger" [disabled]="datatable.selectedRow == null">
 

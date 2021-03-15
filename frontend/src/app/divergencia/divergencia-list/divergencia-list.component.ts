@@ -92,6 +92,12 @@ export class DivergenciaListComponent implements OnInit {
     showDialogDivergenceBlock = false;
     showDialogDivergenceStatus = false;
 
+    canPesquisar: boolean = false;
+    canEditar: boolean = false;
+    canDeletar: boolean = false;
+    canAlterarStatus: boolean = false;
+    canBloquearDesbloquear: boolean = false;
+
     constructor(
         private router: Router,
         private sistemaService: SistemaService,
@@ -112,10 +118,29 @@ export class DivergenciaListComponent implements OnInit {
         this.estadoInicial();
         this.datatable.onLazyLoad.subscribe((event: LazyLoadEvent) => this.loadDirvenceLazy(event));
         this.datatable.lazy = true;
+        this.verificarPermissoes();
     }
 
     getLabel(label) {
         return label;
+    }
+
+    verificarPermissoes(){
+        if (this.authService.possuiRole(AuthService.PREFIX_ROLE + "DIVERGENCIA_EDITAR") == true) {
+            this.canEditar = true;
+        }
+        if (this.authService.possuiRole(AuthService.PREFIX_ROLE + "DIVERGENCIA_EXCLUIR") == true) {
+            this.canDeletar = true;
+        }
+        if (this.authService.possuiRole(AuthService.PREFIX_ROLE + "DIVERGENCIA_PESQUISAR") == true) {
+            this.canPesquisar = true;
+        }
+        if (this.authService.possuiRole(AuthService.PREFIX_ROLE + "DIVERGENCIA_ALTERAR_STATUS") == true) {
+            this.canAlterarStatus = true;
+        }
+        if (this.authService.possuiRole(AuthService.PREFIX_ROLE + "DIVERGENCIA_BLOQUEAR_DESBLOQUEAR") == true) {
+            this.canBloquearDesbloquear = true;
+        }
     }
 
     estadoInicial() {
@@ -180,16 +205,10 @@ export class DivergenciaListComponent implements OnInit {
             this.pageNotificationService.addErrorMessage('Você não pode editar uma análise bloqueada!');
             return;
         }
-        if (this.authService.possuiRole(AuthService.PREFIX_ROLE + "DIVERGENCIA_EDITAR") == false) {
-            return false;
-        }
         this.router.navigate(['/divergencia', analiseDivergence.id, 'edit']);
     }
 
     public confirmDeleteDivergence(divergence: Analise) {
-        if (this.authService.possuiRole(AuthService.PREFIX_ROLE + "DIVERGENCIA_EXCLUIR") == false) {
-            return false;
-        }
         if (!divergence) {
             this.pageNotificationService.addErrorMessage('Nenhuma Validação foi selecionada.');
             return;
@@ -227,9 +246,6 @@ export class DivergenciaListComponent implements OnInit {
     }
 
     public performSearch() {
-        if (this.authService.possuiRole(AuthService.PREFIX_ROLE + "DIVERGENCIA_PESQUISAR") == false) {
-            return false;
-        }
         this.enableTable = true ;
         sessionStorage.setItem('searchDivergence', JSON.stringify(this.searchDivergence));
         this.event.first = 0;
@@ -279,9 +295,6 @@ export class DivergenciaListComponent implements OnInit {
      * funcionalidade para bloqueio e mudança de status
     */
     public confirmBlockDivegence(divergence: Analise){
-        if (this.authService.possuiRole(AuthService.PREFIX_ROLE + "DIVERGENCIA_ALTERAR_STATUS") == false) {
-            return false;
-        }
         if (!divergence) {
             this.pageNotificationService.addErrorMessage('Nenhuma Validação foi selecionada.');
             return;

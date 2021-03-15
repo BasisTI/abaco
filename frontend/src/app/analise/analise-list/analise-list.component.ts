@@ -116,6 +116,21 @@ export class AnaliseListComponent implements OnInit {
     mainAnaliseDivergencia: Analise;
     auxiliaryAnaliseDivergencia: Analise;
 
+    canEditar: boolean = false;
+    canConsultar: boolean = false;
+    canDeletar: boolean = false;
+    canCompartilhar: boolean = false;
+    canClonar: boolean = false;
+    canRelatorioDetalhado: boolean = false;
+    canRelatorioExcel: boolean = false;
+    canRelatorioFundamentacao: boolean = false;
+    canClonarEquipe: boolean = false;
+    canAlterarStatus: boolean = false;
+    canGerarValidacao: boolean = false;
+    canPesquisar: boolean = false;
+    canCadastrar: boolean = false;
+    canBloquearDesbloquear: boolean = false;
+
     constructor(
         private router: Router,
         private confirmationService: ConfirmationService,
@@ -138,10 +153,57 @@ export class AnaliseListComponent implements OnInit {
     public ngOnInit() {
         this.userAnaliseUrl = this.grupoService.grupoUrl + this.changeUrl();
         this.estadoInicial();
+        this.verificarPermissoes();
     }
 
     getLabel(label) {
         return label;
+    }
+
+
+    verificarPermissoes(){
+        if (this.authService.possuiRole(AuthService.PREFIX_ROLE + "ANALISE_EDITAR") == true) {
+            this.canEditar = true;
+        }
+        if (this.authService.possuiRole(AuthService.PREFIX_ROLE + "ANALISE_CONSULTAR") == true) {
+            this.canConsultar = true;
+        }
+        if (this.authService.possuiRole(AuthService.PREFIX_ROLE + "ANALISE_EXPORTAR_RELATORIO_DETALHADO") == true) {
+            this.canRelatorioDetalhado = true;
+        }
+        if (this.authService.possuiRole(AuthService.PREFIX_ROLE + "ANALISE_CLONAR_EQUIPE") == true) {
+            this.canClonarEquipe = true;
+        }
+        if (this.authService.possuiRole(AuthService.PREFIX_ROLE + "ANALISE_EXPORTAR_RELATORIO_EXCEL") == true) {
+            this.canRelatorioExcel = true;
+        }
+        if (this.authService.possuiRole(AuthService.PREFIX_ROLE + "ANALISE_EXCLUIR") == true) {
+            this.canDeletar = true;
+        }
+        if (this.authService.possuiRole(AuthService.PREFIX_ROLE + "ANALISE_CLONAR") == true) {
+            this.canClonar = true;
+        }
+        if (this.authService.possuiRole(AuthService.PREFIX_ROLE + "ANALISE_COMPARTILHAR") == true) {
+            this.canCompartilhar = true;
+        }
+        if (this.authService.possuiRole(AuthService.PREFIX_ROLE + "ANALISE_EXPORTAR_RELATORIO_FUNDAMENTACAO") == true) {
+            this.canRelatorioFundamentacao = true;
+        }
+        if (this.authService.possuiRole(AuthService.PREFIX_ROLE + "ANALISE_ALTERAR_STATUS") == true) {
+            this.canAlterarStatus = true;
+        }
+        if (this.authService.possuiRole(AuthService.PREFIX_ROLE + "ANALISE_GERAR_VALIDACAO") == true) {
+            this.canGerarValidacao = true;
+        }
+        if (this.authService.possuiRole(AuthService.PREFIX_ROLE + "ANALISE_PESQUISAR") == true) {
+            this.canPesquisar = true;
+        }
+        if (this.authService.possuiRole(AuthService.PREFIX_ROLE + "ANALISE_CADASTRAR") == true) {
+            this.canCadastrar = true;
+        }
+        if (this.authService.possuiRole(AuthService.PREFIX_ROLE + "ANALISE_BLOQUEAR_DESBLOQUEAR") == true) {
+            this.canBloquearDesbloquear = true;
+        }
     }
 
     estadoInicial() {
@@ -294,9 +356,6 @@ export class AnaliseListComponent implements OnInit {
         }
         switch (event.button) {
             case 'edit':
-                if (this.authService.possuiRole(AuthService.PREFIX_ROLE + "ANALISE_EDITAR") == false) {
-                    break;
-                }
                 if (event.selection.bloqueiaAnalise) {
                     this.pageNotificationService.addErrorMessage('Você não pode editar uma análise bloqueada!');
                     return;
@@ -304,15 +363,9 @@ export class AnaliseListComponent implements OnInit {
                 this.router.navigate(['/analise', event.selection.id, 'edit']);
                 break;
             case 'view':
-                if (this.authService.possuiRole(AuthService.PREFIX_ROLE + "ANALISE_CONSULTAR") == false) {
-                    break;
-                }
                 this.router.navigate(['/analise', event.selection.id, 'view']);
                 break;
             case 'delete':
-                if (this.authService.possuiRole(AuthService.PREFIX_ROLE + "ANALISE_EXCLUIR") == false) {
-                    break;
-                }
                 this.confirmDelete(event.selection);
                 break;
             case 'relatorioBrowser':
@@ -322,54 +375,30 @@ export class AnaliseListComponent implements OnInit {
                 this.gerarRelatorioPdfArquivo(event.selection);
                 break;
             case 'relatorioBrowserDetalhado':
-                if (this.authService.possuiRole(AuthService.PREFIX_ROLE + "ANALISE_EXPORTAR_RELATORIO_DETALHADO") == false) {
-                    break;
-                }
                 this.geraRelatorioPdfDetalhadoBrowser(event.selection);
                 break;
             case 'relatorioExcelDetalhado':
-                if (this.authService.possuiRole(AuthService.PREFIX_ROLE + "ANALISE_EXPORTAR_RELATORIO_EXCEL") == false) {
-                    break;
-                }
                 this.gerarRelatorioExcel(event.selection);
                 break;
             case 'clone':
-                if (this.authService.possuiRole(AuthService.PREFIX_ROLE + "ANALISE_CLONAR") == false) {
-                    break;
-                }
                 this.clonar(event.selection.id);
                 break;
             case 'geraBaselinePdfBrowser':
                 this.geraBaselinePdfBrowser();
                 break;
             case 'cloneParaEquipe':
-                if (this.authService.possuiRole(AuthService.PREFIX_ROLE + "ANALISE_CLONAR_EQUIPE") == false) {
-                    break;
-                }
                 this.openModalCloneAnaliseEquipe(event.selection.id);
                 break;
             case 'compartilhar':
-                if (this.authService.possuiRole(AuthService.PREFIX_ROLE + "ANALISE_COMPARTILHAR") == false) {
-                    break;
-                }
                this.compartilharAnalise();
                 break;
             case 'relatorioAnaliseContagem':
-                if (this.authService.possuiRole(AuthService.PREFIX_ROLE + "ANALISE_EXPORTAR_RELATORIO_FUNDAMENTACAO") == false) {
-                    break;
-                }
                 this.gerarRelatorioContagem(event.selection);
                 break;
             case 'changeStatus':
-                if (this.authService.possuiRole(AuthService.PREFIX_ROLE + "ANALISE_ALTERAR_STATUS") == false) {
-                    break;
-                }
                 this.openModalChangeStatus(event.selection.id);
                 break;
             case 'generateDivergence':
-                if (this.authService.possuiRole(AuthService.PREFIX_ROLE + "ANALISE_GERAR_VALIDACAO") == false) {
-                    break;
-                }
                 if (event.selection.id) {
                     this.confirmDivergenceGenerate(event.selection);
                 } else {
@@ -446,9 +475,6 @@ export class AnaliseListComponent implements OnInit {
     }
 
     abrirEditar() {
-        if (this.authService.possuiRole(AuthService.PREFIX_ROLE + "ANALISE_EDITAR") == false) {
-            return false;
-        }
         this.router.navigate(['/analise', this.analiseSelecionada.id, 'edit']);
     }
 
@@ -593,9 +619,6 @@ export class AnaliseListComponent implements OnInit {
     }
 
     public performSearch() {
-        if (this.authService.possuiRole(AuthService.PREFIX_ROLE + "ANALISE_PESQUISAR") == false) {
-            return false;
-        }
         this.enableTable = true ;
         sessionStorage.setItem('searchGroup', JSON.stringify(this.searchGroup));
         this.recarregarDataTable();
@@ -889,9 +912,6 @@ export class AnaliseListComponent implements OnInit {
     }
 
     criarAnalise(){
-        if (this.authService.possuiRole(AuthService.PREFIX_ROLE + "ANALISE_CADASTRAR") == false) {
-            return false;
-        }
         this.router.navigate(["/analise/new"])
     }
 }

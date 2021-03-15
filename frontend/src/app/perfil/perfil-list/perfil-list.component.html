@@ -6,8 +6,7 @@
                 <div class="ui-g-12 ui-md-12 ui-sm-12">
                     <span class="md-inputfield">
                         <input type="text" pInputText class="ui-inputtext"
-                            (input)="elasticQuery.value = $event.target.value" (keyup.enter)="recarregarDataTable()"
-                            #filter maxlength="80" />
+                            (input)="elasticQuery.value = $event.target.value" #filter maxlength="80" />
                         <label translate="Cadastros.Perfil.Descricao">Descrição</label>
                     </span>
                 </div>
@@ -21,42 +20,41 @@
                         </app-white-button>
                     </div>
                     <div class="ui-g-2 ui-md-2 ui-sm-12">
-                        <app-blue-button [buttonLabel]="'Pesquisar' " buttonIcon="ui-icon-search"
+                        <app-blue-button [buttonLabel]="'Pesquisar' " buttonIcon="ui-icon-search" *ngIf="canPesquisar"
                             id="idBtnPesquisarComponentPerfil" (click)="recarregarDataTable()">
                         </app-blue-button>
                     </div>
                     <div class="ui-g-2 ui-md-2 ui-sm-12">
-                        <app-green-button [buttonLabel]="'Novo'" id="idBtnNovoComponentPerfil" buttonIcon="ui-icon-add"
-                            (click)="criarPerfil()"></app-green-button>
+                        <app-green-button [buttonLabel]="'Novo'" *ngIf="canCadastrar" id="idBtnNovoComponentPerfil"
+                            buttonIcon="ui-icon-add" (click)="criarPerfil()"></app-green-button>
                     </div>
                 </div>
 
                 <basis-datatable type="server" [url]="searchUrl" (dblclick)="onRowDblclick($event)"
-                    (click)="selectPerfil()" (buttonClick)="onClick($event)" [rows]="20"
-                    [disableLoadingBlockUI]="true"
-                    [rowsPerPageOptions]="rowsPerPageOptions" [showPaginationFooter]="true"
-                    #datatable>
+                    (click)="selectPerfil()" (buttonClick)="onClick($event)" [rows]="20" [disableLoadingBlockUI]="true"
+                    [disableDelete]="!canDeletar" [disableEdit]="!canEditar" [disableView]="!canConsultar"
+                    [rowsPerPageOptions]="rowsPerPageOptions" [showPaginationFooter]="true" #datatable>
 
                     <p-column header="Nome" field="nome" [sortable]="true">
                         <ng-template let-row="rowData" pTemplate="body">
                             <li>
-                              {{ row.nome }}
+                                {{ row.nome }}
                             </li>
-                          </ng-template>
+                        </ng-template>
                     </p-column>
                     <p-column header="Descrição" field="descricao" [sortable]="true">
                         <ng-template let-row="rowData" pTemplate="body">
                             <li>
-                               {{ row.descricao }}
+                                {{ row.descricao }}
                             </li>
-                          </ng-template>
+                        </ng-template>
                     </p-column>
                     <p-column header="Ativo" field="ativo" [sortable]="true">
                         <ng-template let-row="rowData" pTemplate="body">
                             <li>
-                               {{ row.flgAtivo ? 'Sim' : 'Não'}}
+                                {{ row.flgAtivo ? 'Sim' : 'Não'}}
                             </li>
-                          </ng-template>
+                        </ng-template>
                     </p-column>
                 </basis-datatable>
 
