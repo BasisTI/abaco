@@ -343,7 +343,7 @@ public class AnaliseResource {
 
     @GetMapping("/divergencia/relatorioPdfArquivo/{id}")
     @Timed
-    @Secured("ROLE_ABACO_DIVERGENCIA_EXPORTAR")
+    @Secured("ROLE_ABACO_VALIDACAO_EXPORTAR")
     public ResponseEntity<byte[]> downloadDivergenciaPdfArquivo(@PathVariable Long id) throws URISyntaxException, IOException, JRException {
         Analise analise = analiseService.recuperarAnalise(id);
         relatorioAnaliseRest = new RelatorioAnaliseRest(this.response, this.request);
@@ -374,7 +374,7 @@ public class AnaliseResource {
 
     @GetMapping("/divergencia/downloadPdfDetalhadoBrowser/{id}")
     @Timed
-    @Secured("ROLE_ABACO_DIVERGENCIA_EXPORTAR")
+    @Secured("ROLE_ABACO_VALIDACAO_EXPORTAR")
     public @ResponseBody
     ResponseEntity<byte[]> downloadPdfDivergenciaDetalhadoBrowser(@PathVariable Long id) throws URISyntaxException, IOException, JRException {
         Analise analise = analiseService.recuperarAnalise(id);
@@ -403,7 +403,7 @@ public class AnaliseResource {
 
     @GetMapping("/divergencia/downloadRelatorioExcel/{id}")
     @Timed
-    @Secured("ROLE_ABACO_DIVERGENCIA_EXPORTAR")
+    @Secured("ROLE_ABACO_VALIDACAO_EXPORTAR")
     public @ResponseBody
     ResponseEntity<byte[]> downloadDivergenciaRelatorioExcel(@PathVariable Long id) throws URISyntaxException, IOException, JRException {
         Analise analise = analiseService.recuperarAnalise(id);
@@ -482,7 +482,7 @@ public class AnaliseResource {
 
     @PostMapping(value = "/divergencia/exportacao-arquivo", produces = MediaType.APPLICATION_PDF_VALUE)
     @Timed
-    @Secured("ROLE_ABACO_DIVERGENCIA_EXPORTAR")
+    @Secured("ROLE_ABACO_VALIDACAO_EXPORTAR")
     public ResponseEntity<byte[]> gerarRelatorioDivergenciaImprimir(@RequestBody AnaliseFilterDTO filter, @ApiParam Pageable pageable) throws RelatorioException {
         ByteArrayOutputStream byteArrayOutputStream = gerarRelatorioDivergencia("pdf", filter, dynamicExportsService.obterPageableMaximoExportacao());
          return new ResponseEntity<byte[]>(byteArrayOutputStream.toByteArray(), HttpStatus.OK);
@@ -491,7 +491,7 @@ public class AnaliseResource {
 
     @PostMapping(value = "/divergencia/exportacao/{tipoRelatorio}", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
     @Timed
-    @Secured("ROLE_ABACO_DIVERGENCIA_EXPORTAR")
+    @Secured("ROLE_ABACO_VALIDACAO_EXPORTAR")
     public ResponseEntity<InputStreamResource> gerarRelatorioDivergenciaExportacao(@PathVariable String tipoRelatorio,
             @RequestBody AnaliseFilterDTO filter, @ApiParam Pageable pageable) throws RelatorioException {
         ByteArrayOutputStream byteArrayOutputStream = gerarRelatorioDivergencia(tipoRelatorio, filter, dynamicExportsService.obterPageableMaximoExportacao());
@@ -636,7 +636,7 @@ public class AnaliseResource {
 
     @GetMapping("/analises/divergente/update/{id}")
     @Timed
-    @Secured("ROLE_ABACO_DIVERGENCIA_EDITAR")
+    @Secured("ROLE_ABACO_VALIDACAO_EDITAR")
     public ResponseEntity<AnaliseEditDTO> updateAnaliseDivergene(@PathVariable Long id) {
         Analise analise = analiseRepository.findOne(id);
         if (analise == null || analise.getId() == null) {
@@ -648,7 +648,7 @@ public class AnaliseResource {
 
     @GetMapping("/divergencia")
     @Timed
-    @Secured({"ROLE_ABACO_DIVERGENCIA_ACESSAR", "ROLE_ABACO_DIVERGENCIA_PESQUISAR"})
+    @Secured({"ROLE_ABACO_VALIDACAO_ACESSAR", "ROLE_ABACO_VALIDACAO_PESQUISAR"})
     public ResponseEntity<List<AnaliseDTO>> getDivergence(@RequestParam(defaultValue = "ASC", required = false) String order,
                                                                   @RequestParam(defaultValue = "0", name = PAGE) int pageNumber,
                                                                   @RequestParam(defaultValue = "20") int size,
@@ -674,7 +674,7 @@ public class AnaliseResource {
 
     @GetMapping("/divergencia/{id}")
     @Timed
-    @Secured({"ROLE_ABACO_DIVERGENCIA_CONSULTAR", "ROLE_ABACO_DIVERGENCIA_EDITAR"})
+    @Secured({"ROLE_ABACO_VALIDACAO_CONSULTAR", "ROLE_ABACO_VALIDACAO_EDITAR"})
     public ResponseEntity<AnaliseDivergenceEditDTO> getDivergence(@PathVariable Long id) {
         Analise analise = analiseService.recuperarAnaliseDivergence(id);
         if (analise != null) {
@@ -690,7 +690,7 @@ public class AnaliseResource {
 
     @DeleteMapping("/divergencia/{id}")
     @Timed
-    @Secured("ROLE_ABACO_DIVERGENCIA_EXCLUIR")
+    @Secured("ROLE_ABACO_VALIDACAO_EXCLUIR")
     public ResponseEntity<Void> deleteAnaliseDivergence(@PathVariable Long id) {
         Analise analise = analiseService.recuperarAnalise(id);
         User user = userRepository.findOneByLogin(SecurityUtils.getCurrentUserLogin()).get();
