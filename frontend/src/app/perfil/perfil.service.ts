@@ -51,7 +51,9 @@ export class PerfilService {
                 case 'error.nameexists':
                     this.pageNotificationService.addErrorMessage(this.getLabel('Este nome de perfil já existe.'));
                     return Observable.throw(new Error(error.status));
-                    break;
+                case 'error.perfilativo':
+                    this.pageNotificationService.addErrorMessage(this.getLabel('Não pode deixar inativo um perfil associado a um usuário.'));
+                    return Observable.throw(new Error(error.status));
             }
         }));
     }

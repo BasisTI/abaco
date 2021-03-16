@@ -112,6 +112,10 @@ public class PerfilResource {
             return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert(ENTITY_NAME, "nameexists", "Nome do perfil já existe."))
                 .body(null);
         }
+        if(existingPerfil.isPresent() && perfilDTO.getFlgAtivo() == false && !existingPerfil.get().getUsers().isEmpty()){
+            return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert(ENTITY_NAME, "perfilativo", "Perfil não pode ser inativo, pois há usuários associado a este perfil."))
+                .body(null);
+        }
         if (perfilDTO.getId() == null) {
             createPerfil(perfilDTO);
         }

@@ -1,4 +1,4 @@
-import { Component, AfterViewInit, ElementRef, Renderer2, ViewChild, OnDestroy, OnInit, NgZone } from '@angular/core';
+import { Component, AfterViewInit, ElementRef, Renderer2, ViewChild, OnDestroy, OnInit, NgZone, AfterContentChecked } from '@angular/core';
 import { ScrollPanel } from 'primeng';
 import { MenusService, MenuOrientation } from '@nuvem/primeng-components';
 import { AuthService } from './util/auth.service';
@@ -7,7 +7,7 @@ import { AuthService } from './util/auth.service';
     selector: 'app-root',
     templateUrl: './app.component.html'
 })
-export class AppComponent implements AfterViewInit, OnDestroy, OnInit {
+export class AppComponent implements AfterViewInit, OnDestroy, OnInit, AfterContentChecked {
 
     layoutCompact = true;
 
@@ -46,6 +46,10 @@ export class AppComponent implements AfterViewInit, OnDestroy, OnInit {
     rippleMouseDownListener: EventListenerOrEventListenerObject;
 
     constructor(public renderer2: Renderer2, public zone: NgZone, public menuService: MenusService, private authAbacoService : AuthService) { }
+
+    ngAfterContentChecked(): void {
+        this.carregarMenu();
+    }
 
     ngOnInit() {
         this.zone.runOutsideAngular(() => { this.bindRipple(); });
@@ -187,7 +191,6 @@ export class AppComponent implements AfterViewInit, OnDestroy, OnInit {
         this.layoutContainer = this.layourContainerViewChild.nativeElement as HTMLDivElement;
         const time = 100;
         setTimeout(() => { this.layoutMenuScrollerViewChild.moveBar(); }, time);
-        this.carregarMenu();
     }
 
 

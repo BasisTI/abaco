@@ -61,11 +61,13 @@
                     </div>
                     <!-- Datatable Permissao -->
                     <basis-datatable type="memory" [value]="perfil.permissaos" [disableView]="true" (click)="selectFT()"
-                        (buttonClick)="datatableClickPermissao($event)" [disableClone]="true" [disableEdit]="true"
+                        (buttonClick)="datatableClickPermissao($event)" [disableEdit]="true"
                         [selectionMode]="'multiple'"
                         [filterOnColumn]="true"
+                        [enableScroll]="true"
+                        [scrollHeight]="'200px'"
+                        [enableButtonsScroll]="true"
                         [rowsPerPageOptions]="rowsPerPageOptions"
-                        ([disableLoadingBlockUI])="true"
                         [rows]="20" #datatablePermissao>
                         <p-column header="Ação" field="acao.descricao" [sortable]="true">
                             <ng-template let-row="rowData" pTemplate="body">

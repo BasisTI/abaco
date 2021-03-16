@@ -62,7 +62,7 @@ import { AuthGuardService } from './util/auth.guard.service';
         PageNotificationModule,
         BreadcrumbModule,
         ErrorStackModule,
-        VersionTagModule,
+        VersionTagModule.forRoot(environment),
         SecurityModule.forRoot(environment.auth),
         MenuModule,
         FaseModule,
