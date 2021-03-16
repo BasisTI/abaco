@@ -126,19 +126,19 @@ export class DivergenciaListComponent implements OnInit {
     }
 
     verificarPermissoes(){
-        if (this.authService.possuiRole(AuthService.PREFIX_ROLE + "DIVERGENCIA_EDITAR") == true) {
+        if (this.authService.possuiRole(AuthService.PREFIX_ROLE + "VALIDACAO_EDITAR") == true) {
             this.canEditar = true;
         }
-        if (this.authService.possuiRole(AuthService.PREFIX_ROLE + "DIVERGENCIA_EXCLUIR") == true) {
+        if (this.authService.possuiRole(AuthService.PREFIX_ROLE + "VALIDACAO_EXCLUIR") == true) {
             this.canDeletar = true;
         }
-        if (this.authService.possuiRole(AuthService.PREFIX_ROLE + "DIVERGENCIA_PESQUISAR") == true) {
+        if (this.authService.possuiRole(AuthService.PREFIX_ROLE + "VALIDACAO_PESQUISAR") == true) {
             this.canPesquisar = true;
         }
-        if (this.authService.possuiRole(AuthService.PREFIX_ROLE + "DIVERGENCIA_ALTERAR_STATUS") == true) {
+        if (this.authService.possuiRole(AuthService.PREFIX_ROLE + "VALIDACAO_ALTERAR_STATUS") == true) {
             this.canAlterarStatus = true;
         }
-        if (this.authService.possuiRole(AuthService.PREFIX_ROLE + "DIVERGENCIA_BLOQUEAR_DESBLOQUEAR") == true) {
+        if (this.authService.possuiRole(AuthService.PREFIX_ROLE + "VALIDACAO_BLOQUEAR_DESBLOQUEAR") == true) {
             this.canBloquearDesbloquear = true;
         }
     }
@@ -267,7 +267,7 @@ export class DivergenciaListComponent implements OnInit {
     }
 
     public onRowDblclick(event) {
-        if (this.authService.possuiRole(AuthService.PREFIX_ROLE + "DIVERGENCIA_EDITAR") == false) {
+        if (this.authService.possuiRole(AuthService.PREFIX_ROLE + "VALIDACAO_EDITAR") == false) {
             return false;
         }
         if (event.target.nodeName === 'TD') {

@@ -47,7 +47,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
         const menu = this.menuService.itens[index];
         if(menu.label == 'Análise' && this.authAbacoService.possuiAlgumaRoles([AuthService.PREFIX_ROLE+'ANALISE_ACESSAR',
         AuthService.PREFIX_ROLE+'BASELINE_ACESSAR',
-        AuthService.PREFIX_ROLE+'DIVERGENCIA_ACESSAR'])){
+        AuthService.PREFIX_ROLE+'VALIDACAO_ACESSAR'])){
           menu.visible = true;
         }else if(menu.label == 'Cadastros' && this.authAbacoService.possuiAlgumaRoles([AuthService.PREFIX_ROLE+'FASE_ACESSAR',
         AuthService.PREFIX_ROLE+'MANUAL_ACESSAR',
@@ -84,7 +84,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
             submenu.visible = this.authAbacoService.possuiRole(AuthService.PREFIX_ROLE+'ANALISE_ACESSAR');
           }else if(submenu.label == 'Baseline'){
             submenu.visible = this.authAbacoService.possuiRole(AuthService.PREFIX_ROLE+'BASELINE_ACESSAR');
-          }else if(submenu.label == 'Validação' && this.authAbacoService.possuiRole(AuthService.PREFIX_ROLE+'DIVERGENCIA_ACESSAR')){
+          }else if(submenu.label == 'Validação' && this.authAbacoService.possuiRole(AuthService.PREFIX_ROLE+'VALIDACAO_ACESSAR')){
             submenu.visible = true;
           }
         }
