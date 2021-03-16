@@ -20,7 +20,7 @@ export class PerfilFormComponent implements OnInit {
     novasPermissoes: Permissao[] = [];
     editPermissoes: Permissao[] = [];
 
-    rowsPerPageOptions: number[] = [5, 10, 20, 50];
+    rowsPerPageOptions: number[] = [5, 10, 20, 100];
 
     isSaving: boolean;
     mostrarDialogPermissao: boolean;
