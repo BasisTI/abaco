@@ -100,7 +100,7 @@
 
                             <h4>Status: {{currentFuncaoTransacao.statusFuncao}}</h4>
                         <app-analise-modulo-funcionalidade
-                                [erroModulo]="erroModulo" [isFuncaoDados]="false"
+                                [erroModulo]="erroModulo" [isFuncaoDados]="false" [(analise)]="analise"
                                 (moduloSelectedEvent)="moduloSelected($event)"
                                 (funcionalidadeSelectedEvent)="functionalitySelected($event)">
                         </app-analise-modulo-funcionalidade>

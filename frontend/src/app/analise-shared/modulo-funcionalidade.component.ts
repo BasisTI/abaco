@@ -8,6 +8,7 @@ import { Subscription } from 'rxjs';
 import { AnaliseSharedDataService } from '../shared/analise-shared-data.service';
 import { PageNotificationService } from '@nuvem/primeng-components';
 import { FuncaoDadosService } from '../funcao-dados/funcao-dados.service';
+import { Analise } from '../analise/analise.model';
 
 @Component({
     selector: 'app-analise-modulo-funcionalidade',
@@ -23,6 +24,8 @@ export class ModuloFuncionalidadeComponent implements OnInit, OnDestroy {
     isFuncaoDados: boolean;
 
     @Input() moduloNameParam: boolean;
+
+    @Input() analise: Analise;
 
     @Output()
     moduloSelectedEvent = new EventEmitter<Modulo>();
@@ -62,6 +65,7 @@ export class ModuloFuncionalidadeComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
+        this.analiseSharedDataService.analise = this.analise;
         if (_.isUndefined(this.isFuncaoDados)) {
             throw new Error('input isFuncaoDados é obrigatório.');
         }
