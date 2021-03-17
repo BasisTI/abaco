@@ -141,7 +141,6 @@ export class PesquisarFtComponent implements OnInit {
     ngOnInit() {
         this.inicializaValoresAposCarregamento();
         this.analiseSharedDataService.analiseCarregada();
-        console.log(this.analiseSharedDataService.analise)
         this.estadoInicial();
         this.cols = [
             { field: 'nome', header: 'Módulo' },
@@ -279,7 +278,7 @@ export class PesquisarFtComponent implements OnInit {
                 this.inicializaFatoresAjuste();
             }
         }
-        
+
     }
 
     setSistamaOrganizacao(org: Organizacao) {
