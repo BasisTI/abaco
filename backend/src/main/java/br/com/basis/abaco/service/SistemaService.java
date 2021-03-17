@@ -7,6 +7,7 @@ import java.util.Optional;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
 import org.springframework.data.elasticsearch.core.query.SearchQuery;
@@ -33,6 +34,9 @@ public class SistemaService extends BaseService {
     private final SistemaRepository sistemaRepository;
     private final SistemaSearchRepository sistemaSearchRepository;
     private final DynamicExportsService dynamicExportsService;
+    
+    @Autowired
+    private ModelMapper modelMapper;
 
     public SistemaService(SistemaRepository sistemaRepository, SistemaSearchRepository sistemaSearchRepository, DynamicExportsService dynamicExportsService) {
         this.sistemaRepository = sistemaRepository;
@@ -65,11 +69,11 @@ public class SistemaService extends BaseService {
     }
 
     public Sistema convertToEntity(SistemaListDTO sistemaListDTO) {
-        return new ModelMapper().map(sistemaListDTO, Sistema.class);
+        return modelMapper.map(sistemaListDTO, Sistema.class);
     }
 
     public SistemaListDTO convertToAnaliseEditDTO(Sistema sistema) {
-        return new ModelMapper().map(sistema, SistemaListDTO.class);
+        return modelMapper.map(sistema, SistemaListDTO.class);
     }
 
 
