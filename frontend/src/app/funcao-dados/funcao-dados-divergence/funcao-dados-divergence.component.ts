@@ -146,6 +146,7 @@ export class FuncaoDadosDivergenceComponent implements OnInit {
                 if (!this.isView) {
                     this.divergenciaService.find(this.idAnalise).subscribe(analise => {
                         this.analise = analise;
+                        this.analiseSharedDataService.analise = analise;
                         this.hideShowQuantidade = true;
                         this.estadoInicial();
                         this.blockUiService.hide();
@@ -885,6 +886,7 @@ export class FuncaoDadosDivergenceComponent implements OnInit {
 
     private carregarValoresNaPaginaParaEdicao(funcaoDadosSelecionada: FuncaoDados) {
         /* Envia os dados para o componente modulo-funcionalidade-component.ts*/
+        
         this.funcaoDadosService.mod.next(funcaoDadosSelecionada.funcionalidade);
         this.analiseSharedDataService.funcaoAnaliseCarregada();
         this.carregarDerERlr(funcaoDadosSelecionada);
