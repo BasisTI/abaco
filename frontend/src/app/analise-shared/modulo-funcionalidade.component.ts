@@ -97,7 +97,6 @@ export class ModuloFuncionalidadeComponent implements OnInit, OnDestroy {
 
     // TODO Refatorar, pode estar gerando requisições multiplas.
     private carregarModulosQuandoTiverSistemaDisponivel() {
-        console.log(this.sistema);
         if (!this.sistema) {
             return;
         }

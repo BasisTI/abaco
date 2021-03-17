@@ -143,7 +143,6 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
                 if (!this.isView) {
                     this.analiseService.find(this.idAnalise).subscribe(analise => {
                         // analise = new Analise().copyFromJSON(analise);
-                        console.log(analise);
                         this.analiseSharedDataService.analise = analise;
                         this.analise = analise;
                         this.disableAba = this.analise.metodoContagem === MessageUtil.INDICATIVA;
