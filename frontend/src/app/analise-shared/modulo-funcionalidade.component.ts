@@ -27,6 +27,8 @@ export class ModuloFuncionalidadeComponent implements OnInit, OnDestroy {
 
     @Input() analise: Analise;
 
+    @Input() funcionalidade : Funcionalidade;
+
     @Output()
     moduloSelectedEvent = new EventEmitter<Modulo>();
 
@@ -65,7 +67,11 @@ export class ModuloFuncionalidadeComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
+        console.log(this.analise);
+        console.log(this.funcionalidade);
+        this.modulos = this.analise.sistema.modulos;
         this.analiseSharedDataService.analise = this.analise;
+       
         if (_.isUndefined(this.isFuncaoDados)) {
             throw new Error('input isFuncaoDados é obrigatório.');
         }
@@ -101,6 +107,7 @@ export class ModuloFuncionalidadeComponent implements OnInit, OnDestroy {
 
     // TODO Refatorar, pode estar gerando requisições multiplas.
     private carregarModulosQuandoTiverSistemaDisponivel() {
+        console.log(this.sistema);
         if (!this.sistema) {
             return;
         }
@@ -108,6 +115,8 @@ export class ModuloFuncionalidadeComponent implements OnInit, OnDestroy {
         this.sistemaService.find(sistemaId).subscribe((sistemaRecarregado: Sistema) => {
             this.recarregarSistema(sistemaRecarregado);
             this.modulos = sistemaRecarregado.modulos;
+            console.log(this.funcionalidade);
+            this.selecionarModulo(this.funcionalidade.modulo.id);
         });
         this.changeDetectorRef.detectChanges();
     }
@@ -159,7 +168,15 @@ export class ModuloFuncionalidadeComponent implements OnInit, OnDestroy {
 
     // Para selecionar no dropdown, o objeto selecionado tem que ser o mesmo da lista de opções
     private selecionarModulo(moduloId: number) {
-        this.moduloSelecionado = _.find(this.modulos, {'id': moduloId});
+        console.log(this.modulos);
+        for (let index = 0; index < this.modulos.length; index++) {
+            const element = this.modulos[index];
+            if(element.id == moduloId){
+                this.moduloSelecionado = element;
+            }
+        }
+        // this.moduloSelecionado = _.find(this.modulos, {'id': moduloId});
+        console.log(this.moduloSelecionado);
         this.moduloSelected(this.moduloSelecionado);
     }
 

@@ -99,11 +99,14 @@
                             [style]="{width: '80vw'}">
 
                             <h4>Status: {{currentFuncaoTransacao.statusFuncao}}</h4>
-                        <app-analise-modulo-funcionalidade
-                                [erroModulo]="erroModulo" [isFuncaoDados]="false" [(analise)]="analise"
-                                (moduloSelectedEvent)="moduloSelected($event)"
-                                (funcionalidadeSelectedEvent)="functionalitySelected($event)">
-                        </app-analise-modulo-funcionalidade>
+                        <div *ngIf="currentFuncaoTransacao.id">
+
+                            <app-analise-modulo-funcionalidade
+                            [erroModulo]="erroModulo" [isFuncaoDados]="false" [(analise)]="analise"
+                            (moduloSelectedEvent)="moduloSelected($event)"
+                            (funcionalidadeSelectedEvent)="functionalitySelected($event)" [(funcionalidade)]="currentFuncaoTransacao.funcionalidade">
+                            </app-analise-modulo-funcionalidade>
+                        </div>
                         <div *ngIf="!isEdit">
                             <div class="ui-g" *ngIf="!showMultiplos">
                                 <div class="ui-g-9">
@@ -487,9 +490,4 @@
         <app-white-button buttonLabel="Copiar para Evidência" buttonIcon="ui-icon-add"(click)="copyToEvidence()"></app-white-button>
     </p-footer>
 </p-dialog>
- <!-- DIALOG: COPIAR FUNÇÕES DE TRANSAÇÃO -->
- <div *ngIf="analise && analise.organizacao" >
-    <p-dialog [header]="this.getLabel('Importa funções de transação')" [(visible)]="display" [style]="{width: '80vw'}" [closable]="false">
-        <app-pesquisar-ft></app-pesquisar-ft>
-    </p-dialog>
-</div>
+ 
