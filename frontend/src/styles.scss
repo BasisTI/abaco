@@ -4,6 +4,11 @@ body .ui-widget-overlay {
     opacity: 1;
 }
 
+.ui-table .ui-table-scrollable-header-box {
+    margin-right: 0px !important;
+}
+
+
 #idTabelaComponentAnalise th:nth-child(9) {
   width: 75px !important;
 }
