@@ -91,7 +91,7 @@
                     <p-dialog [closable]="false" [(visible)]="showDialog" [(header)]="textHeader" [style]="{width: '80vw'}" [contentStyle]="{'height': ['windowHeightDialog']}">
                         <h4>Status: {{seletedFuncaoDados.statusFuncao}}</h4>
                         <div *ngIf="analise && analise.sistema">
-                            <app-analise-modulo-funcionalidade [erroModulo]="erroModulo" [isFuncaoDados]="true"
+                            <app-analise-modulo-funcionalidade [erroModulo]="erroModulo" [isFuncaoDados]="true" [(analise)]="analise"
                                 (moduloSelectedEvent)="moduloSelected($event)"
                                 (funcionalidadeSelectedEvent)="functionalitySelected($event)">
                             </app-analise-modulo-funcionalidade>
