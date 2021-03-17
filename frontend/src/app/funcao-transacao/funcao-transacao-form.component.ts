@@ -759,9 +759,6 @@ export class FuncaoTransacaoFormComponent implements OnInit {
                 }
             }
             this.carregarValoresNaPaginaParaEdicao(this.currentFuncaoTransacao);
-            this.pageNotificationService.addInfoMessage(
-                `${this.getLabel('Alterando Função de Transação ')} '${this.currentFuncaoTransacao.name}'`
-            );
             this.blockUiService.hide();
         });
     }

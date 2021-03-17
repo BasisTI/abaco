@@ -936,9 +936,6 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
             this.carregarValoresNaPaginaParaEdicao(this.seletedFuncaoDados);
             this.disableTRDER();
             this.configurarDialog();
-            this.pageNotificationService.addInfoMessage(
-                `${this.getLabel('Alterando Função de Dados ')} '${funcaoDadosSelecionada.name}'`
-            );
             this.blockUiService.hide();
         });
     }

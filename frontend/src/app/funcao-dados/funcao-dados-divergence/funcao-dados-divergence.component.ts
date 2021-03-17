@@ -274,7 +274,7 @@ export class FuncaoDadosDivergenceComponent implements OnInit {
 
     abrirEditar() {
         this.isEdit = true;
-        this.prepararParaEdicao(this.funcaoDadosEditar);
+        this.prepararParaEdicao(this.funcaoDadosEditar[0]);
     }
 
     public onChange(editor) {
@@ -860,9 +860,6 @@ export class FuncaoDadosDivergenceComponent implements OnInit {
             this.carregarValoresNaPaginaParaEdicao(this.seletedFuncaoDados);
             this.disableTRDER();
             this.configurarDialog();
-            this.pageNotificationService.addInfoMessage(
-                `${this.getLabel('Alterando Função de Dados ')} '${funcaoDadosSelecionada.name}'`
-            );
             this.blockUiService.hide();
         });
     }
