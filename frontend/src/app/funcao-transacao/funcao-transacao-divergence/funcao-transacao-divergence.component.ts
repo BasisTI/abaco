@@ -262,6 +262,7 @@ export class FuncaoTransacaoDivergenceComponent implements OnInit {
 
     selectRow(event) {
         this.FuncaoTransacaoEditar.id = event.data.id;
+        console.log(this.FuncaoTransacaoEditar);
     }
 
     abrirEditar() {
@@ -741,7 +742,6 @@ export class FuncaoTransacaoDivergenceComponent implements OnInit {
         this.blockUiService.show();
         this.funcaoTransacaoService.getById(funcaoTransacaoSelecionada.id).subscribe(funcaoTransacao => {
             this.disableTRDER();
-            this.configurarDialog();
             this.currentFuncaoTransacao = new FuncaoTransacao().copyFromJSON(funcaoTransacao);
             this.currentFuncaoTransacao.lstDivergenceComments = funcaoTransacao.lstDivergenceComments;
             if (this.currentFuncaoTransacao.fatorAjuste !== undefined) {
@@ -751,6 +751,7 @@ export class FuncaoTransacaoDivergenceComponent implements OnInit {
                     this.hideShowQuantidade = true;
                 }
             }
+            this.configurarDialog();
             this.carregarValoresNaPaginaParaEdicao(this.currentFuncaoTransacao);
             this.blockUiService.hide();
         });
@@ -759,6 +760,7 @@ export class FuncaoTransacaoDivergenceComponent implements OnInit {
     private carregarValoresNaPaginaParaEdicao(funcaoTransacaoSelecionada: FuncaoTransacao) {
         this.funcaoDadosService.mod.next(funcaoTransacaoSelecionada.funcionalidade);
         this.analiseSharedDataService.funcaoAnaliseCarregada();
+        this.analiseSharedDataService.currentFuncaoTransacao = funcaoTransacaoSelecionada;
         this.carregarDerEAlr(funcaoTransacaoSelecionada);
         this.carregarFatorDeAjusteNaEdicao(funcaoTransacaoSelecionada);
     }
