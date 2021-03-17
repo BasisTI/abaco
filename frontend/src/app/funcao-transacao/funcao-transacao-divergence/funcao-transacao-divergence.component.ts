@@ -266,7 +266,7 @@ export class FuncaoTransacaoDivergenceComponent implements OnInit {
 
     abrirEditar() {
         this.isEdit = true;
-        this.prepararParaEdicao(this.FuncaoTransacaoEditar);
+        this.prepararParaEdicao(this.FuncaoTransacaoEditar[0]);
     }
 
     /*
@@ -752,9 +752,6 @@ export class FuncaoTransacaoDivergenceComponent implements OnInit {
                 }
             }
             this.carregarValoresNaPaginaParaEdicao(this.currentFuncaoTransacao);
-            this.pageNotificationService.addInfoMessage(
-                `${this.getLabel('Alterando Função de Transação ')} '${this.currentFuncaoTransacao.name}'`
-            );
             this.blockUiService.hide();
         });
     }
