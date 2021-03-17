@@ -76,7 +76,7 @@
                                     #data >
                             <ng-template pTemplate="header" let-columns>
                                 <tr>
-                                    <th style="width: 3em"></th>
+                                    <th></th>
                                     <th *ngFor="let col of columns" [pSortableColumn]="col.field">
                                         {{col.header}}
                                         <p-sortIcon [field]="col.field"></p-sortIcon>

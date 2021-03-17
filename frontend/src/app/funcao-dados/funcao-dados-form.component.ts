@@ -142,7 +142,8 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
                 this.funcoesDados = value;
                 if (!this.isView) {
                     this.analiseService.find(this.idAnalise).subscribe(analise => {
-                        analise = new Analise().copyFromJSON(analise);
+                        // analise = new Analise().copyFromJSON(analise);
+                        console.log(analise);
                         this.analiseSharedDataService.analise = analise;
                         this.analise = analise;
                         this.disableAba = this.analise.metodoContagem === MessageUtil.INDICATIVA;
@@ -158,6 +159,7 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
     }
 
     estadoInicial() {
+        this.analiseSharedDataService.funcaoAnaliseDescarregada();
         this.isSaving = false;
         this.hideShowQuantidade = true;
         this.seletedFuncaoDados = new FuncaoDados();
