@@ -8,6 +8,16 @@ body .ui-widget-overlay {
     margin-right: 0px !important;
 }
 
+.table-tools .tools a {
+    display: none;
+}
+
+.table-tools .tools basis-show-column {
+    padding-right: 0px;
+    border-right: 0;
+    margin-right: 0px;
+}
+
 
 #idTabelaComponentAnalise th:nth-child(9) {
   width: 75px !important;
