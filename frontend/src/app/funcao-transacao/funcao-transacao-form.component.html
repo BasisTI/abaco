@@ -80,11 +80,13 @@
                             [(header)]="textHeader"
                             [contentStyle]="{'height': ['windowHeightDialog']}"
                             [style]="{width: '80vw'}">
-                        <app-analise-modulo-funcionalidade [(analise)]="analise"
-                                [erroModulo]="erroModulo" [isFuncaoDados]="false"
-                                (moduloSelectedEvent)="moduloSelected($event)"
-                                (funcionalidadeSelectedEvent)="functionalitySelected($event)">
-                        </app-analise-modulo-funcionalidade>
+                            <div  *ngIf="currentFuncaoTransacao.id"> 
+                                <app-analise-modulo-funcionalidade [(analise)]="analise"
+                                        [erroModulo]="erroModulo" [isFuncaoDados]="false"
+                                        (moduloSelectedEvent)="moduloSelected($event)" [(funcionalidade)]="currentFuncaoTransacao.funcionalidade"
+                                        (funcionalidadeSelectedEvent)="functionalitySelected($event)">
+                                </app-analise-modulo-funcionalidade>
+                            </div>
                         <div *ngIf="!isEdit">
                             <div class="ui-g" *ngIf="!showMultiplos">
                                 <div class="ui-g-9">
