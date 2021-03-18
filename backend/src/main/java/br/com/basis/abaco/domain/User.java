@@ -111,6 +111,7 @@ public class User extends AbstractAuditingEntity implements Serializable, Report
     @Column(name = "reset_date")
     private ZonedDateTime resetDate = null;
 
+    @Field(type = FieldType.Nested)
     @ManyToMany
     @JoinTable(name = "user_perfil", joinColumns = {
         @JoinColumn(name = "user_id", referencedColumnName = "id")}, inverseJoinColumns = {
