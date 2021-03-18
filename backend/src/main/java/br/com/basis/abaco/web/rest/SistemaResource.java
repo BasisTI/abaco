@@ -1,24 +1,17 @@
 package br.com.basis.abaco.web.rest;
 
-import br.com.basis.abaco.domain.FuncaoDados;
-import br.com.basis.abaco.domain.FuncaoDadosVersionavel;
-import br.com.basis.abaco.domain.Modulo;
-import br.com.basis.abaco.domain.Organizacao;
-import br.com.basis.abaco.domain.Sistema;
-import br.com.basis.abaco.repository.FuncaoDadosRepository;
-import br.com.basis.abaco.repository.FuncaoDadosVersionavelRepository;
-import br.com.basis.abaco.repository.SistemaRepository;
-import br.com.basis.abaco.repository.search.SistemaSearchRepository;
-import br.com.basis.abaco.service.SistemaService;
-import br.com.basis.abaco.service.dto.SistemaDropdownDTO;
-import br.com.basis.abaco.service.dto.filter.SistemaFilterDTO;
-import br.com.basis.abaco.service.exception.RelatorioException;
-import br.com.basis.abaco.utils.PageUtils;
-import br.com.basis.abaco.web.rest.util.HeaderUtil;
-import br.com.basis.abaco.web.rest.util.PaginationUtil;
-import br.com.basis.dynamicexports.util.DynamicExporter;
-import com.codahale.metrics.annotation.Timed;
-import io.github.jhipster.web.util.ResponseUtil;
+import java.io.ByteArrayOutputStream;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
+
+import javax.transaction.Transactional;
+import javax.validation.Valid;
+
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.search.sort.FieldSortBuilder;
 import org.elasticsearch.search.sort.SortOrder;
@@ -46,16 +39,28 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.transaction.Transactional;
-import javax.validation.Valid;
-import java.io.ByteArrayOutputStream;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import com.codahale.metrics.annotation.Timed;
+
+import br.com.basis.abaco.domain.Analise;
+import br.com.basis.abaco.domain.FuncaoDados;
+import br.com.basis.abaco.domain.FuncaoDadosVersionavel;
+import br.com.basis.abaco.domain.Modulo;
+import br.com.basis.abaco.domain.Organizacao;
+import br.com.basis.abaco.domain.Sistema;
+import br.com.basis.abaco.repository.AnaliseRepository;
+import br.com.basis.abaco.repository.FuncaoDadosRepository;
+import br.com.basis.abaco.repository.FuncaoDadosVersionavelRepository;
+import br.com.basis.abaco.repository.SistemaRepository;
+import br.com.basis.abaco.repository.search.SistemaSearchRepository;
+import br.com.basis.abaco.service.SistemaService;
+import br.com.basis.abaco.service.dto.SistemaDropdownDTO;
+import br.com.basis.abaco.service.dto.filter.SistemaFilterDTO;
+import br.com.basis.abaco.service.exception.RelatorioException;
+import br.com.basis.abaco.utils.PageUtils;
+import br.com.basis.abaco.web.rest.util.HeaderUtil;
+import br.com.basis.abaco.web.rest.util.PaginationUtil;
+import br.com.basis.dynamicexports.util.DynamicExporter;
+import io.github.jhipster.web.util.ResponseUtil;
 
 @RestController
 @RequestMapping("/api")
@@ -69,6 +74,7 @@ public class SistemaResource {
     private final FuncaoDadosVersionavelRepository funcaoDadosVersionavelRepository;
     private final FuncaoDadosRepository funcaoDadosRepository;
     private final SistemaService sistemaService;
+    private final AnaliseRepository analiseRepository;
     private static final String PAGE = "page";
 
     public SistemaResource(
@@ -76,13 +82,15 @@ public class SistemaResource {
         SistemaSearchRepository sistemaSearchRepository,
         FuncaoDadosVersionavelRepository funcaoDadosVersionavelRepository,
         FuncaoDadosRepository funcaoDadosRepository,
-        SistemaService sistemaService) {
+        SistemaService sistemaService,
+        AnaliseRepository analiseRepository) {
 
         this.sistemaRepository = sistemaRepository;
         this.sistemaSearchRepository = sistemaSearchRepository;
         this.funcaoDadosVersionavelRepository = funcaoDadosVersionavelRepository;
         this.funcaoDadosRepository = funcaoDadosRepository;
         this.sistemaService = sistemaService;
+        this.analiseRepository = analiseRepository;
     }
 
     @PostMapping("/sistemas")
@@ -197,9 +205,10 @@ public class SistemaResource {
     @Secured("ROLE_ABACO_SISTEMA_EXCLUIR")
     public ResponseEntity<Void> deleteSistema(@PathVariable Long id) {
         Sistema sistema = sistemaRepository.findOne(id);
+        List<Analise> analises = analiseRepository.findAllBySistema(sistema);
         if (sistema == null) {
             return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert(ENTITY_NAME, "not_found_system", "This system can not found for delete.")).body(null);
-        } else if (sistema.getAnalises().size() > 0) {
+        } else if (analises.size() > 0) {
             return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert(ENTITY_NAME, "analise_exists", "This System can not be deleted")).body(null);
         } else {
             sistemaSearchRepository.delete(id);

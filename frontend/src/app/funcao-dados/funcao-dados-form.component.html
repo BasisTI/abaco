@@ -93,7 +93,7 @@
                     <p-dialog [closable]="false" [(visible)]="showDialog" [(header)]="textHeader" [style]="{width: '80vw'}"
                               [contentStyle]="{'height': ['windowHeightDialog']}">
 
-                        <div *ngIf="seletedFuncaoDados.id">
+                        <div *ngIf="seletedFuncaoDados.id && modulos">
                             <app-analise-modulo-funcionalidade [erroModulo]="erroModulo" [isFuncaoDados]="true" [(analise)]="analise"
                                 (moduloSelectedEvent)="moduloSelected($event)" [(funcionalidade)]="seletedFuncaoDados.funcionalidade"
                                 (funcionalidadeSelectedEvent)="functionalitySelected($event)" [(modulosSistema)]="modulos">

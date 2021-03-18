@@ -71,7 +71,7 @@ export class ModuloFuncionalidadeComponent implements OnInit, OnDestroy {
     ngOnInit() {
         this.modulos = this.modulosSistema;
         this.analiseSharedDataService.analise = this.analise;
-       
+        console.log(this.modulos);
         if (_.isUndefined(this.isFuncaoDados)) {
             throw new Error('input isFuncaoDados é obrigatório.');
         }

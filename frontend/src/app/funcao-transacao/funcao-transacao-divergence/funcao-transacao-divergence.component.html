@@ -99,7 +99,7 @@
                             [style]="{width: '80vw'}">
 
                             <h4>Status: {{currentFuncaoTransacao.statusFuncao}}</h4>
-                        <div *ngIf="currentFuncaoTransacao.id">
+                        <div *ngIf="currentFuncaoTransacao.id && modulos">
 
                             <app-analise-modulo-funcionalidade
                             [erroModulo]="erroModulo" [isFuncaoDados]="false" [(analise)]="analise"

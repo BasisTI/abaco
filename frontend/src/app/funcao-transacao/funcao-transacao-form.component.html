@@ -80,7 +80,7 @@
                             [(header)]="textHeader"
                             [contentStyle]="{'height': ['windowHeightDialog']}"
                             [style]="{width: '80vw'}">
-                            <div  *ngIf="currentFuncaoTransacao.id"> 
+                            <div  *ngIf="currentFuncaoTransacao.id && modulos"> 
                                 <app-analise-modulo-funcionalidade [(analise)]="analise"
                                         [erroModulo]="erroModulo" [isFuncaoDados]="false"
                                         (moduloSelectedEvent)="moduloSelected($event)" [(funcionalidade)]="currentFuncaoTransacao.funcionalidade"
