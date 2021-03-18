@@ -141,8 +141,6 @@ export class PesquisarFtComponent implements OnInit {
     ngOnInit() {
         this.inicializaValoresAposCarregamento();
         this.analiseSharedDataService.analiseCarregada();
-        this.moduloSelecionado = this.analiseSharedDataService.analise.sistema.modulos[0];
-        this.funcionalidadeAtual = this.analiseSharedDataService.analise.sistema.modulos[0].funcionalidades[0];
         this.estadoInicial();
         this.cols = [
             { field: 'nome', header: 'Módulo' },
@@ -329,9 +327,7 @@ export class PesquisarFtComponent implements OnInit {
     private recarregarSistema(sistemaRecarregado: Sistema) {
         this.analiseSharedDataService.analise.sistema = sistemaRecarregado;
         this.modulos = sistemaRecarregado.modulos;
-        this.moduloSelecionado = this.modulos[0]
         this.funcionalidades = sistemaRecarregado.modulos[0].funcionalidades
-        this.funcionalidadeAtual = this.funcionalidades[0]
     }
 
     private subscribeFuncionalideBaseline() {

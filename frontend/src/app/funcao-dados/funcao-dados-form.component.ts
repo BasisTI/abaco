@@ -54,7 +54,7 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
     faS: FatorAjuste[] = [];
     textHeader: string;
     @Input() isView: boolean;
-    isEdit: boolean;
+    isEdit: boolean = false;
     crudExist = false;
     nomeInvalido: boolean;
     isSaving: boolean;
@@ -147,6 +147,7 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
                 if (!this.isView) {
                     this.analiseService.find(this.idAnalise).subscribe(analise => {
                         // analise = new Analise().copyFromJSON(analise);
+                        this.exibeComponenteModuloFuncionalidade();
                         this.analise = analise;
                         this.analiseSharedDataService.analise = analise;
                         this.carregarModuloSistema();
@@ -1167,8 +1168,18 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
     
     carregarModuloSistema(){
         this.sistemaService.find(this.analise.sistema.id).subscribe((sistemaRecarregado: Sistema) => {
+            console.log(sistemaRecarregado.modulos);
             this.modulos = sistemaRecarregado.modulos;
             this.analise.sistema = sistemaRecarregado;
         });
+    }
+
+    exibeComponenteModuloFuncionalidade(){
+        console.log(this.isEdit);
+        console.log(this.seletedFuncaoDados.id);
+        if((!this.isEdit || this.seletedFuncaoDados.id) && this.modulos) {
+            return true;
+        }
+        return false;
     }
 }
