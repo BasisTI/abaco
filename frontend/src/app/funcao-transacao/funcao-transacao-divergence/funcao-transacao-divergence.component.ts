@@ -26,6 +26,7 @@ import { BlockUiService } from '@nuvem/angular-base';
 import { CommentFuncaoTransacao } from '../comment.model';
 import { DivergenciaService } from 'src/app/divergencia';
 import { table } from 'console';
+import { Sistema, SistemaService } from 'src/app/sistema';
 
 @Component({
     selector: 'app-analise-funcao-transacao',
@@ -136,6 +137,8 @@ export class FuncaoTransacaoDivergenceComponent implements OnInit {
     public funcoesTransacoes: FuncaoTransacao[];
     public currentFuncaoTransacao: FuncaoTransacao = new FuncaoTransacao();
 
+    public modulos: Modulo[];
+
 
     constructor(
         private analiseSharedDataService: AnaliseSharedDataService,
@@ -148,6 +151,7 @@ export class FuncaoTransacaoDivergenceComponent implements OnInit {
         private router: Router,
         private route: ActivatedRoute,
         private blockUiService: BlockUiService,
+        private sistemaService: SistemaService
     ) {
     }
 
@@ -166,6 +170,7 @@ export class FuncaoTransacaoDivergenceComponent implements OnInit {
                     this.divergenciaService.find(this.idAnalise).subscribe(analise => {
                         this.analise = analise;
                         this.analiseSharedDataService.analise = analise;
+                        this.carregarModuloSistema();
                         this.disableAba = this.analise.metodoContagem === MessageUtil.INDICATIVA;
                         this.hideShowQuantidade = true;
                         this.currentFuncaoTransacao = new FuncaoTransacao();
@@ -1049,6 +1054,13 @@ export class FuncaoTransacaoDivergenceComponent implements OnInit {
 
     public cancelComment() {
         this.showAddComent = false;
+    }
+
+    carregarModuloSistema(){
+        this.sistemaService.find(this.analise.sistema.id).subscribe((sistemaRecarregado: Sistema) => {
+            this.modulos = sistemaRecarregado.modulos;
+            this.analise.sistema = sistemaRecarregado;
+        });
     }
 }
 

@@ -96,7 +96,7 @@
                         <div *ngIf="seletedFuncaoDados.id">
                             <app-analise-modulo-funcionalidade [erroModulo]="erroModulo" [isFuncaoDados]="true" [(analise)]="analise"
                                 (moduloSelectedEvent)="moduloSelected($event)" [(funcionalidade)]="seletedFuncaoDados.funcionalidade"
-                                (funcionalidadeSelectedEvent)="functionalitySelected($event)">
+                                (funcionalidadeSelectedEvent)="functionalitySelected($event)" [(modulosSistema)]="modulos">
                             </app-analise-modulo-funcionalidade>
                         </div>
 
@@ -433,5 +433,7 @@
     </p-footer>
 </p-dialog>
 <p-dialog [header]="this.getLabel('Importa funções de dados')" [(visible)]="display" [style]="{width: '80vw'}" [closable]="false">
-    <app-pesquisar-ft [isFuncaoDados]="true"></app-pesquisar-ft>
+    <div *ngIf="analise && analise.id && analise.sistema.modulos">
+        <app-pesquisar-ft [isFuncaoDados]="true"></app-pesquisar-ft>
+    </div>
 </p-dialog>

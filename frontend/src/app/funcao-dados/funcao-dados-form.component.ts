@@ -31,6 +31,7 @@ import { FuncaoTransacao, TipoFuncaoTransacao } from './../funcao-transacao/func
 import { FuncaoDados } from './funcao-dados.model';
 import { FuncaoDadosService } from './funcao-dados.service';
 import { BlockUiService } from '@nuvem/angular-base';
+import { Sistema, SistemaService } from '../sistema';
 
 @Component({
     selector: 'app-analise-funcao-dados',
@@ -115,6 +116,8 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
     public seletedFuncaoDados: FuncaoDados = new FuncaoDados();
     public display = false;
 
+    public modulos: Modulo[];
+
     constructor(
         private analiseSharedDataService: AnaliseSharedDataService,
         private confirmationService: ConfirmationService,
@@ -126,6 +129,7 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
         private baselineService: BaselineService,
         private router: Router,
         private blockUiService: BlockUiService,
+        private sistemaService: SistemaService
     ) {
     }
 
@@ -143,8 +147,9 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
                 if (!this.isView) {
                     this.analiseService.find(this.idAnalise).subscribe(analise => {
                         // analise = new Analise().copyFromJSON(analise);
-                        this.analiseSharedDataService.analise = analise;
                         this.analise = analise;
+                        this.analiseSharedDataService.analise = analise;
+                        this.carregarModuloSistema();
                         this.disableAba = this.analise.metodoContagem === MessageUtil.INDICATIVA;
                         this.hideShowQuantidade = true;
                         this.estadoInicial();
@@ -1158,5 +1163,12 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
         if (this.tables && this.tables.selectedRow) {
             this.funcaoDadosEditar = this.tables.selectedRow;
         }
+    }
+    
+    carregarModuloSistema(){
+        this.sistemaService.find(this.analise.sistema.id).subscribe((sistemaRecarregado: Sistema) => {
+            this.modulos = sistemaRecarregado.modulos;
+            this.analise.sistema = sistemaRecarregado;
+        });
     }
 }
