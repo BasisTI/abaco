@@ -94,7 +94,7 @@
                         <div *ngIf="seletedFuncaoDados.id">
                             <app-analise-modulo-funcionalidade [erroModulo]="erroModulo" [isFuncaoDados]="true" [(analise)]="analise"
                                 (moduloSelectedEvent)="moduloSelected($event)" [(funcionalidade)]="seletedFuncaoDados.funcionalidade"
-                                (funcionalidadeSelectedEvent)="functionalitySelected($event)">
+                                (funcionalidadeSelectedEvent)="functionalitySelected($event)" [(modulosSistema)]="modulos">
                             </app-analise-modulo-funcionalidade>
                         </div>
 

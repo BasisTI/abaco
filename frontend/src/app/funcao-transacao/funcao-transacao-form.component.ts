@@ -23,6 +23,7 @@ import { FatorAjusteLabelGenerator } from 'src/app/shared/fator-ajuste-label-gen
 import { Manual } from 'src/app/manual';
 import * as _ from 'lodash';
 import { BlockUiService } from '@nuvem/angular-base';
+import { Sistema, SistemaService } from '../sistema';
 @Component({
     selector: 'app-analise-funcao-transacao',
     templateUrl: './funcao-transacao-form.component.html',
@@ -93,6 +94,8 @@ export class FuncaoTransacaoFormComponent implements OnInit {
     public erroUnitario: boolean;
     public erroDeflator: boolean;
 
+    public modulos: Modulo[];
+
     public config = {
         extraPlugins: [],
         language: 'pt-br',
@@ -139,6 +142,8 @@ export class FuncaoTransacaoFormComponent implements OnInit {
         private router: Router,
         private route: ActivatedRoute,
         private blockUiService: BlockUiService,
+        private sistemaService: SistemaService
+        
     ) {
     }
 
@@ -157,6 +162,7 @@ export class FuncaoTransacaoFormComponent implements OnInit {
                     this.analiseService.find(this.idAnalise).subscribe(analise => {
                         this.analise = analise;
                         this.analiseSharedDataService.analise = analise;
+                        this.carregarModuloSistema();
                         this.disableAba = this.analise.metodoContagem === MessageUtil.INDICATIVA;
                         this.hideShowQuantidade = true;
                         this.currentFuncaoTransacao = new FuncaoTransacao();
@@ -978,6 +984,12 @@ export class FuncaoTransacaoFormComponent implements OnInit {
         if (this.tables && this.tables.selectedRow) {
             this.FuncaoTransacaoEditar = this.tables.selectedRow;
         }
+    }
+    carregarModuloSistema(){
+        this.sistemaService.find(this.analise.sistema.id).subscribe((sistemaRecarregado: Sistema) => {
+            this.modulos = sistemaRecarregado.modulos;
+            this.analise.sistema = sistemaRecarregado;
+        });
     }
 
 }

@@ -103,7 +103,7 @@
 
                             <app-analise-modulo-funcionalidade
                             [erroModulo]="erroModulo" [isFuncaoDados]="false" [(analise)]="analise"
-                            (moduloSelectedEvent)="moduloSelected($event)"
+                            (moduloSelectedEvent)="moduloSelected($event)" [(modulosSistema)]="modulos"
                             (funcionalidadeSelectedEvent)="functionalitySelected($event)" [(funcionalidade)]="currentFuncaoTransacao.funcionalidade">
                             </app-analise-modulo-funcionalidade>
                         </div>

@@ -6,6 +6,7 @@ import * as _ from 'lodash';
 import { ConfirmationService, SelectItem } from 'primeng';
 import { forkJoin, Observable, Subscription } from 'rxjs';
 import { DivergenciaService } from 'src/app/divergencia';
+import { Sistema, SistemaService } from 'src/app/sistema';
 import { Alr } from '../../alr/alr.model';
 import { Analise } from '../../analise';
 import { AnaliseReferenciavel } from '../../analise-shared/analise-referenciavel';
@@ -116,6 +117,7 @@ export class FuncaoDadosDivergenceComponent implements OnInit {
     public display = false;
     public divergenceComment: string;
     public commentFD: CommentFuncaoDados = new CommentFuncaoDados();
+    public modulos: Modulo[];
 
     constructor(
         private analiseSharedDataService: AnaliseSharedDataService,
@@ -129,6 +131,7 @@ export class FuncaoDadosDivergenceComponent implements OnInit {
         private baselineService: BaselineService,
         private router: Router,
         private blockUiService: BlockUiService,
+        private sistemaService: SistemaService
     ) {
     }
 
@@ -147,6 +150,7 @@ export class FuncaoDadosDivergenceComponent implements OnInit {
                     this.divergenciaService.find(this.idAnalise).subscribe(analise => {
                         this.analise = analise;
                         this.analiseSharedDataService.analise = analise;
+                        this.carregarModuloSistema();
                         this.hideShowQuantidade = true;
                         this.estadoInicial();
                         this.blockUiService.hide();
@@ -1191,5 +1195,12 @@ export class FuncaoDadosDivergenceComponent implements OnInit {
 
     public cancelComment() {
         this.showAddComent = false;
+    }
+
+    carregarModuloSistema(){
+        this.sistemaService.find(this.analise.sistema.id).subscribe((sistemaRecarregado: Sistema) => {
+            this.modulos = sistemaRecarregado.modulos;
+            this.analise.sistema = sistemaRecarregado;
+        });
     }
 }

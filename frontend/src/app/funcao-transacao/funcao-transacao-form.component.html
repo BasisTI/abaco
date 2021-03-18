@@ -84,7 +84,7 @@
                                 <app-analise-modulo-funcionalidade [(analise)]="analise"
                                         [erroModulo]="erroModulo" [isFuncaoDados]="false"
                                         (moduloSelectedEvent)="moduloSelected($event)" [(funcionalidade)]="currentFuncaoTransacao.funcionalidade"
-                                        (funcionalidadeSelectedEvent)="functionalitySelected($event)">
+                                        (funcionalidadeSelectedEvent)="functionalitySelected($event)" [(modulosSistema)]="modulos">
                                 </app-analise-modulo-funcionalidade>
                             </div>
                         <div *ngIf="!isEdit">
@@ -322,7 +322,7 @@
     </p-footer>
 </p-dialog>
  <!-- DIALOG: COPIAR FUNÇÕES DE TRANSAÇÃO -->
- <div *ngIf="analise && analise.organizacao" >
+ <div *ngIf="analise && analise.organizacao && analise.sistema.modulos" >
     <p-dialog [header]="this.getLabel('Importa funções de transação')" [(visible)]="display" [style]="{width: '80vw'}" [closable]="false">
         <app-pesquisar-ft></app-pesquisar-ft>
     </p-dialog>
