@@ -184,7 +184,7 @@ public class UserResource {
                                              @RequestParam(value = "login", required = false) String login,
                                              @RequestParam(value = "email", required = false) String email,
                                              @RequestParam(value = "organizacao", required = false) Long[] organizacao,
-                                             @RequestParam(value = "perfil", required = false) String[] perfil,
+                                             @RequestParam(value = "perfil", required = false) Long[] perfil,
                                              @RequestParam(value = "equipe", required = false) Long[] equipe,
                                              @RequestParam(defaultValue = "id") String sort) throws URISyntaxException {
         Sort.Direction sortOrder = PageUtils.getSortDirection(order);
