@@ -295,7 +295,7 @@ public class UserService extends BaseService {
         return userRepository.findOneWithAuthoritiesByLogin(SecurityUtils.getCurrentUserLogin()).orElse(null);
     }
 
-    public BoolQueryBuilder bindFilterSearch(String nome, String login, String email, Long [] organizacao, String[] perfil, Long[] equipeId) {
+    public BoolQueryBuilder bindFilterSearch(String nome, String login, String email, Long [] organizacao, Long[] perfil, Long[] equipeId) {
         BoolQueryBuilder qb = new BoolQueryBuilder();
         mustMatchWildcardContainsQueryLowerCase(nome, qb, "nome");
         mustMatchWildcardContainsQueryLowerCase(login, qb, "login");
@@ -314,8 +314,8 @@ public class UserService extends BaseService {
             BoolQueryBuilder boolQueryBuilderOrganizacao = QueryBuilders.boolQuery()
                 .must(
                     nestedQuery(
-                        "authorities",
-                        boolQuery().must(QueryBuilders.termsQuery("authorities.name", perfil))
+                        "perfils",
+                        boolQuery().must(QueryBuilders.termsQuery("perfils.id", perfil))
                     )
                 );
             qb.must(boolQueryBuilderOrganizacao);
@@ -384,7 +384,7 @@ public class UserService extends BaseService {
     public ByteArrayOutputStream gerarRelatorio(UserFilterDTO filtro, String tipoRelatorio) throws RelatorioException {
         ByteArrayOutputStream byteArrayOutputStream;
         try {
-            BoolQueryBuilder qb = bindFilterSearch(filtro.getNome(), filtro.getLogin(), filtro.getEmail(), filtro.getOrganizacao() == null ? null : filtro.getOrganizacao().stream().toArray(Long[]::new), filtro.getPerfil()== null ? null : filtro.getPerfil().stream().toArray(String[]::new), filtro.getEquipe()== null ? null : filtro.getEquipe().stream().toArray(Long[]::new));
+            BoolQueryBuilder qb = bindFilterSearch(filtro.getNome(), filtro.getLogin(), filtro.getEmail(), filtro.getOrganizacao() == null ? null : filtro.getOrganizacao().stream().toArray(Long[]::new), filtro.getPerfil()== null ? null : filtro.getPerfil().stream().toArray(Long[]::new), filtro.getEquipe()== null ? null : filtro.getEquipe().stream().toArray(Long[]::new));
             SearchQuery searchQuery = new NativeSearchQueryBuilder().withQuery(qb).withPageable(dynamicExportsService.obterPageableMaximoExportacao()).build();
             Page<User> page = userSearchRepository.search(searchQuery);
             byteArrayOutputStream = dynamicExportsService.export(new RelatorioUserColunas(filtro.getColumnsVisible()), page, tipoRelatorio,
