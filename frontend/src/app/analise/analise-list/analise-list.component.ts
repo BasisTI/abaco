@@ -777,8 +777,8 @@ export class AnaliseListComponent implements OnInit {
 
             this.searchGroup = this.loadingGroupSearch();
             this.searchGroup.usuario = null;
-            // this.recarregarDataTable();
-            // this.datatable.filter();
+            this.recarregarDataTable();
+            this.datatable.filter();
             this.isLoadFilter = false;
             this.datatable.pDatatableComponent.metaKeySelection = true;
             this.updateVisibleColumns(this.columnsVisible);

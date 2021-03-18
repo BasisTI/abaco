@@ -110,8 +110,9 @@ export class ModuloFuncionalidadeComponent implements OnInit, OnDestroy {
         if (!this.sistema) {
             return;
         }
-
-        this.selecionarModulo(this.funcionalidade.modulo.id);
+        if(this.funcionalidade){
+            this.selecionarModulo(this.funcionalidade.modulo.id);
+        }
 
         const sistemaId = this.sistema.id;
         this.sistemaService.find(sistemaId).subscribe((sistemaRecarregado: Sistema) => {
