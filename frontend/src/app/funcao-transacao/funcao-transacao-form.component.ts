@@ -749,7 +749,6 @@ export class FuncaoTransacaoFormComponent implements OnInit {
         this.funcaoTransacaoService.getById(funcaoTransacaoSelecionada.id).subscribe(funcaoTransacao => {
             funcaoTransacao = new FuncaoTransacao().copyFromJSON(funcaoTransacao);
             this.disableTRDER();
-            this.configurarDialog();
             this.currentFuncaoTransacao = funcaoTransacao;
             if (this.currentFuncaoTransacao.fatorAjuste !== undefined) {
                 if (this.currentFuncaoTransacao.fatorAjuste.tipoAjuste === 'UNITARIO' && this.faS[0]) {
@@ -759,6 +758,7 @@ export class FuncaoTransacaoFormComponent implements OnInit {
                 }
             }
             this.carregarValoresNaPaginaParaEdicao(this.currentFuncaoTransacao);
+            this.configurarDialog();
             this.blockUiService.hide();
         });
     }
@@ -790,6 +790,7 @@ export class FuncaoTransacaoFormComponent implements OnInit {
     private carregarValoresNaPaginaParaEdicao(funcaoTransacaoSelecionada: FuncaoTransacao) {
         this.funcaoDadosService.mod.next(funcaoTransacaoSelecionada.funcionalidade);
         this.analiseSharedDataService.funcaoAnaliseCarregada();
+        this.analiseSharedDataService.currentFuncaoTransacao = funcaoTransacaoSelecionada;
         this.carregarDerEAlr(funcaoTransacaoSelecionada);
         this.carregarFatorDeAjusteNaEdicao(funcaoTransacaoSelecionada);
     }

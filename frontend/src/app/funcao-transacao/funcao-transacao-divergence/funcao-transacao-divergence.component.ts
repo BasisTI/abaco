@@ -262,7 +262,6 @@ export class FuncaoTransacaoDivergenceComponent implements OnInit {
 
     selectRow(event) {
         this.FuncaoTransacaoEditar.id = event.data.id;
-        console.log(this.FuncaoTransacaoEditar);
     }
 
     abrirEditar() {

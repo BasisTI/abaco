@@ -961,6 +961,7 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
         /* Envia os dados para o componente modulo-funcionalidade-component.ts*/
         this.funcaoDadosService.mod.next(funcaoDadosSelecionada.funcionalidade);
         this.analiseSharedDataService.funcaoAnaliseCarregada();
+        this.analiseSharedDataService.currentFuncaoDados = funcaoDadosSelecionada;
         this.carregarDerERlr(funcaoDadosSelecionada);
         this.carregarFatorDeAjusteNaEdicao(funcaoDadosSelecionada);
     }

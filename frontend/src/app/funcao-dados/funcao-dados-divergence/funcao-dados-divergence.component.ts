@@ -886,6 +886,7 @@ export class FuncaoDadosDivergenceComponent implements OnInit {
         
         this.funcaoDadosService.mod.next(funcaoDadosSelecionada.funcionalidade);
         this.analiseSharedDataService.funcaoAnaliseCarregada();
+        this.analiseSharedDataService.currentFuncaoDados = funcaoDadosSelecionada;
         this.carregarDerERlr(funcaoDadosSelecionada);
         this.carregarFatorDeAjusteNaEdicao(funcaoDadosSelecionada);
     }

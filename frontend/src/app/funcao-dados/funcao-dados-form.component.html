@@ -31,6 +31,7 @@
                                         (click)="selectFD()"
                                         [paginator]="false"
                                         [scrollable]="true"
+                                        (selectRow)="selectRow($event)"
                                         [rows]="20"
                                         [filterOnColumn]="true"
                                         [rowsPerPageOptions]="[20,50,100]"
@@ -92,9 +93,9 @@
                     <p-dialog [closable]="false" [(visible)]="showDialog" [(header)]="textHeader" [style]="{width: '80vw'}"
                               [contentStyle]="{'height': ['windowHeightDialog']}">
 
-                        <div *ngIf="analise && analise.sistema">
+                        <div *ngIf="seletedFuncaoDados.id">
                             <app-analise-modulo-funcionalidade [erroModulo]="erroModulo" [isFuncaoDados]="true" [(analise)]="analise"
-                                (moduloSelectedEvent)="moduloSelected($event)"
+                                (moduloSelectedEvent)="moduloSelected($event)" [(funcionalidade)]="seletedFuncaoDados.funcionalidade"
                                 (funcionalidadeSelectedEvent)="functionalitySelected($event)">
                             </app-analise-modulo-funcionalidade>
                         </div>

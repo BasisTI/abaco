@@ -141,8 +141,8 @@ export class PesquisarFtComponent implements OnInit {
     ngOnInit() {
         this.inicializaValoresAposCarregamento();
         this.analiseSharedDataService.analiseCarregada();
-        this.moduloSelecionado = this.analiseSharedDataService.analise.sistema.modulos[0]
-        this.funcionalidadeAtual = this.analiseSharedDataService.analise.sistema.modulos[0].funcionalidades[0]
+        this.moduloSelecionado = this.analiseSharedDataService.analise.sistema.modulos[0];
+        this.funcionalidadeAtual = this.analiseSharedDataService.analise.sistema.modulos[0].funcionalidades[0];
         this.estadoInicial();
         this.cols = [
             { field: 'nome', header: 'Módulo' },
