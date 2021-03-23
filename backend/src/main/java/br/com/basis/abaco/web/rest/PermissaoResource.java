@@ -99,11 +99,13 @@ public class PermissaoResource {
 
     @GetMapping("/permissaos/perfis")
     public Set<String> getAllPermissaosByPerfil(@RequestParam(value = "perfis", required = true) Set<String> perfis) {
-        List<Permissao> permissoes = permissaoRepository.pesquisarPermissoesPorPerfil(perfis);
+        Optional<List<Permissao>> permissoes = permissaoRepository.pesquisarPermissoesPorPerfil(perfis);
         Set<String> listPermissoes = new HashSet<>();
-        permissoes.forEach(permissao -> {
-            listPermissoes.add("ROLE_ABACO_"+permissao.getFuncionalidadeAbaco().getSigla()+"_"+permissao.getAcao().getSigla());
-        });
+        if(permissoes.isPresent()){
+            permissoes.get().forEach(permissao -> {
+                listPermissoes.add("ROLE_ABACO_"+permissao.getFuncionalidadeAbaco().getSigla()+"_"+permissao.getAcao().getSigla());
+            });
+        }
         return listPermissoes;
     }
 
