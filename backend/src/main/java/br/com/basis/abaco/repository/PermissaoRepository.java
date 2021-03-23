@@ -28,5 +28,5 @@ public interface PermissaoRepository extends JpaRepository<Permissao, Long> {
     @Query("SELECT DISTINCT p FROM Permissao p " +
         "INNER JOIN p.perfils perfil " +
         "WHERE perfil.nome in(:perfis)")
-    List<Permissao> pesquisarPermissoesPorPerfil(@Param("perfis") Set<String> perfis);
+    Optional<List<Permissao>> pesquisarPermissoesPorPerfil(@Param("perfis") Set<String> perfis);
 }

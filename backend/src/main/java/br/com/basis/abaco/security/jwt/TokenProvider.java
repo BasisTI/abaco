@@ -1,10 +1,6 @@
 package br.com.basis.abaco.security.jwt;
 
-import java.util.Collection;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import javax.annotation.PostConstruct;
@@ -99,16 +95,17 @@ public class TokenProvider {
             .getBody();
 
         Optional<br.com.basis.abaco.domain.User> userFromDatabase = userRepository.findOneWithAuthoritiesByLogin(claims.getSubject().toLowerCase());
-
+        Collection<? extends GrantedAuthority> authorities = new ArrayList<>();
         Set<String> listPerfil = userFromDatabase.get().getPerfils().stream().map(perfil -> perfil.getNome()).collect(Collectors.toSet());
-        List<Permissao> listPermissao = permissaoRepository.pesquisarPermissoesPorPerfil(listPerfil);
 
-        Collection<? extends GrantedAuthority> authorities =
-            listPermissao.stream()
-                .map(permissao -> new SimpleGrantedAuthority("ROLE_ABACO_" + permissao.getFuncionalidadeAbaco().getSigla() + "_"+ permissao.getAcao().getSigla()))
-                .collect(Collectors.toList());
-
-
+        if(!listPerfil.isEmpty()){
+            Optional<List<Permissao>> listPermissao = permissaoRepository.pesquisarPermissoesPorPerfil(listPerfil);
+            if(listPermissao.isPresent()){
+                authorities = listPermissao.get().stream()
+                    .map(permissao -> new SimpleGrantedAuthority("ROLE_ABACO_" + permissao.getFuncionalidadeAbaco().getSigla() + "_"+ permissao.getAcao().getSigla()))
+                    .collect(Collectors.toList());
+            }
+        }
         UserDetailsCustom principal = new UserDetailsCustom(claims.getSubject(), "", authorities, userFromDatabase.get());
 
         return new UsernamePasswordAuthenticationToken(principal, "", authorities);
