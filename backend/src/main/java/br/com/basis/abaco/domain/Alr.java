@@ -51,7 +51,7 @@ public class Alr implements Serializable {
 
     private Integer valor;
 
-    @JsonBackReference(value = "funcaoTransacao")
+    @JsonIgnore
     @ManyToOne
     private FuncaoTransacao funcaoTransacao;
 
