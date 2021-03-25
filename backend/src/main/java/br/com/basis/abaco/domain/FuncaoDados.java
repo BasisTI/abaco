@@ -9,16 +9,7 @@ import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.springframework.data.elasticsearch.annotations.Document;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.OrderBy;
-import javax.persistence.Table;
-import javax.persistence.Transient;
+import javax.persistence.*;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -46,11 +37,10 @@ public class FuncaoDados extends FuncaoAnalise implements Serializable {
     @Column(name = "tipo")
     private TipoFuncaoDados tipo;
 
-    @OneToMany(mappedBy = FUNCAODADOS)
-    @JsonIgnore
+    @ManyToOne
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     @OrderBy("nome ASC, id ASC")
-    private Set<Funcionalidade> funcionalidades = new HashSet<>();
+    private Funcionalidade funcionalidade;
 
     @Column
     private String retStr;
@@ -58,7 +48,6 @@ public class FuncaoDados extends FuncaoAnalise implements Serializable {
     @Column
     private Integer quantidade;
 
-    @JsonManagedReference(value = FUNCAODADOS)
     @OneToMany(mappedBy = FUNCAODADOS, cascade = CascadeType.ALL, orphanRemoval = true)
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     @OrderBy("valor ASC")
@@ -76,7 +65,6 @@ public class FuncaoDados extends FuncaoAnalise implements Serializable {
     @Transient
     private Set<String> rlrValues = new HashSet<>();
 
-    @JsonManagedReference(value = FUNCAODADOS)
     @OneToMany(mappedBy = FUNCAODADOS, cascade = CascadeType.ALL, orphanRemoval = true)
     @OrderBy("id ASC")
     private Set<Der> ders = new LinkedHashSet<>();
@@ -95,7 +83,7 @@ public class FuncaoDados extends FuncaoAnalise implements Serializable {
     public FuncaoDados(FuncaoDados funcaoDados) {
 
         this.tipo = funcaoDados.getTipo();
-        this.funcionalidades = funcaoDados.getFuncionalidades();
+        this.funcionalidade = funcaoDados.getFuncionalidade();
         this.retStr = funcaoDados.getRetStr();
         this.quantidade = funcaoDados.getQuantidade();
         this.rlrs = funcaoDados.getRlrs();
@@ -107,9 +95,9 @@ public class FuncaoDados extends FuncaoAnalise implements Serializable {
 
     }
 
-    public void bindFuncaoDados(Complexidade complexidade, BigDecimal pf, BigDecimal grossPF, Analise analise, Funcionalidade funcionalidade, String detStr, FatorAjuste fatorAjuste, String name, String sustantation, Set<String> derValues, TipoFuncaoDados tipo, Set<Funcionalidade> funcionalidades, String retStr, Integer quantidade, Set<Rlr> rlrs, Alr alr, List<UploadedFile> files, Set<String> rlrValues, Set<Der> ders, FuncaoDadosVersionavel funcaoDadosVersionavel, ImpactoFatorAjuste impacto) {
+    public void bindFuncaoDados(Complexidade complexidade, BigDecimal pf, BigDecimal grossPF, Analise analise, Funcionalidade funcionalidade, String detStr, FatorAjuste fatorAjuste, String name, String sustantation, Set<String> derValues, TipoFuncaoDados tipo, String retStr, Integer quantidade, Set<Rlr> rlrs, Alr alr, List<UploadedFile> files, Set<String> rlrValues, Set<Der> ders, FuncaoDadosVersionavel funcaoDadosVersionavel, ImpactoFatorAjuste impacto) {
         this.tipo = tipo;
-        this.funcionalidades = funcionalidades == null ? null : Collections.unmodifiableSet(funcionalidades);
+        this.funcionalidade = funcionalidade;
         this.retStr = retStr;
         this.quantidade = quantidade;
         this.rlrs =  rlrs == null ? null : Collections.unmodifiableSet(rlrs);
@@ -131,46 +119,18 @@ public class FuncaoDados extends FuncaoAnalise implements Serializable {
         return this;
     }
 
+    public Funcionalidade getFuncionalidade() {
+        return funcionalidade;
+    }
+
+    public void setFuncionalidade(Funcionalidade funcionalidade) {
+        this.funcionalidade = funcionalidade;
+    }
+
     public void setTipo(TipoFuncaoDados tipo) {
         this.tipo = tipo;
     }
 
-    public Set<Funcionalidade> getFuncionalidades() {
-        return Optional.ofNullable(this.funcionalidades)
-                .map(lista -> new LinkedHashSet<Funcionalidade>(lista))
-                .orElse(new LinkedHashSet<Funcionalidade>());
-    }
-
-    public FuncaoDados funcionalidades(Set<Funcionalidade> funcionalidades) {
-        this.funcionalidades = Optional.ofNullable(funcionalidades)
-                .map(lista -> new LinkedHashSet<Funcionalidade>(lista))
-                .orElse(new LinkedHashSet<Funcionalidade>());
-        return this;
-    }
-
-    public FuncaoDados addFuncionalidade(Funcionalidade funcionalidade) {
-        if (funcionalidade == null) {
-            return this;
-        }
-        this.funcionalidades.add(funcionalidade);
-        funcionalidade.setFuncaoDados(this);
-        return this;
-    }
-
-    public FuncaoDados removeFuncionalidade(Funcionalidade funcionalidade) {
-        if (funcionalidade == null) {
-            return this;
-        }
-        this.funcionalidades.remove(funcionalidade);
-        funcionalidade.setFuncaoDados(null);
-        return this;
-    }
-
-    public void setFuncionalidades(Set<Funcionalidade> funcionalidades) {
-        this.funcionalidades = Optional.ofNullable(funcionalidades)
-                .map(lista -> new LinkedHashSet<Funcionalidade>(lista))
-                .orElse(new LinkedHashSet<Funcionalidade>());
-    }
 
     public Set<Rlr> getRlrs() {
         return Optional.ofNullable(this.rlrs)

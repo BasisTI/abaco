@@ -53,4 +53,6 @@ public interface FuncaoDadosRepository extends JpaRepository<FuncaoDados, Long> 
     long countByFuncionalidadeId(Long id);
 
     FuncaoDados findByIdOrderByDersIdAscRlrsIdAsc(Long id);
+
+    Optional<List<FuncaoDados>> findAllByFuncionalidadeId(Long id);
 }

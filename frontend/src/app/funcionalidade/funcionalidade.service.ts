@@ -4,7 +4,7 @@ import {environment} from '../../environments/environment';
 import {Funcionalidade} from './funcionalidade.model';
 import {ResponseWrapper, createRequestOption, JhiDateUtils, BaseEntity} from '../shared';
 import {Modulo} from '../modulo/index';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { PageNotificationService } from '@nuvem/primeng-components';
@@ -116,5 +116,12 @@ export class FuncionalidadeService {
 
     getTotalFunction(id: number): Observable<Number> {
       return this.http.get<Number>(`${this.resourceUrl}/total-functions/${id}`);
+    }
+
+    migrarFuncoes(idEditFuncionalidade: number, idMigrarFuncionalidade: number): Observable<void>{
+        let params: HttpParams = new HttpParams();
+        params = params.append("idEdit", ""+idEditFuncionalidade.toString());
+        params = params.append("idMigrar", idMigrarFuncionalidade.toString());
+        return this.http.get<void>(`${this.resourceUrl}/migrar`, {params});
     }
 }
