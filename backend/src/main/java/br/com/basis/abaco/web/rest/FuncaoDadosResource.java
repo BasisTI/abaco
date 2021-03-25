@@ -1,13 +1,11 @@
 package br.com.basis.abaco.web.rest;
 
-import br.com.basis.abaco.domain.Analise;
-import br.com.basis.abaco.domain.Der;
-import br.com.basis.abaco.domain.FuncaoDados;
-import br.com.basis.abaco.domain.Rlr;
+import br.com.basis.abaco.domain.*;
 import br.com.basis.abaco.domain.enumeration.StatusFuncao;
 import br.com.basis.abaco.domain.enumeration.TipoFatorAjuste;
 import br.com.basis.abaco.repository.AnaliseRepository;
 import br.com.basis.abaco.repository.FuncaoDadosRepository;
+import br.com.basis.abaco.repository.FuncionalidadeRepository;
 import br.com.basis.abaco.repository.search.FuncaoDadosSearchRepository;
 import br.com.basis.abaco.service.FuncaoDadosService;
 import br.com.basis.abaco.service.dto.DropdownDTO;
@@ -61,15 +59,17 @@ public class FuncaoDadosResource {
     private final FuncaoDadosSearchRepository funcaoDadosSearchRepository;
     private final FuncaoDadosService funcaoDadosService;
     private final AnaliseRepository analiseRepository;
+    private final FuncionalidadeRepository funcionalidadeRepository;
 
     @Autowired
     private ModelMapper modelMapper;
     public FuncaoDadosResource(FuncaoDadosRepository funcaoDadosRepository,
-                               FuncaoDadosSearchRepository funcaoDadosSearchRepository, FuncaoDadosService funcaoDadosService, AnaliseRepository analiseRepository) {
+                               FuncaoDadosSearchRepository funcaoDadosSearchRepository, FuncaoDadosService funcaoDadosService, AnaliseRepository analiseRepository, FuncionalidadeRepository funcionalidadeRepository) {
         this.funcaoDadosRepository = funcaoDadosRepository;
         this.funcaoDadosSearchRepository = funcaoDadosSearchRepository;
         this.funcaoDadosService = funcaoDadosService;
         this.analiseRepository = analiseRepository;
+        this.funcionalidadeRepository = funcionalidadeRepository;
     }
 
     /**
@@ -90,6 +90,9 @@ public class FuncaoDadosResource {
         funcaoDados.setAnalise(analise);
         if (funcaoDados.getId() != null || funcaoDados.getAnalise() == null || funcaoDados.getAnalise().getId() == null) {
             return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert(ENTITY_NAME, "idexists", "A new funcaoDados cannot already have an ID")).body(null);
+        }
+        for(Der der : funcaoDados.getDers()){
+            der.setFuncaoTransacao(null);
         }
         FuncaoDados result = funcaoDadosRepository.save(funcaoDados);
         FuncaoDadosEditDTO  funcaoDadosEditDTO = convertFuncaoDadoAEditDTO(result);
