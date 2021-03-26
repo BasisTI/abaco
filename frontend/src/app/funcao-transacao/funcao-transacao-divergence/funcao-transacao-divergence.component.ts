@@ -904,6 +904,8 @@ export class FuncaoTransacaoDivergenceComponent implements OnInit {
     openDialog(param: boolean) {
         this.isEdit = param;
         this.disableTRDER();
+        this.currentFuncaoTransacao = new FuncaoTransacao();
+        this.analiseSharedDataService.currentFuncaoTransacao = this.currentFuncaoTransacao;
         this.configurarDialog();
         this.currentFuncaoTransacao.sustantation = null;
         if (this.currentFuncaoTransacao.fatorAjuste !== undefined) {
