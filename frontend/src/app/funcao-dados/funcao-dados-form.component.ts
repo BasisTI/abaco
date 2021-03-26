@@ -1048,6 +1048,8 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
     openDialog(param: boolean) {
         this.subscribeToAnaliseCarregada();
         this.isEdit = param;
+        this.seletedFuncaoDados = new FuncaoDados();
+        this.analiseSharedDataService.currentFuncaoDados = this.seletedFuncaoDados;
         this.disableTRDER();
         this.configurarDialog();
         this.seletedFuncaoDados.sustantation = null;
@@ -1168,15 +1170,12 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
     
     carregarModuloSistema(){
         this.sistemaService.find(this.analise.sistema.id).subscribe((sistemaRecarregado: Sistema) => {
-            console.log(sistemaRecarregado.modulos);
             this.modulos = sistemaRecarregado.modulos;
             this.analise.sistema = sistemaRecarregado;
         });
     }
 
     exibeComponenteModuloFuncionalidade(){
-        console.log(this.isEdit);
-        console.log(this.seletedFuncaoDados.id);
         if((!this.isEdit || this.seletedFuncaoDados.id) && this.modulos) {
             return true;
         }

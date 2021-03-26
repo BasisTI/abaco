@@ -1043,6 +1043,8 @@ export class FuncaoDadosDivergenceComponent implements OnInit {
     openDialog(param: boolean) {
         this.subscribeToAnaliseCarregada();
         this.isEdit = param;
+        this.seletedFuncaoDados = new FuncaoDados();
+        this.analiseSharedDataService.currentFuncaoDados = this.seletedFuncaoDados;
         this.disableTRDER();
         this.configurarDialog();
         this.seletedFuncaoDados.sustantation = null;
