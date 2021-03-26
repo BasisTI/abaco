@@ -503,6 +503,7 @@ export class FuncaoTransacaoFormComponent implements OnInit {
 
     // Funcionalidade Selecionada
     functionalitySelected(funcionalidade: Funcionalidade) {
+        console.log(funcionalidade);
         if (!funcionalidade) {
         } else {
             this.moduloCache = funcionalidade;
@@ -869,6 +870,7 @@ export class FuncaoTransacaoFormComponent implements OnInit {
     }
 
     openDialog(param: boolean) {
+        this.subscribeToAnaliseCarregada();
         this.isEdit = param;
         this.disableTRDER();
         this.configurarDialog();
