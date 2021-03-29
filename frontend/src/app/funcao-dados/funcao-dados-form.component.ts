@@ -1,4 +1,4 @@
-import { AfterViewInit, ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output, QueryList, ViewChildren, ViewChild} from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output, QueryList, ViewChildren, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Column, DatatableClickEvent, DatatableComponent, DatatableModule, PageNotificationService } from '@nuvem/primeng-components';
 import * as _ from 'lodash';
@@ -32,6 +32,7 @@ import { FuncaoDados } from './funcao-dados.model';
 import { FuncaoDadosService } from './funcao-dados.service';
 import { BlockUiService } from '@nuvem/angular-base';
 import { Sistema, SistemaService } from '../sistema';
+import { table } from 'node:console';
 
 @Component({
     selector: 'app-analise-funcao-dados',
@@ -80,27 +81,31 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
     results: string[];
     baselineResults: any[] = [];
     funcoesDadosList: FuncaoDados[] = [];
-    funcaoDadosEditar: FuncaoDados = new FuncaoDados();
+
+    funcaoDadosEditar: FuncaoDados[] = [];
+
     translateSubscriptions: Subscription[] = [];
     viewFuncaoDados = false;
     divergenceComment: String;
     impacto: SelectItem[] = [
-        {label: 'Inclusão', value: 'INCLUSAO'},
-        {label: 'Alteração', value: 'ALTERACAO'},
-        {label: 'Exclusão', value: 'EXCLUSAO'},
-        {label: 'Conversão', value: 'CONVERSAO'},
-        {label: 'Outros', value: 'ITENS_NAO_MENSURAVEIS'}
+        { label: 'Inclusão', value: 'INCLUSAO' },
+        { label: 'Alteração', value: 'ALTERACAO' },
+        { label: 'Exclusão', value: 'EXCLUSAO' },
+        { label: 'Conversão', value: 'CONVERSAO' },
+        { label: 'Outros', value: 'ITENS_NAO_MENSURAVEIS' }
     ];
 
     classificacoes: SelectItem[] = [
-        {label: 'ALI - Arquivo Lógico Interno', value: 'ALI'},
-        {label: 'AIE - Arquivo de Interface Externa', value: 'AIE'}
+        { label: 'ALI - Arquivo Lógico Interno', value: 'ALI' },
+        { label: 'AIE - Arquivo de Interface Externa', value: 'AIE' }
     ];
 
-    crud: string [] = ['Excluir', 'Editar', 'Inserir', 'Pesquisar', 'Consultar'];
+    crud: string[] = ['Excluir', 'Editar', 'Inserir', 'Pesquisar', 'Consultar'];
+
+    selectButtonMultiple: boolean;
 
     idAnalise: number;
-    private fatorAjusteNenhumSelectItem = {label: 'Nenhum', value: undefined};
+    private fatorAjusteNenhumSelectItem = { label: 'Nenhum', value: undefined };
     private analiseCarregadaSubscription: Subscription;
     private subscriptionSistemaSelecionado: Subscription;
     private nomeDasFuncoesDoSistema: string[] = [];
@@ -297,13 +302,9 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
         return 0;
     }
 
-    selectRow(event) {
-        this.funcaoDadosEditar.id = event.data.id;
-    }
-
     abrirEditar() {
         this.isEdit = true;
-        this.prepararParaEdicao(this.funcaoDadosEditar);
+        this.prepararParaEdicao(this.funcaoDadosEditar[0]);
     }
 
     public onChange(editor) {
@@ -404,10 +405,10 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
         if (this.seletedFuncaoDados && this.seletedFuncaoDados.funcionalidade && this.seletedFuncaoDados.funcionalidade.id) {
             this.funcaoDadosService.autoCompletePEAnalitico(
                 event.query, this.seletedFuncaoDados.funcionalidade.id).subscribe(
-                value => {
-                    this.baselineResults = value;
-                }
-            );
+                    value => {
+                        this.baselineResults = value;
+                    }
+                );
         }
     }
 
@@ -442,12 +443,12 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
 
     private setFields(fd: FuncaoDados) {
         return Object.defineProperties(fd, {
-            'totalDers': {value: fd.derValue(), writable: true},
-            'totalRlrs': {value: fd.rlrValue(), writable: true},
-            'deflator': {value: this.formataFatorAjuste(fd.fatorAjuste), writable: true},
-            'impactoFilter': {value: this.updateNameImpacto(fd.impacto), writable: true},
-            'nomeFuncionalidade': {value: fd.funcionalidade.nome, writable: true},
-            'nomeModulo': {value: fd.funcionalidade.modulo.nome, writable: true}
+            'totalDers': { value: fd.derValue(), writable: true },
+            'totalRlrs': { value: fd.rlrValue(), writable: true },
+            'deflator': { value: this.formataFatorAjuste(fd.fatorAjuste), writable: true },
+            'impactoFilter': { value: this.updateNameImpacto(fd.impacto), writable: true },
+            'nomeFuncionalidade': { value: fd.funcionalidade.nome, writable: true },
+            'nomeModulo': { value: fd.funcionalidade.modulo.nome, writable: true }
         });
     }
 
@@ -506,8 +507,8 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
         this.verificarModulo();
         this.seletedFuncaoDados = new FuncaoDados().copyFromJSON(this.seletedFuncaoDados);
         const funcaoDadosCalculada = Calculadora.calcular(this.analise.metodoContagem,
-                this.seletedFuncaoDados,
-                this.analise.contrato.manual);
+            this.seletedFuncaoDados,
+            this.analise.contrato.manual);
         for (const nome of this.parseResult.textos) {
             lstFuncaoDadosWithExist.push(
                 this.funcaoDadosService.existsWithName(
@@ -533,10 +534,10 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
                 this.fecharDialog();
                 this.estadoInicial();
                 this.resetarEstadoPosSalvar();
-                lstFuncaoDados.forEach( funcaoDadosMultp => {
+                lstFuncaoDados.forEach(funcaoDadosMultp => {
                     lstFuncaoDadosToSave.push(
                         this.funcaoDadosService.create(funcaoDadosMultp, this.analise.id)
-                        );
+                    );
                 });
                 forkJoin(lstFuncaoDadosToSave).subscribe(respCreate => {
                     respCreate.forEach((funcaoDados) => {
@@ -590,25 +591,25 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
                 this.analise.id,
                 this.seletedFuncaoDados.funcionalidade.id,
                 this.seletedFuncaoDados.funcionalidade.modulo.id).subscribe(value => {
-                if (value === false) {
-                    this.funcaoDadosService.create(funcaoDadosCalculada, this.analise.id).subscribe(
-                        (funcaoDados) => {
-                            this.pageNotificationService.addCreateMsg(funcaoDadosCalculada.name);
-                            funcaoDadosCalculada.id = funcaoDados.id;
-                            this.setFields(funcaoDadosCalculada);
-                            this.funcoesDados.push(funcaoDadosCalculada);
-                            this.fecharDialog();
-                            this.atualizaResumo();
-                            this.estadoInicial();
-                            this.resetarEstadoPosSalvar();
-                            this.analiseService.updateSomaPf(this.analise.id).subscribe();
-                        }
-                    );
-                } else {
-                    this.pageNotificationService.addErrorMessage(this.getLabel('Registro Cadastrado'));
-                }
-                return retorno;
-            });
+                    if (value === false) {
+                        this.funcaoDadosService.create(funcaoDadosCalculada, this.analise.id).subscribe(
+                            (funcaoDados) => {
+                                this.pageNotificationService.addCreateMsg(funcaoDadosCalculada.name);
+                                funcaoDadosCalculada.id = funcaoDados.id;
+                                this.setFields(funcaoDadosCalculada);
+                                this.funcoesDados.push(funcaoDadosCalculada);
+                                this.fecharDialog();
+                                this.atualizaResumo();
+                                this.estadoInicial();
+                                this.resetarEstadoPosSalvar();
+                                this.analiseService.updateSomaPf(this.analise.id).subscribe();
+                            }
+                        );
+                    } else {
+                        this.pageNotificationService.addErrorMessage(this.getLabel('Registro Cadastrado'));
+                    }
+                    return retorno;
+                });
         }
     }
 
@@ -792,30 +793,30 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
         if (!(event.selection) && event.button !== 'filter') {
             return;
         }
-        const funcaoDadosSelecionada: FuncaoDados = event.selection;
+
         switch (event.button) {
             case 'edit':
                 this.isEdit = true;
-                this.prepararParaEdicao(funcaoDadosSelecionada);
+                this.prepararParaEdicao(this.funcaoDadosEditar[0]);
                 break;
             case 'delete':
-                this.confirmDelete(funcaoDadosSelecionada);
+                this.confirmDelete(this.funcaoDadosEditar);
                 break;
             case 'clone':
                 this.disableTRDER();
                 this.configurarDialog();
                 this.isEdit = false;
-                this.prepareToClone(funcaoDadosSelecionada);
+                this.prepareToClone(this.funcaoDadosEditar[0]);
                 this.seletedFuncaoDados.id = undefined;
                 this.seletedFuncaoDados.artificialId = undefined;
                 this.textHeader = this.getLabel('Clonar Função de Dados');
                 break;
             case 'crud':
-                this.createCrud(funcaoDadosSelecionada);
+                this.createCrud(this.funcaoDadosEditar[0]);
                 break;
             case 'view':
                 this.viewFuncaoDados = true;
-                this.prepararParaVisualizar(funcaoDadosSelecionada);
+                this.prepararParaVisualizar(this.funcaoDadosEditar[0]);
                 break;
             case 'filter':
                 this.display = true;
@@ -870,7 +871,7 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
                         this.analise.id,
                         funcaoTransacaoAtual.funcionalidade.id,
                         funcaoTransacaoAtual.funcionalidade.modulo.id)
-                    );
+                );
             });
             forkJoin(lstFuncaoTransacaoToVerify).subscribe(lstFuncaoTranscao => {
                 let index = 0;
@@ -878,7 +879,7 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
                     if (!existFuncaoTranasacao) {
                         lstFuncaoTransacaoToInclud.push(
                             this.funcaoTransacaoService.create(lstFuncaoTransacaoCrud[index], this.analise.id)
-                            );
+                        );
                     } else {
                         this.pageNotificationService.addErrorMessage('CRUD já cadastrado!');
                     }
@@ -891,7 +892,7 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
                             this.resetarEstadoPosSalvar();
                             this.estadoInicial();
                             this.analiseService.updateSomaPf(this.analise.id).subscribe();
-                    });
+                        });
                     this.blockUiService.hide();
                 });
             });
@@ -999,7 +1000,7 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
 
     // Carregar Referencial
     private loadReference(referenciaveis: AnaliseReferenciavel[],
-                          strValues: string[]): DerChipItem[] {
+        strValues: string[]): DerChipItem[] {
         if (referenciaveis) {
             if (referenciaveis.length > 0) {
                 if (this.isEdit) {
@@ -1022,16 +1023,17 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
     }
 
 
-    confirmDelete(funcaoDadosSelecionada: FuncaoDados) {
+    confirmDelete(funcaoDadosSelecionada: FuncaoDados[]) {
         this.confirmationService.confirm({
-            message: `${this.getLabel(
-                'Tem certeza que deseja excluir a Função de Dados ')} '${funcaoDadosSelecionada.name}'?`,
+            message: 'Tem certeza que deseja excluir as funções de dados selecionada?',
             accept: () => {
-                this.funcaoDadosService.delete(funcaoDadosSelecionada.id).subscribe(value => {
-                    this.funcoesDados = this.funcoesDados.filter((funcaoDados) => (funcaoDados.id !== funcaoDadosSelecionada.id));
-                    this.pageNotificationService.addDeleteMsg(funcaoDadosSelecionada.name);
-                    this.analiseService.updateSomaPf(this.analise.id).subscribe();
-                });
+                funcaoDadosSelecionada.forEach(funcaoDados => {
+                    this.funcaoDadosService.delete(funcaoDados.id).subscribe(value => {
+                        this.funcoesDados = this.funcoesDados.filter((funcaoDadosEdit) => (funcaoDadosEdit.id !== funcaoDados.id));
+                    });
+                })
+                this.analiseService.updateSomaPf(this.analise.id).subscribe();
+                this.pageNotificationService.addDeleteMsg("Funções deletadas com sucesso!");
             }
         });
     }
@@ -1082,7 +1084,7 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
                 this.fatoresAjuste =
                     this.faS.map(fa => {
                         const label = FatorAjusteLabelGenerator.generate(fa);
-                        return {label: label, value: fa};
+                        return { label: label, value: fa };
                     });
                 this.fatoresAjuste.unshift(this.fatorAjusteNenhumSelectItem);
             }
@@ -1155,18 +1157,26 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
     private prepararParaVisualizar(funcaoDadosSelecionada: FuncaoDados) {
         this.blockUiService.show();
         this.funcaoDadosService.getById(funcaoDadosSelecionada.id)
-        .subscribe(funcaoDados => {
-            this.seletedFuncaoDados = funcaoDados;
-            this.blockUiService.hide();
-        });
+            .subscribe(funcaoDados => {
+                this.seletedFuncaoDados = funcaoDados;
+                this.blockUiService.hide();
+            });
     }
     public selectFD() {
+        this.tables.pDatatableComponent.metaKeySelection = true;
         if (this.tables && this.tables.selectedRow) {
             this.funcaoDadosEditar = this.tables.selectedRow;
+            if (this.tables.selectedRow.length > 1) {
+                this.selectButtonMultiple = true;
+            }
+            else {
+                this.selectButtonMultiple = false;
+            }
+
         }
     }
-    
-    carregarModuloSistema(){
+
+    carregarModuloSistema() {
         this.sistemaService.find(this.analise.sistema.id).subscribe((sistemaRecarregado: Sistema) => {
             console.log(sistemaRecarregado.modulos);
             this.modulos = sistemaRecarregado.modulos;
@@ -1174,10 +1184,10 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
         });
     }
 
-    exibeComponenteModuloFuncionalidade(){
+    exibeComponenteModuloFuncionalidade() {
         console.log(this.isEdit);
         console.log(this.seletedFuncaoDados.id);
-        if((!this.isEdit || this.seletedFuncaoDados.id) && this.modulos) {
+        if ((!this.isEdit || this.seletedFuncaoDados.id) && this.modulos) {
             return true;
         }
         return false;

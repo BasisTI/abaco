@@ -55,20 +55,20 @@ export class FuncaoTransacaoFormComponent implements OnInit {
     resumo: ResumoFuncoes;
     fatoresAjuste: SelectItem[] = [];
     funcoesTransacaoList: FuncaoTransacao[] = [];
-    FuncaoTransacaoEditar: FuncaoTransacao = new FuncaoTransacao();
+    funcaoTransacaoEditar: FuncaoTransacao[] = [];
     translateSubscriptions: Subscription[] = [];
-    defaultSort = [{field: 'funcionalidade.nome', order: 1}];
+    defaultSort = [{ field: 'funcionalidade.nome', order: 1 }];
     impacto: SelectItem[] = [
-        {label: 'Inclusão', value: 'INCLUSAO'},
-        {label: 'Alteração', value: 'ALTERACAO'},
-        {label: 'Exclusão', value: 'EXCLUSAO'},
-        {label: 'Conversão', value: 'CONVERSAO'},
-        {label: 'Outros', value: 'ITENS_NAO_MENSURAVEIS'}
+        { label: 'Inclusão', value: 'INCLUSAO' },
+        { label: 'Alteração', value: 'ALTERACAO' },
+        { label: 'Exclusão', value: 'EXCLUSAO' },
+        { label: 'Conversão', value: 'CONVERSAO' },
+        { label: 'Outros', value: 'ITENS_NAO_MENSURAVEIS' }
     ];
     baselineResultados: any[] = [];
     classificacoes: SelectItem[] = [];
     // Carregar Referencial
-    disableAba: boolean ;
+    disableAba: boolean;
     @Output()
     valueChange: EventEmitter<string> = new EventEmitter<string>();
     parseResult: ParseResult;
@@ -84,7 +84,7 @@ export class FuncaoTransacaoFormComponent implements OnInit {
 
     public isDisabled = false;
 
-    private fatorAjusteNenhumSelectItem = {label: 'Nenhum', value: undefined};
+    private fatorAjusteNenhumSelectItem = { label: 'Nenhum', value: undefined };
     private analiseCarregadaSubscription: Subscription;
     private subscriptionSistemaSelecionado: Subscription;
     private nomeDasFuncoesDoSistema: string[] = [];
@@ -105,10 +105,10 @@ export class FuncaoTransacaoFormComponent implements OnInit {
         ],
         heading: {
             options: [
-                {model: 'paragraph', title: 'Parágrafo', class: 'ck-heading_paragraph'},
-                {model: 'heading1', view: 'h1', title: 'Título 1', class: 'ck-heading_heading1'},
-                {model: 'heading2', view: 'h2', title: 'Título 2', class: 'ck-heading_heading2'},
-                {model: 'heading3', view: 'h3', title: 'Título 3', class: 'ck-heading_heading3'}
+                { model: 'paragraph', title: 'Parágrafo', class: 'ck-heading_paragraph' },
+                { model: 'heading1', view: 'h1', title: 'Título 1', class: 'ck-heading_heading1' },
+                { model: 'heading2', view: 'h2', title: 'Título 2', class: 'ck-heading_heading2' },
+                { model: 'heading3', view: 'h3', title: 'Título 3', class: 'ck-heading_heading3' }
             ]
         },
         alignment: {
@@ -131,6 +131,9 @@ export class FuncaoTransacaoFormComponent implements OnInit {
     public currentFuncaoTransacao: FuncaoTransacao = new FuncaoTransacao();
 
 
+    selectButtonMultiple: boolean;
+
+
     constructor(
         private analiseSharedDataService: AnaliseSharedDataService,
         private confirmationService: ConfirmationService,
@@ -143,7 +146,7 @@ export class FuncaoTransacaoFormComponent implements OnInit {
         private route: ActivatedRoute,
         private blockUiService: BlockUiService,
         private sistemaService: SistemaService
-        
+
     ) {
     }
 
@@ -257,13 +260,9 @@ export class FuncaoTransacaoFormComponent implements OnInit {
         }
     }
 
-    selectRow(event) {
-        this.FuncaoTransacaoEditar.id = event.data.id;
-    }
-
     abrirEditar() {
         this.isEdit = true;
-        this.prepararParaEdicao(this.FuncaoTransacaoEditar);
+        this.prepararParaEdicao(this.funcaoTransacaoEditar[0]);
     }
 
     /*
@@ -313,7 +312,7 @@ export class FuncaoTransacaoFormComponent implements OnInit {
         // TODO pipe generico?
         if (classificacoes) {
             classificacoes.forEach(c => {
-                this.classificacoes.push({label: c, value: c});
+                this.classificacoes.push({ label: c, value: c });
             });
         }
     }
@@ -334,59 +333,59 @@ export class FuncaoTransacaoFormComponent implements OnInit {
     }
 
     multiplos(): boolean {
-            const lstFuncaotransacao: FuncaoTransacao[] = [];
-            const lstFuncaotransacaoToSave: Observable<Boolean>[] = [];
-            const lstFuncaotransacaoWithExist: Observable<Boolean>[] = [];
-            let retorno: boolean = this.verifyDataRequire();
-            this.desconverterChips();
-            this.verificarModulo();
-            const funcaoTransacaoCalculada: FuncaoTransacao = CalculadoraTransacao.calcular(this.analise.metodoContagem,
-                this.currentFuncaoTransacao,
-                this.analise.contrato.manual);
-            for (const nome of this.parseResult.textos) {
-                lstFuncaotransacaoWithExist.push(
-                    this.funcaoTransacaoService.existsWithName(
-                        nome,
-                        this.analise.id,
-                        this.currentFuncaoTransacao.funcionalidade.id,
-                        this.currentFuncaoTransacao.funcionalidade.modulo.id)
-                );
-                const funcaoTransacaoMultp: FuncaoTransacao = funcaoTransacaoCalculada.clone();
-                funcaoTransacaoMultp.name = nome;
-                lstFuncaotransacao.push(funcaoTransacaoMultp);
+        const lstFuncaotransacao: FuncaoTransacao[] = [];
+        const lstFuncaotransacaoToSave: Observable<Boolean>[] = [];
+        const lstFuncaotransacaoWithExist: Observable<Boolean>[] = [];
+        let retorno: boolean = this.verifyDataRequire();
+        this.desconverterChips();
+        this.verificarModulo();
+        const funcaoTransacaoCalculada: FuncaoTransacao = CalculadoraTransacao.calcular(this.analise.metodoContagem,
+            this.currentFuncaoTransacao,
+            this.analise.contrato.manual);
+        for (const nome of this.parseResult.textos) {
+            lstFuncaotransacaoWithExist.push(
+                this.funcaoTransacaoService.existsWithName(
+                    nome,
+                    this.analise.id,
+                    this.currentFuncaoTransacao.funcionalidade.id,
+                    this.currentFuncaoTransacao.funcionalidade.modulo.id)
+            );
+            const funcaoTransacaoMultp: FuncaoTransacao = funcaoTransacaoCalculada.clone();
+            funcaoTransacaoMultp.name = nome;
+            lstFuncaotransacao.push(funcaoTransacaoMultp);
+        }
+        forkJoin(lstFuncaotransacaoWithExist).subscribe(respFind => {
+            for (const value of respFind) {
+                if (value) {
+                    this.pageNotificationService.addErrorMessage(this.getLabel('Registro já cadastrado!'));
+                    retorno = false;
+                    break;
+                }
             }
-            forkJoin(lstFuncaotransacaoWithExist).subscribe(respFind => {
-                for (const value of  respFind) {
-                    if (value) {
-                        this.pageNotificationService.addErrorMessage(this.getLabel('Registro já cadastrado!'));
-                        retorno = false;
-                        break;
-                    }
-                }
-                if (retorno) {
-                    lstFuncaotransacao.forEach( funcaoTransacaoMultp => {
-                        lstFuncaotransacaoToSave.push(this.funcaoTransacaoService.create(funcaoTransacaoMultp, this.analise.id));
-                    });
+            if (retorno) {
+                lstFuncaotransacao.forEach(funcaoTransacaoMultp => {
+                    lstFuncaotransacaoToSave.push(this.funcaoTransacaoService.create(funcaoTransacaoMultp, this.analise.id));
+                });
 
-                    forkJoin(lstFuncaotransacaoToSave).subscribe(respCreate => {
-                        respCreate.forEach((funcaoDados) => {
-                            this.pageNotificationService.addCreateMsg(funcaoDados['name']);
-                            const funcaoDadosTable: FuncaoTransacao = new FuncaoTransacao().copyFromJSON(funcaoDados);
-                            funcaoDadosTable.funcionalidade = funcaoTransacaoCalculada.funcionalidade;
-                            this.setFields(funcaoDadosTable);
-                            this.funcoesTransacoes.push(funcaoDadosTable);
-                        });
-                        this.fecharDialog();
-                        this.estadoInicial();
-                        this.resetarEstadoPosSalvar();
-                        this.analiseService.updateSomaPf(this.analise.id).subscribe();
-                        return true;
+                forkJoin(lstFuncaotransacaoToSave).subscribe(respCreate => {
+                    respCreate.forEach((funcaoDados) => {
+                        this.pageNotificationService.addCreateMsg(funcaoDados['name']);
+                        const funcaoDadosTable: FuncaoTransacao = new FuncaoTransacao().copyFromJSON(funcaoDados);
+                        funcaoDadosTable.funcionalidade = funcaoTransacaoCalculada.funcionalidade;
+                        this.setFields(funcaoDadosTable);
+                        this.funcoesTransacoes.push(funcaoDadosTable);
                     });
-                } else {
-                    return false;
-                }
-            });
-            return retorno;
+                    this.fecharDialog();
+                    this.estadoInicial();
+                    this.resetarEstadoPosSalvar();
+                    this.analiseService.updateSomaPf(this.analise.id).subscribe();
+                    return true;
+                });
+            } else {
+                return false;
+            }
+        });
+        return retorno;
     }
 
     disableTRDER() {
@@ -416,11 +415,11 @@ export class FuncaoTransacaoFormComponent implements OnInit {
 
     private setFields(ft: FuncaoTransacao) {
         return Object.defineProperties(ft, {
-            'totalDers': {value: ft.derValue(), writable: true},
-            'totalAlrs': {value: ft.ftrValue(), writable: true},
-            'deflator': {value: this.formataFatorAjuste(ft.fatorAjuste), writable: true},
-            'nomeFuncionalidade': {value: ft.funcionalidade.nome, writable: true},
-            'nomeModulo': {value: ft.funcionalidade.modulo.nome, writable: true}
+            'totalDers': { value: ft.derValue(), writable: true },
+            'totalAlrs': { value: ft.ftrValue(), writable: true },
+            'deflator': { value: this.formataFatorAjuste(ft.fatorAjuste), writable: true },
+            'nomeFuncionalidade': { value: ft.funcionalidade.nome, writable: true },
+            'nomeModulo': { value: ft.funcionalidade.modulo.nome, writable: true }
         });
     }
 
@@ -493,10 +492,10 @@ export class FuncaoTransacaoFormComponent implements OnInit {
         if (this.currentFuncaoTransacao && this.currentFuncaoTransacao.funcionalidade && this.currentFuncaoTransacao.funcionalidade.id) {
             this.funcaoTransacaoService.autoCompletePEAnalitico(
                 event.query, this.currentFuncaoTransacao.funcionalidade.id).subscribe(
-                value => {
-                    this.baselineResultados = value;
-                }
-            );
+                    value => {
+                        this.baselineResultados = value;
+                    }
+                );
         }
     }
 
@@ -572,9 +571,9 @@ export class FuncaoTransacaoFormComponent implements OnInit {
         }
 
         this.classInvalida = this.currentFuncaoTransacao.tipo === undefined;
-        if (this.currentFuncaoTransacao.fatorAjuste ) {
+        if (this.currentFuncaoTransacao.fatorAjuste) {
             if (this.currentFuncaoTransacao.fatorAjuste.tipoAjuste === 'UNITARIO' &&
-                !(this.currentFuncaoTransacao.quantidade && this.currentFuncaoTransacao.quantidade > 0) ) {
+                !(this.currentFuncaoTransacao.quantidade && this.currentFuncaoTransacao.quantidade > 0)) {
                 this.erroUnitario = true;
                 retorno = false;
             } else {
@@ -634,32 +633,32 @@ export class FuncaoTransacaoFormComponent implements OnInit {
                 this.currentFuncaoTransacao.funcionalidade.id,
                 this.currentFuncaoTransacao.funcionalidade.modulo.id,
                 this.currentFuncaoTransacao.id).subscribe(existFuncaoTransacao => {
-                if (!existFuncaoTransacao) {
-                    this.desconverterChips();
-                    this.verificarModulo();
-                    this.currentFuncaoTransacao = new FuncaoTransacao().copyFromJSON(this.currentFuncaoTransacao);
-                    const funcaoTransacaoCalculada = CalculadoraTransacao.calcular(
-                        this.analise.metodoContagem, this.currentFuncaoTransacao, this.analise.contrato.manual);
-                    this.funcaoTransacaoService.update(funcaoTransacaoCalculada).subscribe(value => {
-                        this.funcoesTransacoes = this.funcoesTransacoes.filter((funcaoTransacao) => (
-                            funcaoTransacao.id !== funcaoTransacaoCalculada.id
-                        ));
-                        this.setFields(funcaoTransacaoCalculada);
-                        this.funcoesTransacoes.push(funcaoTransacaoCalculada);
-                        this.resetarEstadoPosSalvar();
-                        this.fecharDialog();
-                        this.analiseService.updateSomaPf(this.analise.id).subscribe();
-                        this.pageNotificationService
-                            .addSuccessMessage(`${this.getLabel('Função de Transação')}
+                    if (!existFuncaoTransacao) {
+                        this.desconverterChips();
+                        this.verificarModulo();
+                        this.currentFuncaoTransacao = new FuncaoTransacao().copyFromJSON(this.currentFuncaoTransacao);
+                        const funcaoTransacaoCalculada = CalculadoraTransacao.calcular(
+                            this.analise.metodoContagem, this.currentFuncaoTransacao, this.analise.contrato.manual);
+                        this.funcaoTransacaoService.update(funcaoTransacaoCalculada).subscribe(value => {
+                            this.funcoesTransacoes = this.funcoesTransacoes.filter((funcaoTransacao) => (
+                                funcaoTransacao.id !== funcaoTransacaoCalculada.id
+                            ));
+                            this.setFields(funcaoTransacaoCalculada);
+                            this.funcoesTransacoes.push(funcaoTransacaoCalculada);
+                            this.resetarEstadoPosSalvar();
+                            this.fecharDialog();
+                            this.analiseService.updateSomaPf(this.analise.id).subscribe();
+                            this.pageNotificationService
+                                .addSuccessMessage(`${this.getLabel('Função de Transação')}
                 '${funcaoTransacaoCalculada.name}' ${this.getLabel(' alterada com sucesso')}`);
-                    });
+                        });
 
-                } else {
-                    this.pageNotificationService.addErrorMessage(
-                        this.getLabel('Registro já cadastrado')
-                    );
-                }
-            });
+                    } else {
+                        this.pageNotificationService.addErrorMessage(
+                            this.getLabel('Registro já cadastrado')
+                        );
+                    }
+                });
         }
     }
 
@@ -718,25 +717,19 @@ export class FuncaoTransacaoFormComponent implements OnInit {
             return;
         }
 
-        const funcaoTransacaoSelecionada: FuncaoTransacao = new FuncaoTransacao();
-        if (button !== 'filter') {
-            funcaoTransacaoSelecionada.id = event.selection.id;
-            funcaoTransacaoSelecionada.name = event.selection.name;
-        }
-
         switch (button) {
             case 'edit':
                 this.isEdit = true;
-                this.prepararParaEdicao(funcaoTransacaoSelecionada);
+                this.prepararParaEdicao(this.funcaoTransacaoEditar[0]);
                 break;
             case 'delete':
-                this.confirmDelete(funcaoTransacaoSelecionada);
+                this.confirmDelete(this.funcaoTransacaoEditar);
                 break;
             case 'clone':
                 this.disableTRDER();
                 this.configurarDialog();
                 this.isEdit = false;
-                this.prepareToClone(funcaoTransacaoSelecionada);
+                this.prepareToClone(this.funcaoTransacaoEditar[0]);
                 this.currentFuncaoTransacao.id = undefined;
                 this.currentFuncaoTransacao.artificialId = undefined;
                 this.textHeader = this.getLabel('Clonar Função de Transação');
@@ -746,10 +739,11 @@ export class FuncaoTransacaoFormComponent implements OnInit {
                 break;
             case 'view':
                 this.viewFuncaoTransacao = true;
-                this.prepararParaVisualizar(funcaoTransacaoSelecionada);
+                this.prepararParaVisualizar(this.funcaoTransacaoEditar[0]);
                 break;
         }
     }
+
 
     private prepararParaEdicao(funcaoTransacaoSelecionada: FuncaoTransacao) {
         this.blockUiService.show();
@@ -805,8 +799,8 @@ export class FuncaoTransacaoFormComponent implements OnInit {
     private carregarFatorDeAjusteNaEdicao(funcaoSelecionada: FuncaoTransacao) {
         this.inicializaFatoresAjuste(this.manual);
         if (funcaoSelecionada.fatorAjuste !== undefined) {
-            const item: SelectItem = this.fatoresAjuste.find( selectItem => {
-                 return selectItem.value && funcaoSelecionada.fatorAjuste.id === selectItem.value['id'];
+            const item: SelectItem = this.fatoresAjuste.find(selectItem => {
+                return selectItem.value && funcaoSelecionada.fatorAjuste.id === selectItem.value['id'];
             });
             if (item && item.value) {
                 funcaoSelecionada.fatorAjuste = item.value;
@@ -824,7 +818,7 @@ export class FuncaoTransacaoFormComponent implements OnInit {
     }
 
     private loadReference(referenciaveis: AnaliseReferenciavel[],
-                          strValues: string[]): DerChipItem[] {
+        strValues: string[]): DerChipItem[] {
 
         if (referenciaveis) {
             if (referenciaveis.length > 0) {
@@ -848,19 +842,21 @@ export class FuncaoTransacaoFormComponent implements OnInit {
     }
 
 
-    confirmDelete(funcaoTransacaoSelecionada: FuncaoTransacao) {
+    confirmDelete(funcaoTransacaoSelecionada: FuncaoTransacao[]) {
+        console.log(funcaoTransacaoSelecionada);
+
         this.confirmationService.confirm({
-            message: `${
-                this.getLabel('Tem certeza que deseja excluir a Função de Transação')
-            } '${funcaoTransacaoSelecionada.name}'?`,
+            message: 'Tem certeza que deseja excluir as funções de transações selecionada?',
             accept: () => {
-                this.funcaoTransacaoService.delete(funcaoTransacaoSelecionada.id).subscribe(value => {
-                    this.funcoesTransacoes = this.funcoesTransacoes.filter((funcaoTransacao) => (
-                        funcaoTransacao.id !== funcaoTransacaoSelecionada.id
-                    ));
-                    this.pageNotificationService.addDeleteMsg(funcaoTransacaoSelecionada.name);
-                    this.analiseService.updateSomaPf(this.analise.id).subscribe();
-                });
+                funcaoTransacaoSelecionada.forEach((funcaoTransacao) => {
+                    this.funcaoTransacaoService.delete(funcaoTransacao.id).subscribe(value => {
+                        this.funcoesTransacoes = this.funcoesTransacoes.filter((funcaoTransacaoEdit) => (
+                            funcaoTransacaoEdit.id !== funcaoTransacao.id
+                        ));
+                    });
+                })
+                this.analiseService.updateSomaPf(this.analise.id).subscribe();
+                this.pageNotificationService.addDeleteMsg("Funções deletadas com sucesso!");
             }
         });
     }
@@ -913,7 +909,7 @@ export class FuncaoTransacaoFormComponent implements OnInit {
                 this.fatoresAjuste =
                     this.faS.map(fa => {
                         const label = FatorAjusteLabelGenerator.generate(fa);
-                        return {label: label, value: fa};
+                        return { label: label, value: fa };
                     });
                 this.fatoresAjuste.unshift(this.fatorAjusteNenhumSelectItem);
             }
@@ -968,8 +964,8 @@ export class FuncaoTransacaoFormComponent implements OnInit {
     copyToEvidence() {
         if (this.currentFuncaoTransacao.sustantation) {
             this.currentFuncaoTransacao.sustantation =
-                    this.currentFuncaoTransacao.sustantation +
-                    this.currentFuncaoTransacao.fatorAjuste.descricao;
+                this.currentFuncaoTransacao.sustantation +
+                this.currentFuncaoTransacao.fatorAjuste.descricao;
         } else {
             this.currentFuncaoTransacao.sustantation = this.currentFuncaoTransacao.fatorAjuste.descricao;
         }
@@ -983,11 +979,19 @@ export class FuncaoTransacaoFormComponent implements OnInit {
         });
     }
     public selectFT() {
+        this.tables.pDatatableComponent.metaKeySelection = true;
         if (this.tables && this.tables.selectedRow) {
-            this.FuncaoTransacaoEditar = this.tables.selectedRow;
+
+            this.funcaoTransacaoEditar = this.tables.selectedRow;
+            if (this.tables.selectedRow.length > 1) {
+                this.selectButtonMultiple = true;
+            }
+            else {
+                this.selectButtonMultiple = false;
+            }
         }
     }
-    carregarModuloSistema(){
+    carregarModuloSistema() {
         this.sistemaService.find(this.analise.sistema.id).subscribe((sistemaRecarregado: Sistema) => {
             this.modulos = sistemaRecarregado.modulos;
             this.analise.sistema = sistemaRecarregado;

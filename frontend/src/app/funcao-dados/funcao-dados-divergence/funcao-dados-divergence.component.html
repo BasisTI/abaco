@@ -18,7 +18,7 @@
                             </div>
                             <div >
                                 <basis-datatable
-                                        type="memory" 
+                                        type="memory"
                                         id="idTabelaFuncaoDados"
                                         [disableDelete]="this.isView"
                                         [disableEdit]="this.isView"
@@ -41,7 +41,7 @@
                                         [disableEdit]= "selectModeButtonsEditAndView"
                                         [disableView]= "selectModeButtonsEditAndView"
                                         #tables>
-                                        
+
                                     <p-column field="statusFuncao" header="Status" [sortable]="true" >
                                         <ng-template let-statusFuncao="rowData.statusFuncao" pTemplate="body">
                                             <button type="button" pButton icon="ui-icon-schedule" *ngIf="statusFuncao === 'DIVERGENTE'" ></button>
@@ -51,7 +51,7 @@
                                     </p-column>
                                     <p-column field="nomeModulo" header="Módulo" [filter]="true" [sortable]="true"></p-column>
                                     <p-column field="nomeFuncionalidade" [filter]="true" header="Funcionalidade" [sortable]="true"></p-column>
-                                    <p-column field="name" header="Nome" [sortable]="true"></p-column> 
+                                    <p-column field="name" header="Nome" [sortable]="true"></p-column>
                                     <p-column field="deflator" header="Deflator" [sortable]="true"></p-column>
                                     <p-column field="tipo" header="Classificação" [sortable]="true"></p-column>
                                     <p-column field="totalDers" header="DER (TD)" [sortable]="true" ></p-column>
@@ -62,7 +62,7 @@
                                     <basis-datatable-button
                                         name="delete"
                                         *ngIf="!isView"
-                                        [bTooltip]="this.getLabel('Excluído')" 
+                                        [bTooltip]="this.getLabel('Excluído')"
                                         [disabled]="funcaoDadosEditar.id == null "
                                         class="ui-button-danger"
                                         icon="delete">
@@ -70,7 +70,7 @@
                                     <basis-datatable-button
                                         name="pending"
                                         *ngIf="!isView"
-                                        [bTooltip]="this.getLabel('Pendente')" 
+                                        [bTooltip]="this.getLabel('Pendente')"
                                         [disabled]="funcaoDadosEditar.id == null "
                                         class="ui-button-dark"
                                         icon="schedule">
@@ -78,7 +78,7 @@
                                     <basis-datatable-button
                                         name="approve"
                                         *ngIf="!isView"
-                                        [bTooltip]="this.getLabel('Aprovado')"  
+                                        [bTooltip]="this.getLabel('Aprovado')"
                                         [disabled]="funcaoDadosEditar.id == null "
                                         class="ui-button-success"
                                         icon="done">
@@ -280,11 +280,11 @@
                             <div *ngFor="let item of seletedFuncaoDados.lstDivergenceComments">
                                 <div class="ui-g-12 ui-md-12 ui-sm-12" >
                                     <label>Usuário: {{item.user.firstName}} {{item.user.lastName}}</label>
-                                    <textarea rows="5" pInputTextarea [(ngModel)]="item.comment" readonly class="ui-md-12 ui-sm-12" style="resize: vertical;"></textarea>
+                                    <textarea rows="5" pInputTextarea [(ngModel)]="item.commet" readonly class="ui-md-12 ui-sm-12" style="resize: vertical;"></textarea>
                                 </div>
                             </div>
                         </div>
-                        
+
                         <div class="ui-g ui-md-12 ui-sm-12" style="justify-content: flex-end">
                             <div class="ui-md-2 ui-sm-12" *ngIf="isEdit">
                                 <app-blue-button [buttonLabel]="'Comentário'"
@@ -373,7 +373,7 @@
                                                 buttonIcon="ui-icon-info-outline"
                                                 (click)="showDeflator()">
                                         </app-blue-button>
-                                    </div>  
+                                    </div>
                                 </div>
                             </div>
                             <div class="ui-g">
@@ -423,7 +423,7 @@
                                     </span>
                                 </div>
                             </div>
-                        </div> 
+                        </div>
                         <div></div>
                         <div class="ui-g ui-md-12 ui-sm-12" style="justify-content: flex-end">
                             <div class="ui-md-2 ui-sm-12">

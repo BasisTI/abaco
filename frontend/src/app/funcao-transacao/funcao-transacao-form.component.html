@@ -24,15 +24,16 @@
                                 <basis-datatable
                                         type="memory"
                                         [disableDelete]="this.isView"
-                                        [disableEdit]="this.isView"
+                                        [disableEdit]="this.isView || selectButtonMultiple"
+                                        [disableView]="selectButtonMultiple"
                                         id="idTabelaFuncaoTransacaoFormFuncaoTransacao"
                                         [value]="this.funcoesTransacoes"
                                         (buttonClick)="datatableClick($event)"
-                                        (selectRow)="selectRow($event)"
                                         (dblclick)="onRowDblclick($event)"
                                         (click)="selectFT()"
                                         [paginator]="false"
                                         [rows]="20"
+                                        [selectionMode]="'multiple'"
                                         [filterOnColumn]="true"
                                         [rowsPerPageOptions]="[20,50,100]"
                                         [showVisibleColumnsControl]="true"
@@ -55,17 +56,18 @@
                                         <ng-template let-sustantation="rowData.sustantation" pTemplate="body"> {{ sustantation && sustantation !== emptySustantion ? this.getLabel('Sim') : this.getLabel('Não') }}</ng-template>
                                     </p-column>
                                     <basis-datatable-button
+                                        [allowMultipleSelection]="false"
                                         name="clone"
                                         *ngIf="!isView"
-                                        [pTooltip]="FuncaoTransacaoEditar && FuncaoTransacaoEditar.id != null ? this.getLabel('Criar Clone') : this.getLabel('Escolha um registro para criar Clone.')" 
-                                        [disabled]="FuncaoTransacaoEditar.id == null"
+                                        [pTooltip]="funcaoTransacaoEditar[0] != undefined ? this.getLabel('Criar Clone') : this.getLabel('Escolha um registro para criar Clone.')"
+                                        [disabled]="funcaoTransacaoEditar[0] == undefined"
                                         class="ui-button-dark"
                                         icon="content-copy">
                                     </basis-datatable-button>
                                     <basis-datatable-button
                                         name="filter"
                                         *ngIf="!isView"
-                                        pTooltip="Copiar funções de transação." 
+                                        pTooltip="Copiar funções de transação."
                                         class="ui-button-info"
                                         icon="import-export">
                                     </basis-datatable-button>
@@ -80,7 +82,7 @@
                             [(header)]="textHeader"
                             [contentStyle]="{'height': ['windowHeightDialog']}"
                             [style]="{width: '80vw'}">
-                            <div *ngIf="showDialog && modulos"> 
+                            <div *ngIf="showDialog && modulos">
                                 <app-analise-modulo-funcionalidade [(analise)]="analise"
                                         [erroModulo]="erroModulo" [isFuncaoDados]="false"
                                         (moduloSelectedEvent)="moduloSelected($event)" [(funcionalidade)]="currentFuncaoTransacao.funcionalidade"
@@ -165,7 +167,7 @@
                                         [(ngModel)]="currentFuncaoTransacao.tipo"
                                         [placeholder]="this.getLabel('Selecione Classificação')"
                                         name="classificacao"
-                                        
+
                                         (onChange)="classValida()">
                                 </p-dropdown>
                                 <span class="md-inputfield">
@@ -357,7 +359,7 @@
              <div class="ui-md-6 ui-sm-12" >
                  <div>
                      <label><b>Deflator: </b></label>
-                     {{currentFuncaoTransacao.fatorAjuste.origem}} - {{currentFuncaoTransacao.fatorAjuste.codigo}} - {{currentFuncaoTransacao.fatorAjuste.nome}} - {{currentFuncaoTransacao.fatorAjuste.fator}} {{ currentFuncaoTransacao.fatorAjuste.tipoAjuste === 'PERCENTUAL'? '%' : 'pf'}} 
+                     {{currentFuncaoTransacao.fatorAjuste.origem}} - {{currentFuncaoTransacao.fatorAjuste.codigo}} - {{currentFuncaoTransacao.fatorAjuste.nome}} - {{currentFuncaoTransacao.fatorAjuste.fator}} {{ currentFuncaoTransacao.fatorAjuste.tipoAjuste === 'PERCENTUAL'? '%' : 'pf'}}
                  </div>
                  <div>
                      <app-blue-button
@@ -414,7 +416,7 @@
                  </span>
              </div>
          </div>
-     </div> 
+     </div>
      <p-footer>
          <div class="ui-g ui-md-12 ui-sm-12" style="justify-content: flex-end">
              <div class="ui-md-3 ui-sm-12">
@@ -423,4 +425,4 @@
          </div>
      </p-footer>
  </p-dialog>
- 
+
