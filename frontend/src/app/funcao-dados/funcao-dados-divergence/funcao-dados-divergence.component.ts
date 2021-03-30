@@ -30,7 +30,7 @@ import { ResponseWrapper } from '../../shared';
 import { AnaliseSharedDataService } from '../../shared/analise-shared-data.service';
 import { FatorAjusteLabelGenerator } from '../../shared/fator-ajuste-label-generator';
 import { CommentFuncaoDados } from '../comment-funcado-dados.model';
-import { FuncaoDados } from '../funcao-dados.model';
+import { FuncaoDados, TipoFuncaoDados } from '../funcao-dados.model';
 import { FuncaoDadosService } from '../funcao-dados.service';
 
 @Component({
@@ -79,7 +79,7 @@ export class FuncaoDadosDivergenceComponent implements OnInit {
     results: string[];
     baselineResults: any[] = [];
     funcoesDadosList: FuncaoDados[] = [];
-    funcaoDadosEditar: FuncaoDados = new FuncaoDados();
+    funcaoDadosEditar: FuncaoDados[] = [];
     translateSubscriptions: Subscription[] = [];
     viewFuncaoDados = false;
     showAddComent = false;
@@ -118,6 +118,16 @@ export class FuncaoDadosDivergenceComponent implements OnInit {
     public divergenceComment: string;
     public commentFD: CommentFuncaoDados = new CommentFuncaoDados();
     public modulos: Modulo[];
+
+    selectButtonMultiple: boolean = false;
+    mostrarDialogEditarEmLote: boolean = false;
+    moduloSelecionadoEmLote: Modulo;
+    funcionalidadeSelecionadaEmLote: Funcionalidade;
+    classificacaoEmLote: TipoFuncaoDados;
+    deflatorEmLote: FatorAjuste;
+    evidenciaEmLote: string;
+    quantidadeEmLote: number;
+    funcaoDadosEmLote: FuncaoDados[] = []
 
     constructor(
         private analiseSharedDataService: AnaliseSharedDataService,
@@ -270,10 +280,6 @@ export class FuncaoDadosDivergenceComponent implements OnInit {
             return -1;
         }
         return 0;
-    }
-
-    selectRow(event) {
-        this.funcaoDadosEditar.id = event.data.id;
     }
 
     abrirEditar() {
@@ -887,7 +893,7 @@ export class FuncaoDadosDivergenceComponent implements OnInit {
 
     private carregarValoresNaPaginaParaEdicao(funcaoDadosSelecionada: FuncaoDados) {
         /* Envia os dados para o componente modulo-funcionalidade-component.ts*/
-        
+
         this.funcaoDadosService.mod.next(funcaoDadosSelecionada.funcionalidade);
         this.analiseSharedDataService.funcaoAnaliseCarregada();
         this.analiseSharedDataService.currentFuncaoDados = funcaoDadosSelecionada;
@@ -951,7 +957,7 @@ export class FuncaoDadosDivergenceComponent implements OnInit {
                 funcaoDadosSelecionada['statusFuncao'] = value['statusFuncao'];
                 this.showDialog = false;
             });
-            
+
         });
         this.pageNotificationService.addSuccessMessage('Status da(s) funcionalidade(s) alterado(s).');
     }
@@ -963,7 +969,7 @@ export class FuncaoDadosDivergenceComponent implements OnInit {
                 funcaoDadosSelecionada['statusFuncao'] = value['statusFuncao'];
                 this.showDialog = false;
             });
-            
+
         });
         this.pageNotificationService.addSuccessMessage('Status da(s) funcionalidade(s) alterado(s).');
     }
@@ -1202,5 +1208,94 @@ export class FuncaoDadosDivergenceComponent implements OnInit {
             this.modulos = sistemaRecarregado.modulos;
             this.analise.sistema = sistemaRecarregado;
         });
+    }
+
+    prepararEditarEmLote() {
+        if (this.funcaoDadosEditar.length < 2) {
+            return this.pageNotificationService.addErrorMessage("Selecione mais de 1 registro para editar em lote.")
+        }
+        for (let i = 0; i < this.funcaoDadosEditar.length; i++) {
+            const funcaoDadosSelecionada = this.funcaoDadosEditar[i];
+            this.funcaoDadosService.getById(funcaoDadosSelecionada.id).subscribe(funcaoDados => {
+                this.funcaoDadosEmLote.push(new FuncaoDados().copyFromJSON(funcaoDados));
+            });
+        }
+        this.mostrarDialogEditarEmLote = true;
+        this.hideShowQuantidade = true;
+    }
+
+    fecharDialogEditarEmLote() {
+        this.evidenciaEmLote = null;
+        this.classificacaoEmLote = null;
+        this.deflatorEmLote = null;
+        this.moduloSelecionadoEmLote = null;
+        this.funcionalidadeSelecionadaEmLote = null;
+        this.quantidadeEmLote = null;
+        this.mostrarDialogEditarEmLote = false;
+        this.funcaoDadosEmLote = [];
+    }
+
+    editarCamposEmLote(){
+        if (this.funcionalidadeSelecionadaEmLote) {
+            this.funcaoDadosEmLote.forEach(funcaoDado => {
+                funcaoDado.funcionalidade = this.funcionalidadeSelecionadaEmLote;
+                funcaoDado.funcionalidade.modulo = this.moduloSelecionadoEmLote;
+            });
+        }
+        if (this.classificacaoEmLote) {
+            this.funcaoDadosEmLote.forEach(funcaoDado => {
+                funcaoDado.tipo = this.classificacaoEmLote;
+            })
+        }
+        if (this.deflatorEmLote) {
+            this.funcaoDadosEmLote.forEach(funcaoDado => {
+                funcaoDado.fatorAjuste = this.deflatorEmLote;
+            })
+        }
+        if (this.evidenciaEmLote) {
+            this.funcaoDadosEmLote.forEach(funcaoDado => {
+                funcaoDado.sustantation = this.evidenciaEmLote;
+            })
+        }
+        if(this.quantidadeEmLote){
+            this.funcaoDadosEmLote.forEach(funcaoDado => {
+                funcaoDado.quantidade = this.quantidadeEmLote;
+            })
+        }
+    }
+
+    editarEmLote() {
+        if (!this.funcionalidadeSelecionadaEmLote &&
+            !this.classificacaoEmLote &&
+            !this.deflatorEmLote &&
+            !this.evidenciaEmLote) {
+                return this.pageNotificationService.addErrorMessage("Para editar em lote, selecione ao menos um campo para editar.")
+        }
+        if(this.deflatorEmLote && this.deflatorEmLote.tipoAjuste === 'UNITARIO' && !this.quantidadeEmLote){
+            return this.pageNotificationService.addErrorMessage("Coloque uma quantidade para o deflator!")
+        }
+        this.editarCamposEmLote();
+        for (let i = 0; i < this.funcaoDadosEmLote.length; i++) {
+            let funcaoDado = this.funcaoDadosEmLote[i];
+            funcaoDado = new FuncaoDados().copyFromJSON(funcaoDado);
+            const funcaoDadosCalculada = Calculadora.calcular(
+                this.analise.metodoContagem, funcaoDado, this.analise.contrato.manual);
+            this.funcaoDadosService.update(funcaoDadosCalculada).subscribe(value => {
+                this.funcoesDados = this.funcoesDados.filter((funcaoDados) => (funcaoDados.id !== funcaoDadosCalculada.id));
+                this.setFields(funcaoDadosCalculada);
+                this.funcoesDados.push(funcaoDadosCalculada);
+            });
+        }
+        this.pageNotificationService.addSuccessMessage("Funções de dados editadas com sucesso!")
+        this.divergenciaService.updateSomaPf(this.analise.id).subscribe();
+        this.fecharDialogEditarEmLote();
+    }
+
+    selecionarDeflatorEmLote(deflator: FatorAjuste){
+        if(deflator.tipoAjuste === 'UNITARIO'){
+            this.hideShowQuantidade = false;
+        }else{
+            this.hideShowQuantidade = true;
+        }
     }
 }

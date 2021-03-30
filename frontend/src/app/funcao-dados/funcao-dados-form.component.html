@@ -42,26 +42,26 @@
                                             this.getLabel('Não') }}
                                         </ng-template>
                                     </p-column>
-                                    <basis-datatable-button name="crud"
-                                        [allowMultipleSelection]="false"
+                                    <basis-datatable-button name="crud" [allowMultipleSelection]="false"
                                         *ngIf="!isView && !(analise && analise.metodoContagem && analise.metodoContagem === 'INDICATIVA')"
                                         [pTooltip]="funcaoDadosEditar[0] != undefined ? this.getLabel('Criar Crud') : this.getLabel('Escolha um registro para criar crud.')"
-                                        [disabled]="funcaoDadosEditar[0] == undefined"
-                                        class="ui-button-success" icon="input">
+                                        [disabled]="funcaoDadosEditar[0] == undefined" class="ui-button-success"
+                                        icon="input">
                                     </basis-datatable-button>
-                                    <basis-datatable-button
-                                        *ngIf="!isView"
-                                        [allowMultipleSelection]="false"
+                                    <basis-datatable-button *ngIf="!isView" [allowMultipleSelection]="false"
                                         name="clone"
                                         [pTooltip]="funcaoDadosEditar[0] != undefined ? this.getLabel('Criar Clone') : this.getLabel('Escolha um registro para criar Clone.')"
-                                        [disabled]="funcaoDadosEditar[0] == undefined"
-                                        class="ui-button-dark" icon="content-copy">
+                                        [disabled]="funcaoDadosEditar[0] == undefined" class="ui-button-dark"
+                                        icon="content-copy">
                                     </basis-datatable-button>
-                                    <basis-datatable-button
-                                        *ngIf="!isView"
-                                        [disabled]="funcaoDadosEditar[0] == undefined"
-                                        name="filter" pTooltip="Copiar funções de dados." class="ui-button-info"
-                                        icon="import-export">
+                                    <basis-datatable-button *ngIf="!isView"
+                                        [disabled]="funcaoDadosEditar[0] == undefined" name="filter"
+                                        pTooltip="Copiar funções de dados." class="ui-button-info" icon="import-export">
+                                    </basis-datatable-button>
+                                    <basis-datatable-button name="edicaoLote"
+                                        *ngIf="!isView && funcaoDadosEditar?.length > 1"
+                                        (click)="prepararEditarEmLote()" pTooltip="Edição em lote."
+                                        class="ui-button-success" icon="border-color">
                                     </basis-datatable-button>
                                 </basis-datatable>
                             </div>
@@ -377,6 +377,84 @@
             </div>
         </div>
     </p-footer>
+</p-dialog>
+<p-dialog [modal]="true" header="Editar em lote" [(visible)]="mostrarDialogEditarEmLote" [style]="{width: '55vw'}"
+    [contentStyle]="{'overflow':'visible'}">
+
+
+
+    <div *ngIf="modulos">
+        <div class="ui-g">
+            <div class="ui-g-12">
+                <div class="ui-g-6 ui-md-6 ui-sm-12">
+                    <!-- filtro/pesquisa? -->
+                    <label>Módulo: </label>
+                    <p-dropdown [filter]="true" optionLabel="nome" name="modulo" datakey="id"
+                        [placeholder]="this.getLabel('Selecione')" [options]="modulos"
+                        [(ngModel)]="moduloSelecionadoEmLote">
+                    </p-dropdown>
+                </div>
+                <div class="ui-g-6 ui-md-6 ui-sm-12">
+                    <!-- filtro/pesquisa? -->
+                    <label>Funcionalidade: </label>
+                    <p-dropdown [filter]="true" optionLabel="nome" name="funcionalidade"
+                        [options]="moduloSelecionadoEmLote?.funcionalidades"
+                        [(ngModel)]="funcionalidadeSelecionadaEmLote" [placeholder]="'Selecione a funcionalidade'"
+                        [disabled]="!moduloSelecionadoEmLote">
+                    </p-dropdown>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="ui-g">
+        <div class="ui-g-3 ui-md-12 ui-sm-12">
+            <label>Classificação: </label>
+            <p-dropdown [filter]="true" [options]="classificacoes" id="idClassificacoesFormEmLoteFuncaoDados"
+                [(ngModel)]="classificacaoEmLote" [placeholder]="this.getLabel('Selecione Classificação')"
+                name="classificacao">
+            </p-dropdown>
+        </div>
+    </div>
+
+    <div class="ui-g">
+        <div class="ui-g-11 ui-md-11 ui-sm-11">
+            <label>Deflator: </label>
+            <p-dropdown [filter]="true" [options]="fatoresAjuste" id="idDeflatorFormEmLoteFuncaoDados"
+                [placeholder]="'Selecione um deflator'" name="fatorAjuste" [(ngModel)]="deflatorEmLote"
+                (onChange)="selecionarDeflatorEmLote($event.value)">
+            </p-dropdown>
+        </div>
+
+        <div class="ui-g-3 ui-md-6 ui-sm-12" [hidden]="hideShowQuantidade">
+            <label>Quantidade *: </label>
+            <input type="number" class="ui-inputtext" min="1" [(ngModel)]="quantidadeEmLote"
+                id="idQuantidadeFormFuncaoDados">
+        </div>
+    </div>
+    <div class="ui-g">
+        <div class="ui-g-12 ui-md-12 ui-sm-12">
+            <label>Evidência: </label>
+            <span class="md-inputfield">
+                <p-editor maxlength="5000" [rows]="3" id="idEvidenciaFormEmLoteFuncaoDados" [cols]="180" pInputTextarea
+                    name="funcaoDadosSustentacao" [(ngModel)]="evidenciaEmLote">
+                </p-editor>
+            </span>
+        </div>
+    </div>
+
+    <div class="ui-g ui-md-12" style="justify-content: flex-end; padding-top: 25px">
+        <div class="ui-g-2 ui-md-2 ui-sm-12">
+            <app-white-button [buttonLabel]="'Cancelar'" id="idBtnCancelarPermissaoSaveFormPerfil"
+                (click)="fecharDialogEditarEmLote()">
+            </app-white-button>
+        </div>
+
+        <div class="ui-g-2">
+            <app-green-button [buttonLabel]="'Salvar'" id="idSalvarPermissaoSaveFormPerfil" (click)="editarEmLote()">
+            </app-green-button>
+        </div>
+    </div>
 </p-dialog>
 <p-dialog [header]="this.getLabel('Importa funções de dados')" [(visible)]="display" [style]="{width: '80vw'}"
     [closable]="false">

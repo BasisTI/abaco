@@ -133,6 +133,15 @@ export class FuncaoTransacaoFormComponent implements OnInit {
 
     selectButtonMultiple: boolean;
 
+    mostrarDialogEditarEmLote: boolean = false;
+    funcionalidadeSelecionadaEmLote: Funcionalidade;
+    moduloSelecionadoEmLote: Modulo;
+    classificacaoEmLote: TipoFuncaoTransacao;
+    deflatorEmLote: FatorAjuste;
+    evidenciaEmLote: string;
+    quantidadeEmLote: number;
+    funcaoTransacaoEmLote: FuncaoTransacao[] = [];
+
 
     constructor(
         private analiseSharedDataService: AnaliseSharedDataService,
@@ -981,7 +990,6 @@ export class FuncaoTransacaoFormComponent implements OnInit {
     public selectFT() {
         this.tables.pDatatableComponent.metaKeySelection = true;
         if (this.tables && this.tables.selectedRow) {
-
             this.funcaoTransacaoEditar = this.tables.selectedRow;
             if (this.tables.selectedRow.length > 1) {
                 this.selectButtonMultiple = true;
@@ -998,5 +1006,103 @@ export class FuncaoTransacaoFormComponent implements OnInit {
         });
     }
 
+    prepararEditarEmLote() {
+        if (this.funcaoTransacaoEditar.length < 2) {
+            return this.pageNotificationService.addErrorMessage("Selecione mais de 1 registro para editar em lote.")
+        }
+        for (let i = 0; i < this.funcaoTransacaoEditar.length; i++) {
+            const funcaoTransacaoSelected = this.funcaoTransacaoEditar[i];
+            this.funcaoTransacaoService.getById(funcaoTransacaoSelected.id).subscribe(funcaoTransacao => {
+                this.funcaoTransacaoEmLote.push(new FuncaoTransacao().copyFromJSON(funcaoTransacao));
+            });
+        }
+        this.mostrarDialogEditarEmLote = true;
+        this.hideShowQuantidade = true;
+    }
+
+    fecharDialogEditarEmLote() {
+        this.evidenciaEmLote = null;
+        this.classificacaoEmLote = null;
+        this.deflatorEmLote = null;
+        this.moduloSelecionadoEmLote = null;
+        this.quantidadeEmLote = null;
+        this.funcionalidadeSelecionadaEmLote = null;
+        this.mostrarDialogEditarEmLote = false;
+        this.funcaoTransacaoEmLote = [];
+        this.hideShowQuantidade = true;
+    }
+
+    editarCamposEmLote(){
+        if (this.funcionalidadeSelecionadaEmLote) {
+            this.funcaoTransacaoEmLote.forEach(funcaoTransacao => {
+                funcaoTransacao.funcionalidade = this.funcionalidadeSelecionadaEmLote;
+                funcaoTransacao.funcionalidade.modulo = this.moduloSelecionadoEmLote;
+            });
+        }
+        if (this.classificacaoEmLote) {
+            this.funcaoTransacaoEmLote.forEach(funcaoTransacao => {
+                funcaoTransacao.tipo = this.classificacaoEmLote;
+            })
+        }
+        if (this.deflatorEmLote) {
+            this.funcaoTransacaoEmLote.forEach(funcaoTransacao => {
+                funcaoTransacao.fatorAjuste = this.deflatorEmLote;
+            })
+        }
+        if (this.evidenciaEmLote) {
+            this.funcaoTransacaoEmLote.forEach(funcaoTransacao => {
+                funcaoTransacao.sustantation = this.evidenciaEmLote;
+            })
+        }
+        if (this.quantidadeEmLote) {
+            this.funcaoTransacaoEmLote.forEach(funcaoTransacao => {
+                funcaoTransacao.quantidade = this.quantidadeEmLote;
+            })
+        }
+    }
+
+    editarEmLote() {
+        if (!this.funcionalidadeSelecionadaEmLote &&
+            !this.classificacaoEmLote &&
+            !this.deflatorEmLote &&
+            !this.evidenciaEmLote) {
+            return this.pageNotificationService.addErrorMessage("Para editar em lote, selecione ao menos um campo para editar.")
+        }
+        if(this.deflatorEmLote && this.deflatorEmLote.tipoAjuste === 'UNITARIO' && !this.quantidadeEmLote){
+            return this.pageNotificationService.addErrorMessage("Coloque uma quantidade para o deflator!")
+        }
+        this.editarCamposEmLote();
+
+        for (let i = 0; i < this.funcaoTransacaoEmLote.length; i++) {
+            let funcaoTransacao = this.funcaoTransacaoEmLote[i];
+            funcaoTransacao = new FuncaoTransacao().copyFromJSON(funcaoTransacao);
+            const funcaoTransacaoCalculada: FuncaoTransacao = CalculadoraTransacao.calcular(
+                this.analise.metodoContagem, funcaoTransacao, this.analise.contrato.manual);
+            this.funcaoTransacaoService.update(funcaoTransacaoCalculada).subscribe(value => {
+                this.funcoesTransacoes = this.funcoesTransacoes.filter((funcaoTransacao) => (funcaoTransacao.id !== funcaoTransacaoCalculada.id));
+                this.setFields(funcaoTransacaoCalculada);
+                this.funcoesTransacoes.push(funcaoTransacaoCalculada);
+            });
+        }
+        this.pageNotificationService.addSuccessMessage("Funções de transações editadas com sucesso!")
+        this.analiseService.updateSomaPf(this.analise.id).subscribe();
+        this.fecharDialogEditarEmLote();
+    }
+
+    moduloSelecionado(modulo: Modulo) {
+        this.moduloSelecionadoEmLote = modulo;
+    }
+
+    funcionalidadeSelecionada(funcionalidade: Funcionalidade) {
+        this.funcionalidadeSelecionadaEmLote = funcionalidade;
+    }
+
+    selecionarDeflatorEmLote(deflator: FatorAjuste){
+        if(deflator.tipoAjuste === 'UNITARIO'){
+            this.hideShowQuantidade = false;
+        }else{
+            this.hideShowQuantidade = true;
+        }
+    }
 }
 
