@@ -84,6 +84,7 @@ export class FuncaoDadosDivergenceComponent implements OnInit {
     viewFuncaoDados = false;
     showAddComent = false;
     selectModeButtonsEditAndView: boolean;
+    files: any[] = []
     impacto: SelectItem[] = [
         {label: 'Inclusão', value: 'INCLUSAO'},
         {label: 'Alteração', value: 'ALTERACAO'},
@@ -144,7 +145,14 @@ export class FuncaoDadosDivergenceComponent implements OnInit {
         private sistemaService: SistemaService
     ) {
     }
-
+    onUpload(event) {
+        if(!this.files.length){
+            this.files = []
+        }        
+        for(let i =0;i < event.currentFiles["length"]; i++) {
+            this.files.push(event.currentFiles[i]);
+        }
+    }
     getLabel(label) {
         return label;
     }
@@ -516,7 +524,7 @@ export class FuncaoDadosDivergenceComponent implements OnInit {
                 this.resetarEstadoPosSalvar();
                 lstFuncaoDados.forEach( funcaoDadosMultp => {
                     lstFuncaoDadosToSave.push(
-                        this.funcaoDadosService.create(funcaoDadosMultp, this.analise.id)
+                        this.funcaoDadosService.create(funcaoDadosMultp, this.analise.id, this.files)
                         );
                 });
                 forkJoin(lstFuncaoDadosToSave).subscribe(respCreate => {
@@ -571,8 +579,8 @@ export class FuncaoDadosDivergenceComponent implements OnInit {
                 this.analise.id,
                 this.seletedFuncaoDados.funcionalidade.id,
                 this.seletedFuncaoDados.funcionalidade.modulo.id).subscribe(value => {
-                if (value === false) {
-                    this.funcaoDadosService.createDivergence(funcaoDadosCalculada, this.analise.id).subscribe(
+                    if (value === false) {
+                    this.funcaoDadosService.createDivergence(funcaoDadosCalculada, this.analise.id, this.files).subscribe(
                         (funcaoDados) => {
                             this.pageNotificationService.addCreateMsg(funcaoDadosCalculada.name);
                             funcaoDadosCalculada.id = funcaoDados.id;
@@ -690,7 +698,7 @@ export class FuncaoDadosDivergenceComponent implements OnInit {
                     this.seletedFuncaoDados = new FuncaoDados().copyFromJSON(this.seletedFuncaoDados);
                     const funcaoDadosCalculada = Calculadora.calcular(
                         this.analise.metodoContagem, this.seletedFuncaoDados, this.analise.contrato.manual);
-                    this.funcaoDadosService.update(funcaoDadosCalculada).subscribe(value => {
+                    this.funcaoDadosService.update(funcaoDadosCalculada, this.files).subscribe(value => {
                         this.funcoesDados = this.funcoesDados.filter((funcaoDados) => (funcaoDados.id !== funcaoDadosCalculada.id));
                         this.setFields(funcaoDadosCalculada);
                         this.funcoesDados.push(funcaoDadosCalculada);
@@ -802,7 +810,8 @@ export class FuncaoDadosDivergenceComponent implements OnInit {
             funcaoTransacaoAtual.funcionalidade.modulo.id)
             .subscribe(existFuncaoTranasacao => {
                 if (!existFuncaoTranasacao) {
-                    this.funcaoTransacaoService.create(funcaoTransacaoAtual, this.analise.id).subscribe(() => {
+                    this.files =[]
+                    this.funcaoTransacaoService.create(funcaoTransacaoAtual, this.analise.id, this.files).subscribe(() => {
                         this.pageNotificationService.addCreateMsg(funcaoTransacaoAtual.name);
                         this.resetarEstadoPosSalvar();
                         this.estadoInicial();
@@ -860,6 +869,7 @@ export class FuncaoDadosDivergenceComponent implements OnInit {
     private prepararParaEdicao(funcaoDadosSelecionada: FuncaoDados) {
         this.blockUiService.show();
         this.funcaoDadosService.getById(funcaoDadosSelecionada.id).subscribe(funcaoDados => {
+            this.files = funcaoDados.files
             this.seletedFuncaoDados = new FuncaoDados().copyFromJSON(funcaoDados);
             this.seletedFuncaoDados.lstDivergenceComments = funcaoDados.lstDivergenceComments;
             if (this.seletedFuncaoDados.fatorAjuste.tipoAjuste === 'UNITARIO' && this.faS[0]) {
@@ -1047,6 +1057,7 @@ export class FuncaoDadosDivergenceComponent implements OnInit {
     }
 
     openDialog(param: boolean) {
+        this.files = [];
         this.subscribeToAnaliseCarregada();
         this.isEdit = param;
         this.disableTRDER();
@@ -1154,9 +1165,10 @@ export class FuncaoDadosDivergenceComponent implements OnInit {
         this.displayDescriptionDeflator = false;
     }
     private prepararParaVisualizar(funcaoDadosSelecionada: FuncaoDados) {
+        this.files = [];
         this.blockUiService.show();
-        this.funcaoDadosService.getById(funcaoDadosSelecionada.id)
-        .subscribe(funcaoDados => {
+        this.funcaoDadosService.getById(funcaoDadosSelecionada.id).subscribe(funcaoDados => {
+            this.files = funcaoDados.files;
             this.seletedFuncaoDados = funcaoDados;
             this.blockUiService.hide();
         });
@@ -1280,7 +1292,7 @@ export class FuncaoDadosDivergenceComponent implements OnInit {
             funcaoDado = new FuncaoDados().copyFromJSON(funcaoDado);
             const funcaoDadosCalculada = Calculadora.calcular(
                 this.analise.metodoContagem, funcaoDado, this.analise.contrato.manual);
-            this.funcaoDadosService.update(funcaoDadosCalculada).subscribe(value => {
+            this.funcaoDadosService.update(funcaoDadosCalculada, this.files).subscribe(value => {
                 this.funcoesDados = this.funcoesDados.filter((funcaoDados) => (funcaoDados.id !== funcaoDadosCalculada.id));
                 this.setFields(funcaoDadosCalculada);
                 this.funcoesDados.push(funcaoDadosCalculada);

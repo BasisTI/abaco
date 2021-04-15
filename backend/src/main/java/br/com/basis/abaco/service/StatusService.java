@@ -8,6 +8,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,6 +32,8 @@ public class StatusService {
     private final StatusRepository statusRepository;
     private final StatusSearchRepository statusSearchRepository;
     private final DynamicExportsService dynamicExportsService;
+    @Autowired
+    private ModelMapper modelMapper;
 
     public StatusService(StatusRepository statusRepository, StatusSearchRepository statusSearchRepository, DynamicExportsService dynamicExportsService) {
         this.statusRepository = statusRepository;
@@ -57,10 +60,10 @@ public class StatusService {
         return statusRepository.findAll();
     }
     public StatusDTO convertToDto(Status status) {
-        return new ModelMapper().map(status, StatusDTO.class);
+        return modelMapper.map(status, StatusDTO.class);
     }
     public Status convertToEntity(StatusDTO statusDTO) {
-        return new ModelMapper().map(statusDTO, Status.class);
+        return modelMapper.map(statusDTO, Status.class);
     }
     public Status setEntityToElatischSearch(Status status){
         return convertToEntity(convertToDto(status));

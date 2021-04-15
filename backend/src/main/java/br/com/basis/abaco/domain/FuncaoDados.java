@@ -4,12 +4,20 @@ import br.com.basis.abaco.domain.enumeration.Complexidade;
 import br.com.basis.abaco.domain.enumeration.ImpactoFatorAjuste;
 import br.com.basis.abaco.domain.enumeration.TipoFuncaoDados;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.springframework.data.elasticsearch.annotations.Document;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.Table;
+import javax.persistence.Enumerated;
+import javax.persistence.Column;
+import javax.persistence.EnumType;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
+import javax.persistence.Transient;
+import javax.persistence.CascadeType;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -92,6 +100,7 @@ public class FuncaoDados extends FuncaoAnalise implements Serializable {
         this.ders = funcaoDados.getDers();
         this.funcaoDadosVersionavel = funcaoDados.getFuncaoDadosVersionavel();
         this.impacto = funcaoDados.getImpacto();
+        this.files = funcaoDados.getFiles();
 
     }
 
@@ -130,7 +139,6 @@ public class FuncaoDados extends FuncaoAnalise implements Serializable {
     public void setTipo(TipoFuncaoDados tipo) {
         this.tipo = tipo;
     }
-
 
     public Set<Rlr> getRlrs() {
         return Optional.ofNullable(this.rlrs)
@@ -220,6 +228,13 @@ public class FuncaoDados extends FuncaoAnalise implements Serializable {
         List<UploadedFile> cp = new ArrayList<>();
         cp.addAll(files);
         this.files = cp;
+    }
+    public void addFiles(UploadedFile file){
+        this.files.add(file);
+        file.setFuncaoDados(this);
+    }
+    public void removeArquivoEvidencia(UploadedFile file){
+        this.files.remove(file);
     }
 
     public Set<String> getRlrValues() {

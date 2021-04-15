@@ -274,6 +274,23 @@
 
                         <div class="ui-g-12 ui-md-12 ui-sm-12">
                             <label>Evidência</label>
+                            <p-fileUpload  
+                                (onSelect)="onUpload($event)"
+                                multiple="multiple" 
+                                accept="image/*" 
+                                chooseLabel="Selecionar Arquivo"
+                                [showUploadButton]=false
+                                [showCancelButton]=false
+                                maxFileSize="1000000">
+                                <ng-template pTemplate="content">
+                                    <div *ngIf="files.length" class="ui-g-12 ui-md-12 ui-sm-12">
+                                        <ul *ngFor="let file of files">
+                                            <li><a  target="_blank" href="/api/downloadImage/{{ file.id }}" download="arquivo-evidencia.png" >{{file.originalName}}</a></li>
+                                        </ul>
+                                    </div>
+                                    <div>Arraste suas imagens e solte aqui</div>
+                                </ng-template>
+                            </p-fileUpload>
                             <span class="md-inputfield">
                                  <p-editor
                                          [rows]="3"
@@ -282,6 +299,48 @@
                                          [disabled]="isDisabled"
                                          pInputTextarea name="funcaoDadosSustentacao"
                                          [(ngModel)]="currentFuncaoTransacao.sustantation">
+                                           <!-- Inicio configuração toolbar-->
+                                    <p-header>
+                                        <span class="ql-formats">
+                                            <select class="ql-header">
+                                              <option value="1">Heading</option>
+                                              <option value="2">Subheading</option>
+                                              <option selected>Normal</option>
+                                            </select>
+                                            <select class="ql-font">
+                                              <option selected>Sans Serif</option>
+                                              <option value="serif">Serif</option>
+                                              <option value="monospace">Monospace</option>
+                                            </select>
+                                        </span>
+                                        <span class="ql-formats">
+                                            <button class="ql-bold" aria-label="Bold" type="button"></button>
+                                            <button class="ql-italic" aria-label="Italic" type="button"></button>
+                                            <button class="ql-underline" aria-label="Underline" type="button"></button>
+                                        </span>
+                                        <span class="ql-formats">
+                                            <select class="ql-color"></select>
+                                            <select class="ql-background"></select>
+                                        </span>
+                                        <span class="ql-formats">
+                                            <button class="ql-list" value="ordered" aria-label="Ordered List" type="button"></button>
+                                            <button class="ql-list" value="bullet" aria-label="Unordered List" type="button"></button>
+                                            <select class="ql-align">
+                                                <option selected></option>
+                                                <option value="center"></option>
+                                                <option value="right"></option>
+                                                <option value="justify"></option>
+                                            </select>
+                                        </span>
+                                        <span class="ql-formats">
+                                            <button class="ql-link" aria-label="Insert Link" type="button"></button>
+                                            <button class="ql-code-block" aria-label="Insert Code Block" type="button"></button>
+                                        </span>
+                                        <span class="ql-formats">
+                                            <button class="ql-clean" aria-label="Remove Styles" type="button"></button>
+                                        </span>
+                                    </p-header>                  
+                                    <!-- fim configuração toolbar-->
                                  </p-editor>
                             </span>
                         </div>
@@ -420,6 +479,11 @@
                              </div>
                              <div class="ui-md-12 ui-sm-12">
                                  <label><b>Evidência: </b></label>
+                                 <div *ngIf="files.length" class="ui-g-12 ui-md-12 ui-sm-12">
+                                    <ul *ngFor="let file of files">
+                                        <li><a  target="_blank" href="/api/downloadImage/{{ file.id }}" download="arquivo-evidencia.png" >{{file.originalName}}</a></li>
+                                    </ul>
+                                </div>
                                  <div class="ui-g-12 ui-md-12 ui-sm-12">
                                      <span class="md-inputfield">
                                          <p-editor
@@ -537,6 +601,11 @@
 
     <div class="ui-g-12 ui-md-12 ui-sm-12">
         <label>Evidência: </label>
+        <div *ngIf="files.length" class="ui-g-12 ui-md-12 ui-sm-12">
+            <ul *ngFor="let file of files">
+                <li><a  target="_blank" href="/api/downloadImage/{{ file.id }}" download="arquivo-evidencia.png" >{{file.originalName}}</a></li>
+            </ul>
+        </div>
         <span class="md-inputfield">
             <p-editor maxlength="5000" [rows]="3" id="idEvidenciaFormEmLoteFuncaoDados" [cols]="180" pInputTextarea
                 name="funcaoDadosSustentacao" [(ngModel)]="evidenciaEmLote">

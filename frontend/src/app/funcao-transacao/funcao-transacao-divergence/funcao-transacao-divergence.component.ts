@@ -64,6 +64,7 @@ export class FuncaoTransacaoDivergenceComponent implements OnInit {
     translateSubscriptions: Subscription[] = [];
     defaultSort = [{field: 'funcionalidade.nome', order: 1}];
     selectModeButtonsEditAndView: boolean;
+    files: any[] = []
     impacto: SelectItem[] = [
         {label: 'Inclusão', value: 'INCLUSAO'},
         {label: 'Alteração', value: 'ALTERACAO'},
@@ -162,6 +163,16 @@ export class FuncaoTransacaoDivergenceComponent implements OnInit {
         private blockUiService: BlockUiService,
         private sistemaService: SistemaService
     ) {
+    }
+
+    onUpload(event) {
+        if(!this.files.length){
+            this.files = []
+        }
+        
+        for(let i =0;i < event.currentFiles["length"]; i++) {
+            this.files.push(event.currentFiles[i]);
+        }
     }
 
     getLabel(label) {
@@ -378,7 +389,7 @@ export class FuncaoTransacaoDivergenceComponent implements OnInit {
                 }
                 if (retorno) {
                     lstFuncaotransacao.forEach( funcaoTransacaoMultp => {
-                        lstFuncaotransacaoToSave.push(this.funcaoTransacaoService.create(funcaoTransacaoMultp, this.analise.id));
+                        lstFuncaotransacaoToSave.push(this.funcaoTransacaoService.create(funcaoTransacaoMultp, this.analise.id, this.files));
                     });
 
                     forkJoin(lstFuncaotransacaoToSave).subscribe(respCreate => {
@@ -546,7 +557,7 @@ export class FuncaoTransacaoDivergenceComponent implements OnInit {
                     this.currentFuncaoTransacao.funcionalidade.modulo.id)
                     .subscribe(existFuncaoTransaco => {
                         if (!existFuncaoTransaco) {
-                            this.funcaoTransacaoService.create(funcaoTransacaoCalculada, this.analise.id).subscribe(value => {
+                            this.funcaoTransacaoService.create(funcaoTransacaoCalculada, this.analise.id, this.files).subscribe(value => {
                                 funcaoTransacaoCalculada.id = value.id;
                                 this.pageNotificationService.addCreateMsg(funcaoTransacaoCalculada.name);
                                 this.setFields(funcaoTransacaoCalculada);
@@ -646,7 +657,7 @@ export class FuncaoTransacaoDivergenceComponent implements OnInit {
             this.currentFuncaoTransacao = new FuncaoTransacao().copyFromJSON(this.currentFuncaoTransacao);
             const funcaoTransacaoCalculada = CalculadoraTransacao.calcular(
                 this.analise.metodoContagem, this.currentFuncaoTransacao, this.analise.contrato.manual);
-            this.funcaoTransacaoService.update(funcaoTransacaoCalculada).subscribe(value => {
+            this.funcaoTransacaoService.update(funcaoTransacaoCalculada, this.files).subscribe(value => {
                 this.funcoesTransacoes = this.funcoesTransacoes.filter((funcaoTransacao) => (
                     funcaoTransacao.id !== funcaoTransacaoCalculada.id
                 ));
@@ -748,8 +759,10 @@ export class FuncaoTransacaoDivergenceComponent implements OnInit {
     }
 
     private prepararParaEdicao(funcaoTransacaoSelecionada: FuncaoTransacao) {
+        this.files = []
         this.blockUiService.show();
         this.funcaoTransacaoService.getById(funcaoTransacaoSelecionada.id).subscribe(funcaoTransacao => {
+            this.files = funcaoTransacao.files
             this.disableTRDER();
             this.currentFuncaoTransacao = new FuncaoTransacao().copyFromJSON(funcaoTransacao);
             this.currentFuncaoTransacao.lstDivergenceComments = funcaoTransacao.lstDivergenceComments;
@@ -907,6 +920,7 @@ export class FuncaoTransacaoDivergenceComponent implements OnInit {
     }
 
     openDialog(param: boolean) {
+        this.files = [];
         this.isEdit = param;
         this.disableTRDER();
         this.configurarDialog();
@@ -1012,8 +1026,10 @@ export class FuncaoTransacaoDivergenceComponent implements OnInit {
         this.displayDescriptionDeflator = false;
     }
     private prepararParaVisualizar(funcaoTransacaoSelecionada: FuncaoTransacao) {
+        this.files = [];
         this.blockUiService.show();
         this.funcaoTransacaoService.getById(funcaoTransacaoSelecionada.id).subscribe(funcaoTransacao => {
+            this.files = funcaoTransacao.files;
             this.currentFuncaoTransacao = funcaoTransacao;
             this.blockUiService.hide();
         });
@@ -1140,7 +1156,7 @@ export class FuncaoTransacaoDivergenceComponent implements OnInit {
             funcaoTransacao = new FuncaoTransacao().copyFromJSON(funcaoTransacao);
             const funcaoTransacaoCalculada: FuncaoTransacao = CalculadoraTransacao.calcular(
                 this.analise.metodoContagem, funcaoTransacao, this.analise.contrato.manual);
-            this.funcaoTransacaoService.update(funcaoTransacaoCalculada).subscribe(value => {
+            this.funcaoTransacaoService.update(funcaoTransacaoCalculada, this.files).subscribe(value => {
                 this.funcoesTransacoes = this.funcoesTransacoes.filter((funcaoTransacao) => (funcaoTransacao.id !== funcaoTransacaoCalculada.id));
                 this.setFields(funcaoTransacaoCalculada);
                 this.funcoesTransacoes.push(funcaoTransacaoCalculada);

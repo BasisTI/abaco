@@ -32,10 +32,16 @@ import { FuncaoDados, TipoFuncaoDados } from './funcao-dados.model';
 import { FuncaoDadosService } from './funcao-dados.service';
 import { BlockUiService } from '@nuvem/angular-base';
 import { Sistema, SistemaService } from '../sistema';
-import { table } from 'node:console';
+import { UploadService } from '../upload/upload.service';
+import { Upload } from '../upload/upload.model';
+import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
+import { timeStamp } from 'console';
 
 @Component({
     selector: 'app-analise-funcao-dados',
+    host: {
+		"(window:paste)": "handlePaste( $event )"
+	},
     templateUrl: './funcao-dados-form.component.html',
     providers: [ConfirmationService]
 })
@@ -81,9 +87,7 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
     results: string[];
     baselineResults: any[] = [];
     funcoesDadosList: FuncaoDados[] = [];
-
     funcaoDadosEditar: FuncaoDados[] = [];
-
     translateSubscriptions: Subscription[] = [];
     viewFuncaoDados = false;
     divergenceComment: String;
@@ -130,6 +134,10 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
     public display = false;
 
     public modulos: Modulo[];
+    files: any[] = []
+    imageUrls: SafeUrl[];
+    private sanitizer: DomSanitizer;
+    private lastObjectUrl: string;
 
     constructor(
         private analiseSharedDataService: AnaliseSharedDataService,
@@ -142,10 +150,66 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
         private baselineService: BaselineService,
         private router: Router,
         private blockUiService: BlockUiService,
-        private sistemaService: SistemaService
+        private sistemaService: SistemaService,
+        private uploadService: UploadService,
+        sanitizer: DomSanitizer,
     ) {
+        this.sanitizer = sanitizer;
+        this.imageUrls = [];
+        this.lastObjectUrl = "";
+    }
+    onUpload(event) {
+        this.files = [];
+       console.log(event)
+        for(let i =0;i < event.currentFiles["length"]; i++) {
+            this.files.push(event.currentFiles[i]);
+        }
+    }
+    
+
+    public handlePaste( event: ClipboardEvent ) : void {
+        console.log(event.clipboardData.files[0]);
+        console.log(this.files);
+        this.files.push(event.clipboardData.files[0])
+        
+        var pastedImage = this.getPastedImage( event );
+
+		if ( ! pastedImage ) {
+			return;
+		}
+
+        if ( this.lastObjectUrl ) {
+			URL.revokeObjectURL( this.lastObjectUrl );
+		}
+        this.lastObjectUrl = URL.createObjectURL( pastedImage );
+        this.imageUrls.unshift(
+			this.sanitizer.bypassSecurityTrustUrl( this.lastObjectUrl )
+		);
+        console.log(this.imageUrls);
+        
     }
 
+    private getPastedImage( event: ClipboardEvent ) : File | null {
+        if (
+			event.clipboardData && 
+			event.clipboardData.files && 
+			event.clipboardData.files.length &&
+			this.isImageFile( event.clipboardData.files[ 0 ] )
+			) {
+
+			return( event.clipboardData.files[ 0 ] );
+
+		}
+
+		return( null );
+    }
+
+    private isImageFile( file: File ) : boolean {
+        const res = file.type.search( /^image\//i ) === 0 
+        
+		return( res);
+	}
+    
     getLabel(label) {
         return label;
     }
@@ -156,7 +220,7 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
             this.idAnalise = params['id'];
             this.isView = params['view'] !== undefined;
             this.funcaoDadosService.getVWFuncaoDadosByIdAnalise(this.idAnalise).subscribe(value => {
-                this.funcoesDados = value;
+               this.funcoesDados = value;
                 if (!this.isView) {
                     this.analiseService.find(this.idAnalise).subscribe(analise => {
                         // analise = new Analise().copyFromJSON(analise);
@@ -310,7 +374,7 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
         return 0;
     }
 
-    abrirEditar() {
+    abrirEditar() {        
         this.isEdit = true;
         this.prepararParaEdicao(this.funcaoDadosEditar[0]);
     }
@@ -536,7 +600,6 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
                     retorno = false;
                     break;
                 }
-
             }
             if (retorno) {
                 this.fecharDialog();
@@ -544,7 +607,7 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
                 this.resetarEstadoPosSalvar();
                 lstFuncaoDados.forEach(funcaoDadosMultp => {
                     lstFuncaoDadosToSave.push(
-                        this.funcaoDadosService.create(funcaoDadosMultp, this.analise.id)
+                        this.funcaoDadosService.create(funcaoDadosMultp, this.analise.id, this.files)
                     );
                 });
                 forkJoin(lstFuncaoDadosToSave).subscribe(respCreate => {
@@ -600,7 +663,7 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
                 this.seletedFuncaoDados.funcionalidade.id,
                 this.seletedFuncaoDados.funcionalidade.modulo.id).subscribe(value => {
                     if (value === false) {
-                        this.funcaoDadosService.create(funcaoDadosCalculada, this.analise.id).subscribe(
+                        this.funcaoDadosService.create(funcaoDadosCalculada, this.analise.id, this.files).subscribe(
                             (funcaoDados) => {
                                 this.pageNotificationService.addCreateMsg(funcaoDadosCalculada.name);
                                 funcaoDadosCalculada.id = funcaoDados.id;
@@ -718,7 +781,7 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
                     this.seletedFuncaoDados = new FuncaoDados().copyFromJSON(this.seletedFuncaoDados);
                     const funcaoDadosCalculada = Calculadora.calcular(
                         this.analise.metodoContagem, this.seletedFuncaoDados, this.analise.contrato.manual);
-                    this.funcaoDadosService.update(funcaoDadosCalculada).subscribe(value => {
+                    this.funcaoDadosService.update(funcaoDadosCalculada, this.files).subscribe(value => {
                         this.funcoesDados = this.funcoesDados.filter((funcaoDados) => (funcaoDados.id !== funcaoDadosCalculada.id));
                         this.setFields(funcaoDadosCalculada);
                         this.funcoesDados.push(funcaoDadosCalculada);
@@ -843,7 +906,8 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
             funcaoTransacaoAtual.funcionalidade.modulo.id)
             .subscribe(existFuncaoTranasacao => {
                 if (!existFuncaoTranasacao) {
-                    this.funcaoTransacaoService.create(funcaoTransacaoAtual, this.analise.id).subscribe(() => {
+                    this.files = [];
+                    this.funcaoTransacaoService.create(funcaoTransacaoAtual, this.analise.id, this.files).subscribe(() => {
                         this.pageNotificationService.addCreateMsg(funcaoTransacaoAtual.name);
                         this.resetarEstadoPosSalvar();
                         this.estadoInicial();
@@ -888,8 +952,9 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
                 let index = 0;
                 for (const existFuncaoTranasacao of lstFuncaoTranscao) {
                     if (!existFuncaoTranasacao) {
+                        this.files = [];
                         lstFuncaoTransacaoToInclud.push(
-                            this.funcaoTransacaoService.create(lstFuncaoTransacaoCrud[index], this.analise.id)
+                            this.funcaoTransacaoService.create(lstFuncaoTransacaoCrud[index], this.analise.id, this.files)
                         );
                     } else {
                         this.pageNotificationService.addErrorMessage('CRUD já cadastrado!');
@@ -943,8 +1008,10 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
 
 
     private prepararParaEdicao(funcaoDadosSelecionada: FuncaoDados) {
+        this.files = []
         this.blockUiService.show();
         this.funcaoDadosService.getById(funcaoDadosSelecionada.id).subscribe(funcaoDados => {
+            this.files = funcaoDados.files;
             this.seletedFuncaoDados = new FuncaoDados().copyFromJSON(funcaoDados);
             if (this.seletedFuncaoDados.fatorAjuste.tipoAjuste === 'UNITARIO' && this.faS[0]) {
                 this.hideShowQuantidade = false;
@@ -960,8 +1027,10 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
 
     // Prepara para clonar
     private prepareToClone(funcaoDadosSelecionada: FuncaoDados) {
+        this.files = [];
         this.blockUiService.show();
         this.funcaoDadosService.getById(funcaoDadosSelecionada.id).subscribe(funcaoDados => {
+            this.files = funcaoDados.files;
             this.seletedFuncaoDados = new FuncaoDados().copyFromJSON(funcaoDados);
             this.seletedFuncaoDados.id = null;
             this.seletedFuncaoDados.name = this.seletedFuncaoDados.name + this.getLabel('- Cópia');
@@ -1026,6 +1095,7 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
     }
 
     cancelar() {
+        this.imageUrls = [];
         this.showDialog = false;
         this.fecharDialog();
     }
@@ -1046,6 +1116,18 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
         });
     }
 
+    confirmDeleteFile(fileId: number, funcaoId: number){
+        this.confirmationService.confirm({
+            message: 'Tem certeza que deseja excluir o arquivo?',
+            accept: () => {
+                this.uploadService.deleteFileEvidence(fileId, funcaoId).subscribe(response => {
+                    this.pageNotificationService.addSuccessMessage('Arquivo excluído com sucesso!');
+                    this.showDialog = false;
+                });
+            }
+        });
+    }
+
     formataFatorAjuste(fatorAjuste: FatorAjuste): string {
         return fatorAjuste ? FatorAjusteLabelGenerator.generate(fatorAjuste) : this.getLabel('Nenhum');
     }
@@ -1056,6 +1138,7 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
     }
 
     openDialog(param: boolean) {
+        this.files = [];
         this.subscribeToAnaliseCarregada();
         this.isEdit = param;
         this.disableTRDER();
@@ -1168,9 +1251,11 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
         this.displayDescriptionDeflator = false;
     }
     private prepararParaVisualizar(funcaoDadosSelecionada: FuncaoDados) {
+        this.files =[];
         this.blockUiService.show();
         this.funcaoDadosService.getById(funcaoDadosSelecionada.id)
             .subscribe(funcaoDados => {
+                this.files = funcaoDados.files;
                 this.seletedFuncaoDados = funcaoDados;
                 this.blockUiService.hide();
             });
@@ -1258,7 +1343,7 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
             funcaoDado = new FuncaoDados().copyFromJSON(funcaoDado);
             const funcaoDadosCalculada = Calculadora.calcular(
                 this.analise.metodoContagem, funcaoDado, this.analise.contrato.manual);
-            this.funcaoDadosService.update(funcaoDadosCalculada).subscribe(value => {
+            this.funcaoDadosService.update(funcaoDadosCalculada, this.files).subscribe(value => {
                 this.funcoesDados = this.funcoesDados.filter((funcaoDados) => (funcaoDados.id !== funcaoDadosCalculada.id));
                 this.setFields(funcaoDadosCalculada);
                 this.funcoesDados.push(funcaoDadosCalculada);
@@ -1279,16 +1364,13 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
 
     carregarModuloSistema() {
         this.sistemaService.find(this.analise.sistema.id).subscribe((sistemaRecarregado: Sistema) => {
-            console.log(sistemaRecarregado.modulos);
             this.modulos = sistemaRecarregado.modulos;
             this.analise.sistema = sistemaRecarregado;
         });
     }
 
-    exibeComponenteModuloFuncionalidade() {
-        console.log(this.isEdit);
-        console.log(this.seletedFuncaoDados.id);
-        if ((!this.isEdit || this.seletedFuncaoDados.id) && this.modulos) {
+    exibeComponenteModuloFuncionalidade(){
+        if((!this.isEdit || this.seletedFuncaoDados.id) && this.modulos) {
             return true;
         }
         return false;

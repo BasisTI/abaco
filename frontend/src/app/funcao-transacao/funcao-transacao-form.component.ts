@@ -57,7 +57,8 @@ export class FuncaoTransacaoFormComponent implements OnInit {
     funcoesTransacaoList: FuncaoTransacao[] = [];
     funcaoTransacaoEditar: FuncaoTransacao[] = [];
     translateSubscriptions: Subscription[] = [];
-    defaultSort = [{ field: 'funcionalidade.nome', order: 1 }];
+    defaultSort = [{field: 'funcionalidade.nome', order: 1}];
+    files: any[] = []
     impacto: SelectItem[] = [
         { label: 'Inclusão', value: 'INCLUSAO' },
         { label: 'Alteração', value: 'ALTERACAO' },
@@ -158,7 +159,15 @@ export class FuncaoTransacaoFormComponent implements OnInit {
 
     ) {
     }
-
+    onUpload(event) {
+        if(!this.files.length){
+            this.files = []
+        }
+        
+        for(let i =0;i < event.currentFiles["length"]; i++) {
+            this.files.push(event.currentFiles[i]);
+        }
+    }
     getLabel(label) {
         return label;
     }
@@ -373,7 +382,7 @@ export class FuncaoTransacaoFormComponent implements OnInit {
             }
             if (retorno) {
                 lstFuncaotransacao.forEach(funcaoTransacaoMultp => {
-                    lstFuncaotransacaoToSave.push(this.funcaoTransacaoService.create(funcaoTransacaoMultp, this.analise.id));
+                    lstFuncaotransacaoToSave.push(this.funcaoTransacaoService.create(funcaoTransacaoMultp, this.analise.id, this.files));
                 });
 
                 forkJoin(lstFuncaotransacaoToSave).subscribe(respCreate => {
@@ -511,7 +520,6 @@ export class FuncaoTransacaoFormComponent implements OnInit {
 
     // Funcionalidade Selecionada
     functionalitySelected(funcionalidade: Funcionalidade) {
-        console.log(funcionalidade);
         if (!funcionalidade) {
         } else {
             this.moduloCache = funcionalidade;
@@ -541,7 +549,7 @@ export class FuncaoTransacaoFormComponent implements OnInit {
                     this.currentFuncaoTransacao.funcionalidade.modulo.id)
                     .subscribe(existFuncaoTransaco => {
                         if (!existFuncaoTransaco) {
-                            this.funcaoTransacaoService.create(funcaoTransacaoCalculada, this.analise.id).subscribe(value => {
+                            this.funcaoTransacaoService.create(funcaoTransacaoCalculada, this.analise.id, this.files).subscribe(value => {
                                 funcaoTransacaoCalculada.id = value.id;
                                 this.pageNotificationService.addCreateMsg(funcaoTransacaoCalculada.name);
                                 this.setFields(funcaoTransacaoCalculada);
@@ -630,7 +638,7 @@ export class FuncaoTransacaoFormComponent implements OnInit {
         this.alrsChips = this.alrsChips ? this.dersChips.concat(dersReferenciadosChips) : dersReferenciadosChips;
     }
 
-    private editar() {
+    private editar() {  
         const retorno: boolean = this.verifyDataRequire();
         if (!retorno) {
             this.pageNotificationService.addErrorMessage(this.getLabel('Por favor preencher o campo obrigatório!'));
@@ -642,23 +650,23 @@ export class FuncaoTransacaoFormComponent implements OnInit {
                 this.currentFuncaoTransacao.funcionalidade.id,
                 this.currentFuncaoTransacao.funcionalidade.modulo.id,
                 this.currentFuncaoTransacao.id).subscribe(existFuncaoTransacao => {
-                    if (!existFuncaoTransacao) {
-                        this.desconverterChips();
-                        this.verificarModulo();
-                        this.currentFuncaoTransacao = new FuncaoTransacao().copyFromJSON(this.currentFuncaoTransacao);
-                        const funcaoTransacaoCalculada = CalculadoraTransacao.calcular(
-                            this.analise.metodoContagem, this.currentFuncaoTransacao, this.analise.contrato.manual);
-                        this.funcaoTransacaoService.update(funcaoTransacaoCalculada).subscribe(value => {
-                            this.funcoesTransacoes = this.funcoesTransacoes.filter((funcaoTransacao) => (
-                                funcaoTransacao.id !== funcaoTransacaoCalculada.id
-                            ));
-                            this.setFields(funcaoTransacaoCalculada);
-                            this.funcoesTransacoes.push(funcaoTransacaoCalculada);
-                            this.resetarEstadoPosSalvar();
-                            this.fecharDialog();
-                            this.analiseService.updateSomaPf(this.analise.id).subscribe();
-                            this.pageNotificationService
-                                .addSuccessMessage(`${this.getLabel('Função de Transação')}
+                if (!existFuncaoTransacao) {
+                    this.desconverterChips();
+                    this.verificarModulo();
+                    this.currentFuncaoTransacao = new FuncaoTransacao().copyFromJSON(this.currentFuncaoTransacao);
+                    const funcaoTransacaoCalculada = CalculadoraTransacao.calcular(
+                        this.analise.metodoContagem, this.currentFuncaoTransacao, this.analise.contrato.manual);
+                    this.funcaoTransacaoService.update(funcaoTransacaoCalculada, this.files).subscribe(value => {
+                        this.funcoesTransacoes = this.funcoesTransacoes.filter((funcaoTransacao) => (
+                            funcaoTransacao.id !== funcaoTransacaoCalculada.id
+                        ));
+                        this.setFields(funcaoTransacaoCalculada);
+                        this.funcoesTransacoes.push(funcaoTransacaoCalculada);
+                        this.resetarEstadoPosSalvar();
+                        this.fecharDialog();
+                        this.analiseService.updateSomaPf(this.analise.id).subscribe();
+                        this.pageNotificationService
+                            .addSuccessMessage(`${this.getLabel('Função de Transação')}
                 '${funcaoTransacaoCalculada.name}' ${this.getLabel(' alterada com sucesso')}`);
                         });
 
@@ -755,8 +763,10 @@ export class FuncaoTransacaoFormComponent implements OnInit {
 
 
     private prepararParaEdicao(funcaoTransacaoSelecionada: FuncaoTransacao) {
+        this.files = []
         this.blockUiService.show();
         this.funcaoTransacaoService.getById(funcaoTransacaoSelecionada.id).subscribe(funcaoTransacao => {
+            this.files = funcaoTransacao.files
             funcaoTransacao = new FuncaoTransacao().copyFromJSON(funcaoTransacao);
             this.disableTRDER();
             this.currentFuncaoTransacao = funcaoTransacao;
@@ -852,8 +862,6 @@ export class FuncaoTransacaoFormComponent implements OnInit {
 
 
     confirmDelete(funcaoTransacaoSelecionada: FuncaoTransacao[]) {
-        console.log(funcaoTransacaoSelecionada);
-
         this.confirmationService.confirm({
             message: 'Tem certeza que deseja excluir as funções de transações selecionada?',
             accept: () => {
@@ -875,6 +883,7 @@ export class FuncaoTransacaoFormComponent implements OnInit {
     }
 
     openDialog(param: boolean) {
+        this.files = [];
         this.subscribeToAnaliseCarregada();
         this.isEdit = param;
         this.disableTRDER();
@@ -981,8 +990,10 @@ export class FuncaoTransacaoFormComponent implements OnInit {
         this.displayDescriptionDeflator = false;
     }
     private prepararParaVisualizar(funcaoTransacaoSelecionada: FuncaoTransacao) {
+        this.files = [];
         this.blockUiService.show();
         this.funcaoTransacaoService.getById(funcaoTransacaoSelecionada.id).subscribe(funcaoTransacao => {
+            this.files = funcaoTransacao.files;
             this.currentFuncaoTransacao = funcaoTransacao;
             this.blockUiService.hide();
         });
@@ -1078,7 +1089,7 @@ export class FuncaoTransacaoFormComponent implements OnInit {
             funcaoTransacao = new FuncaoTransacao().copyFromJSON(funcaoTransacao);
             const funcaoTransacaoCalculada: FuncaoTransacao = CalculadoraTransacao.calcular(
                 this.analise.metodoContagem, funcaoTransacao, this.analise.contrato.manual);
-            this.funcaoTransacaoService.update(funcaoTransacaoCalculada).subscribe(value => {
+            this.funcaoTransacaoService.update(funcaoTransacaoCalculada, this.files).subscribe(value => {
                 this.funcoesTransacoes = this.funcoesTransacoes.filter((funcaoTransacao) => (funcaoTransacao.id !== funcaoTransacaoCalculada.id));
                 this.setFields(funcaoTransacaoCalculada);
                 this.funcoesTransacoes.push(funcaoTransacaoCalculada);
