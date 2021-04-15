@@ -6,6 +6,7 @@ import java.util.List;
 import javax.transaction.Transactional;
 
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import br.com.basis.abaco.domain.ConfiguracaoJobBaseline;
@@ -20,6 +21,8 @@ import br.com.basis.abaco.service.dto.TipoEquipeDTO;
 public class ConfiguracaoJobBaselineService extends BaseService {
 
     private final ConfiguracaoJobBaselineRepository configuracaoJobBaselineRepository;
+    @Autowired
+    private ModelMapper modelMapper;
 
     public ConfiguracaoJobBaselineService(ConfiguracaoJobBaselineRepository configuracaoJobBaselineRepository) {
         this.configuracaoJobBaselineRepository = configuracaoJobBaselineRepository;
@@ -34,7 +37,7 @@ public class ConfiguracaoJobBaselineService extends BaseService {
         } else if (configuracao.getEquipesSelecionados() != null && !configuracao.getEquipesSelecionados().isEmpty()) {
             for (TipoEquipeDTO tipoEquipe : configuracao.getEquipesSelecionados()) {
                 ConfiguracaoJobBaseline config = new ConfiguracaoJobBaseline();
-                config.setTipoEquipe(new ModelMapper().map(tipoEquipe, TipoEquipe.class));
+                config.setTipoEquipe(modelMapper.map(tipoEquipe, TipoEquipe.class));
                 configuracoesIncluir.add(config);
             }
         }
@@ -47,13 +50,13 @@ public class ConfiguracaoJobBaselineService extends BaseService {
         for (SistemaDTO sistema : configuracao.getSistemasSelecionados()) {
             if (configuracao.getEquipesSelecionados() == null || configuracao.getEquipesSelecionados().isEmpty()) {
                 ConfiguracaoJobBaseline config = new ConfiguracaoJobBaseline();
-                config.setSistema(new ModelMapper().map(sistema, Sistema.class));
+                config.setSistema(modelMapper.map(sistema, Sistema.class));
                 configuracoesIncluir.add(config);
             } else {
                 for (TipoEquipeDTO tipoEquipe : configuracao.getEquipesSelecionados()) {
                     ConfiguracaoJobBaseline config = new ConfiguracaoJobBaseline();
-                    config.setSistema(new ModelMapper().map(sistema, Sistema.class));
-                    config.setTipoEquipe(new ModelMapper().map(tipoEquipe, TipoEquipe.class));
+                    config.setSistema(modelMapper.map(sistema, Sistema.class));
+                    config.setTipoEquipe(modelMapper.map(tipoEquipe, TipoEquipe.class));
                     configuracoesIncluir.add(config);
                 }
             }

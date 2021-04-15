@@ -204,7 +204,7 @@ public class RelatorioUtil {
      * @param document documento base dor elatório
      * @param factory classe cosntrutora auxiliar do relatório
      */
-    private void buildBodyAnaliseDetail(@NotNull Analise analise, @NotNull Document document, @NotNull ReportFactory factory) {
+    private void buildBodyAnaliseDetail(@NotNull Analise analise, @NotNull Document document, @NotNull ReportFactory factory) throws MalformedURLException {
         document.add(factory.makeSubTitle("Identificação da Demanda", TextAlignment.LEFT, 14F));
         buildAnaliseDetail(document, analise, factory);
         document.add(factory.makeEspaco());
@@ -212,7 +212,7 @@ public class RelatorioUtil {
         buildModules(analise.getSistema().getModulos(), document, factory);
     }
 
-    private void buildModules(Set<Modulo> modulos, Document document, ReportFactory factory) {
+    private void buildModules(Set<Modulo> modulos, Document document, ReportFactory factory) throws MalformedURLException {
         for (Modulo modulo : modulos) {
             if(verifyModulo(modulo)) {
                 document.add(factory.makeSubTitleLv2(modulo.getNome().replace("\n", "").replace("\t", "").trim(), TextAlignment.LEFT, 12F));
@@ -249,7 +249,7 @@ public class RelatorioUtil {
         return false;
     }
 
-    private void buildtableFT(FuncaoTransacao funcaoTransacao, ReportFactory factory, Document document) {
+    private void buildtableFT(FuncaoTransacao funcaoTransacao, ReportFactory factory, Document document) throws MalformedURLException {
         document.add(factory.makeTableLine("Funcionalidade/Cenário", funcaoTransacao.getName()));
         document.add(factory.makeTableLine("Tipo", translateTipo(funcaoTransacao.getTipo())));
         document.add(factory.makeTableLine("Impacto", translateFT(funcaoTransacao.getImpacto())));
@@ -260,10 +260,13 @@ public class RelatorioUtil {
         document.add(factory.makeBulletList("Entidades Referenciadas", alrs));
         document.add(factory.makeBulletList("Campos", ders));
         document.add(factory.makeDescriptionField("Fundamentação", funcaoTransacao.getSustantation(), TextAlignment.JUSTIFIED, 12F));
+        if(funcaoTransacao.getFiles() != null && !funcaoTransacao.getFiles().isEmpty()){
+            document.add(factory.makeDescriptionFieldImage("Fundamentação", funcaoTransacao.getFiles(), TextAlignment.JUSTIFIED, 12F));
+        }
         document.add(factory.makeEspaco());
     }
 
-    private void buildTableFD(FuncaoDados funcaoDados, ReportFactory factory, Document document) {
+    private void buildTableFD(FuncaoDados funcaoDados, ReportFactory factory, Document document) throws MalformedURLException {
         document.add(factory.makeTableLine("Entidade", funcaoDados.getName()));
         document.add(factory.makeTableLine("Tipo", translateTipo(funcaoDados.getTipo())));
         document.add(factory.makeTableLine("Impacto", translateFD(funcaoDados.getImpacto())));
@@ -274,6 +277,9 @@ public class RelatorioUtil {
         document.add(factory.makeBulletList("Subentidades", rlrs));
         document.add(factory.makeBulletList("Campos", ders));
         document.add(factory.makeDescriptionField("Fundamentação", funcaoDados.getSustantation(), TextAlignment.JUSTIFIED, 12F));
+        if(funcaoDados.getFiles() != null && !funcaoDados.getFiles().isEmpty()){
+            document.add(factory.makeDescriptionFieldImage("Fundamentação", funcaoDados.getFiles(), TextAlignment.JUSTIFIED, 12F));
+        }
         document.add(factory.makeEspaco());
     }
 

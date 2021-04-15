@@ -8,13 +8,13 @@ import br.com.basis.abaco.security.SecurityUtils;
 import br.com.basis.abaco.service.dto.DropdownDTO;
 import br.com.basis.abaco.service.dto.TipoEquipeDTO;
 import br.com.basis.abaco.service.exception.RelatorioException;
-import br.com.basis.abaco.service.relatorio.RelatorioStatusColunas;
 import br.com.basis.abaco.service.relatorio.RelatorioTipoEquipeColunas;
 import br.com.basis.abaco.utils.AbacoUtil;
 import br.com.basis.dynamicexports.service.DynamicExportsService;
 import net.sf.dynamicreports.report.exception.DRException;
 import net.sf.jasperreports.engine.JRException;
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
 import org.springframework.stereotype.Service;
@@ -35,6 +35,8 @@ public class TipoEquipeService {
     private final TipoEquipeRepository tipoEquipeRepository;
     private final TipoEquipeSearchRepository tipoEquipeSearchRepository;
     private final DynamicExportsService dynamicExportsService;
+    @Autowired
+    private ModelMapper modelMapper;
 
     public TipoEquipeService(TipoEquipeRepository tipoEquipeRepository, TipoEquipeSearchRepository tipoEquipeSearchRepository, DynamicExportsService dynamicExportsService) {
         this.tipoEquipeRepository = tipoEquipeRepository;
@@ -53,11 +55,11 @@ public class TipoEquipeService {
     }
 
     public TipoEquipeDTO convertToDto(TipoEquipe tipoEquipe) {
-        return new ModelMapper().map(tipoEquipe, TipoEquipeDTO.class);
+        return modelMapper.map(tipoEquipe, TipoEquipeDTO.class);
     }
 
     public TipoEquipe convertToEntity(TipoEquipeDTO tipoEquipeDTO) {
-        return new ModelMapper().map(tipoEquipeDTO, TipoEquipe.class);
+        return modelMapper.map(tipoEquipeDTO, TipoEquipe.class);
     }
 
     public TipoEquipe setEntityToElatischSearch(TipoEquipe tipoEquipe){

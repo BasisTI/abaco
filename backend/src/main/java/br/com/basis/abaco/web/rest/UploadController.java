@@ -1,7 +1,9 @@
 package br.com.basis.abaco.web.rest;
 
+import br.com.basis.abaco.domain.FuncaoDados;
 import br.com.basis.abaco.domain.Manual;
 import br.com.basis.abaco.domain.UploadedFile;
+import br.com.basis.abaco.repository.FuncaoDadosRepository;
 import br.com.basis.abaco.repository.ManualRepository;
 import br.com.basis.abaco.repository.UploadedFilesRepository;
 import br.com.basis.abaco.web.rest.errors.UploadException;
@@ -46,6 +48,9 @@ public class UploadController {
 
     @Autowired
     private ManualRepository manualRepository;
+
+    @Autowired
+    private FuncaoDadosRepository funcaoDadosRepository;
 
     @Autowired
     ServletContext context;
@@ -97,6 +102,14 @@ public class UploadController {
     response.getOutputStream().write(arquivo);
     }
 
+    @GetMapping("/downloadImage/{id}")
+    public void downloadImageResource(HttpServletResponse response, @PathVariable Long id) throws IOException {
+        byte [] arquivo = filesRepository.findOne(id).getLogo();
+        response.setContentType("image/*");
+        response.addHeader("Content-Disposition", "attachment; filename=arquivo-evidencia.png");
+        response.getOutputStream().write(arquivo);
+    }
+
     @DeleteMapping("/deleteFile")
     public ResponseEntity<Void> deleteFile(@RequestParam("arquivoId") Long id, @RequestParam("manualId") Long manualId) {
         log.debug("REST request to delete File : {}", id);
@@ -104,10 +117,7 @@ public class UploadController {
         UploadedFile file = filesRepository.findOne(id);
         Manual manual = manualRepository.findOne(manualId);
 
-
-
         manual.removeArquivoManual(file);
-
 
         manualRepository.save(manual);
         filesRepository.save(file);
@@ -117,7 +127,19 @@ public class UploadController {
         }
 
         return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert("UploadedFile", id.toString())).build();
+    }
+    @DeleteMapping("/deleteFileEvidence")
+    public ResponseEntity<Void> deleteFileEvidencia(@RequestParam("fileId") Long id, @RequestParam("funcaoDadosId") Long funcaoId) {
+        log.debug("REST request to delete File : {}", id);
 
+        UploadedFile file = filesRepository.findOne(id);
+        FuncaoDados funcaoDados = funcaoDadosRepository.findOne(funcaoId);
+
+        funcaoDados.removeArquivoEvidencia(file);
+
+        funcaoDadosRepository.save(funcaoDados);
+
+        return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert("UploadedFile", funcaoDados.toString())).build();
     }
 
     @GetMapping("/getLogo/info/{id}")

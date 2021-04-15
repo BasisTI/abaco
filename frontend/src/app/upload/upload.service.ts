@@ -42,6 +42,15 @@ export class UploadService {
         return this.http.delete<void>(environment.apiUrl + '/deleteFile/',  {params: params});
     }
 
+    deleteFileEvidence(id: number, funcaoDadosId) : Observable<void>{
+        let params = new HttpParams();
+        
+        params = params.append('fileId', JSON.stringify(id));
+        params = params.append('funcaoDadosId', JSON.stringify(funcaoDadosId));
+
+       return this.http.delete<void>(environment.apiUrl + '/deleteFileEvidence/',  {params: params});
+    }
+
     uploadLogo(file: File) {
         const headers: any = {
             'Content-Type': 'multipart/form-data',
