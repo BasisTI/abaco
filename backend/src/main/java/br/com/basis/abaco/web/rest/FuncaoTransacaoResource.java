@@ -1,27 +1,17 @@
 package br.com.basis.abaco.web.rest;
 
-import br.com.basis.abaco.domain.Alr;
-import br.com.basis.abaco.domain.Analise;
-import br.com.basis.abaco.domain.Der;
-import br.com.basis.abaco.domain.FuncaoTransacao;
-import br.com.basis.abaco.domain.UploadedFile;
-import br.com.basis.abaco.domain.enumeration.StatusFuncao;
-import br.com.basis.abaco.repository.AnaliseRepository;
-import br.com.basis.abaco.repository.DerRepository;
-import br.com.basis.abaco.repository.FuncaoTransacaoRepository;
-import br.com.basis.abaco.repository.UploadedFilesRepository;
-import br.com.basis.abaco.repository.search.FuncaoTransacaoSearchRepository;
-<<<<<<< HEAD
-import br.com.basis.abaco.service.FuncaoTransacaoService;
-=======
-import br.com.basis.abaco.repository.search.VwAlrSearchRepository;
-import br.com.basis.abaco.repository.search.VwDerSearchRepository;
->>>>>>> Autocomplete nos campos DERS/RLRS/ALRS - BASIS-185103
-import br.com.basis.abaco.service.dto.FuncaoTransacaoAnaliseDTO;
-import br.com.basis.abaco.service.dto.FuncaoTransacaoApiDTO;
-import br.com.basis.abaco.web.rest.util.HeaderUtil;
-import com.codahale.metrics.annotation.Timed;
-import io.github.jhipster.web.util.ResponseUtil;
+import static org.elasticsearch.index.query.QueryBuilders.queryStringQuery;
+
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
+
 import org.jetbrains.annotations.NotNull;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
@@ -33,20 +23,35 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.*;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
+import com.codahale.metrics.annotation.Timed;
 
-import static org.elasticsearch.index.query.QueryBuilders.queryStringQuery;
+import br.com.basis.abaco.domain.Alr;
+import br.com.basis.abaco.domain.Analise;
+import br.com.basis.abaco.domain.Der;
+import br.com.basis.abaco.domain.FuncaoTransacao;
+import br.com.basis.abaco.domain.UploadedFile;
+import br.com.basis.abaco.domain.VwAlr;
+import br.com.basis.abaco.domain.VwDer;
+import br.com.basis.abaco.domain.enumeration.StatusFuncao;
+import br.com.basis.abaco.repository.AnaliseRepository;
+import br.com.basis.abaco.repository.DerRepository;
+import br.com.basis.abaco.repository.FuncaoTransacaoRepository;
+import br.com.basis.abaco.repository.UploadedFilesRepository;
+import br.com.basis.abaco.repository.search.FuncaoTransacaoSearchRepository;
+import br.com.basis.abaco.repository.search.VwAlrSearchRepository;
+import br.com.basis.abaco.repository.search.VwDerSearchRepository;
+import br.com.basis.abaco.service.FuncaoTransacaoService;
+import br.com.basis.abaco.service.dto.FuncaoTransacaoAnaliseDTO;
+import br.com.basis.abaco.service.dto.FuncaoTransacaoApiDTO;
+import br.com.basis.abaco.web.rest.util.HeaderUtil;
+import io.github.jhipster.web.util.ResponseUtil;
 
 /**
  * REST controller for managing FuncaoTransacao.
@@ -59,35 +64,23 @@ public class FuncaoTransacaoResource {
     private final FuncaoTransacaoRepository funcaoTransacaoRepository;
     private final FuncaoTransacaoSearchRepository funcaoTransacaoSearchRepository;
     private final AnaliseRepository analiseRepository;
-<<<<<<< HEAD
     private final FuncaoTransacaoService funcaoTransacaoService;
     private final UploadedFilesRepository filesRepository;
-=======
-
     private final VwDerSearchRepository vwDerSearchRepository;
     private final VwAlrSearchRepository vwAlrSearchRepository;
-
->>>>>>> Autocomplete nos campos DERS/RLRS/ALRS - BASIS-185103
     @Autowired
     private DerRepository derRepository;
     @Autowired
     private ModelMapper modelMapper;
 
-<<<<<<< HEAD
-    public FuncaoTransacaoResource(FuncaoTransacaoRepository funcaoTransacaoRepository, FuncaoTransacaoSearchRepository funcaoTransacaoSearchRepository, AnaliseRepository analiseRepository, FuncaoTransacaoService funcaoTransacaoService, UploadedFilesRepository filesRepository) {
-        this.funcaoTransacaoRepository = funcaoTransacaoRepository;
-        this.funcaoTransacaoSearchRepository = funcaoTransacaoSearchRepository;
-        this.analiseRepository = analiseRepository;
-        this.funcaoTransacaoService = funcaoTransacaoService;
-        this.filesRepository = filesRepository;
-=======
-    public FuncaoTransacaoResource(FuncaoTransacaoRepository funcaoTransacaoRepository, FuncaoTransacaoSearchRepository funcaoTransacaoSearchRepository, AnaliseRepository analiseRepository, VwDerSearchRepository vwDerSearchRepository, VwAlrSearchRepository vwAlrSearchRepository) {
+    public FuncaoTransacaoResource(FuncaoTransacaoRepository funcaoTransacaoRepository, FuncaoTransacaoSearchRepository funcaoTransacaoSearchRepository, AnaliseRepository analiseRepository, VwDerSearchRepository vwDerSearchRepository, VwAlrSearchRepository vwAlrSearchRepository, FuncaoTransacaoService funcaoTransacaoService, UploadedFilesRepository filesRepository) {
         this.funcaoTransacaoRepository = funcaoTransacaoRepository;
         this.funcaoTransacaoSearchRepository = funcaoTransacaoSearchRepository;
         this.analiseRepository = analiseRepository;
         this.vwDerSearchRepository = vwDerSearchRepository;
         this.vwAlrSearchRepository = vwAlrSearchRepository;
->>>>>>> Autocomplete nos campos DERS/RLRS/ALRS - BASIS-185103
+        this.funcaoTransacaoService = funcaoTransacaoService;
+        this.filesRepository = filesRepository;
     }
 
     /**

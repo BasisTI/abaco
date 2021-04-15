@@ -1,24 +1,18 @@
 package br.com.basis.abaco.web.rest;
 
-import br.com.basis.abaco.domain.Analise;
-import br.com.basis.abaco.domain.Der;
-import br.com.basis.abaco.domain.FuncaoDados;
-import br.com.basis.abaco.domain.Rlr;
-import br.com.basis.abaco.domain.UploadedFile;
-import br.com.basis.abaco.domain.enumeration.StatusFuncao;
-import br.com.basis.abaco.domain.enumeration.TipoFatorAjuste;
-import br.com.basis.abaco.repository.AnaliseRepository;
-import br.com.basis.abaco.repository.FuncaoDadosRepository;
-import br.com.basis.abaco.repository.FuncionalidadeRepository;
-import br.com.basis.abaco.repository.UploadedFilesRepository;
-import br.com.basis.abaco.repository.search.FuncaoDadosSearchRepository;
-import br.com.basis.abaco.repository.search.VwDerSearchRepository;
-import br.com.basis.abaco.repository.search.VwRlrSearchRepository;
-import br.com.basis.abaco.service.FuncaoDadosService;
-import br.com.basis.abaco.service.dto.*;
-import br.com.basis.abaco.web.rest.util.HeaderUtil;
-import com.codahale.metrics.annotation.Timed;
-import io.github.jhipster.web.util.ResponseUtil;
+import static org.elasticsearch.index.query.QueryBuilders.queryStringQuery;
+
+import java.lang.reflect.InvocationTargetException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
+
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,20 +23,37 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.lang.reflect.InvocationTargetException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.*;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
+import com.codahale.metrics.annotation.Timed;
 
-import static org.elasticsearch.index.query.QueryBuilders.queryStringQuery;
+import br.com.basis.abaco.domain.Analise;
+import br.com.basis.abaco.domain.Der;
+import br.com.basis.abaco.domain.FuncaoDados;
+import br.com.basis.abaco.domain.Rlr;
+import br.com.basis.abaco.domain.UploadedFile;
+import br.com.basis.abaco.domain.VwDer;
+import br.com.basis.abaco.domain.VwRlr;
+import br.com.basis.abaco.domain.enumeration.StatusFuncao;
+import br.com.basis.abaco.domain.enumeration.TipoFatorAjuste;
+import br.com.basis.abaco.repository.AnaliseRepository;
+import br.com.basis.abaco.repository.FuncaoDadosRepository;
+import br.com.basis.abaco.repository.UploadedFilesRepository;
+import br.com.basis.abaco.repository.search.FuncaoDadosSearchRepository;
+import br.com.basis.abaco.repository.search.VwDerSearchRepository;
+import br.com.basis.abaco.repository.search.VwRlrSearchRepository;
+import br.com.basis.abaco.service.FuncaoDadosService;
+import br.com.basis.abaco.service.dto.DropdownDTO;
+import br.com.basis.abaco.service.dto.FuncaoDadoAnaliseDTO;
+import br.com.basis.abaco.service.dto.FuncaoDadoApiDTO;
+import br.com.basis.abaco.service.dto.FuncaoDadosEditDTO;
+import br.com.basis.abaco.service.dto.FuncaoDadosSaveDTO;
+import br.com.basis.abaco.web.rest.util.HeaderUtil;
+import io.github.jhipster.web.util.ResponseUtil;
 
 /**
  * REST controller for managing FuncaoDados.
@@ -159,11 +170,8 @@ public class FuncaoDadosResource {
         FuncaoDados result = funcaoDadosRepository.save(funcaoDadosUpdate);
         FuncaoDadosEditDTO funcaoDadosEditDTO = convertFuncaoDadoAEditDTO(result);
 
-<<<<<<< HEAD
-=======
         saveVwDersAndVwRlrs(result.getDers(), result.getRlrs(), analise.getSistema().getId());
 
->>>>>>> Autocomplete nos campos DERS/RLRS/ALRS - BASIS-185103
         return ResponseEntity.ok().headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, funcaoDados.getId().toString())).body(funcaoDadosEditDTO);
     }
 
