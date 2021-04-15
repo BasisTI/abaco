@@ -36,6 +36,8 @@ import { UploadService } from '../upload/upload.service';
 import { Upload } from '../upload/upload.model';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { timeStamp } from 'console';
+import { table } from 'node:console';
+import { DerService } from '../der/der.service';
 
 @Component({
     selector: 'app-analise-funcao-dados',
@@ -165,13 +167,13 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
             this.files.push(event.currentFiles[i]);
         }
     }
-    
+
 
     public handlePaste( event: ClipboardEvent ) : void {
         console.log(event.clipboardData.files[0]);
         console.log(this.files);
         this.files.push(event.clipboardData.files[0])
-        
+
         var pastedImage = this.getPastedImage( event );
 
 		if ( ! pastedImage ) {
@@ -186,13 +188,13 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
 			this.sanitizer.bypassSecurityTrustUrl( this.lastObjectUrl )
 		);
         console.log(this.imageUrls);
-        
+
     }
 
     private getPastedImage( event: ClipboardEvent ) : File | null {
         if (
-			event.clipboardData && 
-			event.clipboardData.files && 
+			event.clipboardData &&
+			event.clipboardData.files &&
 			event.clipboardData.files.length &&
 			this.isImageFile( event.clipboardData.files[ 0 ] )
 			) {
@@ -205,11 +207,11 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
     }
 
     private isImageFile( file: File ) : boolean {
-        const res = file.type.search( /^image\//i ) === 0 
-        
+        const res = file.type.search( /^image\//i ) === 0
+
 		return( res);
 	}
-    
+
     getLabel(label) {
         return label;
     }
@@ -374,7 +376,7 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
         return 0;
     }
 
-    abrirEditar() {        
+    abrirEditar() {
         this.isEdit = true;
         this.prepararParaEdicao(this.funcaoDadosEditar[0]);
     }
@@ -764,6 +766,7 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
     }
 
     private editar() {
+
         const retorno: boolean = this.verifyDataRequire();
         if (!retorno) {
             this.pageNotificationService.addErrorMessage(this.getLabel('Por favor preencher o campo obrigatório!'));

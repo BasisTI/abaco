@@ -12,12 +12,10 @@ import br.com.basis.abaco.repository.FuncaoDadosRepository;
 import br.com.basis.abaco.repository.FuncionalidadeRepository;
 import br.com.basis.abaco.repository.UploadedFilesRepository;
 import br.com.basis.abaco.repository.search.FuncaoDadosSearchRepository;
+import br.com.basis.abaco.repository.search.VwDerSearchRepository;
+import br.com.basis.abaco.repository.search.VwRlrSearchRepository;
 import br.com.basis.abaco.service.FuncaoDadosService;
-import br.com.basis.abaco.service.dto.DropdownDTO;
-import br.com.basis.abaco.service.dto.FuncaoDadoAnaliseDTO;
-import br.com.basis.abaco.service.dto.FuncaoDadoApiDTO;
-import br.com.basis.abaco.service.dto.FuncaoDadosEditDTO;
-import br.com.basis.abaco.service.dto.FuncaoDadosSaveDTO;
+import br.com.basis.abaco.service.dto.*;
 import br.com.basis.abaco.web.rest.util.HeaderUtil;
 import com.codahale.metrics.annotation.Timed;
 import io.github.jhipster.web.util.ResponseUtil;
@@ -40,10 +38,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
@@ -66,7 +61,8 @@ public class FuncaoDadosResource {
     private final FuncaoDadosSearchRepository funcaoDadosSearchRepository;
     private final FuncaoDadosService funcaoDadosService;
     private final AnaliseRepository analiseRepository;
-    private final FuncionalidadeRepository funcionalidadeRepository;
+    private final VwDerSearchRepository vwDerSearchRepository;
+    private final VwRlrSearchRepository vwRlrSearchRepository;
 
     @Autowired
     private ModelMapper modelMapper;
@@ -74,12 +70,13 @@ public class FuncaoDadosResource {
     private UploadedFilesRepository filesRepository;
 
     public FuncaoDadosResource(FuncaoDadosRepository funcaoDadosRepository,
-                               FuncaoDadosSearchRepository funcaoDadosSearchRepository, FuncaoDadosService funcaoDadosService, AnaliseRepository analiseRepository, FuncionalidadeRepository funcionalidadeRepository) {
+                               FuncaoDadosSearchRepository funcaoDadosSearchRepository, FuncaoDadosService funcaoDadosService, AnaliseRepository analiseRepository, VwDerSearchRepository vwDerSearchRepository, VwRlrSearchRepository vwRlrSearchRepository) {
         this.funcaoDadosRepository = funcaoDadosRepository;
         this.funcaoDadosSearchRepository = funcaoDadosSearchRepository;
         this.funcaoDadosService = funcaoDadosService;
         this.analiseRepository = analiseRepository;
-        this.funcionalidadeRepository = funcionalidadeRepository;
+        this.vwDerSearchRepository = vwDerSearchRepository;
+        this.vwRlrSearchRepository = vwRlrSearchRepository;
     }
 
     /**
@@ -94,6 +91,7 @@ public class FuncaoDadosResource {
     public ResponseEntity<FuncaoDadosEditDTO> createFuncaoDados(@PathVariable Long idAnalise, @RequestPart("funcaoDados") FuncaoDadosSaveDTO funcaoDadosSaveDTO,  @RequestPart("file") List<MultipartFile> files) throws URISyntaxException {
         log.debug("REST request to save FuncaoDados : {}", funcaoDadosSaveDTO);
         Analise analise = analiseRepository.findOne(idAnalise);
+
         funcaoDadosSaveDTO.getDers().forEach(der -> { der.setFuncaoDados(funcaoDadosSaveDTO);});
         funcaoDadosSaveDTO.getRlrs().forEach(rlr -> { rlr.setFuncaoDados(funcaoDadosSaveDTO);});
         FuncaoDados funcaoDados = convertToEntity(funcaoDadosSaveDTO);
@@ -112,6 +110,9 @@ public class FuncaoDadosResource {
 
         FuncaoDados result = funcaoDadosRepository.save(funcaoDados);
         FuncaoDadosEditDTO  funcaoDadosEditDTO = convertFuncaoDadoAEditDTO(result);
+
+        saveVwDersAndVwRlrs(result.getDers(), result.getRlrs(), analise.getSistema().getId());
+
         return ResponseEntity.created(new URI("/api/funcao-dados/" + funcaoDadosEditDTO.getId()))
                 .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, funcaoDadosEditDTO.getId().toString()))
                 .body(funcaoDadosEditDTO);
@@ -158,6 +159,11 @@ public class FuncaoDadosResource {
         FuncaoDados result = funcaoDadosRepository.save(funcaoDadosUpdate);
         FuncaoDadosEditDTO funcaoDadosEditDTO = convertFuncaoDadoAEditDTO(result);
 
+<<<<<<< HEAD
+=======
+        saveVwDersAndVwRlrs(result.getDers(), result.getRlrs(), analise.getSistema().getId());
+
+>>>>>>> Autocomplete nos campos DERS/RLRS/ALRS - BASIS-185103
         return ResponseEntity.ok().headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, funcaoDados.getId().toString())).body(funcaoDadosEditDTO);
     }
 
@@ -238,6 +244,9 @@ public class FuncaoDadosResource {
     @Timed
     public ResponseEntity<Void> deleteFuncaoDados(@PathVariable Long id) {
         log.debug("REST request to delete FuncaoDados : {}", id);
+        FuncaoDados funcaoDados = funcaoDadosRepository.findById(id);
+        funcaoDados.getDers().forEach(item -> vwDerSearchRepository.delete(item.getId()));
+        funcaoDados.getRlrs().forEach(item -> vwRlrSearchRepository.delete(item.getId()));
         funcaoDadosRepository.delete(id);
         funcaoDadosSearchRepository.delete(id);
         return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id.toString())).build();
@@ -399,4 +408,44 @@ public class FuncaoDadosResource {
         funcaoDadosOld.updateRlrs(lstRlrs);
     }
 
+    private void saveVwDersAndVwRlrs(Set<Der> ders, Set<Rlr> rlrs, Long idSistema) {
+        List<VwDer> vwDers = new ArrayList<>();
+        List<VwRlr> vwRlrs = new ArrayList<>();
+
+        List<VwDer> vwDerList = vwDerSearchRepository.findAllByIdSistemaFD(idSistema);
+        List<VwRlr> vwRlrList = vwRlrSearchRepository.findAllByIdSistema(idSistema);
+
+        if(!ders.isEmpty()){
+            ders.forEach(item -> {
+                VwDer vwDer = new VwDer();
+                if(item.getId() != null){
+                    vwDer.setId(item.getId());
+                }
+                vwDer.setNome(item.getNome());
+                vwDer.setIdSistemaFD(idSistema);
+                if(!vwDerList.contains(vwDer)){
+                    vwDers.add(vwDer);
+                }
+            });
+            if(!vwDers.isEmpty()){
+                vwDerSearchRepository.save(vwDers);
+            }
+        }
+        if(!rlrs.isEmpty()){
+            rlrs.forEach(item -> {
+                VwRlr vwRlr = new VwRlr();
+                if(item.getId() != null){
+                    vwRlr.setId(item.getId());
+                }
+                vwRlr.setNome(item.getNome());
+                vwRlr.setIdSistema(idSistema);
+                if(!vwRlrList.contains(vwRlr)){
+                    vwRlrs.add(vwRlr);
+                }
+            });
+            if(!vwRlrs.isEmpty()){
+                vwRlrSearchRepository.save(vwRlrs);
+            }
+        }
+    }
 }

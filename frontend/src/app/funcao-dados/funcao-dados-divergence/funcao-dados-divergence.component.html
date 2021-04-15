@@ -236,7 +236,7 @@
                         <div class="ui-g-6 ui-md-6 ui-sm-12" [hidden]="hideElementTDTR">
                             <h2>RLR (TR) *</h2>
                             <div class="ui-g-12" style="padding: 0px">
-                                <app-analise-der-chips [(values)]="rlrsChips" (onChange)="adicionar()"
+                                <app-analise-der-chips [tipoChip]="'RLR'" [idSistema]="this.analise?.sistema?.id" [(values)]="rlrsChips" (onChange)="adicionar()"
                                                        id="idRLRFormFuncaoDados">
                                 </app-analise-der-chips>
                             </div>
@@ -252,7 +252,9 @@
                         <div class="ui-g-6 ui-md-6 ui-sm-12" [hidden]="hideElementTDTR">
                             <h2>DER (TD) *</h2>
                             <div class="ui-g-12" style="padding: 0px">
-                                <app-analise-der-chips [(values)]="dersChips" id="idDERFormFuncaoDados"
+                                <app-analise-der-chips [tipoChip]="'DER'" [tipoFuncao]="'FD'"
+                                [idSistema]="this.analise?.sistema?.id"
+                                [(values)]="dersChips" id="idDERFormFuncaoDados"
                                                        (onChange)="adicionar()">
                                 </app-analise-der-chips>
                             </div>

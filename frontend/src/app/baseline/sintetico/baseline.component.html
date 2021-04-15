@@ -61,7 +61,7 @@
                                 <basis-datatable-button
                                     *ngIf="canExportar"
                                     name="geraBaselinePdfBrowser"
-                                    tooltip="Relatório Baseline"
+                                    [pTooltip]="'Relatório Baseline'"
                                     icon="description"
                                     disabled="selecionada">
                                 </basis-datatable-button>
