@@ -1,20 +1,35 @@
 package br.com.basis.abaco.web.rest;
 
-import static org.elasticsearch.index.query.QueryBuilders.queryStringQuery;
-
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
+import javax.management.Query;
 import javax.validation.Valid;
 
+import br.com.basis.abaco.domain.Analise;
+import br.com.basis.abaco.domain.VwDer;
+import br.com.basis.abaco.utils.AbacoUtil;
+import br.com.basis.dynamicexports.service.DynamicExportsService;
+import org.elasticsearch.index.query.BoolQueryBuilder;
+import org.elasticsearch.index.query.QueryBuilder;
+import org.elasticsearch.index.query.QueryBuilders;
+import org.elasticsearch.search.sort.FieldSortBuilder;
+import org.elasticsearch.search.sort.SortOrder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.elasticsearch.core.ElasticsearchTemplate;
+import org.springframework.data.elasticsearch.core.query.NativeSearchQuery;
+import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
+import org.springframework.data.elasticsearch.core.query.SearchQuery;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -35,6 +50,8 @@ import br.com.basis.abaco.service.dto.DropdownDTO;
 import br.com.basis.abaco.web.rest.util.HeaderUtil;
 import io.github.jhipster.web.util.ResponseUtil;
 
+import static org.elasticsearch.index.query.QueryBuilders.*;
+
 /**
  * REST controller for managing Der.
  */
@@ -52,10 +69,17 @@ public class DerResource {
 
     private final DerService derService;
 
-    public DerResource(DerRepository derRepository, DerSearchRepository derSearchRepository, DerService derService) {
+    private final DynamicExportsService dynamicExportsService;
+
+    private final ElasticsearchTemplate elasticsearchTemplate;
+
+
+    public DerResource(DerRepository derRepository, DerSearchRepository derSearchRepository, DerService derService, DynamicExportsService dynamicExportsService, ElasticsearchTemplate elasticsearchTemplate) {
         this.derRepository = derRepository;
         this.derSearchRepository = derSearchRepository;
         this.derService = derService;
+        this.dynamicExportsService = dynamicExportsService;
+        this.elasticsearchTemplate = elasticsearchTemplate;
     }
 
     /**
@@ -165,5 +189,24 @@ public class DerResource {
         log.debug("REST request to get dropdown Der for FuncaoDados {}", idFuncaoDados);
         return derService.getDerByFuncaoDadosIdDropdown(idFuncaoDados);
     }
+
+    @GetMapping("/ders/funcao_dados/sistema/{idSistema}")
+    @Timed
+    public ResponseEntity<List<VwDer>> getDerByNomeSistemaFuncaoDados(@RequestParam("nome") String nome, @PathVariable Long idSistema){
+        log.debug("REST request to get Ders for Sistema {}", idSistema);
+
+        List<VwDer> ders = derService.bindFilterSearchDersSistemaFuncaoDados(nome, idSistema);
+        return new ResponseEntity(ders, HttpStatus.OK);
+    }
+
+    @GetMapping("/ders/funcao_transacao/sistema/{idSistema}")
+    @Timed
+    public ResponseEntity<List<VwDer>> getDerByNomeSistemaFuncaoTransacao(@RequestParam("nome") String nome, @PathVariable Long idSistema){
+        log.debug("REST request to get Ders for Sistema {}", idSistema);
+
+        List<VwDer> ders = derService.bindFilterSearchDersSistemaFuncaoTransacao(nome, idSistema);
+        return new ResponseEntity(ders, HttpStatus.OK);
+    }
+
 
 }

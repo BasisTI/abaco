@@ -432,7 +432,6 @@ export class SistemaFormComponent implements OnInit, OnDestroy {
 
     abrirDialogMigrarFuncionalidade(){
         this.mostrarDialogMigrarFuncionalidade = true;
-        this.moduloMigracao = this.funcionalidadeEmEdicao.modulo;
     }
 
     fecharDialogMigrarFuncionalidade(){
@@ -440,11 +439,11 @@ export class SistemaFormComponent implements OnInit, OnDestroy {
     }
 
     migrarFuncoes(){
-        if(this.funcionalidadeEmEdicao.id === this.funcionalidadeMigracao.id){
-            return this.pageNotificationService.addErrorMessage("Você não pode migrar para a funcionalidade que irá excluir.");
-        }
         if(this.funcionalidadeMigracao == null || this.funcionalidadeMigracao == undefined){
             return this.pageNotificationService.addErrorMessage("Escolha uma funcionalidade para fazer a migração.");
+        }
+        if(this.funcionalidadeEmEdicao.id === this.funcionalidadeMigracao.id){
+            return this.pageNotificationService.addErrorMessage("Você não pode migrar para a funcionalidade que irá excluir.");
         }
         if(this.funcionalidadeMigracao.id == undefined || this.funcionalidadeMigracao.id == null){
             return this.pageNotificationService.addErrorMessage("Escolha uma funcionalidade salva para fazer a migração.");

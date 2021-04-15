@@ -1,22 +1,40 @@
-import { Component, Input, Output, EventEmitter, OnChanges, SimpleChanges } from '@angular/core';
-import { DerChipItem } from './der-chip-item';
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
+import { AutoCompleteMultipleComponent } from '@nuvem/primeng-components';
+import { AutoCompleteCustomComponent } from '@nuvem/primeng-components/lib/crud/components/auto-complete/auto-complete-custom.component';
+import { AutoComplete } from 'primeng';
+import { AlrService } from 'src/app/alr/alr.service';
+import { DerService } from 'src/app/der/der.service';
+import { FuncaoDados } from 'src/app/funcao-dados';
+import { FuncaoDadosService } from 'src/app/funcao-dados/funcao-dados.service';
+import { FuncaoTransacao } from 'src/app/funcao-transacao';
+import { FuncaoTransacaoService } from 'src/app/funcao-transacao/funcao-transacao.service';
+import { RlrService } from 'src/app/rlr/rlr.service';
+import { Der } from '../../der/der.model';
 import { DerTextParser, ParseResult } from '../der-text/der-text-parser';
 import { DuplicatesResult, StringArrayDuplicatesFinder } from '../string-array-duplicates-finder';
-import { Der } from '../../der/der.model';
-import { FuncaoTransacao } from 'src/app/funcao-transacao';
+import { DerChipItem } from './der-chip-item';
 
 
 @Component({
     selector: 'app-analise-der-chips',
     templateUrl: './der-chips.component.html'
 })
-export class DerChipsComponent implements OnChanges {
+export class DerChipsComponent implements OnChanges, OnInit {
 
     @Input()
     values: DerChipItem[] = [];
 
     @Input()
     relacionarDers = false;
+
+    @Input()
+    tipoFuncao: string;
+
+    @Input()
+    tipoChip: string;
+
+    @Input()
+    idSistema: number;
 
     @Output()
     valuesChange: EventEmitter<DerChipItem[]> = new EventEmitter<DerChipItem[]>();
@@ -32,20 +50,39 @@ export class DerChipsComponent implements OnChanges {
     validaMultiplosRegistrados = false;
     funcaoTransacao: FuncaoTransacao;
     tamanhoChip = false;
+    chipRepetido = false;
 
     mostrarDialogEdicao = false;
     textoEdicao = '';
     indexChipEmEdicao: number;
 
+    options: DerChipItem[] = [];
+    listOptions: DerChipItem[] = [];
+    listFuncoesDados: FuncaoDados[] = [];
+    listFuncoesTransacoes: FuncaoTransacao[] = [];
+
+    canEnter: boolean;
+
+    @ViewChild(AutoComplete) component: AutoComplete;
+
+
     constructor(
-    ){}
-    
+        private derService: DerService,
+        private rlrService: RlrService,
+        private alrService: AlrService
+    ) { }
+
+    ngOnInit() {
+    }
+
     getLabel(label) {
         return label;
     }
 
     ngOnChanges(changes: SimpleChanges) {
-        // TODO precisa?
+        if (this.values) {
+            this.values.sort((a, b) => a.id - b.id);
+        }
     }
 
     onAddValue(value: string) {
@@ -54,15 +91,105 @@ export class DerChipsComponent implements OnChanges {
         this.addItem(new DerChipItem(undefined, value));
     }
 
+    pressEnter(event) {
+        if (event.code === "Enter") {
+            if (this.canEnter) {
+                if (event.target.value.length > 0) {
+                    const valores: string[] = this.values.map(item => item.text.toLowerCase());
+                    if (event.target.value.length >= 50) {
+                        this.chipRepetido = false;
+                        return this.tamanhoChip = true;
+                    }
+                    if (valores.indexOf(event.target.value.toLowerCase()) === -1) {
+                        this.values.push(new DerChipItem(undefined, event.target.value));
+                        this.valuesChange.emit(this.values);
+                        event.target.value = "";
+                        this.chipRepetido = false;
+                        this.tamanhoChip = false;
+                    } else {
+                        this.tamanhoChip = false;
+                        this.chipRepetido = true;
+                    }
+                }
+            }
+        }
+    }
+
+    search(event) {
+        this.canEnter = true;
+        switch(this.tipoChip){
+            case 'DER':
+                switch(this.tipoFuncao){
+                    case 'FD':
+                        this.derService.getDersFuncaoDadosByNomeSistema(event.query, this.idSistema).subscribe(response => {
+                            this.listOptions = response.map(item => new DerChipItem(undefined, item.nome));
+                            this.options = this.listOptions.filter(item =>{
+                                return this.values.find(value => value.text === item.text) === undefined;
+                            });
+                        });
+
+                        break;
+                    case 'FT':
+                        this.derService.getDersFuncaoTransacaoByNomeSistema(event.query, this.idSistema).subscribe(response => {
+                            this.listOptions = response.map(item => new DerChipItem(undefined, item.nome));
+                            this.options = this.listOptions.filter(item =>{
+                                return this.values.find(value => value.text === item.text) === undefined;
+                            });
+                        })
+                        break;
+                }
+                break;
+            case 'RLR':
+                this.rlrService.getRlrsByNomeSistema(event.query, this.idSistema).subscribe(response => {
+                    this.listOptions = response.map(item => new DerChipItem(undefined, item.nome));
+                    this.options = this.listOptions.filter(item => {
+                        return this.values.find(value => value.text === item.text) === undefined;
+                    })
+                })
+                break;
+            case 'ALR':
+                this.alrService.getAlrsByNomeSistema(event.query, this.idSistema).subscribe(response => {
+                    this.listOptions = response.map(item => new DerChipItem(undefined, item.nome));
+                    this.options = this.listOptions.filter(item => {
+                        return this.values.find(value => value.text === item.text) === undefined;
+                    })
+                })
+                break;
+        }
+    }
+
+    limparCampo(event) {
+        event.target.value = "";
+        this.chipRepetido = false;
+        this.tamanhoChip = false;
+    }
+
+    selecionar(object) {
+        this.canEnter = false;
+        this.valuesChange.emit(this.values);
+        this.chipRepetido = false;
+        this.tamanhoChip = false;
+    }
+
+    deselecionar(object) {
+        this.valuesChange.emit(this.values);
+    }
+
     private addItem(derChipItem: DerChipItem) {
         if (this.values !== undefined && this.values.length <= 255) {
             const valores: string[] = this.values.map(chipItem => chipItem.text);
-            if (valores.indexOf(derChipItem.text) === -1 && derChipItem.text.length <= 50) {
+            if (derChipItem.text.length >= 50) {
+                this.chipRepetido = false;
+                return this.tamanhoChip = true;
+            }
+            if (valores.indexOf(derChipItem.text) === -1) {
                 this.values.push(derChipItem);
                 this.valuesChange.emit(this.values);;
                 this.tamanhoChip = false;
-            }else {
-                this.tamanhoChip = true;
+                this.chipRepetido = false;
+            } else {
+                this.tamanhoChip = false;
+                this.chipRepetido = true;
             }
         }
     }
@@ -103,19 +230,19 @@ export class DerChipsComponent implements OnChanges {
         this.validaMultiplos = false;
         this.validaMultiplosRegistrados = false;
 
-         if (this.verificaMultiplosDuplicados(this.addMultiplosTexto)) {
-             if (this.verificaMultiplosCadastrados(this.addMultiplosTexto)) {
+        if (this.verificaMultiplosDuplicados(this.addMultiplosTexto)) {
+            if (this.verificaMultiplosCadastrados(this.addMultiplosTexto)) {
                 this.values = this.values.concat(this.converteMultiplos());
-                 this.valuesChange.emit(this.values);
+                this.valuesChange.emit(this.values);
                 this.fecharDialogAddMultiplos();
                 this.validaMultiplos = false;
                 this.validaMultiplosRegistrados = false;
-             } else {
+            } else {
                 this.validaMultiplosRegistrados = true;
-             }
-         } else {
+            }
+        } else {
             this.validaMultiplos = true;
-         }
+        }
     }
 
     /**
@@ -220,3 +347,20 @@ export class DerChipsComponent implements OnChanges {
     }
 
 }
+
+
+// <p-chips id="chips"
+// [(ngModel)]="values"
+// addOnTab="true"
+// addOnBlur="true"
+// (onAdd)="onAddValue($event.value)"
+// (onRemove)="onRemove($event.value)">
+
+// <ng-template let-item pTemplate="item">
+//     <span class="ui-chips-token-label ng-star-inserted" (dblclick)="doubleClickChip(item)">
+//         {{ item.text }}
+//     </span>
+// </ng-template>
+// </p-chips>
+
+

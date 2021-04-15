@@ -19,6 +19,7 @@ import { SharedModule } from '../shared/shared.module';
 import { PesquisarFuncaoTransacaoModule } from '../pesquisar-ft/pesquisar-ft.module';
 import { FuncaoTransacaoDivergenceComponent } from '../funcao-transacao';
 import { FuncaoDadosDivergenceComponent } from './funcao-dados-divergence/funcao-dados-divergence.component';
+import { RlrService } from '../rlr/rlr.service';
 
 
 
@@ -51,6 +52,7 @@ import { FuncaoDadosDivergenceComponent } from './funcao-dados-divergence/funcao
   providers: [
     FuncaoDadosService,
     DerService,
+    RlrService,
     BaselineService,
     AnaliseSharedDataService,
   ],

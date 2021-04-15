@@ -11,7 +11,12 @@ import br.com.basis.abaco.repository.DerRepository;
 import br.com.basis.abaco.repository.FuncaoTransacaoRepository;
 import br.com.basis.abaco.repository.UploadedFilesRepository;
 import br.com.basis.abaco.repository.search.FuncaoTransacaoSearchRepository;
+<<<<<<< HEAD
 import br.com.basis.abaco.service.FuncaoTransacaoService;
+=======
+import br.com.basis.abaco.repository.search.VwAlrSearchRepository;
+import br.com.basis.abaco.repository.search.VwDerSearchRepository;
+>>>>>>> Autocomplete nos campos DERS/RLRS/ALRS - BASIS-185103
 import br.com.basis.abaco.service.dto.FuncaoTransacaoAnaliseDTO;
 import br.com.basis.abaco.service.dto.FuncaoTransacaoApiDTO;
 import br.com.basis.abaco.web.rest.util.HeaderUtil;
@@ -37,10 +42,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
@@ -57,19 +59,35 @@ public class FuncaoTransacaoResource {
     private final FuncaoTransacaoRepository funcaoTransacaoRepository;
     private final FuncaoTransacaoSearchRepository funcaoTransacaoSearchRepository;
     private final AnaliseRepository analiseRepository;
+<<<<<<< HEAD
     private final FuncaoTransacaoService funcaoTransacaoService;
     private final UploadedFilesRepository filesRepository;
+=======
+
+    private final VwDerSearchRepository vwDerSearchRepository;
+    private final VwAlrSearchRepository vwAlrSearchRepository;
+
+>>>>>>> Autocomplete nos campos DERS/RLRS/ALRS - BASIS-185103
     @Autowired
     private DerRepository derRepository;
     @Autowired
     private ModelMapper modelMapper;
 
+<<<<<<< HEAD
     public FuncaoTransacaoResource(FuncaoTransacaoRepository funcaoTransacaoRepository, FuncaoTransacaoSearchRepository funcaoTransacaoSearchRepository, AnaliseRepository analiseRepository, FuncaoTransacaoService funcaoTransacaoService, UploadedFilesRepository filesRepository) {
         this.funcaoTransacaoRepository = funcaoTransacaoRepository;
         this.funcaoTransacaoSearchRepository = funcaoTransacaoSearchRepository;
         this.analiseRepository = analiseRepository;
         this.funcaoTransacaoService = funcaoTransacaoService;
         this.filesRepository = filesRepository;
+=======
+    public FuncaoTransacaoResource(FuncaoTransacaoRepository funcaoTransacaoRepository, FuncaoTransacaoSearchRepository funcaoTransacaoSearchRepository, AnaliseRepository analiseRepository, VwDerSearchRepository vwDerSearchRepository, VwAlrSearchRepository vwAlrSearchRepository) {
+        this.funcaoTransacaoRepository = funcaoTransacaoRepository;
+        this.funcaoTransacaoSearchRepository = funcaoTransacaoSearchRepository;
+        this.analiseRepository = analiseRepository;
+        this.vwDerSearchRepository = vwDerSearchRepository;
+        this.vwAlrSearchRepository = vwAlrSearchRepository;
+>>>>>>> Autocomplete nos campos DERS/RLRS/ALRS - BASIS-185103
     }
 
     /**
@@ -97,6 +115,9 @@ public class FuncaoTransacaoResource {
             funcaoTransacao.addFiles(file);
         }
         FuncaoTransacao result = funcaoTransacaoRepository.save(funcaoTransacao);
+
+        saveVwDersAndVwAlrs(result.getDers(), result.getAlrs(), analise.getSistema().getId());
+
         return ResponseEntity.created(new URI("/api/funcao-transacaos/" + result.getId()))
                 .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString()))
                 .body(result);
@@ -140,6 +161,9 @@ public class FuncaoTransacaoResource {
         }
 
         FuncaoTransacao result = funcaoTransacaoRepository.save(funcaoTransacao);
+
+        saveVwDersAndVwAlrs(result.getDers(), result.getAlrs(), analise.getSistema().getId());
+
         return ResponseEntity.ok().headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, funcaoTransacao.getId().toString())).body(result);
     }
 
@@ -214,6 +238,9 @@ public class FuncaoTransacaoResource {
     @Timed
     public ResponseEntity<Void> deleteFuncaoTransacao(@PathVariable Long id) {
         log.debug("REST request to delete FuncaoTransacao : {}", id);
+        FuncaoTransacao funcaoTransacao = funcaoTransacaoRepository.findOne(id);
+        funcaoTransacao.getDers().forEach(item -> vwDerSearchRepository.delete(item.getId()));
+        funcaoTransacao.getAlrs().forEach(item -> vwAlrSearchRepository.delete(item.getId()));
         funcaoTransacaoRepository.delete(id);
         funcaoTransacaoSearchRepository.delete(id);
         return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id.toString())).build();
@@ -316,6 +343,48 @@ public class FuncaoTransacaoResource {
             }
         });
         return ders;
+    }
+
+    private void saveVwDersAndVwAlrs(Set<Der> ders, Set<Alr> alrs, Long idSistema) {
+        List<VwDer> vwDers = new ArrayList<>();
+        List<VwAlr> vwAlrs = new ArrayList<>();
+
+        List<VwDer> vwDerList = vwDerSearchRepository.findAllByIdSistemaFT(idSistema);
+        List<VwAlr> vwAlrList = vwAlrSearchRepository.findAllByIdSistema(idSistema);
+
+        if(!ders.isEmpty()){
+            ders.forEach(item -> {
+                VwDer vwDer = new VwDer();
+                if(item.getId() != null){
+                    vwDer.setId(item.getId());
+                }
+                vwDer.setNome(item.getNome());
+                vwDer.setIdSistemaFT(idSistema);
+                if(!vwDerList.contains(vwDer)){
+                    vwDers.add(vwDer);
+                }
+            });
+            if(!vwDers.isEmpty()){
+                vwDerSearchRepository.save(vwDers);
+            }
+        }
+        if(!alrs.isEmpty()){
+            alrs.forEach(item -> {
+                VwAlr vwAlr = new VwAlr();
+                if(item.getId() != null){
+                    vwAlr.setId(item.getId());
+                }
+                vwAlr.setNome(item.getNome());
+                vwAlr.setIdSistema(idSistema);
+                if(!vwAlrList.contains(vwAlr)){
+                    vwAlrs.add(vwAlr);
+                }
+            });
+            if(!vwAlrs.isEmpty()){
+                vwAlrSearchRepository.save(vwAlrs);
+            }
+        }
+
     }
 
 }

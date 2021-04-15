@@ -6,9 +6,15 @@ import br.com.basis.abaco.domain.enumeration.Complexidade;
 import br.com.basis.abaco.domain.enumeration.TipoFuncaoTransacao;
 import br.com.basis.abaco.repository.AnaliseRepository;
 import br.com.basis.abaco.repository.FuncaoTransacaoRepository;
+<<<<<<< HEAD
 import br.com.basis.abaco.repository.UploadedFilesRepository;
 import br.com.basis.abaco.repository.search.FuncaoTransacaoSearchRepository;
 import br.com.basis.abaco.service.FuncaoTransacaoService;
+=======
+import br.com.basis.abaco.repository.search.FuncaoTransacaoSearchRepository;
+import br.com.basis.abaco.repository.search.VwAlrSearchRepository;
+import br.com.basis.abaco.repository.search.VwDerSearchRepository;
+>>>>>>> Autocomplete nos campos DERS/RLRS/ALRS - BASIS-185103
 import br.com.basis.abaco.web.rest.errors.ExceptionTranslator;
 import org.junit.Before;
 import org.junit.Test;
@@ -81,13 +87,24 @@ public class FuncaoTransacaoResourceIT {
 
     private FuncaoTransacao funcaoTransacao;
 
+<<<<<<< HEAD
     private FuncaoTransacaoService funcaoTransacaoService;
     private UploadedFilesRepository filesRepository;
+=======
+    @Autowired
+    private VwDerSearchRepository vwDerSearchRepository;
+    @Autowired
+    private VwAlrSearchRepository vwAlrSearchRepository;
+>>>>>>> Autocomplete nos campos DERS/RLRS/ALRS - BASIS-185103
 
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
+<<<<<<< HEAD
         FuncaoTransacaoResource funcaoTransacaoResource = new FuncaoTransacaoResource(funcaoTransacaoRepository, funcaoTransacaoSearchRepository, analiseRepository, funcaoTransacaoService, filesRepository);
+=======
+        FuncaoTransacaoResource funcaoTransacaoResource = new FuncaoTransacaoResource(funcaoTransacaoRepository, funcaoTransacaoSearchRepository, analiseRepository, vwDerSearchRepository, vwAlrSearchRepository);
+>>>>>>> Autocomplete nos campos DERS/RLRS/ALRS - BASIS-185103
         this.restFuncaoTransacaoMockMvc = MockMvcBuilders.standaloneSetup(funcaoTransacaoResource)
                 .setCustomArgumentResolvers(pageableArgumentResolver)
                 .setControllerAdvice(exceptionTranslator)

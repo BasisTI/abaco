@@ -20,6 +20,9 @@
                                 <basis-datatable type="memory" [disableDelete]="this.isView"
                                     [disableEdit]="this.isView || selectButtonMultiple"
                                     [disableView]="selectButtonMultiple" id="idTabelaFuncaoTransacaoFormFuncaoTransacao"
+                                    [enableScroll]="true"
+                                    [scrollHeight]="'500px'"
+                                    [enableButtonsScroll]="true"
                                     [value]="this.funcoesTransacoes" (buttonClick)="datatableClick($event)"
                                     (dblclick)="onRowDblclick($event)" (click)="selectFT()" [paginator]="false"
                                     [rows]="20" [selectionMode]="'multiple'" [filterOnColumn]="true"
@@ -179,7 +182,7 @@
                         <div class="ui-g-6 ui-md-6 ui-sm-12" [hidden]="hideElementTDTR">
                             <h2>FTR (AR)</h2>
                             <div class="ui-g-12" style="padding: 0px">
-                                <app-analise-der-chips [(values)]="alrsChips" id="idFTRFormFuncaoTransacao"
+                                <app-analise-der-chips [tipoChip]="'ALR'" [idSistema]="this.analise?.sistema?.id" [(values)]="alrsChips" id="idFTRFormFuncaoTransacao"
                                     [relacionarDers]="true" (dersReferenciadosEvent)="dersReferenciados($event)">
                                 </app-analise-der-chips>
                             </div>
@@ -194,7 +197,7 @@
                         <div class="ui-g-6 ui-md-6 ui-sm-12" [hidden]="hideElementTDTR">
                             <h2>DER (TD)</h2>
                             <div class="ui-g-12" style="padding: 0px">
-                                <app-analise-der-chips id="idDERFormFuncaoTransacao" [(values)]="dersChips">
+                                <app-analise-der-chips [tipoChip]="'DER'" [tipoFuncao]="'FT'" [idSistema]="this.analise?.sistema?.id" id="idDERFormFuncaoTransacao" [(values)]="dersChips">
                                 </app-analise-der-chips>
                             </div>
                             <div class="ui-g-12" style="padding: 0px">

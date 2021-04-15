@@ -14,12 +14,14 @@ import java.util.List;
 
 import javax.persistence.EntityManager;
 
+import br.com.basis.dynamicexports.service.DynamicExportsService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.elasticsearch.core.ElasticsearchTemplate;
 import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
@@ -72,10 +74,16 @@ public class DerResourceIT {
 
     private Der der;
 
+    @Autowired
+    private DynamicExportsService dynamicExportsService;
+
+    @Autowired
+    private ElasticsearchTemplate elasticsearchTemplate;
+
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        DerResource derResource = new DerResource(derRepository, derSearchRepository, derService);
+        DerResource derResource = new DerResource(derRepository, derSearchRepository, derService, dynamicExportsService, elasticsearchTemplate);
         this.restDerMockMvc = MockMvcBuilders.standaloneSetup(derResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)
