@@ -1,7 +1,7 @@
 import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DatatableClickEvent, DatatableComponent, PageNotificationService } from '@nuvem/primeng-components';
-import { ConfirmationService, Editor, SelectItem } from 'primeng';
+import { ConfirmationService, Editor, FileUpload, SelectItem } from 'primeng';
 import { forkJoin, Observable, Subscription } from 'rxjs';
 import { ResumoFuncoes, CalculadoraTransacao } from 'src/app/analise-shared';
 import { DerChipItem } from 'src/app/analise-shared/der-chips/der-chip-item';
@@ -24,8 +24,14 @@ import { Manual } from 'src/app/manual';
 import * as _ from 'lodash';
 import { BlockUiService } from '@nuvem/angular-base';
 import { Sistema, SistemaService } from '../sistema';
+import { DomSanitizer } from '@angular/platform-browser';
+import { Upload } from '../upload/upload.model';
+import { Utilitarios } from '../util/utilitarios.util';
 @Component({
     selector: 'app-analise-funcao-transacao',
+    host: {
+        "(window:paste)": "handlePaste($event)"
+    },
     templateUrl: './funcao-transacao-form.component.html',
     providers: [ConfirmationService]
 })
@@ -58,7 +64,6 @@ export class FuncaoTransacaoFormComponent implements OnInit {
     funcaoTransacaoEditar: FuncaoTransacao[] = [];
     translateSubscriptions: Subscription[] = [];
     defaultSort = [{field: 'funcionalidade.nome', order: 1}];
-    files: any[] = []
     impacto: SelectItem[] = [
         { label: 'Inclusão', value: 'INCLUSAO' },
         { label: 'Alteração', value: 'ALTERACAO' },
@@ -140,8 +145,13 @@ export class FuncaoTransacaoFormComponent implements OnInit {
     classificacaoEmLote: TipoFuncaoTransacao;
     deflatorEmLote: FatorAjuste;
     evidenciaEmLote: string;
+    arquivosEmLote: Upload[] = [];
     quantidadeEmLote: number;
     funcaoTransacaoEmLote: FuncaoTransacao[] = [];
+
+    private sanitizer: DomSanitizer;
+    private lastObjectUrl: string;
+    @ViewChild(FileUpload) componenteFile: FileUpload;
 
 
     constructor(
@@ -155,18 +165,11 @@ export class FuncaoTransacaoFormComponent implements OnInit {
         private router: Router,
         private route: ActivatedRoute,
         private blockUiService: BlockUiService,
-        private sistemaService: SistemaService
-
-    ) {
-    }
-    onUpload(event) {
-        if(!this.files.length){
-            this.files = []
-        }
-        
-        for(let i =0;i < event.currentFiles["length"]; i++) {
-            this.files.push(event.currentFiles[i]);
-        }
+        private sistemaService: SistemaService,
+        sanitizer: DomSanitizer,
+        ) {
+            this.sanitizer = sanitizer;
+            this.lastObjectUrl = "";
     }
     getLabel(label) {
         return label;
@@ -382,7 +385,7 @@ export class FuncaoTransacaoFormComponent implements OnInit {
             }
             if (retorno) {
                 lstFuncaotransacao.forEach(funcaoTransacaoMultp => {
-                    lstFuncaotransacaoToSave.push(this.funcaoTransacaoService.create(funcaoTransacaoMultp, this.analise.id, this.files));
+                    lstFuncaotransacaoToSave.push(this.funcaoTransacaoService.create(funcaoTransacaoMultp, this.analise.id, funcaoTransacaoMultp.files.map(item => item.logo)));
                 });
 
                 forkJoin(lstFuncaotransacaoToSave).subscribe(respCreate => {
@@ -549,7 +552,7 @@ export class FuncaoTransacaoFormComponent implements OnInit {
                     this.currentFuncaoTransacao.funcionalidade.modulo.id)
                     .subscribe(existFuncaoTransaco => {
                         if (!existFuncaoTransaco) {
-                            this.funcaoTransacaoService.create(funcaoTransacaoCalculada, this.analise.id, this.files).subscribe(value => {
+                            this.funcaoTransacaoService.create(funcaoTransacaoCalculada, this.analise.id, funcaoTransacaoCalculada.files.map(item => item.logo)).subscribe(value => {
                                 funcaoTransacaoCalculada.id = value.id;
                                 this.pageNotificationService.addCreateMsg(funcaoTransacaoCalculada.name);
                                 this.setFields(funcaoTransacaoCalculada);
@@ -638,7 +641,7 @@ export class FuncaoTransacaoFormComponent implements OnInit {
         this.alrsChips = this.alrsChips ? this.dersChips.concat(dersReferenciadosChips) : dersReferenciadosChips;
     }
 
-    private editar() {  
+    private editar() {
         const retorno: boolean = this.verifyDataRequire();
         if (!retorno) {
             this.pageNotificationService.addErrorMessage(this.getLabel('Por favor preencher o campo obrigatório!'));
@@ -656,7 +659,9 @@ export class FuncaoTransacaoFormComponent implements OnInit {
                     this.currentFuncaoTransacao = new FuncaoTransacao().copyFromJSON(this.currentFuncaoTransacao);
                     const funcaoTransacaoCalculada = CalculadoraTransacao.calcular(
                         this.analise.metodoContagem, this.currentFuncaoTransacao, this.analise.contrato.manual);
-                    this.funcaoTransacaoService.update(funcaoTransacaoCalculada, this.files).subscribe(value => {
+                        console.log(funcaoTransacaoCalculada);
+
+                    this.funcaoTransacaoService.update(funcaoTransacaoCalculada, funcaoTransacaoCalculada.files.map(item => item.logo)).subscribe(value => {
                         this.funcoesTransacoes = this.funcoesTransacoes.filter((funcaoTransacao) => (
                             funcaoTransacao.id !== funcaoTransacaoCalculada.id
                         ));
@@ -763,10 +768,8 @@ export class FuncaoTransacaoFormComponent implements OnInit {
 
 
     private prepararParaEdicao(funcaoTransacaoSelecionada: FuncaoTransacao) {
-        this.files = []
         this.blockUiService.show();
         this.funcaoTransacaoService.getById(funcaoTransacaoSelecionada.id).subscribe(funcaoTransacao => {
-            this.files = funcaoTransacao.files
             funcaoTransacao = new FuncaoTransacao().copyFromJSON(funcaoTransacao);
             this.disableTRDER();
             this.currentFuncaoTransacao = funcaoTransacao;
@@ -813,6 +816,7 @@ export class FuncaoTransacaoFormComponent implements OnInit {
         this.analiseSharedDataService.currentFuncaoTransacao = funcaoTransacaoSelecionada;
         this.carregarDerEAlr(funcaoTransacaoSelecionada);
         this.carregarFatorDeAjusteNaEdicao(funcaoTransacaoSelecionada);
+        this.carregarArquivos();
     }
 
     private carregarFatorDeAjusteNaEdicao(funcaoSelecionada: FuncaoTransacao) {
@@ -883,7 +887,6 @@ export class FuncaoTransacaoFormComponent implements OnInit {
     }
 
     openDialog(param: boolean) {
-        this.files = [];
         this.subscribeToAnaliseCarregada();
         this.isEdit = param;
         this.disableTRDER();
@@ -990,10 +993,8 @@ export class FuncaoTransacaoFormComponent implements OnInit {
         this.displayDescriptionDeflator = false;
     }
     private prepararParaVisualizar(funcaoTransacaoSelecionada: FuncaoTransacao) {
-        this.files = [];
         this.blockUiService.show();
         this.funcaoTransacaoService.getById(funcaoTransacaoSelecionada.id).subscribe(funcaoTransacao => {
-            this.files = funcaoTransacao.files;
             this.currentFuncaoTransacao = funcaoTransacao;
             this.blockUiService.hide();
         });
@@ -1029,6 +1030,7 @@ export class FuncaoTransacaoFormComponent implements OnInit {
         }
         this.mostrarDialogEditarEmLote = true;
         this.hideShowQuantidade = true;
+        this.arquivosEmLote = [];
     }
 
     fecharDialogEditarEmLote() {
@@ -1041,6 +1043,7 @@ export class FuncaoTransacaoFormComponent implements OnInit {
         this.mostrarDialogEditarEmLote = false;
         this.funcaoTransacaoEmLote = [];
         this.hideShowQuantidade = true;
+        this.arquivosEmLote = [];
     }
 
     editarCamposEmLote(){
@@ -1065,6 +1068,11 @@ export class FuncaoTransacaoFormComponent implements OnInit {
                 funcaoTransacao.sustantation = this.evidenciaEmLote;
             })
         }
+        if (this.arquivosEmLote) {
+            this.funcaoTransacaoEmLote.forEach(funcaoTransacao => {
+                funcaoTransacao.files = this.arquivosEmLote;
+            })
+        }
         if (this.quantidadeEmLote) {
             this.funcaoTransacaoEmLote.forEach(funcaoTransacao => {
                 funcaoTransacao.quantidade = this.quantidadeEmLote;
@@ -1072,11 +1080,13 @@ export class FuncaoTransacaoFormComponent implements OnInit {
         }
     }
 
+
     editarEmLote() {
         if (!this.funcionalidadeSelecionadaEmLote &&
             !this.classificacaoEmLote &&
             !this.deflatorEmLote &&
-            !this.evidenciaEmLote) {
+            !this.evidenciaEmLote &&
+            !this.arquivosEmLote) {
             return this.pageNotificationService.addErrorMessage("Para editar em lote, selecione ao menos um campo para editar.")
         }
         if(this.deflatorEmLote && this.deflatorEmLote.tipoAjuste === 'UNITARIO' && !this.quantidadeEmLote){
@@ -1089,7 +1099,7 @@ export class FuncaoTransacaoFormComponent implements OnInit {
             funcaoTransacao = new FuncaoTransacao().copyFromJSON(funcaoTransacao);
             const funcaoTransacaoCalculada: FuncaoTransacao = CalculadoraTransacao.calcular(
                 this.analise.metodoContagem, funcaoTransacao, this.analise.contrato.manual);
-            this.funcaoTransacaoService.update(funcaoTransacaoCalculada, this.files).subscribe(value => {
+            this.funcaoTransacaoService.update(funcaoTransacaoCalculada, funcaoTransacaoCalculada.files.map(item => item.logo)).subscribe(value => {
                 this.funcoesTransacoes = this.funcoesTransacoes.filter((funcaoTransacao) => (funcaoTransacao.id !== funcaoTransacaoCalculada.id));
                 this.setFields(funcaoTransacaoCalculada);
                 this.funcoesTransacoes.push(funcaoTransacaoCalculada);
@@ -1114,6 +1124,71 @@ export class FuncaoTransacaoFormComponent implements OnInit {
         }else{
             this.hideShowQuantidade = true;
         }
+    }
+
+    onUpload(event) {
+        for (let i = 0; i < event.currentFiles.length; i++) {
+            let file: Upload = new Upload();
+            file.originalName = event.currentFiles[i].name;
+            file.logo = event.currentFiles[i];
+            file.sizeOf = event.currentFiles[i].size;
+            file.safeUrl = this.sanitizer.bypassSecurityTrustUrl(URL.createObjectURL(event.currentFiles[i]));
+            this.currentFuncaoTransacao.files.push(file);
+        }
+        event.currentFiles = [];
+        this.componenteFile.files = [];
+    }
+
+    confirmDeleteFileUpload(file: Upload) {
+        this.confirmationService.confirm({
+            message: 'Tem certeza que deseja excluir o arquivo?',
+            accept: () => {
+                this.currentFuncaoTransacao.files.splice(this.currentFuncaoTransacao.files.indexOf(file), 1);
+            }
+        });
+    }
+
+    carregarArquivos(){
+        this.currentFuncaoTransacao.files.forEach(file => {
+            file.safeUrl = this.sanitizer.bypassSecurityTrustUrl(URL.createObjectURL(Utilitarios.base64toFile(file.logo, "image/png", file.originalName)));
+            file.logo = Utilitarios.base64toFile(file.logo, "image/png", file.originalName);
+        })
+    }
+
+    public handlePaste(event: ClipboardEvent): void {
+        let uploadFile = new Upload();
+        var pastedImage = this.getPastedImage(event);
+        if (!pastedImage) {
+            return;
+        }
+        if (this.lastObjectUrl) {
+            URL.revokeObjectURL(this.lastObjectUrl);
+        }
+        this.lastObjectUrl = URL.createObjectURL(pastedImage);
+        uploadFile.safeUrl = this.sanitizer.bypassSecurityTrustUrl(this.lastObjectUrl);
+        let num: number = this.currentFuncaoTransacao.files.length + 1
+        uploadFile.originalName = "Evidência " + num;
+        uploadFile.logo = new File([event.clipboardData.files[0]], uploadFile.originalName, {type: event.clipboardData.files[0].type});
+        uploadFile.sizeOf = event.clipboardData.files[0].size;
+        this.currentFuncaoTransacao.files.push(uploadFile);
+    }
+
+
+    private getPastedImage(event: ClipboardEvent): File | null {
+        if (
+            event.clipboardData &&
+            event.clipboardData.files &&
+            event.clipboardData.files.length &&
+            this.isImageFile(event.clipboardData.files[0])
+        ) {
+            return (event.clipboardData.files[0]);
+        }
+        return (null);
+    }
+
+    private isImageFile(file: File): boolean {
+        const res = file.type.search(/^image\//i) === 0;
+        return (res);
     }
 }
 

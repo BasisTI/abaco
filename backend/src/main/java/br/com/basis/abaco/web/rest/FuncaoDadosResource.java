@@ -18,15 +18,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RequestPart;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.codahale.metrics.annotation.Timed;
@@ -99,7 +91,7 @@ public class FuncaoDadosResource {
      */
     @PostMapping(path = "/funcao-dados/{idAnalise}", consumes = {"multipart/form-data"})
     @Timed
-    public ResponseEntity<FuncaoDadosEditDTO> createFuncaoDados(@PathVariable Long idAnalise, @RequestPart("funcaoDados") FuncaoDadosSaveDTO funcaoDadosSaveDTO,  @RequestPart("file") List<MultipartFile> files) throws URISyntaxException {
+    public ResponseEntity<FuncaoDadosEditDTO> createFuncaoDados(@PathVariable Long idAnalise, @RequestPart("funcaoDados") FuncaoDadosSaveDTO funcaoDadosSaveDTO, @RequestPart("files")List<MultipartFile> files) throws URISyntaxException {
         log.debug("REST request to save FuncaoDados : {}", funcaoDadosSaveDTO);
         Analise analise = analiseRepository.findOne(idAnalise);
 
@@ -113,10 +105,9 @@ public class FuncaoDadosResource {
         for(Der der : funcaoDados.getDers()){
             der.setFuncaoTransacao(null);
         }
-
-        List<UploadedFile> uploadedFiles = funcaoDadosService.uploadFiles(files, funcaoDados);
-        for(UploadedFile file : uploadedFiles){
-            funcaoDados.addFiles(file);
+        if(!files.isEmpty()){
+            List<UploadedFile> uploadedFiles = funcaoDadosService.uploadFiles(files);
+            funcaoDados.setFiles(uploadedFiles);
         }
 
         FuncaoDados result = funcaoDadosRepository.save(funcaoDados);
@@ -138,9 +129,9 @@ public class FuncaoDadosResource {
      * or with status 500 (Internal Server Error) if the funcaoDados couldnt be updated
      * @throws URISyntaxException if the Location URI syntax is incorrect
      */
-    @PutMapping(path = "/funcao-dados/{id}", consumes = {"multipart/form-data"})
+    @PutMapping(value = "/funcao-dados/{id}", consumes = {"multipart/form-data"})
     @Timed
-    public ResponseEntity<FuncaoDadosEditDTO> updateFuncaoDados(@PathVariable Long id, @RequestPart("funcaoDados") FuncaoDadosSaveDTO funcaoDadosSaveDTO,  @RequestPart("file") List<MultipartFile> files) throws URISyntaxException, InvocationTargetException, IllegalAccessException  {
+    public ResponseEntity<FuncaoDadosEditDTO> updateFuncaoDados(@PathVariable Long id, @RequestPart("funcaoDados")FuncaoDadosSaveDTO funcaoDadosSaveDTO, @RequestPart("files")List<MultipartFile> files) throws URISyntaxException {
         log.debug("REST request to update FuncaoDados : {}", funcaoDadosSaveDTO);
         FuncaoDados funcaoDadosOld = funcaoDadosRepository.findById(id);
         FuncaoDados funcaoDados = convertToEntity(funcaoDadosSaveDTO);
@@ -155,23 +146,17 @@ public class FuncaoDadosResource {
         if (funcaoDados.getAnalise() == null || funcaoDados.getAnalise().getId() == null) {
             return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert(ENTITY_NAME, "idexists", "A new funcaoDados cannot already have an ID")).body(null);
         }
-
-        Optional<List<UploadedFile>> existingFiles = filesRepository.findAllByFuncaoDados(funcaoDados);
-        if(existingFiles.isPresent()){
-            funcaoDados.setFiles(existingFiles.get());
-        }
-
-        List<UploadedFile> uploadedFiles = funcaoDadosService.uploadFiles(files, funcaoDados);
-        for(UploadedFile file : uploadedFiles){
-            funcaoDados.addFiles(file);
+        if(!files.isEmpty()){
+            List<UploadedFile> uploadedFiles = funcaoDadosService.uploadFiles(files);
+            funcaoDadosOld.setFiles(uploadedFiles);
         }
 
         FuncaoDados funcaoDadosUpdate = updateFuncaoDados(funcaoDadosOld, funcaoDados);
+
         FuncaoDados result = funcaoDadosRepository.save(funcaoDadosUpdate);
         FuncaoDadosEditDTO funcaoDadosEditDTO = convertFuncaoDadoAEditDTO(result);
 
         saveVwDersAndVwRlrs(result.getDers(), result.getRlrs(), analise.getSistema().getId());
-
         return ResponseEntity.ok().headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, funcaoDados.getId().toString())).body(funcaoDadosEditDTO);
     }
 

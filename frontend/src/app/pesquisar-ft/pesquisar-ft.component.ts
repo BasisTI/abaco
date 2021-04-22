@@ -121,8 +121,6 @@ export class PesquisarFtComponent implements OnInit {
 
     exportColumns: any[];
 
-    files: any[] = []
-
 
     constructor(
         private analiseService: AnaliseService,
@@ -442,7 +440,7 @@ export class PesquisarFtComponent implements OnInit {
                             if (this.verificarCamposObrigatorios()) {
                                 this.blockUiService.show();
                                 funcaoTransacaoResp.sustantation = "";
-                                saveFuncaoTransacoes.push(this.funcaoTransacaoService.create(funcaoTransacaoResp, this.analise.id, this.files));
+                                saveFuncaoTransacoes.push(this.funcaoTransacaoService.create(funcaoTransacaoResp, this.analise.id));
                             }
                         });
                         forkJoin(saveFuncaoTransacoes).subscribe(
@@ -515,7 +513,7 @@ export class PesquisarFtComponent implements OnInit {
                             if (this.verificarCamposObrigatorios()) {
                                 this.blockUiService.show();
                                 funcaoDadosResp.sustantation = "";
-                                saveFuncaoDados.push(this.funcaoDadosService.create(funcaoDadosResp, this.analise.id, this.files));
+                                saveFuncaoDados.push(this.funcaoDadosService.create(funcaoDadosResp, this.analise.id));
                             }
                         });
                         forkJoin(saveFuncaoDados).subscribe(
@@ -570,7 +568,7 @@ export class PesquisarFtComponent implements OnInit {
     save(funcao: FuncaoTransacao) {
         this.validaCamposObrigatorios();
         if (this.verificarCamposObrigatorios()) {
-            this.funcaoTransacaoService.create(funcao, this.analise.id, this.files).subscribe(() => {
+            this.funcaoTransacaoService.create(funcao, this.analise.id).subscribe(() => {
                 this.pageNotificationService.addSuccessMessage(
                     this.isEdit ? this.getLabel('msgRegistroSalvoSucesso') :
                         this.getLabel('msgDadosAlteradosSucesso'));

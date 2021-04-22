@@ -163,24 +163,23 @@ export class FuncaoDadosService {
         return result;
     }
 
-    create(funcaoDados: FuncaoDados, idAnalise: Number, files: File[]): Observable<any> {
+    create(funcaoDados: FuncaoDados, idAnalise: Number, files?: File[]): Observable<any> {
         let body = new FormData();
         if (files) {
             for (let i = 0; i < files.length; i++) {
-                body.append('file', files[i]);
+                body.append('files', files[i]);
             }
         }
-
         const json = JSON.stringify(funcaoDados);
         const blob = new Blob([json], {
             type: 'application/json'
         });
         body.append('funcaoDados', blob);
-        
+
         return this.http.post(`${this.resourceUrl}/${idAnalise}`, body);
     }
 
-    createDivergence(funcaoDados: FuncaoDados, idAnalise: Number, files: File[]): Observable<any> {
+    createDivergence(funcaoDados: FuncaoDados, idAnalise: Number, files?: File[]): Observable<any> {
         let body = new FormData();
         if (files) {
             for (let i = 0; i < files.length; i++) {
@@ -193,28 +192,25 @@ export class FuncaoDadosService {
             type: 'application/json'
         });
         body.append('funcaoDados', blob);
-        
+
         funcaoDados.statusFuncao = StatusFunction.DIVERGENTE;
         return this.http.post(`${this.resourceUrl}/${idAnalise}`, body);
     }
 
-    update(funcaoDados: FuncaoDados, files: File[]): Observable<any> {
+    update(funcaoDados: FuncaoDados, files?: File[]): Observable<any> {
         let body = new FormData();
         if (files) {
             for (let i = 0; i < files.length; i++) {
-                body.append('file', files[i]);
+                body.append('files', files[i]);
             }
         }
-
         const json = JSON.stringify(funcaoDados);
         const blob = new Blob([json], {
             type: 'application/json'
         });
         body.append('funcaoDados', blob);
-        
-        const copy = funcaoDados.toJSONState();
-        
-        return this.http.put(`${this.resourceUrl}/${copy.id}`, body).pipe(catchError((error: any) => {
+
+        return this.http.put(`${this.resourceUrl}/${funcaoDados.id}`, body).pipe(catchError((error: any) => {
             if (error.status === 403) {
                 this.pageNotificationService.addErrorMessage(error);
                 return Observable.throw(new Error(error.status));
@@ -224,7 +220,7 @@ export class FuncaoDadosService {
 
     existsWithName(name: String, idAnalise: number, idFuncionalade: number, idModulo: number, id: number = 0): Observable<Boolean> {
         const url = `${this.resourceUrl}/${idAnalise}/${idFuncionalade}/${idModulo}?name=${name}&id=${id}`;
-        
+
         return this.http.get<Boolean>(url);
     }
     public getVWFuncaoDadosByIdAnalise(id: Number): Observable<any[]> {

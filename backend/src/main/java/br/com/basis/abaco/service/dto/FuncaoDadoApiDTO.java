@@ -44,7 +44,7 @@ public class FuncaoDadoApiDTO {
     private ImpactoFatorAjuste impacto;
     private StatusFuncao statusFuncao;
     private List<DivergenceCommentDTO> lstDivergenceComments = new ArrayList<>();
-    private List<UploadedFile> files;
+    private List<UploadedFileDTO> files;
 
 
     public List<DivergenceCommentDTO> getLstDivergenceComments() {

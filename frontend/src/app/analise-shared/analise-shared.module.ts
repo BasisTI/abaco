@@ -10,6 +10,7 @@ import { HttpClientModule} from '@angular/common/http';
 import { DatatableModule } from '@nuvem/primeng-components';
 import { AbacoButtonsModule } from '../components/abaco-buttons/abaco-buttons.module';
 import { SharedModule } from '../shared/shared.module';
+import { ArquivoUploadComponent } from './arquivo-upload.component';
 
 
 
@@ -25,11 +26,13 @@ import { SharedModule } from '../shared/shared.module';
     ],
     declarations: [
         ModuloFuncionalidadeComponent,
-        FuncaoResumoTableComponent
+        FuncaoResumoTableComponent,
+        ArquivoUploadComponent
     ],
     exports: [
         ModuloFuncionalidadeComponent,
-        FuncaoResumoTableComponent
+        FuncaoResumoTableComponent,
+        ArquivoUploadComponent
     ]
 })
 export class AbacoAnaliseSharedModule { }

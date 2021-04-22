@@ -162,7 +162,7 @@ export class ManualFormComponent implements OnInit, OnDestroy {
             message: 'Tem certeza que deseja excluir o arquivo?',
             accept: () => {
                 this.uploadService.deleteFile(arquivoId, manualId).subscribe(response => {
-                    this.manual.arquivosManual.splice(this.manual.arquivosManual.indexOf(arquivo, 1));
+                    this.manual.arquivosManual.splice(this.manual.arquivosManual.indexOf(arquivo), 1);
                     this.pageNotificationService.addSuccessMessage('Arquivo excluído com sucesso!');
                     this.refreshArquivos();
                 });

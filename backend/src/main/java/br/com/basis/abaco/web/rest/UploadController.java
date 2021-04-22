@@ -104,9 +104,10 @@ public class UploadController {
 
     @GetMapping("/downloadImage/{id}")
     public void downloadImageResource(HttpServletResponse response, @PathVariable Long id) throws IOException {
-        byte [] arquivo = filesRepository.findOne(id).getLogo();
+        UploadedFile uploadedFile = filesRepository.findOne(id);
+        byte [] arquivo = uploadedFile.getLogo();
         response.setContentType("image/*");
-        response.addHeader("Content-Disposition", "attachment; filename=arquivo-evidencia.png");
+        response.addHeader("Content-Disposition", "attachment; filename="+uploadedFile.getOriginalName());
         response.getOutputStream().write(arquivo);
     }
 

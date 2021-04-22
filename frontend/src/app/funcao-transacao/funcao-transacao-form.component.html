@@ -211,23 +211,7 @@
 
                         <div class="ui-g-12 ui-md-12 ui-sm-12">
                             <label>Evidência</label>
-                            <p-fileUpload  
-                            (onSelect)="onUpload($event)"
-                            multiple="multiple" 
-                            accept="image/*" 
-                            chooseLabel="Selecionar Arquivo"
-                            [showUploadButton]=false
-                            [showCancelButton]=false
-                            maxFileSize="1000000">
-                            <ng-template pTemplate="content">
-                                <div *ngIf="files.length" class="ui-g-12 ui-md-12 ui-sm-12">
-                                    <ul *ngFor="let file of files">
-                                        <li><a  target="_blank" href="/api/downloadImage/{{ file.id }}" download="arquivo-evidencia.png" >{{file.originalName}}</a></li>
-                                    </ul>
-                                </div>
-                                <div>Arraste suas imagens e solte aqui</div>
-                            </ng-template>
-                        </p-fileUpload>
+
                             <span class="md-inputfield">
                                  <p-editor
                                          [rows]="3"
@@ -276,10 +260,42 @@
                                         <span class="ql-formats">
                                             <button class="ql-clean" aria-label="Remove Styles" type="button"></button>
                                         </span>
-                                    </p-header>                  
+                                    </p-header>
                                     <!-- fim configuração toolbar-->
                                  </p-editor>
                             </span>
+
+                            <p-fileUpload (onSelect)="onUpload($event)" multiple="multiple" accept="image/*"
+                                chooseLabel="Selecionar Arquivo" [showUploadButton]=false [showCancelButton]=false
+                                maxFileSize="1000000" #componenteFile>
+                                <ng-template pTemplate="content">
+                                    <div *ngIf="currentFuncaoTransacao.files?.length" class="ui-g-12 ui-md-12 ui-sm-12"
+                                        style="padding: 0;">
+                                        <ul *ngIf="currentFuncaoTransacao.files" style="margin: 0 ;">
+                                            <li *ngFor="let file of currentFuncaoTransacao.files" style="list-style: none;">
+                                                <div style="display: flex;">
+                                                    <div style="padding: 7px 14px">
+                                                        <img style="width: 50px; height: 35px;" [src]="file.safeUrl"
+                                                            class="image" />
+                                                    </div>
+                                                    <div style="padding: 7px 14px">
+                                                        <p>{{file.originalName}}</p>
+                                                    </div>
+                                                    <div style="padding: 7px 14px">
+                                                        <p>{{file.sizeOf}}Kb</p>
+                                                    </div>
+                                                    <basis-datatable-button
+                                                        style="display: inline-table; margin-left: 10px; max-zoom: 10px;"
+                                                        (click)="confirmDeleteFileUpload(file)" name="deleteArquivo"
+                                                        [bTooltip]="'Remover arquivo'" icon="clear">
+                                                    </basis-datatable-button>
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <div>Arraste suas imagens e solte aqui</div>
+                                </ng-template>
+                            </p-fileUpload>
                         </div>
 
                         <div class="ui-g ui-md-12 ui-sm-12" style="justify-content: flex-end">
@@ -339,8 +355,8 @@
     </p-dialog>
 </div>
 
-<p-dialog [modal]="true" header="Editar em lote" [(visible)]="mostrarDialogEditarEmLote" [style]="{width: '55vw'}"
-    [contentStyle]="{'overflow':'visible'}">
+<p-dialog [modal]="true" [style]="{width: '55vw'}" [closable]="false" header="Editar em lote" [(visible)]="mostrarDialogEditarEmLote"
+[contentStyle]="{'height': ['windowHeightDialog']}">
 
 
     <div *ngIf="modulos">
@@ -394,21 +410,64 @@
     </div>
 
     <div class="ui-g-12 ui-md-12 ui-sm-12">
-        <label>Evidência: </label>
-        <div *ngIf="files.length" class="ui-g-12 ui-md-12 ui-sm-12">
-            <ul *ngFor="let file of files">
-                <li><a  target="_blank" href="/api/downloadImage/{{ file.id }}" download="arquivo-evidencia.png" >{{file.originalName}}</a></li>
-            </ul>
-        </div>
+        <label>Evidência</label>
+
         <span class="md-inputfield">
-            <p-editor maxlength="5000" [rows]="3" id="idEvidenciaFormEmLoteFuncaoDados" [cols]="180" pInputTextarea
-                name="funcaoDadosSustentacao" [(ngModel)]="evidenciaEmLote">
+            <p-editor maxlength="5000" [rows]="3" id="idEvidenciaFormFuncaoDados" [cols]="180"
+                [disabled]="isDisabled" pInputTextarea name="funcaoDadosSustentacao"
+                [(ngModel)]="evidenciaEmLote">
+                <!-- Inicio configuração toolbar-->
+                <p-header>
+                    <span class="ql-formats">
+                        <select class="ql-header">
+                            <option value="1">Heading</option>
+                            <option value="2">Subheading</option>
+                            <option selected>Normal</option>
+                        </select>
+                        <select class="ql-font">
+                            <option selected>Sans Serif</option>
+                            <option value="serif">Serif</option>
+                            <option value="monospace">Monospace</option>
+                        </select>
+                    </span>
+                    <span class="ql-formats">
+                        <button class="ql-bold" aria-label="Bold" type="button"></button>
+                        <button class="ql-italic" aria-label="Italic" type="button"></button>
+                        <button class="ql-underline" aria-label="Underline" type="button"></button>
+                    </span>
+                    <span class="ql-formats">
+                        <select class="ql-color"></select>
+                        <select class="ql-background"></select>
+                    </span>
+                    <span class="ql-formats">
+                        <button class="ql-list" value="ordered" aria-label="Ordered List"
+                            type="button"></button>
+                        <button class="ql-list" value="bullet" aria-label="Unordered List"
+                            type="button"></button>
+                        <select class="ql-align">
+                            <option selected></option>
+                            <option value="center"></option>
+                            <option value="right"></option>
+                            <option value="justify"></option>
+                        </select>
+                    </span>
+                    <span class="ql-formats">
+                        <button class="ql-link" aria-label="Insert Link" type="button"></button>
+                        <button class="ql-code-block" aria-label="Insert Code Block"
+                            type="button"></button>
+                    </span>
+                    <span class="ql-formats">
+                        <button class="ql-clean" aria-label="Remove Styles" type="button"></button>
+                    </span>
+                </p-header>
+                <!-- fim configuração toolbar-->
             </p-editor>
         </span>
+        <app-arquivo-upload [(arquivos)]="arquivosEmLote"></app-arquivo-upload>
     </div>
 
     <div class="ui-g ui-md-12" style="justify-content: flex-end; padding-top: 25px">
-        <div class="ui-g-2 ui-md-2 ui-sm-12">
+        <div class="ui-g-2">
             <app-white-button [buttonLabel]="'Cancelar'" id="idBtnCancelarPermissaoSaveFormPerfil"
                 (click)="fecharDialogEditarEmLote()">
             </app-white-button>
@@ -495,17 +554,23 @@
         </div>
         <div class="ui-md-12 ui-sm-12">
             <label><b>Evidência: </b></label>
-            <div *ngIf="files.length" class="ui-g-12 ui-md-12 ui-sm-12">
-                <ul *ngFor="let file of files">
-                    <li><a  target="_blank" href="/api/downloadImage/{{ file.id }}" download="arquivo-evidencia.png" >{{file.originalName}}</a></li>
+
+             <div class="ui-g-12 ui-md-12 ui-sm-12">
+                 <span class="md-inputfield">
+                     <p-editor
+                             [rows]="3"
+                             id="idEvidenciaFormFuncaoDados"
+                             [style]="{'height':'auto'}"
+                             [readonly]="true"
+                             pInputTextarea name="funcaoDadosSustentacao"
+                             [(ngModel)]="currentFuncaoTransacao.sustantation">
+                     </p-editor>
+                 </span>
+             </div>
+             <div *ngIf="currentFuncaoTransacao.files?.length" class="ui-g-12 ui-md-12 ui-sm-12">
+                <ul *ngFor="let file of currentFuncaoTransacao.files">
+                    <li><a  target="_self" href="/api/downloadImage/{{ file?.id }}" [download]="file?.originalName" >{{file?.originalName}}</a></li>
                 </ul>
-            </div>
-            <div class="ui-g-12 ui-md-12 ui-sm-12">
-                <span class="md-inputfield">
-                    <p-editor [rows]="3" id="idEvidenciaFormFuncaoDados" [style]="{'height':'auto'}" [readonly]="true"
-                        pInputTextarea name="funcaoDadosSustentacao" [(ngModel)]="currentFuncaoTransacao.sustantation">
-                    </p-editor>
-                </span>
             </div>
         </div>
     </div>

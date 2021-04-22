@@ -40,34 +40,28 @@ public class FuncaoDadosService {
         return funcaoDadosRepository.getFuncaoDadosDropdown();
     }
 
-    public List<UploadedFile> uploadFiles(List<MultipartFile> files, FuncaoDados funcaoDados){
+    public List<UploadedFile> uploadFiles(List<MultipartFile> files){
         List<UploadedFile> uploadedFiles = new ArrayList<>();
         try {
             for(MultipartFile file : files) {
                 UploadedFile uploadedFile = new UploadedFile();
                 byte[] bytes = file.getBytes();
-
                 byte[] bytesFileName = (file.getOriginalFilename() + String.valueOf(System.currentTimeMillis()))
                     .getBytes("UTF-8");
                 String filename = DatatypeConverter.printHexBinary(MessageDigest.getInstance("MD5").digest(bytesFileName));
                 String ext = FilenameUtils.getExtension(file.getOriginalFilename());
                 filename += "." + ext;
-
                 uploadedFile.setLogo(bytes);
                 uploadedFile.setDateOf(new Date());
                 uploadedFile.setOriginalName(file.getOriginalFilename());
                 uploadedFile.setFilename(filename);
                 uploadedFile.setSizeOf(bytes.length);
                 uploadedFiles.add(uploadedFile);
-
-                if(!funcaoDados.getFiles().contains(uploadedFile)){
-                    filesRepository.save(uploadedFile);
-                }
             }
+            return uploadedFiles;
         } catch (IOException | NoSuchAlgorithmException e) {
             throw new UploadException("Erro ao efetuar o upload do arquivo", e);
         }
-        return uploadedFiles;
     }
 
 }

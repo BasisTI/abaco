@@ -8,6 +8,7 @@ import br.com.basis.abaco.repository.AnaliseRepository;
 import br.com.basis.abaco.repository.FuncaoTransacaoRepository;
 import br.com.basis.abaco.repository.UploadedFilesRepository;
 import br.com.basis.abaco.repository.search.FuncaoTransacaoSearchRepository;
+import br.com.basis.abaco.service.FuncaoDadosService;
 import br.com.basis.abaco.service.FuncaoTransacaoService;
 import br.com.basis.abaco.repository.search.VwAlrSearchRepository;
 import br.com.basis.abaco.repository.search.VwDerSearchRepository;
@@ -83,6 +84,8 @@ public class FuncaoTransacaoResourceIT {
 
     private FuncaoTransacao funcaoTransacao;
 
+    @Autowired
+    private FuncaoDadosService funcaoDadosService;
     private FuncaoTransacaoService funcaoTransacaoService;
     private UploadedFilesRepository filesRepository;
     @Autowired
@@ -93,7 +96,7 @@ public class FuncaoTransacaoResourceIT {
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        FuncaoTransacaoResource funcaoTransacaoResource = new FuncaoTransacaoResource(funcaoTransacaoRepository, funcaoTransacaoSearchRepository, analiseRepository, vwDerSearchRepository, vwAlrSearchRepository, funcaoTransacaoService, filesRepository);
+        FuncaoTransacaoResource funcaoTransacaoResource = new FuncaoTransacaoResource(funcaoTransacaoRepository, funcaoTransacaoSearchRepository, analiseRepository, vwDerSearchRepository, vwAlrSearchRepository, funcaoTransacaoService, filesRepository, funcaoDadosService);
         this.restFuncaoTransacaoMockMvc = MockMvcBuilders.standaloneSetup(funcaoTransacaoResource)
                 .setCustomArgumentResolvers(pageableArgumentResolver)
                 .setControllerAdvice(exceptionTranslator)

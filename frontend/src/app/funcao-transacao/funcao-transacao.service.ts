@@ -61,14 +61,14 @@ export class FuncaoTransacaoService {
         return result;
     }
 
-    create(funcaoTransacao: FuncaoTransacao, idAnalise: Number, files: File[]): Observable<any> {
+    create(funcaoTransacao: FuncaoTransacao, idAnalise: Number, files?: File[]): Observable<any> {
+
         let body = new FormData();
         if (files) {
             for (let i = 0; i < files.length; i++) {
-                body.append('file', files[i]);
+                body.append('files', files[i]);
             }
         }
-
         const json = JSON.stringify(funcaoTransacao);
         const blob = new Blob([json], {
             type: 'application/json'
@@ -78,22 +78,20 @@ export class FuncaoTransacaoService {
         return this.http.post(`${this.funcaoTransacaoResourceUrl}/${idAnalise}`, body);
     }
 
-    update(funcaoTransacao: FuncaoTransacao, files: File[]) {
+    update(funcaoTransacao: FuncaoTransacao, files?: File[]) {
         let body = new FormData();
         if (files) {
             for (let i = 0; i < files.length; i++) {
-                body.append('file', files[i]);
+                body.append('files', files[i]);
             }
         }
-
         const json = JSON.stringify(funcaoTransacao);
         const blob = new Blob([json], {
             type: 'application/json'
         });
         body.append('funcaoTransacao', blob);
 
-        const copy = funcaoTransacao.toJSONState();
-        return this.http.put(`${this.funcaoTransacaoResourceUrl}/${copy.id}`, body).pipe(catchError((error: any) => {
+        return this.http.put(`${this.funcaoTransacaoResourceUrl}/${funcaoTransacao.id}`, body).pipe(catchError((error: any) => {
             if (error.name === 403) {
                 this.pageNotificationService.addErrorMessage(error);
                 return Observable.throw(new Error(error.status));

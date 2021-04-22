@@ -12,6 +12,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
+import br.com.basis.abaco.service.FuncaoDadosService;
 import org.jetbrains.annotations.NotNull;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
@@ -68,12 +69,13 @@ public class FuncaoTransacaoResource {
     private final UploadedFilesRepository filesRepository;
     private final VwDerSearchRepository vwDerSearchRepository;
     private final VwAlrSearchRepository vwAlrSearchRepository;
+    private final FuncaoDadosService funcaoDadosService;
     @Autowired
     private DerRepository derRepository;
     @Autowired
     private ModelMapper modelMapper;
 
-    public FuncaoTransacaoResource(FuncaoTransacaoRepository funcaoTransacaoRepository, FuncaoTransacaoSearchRepository funcaoTransacaoSearchRepository, AnaliseRepository analiseRepository, VwDerSearchRepository vwDerSearchRepository, VwAlrSearchRepository vwAlrSearchRepository, FuncaoTransacaoService funcaoTransacaoService, UploadedFilesRepository filesRepository) {
+    public FuncaoTransacaoResource(FuncaoTransacaoRepository funcaoTransacaoRepository, FuncaoTransacaoSearchRepository funcaoTransacaoSearchRepository, AnaliseRepository analiseRepository, VwDerSearchRepository vwDerSearchRepository, VwAlrSearchRepository vwAlrSearchRepository, FuncaoTransacaoService funcaoTransacaoService, UploadedFilesRepository filesRepository, FuncaoDadosService funcaoDadosService) {
         this.funcaoTransacaoRepository = funcaoTransacaoRepository;
         this.funcaoTransacaoSearchRepository = funcaoTransacaoSearchRepository;
         this.analiseRepository = analiseRepository;
@@ -81,6 +83,7 @@ public class FuncaoTransacaoResource {
         this.vwAlrSearchRepository = vwAlrSearchRepository;
         this.funcaoTransacaoService = funcaoTransacaoService;
         this.filesRepository = filesRepository;
+        this.funcaoDadosService = funcaoDadosService;
     }
 
     /**
@@ -90,9 +93,9 @@ public class FuncaoTransacaoResource {
      * @return the ResponseEntity with status 201 (Created) and with body the new funcaoTransacao, or with status 400 (Bad Request) if the funcaoTransacao has already an ID
      * @throws URISyntaxException if the Location URI syntax is incorrect
      */
-    @PostMapping(path = "/funcao-transacaos/{idAnalise}",  consumes = {"multipart/form-data"})
+    @PostMapping(path = "/funcao-transacaos/{idAnalise}", consumes = {"multipart/form-data"})
     @Timed
-    public ResponseEntity<FuncaoTransacao> createFuncaoTransacao(@PathVariable Long idAnalise, @RequestPart("funcaoTransacao") FuncaoTransacao funcaoTransacao, @RequestPart("file") List<MultipartFile> files) throws URISyntaxException {
+    public ResponseEntity<FuncaoTransacao> createFuncaoTransacao(@PathVariable Long idAnalise, @RequestPart("funcaoTransacao") FuncaoTransacao funcaoTransacao, @RequestPart("files")List<MultipartFile> files) throws URISyntaxException {
         log.debug("REST request to save FuncaoTransacao : {}", funcaoTransacao);
         Analise analise = analiseRepository.findOne(idAnalise);
         funcaoTransacao.getDers().forEach(alr -> {alr.setFuncaoTransacao(funcaoTransacao);});
@@ -101,12 +104,14 @@ public class FuncaoTransacaoResource {
         if (funcaoTransacao.getId() != null || analise.getId() == null) {
             return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert(ENTITY_NAME, "idexists", "A new funcaoTransacao cannot already have an ID")).body(null);
         }
+
+        if(!files.isEmpty()){
+            List<UploadedFile> uploadedFiles = funcaoDadosService.uploadFiles(files);
+            funcaoTransacao.setFiles(uploadedFiles);
+        }
+
         funcaoTransacao.setDers(bindDers(funcaoTransacao));
 
-        List<UploadedFile> uploadedFiles = funcaoTransacaoService.uploadFiles(files, funcaoTransacao);
-        for(UploadedFile file : uploadedFiles){
-            funcaoTransacao.addFiles(file);
-        }
         FuncaoTransacao result = funcaoTransacaoRepository.save(funcaoTransacao);
 
         saveVwDersAndVwAlrs(result.getDers(), result.getAlrs(), analise.getSistema().getId());
@@ -127,7 +132,7 @@ public class FuncaoTransacaoResource {
      */
     @PutMapping(path = "/funcao-transacaos/{id}", consumes = {"multipart/form-data"})
     @Timed
-    public ResponseEntity<FuncaoTransacao> updateFuncaoTransacao(@PathVariable Long id, @RequestPart("funcaoTransacao") FuncaoTransacao funcaoTransacao, @RequestPart("file") List<MultipartFile> files) throws URISyntaxException {
+    public ResponseEntity<FuncaoTransacao> updateFuncaoTransacao(@PathVariable Long id, @RequestPart("funcaoTransacao") FuncaoTransacao funcaoTransacao, @RequestPart("files")List<MultipartFile> files) throws URISyntaxException {
         log.debug("REST request to update FuncaoTransacao : {}", funcaoTransacao);
         FuncaoTransacao funcaoTransacaoOld = funcaoTransacaoRepository.findOne(id);
         Analise analise = analiseRepository.findOne(funcaoTransacaoOld.getAnalise().getId());
@@ -142,15 +147,9 @@ public class FuncaoTransacaoResource {
         if (funcaoTransacao.getAnalise() == null || funcaoTransacao.getAnalise().getId() == null) {
             return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert(ENTITY_NAME, "idexists", "A new funcaoTransacao cannot already have an ID")).body(null);
         }
-
-        Optional<List<UploadedFile>> existingFiles = filesRepository.findAllByFuncaoTransacao(funcaoTransacao);
-        if(existingFiles.isPresent()){
-            funcaoTransacao.setFiles(existingFiles.get());
-        }
-
-        List<UploadedFile> uploadedFiles = funcaoTransacaoService.uploadFiles(files, funcaoTransacao);
-        for(UploadedFile file : uploadedFiles){
-            funcaoTransacao.addFiles(file);
+        if(!files.isEmpty()){
+            List<UploadedFile> uploadedFiles = funcaoDadosService.uploadFiles(files);
+            funcaoTransacao.setFiles(uploadedFiles);
         }
 
         FuncaoTransacao result = funcaoTransacaoRepository.save(funcaoTransacao);
