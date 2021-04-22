@@ -1,0 +1,28 @@
+<p-fileUpload (onSelect)="onUploadEmLote($event)" multiple="multiple" accept="image/*" [name]="'arquivoEmLote'"
+    chooseLabel="Selecionar Arquivo" [showUploadButton]=false [showCancelButton]=false maxFileSize="1000000"
+    #componenteFileEmLote>
+    <ng-template pTemplate="content">
+        <div *ngIf="arquivos?.length" class="ui-g-12 ui-md-12 ui-sm-12" style="padding: 0;">
+            <ul style="margin: 0 ;">
+                <li *ngFor="let file of arquivos" style="list-style: none;">
+                    <div style="display: flex;">
+                        <div style="padding: 7px 14px">
+                            <img style="width: 50px; height: 35px;" [src]="file.safeUrl" class="image" />
+                        </div>
+                        <div style="padding: 7px 14px">
+                            <p>{{file.originalName}}</p>
+                        </div>
+                        <div style="padding: 7px 14px">
+                            <p>{{file.sizeOf}}Kb</p>
+                        </div>
+                        <basis-datatable-button style="display: inline-table; margin-left: 10px; max-zoom: 10px;"
+                            (click)="confirmDeleteFileUpload(file)" name="deleteArquivo" [bTooltip]="'Remover arquivo'"
+                            icon="clear">
+                        </basis-datatable-button>
+                    </div>
+                </li>
+            </ul>
+        </div>
+        <div>Arraste suas imagens e solte aqui</div>
+    </ng-template>
+</p-fileUpload>

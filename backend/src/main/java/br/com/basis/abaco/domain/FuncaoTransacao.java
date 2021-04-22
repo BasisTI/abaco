@@ -105,4 +105,15 @@ public class FuncaoTransacao extends FuncaoAnalise implements Serializable {
         this.files.add(file);
         file.setFuncaoTransacao(this);
     }
+
+    public void setFiles(List<UploadedFile> files) {
+        this.files.clear();
+        if (files != null) {
+            this.files.addAll(files);
+            files.forEach(item -> {
+                item.setFuncaoTransacao(this);
+            });
+        }
+    }
+
 }

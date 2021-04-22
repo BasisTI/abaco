@@ -2,7 +2,7 @@ import { AfterViewInit, ChangeDetectorRef, Component, EventEmitter, Input, OnIni
 import { ActivatedRoute, Router } from '@angular/router';
 import { Column, DatatableClickEvent, DatatableComponent, DatatableModule, PageNotificationService } from '@nuvem/primeng-components';
 import * as _ from 'lodash';
-import { ConfirmationService, SelectItem, FullCalendar } from 'primeng';
+import { ConfirmationService, SelectItem, FullCalendar, FileUpload } from 'primeng';
 import { forkJoin, Observable, Subscription } from 'rxjs';
 import { Alr } from '../alr/alr.model';
 import { Analise, AnaliseService } from '../analise';
@@ -38,12 +38,13 @@ import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { timeStamp } from 'console';
 import { table } from 'node:console';
 import { DerService } from '../der/der.service';
+import { Utilitarios } from '../util/utilitarios.util';
 
 @Component({
     selector: 'app-analise-funcao-dados',
     host: {
-		"(window:paste)": "handlePaste( $event )"
-	},
+        "(window:paste)": "handlePaste($event)"
+    },
     templateUrl: './funcao-dados-form.component.html',
     providers: [ConfirmationService]
 })
@@ -115,6 +116,7 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
     classificacaoEmLote: TipoFuncaoDados;
     deflatorEmLote: FatorAjuste;
     evidenciaEmLote: string;
+    arquivosEmLote: Upload[] = [];
     quantidadeEmLote: number;
     funcaoDadosEmLote: FuncaoDados[] = []
 
@@ -136,10 +138,10 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
     public display = false;
 
     public modulos: Modulo[];
-    files: any[] = []
-    imageUrls: SafeUrl[];
     private sanitizer: DomSanitizer;
     private lastObjectUrl: string;
+
+    @ViewChild(FileUpload) componenteFile: FileUpload;
 
     constructor(
         private analiseSharedDataService: AnaliseSharedDataService,
@@ -157,60 +159,9 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
         sanitizer: DomSanitizer,
     ) {
         this.sanitizer = sanitizer;
-        this.imageUrls = [];
         this.lastObjectUrl = "";
     }
-    onUpload(event) {
-        this.files = [];
-       console.log(event)
-        for(let i =0;i < event.currentFiles["length"]; i++) {
-            this.files.push(event.currentFiles[i]);
-        }
-    }
 
-
-    public handlePaste( event: ClipboardEvent ) : void {
-        console.log(event.clipboardData.files[0]);
-        console.log(this.files);
-        this.files.push(event.clipboardData.files[0])
-
-        var pastedImage = this.getPastedImage( event );
-
-		if ( ! pastedImage ) {
-			return;
-		}
-
-        if ( this.lastObjectUrl ) {
-			URL.revokeObjectURL( this.lastObjectUrl );
-		}
-        this.lastObjectUrl = URL.createObjectURL( pastedImage );
-        this.imageUrls.unshift(
-			this.sanitizer.bypassSecurityTrustUrl( this.lastObjectUrl )
-		);
-        console.log(this.imageUrls);
-
-    }
-
-    private getPastedImage( event: ClipboardEvent ) : File | null {
-        if (
-			event.clipboardData &&
-			event.clipboardData.files &&
-			event.clipboardData.files.length &&
-			this.isImageFile( event.clipboardData.files[ 0 ] )
-			) {
-
-			return( event.clipboardData.files[ 0 ] );
-
-		}
-
-		return( null );
-    }
-
-    private isImageFile( file: File ) : boolean {
-        const res = file.type.search( /^image\//i ) === 0
-
-		return( res);
-	}
 
     getLabel(label) {
         return label;
@@ -222,7 +173,7 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
             this.idAnalise = params['id'];
             this.isView = params['view'] !== undefined;
             this.funcaoDadosService.getVWFuncaoDadosByIdAnalise(this.idAnalise).subscribe(value => {
-               this.funcoesDados = value;
+                this.funcoesDados = value;
                 if (!this.isView) {
                     this.analiseService.find(this.idAnalise).subscribe(analise => {
                         // analise = new Analise().copyFromJSON(analise);
@@ -609,7 +560,7 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
                 this.resetarEstadoPosSalvar();
                 lstFuncaoDados.forEach(funcaoDadosMultp => {
                     lstFuncaoDadosToSave.push(
-                        this.funcaoDadosService.create(funcaoDadosMultp, this.analise.id, this.files)
+                        this.funcaoDadosService.create(funcaoDadosMultp, this.analise.id, funcaoDadosMultp.files.map(item => item.logo))
                     );
                 });
                 forkJoin(lstFuncaoDadosToSave).subscribe(respCreate => {
@@ -665,7 +616,7 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
                 this.seletedFuncaoDados.funcionalidade.id,
                 this.seletedFuncaoDados.funcionalidade.modulo.id).subscribe(value => {
                     if (value === false) {
-                        this.funcaoDadosService.create(funcaoDadosCalculada, this.analise.id, this.files).subscribe(
+                        this.funcaoDadosService.create(funcaoDadosCalculada, this.analise.id, funcaoDadosCalculada.files.map(item => item.logo)).subscribe(
                             (funcaoDados) => {
                                 this.pageNotificationService.addCreateMsg(funcaoDadosCalculada.name);
                                 funcaoDadosCalculada.id = funcaoDados.id;
@@ -784,7 +735,7 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
                     this.seletedFuncaoDados = new FuncaoDados().copyFromJSON(this.seletedFuncaoDados);
                     const funcaoDadosCalculada = Calculadora.calcular(
                         this.analise.metodoContagem, this.seletedFuncaoDados, this.analise.contrato.manual);
-                    this.funcaoDadosService.update(funcaoDadosCalculada, this.files).subscribe(value => {
+                    this.funcaoDadosService.update(funcaoDadosCalculada, funcaoDadosCalculada.files.map(item => item.logo)).subscribe(value => {
                         this.funcoesDados = this.funcoesDados.filter((funcaoDados) => (funcaoDados.id !== funcaoDadosCalculada.id));
                         this.setFields(funcaoDadosCalculada);
                         this.funcoesDados.push(funcaoDadosCalculada);
@@ -806,6 +757,7 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
         this.seletedFuncaoDados = new FuncaoDados();
         this.dersChips = [];
         this.rlrsChips = [];
+        this.componenteFile.files = [];
         window.scrollTo(0, 60);
     }
 
@@ -909,8 +861,7 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
             funcaoTransacaoAtual.funcionalidade.modulo.id)
             .subscribe(existFuncaoTranasacao => {
                 if (!existFuncaoTranasacao) {
-                    this.files = [];
-                    this.funcaoTransacaoService.create(funcaoTransacaoAtual, this.analise.id, this.files).subscribe(() => {
+                    this.funcaoTransacaoService.create(funcaoTransacaoAtual, this.analise.id).subscribe(() => {
                         this.pageNotificationService.addCreateMsg(funcaoTransacaoAtual.name);
                         this.resetarEstadoPosSalvar();
                         this.estadoInicial();
@@ -955,9 +906,8 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
                 let index = 0;
                 for (const existFuncaoTranasacao of lstFuncaoTranscao) {
                     if (!existFuncaoTranasacao) {
-                        this.files = [];
                         lstFuncaoTransacaoToInclud.push(
-                            this.funcaoTransacaoService.create(lstFuncaoTransacaoCrud[index], this.analise.id, this.files)
+                            this.funcaoTransacaoService.create(lstFuncaoTransacaoCrud[index], this.analise.id)
                         );
                     } else {
                         this.pageNotificationService.addErrorMessage('CRUD já cadastrado!');
@@ -1011,10 +961,8 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
 
 
     private prepararParaEdicao(funcaoDadosSelecionada: FuncaoDados) {
-        this.files = []
         this.blockUiService.show();
         this.funcaoDadosService.getById(funcaoDadosSelecionada.id).subscribe(funcaoDados => {
-            this.files = funcaoDados.files;
             this.seletedFuncaoDados = new FuncaoDados().copyFromJSON(funcaoDados);
             if (this.seletedFuncaoDados.fatorAjuste.tipoAjuste === 'UNITARIO' && this.faS[0]) {
                 this.hideShowQuantidade = false;
@@ -1030,10 +978,8 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
 
     // Prepara para clonar
     private prepareToClone(funcaoDadosSelecionada: FuncaoDados) {
-        this.files = [];
         this.blockUiService.show();
         this.funcaoDadosService.getById(funcaoDadosSelecionada.id).subscribe(funcaoDados => {
-            this.files = funcaoDados.files;
             this.seletedFuncaoDados = new FuncaoDados().copyFromJSON(funcaoDados);
             this.seletedFuncaoDados.id = null;
             this.seletedFuncaoDados.name = this.seletedFuncaoDados.name + this.getLabel('- Cópia');
@@ -1054,6 +1000,7 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
         this.analiseSharedDataService.currentFuncaoDados = funcaoDadosSelecionada;
         this.carregarDerERlr(funcaoDadosSelecionada);
         this.carregarFatorDeAjusteNaEdicao(funcaoDadosSelecionada);
+        this.carregarArquivos();
     }
 
     private carregarFatorDeAjusteNaEdicao(funcaoSelecionada: FuncaoDados) {
@@ -1098,8 +1045,6 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
     }
 
     cancelar() {
-        this.imageUrls = [];
-        this.showDialog = false;
         this.fecharDialog();
     }
 
@@ -1119,18 +1064,6 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
         });
     }
 
-    confirmDeleteFile(fileId: number, funcaoId: number){
-        this.confirmationService.confirm({
-            message: 'Tem certeza que deseja excluir o arquivo?',
-            accept: () => {
-                this.uploadService.deleteFileEvidence(fileId, funcaoId).subscribe(response => {
-                    this.pageNotificationService.addSuccessMessage('Arquivo excluído com sucesso!');
-                    this.showDialog = false;
-                });
-            }
-        });
-    }
-
     formataFatorAjuste(fatorAjuste: FatorAjuste): string {
         return fatorAjuste ? FatorAjusteLabelGenerator.generate(fatorAjuste) : this.getLabel('Nenhum');
     }
@@ -1141,7 +1074,6 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
     }
 
     openDialog(param: boolean) {
-        this.files = [];
         this.subscribeToAnaliseCarregada();
         this.isEdit = param;
         this.disableTRDER();
@@ -1254,11 +1186,9 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
         this.displayDescriptionDeflator = false;
     }
     private prepararParaVisualizar(funcaoDadosSelecionada: FuncaoDados) {
-        this.files =[];
         this.blockUiService.show();
         this.funcaoDadosService.getById(funcaoDadosSelecionada.id)
             .subscribe(funcaoDados => {
-                this.files = funcaoDados.files;
                 this.seletedFuncaoDados = funcaoDados;
                 this.blockUiService.hide();
             });
@@ -1297,11 +1227,12 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
         this.moduloSelecionadoEmLote = null;
         this.funcionalidadeSelecionadaEmLote = null;
         this.quantidadeEmLote = null;
+        this.arquivosEmLote = []
         this.mostrarDialogEditarEmLote = false;
         this.funcaoDadosEmLote = [];
     }
 
-    editarCamposEmLote(){
+    editarCamposEmLote() {
         if (this.funcionalidadeSelecionadaEmLote) {
             this.funcaoDadosEmLote.forEach(funcaoDado => {
                 funcaoDado.funcionalidade = this.funcionalidadeSelecionadaEmLote;
@@ -1323,7 +1254,12 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
                 funcaoDado.sustantation = this.evidenciaEmLote;
             })
         }
-        if(this.quantidadeEmLote){
+        if (this.arquivosEmLote) {
+            this.funcaoDadosEmLote.forEach(funcaoDado => {
+                funcaoDado.files = this.arquivosEmLote;
+            })
+        }
+        if (this.quantidadeEmLote) {
             this.funcaoDadosEmLote.forEach(funcaoDado => {
                 funcaoDado.quantidade = this.quantidadeEmLote;
             })
@@ -1334,10 +1270,11 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
         if (!this.funcionalidadeSelecionadaEmLote &&
             !this.classificacaoEmLote &&
             !this.deflatorEmLote &&
-            !this.evidenciaEmLote) {
-                return this.pageNotificationService.addErrorMessage("Para editar em lote, selecione ao menos um campo para editar.")
+            !this.evidenciaEmLote &&
+            !this.arquivosEmLote) {
+            return this.pageNotificationService.addErrorMessage("Para editar em lote, selecione ao menos um campo para editar.")
         }
-        if(this.deflatorEmLote && this.deflatorEmLote.tipoAjuste === 'UNITARIO' && !this.quantidadeEmLote){
+        if (this.deflatorEmLote && this.deflatorEmLote.tipoAjuste === 'UNITARIO' && !this.quantidadeEmLote) {
             return this.pageNotificationService.addErrorMessage("Coloque uma quantidade para o deflator!")
         }
         this.editarCamposEmLote();
@@ -1346,7 +1283,7 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
             funcaoDado = new FuncaoDados().copyFromJSON(funcaoDado);
             const funcaoDadosCalculada = Calculadora.calcular(
                 this.analise.metodoContagem, funcaoDado, this.analise.contrato.manual);
-            this.funcaoDadosService.update(funcaoDadosCalculada, this.files).subscribe(value => {
+            this.funcaoDadosService.update(funcaoDadosCalculada, funcaoDadosCalculada.files.map(item => item.logo)).subscribe(value => {
                 this.funcoesDados = this.funcoesDados.filter((funcaoDados) => (funcaoDados.id !== funcaoDadosCalculada.id));
                 this.setFields(funcaoDadosCalculada);
                 this.funcoesDados.push(funcaoDadosCalculada);
@@ -1365,6 +1302,17 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
         this.funcionalidadeSelecionadaEmLote = funcionalidade;
     }
 
+
+
+    selecionarDeflatorEmLote(deflator: FatorAjuste) {
+        if (deflator.tipoAjuste === 'UNITARIO') {
+            this.hideShowQuantidade = false;
+        } else {
+            this.hideShowQuantidade = true;
+        }
+    }
+
+
     carregarModuloSistema() {
         this.sistemaService.find(this.analise.sistema.id).subscribe((sistemaRecarregado: Sistema) => {
             this.modulos = sistemaRecarregado.modulos;
@@ -1372,18 +1320,92 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
         });
     }
 
-    exibeComponenteModuloFuncionalidade(){
-        if((!this.isEdit || this.seletedFuncaoDados.id) && this.modulos) {
+    exibeComponenteModuloFuncionalidade() {
+        if ((!this.isEdit || this.seletedFuncaoDados.id) && this.modulos) {
             return true;
         }
         return false;
     }
 
-    selecionarDeflatorEmLote(deflator: FatorAjuste){
-        if(deflator.tipoAjuste === 'UNITARIO'){
-            this.hideShowQuantidade = false;
-        }else{
-            this.hideShowQuantidade = true;
+    onUpload(event) {
+        for (let i = 0; i < event.currentFiles.length; i++) {
+            let file: Upload = new Upload();
+            file.originalName = event.currentFiles[i].name;
+            file.logo = event.currentFiles[i];
+            file.sizeOf = event.currentFiles[i].size;
+            file.safeUrl = this.sanitizer.bypassSecurityTrustUrl(URL.createObjectURL(event.currentFiles[i]));
+            if (this.seletedFuncaoDados.id != undefined) {
+                this.seletedFuncaoDados.files.push(file);
+            } else if (this.funcaoDadosEmLote.length > 0) {
+                this.arquivosEmLote.push(file);
+            }
         }
+        event.currentFiles = [];
+        this.componenteFile.files = [];
     }
+
+    confirmDeleteFileUpload(file: Upload) {
+        this.confirmationService.confirm({
+            message: 'Tem certeza que deseja excluir o arquivo?',
+            accept: () => {
+                if (this.seletedFuncaoDados.id != undefined) {
+                    this.seletedFuncaoDados.files.splice(this.seletedFuncaoDados.files.indexOf(file), 1);
+                } else if (this.funcaoDadosEmLote.length > 0) {
+                    this.arquivosEmLote.splice(this.arquivosEmLote.indexOf(file), 1);
+                }
+            }
+        });
+    }
+
+    carregarArquivos() {
+        this.seletedFuncaoDados.files.forEach(file => {
+            file.safeUrl = this.sanitizer.bypassSecurityTrustUrl(URL.createObjectURL(Utilitarios.base64toFile(file.logo, "image/png", file.originalName)));
+            file.logo = Utilitarios.base64toFile(file.logo, "image/png", file.originalName);
+        })
+    }
+
+    public handlePaste(event: ClipboardEvent): void {
+        let uploadFile = new Upload();
+        let num: number = 0;
+        var pastedImage = this.getPastedImage(event);
+        if (!pastedImage) {
+            return;
+        }
+        if (this.lastObjectUrl) {
+            URL.revokeObjectURL(this.lastObjectUrl);
+        }
+        this.lastObjectUrl = URL.createObjectURL(pastedImage);
+        uploadFile.safeUrl = this.sanitizer.bypassSecurityTrustUrl(this.lastObjectUrl);
+        uploadFile.logo = new File([event.clipboardData.files[0]], uploadFile.originalName, { type: event.clipboardData.files[0].type });
+        uploadFile.sizeOf = event.clipboardData.files[0].size;
+        if (this.seletedFuncaoDados.id != undefined) {
+            num = this.seletedFuncaoDados.files.length + 1
+            uploadFile.originalName = "Evidência " + num;
+            this.seletedFuncaoDados.files.push(uploadFile);
+        } else if (this.funcaoDadosEmLote.length > 0) {
+            num = this.arquivosEmLote.length + 1;
+            uploadFile.originalName = "Evidência " + num;
+            this.arquivosEmLote.push(uploadFile);
+        }
+
+    }
+
+    private getPastedImage(event: ClipboardEvent): File | null {
+        if (
+            event.clipboardData &&
+            event.clipboardData.files &&
+            event.clipboardData.files.length &&
+            this.isImageFile(event.clipboardData.files[0])
+        ) {
+            return (event.clipboardData.files[0]);
+        }
+        return (null);
+    }
+
+    private isImageFile(file: File): boolean {
+        const res = file.type.search(/^image\//i) === 0;
+        return (res);
+    }
+
+
 }

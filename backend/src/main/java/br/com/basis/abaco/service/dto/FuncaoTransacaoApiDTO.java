@@ -39,7 +39,7 @@ public class FuncaoTransacaoApiDTO {
     private Set<DerFtDTO> ders = new HashSet<>();
     private StatusFuncao statusFuncao;
     private List<DivergenceCommentDTO> lstDivergenceComments = new ArrayList<>();
-    private List<UploadedFile> files;
+    private List<UploadedFileDTO    > files;
 
     public List<DivergenceCommentDTO> getLstDivergenceComments() {
         return  Collections.unmodifiableList(lstDivergenceComments);

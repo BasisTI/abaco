@@ -225,9 +225,13 @@ public class FuncaoDados extends FuncaoAnalise implements Serializable {
     }
 
     public void setFiles(List<UploadedFile> files) {
-        List<UploadedFile> cp = new ArrayList<>();
-        cp.addAll(files);
-        this.files = cp;
+        this.files.clear();
+        if (files != null) {
+            this.files.addAll(files);
+            files.forEach(item -> {
+                item.setFuncaoDados(this);
+            });
+        }
     }
     public void addFiles(UploadedFile file){
         this.files.add(file);

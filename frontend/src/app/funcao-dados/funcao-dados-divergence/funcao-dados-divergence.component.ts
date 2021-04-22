@@ -1,12 +1,15 @@
 import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { DomSanitizer } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BlockUiService } from '@nuvem/angular-base';
 import { Column, DatatableClickEvent, DatatableComponent, PageNotificationService } from '@nuvem/primeng-components';
 import * as _ from 'lodash';
-import { ConfirmationService, SelectItem } from 'primeng';
+import { ConfirmationService, FileUpload, SelectItem } from 'primeng';
 import { forkJoin, Observable, Subscription } from 'rxjs';
 import { DivergenciaService } from 'src/app/divergencia';
 import { Sistema, SistemaService } from 'src/app/sistema';
+import { Upload } from 'src/app/upload/upload.model';
+import { Utilitarios } from 'src/app/util/utilitarios.util';
 import { Alr } from '../../alr/alr.model';
 import { Analise } from '../../analise';
 import { AnaliseReferenciavel } from '../../analise-shared/analise-referenciavel';
@@ -35,6 +38,9 @@ import { FuncaoDadosService } from '../funcao-dados.service';
 
 @Component({
     selector: 'app-analise-funcao-dados',
+    host: {
+        "(window:paste)": "handlePaste($event)"
+    },
     templateUrl: './funcao-dados-divergence.component.html',
     providers: [ConfirmationService]
 })
@@ -84,7 +90,6 @@ export class FuncaoDadosDivergenceComponent implements OnInit {
     viewFuncaoDados = false;
     showAddComent = false;
     selectModeButtonsEditAndView: boolean;
-    files: any[] = []
     impacto: SelectItem[] = [
         {label: 'Inclusão', value: 'INCLUSAO'},
         {label: 'Alteração', value: 'ALTERACAO'},
@@ -127,8 +132,14 @@ export class FuncaoDadosDivergenceComponent implements OnInit {
     classificacaoEmLote: TipoFuncaoDados;
     deflatorEmLote: FatorAjuste;
     evidenciaEmLote: string;
+    arquivosEmLote: Upload[] = [];
     quantidadeEmLote: number;
     funcaoDadosEmLote: FuncaoDados[] = []
+
+    private sanitizer: DomSanitizer;
+    private lastObjectUrl: string;
+
+    @ViewChild(FileUpload) componenteFile: FileUpload;
 
     constructor(
         private analiseSharedDataService: AnaliseSharedDataService,
@@ -142,17 +153,14 @@ export class FuncaoDadosDivergenceComponent implements OnInit {
         private baselineService: BaselineService,
         private router: Router,
         private blockUiService: BlockUiService,
-        private sistemaService: SistemaService
+        private sistemaService: SistemaService,
+        sanitizer: DomSanitizer,
     ) {
+        this.sanitizer = sanitizer;
+        this.lastObjectUrl = "";
     }
-    onUpload(event) {
-        if(!this.files.length){
-            this.files = []
-        }        
-        for(let i =0;i < event.currentFiles["length"]; i++) {
-            this.files.push(event.currentFiles[i]);
-        }
-    }
+
+
     getLabel(label) {
         return label;
     }
@@ -524,7 +532,7 @@ export class FuncaoDadosDivergenceComponent implements OnInit {
                 this.resetarEstadoPosSalvar();
                 lstFuncaoDados.forEach( funcaoDadosMultp => {
                     lstFuncaoDadosToSave.push(
-                        this.funcaoDadosService.create(funcaoDadosMultp, this.analise.id, this.files)
+                        this.funcaoDadosService.create(funcaoDadosMultp, this.analise.id, funcaoDadosMultp.files.map(item => item.logo))
                         );
                 });
                 forkJoin(lstFuncaoDadosToSave).subscribe(respCreate => {
@@ -580,7 +588,7 @@ export class FuncaoDadosDivergenceComponent implements OnInit {
                 this.seletedFuncaoDados.funcionalidade.id,
                 this.seletedFuncaoDados.funcionalidade.modulo.id).subscribe(value => {
                     if (value === false) {
-                    this.funcaoDadosService.createDivergence(funcaoDadosCalculada, this.analise.id, this.files).subscribe(
+                    this.funcaoDadosService.createDivergence(funcaoDadosCalculada, this.analise.id, funcaoDadosCalculada.files.map(item => item.logo)).subscribe(
                         (funcaoDados) => {
                             this.pageNotificationService.addCreateMsg(funcaoDadosCalculada.name);
                             funcaoDadosCalculada.id = funcaoDados.id;
@@ -698,7 +706,7 @@ export class FuncaoDadosDivergenceComponent implements OnInit {
                     this.seletedFuncaoDados = new FuncaoDados().copyFromJSON(this.seletedFuncaoDados);
                     const funcaoDadosCalculada = Calculadora.calcular(
                         this.analise.metodoContagem, this.seletedFuncaoDados, this.analise.contrato.manual);
-                    this.funcaoDadosService.update(funcaoDadosCalculada, this.files).subscribe(value => {
+                    this.funcaoDadosService.update(funcaoDadosCalculada, funcaoDadosCalculada.files.map(item => item.logo)).subscribe(value => {
                         this.funcoesDados = this.funcoesDados.filter((funcaoDados) => (funcaoDados.id !== funcaoDadosCalculada.id));
                         this.setFields(funcaoDadosCalculada);
                         this.funcoesDados.push(funcaoDadosCalculada);
@@ -719,6 +727,7 @@ export class FuncaoDadosDivergenceComponent implements OnInit {
         this.seletedFuncaoDados = new FuncaoDados();
         this.dersChips = [];
         this.rlrsChips = [];
+        this.componenteFile.files = [];
         window.scrollTo(0, 60);
     }
 
@@ -810,8 +819,7 @@ export class FuncaoDadosDivergenceComponent implements OnInit {
             funcaoTransacaoAtual.funcionalidade.modulo.id)
             .subscribe(existFuncaoTranasacao => {
                 if (!existFuncaoTranasacao) {
-                    this.files =[]
-                    this.funcaoTransacaoService.create(funcaoTransacaoAtual, this.analise.id, this.files).subscribe(() => {
+                    this.funcaoTransacaoService.create(funcaoTransacaoAtual, this.analise.id, funcaoTransacaoAtual.files.map(item => item.logo)).subscribe(() => {
                         this.pageNotificationService.addCreateMsg(funcaoTransacaoAtual.name);
                         this.resetarEstadoPosSalvar();
                         this.estadoInicial();
@@ -869,7 +877,6 @@ export class FuncaoDadosDivergenceComponent implements OnInit {
     private prepararParaEdicao(funcaoDadosSelecionada: FuncaoDados) {
         this.blockUiService.show();
         this.funcaoDadosService.getById(funcaoDadosSelecionada.id).subscribe(funcaoDados => {
-            this.files = funcaoDados.files
             this.seletedFuncaoDados = new FuncaoDados().copyFromJSON(funcaoDados);
             this.seletedFuncaoDados.lstDivergenceComments = funcaoDados.lstDivergenceComments;
             if (this.seletedFuncaoDados.fatorAjuste.tipoAjuste === 'UNITARIO' && this.faS[0]) {
@@ -909,6 +916,7 @@ export class FuncaoDadosDivergenceComponent implements OnInit {
         this.analiseSharedDataService.currentFuncaoDados = funcaoDadosSelecionada;
         this.carregarDerERlr(funcaoDadosSelecionada);
         this.carregarFatorDeAjusteNaEdicao(funcaoDadosSelecionada);
+        this.carregarArquivos();
     }
 
     private carregarFatorDeAjusteNaEdicao(funcaoSelecionada: FuncaoDados) {
@@ -1057,7 +1065,6 @@ export class FuncaoDadosDivergenceComponent implements OnInit {
     }
 
     openDialog(param: boolean) {
-        this.files = [];
         this.subscribeToAnaliseCarregada();
         this.isEdit = param;
         this.disableTRDER();
@@ -1165,10 +1172,8 @@ export class FuncaoDadosDivergenceComponent implements OnInit {
         this.displayDescriptionDeflator = false;
     }
     private prepararParaVisualizar(funcaoDadosSelecionada: FuncaoDados) {
-        this.files = [];
         this.blockUiService.show();
         this.funcaoDadosService.getById(funcaoDadosSelecionada.id).subscribe(funcaoDados => {
-            this.files = funcaoDados.files;
             this.seletedFuncaoDados = funcaoDados;
             this.blockUiService.hide();
         });
@@ -1245,6 +1250,7 @@ export class FuncaoDadosDivergenceComponent implements OnInit {
         this.quantidadeEmLote = null;
         this.mostrarDialogEditarEmLote = false;
         this.funcaoDadosEmLote = [];
+        this.arquivosEmLote = [];
     }
 
     editarCamposEmLote(){
@@ -1274,13 +1280,19 @@ export class FuncaoDadosDivergenceComponent implements OnInit {
                 funcaoDado.quantidade = this.quantidadeEmLote;
             })
         }
+        if (this.arquivosEmLote) {
+            this.funcaoDadosEmLote.forEach(funcaoDado => {
+                funcaoDado.files = this.arquivosEmLote;
+            })
+        }
     }
 
     editarEmLote() {
         if (!this.funcionalidadeSelecionadaEmLote &&
             !this.classificacaoEmLote &&
             !this.deflatorEmLote &&
-            !this.evidenciaEmLote) {
+            !this.evidenciaEmLote &&
+            !this.arquivosEmLote) {
                 return this.pageNotificationService.addErrorMessage("Para editar em lote, selecione ao menos um campo para editar.")
         }
         if(this.deflatorEmLote && this.deflatorEmLote.tipoAjuste === 'UNITARIO' && !this.quantidadeEmLote){
@@ -1292,7 +1304,7 @@ export class FuncaoDadosDivergenceComponent implements OnInit {
             funcaoDado = new FuncaoDados().copyFromJSON(funcaoDado);
             const funcaoDadosCalculada = Calculadora.calcular(
                 this.analise.metodoContagem, funcaoDado, this.analise.contrato.manual);
-            this.funcaoDadosService.update(funcaoDadosCalculada, this.files).subscribe(value => {
+            this.funcaoDadosService.update(funcaoDadosCalculada, funcaoDadosCalculada.files.map(item => item.logo)).subscribe(value => {
                 this.funcoesDados = this.funcoesDados.filter((funcaoDados) => (funcaoDados.id !== funcaoDadosCalculada.id));
                 this.setFields(funcaoDadosCalculada);
                 this.funcoesDados.push(funcaoDadosCalculada);
@@ -1309,5 +1321,70 @@ export class FuncaoDadosDivergenceComponent implements OnInit {
         }else{
             this.hideShowQuantidade = true;
         }
+    }
+
+
+    onUpload(event) {
+        for (let i = 0; i < event.currentFiles.length; i++) {
+            let file: Upload = new Upload();
+            file.originalName = event.currentFiles[i].name;
+            file.logo = event.currentFiles[i];
+            file.sizeOf = event.currentFiles[i].size;
+            file.safeUrl = this.sanitizer.bypassSecurityTrustUrl(URL.createObjectURL(event.currentFiles[i]));
+            this.seletedFuncaoDados.files.push(file);
+        }
+        event.currentFiles = [];
+        this.componenteFile.files = [];
+    }
+
+    confirmDeleteFileUpload(file: Upload) {
+        this.confirmationService.confirm({
+            message: 'Tem certeza que deseja excluir o arquivo?',
+            accept: () => {
+                this.seletedFuncaoDados.files.splice(this.seletedFuncaoDados.files.indexOf(file), 1);
+            }
+        });
+    }
+
+    carregarArquivos(){
+        this.seletedFuncaoDados.files.forEach(file => {
+            file.safeUrl = this.sanitizer.bypassSecurityTrustUrl(URL.createObjectURL(Utilitarios.base64toFile(file.logo, "image/png", file.originalName)));
+            file.logo = Utilitarios.base64toFile(file.logo, "image/png", file.originalName);
+        })
+    }
+
+    public handlePaste(event: ClipboardEvent): void {
+        let uploadFile = new Upload();
+        var pastedImage = this.getPastedImage(event);
+        if (!pastedImage) {
+            return;
+        }
+        if (this.lastObjectUrl) {
+            URL.revokeObjectURL(this.lastObjectUrl);
+        }
+        this.lastObjectUrl = URL.createObjectURL(pastedImage);
+        uploadFile.safeUrl = this.sanitizer.bypassSecurityTrustUrl(this.lastObjectUrl);
+        let num: number = this.seletedFuncaoDados.files.length + 1
+        uploadFile.originalName = "Evidência " + num;
+        uploadFile.logo = new File([event.clipboardData.files[0]], uploadFile.originalName, {type: event.clipboardData.files[0].type});
+        uploadFile.sizeOf = event.clipboardData.files[0].size;
+        this.seletedFuncaoDados.files.push(uploadFile);
+    }
+
+    private getPastedImage(event: ClipboardEvent): File | null {
+        if (
+            event.clipboardData &&
+            event.clipboardData.files &&
+            event.clipboardData.files.length &&
+            this.isImageFile(event.clipboardData.files[0])
+        ) {
+            return (event.clipboardData.files[0]);
+        }
+        return (null);
+    }
+
+    private isImageFile(file: File): boolean {
+        const res = file.type.search(/^image\//i) === 0;
+        return (res);
     }
 }
