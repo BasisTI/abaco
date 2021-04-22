@@ -7,8 +7,8 @@ import java.util.stream.Collectors;
 import javax.validation.Valid;
 
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
-import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -34,6 +34,8 @@ public class ConfiguracaoJobBaselineResource {
     private final ConfiguracaoJobBaselineService configuracaoJobBaselineService;
     private final SistemaService sistemaService;
     private final TipoEquipeService tipoEquipeService;
+    @Autowired
+    private ModelMapper modelMapper;
 
     public ConfiguracaoJobBaselineResource(ConfiguracaoJobBaselineService configuracaoJobBaselineService,
             SistemaService sistemaService, TipoEquipeService tipoEquipeService) {
@@ -72,12 +74,12 @@ public class ConfiguracaoJobBaselineResource {
         List<TipoEquipe> tipoEquipeIncluida = configuracoes.stream().map(config -> config.getTipoEquipe()).distinct().collect(Collectors.toList());
 
         sistemas.removeAll(sistemasIncluidos);
-        configuracaoDTO.setSistemasDisponiveis(sistemas.stream().map(sis -> new ModelMapper().map(sis, SistemaDTO.class)).collect(Collectors.toList()));
-        configuracaoDTO.setSistemasSelecionados(sistemasIncluidos.stream().distinct().map(sis -> new ModelMapper().map(sis, SistemaDTO.class)).collect(Collectors.toList()));
+        configuracaoDTO.setSistemasDisponiveis(sistemas.stream().map(sis -> modelMapper.map(sis, SistemaDTO.class)).collect(Collectors.toList()));
+        configuracaoDTO.setSistemasSelecionados(sistemasIncluidos.stream().distinct().map(sis -> modelMapper.map(sis, SistemaDTO.class)).collect(Collectors.toList()));
 
         List<TipoEquipe> equipesDisponiveis = equipes.stream().filter(eq -> tipoEquipeIncluida.indexOf(eq) == -1).collect(Collectors.toList());
-        configuracaoDTO.setEquipesDisponiveis(equipesDisponiveis.stream().map(eq -> new ModelMapper().map(eq, TipoEquipeDTO.class)).collect(Collectors.toList()));
-        configuracaoDTO.setEquipesSelecionados(tipoEquipeIncluida.stream().distinct().map(eq -> new ModelMapper().map(eq, TipoEquipeDTO.class)).collect(Collectors.toList()));
+        configuracaoDTO.setEquipesDisponiveis(equipesDisponiveis.stream().map(eq -> modelMapper.map(eq, TipoEquipeDTO.class)).collect(Collectors.toList()));
+        configuracaoDTO.setEquipesSelecionados(tipoEquipeIncluida.stream().distinct().map(eq -> modelMapper.map(eq, TipoEquipeDTO.class)).collect(Collectors.toList()));
 
         return configuracaoDTO;
     }

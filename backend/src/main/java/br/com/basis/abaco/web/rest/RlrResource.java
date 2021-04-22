@@ -1,15 +1,17 @@
 package br.com.basis.abaco.web.rest;
 
 import br.com.basis.abaco.domain.Rlr;
+import br.com.basis.abaco.domain.VwRlr;
 import br.com.basis.abaco.repository.RlrRepository;
 import br.com.basis.abaco.repository.search.RlrSearchRepository;
+import br.com.basis.abaco.service.RlrService;
 import br.com.basis.abaco.web.rest.util.HeaderUtil;
 import com.codahale.metrics.annotation.Timed;
 import io.github.jhipster.web.util.ResponseUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -45,9 +47,12 @@ public class RlrResource {
 
     private final RlrSearchRepository rlrSearchRepository;
 
-    public RlrResource(RlrRepository rlrRepository, RlrSearchRepository rlrSearchRepository) {
+    private final RlrService rlrService;
+
+    public RlrResource(RlrRepository rlrRepository, RlrSearchRepository rlrSearchRepository, RlrService rlrService) {
         this.rlrRepository = rlrRepository;
         this.rlrSearchRepository = rlrSearchRepository;
+        this.rlrService = rlrService;
     }
 
     /**
@@ -149,6 +154,15 @@ public class RlrResource {
         return StreamSupport
             .stream(rlrSearchRepository.search(queryStringQuery(query)).spliterator(), false)
             .collect(Collectors.toList());
+    }
+
+    @GetMapping("/rlrs/sistema/{idSistema}")
+    @Timed
+    public ResponseEntity<List<VwRlr>> getRlrByNomeSistema(@RequestParam("nome") String nome, @PathVariable Long idSistema){
+        log.debug("REST request to get Rlrs for Sistema {}", idSistema);
+
+        List<VwRlr> rlrs = rlrService.bindFilterSearchRlrsSistema(nome, idSistema);
+        return new ResponseEntity(rlrs, HttpStatus.OK);
     }
 
 

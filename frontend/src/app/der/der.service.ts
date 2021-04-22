@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { environment } from '../../environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { Der } from './der.model';
 
 
 @Injectable()
@@ -16,4 +17,11 @@ export class DerService {
         return this.http.get<any>(this.resourceUrl + '/drop-down/' + idFuncaoDados);
     }
 
+    getDersFuncaoDadosByNomeSistema(nome: string, idSistema: number): Observable<Der[]>{
+        return this.http.get<Der[]>(this.resourceUrl + "/funcao_dados/sistema/"+ idSistema + "?nome="+nome);
+    }
+
+    getDersFuncaoTransacaoByNomeSistema(nome: string, idSistema: number): Observable<Der[]>{
+        return this.http.get<Der[]>(this.resourceUrl + "/funcao_transacao/sistema/"+ idSistema + "?nome="+nome);
+    }
 }

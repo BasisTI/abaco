@@ -8,6 +8,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,6 +31,8 @@ public class NomenclaturaService {
     private final NomenclaturaSearchRepository  nomenclaturaSearchRepository;
     private final NomenclaturaRepository nomenclaturaRepository;
     private final DynamicExportsService dynamicExportsService;
+    @Autowired
+    private ModelMapper modelMapper;
 
     public NomenclaturaService(NomenclaturaSearchRepository nomenclaturaSearchRepository, NomenclaturaRepository nomenclaturaRepository, DynamicExportsService dynamicExportsService) {
         this.nomenclaturaSearchRepository = nomenclaturaSearchRepository;
@@ -47,11 +50,11 @@ public class NomenclaturaService {
 
 
     public NomenclaturaDTO convertToDto(Nomenclatura nomenclatura) {
-        return new ModelMapper().map(nomenclatura, NomenclaturaDTO.class);
+        return modelMapper.map(nomenclatura, NomenclaturaDTO.class);
     }
 
     public Nomenclatura convertToEntity(NomenclaturaDTO nomenclaturaDTO) {
-        return new ModelMapper().map(nomenclaturaDTO, Nomenclatura.class);
+        return modelMapper.map(nomenclaturaDTO, Nomenclatura.class);
     }
 
     public Nomenclatura setEntityToElatischSearch(Nomenclatura nomenclatura){

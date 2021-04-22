@@ -23,6 +23,7 @@ import org.elasticsearch.index.query.QueryBuilders;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
@@ -61,6 +62,9 @@ public class UserService extends BaseService {
     private final DynamicExportsService dynamicExportsService;
 
     private final PerfilRepository perfilRepository;
+
+    @Autowired
+    private ModelMapper modelMapper;
 
     public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, SocialService socialService,
                        UserSearchRepository userSearchRepository, DynamicExportsService dynamicExportsService, PerfilRepository perfilRepository) {
@@ -270,7 +274,7 @@ public class UserService extends BaseService {
         List<User> lista = userRepository.findAllUsersOrgEquip(idOrg, idEquip);
         List<UserAnaliseDTO> lst = new ArrayList<>();
         for (int i = 0; i < lista.size(); i++) {
-            lst.add(new ModelMapper().map(lista.get(i), UserAnaliseDTO.class));
+            lst.add(modelMapper.map(lista.get(i), UserAnaliseDTO.class));
         }
         return lst;
     }
@@ -338,11 +342,11 @@ public class UserService extends BaseService {
     }
 
     public UserEditDTO convertToDto(User user) {
-        return new ModelMapper().map(user, UserEditDTO.class);
+        return modelMapper.map(user, UserEditDTO.class);
     }
 
     public User convertToEntity(UserEditDTO userEditDTO) {
-        return new ModelMapper().map(userEditDTO, User.class);
+        return modelMapper.map(userEditDTO, User.class);
     }
 
     public User bindUserForSaveElatiscSearch(User user){

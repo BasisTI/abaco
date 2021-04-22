@@ -18,14 +18,13 @@
                             </div>
                             <div >
                                 <basis-datatable
-                                        type="memory" 
+                                        type="memory"
                                         id="idTabelaFuncaoDados"
                                         [disableDelete]="this.isView"
                                         [disableEdit]="this.isView"
                                         [disableClone]="this.isView"
                                         [disableCrud]="this.isView"
                                         (dblclick)="onRowDblclick($event)"
-                                        (selectRow)="selectRow($event)"
                                         [value]="funcoesDados"
                                         [showCrud]="true"
                                         (buttonClick)="datatableClick($event)"
@@ -41,7 +40,7 @@
                                         [disableEdit]= "selectModeButtonsEditAndView"
                                         [disableView]= "selectModeButtonsEditAndView"
                                         #tables>
-                                        
+
                                     <p-column field="statusFuncao" header="Status" [sortable]="true" >
                                         <ng-template let-statusFuncao="rowData.statusFuncao" pTemplate="body">
                                             <button type="button" pButton icon="ui-icon-schedule" *ngIf="statusFuncao === 'DIVERGENTE'" ></button>
@@ -51,7 +50,7 @@
                                     </p-column>
                                     <p-column field="nomeModulo" header="Módulo" [filter]="true" [sortable]="true"></p-column>
                                     <p-column field="nomeFuncionalidade" [filter]="true" header="Funcionalidade" [sortable]="true"></p-column>
-                                    <p-column field="name" header="Nome" [sortable]="true"></p-column> 
+                                    <p-column field="name" header="Nome" [sortable]="true"></p-column>
                                     <p-column field="deflator" header="Deflator" [sortable]="true"></p-column>
                                     <p-column field="tipo" header="Classificação" [sortable]="true"></p-column>
                                     <p-column field="totalDers" header="DER (TD)" [sortable]="true" ></p-column>
@@ -62,26 +61,31 @@
                                     <basis-datatable-button
                                         name="delete"
                                         *ngIf="!isView"
-                                        [bTooltip]="this.getLabel('Excluído')" 
-                                        [disabled]="funcaoDadosEditar.id == null "
+                                        [bTooltip]="this.getLabel('Excluído')"
+                                        [disabled]="funcaoDadosEditar[0] == undefined"
                                         class="ui-button-danger"
                                         icon="delete">
                                     </basis-datatable-button>
                                     <basis-datatable-button
                                         name="pending"
                                         *ngIf="!isView"
-                                        [bTooltip]="this.getLabel('Pendente')" 
-                                        [disabled]="funcaoDadosEditar.id == null "
+                                        [bTooltip]="this.getLabel('Pendente')"
+                                        [disabled]="funcaoDadosEditar[0] == undefined"
                                         class="ui-button-dark"
                                         icon="schedule">
                                     </basis-datatable-button>
                                     <basis-datatable-button
                                         name="approve"
                                         *ngIf="!isView"
-                                        [bTooltip]="this.getLabel('Aprovado')"  
-                                        [disabled]="funcaoDadosEditar.id == null "
+                                        [bTooltip]="this.getLabel('Aprovado')"
+                                        [disabled]="funcaoDadosEditar[0] == undefined"
                                         class="ui-button-success"
                                         icon="done">
+                                    </basis-datatable-button>
+                                    <basis-datatable-button name="edicaoLote"
+                                        *ngIf="!isView && funcaoDadosEditar?.length > 1"
+                                        (click)="prepararEditarEmLote()" pTooltip="Edição em lote."
+                                        class="ui-button-success" icon="border-color">
                                     </basis-datatable-button>
                                 </basis-datatable>
                             </div>
@@ -232,7 +236,7 @@
                         <div class="ui-g-6 ui-md-6 ui-sm-12" [hidden]="hideElementTDTR">
                             <h2>RLR (TR) *</h2>
                             <div class="ui-g-12" style="padding: 0px">
-                                <app-analise-der-chips [(values)]="rlrsChips" (onChange)="adicionar()"
+                                <app-analise-der-chips [tipoChip]="'RLR'" [idSistema]="this.analise?.sistema?.id" [(values)]="rlrsChips" (onChange)="adicionar()"
                                                        id="idRLRFormFuncaoDados">
                                 </app-analise-der-chips>
                             </div>
@@ -248,7 +252,9 @@
                         <div class="ui-g-6 ui-md-6 ui-sm-12" [hidden]="hideElementTDTR">
                             <h2>DER (TD) *</h2>
                             <div class="ui-g-12" style="padding: 0px">
-                                <app-analise-der-chips [(values)]="dersChips" id="idDERFormFuncaoDados"
+                                <app-analise-der-chips [tipoChip]="'DER'" [tipoFuncao]="'FD'"
+                                [idSistema]="this.analise?.sistema?.id"
+                                [(values)]="dersChips" id="idDERFormFuncaoDados"
                                                        (onChange)="adicionar()">
                                 </app-analise-der-chips>
                             </div>
@@ -263,6 +269,7 @@
 
                         <div class="ui-g-12 ui-md-12 ui-sm-12">
                             <label>Evidência</label>
+
                             <span class="md-inputfield">
                                 <p-editor
                                         maxlength="5000"
@@ -272,19 +279,93 @@
                                         [disabled]="isDisabled"
                                         pInputTextarea name="funcaoDadosSustentacao"
                                         [(ngModel)]="seletedFuncaoDados.sustantation">
+                                          <!-- Inicio configuração toolbar-->
+                                    <p-header>
+                                        <span class="ql-formats">
+                                            <select class="ql-header">
+                                              <option value="1">Heading</option>
+                                              <option value="2">Subheading</option>
+                                              <option selected>Normal</option>
+                                            </select>
+                                            <select class="ql-font">
+                                              <option selected>Sans Serif</option>
+                                              <option value="serif">Serif</option>
+                                              <option value="monospace">Monospace</option>
+                                            </select>
+                                        </span>
+                                        <span class="ql-formats">
+                                            <button class="ql-bold" aria-label="Bold" type="button"></button>
+                                            <button class="ql-italic" aria-label="Italic" type="button"></button>
+                                            <button class="ql-underline" aria-label="Underline" type="button"></button>
+                                        </span>
+                                        <span class="ql-formats">
+                                            <select class="ql-color"></select>
+                                            <select class="ql-background"></select>
+                                        </span>
+                                        <span class="ql-formats">
+                                            <button class="ql-list" value="ordered" aria-label="Ordered List" type="button"></button>
+                                            <button class="ql-list" value="bullet" aria-label="Unordered List" type="button"></button>
+                                            <select class="ql-align">
+                                                <option selected></option>
+                                                <option value="center"></option>
+                                                <option value="right"></option>
+                                                <option value="justify"></option>
+                                            </select>
+                                        </span>
+                                        <span class="ql-formats">
+                                            <button class="ql-link" aria-label="Insert Link" type="button"></button>
+                                            <button class="ql-code-block" aria-label="Insert Code Block" type="button"></button>
+                                        </span>
+                                        <span class="ql-formats">
+                                            <button class="ql-clean" aria-label="Remove Styles" type="button"></button>
+                                        </span>
+                                    </p-header>
+                                    <!-- fim configuração toolbar-->
                                 </p-editor>
                             </span>
+
+                            <p-fileUpload (onSelect)="onUpload($event)" multiple="multiple" accept="image/*"
+                                chooseLabel="Selecionar Arquivo" [showUploadButton]=false [showCancelButton]=false
+                                maxFileSize="1000000" #componenteFile>
+                                <ng-template pTemplate="content">
+                                    <div *ngIf="seletedFuncaoDados.files?.length" class="ui-g-12 ui-md-12 ui-sm-12"
+                                        style="padding: 0;">
+                                        <ul *ngIf="seletedFuncaoDados.files" style="margin: 0 ;">
+                                            <li *ngFor="let file of seletedFuncaoDados.files" style="list-style: none;">
+                                                <div style="display: flex;">
+                                                    <div style="padding: 7px 14px">
+                                                        <img style="width: 50px; height: 35px;" [src]="file.safeUrl"
+                                                            class="image" />
+                                                    </div>
+                                                    <div style="padding: 7px 14px">
+                                                        <p>{{file.originalName}}</p>
+                                                    </div>
+                                                    <div style="padding: 7px 14px">
+                                                        <p>{{file.sizeOf}}Kb</p>
+                                                    </div>
+                                                    <basis-datatable-button
+                                                        style="display: inline-table; margin-left: 10px; max-zoom: 10px;"
+                                                        (click)="confirmDeleteFileUpload(file)" name="deleteArquivo"
+                                                        [bTooltip]="'Remover arquivo'" icon="clear">
+                                                    </basis-datatable-button>
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <div>Arraste suas imagens e solte aqui</div>
+                                </ng-template>
+                            </p-fileUpload>
                         </div>
                         <div  *ngIf="seletedFuncaoDados.lstDivergenceComments">
                             <label>Informação: </label>
                             <div *ngFor="let item of seletedFuncaoDados.lstDivergenceComments">
                                 <div class="ui-g-12 ui-md-12 ui-sm-12" >
                                     <label>Usuário: {{item.user.firstName}} {{item.user.lastName}}</label>
-                                    <textarea rows="5" pInputTextarea [(ngModel)]="item.comment" readonly class="ui-md-12 ui-sm-12" style="resize: vertical;"></textarea>
+                                    <textarea rows="5" pInputTextarea [(ngModel)]="item.commet" readonly class="ui-md-12 ui-sm-12" style="resize: vertical;"></textarea>
                                 </div>
                             </div>
                         </div>
-                        
+
                         <div class="ui-g ui-md-12 ui-sm-12" style="justify-content: flex-end">
                             <div class="ui-md-2 ui-sm-12" *ngIf="isEdit">
                                 <app-blue-button [buttonLabel]="'Comentário'"
@@ -373,7 +454,7 @@
                                                 buttonIcon="ui-icon-info-outline"
                                                 (click)="showDeflator()">
                                         </app-blue-button>
-                                    </div>  
+                                    </div>
                                 </div>
                             </div>
                             <div class="ui-g">
@@ -410,6 +491,7 @@
                             </div>
                             <div class="ui-md-12 ui-sm-12">
                                 <label><b>Evidência: </b></label>
+
                                 <div class="ui-g-12 ui-md-12 ui-sm-12">
                                     <span class="md-inputfield">
                                         <p-editor
@@ -422,8 +504,13 @@
                                         </p-editor>
                                     </span>
                                 </div>
+                                <div *ngIf="seletedFuncaoDados.files?.length" class="ui-g-12 ui-md-12 ui-sm-12">
+                                    <ul *ngFor="let file of seletedFuncaoDados.files">
+                                        <li><a  target="_self" href="/api/downloadImage/{{ file?.id }}" [download]="file?.originalName" >{{file?.originalName}}</a></li>
+                                    </ul>
+                                </div>
                             </div>
-                        </div> 
+                        </div>
                         <div></div>
                         <div class="ui-g ui-md-12 ui-sm-12" style="justify-content: flex-end">
                             <div class="ui-md-2 ui-sm-12">
@@ -454,6 +541,8 @@
                             </div>
                         </div>
                     </p-dialog>
+
+
                 </div>
             </div>
         </div>
@@ -474,6 +563,134 @@
 
     <p-tabPanel [header]="this.getLabel('Resumo')"></p-tabPanel>
 </p-tabView>
+
+<p-dialog [modal]="true" [style]="{width: '55vw'}" [closable]="false" header="Editar em lote" [(visible)]="mostrarDialogEditarEmLote"
+[contentStyle]="{'height': ['windowHeightDialog']}">
+
+
+
+    <div *ngIf="modulos">
+        <div class="ui-g">
+            <div class="ui-g-12">
+                <div class="ui-g-6 ui-md-6 ui-sm-12">
+                    <!-- filtro/pesquisa? -->
+                    <label>Módulo: </label>
+                    <p-dropdown [filter]="true" optionLabel="nome" name="modulo" datakey="id"
+                        [placeholder]="this.getLabel('Selecione')" [options]="modulos"
+                        [(ngModel)]="moduloSelecionadoEmLote">
+                    </p-dropdown>
+                </div>
+                <div class="ui-g-6 ui-md-6 ui-sm-12">
+                    <!-- filtro/pesquisa? -->
+                    <label>Funcionalidade: </label>
+                    <p-dropdown [filter]="true" optionLabel="nome" name="funcionalidade"
+                        [options]="moduloSelecionadoEmLote?.funcionalidades"
+                        [(ngModel)]="funcionalidadeSelecionadaEmLote" [placeholder]="'Selecione a funcionalidade'"
+                        [disabled]="!moduloSelecionadoEmLote">
+                    </p-dropdown>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="ui-g">
+        <div class="ui-g-3 ui-md-12 ui-sm-12">
+            <label>Classificação: </label>
+            <p-dropdown [filter]="true" [options]="classificacoes" id="idClassificacoesFormEmLoteFuncaoDados"
+                [(ngModel)]="classificacaoEmLote" [placeholder]="this.getLabel('Selecione Classificação')"
+                name="classificacao">
+            </p-dropdown>
+        </div>
+    </div>
+
+    <div class="ui-g">
+        <div class="ui-g-11 ui-md-11 ui-sm-11">
+            <label>Deflator: </label>
+            <p-dropdown [filter]="true" [options]="fatoresAjuste" id="idDeflatorFormEmLoteFuncaoDados"
+                [placeholder]="'Selecione um deflator'" name="fatorAjuste" [(ngModel)]="deflatorEmLote"
+                (onChange)="selecionarDeflatorEmLote($event.value)">
+            </p-dropdown>
+        </div>
+
+        <div class="ui-g-3 ui-md-6 ui-sm-12" [hidden]="hideShowQuantidade">
+            <label>Quantidade *: </label>
+            <input type="number" class="ui-inputtext" min="1" [(ngModel)]="quantidadeEmLote"
+                id="idQuantidadeFormFuncaoDados">
+        </div>
+    </div>
+    <div class="ui-g">
+
+        <div class="ui-g-12 ui-md-12 ui-sm-12">
+            <label>Evidência</label>
+
+            <span class="md-inputfield">
+                <p-editor maxlength="5000" [rows]="3" id="idEvidenciaFormFuncaoDados" [cols]="180"
+                    [disabled]="isDisabled" pInputTextarea name="funcaoDadosSustentacao"
+                    [(ngModel)]="evidenciaEmLote">
+                    <!-- Inicio configuração toolbar-->
+                    <p-header>
+                        <span class="ql-formats">
+                            <select class="ql-header">
+                                <option value="1">Heading</option>
+                                <option value="2">Subheading</option>
+                                <option selected>Normal</option>
+                            </select>
+                            <select class="ql-font">
+                                <option selected>Sans Serif</option>
+                                <option value="serif">Serif</option>
+                                <option value="monospace">Monospace</option>
+                            </select>
+                        </span>
+                        <span class="ql-formats">
+                            <button class="ql-bold" aria-label="Bold" type="button"></button>
+                            <button class="ql-italic" aria-label="Italic" type="button"></button>
+                            <button class="ql-underline" aria-label="Underline" type="button"></button>
+                        </span>
+                        <span class="ql-formats">
+                            <select class="ql-color"></select>
+                            <select class="ql-background"></select>
+                        </span>
+                        <span class="ql-formats">
+                            <button class="ql-list" value="ordered" aria-label="Ordered List"
+                                type="button"></button>
+                            <button class="ql-list" value="bullet" aria-label="Unordered List"
+                                type="button"></button>
+                            <select class="ql-align">
+                                <option selected></option>
+                                <option value="center"></option>
+                                <option value="right"></option>
+                                <option value="justify"></option>
+                            </select>
+                        </span>
+                        <span class="ql-formats">
+                            <button class="ql-link" aria-label="Insert Link" type="button"></button>
+                            <button class="ql-code-block" aria-label="Insert Code Block"
+                                type="button"></button>
+                        </span>
+                        <span class="ql-formats">
+                            <button class="ql-clean" aria-label="Remove Styles" type="button"></button>
+                        </span>
+                    </p-header>
+                    <!-- fim configuração toolbar-->
+                </p-editor>
+            </span>
+            <app-arquivo-upload [(arquivos)]="arquivosEmLote"></app-arquivo-upload>
+        </div>
+    </div>
+
+    <div class="ui-g ui-md-12" style="justify-content: flex-end; padding-top: 25px">
+        <div class="ui-g-2 ui-md-2 ui-sm-12">
+            <app-white-button [buttonLabel]="'Cancelar'" id="idBtnCancelarPermissaoSaveFormPerfil"
+                (click)="fecharDialogEditarEmLote()">
+            </app-white-button>
+        </div>
+
+        <div class="ui-g-2">
+            <app-green-button [buttonLabel]="'Salvar'" id="idSalvarPermissaoSaveFormPerfil" (click)="editarEmLote()">
+            </app-green-button>
+        </div>
+    </div>
+</p-dialog>
 
 <!-- Dialog confirmação deleção -->
 <p-confirmDialog [header]="this.getLabel('Confirmação')" #dialog>

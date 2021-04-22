@@ -1,162 +1,124 @@
 <div class="ui-g-12 ui-md-12 ui-sm-12">
 
-  <div class="ui-g-8 ui-md-8 ui-sm-12">
-    <p-chips 
-      id="chips"
-      [(ngModel)]="values"
-      addOnTab="true"
-      addOnBlur="true"
-      (onAdd)="onAddValue($event.value)"
-      (onRemove)="onRemove($event.value)">
+    <div class="ui-g-8 ui-md-8 ui-sm-12">
 
-      <ng-template let-item pTemplate="item">
-        <span
-          class="ui-chips-token-label ng-star-inserted"
-          (dblclick)="doubleClickChip(item)">
-          {{ item.text }}
-        </span>
-      </ng-template>
-    </p-chips>
+        <p-autoComplete id="autoComplete"
+            [(ngModel)]="values"
+            [field]="'text'"
+            [delay]="500"
+            [suggestions]="options"
+            [maxlength]="50"
+            (completeMethod)="search($event)"
+            (onKeyUp)="pressEnter($event)"
+            (onSelect)="selecionar($event)"
+            (onUnselect)="deselecionar($event)"
+            [multiple]="true"
+            (onBlur)="limparCampo($event)">
 
-    <div *ngIf="tamanhoChip"
-          class="ui-message ui-messages-error" translate="Global.Mensagens.LimiteExcedido">
-          Limite de caracteres excedido (50)
+            </p-autoComplete>
+
+        <div *ngIf="tamanhoChip" class="ui-message ui-messages-error" translate="Global.Mensagens.LimiteExcedido">
+            Limite de caracteres excedido (50)
+        </div>
+
+        <div *ngIf="chipRepetido" class="ui-message ui-messages-error">
+            Registro já adicionado!
+        </div>
+
     </div>
-    
-  </div>
 
-  <div class="ui-g-2 ui-md-2 ui-sm-12">
-    <button 
-      pButton 
-      type="button"
-      id="idBtnAdicionarMultiplosComponentDerChips"
-      class="blue-btn flat ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only"
-      [label]="this.getLabel('+')"
-      (click)="abrirDialogAddMultiplos()">
-    </button>
-  </div>
+    <div class="ui-g-2 ui-md-2 ui-sm-12">
+        <button pButton type="button" id="idBtnAdicionarMultiplosComponentDerChips"
+            class="blue-btn flat ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only"
+            [label]="this.getLabel('+')" (click)="abrirDialogAddMultiplos()">
+        </button>
+    </div>
 
-  <div class="ui-g-2 ui-md-2 ui-sm-12">
-    <button 
-      pButton 
-      type="button"
-      id="idBtnLimparMultiplosComponentDerChips"
-      label="-"
-      (click)="limparMultiplos()">
-    </button>
-  </div>
+    <div class="ui-g-2 ui-md-2 ui-sm-12">
+        <button pButton type="button" id="idBtnLimparMultiplosComponentDerChips" label="-" (click)="limparMultiplos()">
+        </button>
+    </div>
 
-  <div class="ui-g-6 ui-md-6 ui-sm-12" *ngIf="relacionarDers">
-    <app-analise-referenciador-ar
-      (funcaoDadosReferenciadaEvent)="funcaoDadosReferenciada($event)"
-      (dersReferenciadosEvent)="dersReferenciados($event)">
-    </app-analise-referenciador-ar>
-  </div>
 
-  <div class="ui-g-6 ui-md-6 ui-sm-12">
-    <span>
-      {{ showTotal() }}
-    </span>
-  </div>
-  
-  <div class="ui-g-12 ui-md-12 ui-sm-12" *ngIf="deveMostrarDuplicatas()">
-    <span >
-      {{this.getLabel('Analise.Analise.ValoresDuplicados:')}} {{ duplicatesResult.duplicatasFormatadas() }}
-    </span>
-  </div>
+    <div class="ui-g-6 ui-md-6 ui-sm-12" *ngIf="relacionarDers">
+        <app-analise-referenciador-ar (funcaoDadosReferenciadaEvent)="funcaoDadosReferenciada($event)"
+            (dersReferenciadosEvent)="dersReferenciados($event)">
+        </app-analise-referenciador-ar>
+    </div>
+
+    <div class="ui-g-6 ui-md-6 ui-sm-12">
+        <span>
+            {{ showTotal() }}
+        </span>
+    </div>
+
+    <div class="ui-g-12 ui-md-12 ui-sm-12" *ngIf="deveMostrarDuplicatas()">
+        <span>
+            {{this.getLabel('Analise.Analise.ValoresDuplicados:')}} {{ duplicatesResult.duplicatasFormatadas() }}
+        </span>
+    </div>
 
 </div>
 
-<p-dialog 
-  [header]="this.getLabel('Adicionar Multiplos')"
-  [(visible)]="mostrarDialogAddMultiplos"
-  id="idAdicionarMultiplosComponentDerChips"
-  [contentStyle]="{'overflow': 'visible'}"
- >
 
-  <div class="ui-g">
-    <div class="ui-g-12 ui-md-12 ui-sm-12" style="margin-top: 25px">
-      <app-analise-der-text 
-        [(value)]="addMultiplosTexto"
-        id="idAddMultiplosComponentDerChips">
-      </app-analise-der-text>
-        <div *ngIf="validaMultiplos"
-          class="ui-message ui-messages-error">
-            O campo possui valores duplicado!
+<p-dialog [header]="this.getLabel('Adicionar Multiplos')" [(visible)]="mostrarDialogAddMultiplos"
+    id="idAdicionarMultiplosComponentDerChips" [contentStyle]="{'overflow': 'visible'}">
+
+    <div class="ui-g">
+        <div class="ui-g-12 ui-md-12 ui-sm-12" style="margin-top: 25px">
+            <app-analise-der-text [(value)]="addMultiplosTexto" id="idAddMultiplosComponentDerChips">
+            </app-analise-der-text>
+            <div *ngIf="validaMultiplos" class="ui-message ui-messages-error">
+                O campo possui valores duplicado!
+            </div>
+            <div *ngIf="validaMultiplosRegistrados" class="ui-message ui-messages-error">
+                Registro já cadastrado!
+            </div>
         </div>
-        <div *ngIf="validaMultiplosRegistrados"
-          class="ui-message ui-messages-error" >
-            Registro já cadastrado!
+
+        <div class="ui-g ui-md-12" style="justify-content: flex-end">
+            <div class="ui-g-2 ui-md-2 ui-sm-2">
+                <button pButton type="button" id="idBtnCancelarComponentDerChips"
+                    class=" abaco-white-btn flat ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only"
+                    [label]="this.getLabel('Cancelar')" (click)="fecharDialogAddMultiplos()">
+                </button>
+            </div>
+
+            <div class="ui-g-2 ui-md-2 ui-sm-2">
+                <button pButton type="button" id="idBtnAdicionarComponentDerChips"
+                    class="green-btn flat ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only"
+                    [label]="this.getLabel('Adicionar')" (click)="adicionarMultiplos()">
+                </button>
+            </div>
         </div>
     </div>
-
-    <div class="ui-g ui-md-12" style="justify-content: flex-end">
-      <div class="ui-g-2 ui-md-2 ui-sm-2">
-        <button
-          pButton
-          type="button"
-          id="idBtnCancelarComponentDerChips"
-          class=" abaco-white-btn flat ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only"
-          [label]="this.getLabel('Cancelar')" 
-          (click)="fecharDialogAddMultiplos()">
-        </button>
-      </div>
-
-      <div class="ui-g-2 ui-md-2 ui-sm-2">
-        <button
-          pButton
-          type="button"
-          id="idBtnAdicionarComponentDerChips"
-          class="green-btn flat ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only"
-          [label]="this.getLabel('Adicionar')"
-          (click)="adicionarMultiplos()">
-        </button>
-      </div>
-    </div>
-  </div>
 </p-dialog>
 
-<p-dialog
-  [header]="this.getLabel('Analise.Analise.Editar')"
-  [(visible)]="mostrarDialogEdicao"
-  [contentStyle]="{'overflow': 'visible'}" 
- >
+<p-dialog [header]="this.getLabel('Analise.Analise.Editar')" [(visible)]="mostrarDialogEdicao"
+    [contentStyle]="{'overflow': 'visible'}">
 
-  <div class="ui-g">
+    <div class="ui-g">
 
-    <textarea 
-      pInputTextarea
-      [(ngModel)]="textoEdicao"
-      id="idTextoEdicaoComponentDerChips"
-      style="white-space: nowrap; overflow: auto;"
-      [rows]="1" 
-      [cols]="180">
+        <textarea pInputTextarea [(ngModel)]="textoEdicao" id="idTextoEdicaoComponentDerChips"
+            style="white-space: nowrap; overflow: auto;" [rows]="1" [cols]="180">
     </textarea>
-    
-    <div class="ui-g ui-md-12" style="justify-content: flex-end">
-      <div class="ui-g-2 ui-md-2 ui-sm-12">
-        <button 
-          pButton 
-          type="button"
-          id="idBtnCancelarDialogComponentDerChips"
-          class=" abaco-white-btn flat ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only"
-          [label]="this.getLabel('Cancelar')"  
-          (click)="fecharDialogEdicao()">
-        </button>
-      </div>
 
-      <div class="ui-g-2 ui-md-2 ui-sm-12">
-        <button
-          pButton
-          type="button"
-          class="green-btn flat ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only"
-          [label]="this.getLabel('Editar')"
-          id="idBtnEditarComponentDerChips" 
-          (click)="editarChip()">
-        </button>
-      </div>
+        <div class="ui-g ui-md-12" style="justify-content: flex-end">
+            <div class="ui-g-2 ui-md-2 ui-sm-12">
+                <button pButton type="button" id="idBtnCancelarDialogComponentDerChips"
+                    class=" abaco-white-btn flat ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only"
+                    [label]="this.getLabel('Cancelar')" (click)="fecharDialogEdicao()">
+                </button>
+            </div>
+
+            <div class="ui-g-2 ui-md-2 ui-sm-12">
+                <button pButton type="button"
+                    class="green-btn flat ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only"
+                    [label]="this.getLabel('Editar')" id="idBtnEditarComponentDerChips" (click)="editarChip()">
+                </button>
+            </div>
+        </div>
+
     </div>
-
-  </div>
 
 </p-dialog>

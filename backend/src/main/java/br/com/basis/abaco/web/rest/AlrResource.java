@@ -1,13 +1,17 @@
 package br.com.basis.abaco.web.rest;
 
 import br.com.basis.abaco.domain.Alr;
+import br.com.basis.abaco.domain.VwAlr;
+import br.com.basis.abaco.domain.VwRlr;
 import br.com.basis.abaco.repository.AlrRepository;
 import br.com.basis.abaco.repository.search.AlrSearchRepository;
+import br.com.basis.abaco.service.AlrService;
 import br.com.basis.abaco.web.rest.util.HeaderUtil;
 import com.codahale.metrics.annotation.Timed;
 import io.github.jhipster.web.util.ResponseUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -43,9 +47,12 @@ public class AlrResource {
 
     private final AlrSearchRepository alrSearchRepository;
 
-    public AlrResource(AlrRepository alrRepository, AlrSearchRepository alrSearchRepository) {
+    private final AlrService alrService;
+
+    public AlrResource(AlrRepository alrRepository, AlrSearchRepository alrSearchRepository, AlrService alrService) {
         this.alrRepository = alrRepository;
         this.alrSearchRepository = alrSearchRepository;
+        this.alrService = alrService;
     }
 
     /**
@@ -151,4 +158,12 @@ public class AlrResource {
     }
 
 
+    @GetMapping("/alrs/sistema/{idSistema}")
+    @Timed
+    public ResponseEntity<List<VwAlr>> getAlrByNomeSistema(@RequestParam("nome") String nome, @PathVariable Long idSistema){
+        log.debug("REST request to get Alrs for Sistema {}", idSistema);
+
+        List<VwAlr> alrs = alrService.bindFilterSearchAlrsSistema(nome, idSistema);
+        return new ResponseEntity(alrs, HttpStatus.OK);
+    }
 }

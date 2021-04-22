@@ -80,7 +80,7 @@
                                     placeholder="Selecione"
                                     name="Organização"
                                     [(ngModel)]="sistema.organizacao"
-                                    
+
                                     dataKey="id"
                                     required
                                     #organizacao='ngModel'>
@@ -204,9 +204,9 @@
                                     #nomeModulo='ngModel'
                                     required/>
                                 <label>Nome *</label>
-                                <div *ngIf="editForm.controls['nomeModulo'] 
-                                    && !editForm.controls['nomeModulo'].valid 
-                                    && (editForm.controls['nomeModulo'].touched 
+                                <div *ngIf="editForm.controls['nomeModulo']
+                                    && !editForm.controls['nomeModulo'].valid
+                                    && (editForm.controls['nomeModulo'].touched
                                     || editForm.submitted || valido) "
                                     class="ui-message ui-messages-error" >
                                     Campo obrigatório.
@@ -250,9 +250,9 @@
                                     pInputText
                                     (keydown.enter)="editarModulo()"/>
                                 <label>Nome do Módulo</label>
-                                <div *ngIf="(editForm.controls['EditnomeModulo'] 
-                                    && !editForm.controls['EditnomeModulo'].valid 
-                                    && (editForm.controls['EditnomeModulo'].touched 
+                                <div *ngIf="(editForm.controls['EditnomeModulo']
+                                    && !editForm.controls['EditnomeModulo'].valid
+                                    && (editForm.controls['EditnomeModulo'].touched
                                     || editForm.submitted) || valido)"
                                         class="ui-message ui-messages-error" >
                                         Campo obrigatório.
@@ -310,9 +310,9 @@
                                         #nomeFuncionalidade='ngModel'
                                         (keydown.enter)="adicionarFuncionalidade()"/>
                                 <label >Nome *</label>
-                                <div *ngIf="editForm.controls['nomeFuncionalidade'] 
-                                && !editForm.controls['nomeFuncionalidade'].valid 
-                                && (editForm.controls['nomeFuncionalidade'].touched 
+                                <div *ngIf="editForm.controls['nomeFuncionalidade']
+                                && !editForm.controls['nomeFuncionalidade'].valid
+                                && (editForm.controls['nomeFuncionalidade'].touched
                                 || editForm.submitted || valido)"
                                     class="ui-message ui-messages-error" >
                                 Campo obrigatório.
@@ -329,13 +329,13 @@
                                         placeholder="Modulo*"
                                         name="funcionalidadeModulo"
                                         [(ngModel)]="novaFuncionalidade.modulo"
-                                        
+
                                         required
                                         #funcionalidadeModulo='ngModel'>
                                 </p-dropdown>
-                                <div *ngIf="editForm.controls['funcionalidadeModulo'] 
-                                    && !editForm.controls['funcionalidadeModulo'].valid 
-                                    && (editForm.controls['funcionalidadeModulo'].touched 
+                                <div *ngIf="editForm.controls['funcionalidadeModulo']
+                                    && !editForm.controls['funcionalidadeModulo'].valid
+                                    && (editForm.controls['funcionalidadeModulo'].touched
                                     || editForm.submitted || valido)"
                                         class="ui-message ui-messages-error" >
                                     Campo obrigatório.
@@ -382,9 +382,9 @@
                                         #nomeFuncionalidade='ngModel'
                                         (keydown.enter)="editarFuncionalidade()"/>
                                 <label >Nome *</label>
-                                <div *ngIf="editForm.controls['nomeFuncionalidade'] 
-                                && !editForm.controls['nomeFuncionalidade'].valid 
-                                && (editForm.controls['nomeFuncionalidade'].touched 
+                                <div *ngIf="editForm.controls['nomeFuncionalidade']
+                                && !editForm.controls['nomeFuncionalidade'].valid
+                                && (editForm.controls['nomeFuncionalidade'].touched
                                 || editForm.submitted || valido)"
                                     class="ui-message ui-messages-error">
                                     Campo obrigatório.
@@ -401,13 +401,13 @@
                                         placeholder="Modulo*"
                                         name="funcionalidadeModulo"
                                         [(ngModel)]="funcionalidadeEmEdicao.modulo"
-                                        
+
                                         required
                                         #funcionalidadeModulo='ngModel'>
                                 </p-dropdown>
-                                <div *ngIf="editForm.controls['funcionalidadeModulo'] 
-                                && !editForm.controls['funcionalidadeModulo'].valid 
-                                && (editForm.controls['funcionalidadeModulo'].touched 
+                                <div *ngIf="editForm.controls['funcionalidadeModulo']
+                                && !editForm.controls['funcionalidadeModulo'].valid
+                                && (editForm.controls['funcionalidadeModulo'].touched
                                 || editForm.submitted || valido)"
                                     class="ui-message ui-messages-error">
                                 Campo obrigatório.
@@ -435,6 +435,67 @@
                     </div>
                 </p-dialog>
                 <!-- Fim dialog editar Funcionalidades -->
+                <!-- Dialog migrar funções de funcionalidades -->
+                <p-dialog header="Funcionalidade"
+                            [modal]="true"
+                            [(visible)]="mostrarDialogMigrarFuncionalidade"
+                            [contentStyle]="{'overflow':'visible'}">
+                    <div class="ui-g">
+
+                        <div class="ui-g-12" style="margin-bottom: 25px">
+                            <span>
+                                <p-dropdown
+                                        [filter]="true"
+                                        [options]="listModulos"
+                                        optionLabel="nome"
+                                        datakey="id"
+                                        id="idModuloFuncionalidadeMigrarFormSistema"
+                                        placeholder="Modulo*"
+                                        name="funcionalidadeModulo"
+                                        [(ngModel)]="moduloMigracao"
+                                        (onChange)="mudarModulo($event)"
+                                        required
+                                        #funcionalidadeModulo='ngModel'>
+                                </p-dropdown>
+                            </span>
+                        </div>
+                        <div class="ui-g-12" style="margin-bottom: 25px">
+                            <span>
+                                <p-dropdown
+                                        [disabled]="!moduloMigracao.id"
+                                        [filter]="true"
+                                        [options]="moduloMigracao.funcionalidades"
+                                        optionLabel="nome"
+                                        id="idModuloFuncionalidadeMigrarFormSistema"
+                                        placeholder="Funcionalidade*"
+                                        name="migrarFuncionalidadeModulo"
+                                        [(ngModel)]="funcionalidadeMigracao"
+                                        required
+                                        #migrarFuncionalidadeModulo='ngModel'>
+                                </p-dropdown>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="ui-g ui-md-12" style="justify-content: flex-end">
+
+                        <div class="ui-g-4">
+                            <app-white-button
+                                    [buttonLabel]="'Cancelar'"
+                                    id="idBtnCancelarFuncionalidadeEditFormSistema"
+                                    (click)="fecharDialogMigrarFuncionalidade()">
+                            </app-white-button>
+                        </div>
+
+                        <div class="ui-g-4">
+                            <app-green-button
+                                    [buttonLabel]="'Salvar'"
+                                    id="idBtnSalvarFuncionalidadeEditFormSistema"
+                                    (click)="migrarFuncoes()">
+                            </app-green-button>
+                        </div>
+                    </div>
+                </p-dialog>
+                <!-- Fim dialog migrar funções de funcionalidades -->
             </form>
         </div>
     </div>

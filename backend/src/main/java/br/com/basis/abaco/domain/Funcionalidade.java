@@ -11,16 +11,7 @@ import org.springframework.data.elasticsearch.annotations.Field;
 import org.springframework.data.elasticsearch.annotations.FieldIndex;
 import org.springframework.data.elasticsearch.annotations.FieldType;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
-import javax.persistence.OrderBy;
-import javax.persistence.SequenceGenerator;
-import javax.persistence.Table;
-import javax.persistence.Transient;
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.HashSet;
@@ -53,25 +44,17 @@ public class Funcionalidade implements Serializable {
     private String nome;
 
     @ManyToOne
-    @JsonBackReference
+    @JsonIgnore
     private Modulo modulo;
 
-    @ManyToOne
-    @JsonIgnore
-    @OrderBy("name ASC, id ASC")
-    private FuncaoDados funcaoDados;
 
-    @Transient
     @JsonIgnore
+    @Transient
     private Set<FuncaoDados> funcoesDados = new HashSet<>();
 
-    @ManyToOne
-    @JsonIgnore
-    @OrderBy("name ASC, id ASC")
-    private FuncaoTransacao funcaoTransacao;
 
-    @Transient
     @JsonIgnore
+    @Transient
     private Set<FuncaoTransacao> funcoesTransacao = new HashSet<>();
 
     public Long getId() {
@@ -108,31 +91,7 @@ public class Funcionalidade implements Serializable {
         this.modulo = modulo;
     }
 
-    public FuncaoDados getFuncaoDados() {
-        return funcaoDados;
-    }
 
-    public Funcionalidade funcaoDados(FuncaoDados funcaoDados) {
-        this.funcaoDados = funcaoDados;
-        return this;
-    }
-
-    public void setFuncaoDados(FuncaoDados funcaoDados) {
-        this.funcaoDados = funcaoDados;
-    }
-
-    public FuncaoTransacao getFuncaoTransacao() {
-        return funcaoTransacao;
-    }
-
-    public Funcionalidade funcaoTransacao(FuncaoTransacao funcaoTransacao) {
-        this.funcaoTransacao = funcaoTransacao;
-        return this;
-    }
-
-    public void setFuncaoTransacao(FuncaoTransacao funcaoTransacao) {
-        this.funcaoTransacao = funcaoTransacao;
-    }
 
     public Set<FuncaoDados> getFuncoesDados() {
         return Optional.ofNullable(funcoesDados)

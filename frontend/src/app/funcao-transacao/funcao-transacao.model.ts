@@ -54,6 +54,7 @@ export class FuncaoTransacao implements FuncaoResumivel, BaseEntity, FuncaoAnali
     public quantidade?: number,
     public statusFuncao?: String,
     public lstDivergenceComments?: CommentFuncaoTransacao[],
+    public files?: any[],
   ) {
     if (!pf) {
       this.pf = 0;
@@ -126,7 +127,7 @@ export class FuncaoTransacao implements FuncaoResumivel, BaseEntity, FuncaoAnali
       this.complexidade, this.pf, this.analise, this.funcionalidades,
       this.funcionalidade, this.fatorAjuste, this.alrs,
       this.name, this.sustantation, this.der, this.ftr, this.grossPF,
-      this.derValues, this.ftrValues, this.ders, this.impacto, this.quantidade, this.statusFuncao, this.lstDivergenceComments);
+      this.derValues, this.ftrValues, this.ders, this.impacto, this.quantidade, this.statusFuncao, this.lstDivergenceComments, this.files);
   }
 
 }
@@ -165,6 +166,7 @@ class FuncaoTransacaoCopyFromJSON {
     this._funcaoTransacao.impacto = this._json.impacto;
     this._funcaoTransacao.quantidade = this._json.quantidade;
     this._funcaoTransacao.statusFuncao = this._json.statusFuncao;
+    this._funcaoTransacao.files = this._json.files;
   }
 
   private converteBaseEntities() {

@@ -1,6 +1,7 @@
 package br.com.basis.abaco.service.dto;
 
 import br.com.basis.abaco.domain.Alr;
+import br.com.basis.abaco.domain.UploadedFile;
 import br.com.basis.abaco.domain.enumeration.Complexidade;
 import br.com.basis.abaco.domain.enumeration.ImpactoFatorAjuste;
 import br.com.basis.abaco.domain.enumeration.StatusFuncao;
@@ -43,6 +44,7 @@ public class FuncaoDadoApiDTO {
     private ImpactoFatorAjuste impacto;
     private StatusFuncao statusFuncao;
     private List<DivergenceCommentDTO> lstDivergenceComments = new ArrayList<>();
+    private List<UploadedFileDTO> files;
 
 
     public List<DivergenceCommentDTO> getLstDivergenceComments() {

@@ -1,8 +1,8 @@
-import { AfterViewInit, ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output, QueryList, ViewChildren, ViewChild} from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output, QueryList, ViewChildren, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Column, DatatableClickEvent, DatatableComponent, DatatableModule, PageNotificationService } from '@nuvem/primeng-components';
 import * as _ from 'lodash';
-import { ConfirmationService, SelectItem, FullCalendar } from 'primeng';
+import { ConfirmationService, SelectItem, FullCalendar, FileUpload } from 'primeng';
 import { forkJoin, Observable, Subscription } from 'rxjs';
 import { Alr } from '../alr/alr.model';
 import { Analise, AnaliseService } from '../analise';
@@ -28,13 +28,23 @@ import { BaselineAnalitico } from './../baseline/baseline-analitico.model';
 import { BaselineService } from './../baseline/baseline.service';
 import { Der } from './../der/der.model';
 import { FuncaoTransacao, TipoFuncaoTransacao } from './../funcao-transacao/funcao-transacao.model';
-import { FuncaoDados } from './funcao-dados.model';
+import { FuncaoDados, TipoFuncaoDados } from './funcao-dados.model';
 import { FuncaoDadosService } from './funcao-dados.service';
 import { BlockUiService } from '@nuvem/angular-base';
 import { Sistema, SistemaService } from '../sistema';
+import { UploadService } from '../upload/upload.service';
+import { Upload } from '../upload/upload.model';
+import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
+import { timeStamp } from 'console';
+import { table } from 'node:console';
+import { DerService } from '../der/der.service';
+import { Utilitarios } from '../util/utilitarios.util';
 
 @Component({
     selector: 'app-analise-funcao-dados',
+    host: {
+        "(window:paste)": "handlePaste($event)"
+    },
     templateUrl: './funcao-dados-form.component.html',
     providers: [ConfirmationService]
 })
@@ -80,27 +90,38 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
     results: string[];
     baselineResults: any[] = [];
     funcoesDadosList: FuncaoDados[] = [];
-    funcaoDadosEditar: FuncaoDados = new FuncaoDados();
+    funcaoDadosEditar: FuncaoDados[] = [];
     translateSubscriptions: Subscription[] = [];
     viewFuncaoDados = false;
     divergenceComment: String;
     impacto: SelectItem[] = [
-        {label: 'Inclusão', value: 'INCLUSAO'},
-        {label: 'Alteração', value: 'ALTERACAO'},
-        {label: 'Exclusão', value: 'EXCLUSAO'},
-        {label: 'Conversão', value: 'CONVERSAO'},
-        {label: 'Outros', value: 'ITENS_NAO_MENSURAVEIS'}
+        { label: 'Inclusão', value: 'INCLUSAO' },
+        { label: 'Alteração', value: 'ALTERACAO' },
+        { label: 'Exclusão', value: 'EXCLUSAO' },
+        { label: 'Conversão', value: 'CONVERSAO' },
+        { label: 'Outros', value: 'ITENS_NAO_MENSURAVEIS' }
     ];
 
     classificacoes: SelectItem[] = [
-        {label: 'ALI - Arquivo Lógico Interno', value: 'ALI'},
-        {label: 'AIE - Arquivo de Interface Externa', value: 'AIE'}
+        { label: 'ALI - Arquivo Lógico Interno', value: 'ALI' },
+        { label: 'AIE - Arquivo de Interface Externa', value: 'AIE' }
     ];
 
-    crud: string [] = ['Excluir', 'Editar', 'Inserir', 'Pesquisar', 'Consultar'];
+    crud: string[] = ['Excluir', 'Editar', 'Inserir', 'Pesquisar', 'Consultar'];
+
+    selectButtonMultiple: boolean = false;
+    mostrarDialogEditarEmLote: boolean = false;
+    moduloSelecionadoEmLote: Modulo;
+    funcionalidadeSelecionadaEmLote: Funcionalidade;
+    classificacaoEmLote: TipoFuncaoDados;
+    deflatorEmLote: FatorAjuste;
+    evidenciaEmLote: string;
+    arquivosEmLote: Upload[] = [];
+    quantidadeEmLote: number;
+    funcaoDadosEmLote: FuncaoDados[] = []
 
     idAnalise: number;
-    private fatorAjusteNenhumSelectItem = {label: 'Nenhum', value: undefined};
+    private fatorAjusteNenhumSelectItem = { label: 'Nenhum', value: undefined };
     private analiseCarregadaSubscription: Subscription;
     private subscriptionSistemaSelecionado: Subscription;
     private nomeDasFuncoesDoSistema: string[] = [];
@@ -117,6 +138,10 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
     public display = false;
 
     public modulos: Modulo[];
+    private sanitizer: DomSanitizer;
+    private lastObjectUrl: string;
+
+    @ViewChild(FileUpload) componenteFile: FileUpload;
 
     constructor(
         private analiseSharedDataService: AnaliseSharedDataService,
@@ -129,9 +154,14 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
         private baselineService: BaselineService,
         private router: Router,
         private blockUiService: BlockUiService,
-        private sistemaService: SistemaService
+        private sistemaService: SistemaService,
+        private uploadService: UploadService,
+        sanitizer: DomSanitizer,
     ) {
+        this.sanitizer = sanitizer;
+        this.lastObjectUrl = "";
     }
+
 
     getLabel(label) {
         return label;
@@ -297,13 +327,9 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
         return 0;
     }
 
-    selectRow(event) {
-        this.funcaoDadosEditar.id = event.data.id;
-    }
-
     abrirEditar() {
         this.isEdit = true;
-        this.prepararParaEdicao(this.funcaoDadosEditar);
+        this.prepararParaEdicao(this.funcaoDadosEditar[0]);
     }
 
     public onChange(editor) {
@@ -404,10 +430,10 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
         if (this.seletedFuncaoDados && this.seletedFuncaoDados.funcionalidade && this.seletedFuncaoDados.funcionalidade.id) {
             this.funcaoDadosService.autoCompletePEAnalitico(
                 event.query, this.seletedFuncaoDados.funcionalidade.id).subscribe(
-                value => {
-                    this.baselineResults = value;
-                }
-            );
+                    value => {
+                        this.baselineResults = value;
+                    }
+                );
         }
     }
 
@@ -442,12 +468,12 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
 
     private setFields(fd: FuncaoDados) {
         return Object.defineProperties(fd, {
-            'totalDers': {value: fd.derValue(), writable: true},
-            'totalRlrs': {value: fd.rlrValue(), writable: true},
-            'deflator': {value: this.formataFatorAjuste(fd.fatorAjuste), writable: true},
-            'impactoFilter': {value: this.updateNameImpacto(fd.impacto), writable: true},
-            'nomeFuncionalidade': {value: fd.funcionalidade.nome, writable: true},
-            'nomeModulo': {value: fd.funcionalidade.modulo.nome, writable: true}
+            'totalDers': { value: fd.derValue(), writable: true },
+            'totalRlrs': { value: fd.rlrValue(), writable: true },
+            'deflator': { value: this.formataFatorAjuste(fd.fatorAjuste), writable: true },
+            'impactoFilter': { value: this.updateNameImpacto(fd.impacto), writable: true },
+            'nomeFuncionalidade': { value: fd.funcionalidade.nome, writable: true },
+            'nomeModulo': { value: fd.funcionalidade.modulo.nome, writable: true }
         });
     }
 
@@ -506,8 +532,8 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
         this.verificarModulo();
         this.seletedFuncaoDados = new FuncaoDados().copyFromJSON(this.seletedFuncaoDados);
         const funcaoDadosCalculada = Calculadora.calcular(this.analise.metodoContagem,
-                this.seletedFuncaoDados,
-                this.analise.contrato.manual);
+            this.seletedFuncaoDados,
+            this.analise.contrato.manual);
         for (const nome of this.parseResult.textos) {
             lstFuncaoDadosWithExist.push(
                 this.funcaoDadosService.existsWithName(
@@ -527,16 +553,15 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
                     retorno = false;
                     break;
                 }
-
             }
             if (retorno) {
                 this.fecharDialog();
                 this.estadoInicial();
                 this.resetarEstadoPosSalvar();
-                lstFuncaoDados.forEach( funcaoDadosMultp => {
+                lstFuncaoDados.forEach(funcaoDadosMultp => {
                     lstFuncaoDadosToSave.push(
-                        this.funcaoDadosService.create(funcaoDadosMultp, this.analise.id)
-                        );
+                        this.funcaoDadosService.create(funcaoDadosMultp, this.analise.id, funcaoDadosMultp.files.map(item => item.logo))
+                    );
                 });
                 forkJoin(lstFuncaoDadosToSave).subscribe(respCreate => {
                     respCreate.forEach((funcaoDados) => {
@@ -590,25 +615,25 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
                 this.analise.id,
                 this.seletedFuncaoDados.funcionalidade.id,
                 this.seletedFuncaoDados.funcionalidade.modulo.id).subscribe(value => {
-                if (value === false) {
-                    this.funcaoDadosService.create(funcaoDadosCalculada, this.analise.id).subscribe(
-                        (funcaoDados) => {
-                            this.pageNotificationService.addCreateMsg(funcaoDadosCalculada.name);
-                            funcaoDadosCalculada.id = funcaoDados.id;
-                            this.setFields(funcaoDadosCalculada);
-                            this.funcoesDados.push(funcaoDadosCalculada);
-                            this.fecharDialog();
-                            this.atualizaResumo();
-                            this.estadoInicial();
-                            this.resetarEstadoPosSalvar();
-                            this.analiseService.updateSomaPf(this.analise.id).subscribe();
-                        }
-                    );
-                } else {
-                    this.pageNotificationService.addErrorMessage(this.getLabel('Registro Cadastrado'));
-                }
-                return retorno;
-            });
+                    if (value === false) {
+                        this.funcaoDadosService.create(funcaoDadosCalculada, this.analise.id, funcaoDadosCalculada.files.map(item => item.logo)).subscribe(
+                            (funcaoDados) => {
+                                this.pageNotificationService.addCreateMsg(funcaoDadosCalculada.name);
+                                funcaoDadosCalculada.id = funcaoDados.id;
+                                this.setFields(funcaoDadosCalculada);
+                                this.funcoesDados.push(funcaoDadosCalculada);
+                                this.fecharDialog();
+                                this.atualizaResumo();
+                                this.estadoInicial();
+                                this.resetarEstadoPosSalvar();
+                                this.analiseService.updateSomaPf(this.analise.id).subscribe();
+                            }
+                        );
+                    } else {
+                        this.pageNotificationService.addErrorMessage(this.getLabel('Registro Cadastrado'));
+                    }
+                    return retorno;
+                });
         }
     }
 
@@ -692,6 +717,7 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
     }
 
     private editar() {
+
         const retorno: boolean = this.verifyDataRequire();
         if (!retorno) {
             this.pageNotificationService.addErrorMessage(this.getLabel('Por favor preencher o campo obrigatório!'));
@@ -709,7 +735,7 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
                     this.seletedFuncaoDados = new FuncaoDados().copyFromJSON(this.seletedFuncaoDados);
                     const funcaoDadosCalculada = Calculadora.calcular(
                         this.analise.metodoContagem, this.seletedFuncaoDados, this.analise.contrato.manual);
-                    this.funcaoDadosService.update(funcaoDadosCalculada).subscribe(value => {
+                    this.funcaoDadosService.update(funcaoDadosCalculada, funcaoDadosCalculada.files.map(item => item.logo)).subscribe(value => {
                         this.funcoesDados = this.funcoesDados.filter((funcaoDados) => (funcaoDados.id !== funcaoDadosCalculada.id));
                         this.setFields(funcaoDadosCalculada);
                         this.funcoesDados.push(funcaoDadosCalculada);
@@ -731,6 +757,7 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
         this.seletedFuncaoDados = new FuncaoDados();
         this.dersChips = [];
         this.rlrsChips = [];
+        this.componenteFile.files = [];
         window.scrollTo(0, 60);
     }
 
@@ -792,33 +819,36 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
         if (!(event.selection) && event.button !== 'filter') {
             return;
         }
-        const funcaoDadosSelecionada: FuncaoDados = event.selection;
+
         switch (event.button) {
             case 'edit':
                 this.isEdit = true;
-                this.prepararParaEdicao(funcaoDadosSelecionada);
+                this.prepararParaEdicao(this.funcaoDadosEditar[0]);
                 break;
             case 'delete':
-                this.confirmDelete(funcaoDadosSelecionada);
+                this.confirmDelete(this.funcaoDadosEditar);
                 break;
             case 'clone':
                 this.disableTRDER();
                 this.configurarDialog();
                 this.isEdit = false;
-                this.prepareToClone(funcaoDadosSelecionada);
+                this.prepareToClone(this.funcaoDadosEditar[0]);
                 this.seletedFuncaoDados.id = undefined;
                 this.seletedFuncaoDados.artificialId = undefined;
                 this.textHeader = this.getLabel('Clonar Função de Dados');
                 break;
             case 'crud':
-                this.createCrud(funcaoDadosSelecionada);
+                this.createCrud(this.funcaoDadosEditar[0]);
                 break;
             case 'view':
                 this.viewFuncaoDados = true;
-                this.prepararParaVisualizar(funcaoDadosSelecionada);
+                this.prepararParaVisualizar(this.funcaoDadosEditar[0]);
                 break;
             case 'filter':
                 this.display = true;
+                break;
+            case 'edicaoLote':
+                this.prepararEditarEmLote();
                 break;
         }
     }
@@ -870,7 +900,7 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
                         this.analise.id,
                         funcaoTransacaoAtual.funcionalidade.id,
                         funcaoTransacaoAtual.funcionalidade.modulo.id)
-                    );
+                );
             });
             forkJoin(lstFuncaoTransacaoToVerify).subscribe(lstFuncaoTranscao => {
                 let index = 0;
@@ -878,7 +908,7 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
                     if (!existFuncaoTranasacao) {
                         lstFuncaoTransacaoToInclud.push(
                             this.funcaoTransacaoService.create(lstFuncaoTransacaoCrud[index], this.analise.id)
-                            );
+                        );
                     } else {
                         this.pageNotificationService.addErrorMessage('CRUD já cadastrado!');
                     }
@@ -891,7 +921,7 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
                             this.resetarEstadoPosSalvar();
                             this.estadoInicial();
                             this.analiseService.updateSomaPf(this.analise.id).subscribe();
-                    });
+                        });
                     this.blockUiService.hide();
                 });
             });
@@ -970,6 +1000,7 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
         this.analiseSharedDataService.currentFuncaoDados = funcaoDadosSelecionada;
         this.carregarDerERlr(funcaoDadosSelecionada);
         this.carregarFatorDeAjusteNaEdicao(funcaoDadosSelecionada);
+        this.carregarArquivos();
     }
 
     private carregarFatorDeAjusteNaEdicao(funcaoSelecionada: FuncaoDados) {
@@ -994,12 +1025,9 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
         }
     }
 
-    moduloSelected(modulo: Modulo) {
-    }
-
     // Carregar Referencial
     private loadReference(referenciaveis: AnaliseReferenciavel[],
-                          strValues: string[]): DerChipItem[] {
+        strValues: string[]): DerChipItem[] {
         if (referenciaveis) {
             if (referenciaveis.length > 0) {
                 if (this.isEdit) {
@@ -1017,21 +1045,21 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
     }
 
     cancelar() {
-        this.showDialog = false;
         this.fecharDialog();
     }
 
 
-    confirmDelete(funcaoDadosSelecionada: FuncaoDados) {
+    confirmDelete(funcaoDadosSelecionada: FuncaoDados[]) {
         this.confirmationService.confirm({
-            message: `${this.getLabel(
-                'Tem certeza que deseja excluir a Função de Dados ')} '${funcaoDadosSelecionada.name}'?`,
+            message: 'Tem certeza que deseja excluir as funções de dados selecionada?',
             accept: () => {
-                this.funcaoDadosService.delete(funcaoDadosSelecionada.id).subscribe(value => {
-                    this.funcoesDados = this.funcoesDados.filter((funcaoDados) => (funcaoDados.id !== funcaoDadosSelecionada.id));
-                    this.pageNotificationService.addDeleteMsg(funcaoDadosSelecionada.name);
-                    this.analiseService.updateSomaPf(this.analise.id).subscribe();
-                });
+                funcaoDadosSelecionada.forEach(funcaoDados => {
+                    this.funcaoDadosService.delete(funcaoDados.id).subscribe(value => {
+                        this.funcoesDados = this.funcoesDados.filter((funcaoDadosEdit) => (funcaoDadosEdit.id !== funcaoDados.id));
+                    });
+                })
+                this.analiseService.updateSomaPf(this.analise.id).subscribe();
+                this.pageNotificationService.addDeleteMsg("Funções deletadas com sucesso!");
             }
         });
     }
@@ -1082,7 +1110,7 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
                 this.fatoresAjuste =
                     this.faS.map(fa => {
                         const label = FatorAjusteLabelGenerator.generate(fa);
-                        return {label: label, value: fa};
+                        return { label: label, value: fa };
                     });
                 this.fatoresAjuste.unshift(this.fatorAjusteNenhumSelectItem);
             }
@@ -1139,6 +1167,11 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
         }
         this.router.navigate(link);
     }
+
+    moduloSelected(modulo: Modulo) {
+
+    }
+
     showDeflator() {
         if (this.seletedFuncaoDados.fatorAjuste) {
             this.displayDescriptionDeflator = true;
@@ -1155,31 +1188,224 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
     private prepararParaVisualizar(funcaoDadosSelecionada: FuncaoDados) {
         this.blockUiService.show();
         this.funcaoDadosService.getById(funcaoDadosSelecionada.id)
-        .subscribe(funcaoDados => {
-            this.seletedFuncaoDados = funcaoDados;
-            this.blockUiService.hide();
-        });
+            .subscribe(funcaoDados => {
+                this.seletedFuncaoDados = funcaoDados;
+                this.blockUiService.hide();
+            });
     }
     public selectFD() {
+        this.tables.pDatatableComponent.metaKeySelection = true;
         if (this.tables && this.tables.selectedRow) {
             this.funcaoDadosEditar = this.tables.selectedRow;
+            if (this.tables.selectedRow.length > 1) {
+                this.selectButtonMultiple = true;
+            }
+            else {
+                this.selectButtonMultiple = false;
+            }
         }
     }
-    
-    carregarModuloSistema(){
+
+    prepararEditarEmLote() {
+        if (this.funcaoDadosEditar.length < 2) {
+            return this.pageNotificationService.addErrorMessage("Selecione mais de 1 registro para editar em lote.")
+        }
+        for (let i = 0; i < this.funcaoDadosEditar.length; i++) {
+            const funcaoDadosSelecionada = this.funcaoDadosEditar[i];
+            this.funcaoDadosService.getById(funcaoDadosSelecionada.id).subscribe(funcaoDados => {
+                this.funcaoDadosEmLote.push(new FuncaoDados().copyFromJSON(funcaoDados));
+            });
+        }
+        this.mostrarDialogEditarEmLote = true;
+        this.hideShowQuantidade = true;
+    }
+
+    fecharDialogEditarEmLote() {
+        this.evidenciaEmLote = null;
+        this.classificacaoEmLote = null;
+        this.deflatorEmLote = null;
+        this.moduloSelecionadoEmLote = null;
+        this.funcionalidadeSelecionadaEmLote = null;
+        this.quantidadeEmLote = null;
+        this.arquivosEmLote = []
+        this.mostrarDialogEditarEmLote = false;
+        this.funcaoDadosEmLote = [];
+    }
+
+    editarCamposEmLote() {
+        if (this.funcionalidadeSelecionadaEmLote) {
+            this.funcaoDadosEmLote.forEach(funcaoDado => {
+                funcaoDado.funcionalidade = this.funcionalidadeSelecionadaEmLote;
+                funcaoDado.funcionalidade.modulo = this.moduloSelecionadoEmLote;
+            });
+        }
+        if (this.classificacaoEmLote) {
+            this.funcaoDadosEmLote.forEach(funcaoDado => {
+                funcaoDado.tipo = this.classificacaoEmLote;
+            })
+        }
+        if (this.deflatorEmLote) {
+            this.funcaoDadosEmLote.forEach(funcaoDado => {
+                funcaoDado.fatorAjuste = this.deflatorEmLote;
+            })
+        }
+        if (this.evidenciaEmLote) {
+            this.funcaoDadosEmLote.forEach(funcaoDado => {
+                funcaoDado.sustantation = this.evidenciaEmLote;
+            })
+        }
+        if (this.arquivosEmLote) {
+            this.funcaoDadosEmLote.forEach(funcaoDado => {
+                funcaoDado.files = this.arquivosEmLote;
+            })
+        }
+        if (this.quantidadeEmLote) {
+            this.funcaoDadosEmLote.forEach(funcaoDado => {
+                funcaoDado.quantidade = this.quantidadeEmLote;
+            })
+        }
+    }
+
+    editarEmLote() {
+        if (!this.funcionalidadeSelecionadaEmLote &&
+            !this.classificacaoEmLote &&
+            !this.deflatorEmLote &&
+            !this.evidenciaEmLote &&
+            !this.arquivosEmLote) {
+            return this.pageNotificationService.addErrorMessage("Para editar em lote, selecione ao menos um campo para editar.")
+        }
+        if (this.deflatorEmLote && this.deflatorEmLote.tipoAjuste === 'UNITARIO' && !this.quantidadeEmLote) {
+            return this.pageNotificationService.addErrorMessage("Coloque uma quantidade para o deflator!")
+        }
+        this.editarCamposEmLote();
+        for (let i = 0; i < this.funcaoDadosEmLote.length; i++) {
+            let funcaoDado = this.funcaoDadosEmLote[i];
+            funcaoDado = new FuncaoDados().copyFromJSON(funcaoDado);
+            const funcaoDadosCalculada = Calculadora.calcular(
+                this.analise.metodoContagem, funcaoDado, this.analise.contrato.manual);
+            this.funcaoDadosService.update(funcaoDadosCalculada, funcaoDadosCalculada.files.map(item => item.logo)).subscribe(value => {
+                this.funcoesDados = this.funcoesDados.filter((funcaoDados) => (funcaoDados.id !== funcaoDadosCalculada.id));
+                this.setFields(funcaoDadosCalculada);
+                this.funcoesDados.push(funcaoDadosCalculada);
+            });
+        }
+        this.pageNotificationService.addSuccessMessage("Funções de dados editadas com sucesso!")
+        this.analiseService.updateSomaPf(this.analise.id).subscribe();
+        this.fecharDialogEditarEmLote();
+    }
+
+    moduloSelecionado(modulo: Modulo) {
+        this.moduloSelecionadoEmLote = modulo;
+    }
+
+    funcionalidadeSelecionada(funcionalidade: Funcionalidade) {
+        this.funcionalidadeSelecionadaEmLote = funcionalidade;
+    }
+
+
+
+    selecionarDeflatorEmLote(deflator: FatorAjuste) {
+        if (deflator.tipoAjuste === 'UNITARIO') {
+            this.hideShowQuantidade = false;
+        } else {
+            this.hideShowQuantidade = true;
+        }
+    }
+
+
+    carregarModuloSistema() {
         this.sistemaService.find(this.analise.sistema.id).subscribe((sistemaRecarregado: Sistema) => {
-            console.log(sistemaRecarregado.modulos);
             this.modulos = sistemaRecarregado.modulos;
             this.analise.sistema = sistemaRecarregado;
         });
     }
 
-    exibeComponenteModuloFuncionalidade(){
-        console.log(this.isEdit);
-        console.log(this.seletedFuncaoDados.id);
-        if((!this.isEdit || this.seletedFuncaoDados.id) && this.modulos) {
+    exibeComponenteModuloFuncionalidade() {
+        if ((!this.isEdit || this.seletedFuncaoDados.id) && this.modulos) {
             return true;
         }
         return false;
     }
+
+    onUpload(event) {
+        for (let i = 0; i < event.currentFiles.length; i++) {
+            let file: Upload = new Upload();
+            file.originalName = event.currentFiles[i].name;
+            file.logo = event.currentFiles[i];
+            file.sizeOf = event.currentFiles[i].size;
+            file.safeUrl = this.sanitizer.bypassSecurityTrustUrl(URL.createObjectURL(event.currentFiles[i]));
+            if (this.seletedFuncaoDados.id != undefined) {
+                this.seletedFuncaoDados.files.push(file);
+            } else if (this.funcaoDadosEmLote.length > 0) {
+                this.arquivosEmLote.push(file);
+            }
+        }
+        event.currentFiles = [];
+        this.componenteFile.files = [];
+    }
+
+    confirmDeleteFileUpload(file: Upload) {
+        this.confirmationService.confirm({
+            message: 'Tem certeza que deseja excluir o arquivo?',
+            accept: () => {
+                if (this.seletedFuncaoDados.id != undefined) {
+                    this.seletedFuncaoDados.files.splice(this.seletedFuncaoDados.files.indexOf(file), 1);
+                } else if (this.funcaoDadosEmLote.length > 0) {
+                    this.arquivosEmLote.splice(this.arquivosEmLote.indexOf(file), 1);
+                }
+            }
+        });
+    }
+
+    carregarArquivos() {
+        this.seletedFuncaoDados.files.forEach(file => {
+            file.safeUrl = this.sanitizer.bypassSecurityTrustUrl(URL.createObjectURL(Utilitarios.base64toFile(file.logo, "image/png", file.originalName)));
+            file.logo = Utilitarios.base64toFile(file.logo, "image/png", file.originalName);
+        })
+    }
+
+    public handlePaste(event: ClipboardEvent): void {
+        let uploadFile = new Upload();
+        let num: number = 0;
+        var pastedImage = this.getPastedImage(event);
+        if (!pastedImage) {
+            return;
+        }
+        if (this.lastObjectUrl) {
+            URL.revokeObjectURL(this.lastObjectUrl);
+        }
+        this.lastObjectUrl = URL.createObjectURL(pastedImage);
+        uploadFile.safeUrl = this.sanitizer.bypassSecurityTrustUrl(this.lastObjectUrl);
+        uploadFile.logo = new File([event.clipboardData.files[0]], uploadFile.originalName, { type: event.clipboardData.files[0].type });
+        uploadFile.sizeOf = event.clipboardData.files[0].size;
+        if (this.seletedFuncaoDados.id != undefined) {
+            num = this.seletedFuncaoDados.files.length + 1
+            uploadFile.originalName = "Evidência " + num;
+            this.seletedFuncaoDados.files.push(uploadFile);
+        } else if (this.funcaoDadosEmLote.length > 0) {
+            num = this.arquivosEmLote.length + 1;
+            uploadFile.originalName = "Evidência " + num;
+            this.arquivosEmLote.push(uploadFile);
+        }
+
+    }
+
+    private getPastedImage(event: ClipboardEvent): File | null {
+        if (
+            event.clipboardData &&
+            event.clipboardData.files &&
+            event.clipboardData.files.length &&
+            this.isImageFile(event.clipboardData.files[0])
+        ) {
+            return (event.clipboardData.files[0]);
+        }
+        return (null);
+    }
+
+    private isImageFile(file: File): boolean {
+        const res = file.type.search(/^image\//i) === 0;
+        return (res);
+    }
+
+
 }

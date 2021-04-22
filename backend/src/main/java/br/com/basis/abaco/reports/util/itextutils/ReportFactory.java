@@ -1,5 +1,6 @@
 package br.com.basis.abaco.reports.util.itextutils;
 
+import br.com.basis.abaco.domain.UploadedFile;
 import br.com.basis.abaco.reports.util.itextutils.exeptions.SizeMatchExeption;
 import com.itextpdf.html2pdf.ConverterProperties;
 import com.itextpdf.html2pdf.HtmlConverter;
@@ -9,6 +10,7 @@ import com.itextpdf.html2pdf.attach.ProcessorContext;
 import com.itextpdf.html2pdf.attach.impl.DefaultTagWorkerFactory;
 import com.itextpdf.html2pdf.html.TagConstants;
 import com.itextpdf.io.font.constants.StandardFonts;
+import com.itextpdf.io.image.ImageData;
 import com.itextpdf.io.image.ImageDataFactory;
 import com.itextpdf.kernel.colors.WebColors;
 import com.itextpdf.kernel.events.Event;
@@ -46,6 +48,7 @@ import org.slf4j.LoggerFactory;
 import javax.validation.constraints.NotNull;
 import java.io.File;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -491,6 +494,26 @@ public class ReportFactory {
             ).setBackgroundColor(WebColors.getRGBColor(HEADER_BACKGROUND_COLOR)
         ));
         buildContentDescription(content, table);
+        table.setMarginLeft(tabMargin);
+        table.setMinHeight(14F);
+        return table;
+    }
+    public IBlockElement makeDescriptionFieldImage(@NotNull String headerText, List<UploadedFile> content, TextAlignment headerAlignment, float fontSize) throws MalformedURLException {
+        Table table = new Table(1);
+        table.setWidth(availableSpace - leftMargin);
+        table.setMargin(0).setPadding(0);
+        table.addHeaderCell(new Cell().add(
+            new Paragraph(headerText).setTextAlignment(headerAlignment).setFontSize(fontSize)
+        ).setBackgroundColor(WebColors.getRGBColor(HEADER_BACKGROUND_COLOR)
+        ));
+
+        for(UploadedFile file : content){
+            ImageData data =  ImageDataFactory.create(file.getLogo());
+            Image image = new Image(data);
+            image.setWidth(420).setMargins(5,0,5,45);
+            table.addCell(new Cell().add(image));
+        }
+
         table.setMarginLeft(tabMargin);
         table.setMinHeight(14F);
         return table;

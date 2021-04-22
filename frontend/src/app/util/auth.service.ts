@@ -18,6 +18,10 @@ export class AuthService {
 
     }
 
+    isAuthenticated(): boolean{
+        return this.authService.isAuthenticated();
+    }
+
     possuiRole(role: string): boolean {
         if(!this.authService.getUser()){
             return false;

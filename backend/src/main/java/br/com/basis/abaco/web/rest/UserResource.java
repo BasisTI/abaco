@@ -26,6 +26,7 @@ import org.elasticsearch.search.sort.SortOrder;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -69,6 +70,8 @@ public class UserResource {
     private final UserService userService;
     private final UserSearchRepository userSearchRepository;
     private String userexists = "userexists";
+    @Autowired
+    private ModelMapper modelMapper;
 
     public UserResource(UserRepository userRepository,
                         MailService mailService,
@@ -226,7 +229,6 @@ public class UserResource {
     @Transactional
     public List<UserAnaliseDTO> getOrganizacaoDropdown() {
         List<User> lstUser =  userRepository.getAllByFirstNameIsNotNullOrderByFirstName();
-        ModelMapper modelMapper = new ModelMapper();
         List<UserAnaliseDTO> lstUserDto = lstUser.stream()
             .map(user -> modelMapper.map(user, UserAnaliseDTO.class))
             .collect(Collectors.toList());
@@ -238,7 +240,6 @@ public class UserResource {
     @Transactional
     public List<UserAnaliseDTO> getUserInOrganizacao(@RequestBody List<Organizacao>organizacoes) {
         List<User> lstUser =  userRepository.findDistinctByOrganizacoesInOrderByFirstName(organizacoes);
-        ModelMapper modelMapper = new ModelMapper();
         List<UserAnaliseDTO> lstUserDto = lstUser.stream()
             .map(user -> modelMapper.map(user, UserAnaliseDTO.class))
             .collect(Collectors.toList());

@@ -16,6 +16,8 @@ import { SharedModule } from '../shared/shared.module';
 import { ConfirmationService } from 'primeng';
 import { PesquisarFuncaoTransacaoModule } from '../pesquisar-ft/pesquisar-ft.module';
 import { FuncaoTransacaoDivergenceComponent } from './funcao-transacao-divergence/funcao-transacao-divergence.component';
+import { DerService } from '../der/der.service';
+import { AlrService } from '../alr/alr.service';
 
 @NgModule({
     imports: [
@@ -44,6 +46,8 @@ import { FuncaoTransacaoDivergenceComponent } from './funcao-transacao-divergenc
   providers: [
     FuncaoTransacaoService,
     ConfirmationService,
+    DerService,
+    AlrService
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })

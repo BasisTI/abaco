@@ -6,6 +6,7 @@ import br.com.basis.abaco.repository.DivergenceCommentFuncaoDadosRepository;
 import br.com.basis.abaco.repository.DivergenceCommentFuncaoTransacaoRepository;
 import br.com.basis.abaco.service.dto.DivergenceCommentDTO;
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,6 +18,8 @@ public class DivergenceCommentService {
 
     private final DivergenceCommentFuncaoDadosRepository divergenceCommentFuncaoDadosRepository;
     private final DivergenceCommentFuncaoTransacaoRepository divergenceCommentFuncaoTransacaoRepository;
+    @Autowired
+    private ModelMapper modelMapper;
 
     public DivergenceCommentService(DivergenceCommentFuncaoDadosRepository divergenceCommentFuncaoDadosRepository,
                                     DivergenceCommentFuncaoTransacaoRepository divergenceCommentFuncaoTransacaoRepository) {
@@ -37,19 +40,19 @@ public class DivergenceCommentService {
     }
 
     public DivergenceCommentDTO convertToDto(DivergenceCommentFuncaoDados divergenceCommentFuncaoDados) {
-        return new ModelMapper().map(divergenceCommentFuncaoDados, DivergenceCommentDTO.class);
+        return modelMapper.map(divergenceCommentFuncaoDados, DivergenceCommentDTO.class);
     }
 
     public DivergenceCommentDTO convertToDto(DivergenceCommentFuncaoTransacao divergenceCommentFuncaoTransacao) {
-        return new ModelMapper().map(divergenceCommentFuncaoTransacao, DivergenceCommentDTO.class);
+        return modelMapper.map(divergenceCommentFuncaoTransacao, DivergenceCommentDTO.class);
     }
 
     public DivergenceCommentFuncaoDados convertToEntityFuncaoDados(DivergenceCommentDTO divergenceCommentDTO) {
-        return new ModelMapper().map(divergenceCommentDTO, DivergenceCommentFuncaoDados.class);
+        return modelMapper.map(divergenceCommentDTO, DivergenceCommentFuncaoDados.class);
     }
 
     public DivergenceCommentFuncaoTransacao convertToEntityFuncaoTransacao(DivergenceCommentDTO divergenceCommentDTO) {
-        return new ModelMapper().map(divergenceCommentDTO, DivergenceCommentFuncaoTransacao.class);
+        return modelMapper.map(divergenceCommentDTO, DivergenceCommentFuncaoTransacao.class);
     }
 
     public List<DivergenceCommentDTO> convertFuncaoDados(List<DivergenceCommentFuncaoDados> lstDivergenceCommentFuncaoDados) {

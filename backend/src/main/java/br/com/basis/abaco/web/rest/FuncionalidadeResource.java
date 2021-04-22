@@ -1,6 +1,10 @@
 package br.com.basis.abaco.web.rest;
 
+import br.com.basis.abaco.domain.FuncaoDados;
+import br.com.basis.abaco.domain.FuncaoTransacao;
 import br.com.basis.abaco.domain.Funcionalidade;
+import br.com.basis.abaco.repository.FuncaoDadosRepository;
+import br.com.basis.abaco.repository.FuncaoTransacaoRepository;
 import br.com.basis.abaco.repository.FuncionalidadeRepository;
 import br.com.basis.abaco.repository.search.FuncionalidadeSearchRepository;
 import br.com.basis.abaco.service.FuncionalidadeService;
@@ -11,16 +15,7 @@ import io.github.jhipster.web.util.ResponseUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.annotation.Secured;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.net.URI;
@@ -30,7 +25,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
-import static org.elasticsearch.index.query.QueryBuilders.*;
+import static org.elasticsearch.index.query.QueryBuilders.queryStringQuery;
 
 /**
  * REST controller for managing Funcionalidade.
@@ -170,6 +165,14 @@ public class FuncionalidadeResource {
     public Long countTotaFuncao(@PathVariable Long id){
         log.debug("REST request to get total Funcionalidade for function {}", id);
         return funcionalidadeService.countTotalFuncao(id);
+    }
+
+    @GetMapping("/funcionalidades/migrar")
+    @Timed
+    public ResponseEntity<Void> migrarFuncoes(@RequestParam("idEdit") Long idEdit, @RequestParam("idMigrar") Long idMigrar){
+        log.debug("Requisição para migrar funções das funcionalidades: {} para {}", idEdit, idMigrar);
+        funcionalidadeService.migrarFuncoes(idEdit, idMigrar);
+        return deleteFuncionalidade(idEdit);
     }
 
 }
