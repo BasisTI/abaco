@@ -164,6 +164,6 @@ public class AlrResource {
         log.debug("REST request to get Alrs for Sistema {}", idSistema);
 
         List<VwAlr> alrs = alrService.bindFilterSearchAlrsSistema(nome, idSistema);
-        return new ResponseEntity(alrs, HttpStatus.OK);
+        return new ResponseEntity<>(alrs, HttpStatus.OK);
     }
 }

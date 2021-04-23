@@ -65,29 +65,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.data.elasticsearch.core.ElasticsearchTemplate;
 
 import br.com.basis.abaco.domain.enumeration.IndexadoresUtil;
-import br.com.basis.abaco.repository.AlrRepository;
-import br.com.basis.abaco.repository.AnaliseRepository;
-import br.com.basis.abaco.repository.BaseLineAnaliticoFDRepository;
-import br.com.basis.abaco.repository.BaseLineAnaliticoFTRepository;
-import br.com.basis.abaco.repository.BaseLineSinteticoRepository;
-import br.com.basis.abaco.repository.ContratoRepository;
-import br.com.basis.abaco.repository.DerRepository;
-import br.com.basis.abaco.repository.EsforcoFaseRepository;
-import br.com.basis.abaco.repository.FatorAjusteRepository;
-import br.com.basis.abaco.repository.FuncaoDadosRepository;
-import br.com.basis.abaco.repository.FuncaoTransacaoRepository;
-import br.com.basis.abaco.repository.FuncionalidadeRepository;
-import br.com.basis.abaco.repository.ManualContratoRepository;
-import br.com.basis.abaco.repository.ManualRepository;
-import br.com.basis.abaco.repository.ModuloRepository;
-import br.com.basis.abaco.repository.NomenclaturaRepository;
-import br.com.basis.abaco.repository.OrganizacaoRepository;
-import br.com.basis.abaco.repository.PerfilRepository;
-import br.com.basis.abaco.repository.RlrRepository;
-import br.com.basis.abaco.repository.SistemaRepository;
-import br.com.basis.abaco.repository.StatusRepository;
-import br.com.basis.abaco.repository.TipoEquipeRepository;
-import br.com.basis.abaco.repository.UserRepository;
+import br.com.basis.abaco.repository.*;
+import br.com.basis.abaco.repository.search.*;
 import br.com.basis.abaco.service.Indexador;
 import br.com.basis.abaco.service.IndexadorComMapper;
 import br.com.basis.abaco.service.IndexadorSemMapper;
@@ -95,13 +74,19 @@ import br.com.basis.abaco.service.dto.AnaliseDTO;
 import br.com.basis.abaco.service.dto.SistemaListDTO;
 import br.com.basis.abaco.service.dto.TipoEquipeDTO;
 import br.com.basis.abaco.service.dto.UserEditDTO;
+import br.com.basis.abaco.service.mapper.*;
 import lombok.AllArgsConstructor;
+import org.modelmapper.ModelMapper;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.data.elasticsearch.core.ElasticsearchTemplate;
 
 @AllArgsConstructor
 @Configuration
 public class IndexadorConfiguration {
 
     private ElasticsearchTemplate elasticsearchTemplate;
+    private ModelMapper modelMapper;
 
     private AnaliseRepository analiseRepository;
     private AlrRepository alrRepository;
@@ -181,8 +166,7 @@ public class IndexadorConfiguration {
     @Bean
     public Indexador indexadorAlr() {
         AlrMapper alrMapper = new AlrMapper(alrRepository);
-        IndexadorComMapper<VwAlr, VwAlr, Long, Alr> indexador = new IndexadorComMapper(alrRepository,
-            vwAlrSearchRepository,
+        IndexadorComMapper<VwAlr, VwAlr, Long, Alr> indexador = new IndexadorComMapper<>(vwAlrSearchRepository,
             alrMapper,
             elasticsearchTemplate);
         indexador.setCodigo(IndexadoresUtil.ALR.name());
@@ -214,8 +198,7 @@ public class IndexadorConfiguration {
     @Bean
     public Indexador indexadorDer() {
         DerMapper derMapper = new DerMapper(derRepository);
-        IndexadorComMapper<VwDer, VwDer, Long, Der> indexador = new IndexadorComMapper(derRepository
-            , vwDerSearchRepository
+        IndexadorComMapper<VwDer, VwDer, Long, Der> indexador = new IndexadorComMapper<>(vwDerSearchRepository
             , derMapper
             , elasticsearchTemplate);
         indexador.setCodigo(IndexadoresUtil.DER.name());
@@ -316,8 +299,7 @@ public class IndexadorConfiguration {
     @Bean
     public Indexador indexadorRlr() {
         RlrMapper rlrMapper = new RlrMapper(rlrRepository);
-        IndexadorComMapper<VwRlr, VwRlr, Long, Rlr> indexador = new IndexadorComMapper(rlrRepository,
-            vwRlrSearchRepository,
+        IndexadorComMapper<VwRlr, VwRlr, Long, Rlr> indexador = new IndexadorComMapper<>(vwRlrSearchRepository,
             rlrMapper,
             elasticsearchTemplate);
         indexador.setCodigo(IndexadoresUtil.RLR.name());

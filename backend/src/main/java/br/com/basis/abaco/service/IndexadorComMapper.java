@@ -8,6 +8,7 @@ import org.springframework.data.elasticsearch.repository.ElasticsearchRepository
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 @AllArgsConstructor
@@ -20,6 +21,14 @@ public class IndexadorComMapper<A, B, C extends Serializable, D> extends Abstrac
 
     private final Logger log = LoggerFactory.getLogger(this.getClass());
 
+    public IndexadorComMapper(ElasticsearchRepository<B, C> elasticsearchClassRepository,
+        EntityMapper<D, A> classMapper,
+        ElasticsearchTemplate elasticsearchTemplate){
+        this.elasticsearchClassRepository = elasticsearchClassRepository;
+        this.classMapper = classMapper;
+        this.elasticsearchTemplate = elasticsearchTemplate;
+    }
+
     @Override
     public void indexar() {
         Class<B> classe = elasticsearchClassRepository.getEntityClass();
@@ -31,8 +40,15 @@ public class IndexadorComMapper<A, B, C extends Serializable, D> extends Abstrac
             log.debug(e.getMessage(), e);
         }
         elasticsearchTemplate.putMapping(classe);
-        if (jpaRepository.count() > 0) {
-            List<A> all = jpaRepository.findAll();
+        if(jpaRepository != null){
+            if (jpaRepository.count() > 0) {
+                List<A> all = jpaRepository.findAll();
+                List<D> dto = classMapper.toDto(all);
+                List list = classMapper.toEntity(dto);
+                elasticsearchClassRepository.save(list);
+            }
+        }else{
+            List<A> all = new ArrayList<>();
             List<D> dto = classMapper.toDto(all);
             List list = classMapper.toEntity(dto);
             elasticsearchClassRepository.save(list);

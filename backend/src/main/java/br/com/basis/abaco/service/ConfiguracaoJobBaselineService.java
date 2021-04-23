@@ -6,7 +6,6 @@ import java.util.List;
 import javax.transaction.Transactional;
 
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import br.com.basis.abaco.domain.ConfiguracaoJobBaseline;
@@ -21,11 +20,12 @@ import br.com.basis.abaco.service.dto.TipoEquipeDTO;
 public class ConfiguracaoJobBaselineService extends BaseService {
 
     private final ConfiguracaoJobBaselineRepository configuracaoJobBaselineRepository;
-    @Autowired
-    private ModelMapper modelMapper;
 
-    public ConfiguracaoJobBaselineService(ConfiguracaoJobBaselineRepository configuracaoJobBaselineRepository) {
+    private final ModelMapper modelMapper;
+
+    public ConfiguracaoJobBaselineService(ConfiguracaoJobBaselineRepository configuracaoJobBaselineRepository, ModelMapper modelMapper) {
         this.configuracaoJobBaselineRepository = configuracaoJobBaselineRepository;
+        this.modelMapper = modelMapper;
     }
 
     @Transactional

@@ -22,7 +22,10 @@ public class AlrMapper implements EntityMapper<Alr, VwAlr>{
     public VwAlr toEntity(Alr dto) {
         VwAlr vwAlr = new VwAlr();
         vwAlr.setId(dto.getId());
-        if(dto.getFuncaoDados() != null){
+        if(dto.getFuncaoTransacao() != null &&
+            dto.getFuncaoTransacao().getFuncionalidade() != null &&
+            dto.getFuncaoTransacao().getFuncionalidade().getModulo() != null &&
+            dto.getFuncaoTransacao().getFuncionalidade().getModulo().getSistema() != null){
             vwAlr.setIdSistema(dto.getFuncaoTransacao().getFuncionalidade().getModulo().getSistema().getId());
         }
         vwAlr.setNome(dto.getNome());
@@ -42,7 +45,10 @@ public class AlrMapper implements EntityMapper<Alr, VwAlr>{
         List<VwAlr> vwAlrs = new ArrayList<>();
         dtoList.forEach(item -> {
             Long idSistema = null;
-            if(item.getFuncaoTransacao() != null){
+            if(item.getFuncaoTransacao() != null &&
+                item.getFuncaoTransacao().getFuncionalidade() != null &&
+                item.getFuncaoTransacao().getFuncionalidade().getModulo() != null &&
+                item.getFuncaoTransacao().getFuncionalidade().getModulo().getSistema() != null){
                 idSistema = item.getFuncaoTransacao().getFuncionalidade().getModulo().getSistema().getId();
             }
             VwAlr vwAlr = new VwAlr(item.getId(), idSistema, item.getNome());
