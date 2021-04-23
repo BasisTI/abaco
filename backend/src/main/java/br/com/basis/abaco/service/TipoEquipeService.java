@@ -1,6 +1,5 @@
 package br.com.basis.abaco.service;
 
-import br.com.basis.abaco.domain.Status;
 import br.com.basis.abaco.domain.TipoEquipe;
 import br.com.basis.abaco.repository.TipoEquipeRepository;
 import br.com.basis.abaco.repository.search.TipoEquipeSearchRepository;
@@ -14,7 +13,6 @@ import br.com.basis.dynamicexports.service.DynamicExportsService;
 import net.sf.dynamicreports.report.exception.DRException;
 import net.sf.jasperreports.engine.JRException;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
 import org.springframework.stereotype.Service;
@@ -35,13 +33,14 @@ public class TipoEquipeService {
     private final TipoEquipeRepository tipoEquipeRepository;
     private final TipoEquipeSearchRepository tipoEquipeSearchRepository;
     private final DynamicExportsService dynamicExportsService;
-    @Autowired
-    private ModelMapper modelMapper;
 
-    public TipoEquipeService(TipoEquipeRepository tipoEquipeRepository, TipoEquipeSearchRepository tipoEquipeSearchRepository, DynamicExportsService dynamicExportsService) {
+    private final ModelMapper modelMapper;
+
+    public TipoEquipeService(TipoEquipeRepository tipoEquipeRepository, TipoEquipeSearchRepository tipoEquipeSearchRepository, DynamicExportsService dynamicExportsService, ModelMapper modelMapper) {
         this.tipoEquipeRepository = tipoEquipeRepository;
         this.tipoEquipeSearchRepository = tipoEquipeSearchRepository;
         this.dynamicExportsService = dynamicExportsService;
+        this.modelMapper = modelMapper;
     }
 
     @Transactional(readOnly = true)

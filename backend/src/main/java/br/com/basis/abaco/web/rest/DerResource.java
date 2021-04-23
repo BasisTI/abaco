@@ -173,7 +173,7 @@ public class DerResource {
         log.debug("REST request to get Ders for Sistema {}", idSistema);
 
         List<VwDer> ders = derService.bindFilterSearchDersSistemaFuncaoDados(nome, idSistema);
-        return new ResponseEntity(ders, HttpStatus.OK);
+        return new ResponseEntity<>(ders, HttpStatus.OK);
     }
 
     @GetMapping("/ders/funcao_transacao/sistema/{idSistema}")
@@ -182,7 +182,7 @@ public class DerResource {
         log.debug("REST request to get Ders for Sistema {}", idSistema);
 
         List<VwDer> ders = derService.bindFilterSearchDersSistemaFuncaoTransacao(nome, idSistema);
-        return new ResponseEntity(ders, HttpStatus.OK);
+        return new ResponseEntity<>(ders, HttpStatus.OK);
     }
 
 

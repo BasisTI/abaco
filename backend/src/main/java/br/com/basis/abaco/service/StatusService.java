@@ -8,7 +8,6 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -32,13 +31,14 @@ public class StatusService {
     private final StatusRepository statusRepository;
     private final StatusSearchRepository statusSearchRepository;
     private final DynamicExportsService dynamicExportsService;
-    @Autowired
-    private ModelMapper modelMapper;
 
-    public StatusService(StatusRepository statusRepository, StatusSearchRepository statusSearchRepository, DynamicExportsService dynamicExportsService) {
+    private final ModelMapper modelMapper;
+
+    public StatusService(StatusRepository statusRepository, StatusSearchRepository statusSearchRepository, DynamicExportsService dynamicExportsService, ModelMapper modelMapper) {
         this.statusRepository = statusRepository;
         this.statusSearchRepository = statusSearchRepository;
         this.dynamicExportsService = dynamicExportsService;
+        this.modelMapper = modelMapper;
     }
 
     @Transactional(readOnly = true)

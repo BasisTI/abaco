@@ -22,10 +22,16 @@ public class DerMapper implements EntityMapper<Der, VwDer>{
     public VwDer toEntity(Der dto) {
         VwDer vwDer = new VwDer();
         vwDer.setId(dto.getId());
-        if(dto.getFuncaoDados() != null){
+        if( dto.getFuncaoDados() != null &&
+            dto.getFuncaoDados().getFuncionalidade() != null &&
+            dto.getFuncaoDados().getFuncionalidade().getModulo() != null &&
+            dto.getFuncaoDados().getFuncionalidade().getModulo().getSistema() != null){
             vwDer.setIdSistemaFD(dto.getFuncaoDados().getFuncionalidade().getModulo().getSistema().getId());
         }
-        if(dto.getFuncaoTransacao() != null){
+        if(dto.getFuncaoTransacao() != null &&
+            dto.getFuncaoTransacao().getFuncionalidade() != null &&
+            dto.getFuncaoTransacao().getFuncionalidade().getModulo() != null &&
+            dto.getFuncaoTransacao().getFuncionalidade().getModulo().getSistema() != null){
             vwDer.setIdSistemaFT(dto.getFuncaoTransacao().getFuncionalidade().getModulo().getSistema().getId());
         }
         vwDer.setNome(dto.getNome());
@@ -46,10 +52,16 @@ public class DerMapper implements EntityMapper<Der, VwDer>{
         dtoList.forEach(item -> {
             Long idFD = null;
             Long idFT = null;
-            if(item.getFuncaoDados() != null){
+            if( item.getFuncaoDados() != null &&
+                item.getFuncaoDados().getFuncionalidade() != null &&
+                item.getFuncaoDados().getFuncionalidade().getModulo() != null &&
+                item.getFuncaoDados().getFuncionalidade().getModulo().getSistema() != null){
                 idFD = item.getFuncaoDados().getFuncionalidade().getModulo().getSistema().getId();
             }
-            if(item.getFuncaoTransacao() != null){
+            if(item.getFuncaoTransacao() != null &&
+                item.getFuncaoTransacao().getFuncionalidade() != null &&
+                item.getFuncaoTransacao().getFuncionalidade().getModulo() != null &&
+                item.getFuncaoTransacao().getFuncionalidade().getModulo().getSistema() != null){
                 idFT = item.getFuncaoTransacao().getFuncionalidade().getModulo().getSistema().getId();
             }
             VwDer vwDer = new VwDer(item.getId(), item.getNome(), idFD, idFT);

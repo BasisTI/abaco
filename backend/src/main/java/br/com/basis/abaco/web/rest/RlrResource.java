@@ -162,7 +162,7 @@ public class RlrResource {
         log.debug("REST request to get Rlrs for Sistema {}", idSistema);
 
         List<VwRlr> rlrs = rlrService.bindFilterSearchRlrsSistema(nome, idSistema);
-        return new ResponseEntity(rlrs, HttpStatus.OK);
+        return new ResponseEntity<>(rlrs, HttpStatus.OK);
     }
 
 
