@@ -334,28 +334,15 @@ public class FuncaoTransacaoResource {
     }
 
     private void saveVwDersAndVwAlrs(Set<Der> ders, Set<Alr> alrs, Long idSistema) {
-        List<VwDer> vwDers = new ArrayList<>();
-        List<VwAlr> vwAlrs = new ArrayList<>();
-
         List<VwDer> vwDerList = vwDerSearchRepository.findAllByIdSistemaFT(idSistema);
         List<VwAlr> vwAlrList = vwAlrSearchRepository.findAllByIdSistema(idSistema);
 
-        if(!ders.isEmpty()){
-            ders.forEach(item -> {
-                VwDer vwDer = new VwDer();
-                if(item.getId() != null){
-                    vwDer.setId(item.getId());
-                }
-                vwDer.setNome(item.getNome());
-                vwDer.setIdSistemaFT(idSistema);
-                if(!vwDerList.contains(vwDer)){
-                    vwDers.add(vwDer);
-                }
-            });
-            if(!vwDers.isEmpty()){
-                vwDerSearchRepository.save(vwDers);
-            }
-        }
+        saveVwDers(ders, vwDerList, idSistema);
+        saveVwAlrs(alrs, vwAlrList, idSistema);
+    }
+
+    private void saveVwAlrs(Set<Alr> alrs, List<VwAlr> vwAlrList, Long idSistema) {
+        List<VwAlr> vwAlrs = new ArrayList<>();
         if(!alrs.isEmpty()){
             alrs.forEach(item -> {
                 VwAlr vwAlr = new VwAlr();
@@ -372,7 +359,26 @@ public class FuncaoTransacaoResource {
                 vwAlrSearchRepository.save(vwAlrs);
             }
         }
+    }
 
+    private void saveVwDers(Set<Der> ders, List<VwDer> vwDerList, Long idSistema) {
+        List<VwDer> vwDers = new ArrayList<>();
+        if(!ders.isEmpty()){
+            ders.forEach(item -> {
+                VwDer vwDer = new VwDer();
+                if(item.getId() != null){
+                    vwDer.setId(item.getId());
+                }
+                vwDer.setNome(item.getNome());
+                vwDer.setIdSistemaFT(idSistema);
+                if(!vwDerList.contains(vwDer)){
+                    vwDers.add(vwDer);
+                }
+            });
+            if(!vwDers.isEmpty()){
+                vwDerSearchRepository.save(vwDers);
+            }
+        }
     }
 
 }

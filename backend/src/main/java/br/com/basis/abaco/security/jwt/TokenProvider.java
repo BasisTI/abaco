@@ -1,6 +1,12 @@
 package br.com.basis.abaco.security.jwt;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import javax.annotation.PostConstruct;
@@ -96,20 +102,20 @@ public class TokenProvider {
 
         Optional<br.com.basis.abaco.domain.User> userFromDatabase = userRepository.findOneWithAuthoritiesByLogin(claims.getSubject().toLowerCase());
         Collection<? extends GrantedAuthority> authorities = new ArrayList<>();
-        Set<String> listPerfil = new HashSet<>();
-        if(userFromDatabase.isPresent()){
+        UserDetailsCustom principal = null;
+        if(userFromDatabase.isPresent()) {
+            Set<String> listPerfil;
             listPerfil = userFromDatabase.get().getPerfils().stream().map(perfil -> perfil.getNome()).collect(Collectors.toSet());
-        }
-
-        if(!listPerfil.isEmpty()){
-            Optional<List<Permissao>> listPermissao = permissaoRepository.pesquisarPermissoesPorPerfil(listPerfil);
-            if(listPermissao.isPresent()){
-                authorities = listPermissao.get().stream()
-                    .map(permissao -> new SimpleGrantedAuthority("ROLE_ABACO_" + permissao.getFuncionalidadeAbaco().getSigla() + "_"+ permissao.getAcao().getSigla()))
-                    .collect(Collectors.toList());
+            if (!listPerfil.isEmpty()) {
+                Optional<List<Permissao>> listPermissao = permissaoRepository.pesquisarPermissoesPorPerfil(listPerfil);
+                if (listPermissao.isPresent()) {
+                    authorities = listPermissao.get().stream()
+                        .map(permissao -> new SimpleGrantedAuthority("ROLE_ABACO_" + permissao.getFuncionalidadeAbaco().getSigla() + "_" + permissao.getAcao().getSigla()))
+                        .collect(Collectors.toList());
+                }
             }
+             principal = new UserDetailsCustom(claims.getSubject(), "", authorities, userFromDatabase.get());
         }
-        UserDetailsCustom principal = new UserDetailsCustom(claims.getSubject(), "", authorities, userFromDatabase.get());
 
         return new UsernamePasswordAuthenticationToken(principal, "", authorities);
     }

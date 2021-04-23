@@ -410,28 +410,15 @@ public class FuncaoDadosResource {
     }
 
     private void saveVwDersAndVwRlrs(Set<Der> ders, Set<Rlr> rlrs, Long idSistema) {
-        List<VwDer> vwDers = new ArrayList<>();
-        List<VwRlr> vwRlrs = new ArrayList<>();
-
         List<VwDer> vwDerList = vwDerSearchRepository.findAllByIdSistemaFD(idSistema);
         List<VwRlr> vwRlrList = vwRlrSearchRepository.findAllByIdSistema(idSistema);
 
-        if(!ders.isEmpty()){
-            ders.forEach(item -> {
-                VwDer vwDer = new VwDer();
-                if(item.getId() != null){
-                    vwDer.setId(item.getId());
-                }
-                vwDer.setNome(item.getNome());
-                vwDer.setIdSistemaFD(idSistema);
-                if(!vwDerList.contains(vwDer)){
-                    vwDers.add(vwDer);
-                }
-            });
-            if(!vwDers.isEmpty()){
-                vwDerSearchRepository.save(vwDers);
-            }
-        }
+        saveVwDer(ders, vwDerList, idSistema);
+        saveVwRlr(rlrs, vwRlrList, idSistema);
+    }
+
+    private void saveVwRlr(Set<Rlr> rlrs, List<VwRlr> vwRlrList, Long idSistema) {
+        List<VwRlr> vwRlrs = new ArrayList<>();
         if(!rlrs.isEmpty()){
             rlrs.forEach(item -> {
                 VwRlr vwRlr = new VwRlr();
@@ -446,6 +433,26 @@ public class FuncaoDadosResource {
             });
             if(!vwRlrs.isEmpty()){
                 vwRlrSearchRepository.save(vwRlrs);
+            }
+        }
+    }
+
+    private void saveVwDer(Set<Der> ders, List<VwDer> vwDerList, Long idSistema) {
+        List<VwDer> vwDers = new ArrayList<>();
+        if(!ders.isEmpty()){
+            ders.forEach(item -> {
+                VwDer vwDer = new VwDer();
+                if(item.getId() != null){
+                    vwDer.setId(item.getId());
+                }
+                vwDer.setNome(item.getNome());
+                vwDer.setIdSistemaFD(idSistema);
+                if(!vwDerList.contains(vwDer)){
+                    vwDers.add(vwDer);
+                }
+            });
+            if(!vwDers.isEmpty()){
+                vwDerSearchRepository.save(vwDers);
             }
         }
     }
