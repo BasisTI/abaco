@@ -22,7 +22,4 @@ import java.util.List;
 @Transactional
 public class FuncaoTransacaoService {
 
-    public FuncaoTransacaoService() {
-    }
-
 }

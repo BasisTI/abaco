@@ -17,8 +17,6 @@ public class UploadedFileDTO {
 
     private String filename;
 
-    private Date dateOf;
-
     private Integer sizeOf;
 
     public Long getId() {
@@ -30,11 +28,11 @@ public class UploadedFileDTO {
     }
 
     public byte[] getLogo() {
-        return logo;
+        return logo.clone();
     }
 
     public void setLogo(byte[] logo) {
-        this.logo = logo;
+        this.logo = logo.clone();
     }
 
     public String getOriginalName() {
@@ -51,14 +49,6 @@ public class UploadedFileDTO {
 
     public void setFilename(String filename) {
         this.filename = filename;
-    }
-
-    public Date getDateOf() {
-        return dateOf;
-    }
-
-    public void setDateOf(Date dateOf) {
-        this.dateOf = dateOf;
     }
 
     public Integer getSizeOf() {

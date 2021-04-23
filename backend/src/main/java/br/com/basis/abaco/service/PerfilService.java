@@ -97,8 +97,9 @@ public class PerfilService {
 
         if(perfil.isPresent()){
             Optional<List<Permissao>> permissaoList = permissaoRepository.findAllByPerfils(perfil.get());
-            if(permissaoList.isPresent())
-            perfil.get().setPermissaos(permissaoList.get().stream().collect(Collectors.toSet()));
+            if(permissaoList.isPresent()) {
+                perfil.get().setPermissaos(permissaoList.get().stream().collect(Collectors.toSet()));
+            }
         }
         return perfil;
     }
