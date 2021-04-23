@@ -302,4 +302,14 @@ public class FuncaoDados extends FuncaoAnalise implements Serializable {
         this.rlrs.clear();
         this.rlrs.addAll(rlrs);
     }
+
+    @Override
+    public Funcionalidade getFuncionalidade() {
+        return funcionalidade;
+    }
+
+    @Override
+    public void setFuncionalidade(Funcionalidade funcionalidade) {
+        this.funcionalidade = funcionalidade;
+    }
 }

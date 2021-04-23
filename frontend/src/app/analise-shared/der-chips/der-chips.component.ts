@@ -144,7 +144,7 @@ export class DerChipsComponent implements OnChanges, OnInit {
                     this.listOptions = response.map(item => new DerChipItem(undefined, item.nome));
                     this.options = this.listOptions.filter(item => {
                         return this.values.find(value => value.text === item.text) === undefined;
-                    })
+                    });
                 })
                 break;
             case 'ALR':
@@ -152,7 +152,7 @@ export class DerChipsComponent implements OnChanges, OnInit {
                     this.listOptions = response.map(item => new DerChipItem(undefined, item.nome));
                     this.options = this.listOptions.filter(item => {
                         return this.values.find(value => value.text === item.text) === undefined;
-                    })
+                    });
                 })
                 break;
         }
