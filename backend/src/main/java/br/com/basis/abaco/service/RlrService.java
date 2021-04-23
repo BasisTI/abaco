@@ -27,16 +27,10 @@ import java.util.List;
 @Transactional
 public class RlrService {
 
-    private final RlrRepository rlrRepository;
-    private final RlrSearchRepository rlrSearchRepository;
     private final ElasticsearchTemplate elasticsearchTemplate;
     private final DynamicExportsService dynamicExportsService;
-    private final VwRlrSearchRepository vwRlrSearchRepository;
 
-    public RlrService(ElasticsearchTemplate elasticsearchTemplate, DynamicExportsService dynamicExportsService, RlrRepository rlrRepository, RlrSearchRepository rlrSearchRepository, VwRlrSearchRepository vwRlrSearchRepository) {
-        this.rlrRepository = rlrRepository;
-        this.rlrSearchRepository = rlrSearchRepository;
-        this.vwRlrSearchRepository = vwRlrSearchRepository;
+    public RlrService(ElasticsearchTemplate elasticsearchTemplate, DynamicExportsService dynamicExportsService) {
         this.elasticsearchTemplate = elasticsearchTemplate;
         this.dynamicExportsService = dynamicExportsService;
     }

@@ -74,16 +74,10 @@ public class DerResourceIT {
 
     private Der der;
 
-    @Autowired
-    private DynamicExportsService dynamicExportsService;
-
-    @Autowired
-    private ElasticsearchTemplate elasticsearchTemplate;
-
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        DerResource derResource = new DerResource(derRepository, derSearchRepository, derService, dynamicExportsService, elasticsearchTemplate);
+        DerResource derResource = new DerResource(derRepository, derSearchRepository, derService);
         this.restDerMockMvc = MockMvcBuilders.standaloneSetup(derResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)

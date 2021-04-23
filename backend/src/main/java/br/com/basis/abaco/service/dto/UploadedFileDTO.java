@@ -7,10 +7,6 @@ import lombok.Setter;
 
 import java.util.Date;
 
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
 public class UploadedFileDTO {
 
     private Long id;
@@ -24,4 +20,52 @@ public class UploadedFileDTO {
     private Date dateOf;
 
     private Integer sizeOf;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public byte[] getLogo() {
+        return logo;
+    }
+
+    public void setLogo(byte[] logo) {
+        this.logo = logo;
+    }
+
+    public String getOriginalName() {
+        return originalName;
+    }
+
+    public void setOriginalName(String originalName) {
+        this.originalName = originalName;
+    }
+
+    public String getFilename() {
+        return filename;
+    }
+
+    public void setFilename(String filename) {
+        this.filename = filename;
+    }
+
+    public Date getDateOf() {
+        return dateOf;
+    }
+
+    public void setDateOf(Date dateOf) {
+        this.dateOf = dateOf;
+    }
+
+    public Integer getSizeOf() {
+        return sizeOf;
+    }
+
+    public void setSizeOf(Integer sizeOf) {
+        this.sizeOf = sizeOf;
+    }
 }
