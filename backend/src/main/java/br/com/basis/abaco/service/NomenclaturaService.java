@@ -8,7 +8,6 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,13 +30,14 @@ public class NomenclaturaService {
     private final NomenclaturaSearchRepository  nomenclaturaSearchRepository;
     private final NomenclaturaRepository nomenclaturaRepository;
     private final DynamicExportsService dynamicExportsService;
-    @Autowired
-    private ModelMapper modelMapper;
 
-    public NomenclaturaService(NomenclaturaSearchRepository nomenclaturaSearchRepository, NomenclaturaRepository nomenclaturaRepository, DynamicExportsService dynamicExportsService) {
+    private final ModelMapper modelMapper;
+
+    public NomenclaturaService(NomenclaturaSearchRepository nomenclaturaSearchRepository, NomenclaturaRepository nomenclaturaRepository, DynamicExportsService dynamicExportsService, ModelMapper modelMapper) {
         this.nomenclaturaSearchRepository = nomenclaturaSearchRepository;
         this.nomenclaturaRepository = nomenclaturaRepository;
         this.dynamicExportsService = dynamicExportsService;
+        this.modelMapper = modelMapper;
     }
 
     @Transactional

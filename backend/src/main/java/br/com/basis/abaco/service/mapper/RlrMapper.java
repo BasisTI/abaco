@@ -22,7 +22,10 @@ public class RlrMapper implements EntityMapper<Rlr, VwRlr>{
     public VwRlr toEntity(Rlr dto) {
         VwRlr vwRlr = new VwRlr();
         vwRlr.setId(dto.getId());
-        if(dto.getFuncaoDados() != null){
+        if( dto.getFuncaoDados() != null &&
+            dto.getFuncaoDados().getFuncionalidade() != null &&
+            dto.getFuncaoDados().getFuncionalidade().getModulo() != null &&
+            dto.getFuncaoDados().getFuncionalidade().getModulo().getSistema() != null){
             vwRlr.setIdSistema(dto.getFuncaoDados().getFuncionalidade().getModulo().getSistema().getId());
         }
         vwRlr.setNome(dto.getNome());
@@ -42,7 +45,10 @@ public class RlrMapper implements EntityMapper<Rlr, VwRlr>{
         List<VwRlr> vwRlrs = new ArrayList<>();
         dtoList.forEach(item -> {
             Long idSistema = null;
-            if(item.getFuncaoDados() != null){
+            if( item.getFuncaoDados() != null &&
+                item.getFuncaoDados().getFuncionalidade() != null &&
+                item.getFuncaoDados().getFuncionalidade().getModulo() != null &&
+                item.getFuncaoDados().getFuncionalidade().getModulo().getSistema() != null){
                 idSistema = item.getFuncaoDados().getFuncionalidade().getModulo().getSistema().getId();
             }
             VwRlr vwRlr = new VwRlr(item.getId(), item.getNome(), idSistema);

@@ -6,7 +6,6 @@ import br.com.basis.abaco.repository.DivergenceCommentFuncaoDadosRepository;
 import br.com.basis.abaco.repository.DivergenceCommentFuncaoTransacaoRepository;
 import br.com.basis.abaco.service.dto.DivergenceCommentDTO;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,13 +17,14 @@ public class DivergenceCommentService {
 
     private final DivergenceCommentFuncaoDadosRepository divergenceCommentFuncaoDadosRepository;
     private final DivergenceCommentFuncaoTransacaoRepository divergenceCommentFuncaoTransacaoRepository;
-    @Autowired
-    private ModelMapper modelMapper;
+
+    private final ModelMapper modelMapper;
 
     public DivergenceCommentService(DivergenceCommentFuncaoDadosRepository divergenceCommentFuncaoDadosRepository,
-                                    DivergenceCommentFuncaoTransacaoRepository divergenceCommentFuncaoTransacaoRepository) {
+                                    DivergenceCommentFuncaoTransacaoRepository divergenceCommentFuncaoTransacaoRepository, ModelMapper modelMapper) {
         this.divergenceCommentFuncaoDadosRepository = divergenceCommentFuncaoDadosRepository;
         this.divergenceCommentFuncaoTransacaoRepository = divergenceCommentFuncaoTransacaoRepository;
+        this.modelMapper = modelMapper;
     }
 
     @Transactional

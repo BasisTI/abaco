@@ -7,7 +7,6 @@ import java.util.Optional;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
 import org.springframework.data.elasticsearch.core.query.SearchQuery;
@@ -34,14 +33,14 @@ public class SistemaService extends BaseService {
     private final SistemaRepository sistemaRepository;
     private final SistemaSearchRepository sistemaSearchRepository;
     private final DynamicExportsService dynamicExportsService;
-    
-    @Autowired
-    private ModelMapper modelMapper;
 
-    public SistemaService(SistemaRepository sistemaRepository, SistemaSearchRepository sistemaSearchRepository, DynamicExportsService dynamicExportsService) {
+    private final ModelMapper modelMapper;
+
+    public SistemaService(SistemaRepository sistemaRepository, SistemaSearchRepository sistemaSearchRepository, DynamicExportsService dynamicExportsService, ModelMapper modelMapper) {
         this.sistemaRepository = sistemaRepository;
         this.sistemaSearchRepository = sistemaSearchRepository;
         this.dynamicExportsService = dynamicExportsService;
+        this.modelMapper = modelMapper;
     }
 
     @Transactional(readOnly = true)
@@ -87,7 +86,7 @@ public class SistemaService extends BaseService {
             BoolQueryBuilder qb = bindFilterSearch(filtro.getNome(), filtro.getSigla(), filtro.getNumeroOcorrencia(), organizacoes != null ? filtro.getOrganizacao().toArray(organizacoes) : null);
             SearchQuery searchQuery = new NativeSearchQueryBuilder().withQuery(qb).withPageable(dynamicExportsService.obterPageableMaximoExportacao()).build();
             Page<Sistema> page = sistemaSearchRepository.search(searchQuery);
-  
+
             byteArrayOutputStream = dynamicExportsService.export(new RelatorioSistemaColunas(), page, tipoRelatorio, Optional.empty(), Optional.ofNullable(AbacoUtil.REPORT_LOGO_PATH), Optional.ofNullable(AbacoUtil.getReportFooter()));
         } catch (DRException | ClassNotFoundException | JRException | NoClassDefFoundError e) {
             throw new RelatorioException(e);

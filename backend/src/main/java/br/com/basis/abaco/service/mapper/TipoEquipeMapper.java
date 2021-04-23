@@ -10,8 +10,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class TipoEquipeMapper implements EntityMapper<TipoEquipeDTO, TipoEquipe> {
-    @Autowired
-    private ModelMapper modelMapper;
+
+    private ModelMapper modelMapper = new ModelMapper();
 
     @Override
     public TipoEquipe toEntity(TipoEquipeDTO dto) {

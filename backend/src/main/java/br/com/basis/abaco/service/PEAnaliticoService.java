@@ -5,7 +5,6 @@ import br.com.basis.abaco.repository.PEAnaliticoRepository;
 import br.com.basis.abaco.service.dto.PEAnaliticoDTO;
 import br.com.basis.abaco.utils.StringUtils;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,11 +15,12 @@ import java.util.stream.Collectors;
 public class PEAnaliticoService {
 
     private final PEAnaliticoRepository peAnaliticoRepository;
-    @Autowired
-    private ModelMapper modelMapper;
 
-    public PEAnaliticoService(PEAnaliticoRepository peAnaliticoRepository) {
+    private final ModelMapper modelMapper;
+
+    public PEAnaliticoService(PEAnaliticoRepository peAnaliticoRepository, ModelMapper modelMapper) {
         this.peAnaliticoRepository = peAnaliticoRepository;
+        this.modelMapper = modelMapper;
     }
 
     public PEAnalitico convertToEntity(PEAnaliticoDTO peAnaliticoDTO) {

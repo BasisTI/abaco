@@ -23,7 +23,6 @@ import org.elasticsearch.index.query.QueryBuilders;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
@@ -63,17 +62,17 @@ public class UserService extends BaseService {
 
     private final PerfilRepository perfilRepository;
 
-    @Autowired
-    private ModelMapper modelMapper;
+    private final ModelMapper modelMapper;
 
     public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, SocialService socialService,
-                       UserSearchRepository userSearchRepository, DynamicExportsService dynamicExportsService, PerfilRepository perfilRepository) {
+                       UserSearchRepository userSearchRepository, DynamicExportsService dynamicExportsService, PerfilRepository perfilRepository, ModelMapper modelMapper) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.socialService = socialService;
         this.userSearchRepository = userSearchRepository;
         this.dynamicExportsService = dynamicExportsService;
         this.perfilRepository = perfilRepository;
+        this.modelMapper = modelMapper;
     }
 
     public Optional<User> activateRegistration(String key) {
