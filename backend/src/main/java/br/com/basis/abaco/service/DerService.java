@@ -34,17 +34,13 @@ import static org.elasticsearch.index.query.QueryBuilders.termsQuery;
 public class DerService {
 
     private final DerRepository derRepository;
-    private final DerSearchRepository derSearchRepository;
     private final ElasticsearchTemplate elasticsearchTemplate;
     private final DynamicExportsService dynamicExportsService;
-    private final VwDerSearchRepository vwDerSearchRepository;
 
-    public DerService(DerRepository derRepository, DerSearchRepository derSearchRepository, ElasticsearchTemplate elasticsearchTemplate, DynamicExportsService dynamicExportsService, VwDerSearchRepository vwDerSearchRepository) {
+    public DerService(DerRepository derRepository, ElasticsearchTemplate elasticsearchTemplate, DynamicExportsService dynamicExportsService) {
         this.derRepository = derRepository;
-        this.derSearchRepository = derSearchRepository;
         this.elasticsearchTemplate = elasticsearchTemplate;
         this.dynamicExportsService = dynamicExportsService;
-        this.vwDerSearchRepository = vwDerSearchRepository;
     }
 
     @Transactional(readOnly = true)

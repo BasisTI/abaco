@@ -128,14 +128,6 @@ public class FuncaoDados extends FuncaoAnalise implements Serializable {
         return this;
     }
 
-    public Funcionalidade getFuncionalidade() {
-        return funcionalidade;
-    }
-
-    public void setFuncionalidade(Funcionalidade funcionalidade) {
-        this.funcionalidade = funcionalidade;
-    }
-
     public void setTipo(TipoFuncaoDados tipo) {
         this.tipo = tipo;
     }

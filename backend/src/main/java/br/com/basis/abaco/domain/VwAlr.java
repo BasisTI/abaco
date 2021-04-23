@@ -28,25 +28,27 @@ public class VwAlr {
     @Column(name = "id")
     private Long id;
 
+    @Column(name = "id_sistema")
+    private Long idSistema;
+
     @Column(name = "nome")
     @Field(index = FieldIndex.not_analyzed, type = FieldType.String)
     private String nome;
 
-    @Column(name = "id_sistema")
-    private Long idSistema;
-
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o){
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()){
+            return false;
+        }
         VwAlr vwAlr = (VwAlr) o;
         if(vwAlr.nome == null || nome == null) {
             return false;
         }
-        if(Objects.equals(nome, vwAlr.nome)){
-            if(vwAlr.idSistema != null && idSistema != null){
-                return Objects.equals(idSistema, vwAlr.idSistema);
-            }
+        if(Objects.equals(nome, vwAlr.nome) && vwAlr.idSistema != null && idSistema != null){
+            return Objects.equals(idSistema, vwAlr.idSistema);
         }
         return false;
     }

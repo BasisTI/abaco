@@ -65,8 +65,6 @@ public class FuncaoTransacaoResource {
     private final FuncaoTransacaoRepository funcaoTransacaoRepository;
     private final FuncaoTransacaoSearchRepository funcaoTransacaoSearchRepository;
     private final AnaliseRepository analiseRepository;
-    private final FuncaoTransacaoService funcaoTransacaoService;
-    private final UploadedFilesRepository filesRepository;
     private final VwDerSearchRepository vwDerSearchRepository;
     private final VwAlrSearchRepository vwAlrSearchRepository;
     private final FuncaoDadosService funcaoDadosService;
@@ -75,14 +73,12 @@ public class FuncaoTransacaoResource {
     @Autowired
     private ModelMapper modelMapper;
 
-    public FuncaoTransacaoResource(FuncaoTransacaoRepository funcaoTransacaoRepository, FuncaoTransacaoSearchRepository funcaoTransacaoSearchRepository, AnaliseRepository analiseRepository, VwDerSearchRepository vwDerSearchRepository, VwAlrSearchRepository vwAlrSearchRepository, FuncaoTransacaoService funcaoTransacaoService, UploadedFilesRepository filesRepository, FuncaoDadosService funcaoDadosService) {
+    public FuncaoTransacaoResource(FuncaoTransacaoRepository funcaoTransacaoRepository, FuncaoTransacaoSearchRepository funcaoTransacaoSearchRepository, AnaliseRepository analiseRepository, VwDerSearchRepository vwDerSearchRepository, VwAlrSearchRepository vwAlrSearchRepository, FuncaoDadosService funcaoDadosService) {
         this.funcaoTransacaoRepository = funcaoTransacaoRepository;
         this.funcaoTransacaoSearchRepository = funcaoTransacaoSearchRepository;
         this.analiseRepository = analiseRepository;
         this.vwDerSearchRepository = vwDerSearchRepository;
         this.vwAlrSearchRepository = vwAlrSearchRepository;
-        this.funcaoTransacaoService = funcaoTransacaoService;
-        this.filesRepository = filesRepository;
         this.funcaoDadosService = funcaoDadosService;
     }
 

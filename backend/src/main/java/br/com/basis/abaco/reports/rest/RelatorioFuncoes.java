@@ -360,7 +360,6 @@ public class RelatorioFuncoes {
         funcoes.setPfTotalFd(f.getGrossPF() != null ? f.getGrossPF().stripTrailingZeros().toPlainString() : "0");
         funcoes.setPfAjustadoFd(f.getPf() != null ? f.getPf().stripTrailingZeros().toPlainString() : "0" );
         funcoes.setSustantation(f.getSustantation());
-//        funcoes.setSustantation(f.getFiles().toString());
     }
 
     /**

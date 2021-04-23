@@ -94,8 +94,10 @@ public class PerfilService {
     public Optional<Perfil> findOne(Long id) {
         log.debug("Request to get FuncionalidadeAbaco : {}", id);
         Optional<Perfil> perfil = perfilRepository.findById(id);
-        Optional<List<Permissao>> permissaoList = permissaoRepository.findAllByPerfils(perfil.get());
-        if(perfil.isPresent() && permissaoList.isPresent()){
+
+        if(perfil.isPresent()){
+            Optional<List<Permissao>> permissaoList = permissaoRepository.findAllByPerfils(perfil.get());
+            if(permissaoList.isPresent())
             perfil.get().setPermissaos(permissaoList.get().stream().collect(Collectors.toSet()));
         }
         return perfil;

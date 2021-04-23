@@ -86,8 +86,6 @@ public class FuncaoTransacaoResourceIT {
 
     @Autowired
     private FuncaoDadosService funcaoDadosService;
-    private FuncaoTransacaoService funcaoTransacaoService;
-    private UploadedFilesRepository filesRepository;
     @Autowired
     private VwDerSearchRepository vwDerSearchRepository;
     @Autowired
@@ -96,7 +94,7 @@ public class FuncaoTransacaoResourceIT {
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        FuncaoTransacaoResource funcaoTransacaoResource = new FuncaoTransacaoResource(funcaoTransacaoRepository, funcaoTransacaoSearchRepository, analiseRepository, vwDerSearchRepository, vwAlrSearchRepository, funcaoTransacaoService, filesRepository, funcaoDadosService);
+        FuncaoTransacaoResource funcaoTransacaoResource = new FuncaoTransacaoResource(funcaoTransacaoRepository, funcaoTransacaoSearchRepository, analiseRepository, vwDerSearchRepository, vwAlrSearchRepository, funcaoDadosService);
         this.restFuncaoTransacaoMockMvc = MockMvcBuilders.standaloneSetup(funcaoTransacaoResource)
                 .setCustomArgumentResolvers(pageableArgumentResolver)
                 .setControllerAdvice(exceptionTranslator)

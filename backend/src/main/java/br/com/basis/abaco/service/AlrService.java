@@ -21,18 +21,12 @@ import java.util.List;
 @Transactional
 public class AlrService {
 
-    private final AlrRepository alrRepository;
-    private final AlrSearchRepository alrSearchRepository;
     private final ElasticsearchTemplate elasticsearchTemplate;
     private final DynamicExportsService dynamicExportsService;
-    private final VwAlrSearchRepository vwAlrSearchRepository;
 
-    public AlrService(AlrRepository alrRepository, AlrSearchRepository alrSearchRepository, ElasticsearchTemplate elasticsearchTemplate, DynamicExportsService dynamicExportsService, VwAlrSearchRepository vwAlrSearchRepository){
-        this.alrRepository = alrRepository;
-        this.alrSearchRepository = alrSearchRepository;
+    public AlrService(ElasticsearchTemplate elasticsearchTemplate, DynamicExportsService dynamicExportsService){
         this.elasticsearchTemplate = elasticsearchTemplate;
         this.dynamicExportsService = dynamicExportsService;
-        this.vwAlrSearchRepository = vwAlrSearchRepository;
     }
 
     public List<VwAlr> bindFilterSearchAlrsSistema(String nome, Long idSistema) {
