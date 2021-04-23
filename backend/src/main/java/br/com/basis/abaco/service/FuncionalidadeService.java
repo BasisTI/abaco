@@ -26,15 +26,13 @@ public class FuncionalidadeService {
     private final FuncaoDadosSearchRepository funcaoDadosSearchRepository;
     private final FuncaoTransacaoRepository funcaoTransacaoRepository;
     private final FuncaoTransacaoSearchRepository funcaoTransacaoSearchRepository;
-    private final FuncionalidadeSearchRepository funcionalidadeSearchRepository;
 
-    public FuncionalidadeService(FuncionalidadeRepository funcionalidadeRepository, FuncaoTransacaoRepository funcaoTransacaoRepository, FuncaoDadosRepository funcaoDadosRepository, FuncaoDadosSearchRepository funcaoDadosSearchRepository, FuncaoTransacaoSearchRepository funcaoTransacaoSearchRepository, FuncionalidadeSearchRepository funcionalidadeSearchRepository) {
+    public FuncionalidadeService(FuncionalidadeRepository funcionalidadeRepository, FuncaoTransacaoRepository funcaoTransacaoRepository, FuncaoDadosRepository funcaoDadosRepository, FuncaoDadosSearchRepository funcaoDadosSearchRepository, FuncaoTransacaoSearchRepository funcaoTransacaoSearchRepository) {
         this.funcionalidadeRepository = funcionalidadeRepository;
         this.funcaoTransacaoRepository = funcaoTransacaoRepository;
         this.funcaoDadosRepository = funcaoDadosRepository;
         this.funcaoDadosSearchRepository = funcaoDadosSearchRepository;
         this.funcaoTransacaoSearchRepository = funcaoTransacaoSearchRepository;
-        this.funcionalidadeSearchRepository = funcionalidadeSearchRepository;
     }
 
     @Transactional(readOnly = true)

@@ -27,12 +27,10 @@ import javax.xml.bind.DatatypeConverter;
 public class FuncaoDadosService {
 
     private final FuncaoDadosRepository funcaoDadosRepository;
-    private final UploadedFilesRepository filesRepository;
 
 
-    public FuncaoDadosService(FuncaoDadosRepository funcaoDadosRepository, UploadedFilesRepository filesRepository) {
+    public FuncaoDadosService(FuncaoDadosRepository funcaoDadosRepository) {
         this.funcaoDadosRepository = funcaoDadosRepository;
-        this.filesRepository = filesRepository;
     }
 
     @Transactional(readOnly = true)
@@ -43,20 +41,20 @@ public class FuncaoDadosService {
     public List<UploadedFile> uploadFiles(List<MultipartFile> files){
         List<UploadedFile> uploadedFiles = new ArrayList<>();
         try {
-            for(MultipartFile file : files) {
-                UploadedFile uploadedFile = new UploadedFile();
-                byte[] bytes = file.getBytes();
-                byte[] bytesFileName = (file.getOriginalFilename() + String.valueOf(System.currentTimeMillis()))
+            for(MultipartFile fileFunc : files) {
+                UploadedFile uploadedFileFunc = new UploadedFile();
+                byte[] bytes = fileFunc.getBytes();
+                byte[] bytesFileName = (fileFunc.getOriginalFilename() + String.valueOf(System.currentTimeMillis()))
                     .getBytes("UTF-8");
                 String filename = DatatypeConverter.printHexBinary(MessageDigest.getInstance("MD5").digest(bytesFileName));
-                String ext = FilenameUtils.getExtension(file.getOriginalFilename());
+                String ext = FilenameUtils.getExtension(fileFunc.getOriginalFilename());
                 filename += "." + ext;
-                uploadedFile.setLogo(bytes);
-                uploadedFile.setDateOf(new Date());
-                uploadedFile.setOriginalName(file.getOriginalFilename());
-                uploadedFile.setFilename(filename);
-                uploadedFile.setSizeOf(bytes.length);
-                uploadedFiles.add(uploadedFile);
+                uploadedFileFunc.setLogo(bytes);
+                uploadedFileFunc.setDateOf(new Date());
+                uploadedFileFunc.setOriginalName(fileFunc.getOriginalFilename());
+                uploadedFileFunc.setFilename(filename);
+                uploadedFileFunc.setSizeOf(bytes.length);
+                uploadedFiles.add(uploadedFileFunc);
             }
             return uploadedFiles;
         } catch (IOException | NoSuchAlgorithmException e) {

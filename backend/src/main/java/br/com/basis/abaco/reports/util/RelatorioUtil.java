@@ -70,6 +70,8 @@ public class RelatorioUtil {
 
     private static final String CONTAGEM_PDF = "analise_contagem.pdf";
 
+    private static final String FUNDAMENTACAO = "Fundamentação";
+
 
     private HttpServletResponse response;
 
@@ -259,9 +261,9 @@ public class RelatorioUtil {
         funcaoTransacao.getDers().forEach(der -> ders.add(der.getNome() != null ? der.getNome() : (der.getValor() != null ? der.getValor().toString(): null)));
         document.add(factory.makeBulletList("Entidades Referenciadas", alrs));
         document.add(factory.makeBulletList("Campos", ders));
-        document.add(factory.makeDescriptionField("Fundamentação", funcaoTransacao.getSustantation(), TextAlignment.JUSTIFIED, 12F));
+        document.add(factory.makeDescriptionField(FUNDAMENTACAO, funcaoTransacao.getSustantation(), TextAlignment.JUSTIFIED, 12F));
         if(funcaoTransacao.getFiles() != null && !funcaoTransacao.getFiles().isEmpty()){
-            document.add(factory.makeDescriptionFieldImage("Fundamentação", funcaoTransacao.getFiles(), TextAlignment.JUSTIFIED, 12F));
+            document.add(factory.makeDescriptionFieldImage(FUNDAMENTACAO, funcaoTransacao.getFiles(), TextAlignment.JUSTIFIED, 12F));
         }
         document.add(factory.makeEspaco());
     }
@@ -276,9 +278,9 @@ public class RelatorioUtil {
         funcaoDados.getDers().forEach(der -> ders.add(der.getNome() != null ? der.getNome() : (der.getValor() != null ? der.getValor().toString() : null)));
         document.add(factory.makeBulletList("Subentidades", rlrs));
         document.add(factory.makeBulletList("Campos", ders));
-        document.add(factory.makeDescriptionField("Fundamentação", funcaoDados.getSustantation(), TextAlignment.JUSTIFIED, 12F));
+        document.add(factory.makeDescriptionField(FUNDAMENTACAO, funcaoDados.getSustantation(), TextAlignment.JUSTIFIED, 12F));
         if(funcaoDados.getFiles() != null && !funcaoDados.getFiles().isEmpty()){
-            document.add(factory.makeDescriptionFieldImage("Fundamentação", funcaoDados.getFiles(), TextAlignment.JUSTIFIED, 12F));
+            document.add(factory.makeDescriptionFieldImage(FUNDAMENTACAO, funcaoDados.getFiles(), TextAlignment.JUSTIFIED, 12F));
         }
         document.add(factory.makeEspaco());
     }

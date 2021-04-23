@@ -37,16 +37,18 @@ public class VwRlr {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o){
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()){
+            return false;
+        }
         VwRlr vwRlr = (VwRlr) o;
         if(vwRlr.nome == null || nome == null) {
             return false;
         }
-        if(Objects.equals(nome, vwRlr.nome)){
-            if(vwRlr.idSistema != null && idSistema != null){
-                return Objects.equals(idSistema, vwRlr.idSistema);
-            }
+        if(Objects.equals(nome, vwRlr.nome) && vwRlr.idSistema != null && idSistema != null){
+            return Objects.equals(idSistema, vwRlr.idSistema);
         }
         return false;
     }

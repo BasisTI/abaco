@@ -41,9 +41,17 @@ public class VwDer {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         VwDer vwDer = (VwDer) o;
+        return testEquals(vwDer);
+    }
+
+    public boolean testEquals(VwDer vwDer){
         if(vwDer.nome == null || nome == null) {
             return false;
         }

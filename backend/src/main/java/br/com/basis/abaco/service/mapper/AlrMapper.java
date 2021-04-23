@@ -45,7 +45,7 @@ public class AlrMapper implements EntityMapper<Alr, VwAlr>{
             if(item.getFuncaoTransacao() != null){
                 idSistema = item.getFuncaoTransacao().getFuncionalidade().getModulo().getSistema().getId();
             }
-            VwAlr vwAlr = new VwAlr(item.getId(), item.getNome(), idSistema);
+            VwAlr vwAlr = new VwAlr(item.getId(), idSistema, item.getNome());
 
             if(!vwAlrs.contains(vwAlr)){
                 vwAlrs.add(vwAlr);

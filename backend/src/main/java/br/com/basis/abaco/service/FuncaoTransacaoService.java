@@ -22,13 +22,7 @@ import java.util.List;
 @Transactional
 public class FuncaoTransacaoService {
 
-    private final FuncaoTransacaoRepository funcaoTransacaoRepository;
-    private final UploadedFilesRepository filesRepository;
-
-
-    public FuncaoTransacaoService(FuncaoTransacaoRepository funcaoTransacaoRepository, UploadedFilesRepository filesRepository) {
-        this.funcaoTransacaoRepository = funcaoTransacaoRepository;
-        this.filesRepository = filesRepository;
+    public FuncaoTransacaoService() {
     }
 
 }

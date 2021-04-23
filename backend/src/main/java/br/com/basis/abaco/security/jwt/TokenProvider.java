@@ -1,11 +1,6 @@
 package br.com.basis.abaco.security.jwt;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import javax.annotation.PostConstruct;
@@ -101,7 +96,10 @@ public class TokenProvider {
 
         Optional<br.com.basis.abaco.domain.User> userFromDatabase = userRepository.findOneWithAuthoritiesByLogin(claims.getSubject().toLowerCase());
         Collection<? extends GrantedAuthority> authorities = new ArrayList<>();
-        Set<String> listPerfil = userFromDatabase.get().getPerfils().stream().map(perfil -> perfil.getNome()).collect(Collectors.toSet());
+        Set<String> listPerfil = new HashSet<>();
+        if(userFromDatabase.isPresent()){
+            listPerfil = userFromDatabase.get().getPerfils().stream().map(perfil -> perfil.getNome()).collect(Collectors.toSet());
+        }
 
         if(!listPerfil.isEmpty()){
             Optional<List<Permissao>> listPermissao = permissaoRepository.pesquisarPermissoesPorPerfil(listPerfil);
