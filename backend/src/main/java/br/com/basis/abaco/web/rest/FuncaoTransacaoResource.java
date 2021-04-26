@@ -2,6 +2,7 @@ package br.com.basis.abaco.web.rest;
 
 import static org.elasticsearch.index.query.QueryBuilders.queryStringQuery;
 
+import java.lang.reflect.InvocationTargetException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
@@ -13,6 +14,7 @@ import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 import br.com.basis.abaco.service.FuncaoDadosService;
+import br.com.basis.abaco.service.dto.FuncaoTransacaoSaveDTO;
 import org.jetbrains.annotations.NotNull;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
@@ -128,7 +130,9 @@ public class FuncaoTransacaoResource {
      */
     @PutMapping(path = "/funcao-transacaos/{id}", consumes = {"multipart/form-data"})
     @Timed
-    public ResponseEntity<FuncaoTransacao> updateFuncaoTransacao(@PathVariable Long id, @RequestPart("funcaoTransacao") FuncaoTransacao funcaoTransacao, @RequestPart("files")List<MultipartFile> files) throws URISyntaxException {
+    public ResponseEntity<FuncaoTransacao> updateFuncaoTransacao(@PathVariable Long id, @RequestPart("funcaoTransacao") FuncaoTransacaoSaveDTO funcaoTransacaoDTO, @RequestPart("files")List<MultipartFile> files) throws URISyntaxException, InvocationTargetException, IllegalAccessException {
+        FuncaoTransacao funcaoTransacao = funcaoTransacaoDTO.toEntity();
+
         log.debug("REST request to update FuncaoTransacao : {}", funcaoTransacao);
         FuncaoTransacao funcaoTransacaoOld = funcaoTransacaoRepository.findOne(id);
         Analise analise = analiseRepository.findOne(funcaoTransacaoOld.getAnalise().getId());
