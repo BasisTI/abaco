@@ -34,6 +34,10 @@ export class DashboardComponent implements OnInit, AfterViewInit {
 
     ngAfterViewInit(): void {
         this.carregarMenu();
+        this.authenticated = this.authService.isAuthenticated();
+        if (!this.authenticated) {
+            this.router.navigate(["/login"]);
+        }
     }
 
     getLabel(label) {
