@@ -13,6 +13,7 @@ import java.util.regex.Pattern;
 
 import javax.validation.Valid;
 
+import br.com.basis.abaco.repository.UploadedFilesRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.InputStreamResource;
@@ -72,6 +73,8 @@ public class OrganizacaoResource {
 
   private final OrganizacaoSearchRepository organizacaoSearchRepository;
 
+  private final UploadedFilesRepository filesRepository;
+
   private String[] erro = { "orgNomeInvalido", "orgCnpjInvalido", "orgSiglaInvalido", "orgNumOcorInvalido",
       "organizacaoexists", "cnpjexists" };
   private String[] mensagem = { "Nome de organização inválido", "CNPJ de organização inválido",
@@ -83,10 +86,11 @@ public class OrganizacaoResource {
     private final OrganizacaoService organizacaoService;
 
     public OrganizacaoResource(OrganizacaoRepository organizacaoRepository,
-            OrganizacaoSearchRepository organizacaoSearchRepository, DynamicExportsService dynamicExportsService,
-            OrganizacaoService organizacaoService) {
+                               OrganizacaoSearchRepository organizacaoSearchRepository, UploadedFilesRepository filesRepository, DynamicExportsService dynamicExportsService,
+                               OrganizacaoService organizacaoService) {
         this.organizacaoRepository = organizacaoRepository;
         this.organizacaoSearchRepository = organizacaoSearchRepository;
+        this.filesRepository = filesRepository;
         this.dynamicExportsService = dynamicExportsService;
         this.organizacaoService = organizacaoService;
     }
@@ -193,6 +197,11 @@ public class OrganizacaoResource {
       return this.createBadRequest(this.erro[i], this.mensagem[i]);
     }
 
+    Organizacao organizacaoOld = organizacaoRepository.findOne(organizacao.getId());
+    if(organizacaoOld.getLogoId() != null && filesRepository.exists(organizacaoOld.getLogoId())){
+        filesRepository.delete(organizacaoOld.getLogoId());
+    }
+
     Organizacao result = organizacaoRepository.saveAndFlush(organizacao);
     organizacaoSearchRepository.save(result);
 
@@ -247,10 +256,14 @@ public class OrganizacaoResource {
   @Timed
   @Secured("ROLE_ABACO_ORGANIZACAO_EXCLUIR")
   public ResponseEntity<Void> deleteOrganizacao(@PathVariable Long id) {
-    log.debug("REST request to delete Organizacao : {}", id);
-    organizacaoRepository.delete(id);
-    organizacaoSearchRepository.delete(id);
-    return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id.toString())).build();
+      log.debug("REST request to delete Organizacao : {}", id);
+      organizacaoRepository.delete(id);
+      organizacaoSearchRepository.delete(id);
+      Organizacao organizacao = organizacaoRepository.findOne(id);
+      if(organizacao.getLogoId() != null && filesRepository.exists(organizacao.getLogoId())){
+          filesRepository.delete(organizacao.getLogoId());
+      }
+      return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id.toString())).build();
   }
 
   /**
