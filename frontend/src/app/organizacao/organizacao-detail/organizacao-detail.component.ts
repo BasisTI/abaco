@@ -40,7 +40,7 @@ export class OrganizacaoDetailComponent implements OnInit, OnDestroy {
             this.organizacao = organizacao;
             if (this.organizacao.logoId !== undefined && this.organizacao.logoId != null) {
                 this.uploadService.getLogo(organizacao.logoId).subscribe(response => {
-                    // this.logo = response.logo;
+                    this.logo = response.logo;
                 });
             }
         });

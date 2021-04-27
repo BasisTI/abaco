@@ -274,6 +274,7 @@ export class OrganizacaoFormComponent implements OnInit, OnDestroy {
         }
     }
 
+
     manualContratoTableClickNovo(event: DatatableClickEvent) {
         if (!event.selection) {
             return;
@@ -335,7 +336,7 @@ export class OrganizacaoFormComponent implements OnInit, OnDestroy {
     }
 
     comfirmarExcluirManualNovo() {
-        
+
         this.confirmationService.confirm({
             message:'Tem certeza que deseja excluir o manual '+ this.manualContratoEdt.manual.nome +' ?',
             accept: () => {
@@ -344,7 +345,7 @@ export class OrganizacaoFormComponent implements OnInit, OnDestroy {
             }
         });
     }
-    
+
     save(form: any) {
         this.cnpjValido = false;
 
@@ -416,14 +417,11 @@ export class OrganizacaoFormComponent implements OnInit, OnDestroy {
                     this.isEdit = true;
                     this.subscribeToSaveResponse(this.organizacaoService.update(this.organizacao));
                 });
-
-                this.uploadService.saveFile(this.newLogo).subscribe(response => {
-                });
             } else {
                 this.isEdit = true;
                 this.subscribeToSaveResponse(this.organizacaoService.update(this.organizacao));
             }
-        }); 
+        });
     }
 
     novo() {
