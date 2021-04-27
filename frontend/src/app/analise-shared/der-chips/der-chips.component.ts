@@ -85,6 +85,7 @@ export class DerChipsComponent implements OnChanges, OnInit {
         }
     }
 
+
     onAddValue(value: string) {
         // removendo o adicionado pelo primeng no keydown de enter
         this.values.pop();
@@ -92,7 +93,7 @@ export class DerChipsComponent implements OnChanges, OnInit {
     }
 
     pressEnter(event) {
-        if (event.code === "Enter") {
+        if (event.code === "Enter" || event.code === "NumpadEnter") {
             if (this.canEnter) {
                 if (event.target.value.length > 0) {
                     const valores: string[] = this.values.map(item => item.text.toLowerCase());
