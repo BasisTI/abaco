@@ -7,13 +7,13 @@ import { ResumoFuncoes, CalculadoraTransacao } from 'src/app/analise-shared';
 import { DerChipItem } from 'src/app/analise-shared/der-chips/der-chip-item';
 import { FatorAjuste } from 'src/app/fator-ajuste';
 import { Funcionalidade } from 'src/app/funcionalidade';
-import { FuncaoTransacao, TipoFuncaoTransacao } from '../';
-import { FuncaoDadosService } from '../../funcao-dados/funcao-dados.service';
-import { FuncaoTransacaoService } from '../funcao-transacao.service';
+import { FuncaoTransacao, TipoFuncaoTransacao } from '.';
+import { FuncaoDadosService } from '../funcao-dados/funcao-dados.service';
+import { FuncaoTransacaoService } from './funcao-transacao.service';
 import { ParseResult, DerTextParser } from 'src/app/analise-shared/der-text/der-text-parser';
 import { AnaliseSharedDataService } from 'src/app/shared/analise-shared-data.service';
-import { AnaliseService } from '../../analise/analise.service';
-import { Analise } from '../../analise/analise.model';
+import { AnaliseService } from '../analise/analise.service';
+import { Analise } from '../analise/analise.model';
 import { MessageUtil } from 'src/app/util/message.util';
 import { DerChipConverter } from 'src/app/analise-shared/der-chips/der-chip-converter';
 import { Der } from 'src/app/der/der.model';
@@ -23,29 +23,24 @@ import { FatorAjusteLabelGenerator } from 'src/app/shared/fator-ajuste-label-gen
 import { Manual } from 'src/app/manual';
 import * as _ from 'lodash';
 import { BlockUiService } from '@nuvem/angular-base';
-import { CommentFuncaoTransacao } from '../comment.model';
-import { DivergenciaService } from 'src/app/divergencia';
-import { table } from 'console';
-import { Sistema, SistemaService } from 'src/app/sistema';
-import { Upload } from 'src/app/upload/upload.model';
+import { Sistema, SistemaService } from '../sistema';
 import { DomSanitizer } from '@angular/platform-browser';
-import { Utilitarios } from 'src/app/util/utilitarios.util';
-
+import { Upload } from '../upload/upload.model';
+import { Utilitarios } from '../util/utilitarios.util';
 @Component({
     selector: 'app-analise-funcao-transacao',
     host: {
         "(window:paste)": "handlePaste($event)"
     },
-    templateUrl: './funcao-transacao-divergence.component.html',
+    templateUrl: './funcao-transacao-form.component.html',
     providers: [ConfirmationService]
 })
-export class FuncaoTransacaoDivergenceComponent implements OnInit {
+export class FuncaoTransacaoFormComponent implements OnInit {
     emptySustantion = '<p><br></p>';
     faS: FatorAjuste[] = [];
     textHeader: string;
     @Input() isView: boolean;
     isEdit: boolean;
-    showAddComent = false;
     isFilter: boolean;
     nomeInvalido;
     classInvalida;
@@ -68,8 +63,7 @@ export class FuncaoTransacaoDivergenceComponent implements OnInit {
     funcoesTransacaoList: FuncaoTransacao[] = [];
     funcaoTransacaoEditar: FuncaoTransacao[] = [];
     translateSubscriptions: Subscription[] = [];
-    defaultSort = [{ field: 'funcionalidade.nome', order: 1 }];
-    selectModeButtonsEditAndView: boolean;
+    defaultSort = [{field: 'funcionalidade.nome', order: 1}];
     impacto: SelectItem[] = [
         { label: 'Inclusão', value: 'INCLUSAO' },
         { label: 'Alteração', value: 'ALTERACAO' },
@@ -77,7 +71,6 @@ export class FuncaoTransacaoDivergenceComponent implements OnInit {
         { label: 'Conversão', value: 'CONVERSAO' },
         { label: 'Outros', value: 'ITENS_NAO_MENSURAVEIS' }
     ];
-
     baselineResultados: any[] = [];
     classificacoes: SelectItem[] = [];
     // Carregar Referencial
@@ -94,7 +87,6 @@ export class FuncaoTransacaoDivergenceComponent implements OnInit {
     @Input() criacaoTabela = true;
     @ViewChild(DatatableComponent) tables: DatatableComponent;
     viewFuncaoTransacao = false;
-    divergenceComment: string;
 
     public isDisabled = false;
 
@@ -107,7 +99,8 @@ export class FuncaoTransacaoDivergenceComponent implements OnInit {
     public erroTD: boolean;
     public erroUnitario: boolean;
     public erroDeflator: boolean;
-    public commentFT: CommentFuncaoTransacao = new CommentFuncaoTransacao();
+
+    public modulos: Modulo[];
 
     public config = {
         extraPlugins: [],
@@ -143,7 +136,8 @@ export class FuncaoTransacaoDivergenceComponent implements OnInit {
     public funcoesTransacoes: FuncaoTransacao[];
     public currentFuncaoTransacao: FuncaoTransacao = new FuncaoTransacao();
 
-    public modulos: Modulo[];
+
+    selectButtonMultiple: boolean;
 
     mostrarDialogEditarEmLote: boolean = false;
     funcionalidadeSelecionadaEmLote: Funcionalidade;
@@ -166,18 +160,17 @@ export class FuncaoTransacaoDivergenceComponent implements OnInit {
         private pageNotificationService: PageNotificationService,
         private changeDetectorRef: ChangeDetectorRef,
         private funcaoDadosService: FuncaoDadosService,
-        private divergenciaService: DivergenciaService,
+        private analiseService: AnaliseService,
         private funcaoTransacaoService: FuncaoTransacaoService,
         private router: Router,
         private route: ActivatedRoute,
         private blockUiService: BlockUiService,
         private sistemaService: SistemaService,
-        sanitizer: DomSanitizer
-    ) {
-        this.sanitizer = sanitizer;
-        this.lastObjectUrl = "";
+        sanitizer: DomSanitizer,
+        ) {
+            this.sanitizer = sanitizer;
+            this.lastObjectUrl = "";
     }
-
     getLabel(label) {
         return label;
     }
@@ -190,7 +183,7 @@ export class FuncaoTransacaoDivergenceComponent implements OnInit {
             this.funcaoTransacaoService.getVwFuncaoTransacaoByIdAnalise(this.idAnalise).subscribe(value => {
                 this.funcoesTransacoes = value;
                 if (!this.isView) {
-                    this.divergenciaService.find(this.idAnalise).subscribe(analise => {
+                    this.analiseService.find(this.idAnalise).subscribe(analise => {
                         this.analise = analise;
                         this.analiseSharedDataService.analise = analise;
                         this.carregarModuloSistema();
@@ -392,7 +385,7 @@ export class FuncaoTransacaoDivergenceComponent implements OnInit {
             }
             if (retorno) {
                 lstFuncaotransacao.forEach(funcaoTransacaoMultp => {
-                    lstFuncaotransacaoToSave.push(this.funcaoTransacaoService.create(funcaoTransacaoMultp, this.analise.id, funcaoTransacaoMultp.files?.map(item => item.logo)));
+                    lstFuncaotransacaoToSave.push(this.funcaoTransacaoService.create(funcaoTransacaoMultp, this.analise.id, funcaoTransacaoMultp.files.map(item => item.logo)));
                 });
 
                 forkJoin(lstFuncaotransacaoToSave).subscribe(respCreate => {
@@ -406,7 +399,7 @@ export class FuncaoTransacaoDivergenceComponent implements OnInit {
                     this.fecharDialog();
                     this.estadoInicial();
                     this.resetarEstadoPosSalvar();
-                    this.divergenciaService.updateDivergenciaSomaPf(this.analise.id).subscribe();
+                    this.analiseService.updateSomaPf(this.analise.id).subscribe();
                     return true;
                 });
             } else {
@@ -548,7 +541,6 @@ export class FuncaoTransacaoDivergenceComponent implements OnInit {
             if (this.currentFuncaoTransacao.fatorAjuste !== undefined) {
                 this.desconverterChips();
                 this.verificarModulo();
-                this.currentFuncaoTransacao.statusFuncao = StatusFunction.DIVERGENTE;
                 this.currentFuncaoTransacao = new FuncaoTransacao().copyFromJSON(this.currentFuncaoTransacao);
                 const funcaoTransacaoCalculada: FuncaoTransacao = CalculadoraTransacao.calcular(this.analise.metodoContagem,
                     this.currentFuncaoTransacao,
@@ -560,7 +552,7 @@ export class FuncaoTransacaoDivergenceComponent implements OnInit {
                     this.currentFuncaoTransacao.funcionalidade.modulo.id)
                     .subscribe(existFuncaoTransaco => {
                         if (!existFuncaoTransaco) {
-                            this.funcaoTransacaoService.create(funcaoTransacaoCalculada, this.analise.id, funcaoTransacaoCalculada.files?.map(item => item.logo)).subscribe(value => {
+                            this.funcaoTransacaoService.create(funcaoTransacaoCalculada, this.analise.id, funcaoTransacaoCalculada.files.map(item => item.logo)).subscribe(value => {
                                 funcaoTransacaoCalculada.id = value.id;
                                 this.pageNotificationService.addCreateMsg(funcaoTransacaoCalculada.name);
                                 this.setFields(funcaoTransacaoCalculada);
@@ -568,7 +560,7 @@ export class FuncaoTransacaoDivergenceComponent implements OnInit {
                                 this.fecharDialog();
                                 this.resetarEstadoPosSalvar();
                                 this.estadoInicial();
-                                this.divergenciaService.updateDivergenciaSomaPf(this.analise.id).subscribe();
+                                this.analiseService.updateSomaPf(this.analise.id).subscribe();
                                 return retorno;
                             });
                         } else {
@@ -583,6 +575,7 @@ export class FuncaoTransacaoDivergenceComponent implements OnInit {
 
     private verifyDataRequire(): boolean {
         let retorno = true;
+
         if (!(this.currentFuncaoTransacao.name) && !(this.multiplos && this.text)) {
             this.nomeInvalido = true;
             retorno = false;
@@ -654,25 +647,40 @@ export class FuncaoTransacaoDivergenceComponent implements OnInit {
             this.pageNotificationService.addErrorMessage(this.getLabel('Por favor preencher o campo obrigatório!'));
             return;
         } else {
-            this.desconverterChips();
-            this.verificarModulo();
-            this.currentFuncaoTransacao = new FuncaoTransacao().copyFromJSON(this.currentFuncaoTransacao);
-            const funcaoTransacaoCalculada = CalculadoraTransacao.calcular(
-                this.analise.metodoContagem, this.currentFuncaoTransacao, this.analise.contrato.manual);
-            this.funcaoTransacaoService.update(funcaoTransacaoCalculada, funcaoTransacaoCalculada.files?.map(item => item.logo)).subscribe(value => {
-                this.funcoesTransacoes = this.funcoesTransacoes.filter((funcaoTransacao) => (
-                    funcaoTransacao.id !== funcaoTransacaoCalculada.id
-                ));
-                this.setFields(funcaoTransacaoCalculada);
-                this.funcoesTransacoes.push(funcaoTransacaoCalculada);
-                this.resetarEstadoPosSalvar();
-                this.fecharDialog();
-                this.divergenciaService.updateDivergenciaSomaPf(this.analise.id).subscribe();
-                this.pageNotificationService
-                    .addSuccessMessage(`${this.getLabel('Função de Transação')}
-                        '${funcaoTransacaoCalculada.name}' ${this.getLabel(' alterada com sucesso')}`);
+            this.funcaoTransacaoService.existsWithName(
+                this.currentFuncaoTransacao.name,
+                this.analise.id,
+                this.currentFuncaoTransacao.funcionalidade.id,
+                this.currentFuncaoTransacao.funcionalidade.modulo.id,
+                this.currentFuncaoTransacao.id).subscribe(existFuncaoTransacao => {
+                if (!existFuncaoTransacao) {
+                    this.desconverterChips();
+                    this.verificarModulo();
+                    this.currentFuncaoTransacao = new FuncaoTransacao().copyFromJSON(this.currentFuncaoTransacao);
+                    const funcaoTransacaoCalculada = CalculadoraTransacao.calcular(
+                        this.analise.metodoContagem, this.currentFuncaoTransacao, this.analise.contrato.manual);
+                        console.log(funcaoTransacaoCalculada);
 
-            });
+                    this.funcaoTransacaoService.update(funcaoTransacaoCalculada, funcaoTransacaoCalculada.files.map(item => item.logo)).subscribe(value => {
+                        this.funcoesTransacoes = this.funcoesTransacoes.filter((funcaoTransacao) => (
+                            funcaoTransacao.id !== funcaoTransacaoCalculada.id
+                        ));
+                        this.setFields(funcaoTransacaoCalculada);
+                        this.funcoesTransacoes.push(funcaoTransacaoCalculada);
+                        this.resetarEstadoPosSalvar();
+                        this.fecharDialog();
+                        this.analiseService.updateSomaPf(this.analise.id).subscribe();
+                        this.pageNotificationService
+                            .addSuccessMessage(`${this.getLabel('Função de Transação')}
+                '${funcaoTransacaoCalculada.name}' ${this.getLabel(' alterada com sucesso')}`);
+                        });
+
+                    } else {
+                        this.pageNotificationService.addErrorMessage(
+                            this.getLabel('Registro já cadastrado')
+                        );
+                    }
+                });
         }
     }
 
@@ -726,11 +734,6 @@ export class FuncaoTransacaoDivergenceComponent implements OnInit {
     }
 
     datatableClick(event: DatatableClickEvent) {
-
-        if (!(event.selection) && event.button !== 'filter') {
-            return;
-        }
-        const funcaoTransacaoSelecionadas: FuncaoTransacao[] = event.selection;
         const button = event.button;
         if (button !== 'filter' && !event.selection) {
             return;
@@ -739,33 +742,37 @@ export class FuncaoTransacaoDivergenceComponent implements OnInit {
         switch (button) {
             case 'edit':
                 this.isEdit = true;
-                this.prepararParaEdicao(funcaoTransacaoSelecionadas[0]);
+                this.prepararParaEdicao(this.funcaoTransacaoEditar[0]);
+                break;
+            case 'delete':
+                this.confirmDelete(this.funcaoTransacaoEditar);
+                break;
+            case 'clone':
+                this.disableTRDER();
+                this.configurarDialog();
+                this.isEdit = false;
+                this.prepareToClone(this.funcaoTransacaoEditar[0]);
+                this.currentFuncaoTransacao.id = undefined;
+                this.currentFuncaoTransacao.artificialId = undefined;
+                this.textHeader = this.getLabel('Clonar Função de Transação');
                 break;
             case 'filter':
                 this.display = true;
                 break;
             case 'view':
                 this.viewFuncaoTransacao = true;
-                this.prepararParaVisualizar(funcaoTransacaoSelecionadas[0]);
-                break;
-            case 'delete':
-                this.setDelete(funcaoTransacaoSelecionadas);
-                break;
-            case 'divergence':
-                this.setDivergence(funcaoTransacaoSelecionadas);
-                break;
-            case 'approve':
-                this.setApproved(funcaoTransacaoSelecionadas);
+                this.prepararParaVisualizar(this.funcaoTransacaoEditar[0]);
                 break;
         }
     }
 
+
     private prepararParaEdicao(funcaoTransacaoSelecionada: FuncaoTransacao) {
         this.blockUiService.show();
         this.funcaoTransacaoService.getById(funcaoTransacaoSelecionada.id).subscribe(funcaoTransacao => {
+            funcaoTransacao = new FuncaoTransacao().copyFromJSON(funcaoTransacao);
             this.disableTRDER();
-            this.currentFuncaoTransacao = new FuncaoTransacao().copyFromJSON(funcaoTransacao);
-            this.currentFuncaoTransacao.lstDivergenceComments = funcaoTransacao.lstDivergenceComments;
+            this.currentFuncaoTransacao = funcaoTransacao;
             if (this.currentFuncaoTransacao.fatorAjuste !== undefined) {
                 if (this.currentFuncaoTransacao.fatorAjuste.tipoAjuste === 'UNITARIO' && this.faS[0]) {
                     this.hideShowQuantidade = false;
@@ -773,8 +780,32 @@ export class FuncaoTransacaoDivergenceComponent implements OnInit {
                     this.hideShowQuantidade = true;
                 }
             }
-            this.configurarDialog();
             this.carregarValoresNaPaginaParaEdicao(this.currentFuncaoTransacao);
+            this.configurarDialog();
+            this.blockUiService.hide();
+        });
+    }
+
+    private carregarDersAlrs() {
+        this.funcaoTransacaoService.getFuncaoTransacaosCompleta(this.currentFuncaoTransacao.id)
+            .subscribe(funcaoTransacao => {
+                this.currentFuncaoTransacao = funcaoTransacao;
+            });
+    }
+
+    // Prepara para clonar
+    private prepareToClone(funcaoTransacaoSelecionada: FuncaoTransacao) {
+        this.blockUiService.show();
+        this.funcaoTransacaoService.getById(funcaoTransacaoSelecionada.id).subscribe(funcaoTransacao => {
+            this.disableTRDER();
+            this.configurarDialog();
+            this.currentFuncaoTransacao = new FuncaoTransacao().copyFromJSON(funcaoTransacao);
+            this.currentFuncaoTransacao.id = undefined;
+            this.currentFuncaoTransacao.name = this.currentFuncaoTransacao.name + ' - Cópia';
+            this.carregarValoresNaPaginaParaEdicao(this.currentFuncaoTransacao);
+            this.pageNotificationService.addInfoMessage(
+                `${this.getLabel('Clonando Função de Transação ')} '${this.currentFuncaoTransacao.name}'`
+            );
             this.blockUiService.hide();
         });
     }
@@ -818,6 +849,7 @@ export class FuncaoTransacaoDivergenceComponent implements OnInit {
                     return DerChipConverter.converterReferenciaveis(referenciaveis);
                 } else {
                     return DerChipConverter.convertertReferenciaveisToClone(referenciaveis);
+
                 }
             } else {
                 return DerChipConverter.converter(strValues);
@@ -832,83 +864,20 @@ export class FuncaoTransacaoDivergenceComponent implements OnInit {
         this.fecharDialog();
     }
 
-    setDivergence(funcaoTransacaoSelecionadas: FuncaoTransacao[]) {
-        funcaoTransacaoSelecionadas.forEach(funcaoTransacaoSelecionada => {
-            this.funcaoTransacaoService.pending(funcaoTransacaoSelecionada.id).subscribe(value => {
-                funcaoTransacaoSelecionada = this.funcoesTransacoes.filter((funcaoTransacao) => (funcaoTransacao.id === funcaoTransacaoSelecionada.id))[0];
-                funcaoTransacaoSelecionada['statusFuncao'] = value['statusFuncao'];
-            });
 
-        });
-        this.pageNotificationService.addSuccessMessage('Status da(s) funcionalidade(s) alterado(s).');
-    }
-
-    setApproved(funcaoTransacaoSelecionadas: FuncaoTransacao[]) {
-        funcaoTransacaoSelecionadas.forEach(funcaoTransacaoSelecionada => {
-            this.funcaoTransacaoService.approved(funcaoTransacaoSelecionada.id).subscribe(value => {
-                funcaoTransacaoSelecionada = this.funcoesTransacoes.filter((funcaoTransacao) => (funcaoTransacao.id === funcaoTransacaoSelecionada.id))[0];
-                funcaoTransacaoSelecionada['statusFuncao'] = value['statusFuncao'];
-            });
-
-        });
-        this.pageNotificationService.addSuccessMessage('Status da(s) funcionalidade(s) alterado(s).');
-
-    }
-
-    setDelete(funcaoTransacaoSelecionadas: FuncaoTransacao[]) {
-
-        funcaoTransacaoSelecionadas.forEach(funcaoTransacaoSelecionada => {
-            this.funcaoTransacaoService.deleteStatus(funcaoTransacaoSelecionada.id).subscribe(value => {
-                funcaoTransacaoSelecionada = this.funcoesTransacoes.filter((funcaoTransacao) => (funcaoTransacao.id === funcaoTransacaoSelecionada.id))[0];
-                funcaoTransacaoSelecionada['statusFuncao'] = value['statusFuncao'];
-            });
-
-        });
-        this.pageNotificationService.addSuccessMessage('Status da(s) funcionalidade(s) alterado(s).');
-    }
-
-    confirmDelete(funcaoTransacaoSelecionada: FuncaoTransacao) {
+    confirmDelete(funcaoTransacaoSelecionada: FuncaoTransacao[]) {
         this.confirmationService.confirm({
-            message: `${this.getLabel('Tem certeza que deseja alterar o status para Excluido a Função de Transação')
-                } '${funcaoTransacaoSelecionada.name}'?`,
+            message: 'Tem certeza que deseja excluir as funções de transações selecionada?',
             accept: () => {
-                this.funcaoTransacaoService.deleteStatus(funcaoTransacaoSelecionada.id).subscribe(value => {
-                    funcaoTransacaoSelecionada = this.funcoesTransacoes.filter((funcaoTransacao) => (funcaoTransacao.id === funcaoTransacaoSelecionada.id))[0];
-                    funcaoTransacaoSelecionada['statusFuncao'] = value['statusFuncao'];
-                    this.pageNotificationService.addSuccessMessage('Status da funcionalidade ' + funcaoTransacaoSelecionada.name + ' foi alterado.');
-                    this.divergenciaService.updateDivergenciaSomaPf(this.analise.id).subscribe();
-                });
-            }
-        });
-    }
-
-
-    confirmDivergence(funcaoTransacaoSelecionada: FuncaoTransacao) {
-        this.confirmationService.confirm({
-            message: `${this.getLabel('Tem certeza que deseja alterar o status para Divergente a Função de Transação')
-                } '${funcaoTransacaoSelecionada.name}'?`,
-            accept: () => {
-                this.funcaoTransacaoService.pending(funcaoTransacaoSelecionada.id).subscribe(value => {
-                    funcaoTransacaoSelecionada = this.funcoesTransacoes.filter((funcaoTransacao) => (funcaoTransacao.id === funcaoTransacaoSelecionada.id))[0];
-                    funcaoTransacaoSelecionada['statusFuncao'] = value['statusFuncao'];
-                    this.pageNotificationService.addSuccessMessage('Status da funcionalidade ' + funcaoTransacaoSelecionada.name + ' foi alterado.');
-                    this.divergenciaService.updateDivergenciaSomaPf(this.analise.id).subscribe();
-                });
-            }
-        });
-    }
-
-    confirmApproved(funcaoTransacaoSelecionada: FuncaoTransacao) {
-        this.confirmationService.confirm({
-            message: `${this.getLabel('Tem certeza que deseja alterar o status para Aprovado a Função de Transação')
-                } '${funcaoTransacaoSelecionada.name}'?`,
-            accept: () => {
-                this.funcaoTransacaoService.approved(funcaoTransacaoSelecionada.id).subscribe(value => {
-                    funcaoTransacaoSelecionada = this.funcoesTransacoes.filter((funcaoTransacao) => (funcaoTransacao.id === funcaoTransacaoSelecionada.id))[0];
-                    funcaoTransacaoSelecionada['statusFuncao'] = value['statusFuncao'];
-                    this.pageNotificationService.addSuccessMessage('Status da funcionalidade ' + funcaoTransacaoSelecionada.name + ' foi alterado.');
-                    this.divergenciaService.updateDivergenciaSomaPf(this.analise.id).subscribe();
-                });
+                funcaoTransacaoSelecionada.forEach((funcaoTransacao) => {
+                    this.funcaoTransacaoService.delete(funcaoTransacao.id).subscribe(value => {
+                        this.funcoesTransacoes = this.funcoesTransacoes.filter((funcaoTransacaoEdit) => (
+                            funcaoTransacaoEdit.id !== funcaoTransacao.id
+                        ));
+                    });
+                })
+                this.analiseService.updateSomaPf(this.analise.id).subscribe();
+                this.pageNotificationService.addDeleteMsg("Funções deletadas com sucesso!");
             }
         });
     }
@@ -918,6 +887,7 @@ export class FuncaoTransacaoDivergenceComponent implements OnInit {
     }
 
     openDialog(param: boolean) {
+        this.subscribeToAnaliseCarregada();
         this.isEdit = param;
         this.disableTRDER();
         this.configurarDialog();
@@ -982,25 +952,25 @@ export class FuncaoTransacaoDivergenceComponent implements OnInit {
         switch (index) {
             case 0:
                 if (this.isView) {
-                    link = ['/divergencia/' + this.idAnalise + '/view'];
+                    link = ['/analise/' + this.idAnalise + '/view'];
                 } else {
-                    link = ['/divergencia/' + this.idAnalise + '/edit'];
+                    link = ['/analise/' + this.idAnalise + '/edit'];
                 }
                 break;
             case 1:
                 if (this.isView) {
-                    link = ['/divergencia/' + this.idAnalise + '/funcao-dados/view'];
+                    link = ['/analise/' + this.idAnalise + '/funcao-dados/view'];
                 } else {
-                    link = ['/divergencia/' + this.idAnalise + '/funcao-dados'];
+                    link = ['/analise/' + this.idAnalise + '/funcao-dados'];
                 }
                 break;
             case 2:
                 return;
             case 3:
                 if (this.isView) {
-                    link = ['/divergencia/' + this.idAnalise + '/resumo/view'];
+                    link = ['/analise/' + this.idAnalise + '/resumo/view'];
                 } else {
-                    link = ['/divergencia/' + this.idAnalise + '/resumo'];
+                    link = ['/analise/' + this.idAnalise + '/resumo'];
                 }
                 break;
         }
@@ -1033,45 +1003,14 @@ export class FuncaoTransacaoDivergenceComponent implements OnInit {
         this.tables.pDatatableComponent.metaKeySelection = true;
         if (this.tables && this.tables.selectedRow) {
             this.funcaoTransacaoEditar = this.tables.selectedRow;
-        }
-        this.disableButtonsEditAndView();
-    }
-
-    public showDialogAddComent() {
-        this.showAddComent = true;
-    }
-    public saveComent(divergenceComment: string) {
-        if (!divergenceComment) {
-            this.pageNotificationService.addErrorMessage('É obrigatório preencher o campo comentário.');
-            return;
-        }
-        if (!this.currentFuncaoTransacao && !this.currentFuncaoTransacao.id) {
-            this.pageNotificationService.addErrorMessage('A função de transação selecionada é inválida.');
-            return;
-        }
-        this.commentFT.commet = divergenceComment;
-        this.funcaoTransacaoService.saveComent(this.commentFT.commet, this.currentFuncaoTransacao.id)
-            .subscribe((comment) => {
-                this.currentFuncaoTransacao.lstDivergenceComments.push(comment);
-                this.showAddComent = false;
-                this.divergenceComment = '';
-                this.pageNotificationService.addSuccessMessage('Comentário adicionado.');
-            });
-    }
-
-    public disableButtonsEditAndView(): boolean {
-        if (this.tables.selectedRow.length > 1) {
-            return this.selectModeButtonsEditAndView = true;
-        }
-        else {
-            return this.selectModeButtonsEditAndView = false;
+            if (this.tables.selectedRow.length > 1) {
+                this.selectButtonMultiple = true;
+            }
+            else {
+                this.selectButtonMultiple = false;
+            }
         }
     }
-
-    public cancelComment() {
-        this.showAddComent = false;
-    }
-
     carregarModuloSistema() {
         this.sistemaService.find(this.analise.sistema.id).subscribe((sistemaRecarregado: Sistema) => {
             this.modulos = sistemaRecarregado.modulos;
@@ -1091,6 +1030,7 @@ export class FuncaoTransacaoDivergenceComponent implements OnInit {
         }
         this.mostrarDialogEditarEmLote = true;
         this.hideShowQuantidade = true;
+        this.arquivosEmLote = [];
     }
 
     fecharDialogEditarEmLote() {
@@ -1106,7 +1046,7 @@ export class FuncaoTransacaoDivergenceComponent implements OnInit {
         this.arquivosEmLote = [];
     }
 
-    editarCamposEmLote() {
+    editarCamposEmLote(){
         if (this.funcionalidadeSelecionadaEmLote) {
             this.funcaoTransacaoEmLote.forEach(funcaoTransacao => {
                 funcaoTransacao.funcionalidade = this.funcionalidadeSelecionadaEmLote;
@@ -1140,6 +1080,7 @@ export class FuncaoTransacaoDivergenceComponent implements OnInit {
         }
     }
 
+
     editarEmLote() {
         if (!this.funcionalidadeSelecionadaEmLote &&
             !this.classificacaoEmLote &&
@@ -1148,7 +1089,7 @@ export class FuncaoTransacaoDivergenceComponent implements OnInit {
             !this.arquivosEmLote) {
             return this.pageNotificationService.addErrorMessage("Para editar em lote, selecione ao menos um campo para editar.")
         }
-        if (this.deflatorEmLote && this.deflatorEmLote.tipoAjuste === 'UNITARIO' && !this.quantidadeEmLote) {
+        if(this.deflatorEmLote && this.deflatorEmLote.tipoAjuste === 'UNITARIO' && !this.quantidadeEmLote){
             return this.pageNotificationService.addErrorMessage("Coloque uma quantidade para o deflator!")
         }
         this.editarCamposEmLote();
@@ -1158,21 +1099,29 @@ export class FuncaoTransacaoDivergenceComponent implements OnInit {
             funcaoTransacao = new FuncaoTransacao().copyFromJSON(funcaoTransacao);
             const funcaoTransacaoCalculada: FuncaoTransacao = CalculadoraTransacao.calcular(
                 this.analise.metodoContagem, funcaoTransacao, this.analise.contrato.manual);
-            this.funcaoTransacaoService.update(funcaoTransacaoCalculada, funcaoTransacao.files?.map(item => item.logo)).subscribe(value => {
+            this.funcaoTransacaoService.update(funcaoTransacaoCalculada, funcaoTransacaoCalculada.files.map(item => item.logo)).subscribe(value => {
                 this.funcoesTransacoes = this.funcoesTransacoes.filter((funcaoTransacao) => (funcaoTransacao.id !== funcaoTransacaoCalculada.id));
                 this.setFields(funcaoTransacaoCalculada);
                 this.funcoesTransacoes.push(funcaoTransacaoCalculada);
             });
         }
         this.pageNotificationService.addSuccessMessage("Funções de transações editadas com sucesso!")
-        this.divergenciaService.updateSomaPf(this.analise.id).subscribe();
+        this.analiseService.updateSomaPf(this.analise.id).subscribe();
         this.fecharDialogEditarEmLote();
     }
 
-    selecionarDeflatorEmLote(deflator: FatorAjuste) {
-        if (deflator.tipoAjuste === 'UNITARIO') {
+    moduloSelecionado(modulo: Modulo) {
+        this.moduloSelecionadoEmLote = modulo;
+    }
+
+    funcionalidadeSelecionada(funcionalidade: Funcionalidade) {
+        this.funcionalidadeSelecionadaEmLote = funcionalidade;
+    }
+
+    selecionarDeflatorEmLote(deflator: FatorAjuste){
+        if(deflator.tipoAjuste === 'UNITARIO'){
             this.hideShowQuantidade = false;
-        } else {
+        }else{
             this.hideShowQuantidade = true;
         }
     }
@@ -1243,8 +1192,3 @@ export class FuncaoTransacaoDivergenceComponent implements OnInit {
     }
 }
 
-enum StatusFunction {
-    DIVERGENTE = 'DIVERGENTE',
-    EXCLUIDO = 'EXCLUIDO',
-    VALIDADO = 'VALIDADO',
-}

@@ -392,7 +392,7 @@ export class FuncaoTransacaoDivergenceComponent implements OnInit {
             }
             if (retorno) {
                 lstFuncaotransacao.forEach(funcaoTransacaoMultp => {
-                    lstFuncaotransacaoToSave.push(this.funcaoTransacaoService.create(funcaoTransacaoMultp, this.analise.id, funcaoTransacaoMultp.files?.map(item => item.logo)));
+                    lstFuncaotransacaoToSave.push(this.funcaoTransacaoService.create(funcaoTransacaoMultp, this.analise.id, funcaoTransacaoMultp.files.map(item => item.logo)));
                 });
 
                 forkJoin(lstFuncaotransacaoToSave).subscribe(respCreate => {
@@ -560,7 +560,7 @@ export class FuncaoTransacaoDivergenceComponent implements OnInit {
                     this.currentFuncaoTransacao.funcionalidade.modulo.id)
                     .subscribe(existFuncaoTransaco => {
                         if (!existFuncaoTransaco) {
-                            this.funcaoTransacaoService.create(funcaoTransacaoCalculada, this.analise.id, funcaoTransacaoCalculada.files?.map(item => item.logo)).subscribe(value => {
+                            this.funcaoTransacaoService.create(funcaoTransacaoCalculada, this.analise.id, funcaoTransacaoCalculada.files.map(item => item.logo)).subscribe(value => {
                                 funcaoTransacaoCalculada.id = value.id;
                                 this.pageNotificationService.addCreateMsg(funcaoTransacaoCalculada.name);
                                 this.setFields(funcaoTransacaoCalculada);
@@ -583,6 +583,7 @@ export class FuncaoTransacaoDivergenceComponent implements OnInit {
 
     private verifyDataRequire(): boolean {
         let retorno = true;
+
         if (!(this.currentFuncaoTransacao.name) && !(this.multiplos && this.text)) {
             this.nomeInvalido = true;
             retorno = false;
@@ -659,7 +660,7 @@ export class FuncaoTransacaoDivergenceComponent implements OnInit {
             this.currentFuncaoTransacao = new FuncaoTransacao().copyFromJSON(this.currentFuncaoTransacao);
             const funcaoTransacaoCalculada = CalculadoraTransacao.calcular(
                 this.analise.metodoContagem, this.currentFuncaoTransacao, this.analise.contrato.manual);
-            this.funcaoTransacaoService.update(funcaoTransacaoCalculada, funcaoTransacaoCalculada.files?.map(item => item.logo)).subscribe(value => {
+            this.funcaoTransacaoService.update(funcaoTransacaoCalculada, funcaoTransacaoCalculada.files.map(item => item.logo)).subscribe(value => {
                 this.funcoesTransacoes = this.funcoesTransacoes.filter((funcaoTransacao) => (
                     funcaoTransacao.id !== funcaoTransacaoCalculada.id
                 ));
@@ -1158,7 +1159,7 @@ export class FuncaoTransacaoDivergenceComponent implements OnInit {
             funcaoTransacao = new FuncaoTransacao().copyFromJSON(funcaoTransacao);
             const funcaoTransacaoCalculada: FuncaoTransacao = CalculadoraTransacao.calcular(
                 this.analise.metodoContagem, funcaoTransacao, this.analise.contrato.manual);
-            this.funcaoTransacaoService.update(funcaoTransacaoCalculada, funcaoTransacao.files?.map(item => item.logo)).subscribe(value => {
+            this.funcaoTransacaoService.update(funcaoTransacaoCalculada, funcaoTransacao.files.map(item => item.logo)).subscribe(value => {
                 this.funcoesTransacoes = this.funcoesTransacoes.filter((funcaoTransacao) => (funcaoTransacao.id !== funcaoTransacaoCalculada.id));
                 this.setFields(funcaoTransacaoCalculada);
                 this.funcoesTransacoes.push(funcaoTransacaoCalculada);
