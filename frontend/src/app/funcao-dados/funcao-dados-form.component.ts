@@ -560,7 +560,7 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
                 this.resetarEstadoPosSalvar();
                 lstFuncaoDados.forEach(funcaoDadosMultp => {
                     lstFuncaoDadosToSave.push(
-                        this.funcaoDadosService.create(funcaoDadosMultp, this.analise.id, funcaoDadosMultp.files.map(item => item.logo))
+                        this.funcaoDadosService.create(funcaoDadosMultp, this.analise.id, funcaoDadosMultp.files?.map(item => item.logo))
                     );
                 });
                 forkJoin(lstFuncaoDadosToSave).subscribe(respCreate => {
@@ -735,7 +735,7 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
                     this.seletedFuncaoDados = new FuncaoDados().copyFromJSON(this.seletedFuncaoDados);
                     const funcaoDadosCalculada = Calculadora.calcular(
                         this.analise.metodoContagem, this.seletedFuncaoDados, this.analise.contrato.manual);
-                    this.funcaoDadosService.update(funcaoDadosCalculada, funcaoDadosCalculada.files.map(item => item.logo)).subscribe(value => {
+                    this.funcaoDadosService.update(funcaoDadosCalculada, funcaoDadosCalculada.files?.map(item => item.logo)).subscribe(value => {
                         this.funcoesDados = this.funcoesDados.filter((funcaoDados) => (funcaoDados.id !== funcaoDadosCalculada.id));
                         this.setFields(funcaoDadosCalculada);
                         this.funcoesDados.push(funcaoDadosCalculada);
@@ -1283,7 +1283,7 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
             funcaoDado = new FuncaoDados().copyFromJSON(funcaoDado);
             const funcaoDadosCalculada = Calculadora.calcular(
                 this.analise.metodoContagem, funcaoDado, this.analise.contrato.manual);
-            this.funcaoDadosService.update(funcaoDadosCalculada, funcaoDadosCalculada.files.map(item => item.logo)).subscribe(value => {
+            this.funcaoDadosService.update(funcaoDadosCalculada, funcaoDadosCalculada.files?.map(item => item.logo)).subscribe(value => {
                 this.funcoesDados = this.funcoesDados.filter((funcaoDados) => (funcaoDados.id !== funcaoDadosCalculada.id));
                 this.setFields(funcaoDadosCalculada);
                 this.funcoesDados.push(funcaoDadosCalculada);
