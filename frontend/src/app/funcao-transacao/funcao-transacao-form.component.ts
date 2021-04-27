@@ -385,7 +385,7 @@ export class FuncaoTransacaoFormComponent implements OnInit {
             }
             if (retorno) {
                 lstFuncaotransacao.forEach(funcaoTransacaoMultp => {
-                    lstFuncaotransacaoToSave.push(this.funcaoTransacaoService.create(funcaoTransacaoMultp, this.analise.id, funcaoTransacaoMultp.files.map(item => item.logo)));
+                    lstFuncaotransacaoToSave.push(this.funcaoTransacaoService.create(funcaoTransacaoMultp, this.analise.id, funcaoTransacaoMultp.files?.map(item => item.logo)));
                 });
 
                 forkJoin(lstFuncaotransacaoToSave).subscribe(respCreate => {
@@ -552,7 +552,7 @@ export class FuncaoTransacaoFormComponent implements OnInit {
                     this.currentFuncaoTransacao.funcionalidade.modulo.id)
                     .subscribe(existFuncaoTransaco => {
                         if (!existFuncaoTransaco) {
-                            this.funcaoTransacaoService.create(funcaoTransacaoCalculada, this.analise.id, funcaoTransacaoCalculada.files.map(item => item.logo)).subscribe(value => {
+                            this.funcaoTransacaoService.create(funcaoTransacaoCalculada, this.analise.id, funcaoTransacaoCalculada.files?.map(item => item.logo)).subscribe(value => {
                                 funcaoTransacaoCalculada.id = value.id;
                                 this.pageNotificationService.addCreateMsg(funcaoTransacaoCalculada.name);
                                 this.setFields(funcaoTransacaoCalculada);
@@ -661,7 +661,7 @@ export class FuncaoTransacaoFormComponent implements OnInit {
                         this.analise.metodoContagem, this.currentFuncaoTransacao, this.analise.contrato.manual);
                         console.log(funcaoTransacaoCalculada);
 
-                    this.funcaoTransacaoService.update(funcaoTransacaoCalculada, funcaoTransacaoCalculada.files.map(item => item.logo)).subscribe(value => {
+                    this.funcaoTransacaoService.update(funcaoTransacaoCalculada, funcaoTransacaoCalculada.files?.map(item => item.logo)).subscribe(value => {
                         this.funcoesTransacoes = this.funcoesTransacoes.filter((funcaoTransacao) => (
                             funcaoTransacao.id !== funcaoTransacaoCalculada.id
                         ));
@@ -1099,7 +1099,7 @@ export class FuncaoTransacaoFormComponent implements OnInit {
             funcaoTransacao = new FuncaoTransacao().copyFromJSON(funcaoTransacao);
             const funcaoTransacaoCalculada: FuncaoTransacao = CalculadoraTransacao.calcular(
                 this.analise.metodoContagem, funcaoTransacao, this.analise.contrato.manual);
-            this.funcaoTransacaoService.update(funcaoTransacaoCalculada, funcaoTransacaoCalculada.files.map(item => item.logo)).subscribe(value => {
+            this.funcaoTransacaoService.update(funcaoTransacaoCalculada, funcaoTransacaoCalculada.files?.map(item => item.logo)).subscribe(value => {
                 this.funcoesTransacoes = this.funcoesTransacoes.filter((funcaoTransacao) => (funcaoTransacao.id !== funcaoTransacaoCalculada.id));
                 this.setFields(funcaoTransacaoCalculada);
                 this.funcoesTransacoes.push(funcaoTransacaoCalculada);
