@@ -6,6 +6,7 @@ import br.com.basis.abaco.domain.UploadedFile;
 import br.com.basis.abaco.repository.FuncaoDadosRepository;
 import br.com.basis.abaco.repository.ManualRepository;
 import br.com.basis.abaco.repository.UploadedFilesRepository;
+import br.com.basis.abaco.service.dto.UploadedFileDTO;
 import br.com.basis.abaco.web.rest.errors.UploadException;
 import br.com.basis.abaco.web.rest.util.HeaderUtil;
 import com.google.common.net.HttpHeaders;
@@ -149,20 +150,34 @@ public class UploadController {
     }
 
     @GetMapping("/getLogo/{id}")
-    public UploadedFile getLogo(@PathVariable Long id) {
-        return filesRepository.findOne(id);
+    public UploadedFileDTO getLogo(@PathVariable Long id) {
+        UploadedFile uploadedFile = filesRepository.findOne(id);
+        UploadedFileDTO uploadedFileDTO = new UploadedFileDTO();
+        uploadedFileDTO.setId(uploadedFile.getId());
+        uploadedFileDTO.setOriginalName(uploadedFile.getOriginalName());
+        uploadedFileDTO.setLogo(uploadedFile.getLogo());
+        uploadedFileDTO.setSizeOf(uploadedFile.getSizeOf());
+        return uploadedFileDTO;
     }
 
     @PostMapping("/uploadLogo")
-    public ResponseEntity<UploadedFile> singleFileUpload(@RequestParam("file") MultipartFile file) throws IOException {
+    public ResponseEntity<UploadedFileDTO> singleFileUpload(@RequestParam("file") MultipartFile file) throws IOException {
         this.bytes = file.getBytes();
 
         UploadedFile uploadedFile = new UploadedFile();
 
         uploadedFile.setLogo(bytes);
         uploadedFile.setDateOf(new Date());
+        uploadedFile.setSizeOf((int) file.getSize());
+        uploadedFile.setOriginalName(file.getOriginalFilename());
         uploadedFile = filesRepository.save(uploadedFile);
 
-        return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION, "/saveFile").body(uploadedFile);
+        UploadedFileDTO uploadedFileDTO = new UploadedFileDTO();
+        uploadedFileDTO.setId(uploadedFile.getId());
+        uploadedFileDTO.setOriginalName(uploadedFile.getOriginalName());
+        uploadedFileDTO.setLogo(uploadedFile.getLogo());
+        uploadedFileDTO.setSizeOf(uploadedFile.getSizeOf());
+
+        return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION, "/saveFile").body(uploadedFileDTO);
     }
 }

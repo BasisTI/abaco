@@ -14,6 +14,7 @@ import java.util.List;
 
 import javax.persistence.EntityManager;
 
+import br.com.basis.abaco.repository.UploadedFilesRepository;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -85,11 +86,14 @@ public class OrganizacaoResourceIT {
 
     private Organizacao organizacao;
 
+    @Autowired
+    private UploadedFilesRepository filesRepository;
+
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
         OrganizacaoResource organizacaoResource = new OrganizacaoResource(organizacaoRepository,
-                organizacaoSearchRepository, dynamicExportsService, organizacaoService);
+                organizacaoSearchRepository, filesRepository, dynamicExportsService, organizacaoService);
         this.restOrganizacaoMockMvc = MockMvcBuilders.standaloneSetup(organizacaoResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)
