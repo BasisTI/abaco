@@ -419,5 +419,4 @@ export class ModuloFuncionalidadeComponent implements OnInit, OnDestroy {
         this.subscriptionFuncaoAnaliseCarregada.unsubscribe();
         this.changeDetectorRef.detach();
     }
-
 }
