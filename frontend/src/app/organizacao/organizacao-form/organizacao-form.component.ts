@@ -1,7 +1,7 @@
-import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
-import {ActivatedRoute, Router} from '@angular/router';
-import {Observable, Subscription} from 'rxjs';
-import {FileUpload, SelectItem, ConfirmationService} from 'primeng';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import { Observable, Subscription } from 'rxjs';
+import { FileUpload, SelectItem, ConfirmationService } from 'primeng';
 import { Contrato, ContratoService } from 'src/app/contrato';
 import { Organizacao } from '../organizacao.model';
 import { Manual, ManualService } from 'src/app/manual';
@@ -17,7 +17,7 @@ import { ValidacaoUtil } from 'src/app/shared/validacao.util';
 @Component({
     selector: 'jhi-organizacao-form',
     templateUrl: './organizacao-form.component.html',
-    providers:[ConfirmationService]
+    providers: [ConfirmationService]
 })
 export class OrganizacaoFormComponent implements OnInit, OnDestroy {
 
@@ -62,6 +62,8 @@ export class OrganizacaoFormComponent implements OnInit, OnDestroy {
     indiceManual: number;
     manuaisEdt: SelectItem[] = [];
     manualEdt: Manual;
+    isNovoManualContrato: boolean = false;
+
 
     @ViewChild('fileInput') fileInput: FileUpload;
 
@@ -170,7 +172,6 @@ export class OrganizacaoFormComponent implements OnInit, OnDestroy {
     }
 
     adicionarContrato() {
-
         if (this.validaCamposContrato(this.novoContrato)) {
             document.getElementById('tabela-contrato').removeAttribute('style');
             this.organizacao.addContrato(this.novoContrato);
@@ -201,13 +202,8 @@ export class OrganizacaoFormComponent implements OnInit, OnDestroy {
 
     adicionarManual() {
         if (this.validaDadosManual(this.manualContratoNovo)) {
-            if (this.manualContratoNovo.artificialId !== undefined && this.manualContratoNovo.artificialId !== null) {
-                const manualContratoTemp = this.manualContratoNovo.clone();
-                this.novoContrato.updateManualContrato(manualContratoTemp);
-            } else {
-                const manualContratoTemp = this.setManualContrato(this.manualContratoNovo);
-                this.novoContrato.addManualContrato(manualContratoTemp);
-            }
+            const manualContratoTemp = this.setManualContrato(this.manualContratoNovo);
+            this.novoContrato.manualContrato.push(manualContratoTemp);
             this.validaManual = false;
             this.manualContratoNovo = new ManualContrato();
         }
@@ -215,16 +211,11 @@ export class OrganizacaoFormComponent implements OnInit, OnDestroy {
 
     adicionarManualEdt() {
         if (this.validaDadosManual(this.manualContratoEdt)) {
-            if (
-                this.manualContratoEdt.id !== undefined
-                &&
-                this.manualContratoEdt.id !== null
-            ) {
+            if (this.manualContratoEdt.id !== undefined && this.manualContratoEdt.id !== null) {
                 const manualContratoTemp = this.manualContratoEdt.clone();
                 this.contratoEmEdicao.updateManualContrato(manualContratoTemp);
             } else {
-                const manualContratoTemp = this.setManualContrato(this.manualContratoEdt);
-                this.contratoEmEdicao.addManualContrato(manualContratoTemp);
+                this.contratoEmEdicao.addManualContrato(this.manualContratoEdt);
             }
             this.validaManual = false;
             this.manualContratoEdt = new ManualContrato();
@@ -232,7 +223,7 @@ export class OrganizacaoFormComponent implements OnInit, OnDestroy {
     }
 
     setManualContrato(manualContrato: ManualContrato): ManualContrato {
-        const manualContratoCopy = new ManualContrato(this.contratoEmEdicao.id, null,
+        const manualContratoCopy = new ManualContrato(null, null,
             manualContrato.manual,
             /**contrato deve ser null para não loop */null,
             manualContrato.dataInicioVigencia,
@@ -268,8 +259,7 @@ export class OrganizacaoFormComponent implements OnInit, OnDestroy {
                 this.manualContratoEdt = new ManualContrato().copyFromJSON(event.selection);
                 break;
             case 'delete':
-                this.manualContratoEdt = new ManualContrato().copyFromJSON(event.selection);
-                this.comfirmarExcluirManual();
+                this.comfirmarExcluirManual(event.selection);
                 break;
         }
     }
@@ -280,15 +270,12 @@ export class OrganizacaoFormComponent implements OnInit, OnDestroy {
             return;
         }
         switch (event.button) {
-            case 'edit':
-                this.manualContratoNovo = new ManualContrato().copyFromJSON(event.selection);
-                break;
             case 'delete':
-                this.manualContratoNovo = new ManualContrato().copyFromJSON(event.selection);
-                this.comfirmarExcluirManualNovo();
+                this.comfirmarExcluirManualNovo(event.selection);
                 break;
         }
     }
+
 
     abrirDialogEditarContrato() {
         this.mostrarDialogEdicaoContrato = true;
@@ -317,7 +304,7 @@ export class OrganizacaoFormComponent implements OnInit, OnDestroy {
 
     confirmDeleteContrato() {
         this.confirmationService.confirm({
-            message: 'Tem certeza que deseja excluir o contrato ' + this.contratoEmEdicao.numeroContrato +' e todas as suas funcionalidades?',
+            message: 'Tem certeza que deseja excluir o contrato ' + this.contratoEmEdicao.numeroContrato + ' e todas as suas funcionalidades?',
             accept: () => {
                 this.organizacao.deleteContrato(this.contratoEmEdicao);
                 this.contratoEmEdicao = new Contrato();
@@ -325,26 +312,39 @@ export class OrganizacaoFormComponent implements OnInit, OnDestroy {
         });
     }
 
-    comfirmarExcluirManual() {
+    comfirmarExcluirManual(manualContrato: ManualContrato) {
         this.confirmationService.confirm({
-            message: 'Tem certeza que deseja excluir o manual'+ this.manualContratoEdt.manual.nome + ' ?',
+            message: 'Tem certeza que deseja excluir o manual' + manualContrato.manual.nome + ' ?',
             accept: () => {
-                this.contratoEmEdicao.deleteManualContrato(this.manualContratoEdt);
-                this.manualContratoEdt = new ManualContrato();
+                if(manualContrato.id !== undefined && manualContrato.id !== null){
+                    this.contratoEmEdicao.deleteManualContrato(manualContrato);
+                }
+                else{
+                    this.contratoEmEdicao.manualContrato.splice(this.contratoEmEdicao.manualContrato.indexOf(manualContrato), 1);
+                }
             }
         });
     }
 
-    comfirmarExcluirManualNovo() {
-
+    comfirmarExcluirManualNovo(manualContrato: ManualContrato) {
         this.confirmationService.confirm({
-            message:'Tem certeza que deseja excluir o manual '+ this.manualContratoEdt.manual.nome +' ?',
+            message: 'Tem certeza que deseja excluir o manual ' + manualContrato.manual.nome + ' ?',
             accept: () => {
-                this.novoContrato.deleteManualContrato(this.manualContratoNovo);
-                this.manualContratoNovo = new ManualContrato();
+                this.novoContrato.manualContrato.splice(this.novoContrato.manualContrato.indexOf(manualContrato), 1);
             }
         });
     }
+
+    verificarNovoOuVelho(manual: ManualContrato) {
+        if (manual) {
+            if (manual.id !== undefined && manual.id !== null) {
+                this.isNovoManualContrato = false
+            } else {
+                this.isNovoManualContrato = true;
+            }
+        }
+    }
+
 
     save(form: any) {
         this.cnpjValido = false;
