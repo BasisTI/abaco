@@ -131,7 +131,8 @@
             </form>
             <form name="editForm1" role="form" novalidate (ngSubmit)="save(editForm1)" #editForm1="ngForm">
                 <p-dialog [header]="'Contrato'" [(visible)]="mostrarDialogCadastroContrato"
-                    (onHide)="fecharContrato(editForm1.resetForm())" [contentStyle]="{'overflow':'auto'}" [width]="900">
+                [modal]="true"
+                    (onHide)="fecharContrato(editForm1.resetForm())" [contentStyle]="{'height': ['windowHeightDialog']}" [style]="{width: '65vw'}">
                     <div class="ui-g">
                         <div class="ui-g-12" style="margin-bottom: 25px">
                             <span class="md-inputfield">
@@ -279,6 +280,7 @@
                     </p-fieldset>
                     <div class="ui-g-12" style="margin-bottom: 25px">
                         <basis-datatable type="memory" [value]="novoContrato.manualContrato"
+                            [disableEdit] = "true"
                             (buttonClick)="manualContratoTableClickNovo($event)" disableClone="true" disableView="true">
                             <p-column [header]="'Manual'" field="manual">
                                 <ng-template let-col let-manualContrato="rowData" pTemplate="body">
@@ -319,8 +321,8 @@
                     </div>
                 </p-dialog>
             </form>
-            <p-dialog [header]="'EditarContrato'" [(visible)]="mostrarDialogEdicaoContrato"
-                [contentStyle]="{'overflow':'visible'}">
+            <p-dialog [header]="'EditarContrato'" [(visible)]="mostrarDialogEdicaoContrato" [modal]="true"
+            [contentStyle]="{'height': ['windowHeightDialog']}" [style]="{width: '65vw'}">
                 <div class="ui-g">
                     <div class="ui-g-6" style="margin-bottom: 25px">
                         <span class="md-inputfield">
@@ -441,8 +443,12 @@
                 </p-fieldset>
                 <div class="ui-g-12" style="margin-bottom: 25px">
                     <basis-datatable type="memory" [value]="contratoEmEdicao.manualContrato"
-                        (buttonClick)="manualContratoTableClick($event)" disableClone="true">
-                        <p-column [header]="'Manual'" field="manual.nome" disableView="true">
+                    [disableView]="true"
+                    [disableEdit]="isNovoManualContrato"
+                    [disableClone]="true"
+                    (onRowSelected)="verificarNovoOuVelho($event)"
+                    (buttonClick)="manualContratoTableClick($event)" >
+                    <p-column [header]="'Manual'" field="manual.nome">
                             <ng-template let-col let-manualContrato="rowData" pTemplate="body">
                                 {{ manualContrato.manual.nome}}
                             </ng-template>
