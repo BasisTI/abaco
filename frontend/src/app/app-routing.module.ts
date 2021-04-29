@@ -12,8 +12,8 @@ import { AuthGuardService } from './util/auth.guard.service';
 
 
 const routes: Routes = [
-  { path: '', component: DashboardComponent},
-  { path: 'diario-erros', component: DiarioErrosComponent , canActivate: [AuthGuardService] ,  data: { breadcrumb: 'Diário de Erros'} },
+  { path: '', component: DashboardComponent, canActivate: [AuthGuardService]},
+  { path: 'diario-erros', component: DiarioErrosComponent, canActivate: [AuthGuardService] ,  data: { breadcrumb: 'Diário de Erros'} },
   { path: 'login-success', component: LoginSuccessComponent},
   { path: 'indexador', component: IndexadorComponent , canActivate: [AuthGuardService] , data: { breadcrumb: 'Reindexar'} },
   { path: 'configuracao-baseline', component: ConfiguracaoBaselineComponent , canActivate: [AuthGuardService] , data: { breadcrumb: 'Configuração Baseline'} },
