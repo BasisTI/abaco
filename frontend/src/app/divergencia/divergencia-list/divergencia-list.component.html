@@ -225,6 +225,27 @@
                             <app-red-button   *ngIf="!blocked"  buttonLabel="Bloquear" (click)="divergenceBlock()" style="float:right; margin-top: 5px"></app-red-button>
                         </div>
                     </p-dialog>
+                     <!-- Dialog Alterar status validação-->
+                     <p-dialog header="Alterar status ?" [(visible)]="showDialogDivergenceStatus" [style]="{width: '40vw', minHeight: '200px'}" [modal]="true" >
+                        <div style="min-height:200px">
+                            <div class="ui-g" >
+                                <div class="ui-g-12 ui-md-12 ui-sm-12">
+                                    <p-dropdown
+                                            [style]="{'width':'100%'}"
+                                            [filter]="true"
+                                            dataKey=id
+                                            optionLabel="nome"
+                                            [options]="lstStatusActive"
+                                            id="idStatusAnalise"
+                                            [(ngModel)]="statusToChange"
+                                            placeholder="Selecione um Status">
+                                    </p-dropdown>
+                                </div>
+                            </div>
+                            <app-green-button buttonLabel="Alterar" (click)="alterStatusValidacao()" style="float:right; margin-top: 5px"></app-green-button>
+                        </div>
+                    </p-dialog>
+
                 </div>
             </div>
         </div>
