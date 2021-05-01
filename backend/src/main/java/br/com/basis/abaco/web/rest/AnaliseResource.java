@@ -187,7 +187,8 @@ public class AnaliseResource {
             analise.setBloqueiaAnalise(!analise.isBloqueiaAnalise());
             Analise result = analiseRepository.save(analise);
             analiseSearchRepository.save(result);
-            return ResponseEntity.ok().headers(HeaderUtil.blockEntityUpdateAlert(ENTITY_NAME, analise.getId().toString())).body(result);
+            AnaliseEditDTO analiseEditDTO = analiseService.convertToAnaliseEditDTO(result);
+            return ResponseEntity.ok().headers(HeaderUtil.blockEntityUpdateAlert(ENTITY_NAME, analise.getId().toString())).body(analiseEditDTO);
         } else {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new Analise());
         }
@@ -591,8 +592,9 @@ public class AnaliseResource {
         if (analise.getId() != null && status.getId() != null && analiseService.changeStatusAnalise(analise, status, user)) {
             Analise result = analiseRepository.save(analise);
             analiseSearchRepository.save(result);
+            AnaliseEditDTO analiseEditDTO = analiseService.convertToAnaliseEditDTO(result);
             return ResponseEntity.ok().headers(HeaderUtil.blockEntityUpdateAlert(ENTITY_NAME, analise.getId().toString()))
-                .body(result);
+                .body(analiseEditDTO);
         } else {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new Analise());
         }
