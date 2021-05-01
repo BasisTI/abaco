@@ -18,10 +18,13 @@ import java.util.stream.Collectors;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
+import br.com.basis.abaco.service.dto.*;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
 import org.springframework.data.elasticsearch.core.query.SearchQuery;
@@ -59,9 +62,6 @@ import br.com.basis.abaco.repository.VwAnaliseSomaPfRepository;
 import br.com.basis.abaco.repository.search.AnaliseSearchRepository;
 import br.com.basis.abaco.repository.search.UserSearchRepository;
 import br.com.basis.abaco.security.SecurityUtils;
-import br.com.basis.abaco.service.dto.AnaliseDTO;
-import br.com.basis.abaco.service.dto.AnaliseDivergenceEditDTO;
-import br.com.basis.abaco.service.dto.AnaliseEditDTO;
 import br.com.basis.abaco.service.dto.filter.AnaliseFilterDTO;
 import br.com.basis.abaco.utils.StringUtils;
 import br.com.basis.dynamicexports.service.DynamicExportsService;
@@ -490,7 +490,48 @@ public class AnaliseService extends BaseService {
     }
 
     public AnaliseEditDTO convertToAnaliseEditDTO(Analise analise) {
-        return modelMapper.map(analise, AnaliseEditDTO.class);
+        AnaliseEditDTO analiseEditDTO = new AnaliseEditDTO();
+        analiseEditDTO.setBaselineImediatamente(analise.getBaselineImediatamente());
+        analiseEditDTO.setBloqueiaAnalise(analise.isBloqueiaAnalise());
+        analiseEditDTO.setClonadaParaEquipe(analise.getClonadaParaEquipe());
+        analiseEditDTO.setCompartilhadas(analise.getCompartilhadas());
+        analiseEditDTO.setContrato(analise.getContrato());
+        analiseEditDTO.setDataHomologacao(analise.getDataHomologacao());
+        analiseEditDTO.setDocumentacao(analise.getDocumentacao());
+        analiseEditDTO.setEnviarBaseline(analise.isEnviarBaseline());
+        analiseEditDTO.setEscopo(analise.getEscopo());
+        analiseEditDTO.setEsforcoFases(analise.getEsforcoFases());
+        analiseEditDTO.setFatorAjuste(analise.getFatorAjuste());
+        analiseEditDTO.setFronteiras(analise.getFronteiras());
+        analiseEditDTO.setManual(analise.getManual());
+        analiseEditDTO.setObservacoes(analise.getObservacoes());
+        analiseEditDTO.setPropositoContagem(analise.getPropositoContagem());
+        analiseEditDTO.setStatus(analise.getStatus());
+        Set<UserAnaliseDTO> userAnaliseDTO = new HashSet<>();
+        analise.getUsers().forEach(item -> {
+            UserAnaliseDTO userAnalise = new UserAnaliseDTO();
+            BeanUtils.copyProperties(userAnalise, item);
+            userAnaliseDTO.add(userAnalise);
+        });
+        analiseEditDTO.setUsers(userAnaliseDTO);
+        analiseEditDTO.setAdjustPFTotal(analise.getAdjustPFTotal());
+        analiseEditDTO.setDataCriacaoOrdemServico(analise.getDataCriacaoOrdemServico());
+        TipoEquipeAnaliseDTO tipoEquipeAnaliseDTO = new TipoEquipeAnaliseDTO();
+        BeanUtils.copyProperties(tipoEquipeAnaliseDTO, analise.getEquipeResponsavel());
+        analiseEditDTO.setEquipeResponsavel(tipoEquipeAnaliseDTO);
+        analiseEditDTO.setId(analise.getId());
+        analiseEditDTO.setIdentificadorAnalise(analise.getIdentificadorAnalise());
+        analiseEditDTO.setMetodoContagem(analise.getMetodoContagem());
+        analiseEditDTO.setNumeroOs(analise.getNumeroOs());
+        OrganizacaoAnaliseDTO organizacaoAnaliseDTO = new OrganizacaoAnaliseDTO();
+        BeanUtils.copyProperties(organizacaoAnaliseDTO, analise.getOrganizacao());
+        analiseEditDTO.setOrganizacao(organizacaoAnaliseDTO);
+        analiseEditDTO.setPfTotal(analise.getPfTotal());
+        SistemaAnaliseDTO sistemaAnaliseDTO = new SistemaAnaliseDTO();
+        BeanUtils.copyProperties(sistemaAnaliseDTO, analise.getSistema());
+        analiseEditDTO.setSistema(sistemaAnaliseDTO);
+        analiseEditDTO.setTipoAnalise(analise.getTipoAnalise());
+        return analiseEditDTO;
     }
 
     public AnaliseDivergenceEditDTO convertToAnaliseDivergenceEditDTO(Analise analise) {
