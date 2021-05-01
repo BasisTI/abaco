@@ -339,34 +339,38 @@ export class DivergenciaListComponent implements OnInit {
             });
         }
         if (canBloqued) {
-            this.alterValidacaoBlock();
+            this.alterValidacaoStatusBlock();
         } else {
             this.pageNotificationService.addErrorMessage(this.getLabel('Somente membros da equipe responsável podem excluir esta análise!'));
         }
     }
 
-    public alterValidacaoBlock() {
+    public alterValidacaoStatusBlock() {
         this.divergenciaService.changeStatusDivergence(this.idDivergenceStatus, this.statusToChange).subscribe(data => {
             this.analiseTemp = new Analise().copyFromJSON(data);
             this.statusService = undefined;
             this.idDivergenceStatus = undefined;
             this.pageNotificationService.addSuccessMessage('O status da validação ' + data.identificadorAnalise + ' foi alterado.');
-            if (this.analiseTemp && this.analiseTemp.dataHomologacao) {
-                const copy = this.analiseTemp.toJSONState();
-                this.divergenciaService.block(copy).subscribe(() => {
-                    const nome = this.analiseTemp.identificadorAnalise;
-                    const bloqueado = this.analiseTemp.bloqueiaAnalise;
-                    this.mensagemAnaliseBloqueada(bloqueado, nome);
-                    this.datatable._filter();
-                    this.showDialogDivergenceBlock = false;
-                });
-            } else {
-                this.pageNotificationService.addErrorMessage('Não é possível bloquear/desbloquear essa validação');
-                this.datatable._filter();
-                this.showDialogDivergenceBlock = false;
-            }
+            this.alterValidacaoBlock();
         },
             err => this.pageNotificationService.addErrorMessage('Não foi possível alterar o status da Validação.'));
+    }
+
+    alterValidacaoBlock(){
+        if (this.analiseTemp && this.analiseTemp.dataHomologacao) {
+            const copy = this.analiseTemp.toJSONState();
+            this.divergenciaService.block(copy).subscribe(() => {
+                const nome = this.analiseTemp.identificadorAnalise;
+                const bloqueado = this.analiseTemp.bloqueiaAnalise;
+                this.mensagemAnaliseBloqueada(bloqueado, nome);
+                this.datatable._filter();
+                this.showDialogDivergenceBlock = false;
+            });
+        } else {
+            this.pageNotificationService.addErrorMessage('Não é possível bloquear/desbloquear essa validação');
+            this.datatable._filter();
+            this.showDialogDivergenceBlock = false;
+        }
     }
 
     public alterStatusValidacao() {
