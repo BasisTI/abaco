@@ -490,52 +490,12 @@ public class AnaliseService extends BaseService {
     }
 
     public AnaliseEditDTO convertToAnaliseEditDTO(Analise analise) {
-        AnaliseEditDTO analiseEditDTO = new AnaliseEditDTO();
-        analiseEditDTO.setBaselineImediatamente(analise.getBaselineImediatamente());
-        analiseEditDTO.setBloqueiaAnalise(analise.isBloqueiaAnalise());
-        analiseEditDTO.setClonadaParaEquipe(analise.getClonadaParaEquipe());
-        analiseEditDTO.setCompartilhadas(analise.getCompartilhadas());
-        analiseEditDTO.setContrato(analise.getContrato());
-        analiseEditDTO.setDataHomologacao(analise.getDataHomologacao());
-        analiseEditDTO.setDocumentacao(analise.getDocumentacao());
-        analiseEditDTO.setEnviarBaseline(analise.isEnviarBaseline());
-        analiseEditDTO.setEscopo(analise.getEscopo());
-        analiseEditDTO.setEsforcoFases(analise.getEsforcoFases());
-        analiseEditDTO.setFatorAjuste(analise.getFatorAjuste());
-        analiseEditDTO.setFronteiras(analise.getFronteiras());
-        analiseEditDTO.setManual(analise.getManual());
-        analiseEditDTO.setObservacoes(analise.getObservacoes());
-        analiseEditDTO.setPropositoContagem(analise.getPropositoContagem());
-        analiseEditDTO.setStatus(analise.getStatus());
-        Set<UserAnaliseDTO> userAnaliseDTO = new HashSet<>();
-        analise.getUsers().forEach(item -> {
-            UserAnaliseDTO userAnalise = new UserAnaliseDTO();
-            BeanUtils.copyProperties(userAnalise, item);
-            userAnaliseDTO.add(userAnalise);
-        });
-        analiseEditDTO.setUsers(userAnaliseDTO);
-        analiseEditDTO.setAdjustPFTotal(analise.getAdjustPFTotal());
-        analiseEditDTO.setDataCriacaoOrdemServico(analise.getDataCriacaoOrdemServico());
-        TipoEquipeAnaliseDTO tipoEquipeAnaliseDTO = new TipoEquipeAnaliseDTO();
-        BeanUtils.copyProperties(tipoEquipeAnaliseDTO, analise.getEquipeResponsavel());
-        analiseEditDTO.setEquipeResponsavel(tipoEquipeAnaliseDTO);
-        analiseEditDTO.setId(analise.getId());
-        analiseEditDTO.setIdentificadorAnalise(analise.getIdentificadorAnalise());
-        analiseEditDTO.setMetodoContagem(analise.getMetodoContagem());
-        analiseEditDTO.setNumeroOs(analise.getNumeroOs());
-        OrganizacaoAnaliseDTO organizacaoAnaliseDTO = new OrganizacaoAnaliseDTO();
-        BeanUtils.copyProperties(organizacaoAnaliseDTO, analise.getOrganizacao());
-        analiseEditDTO.setOrganizacao(organizacaoAnaliseDTO);
-        analiseEditDTO.setPfTotal(analise.getPfTotal());
-        SistemaAnaliseDTO sistemaAnaliseDTO = new SistemaAnaliseDTO();
-        BeanUtils.copyProperties(sistemaAnaliseDTO, analise.getSistema());
-        analiseEditDTO.setSistema(sistemaAnaliseDTO);
-        analiseEditDTO.setTipoAnalise(analise.getTipoAnalise());
-        return analiseEditDTO;
+        return modelMapper.map(analise, AnaliseEditDTO.class);
     }
 
     public AnaliseDivergenceEditDTO convertToAnaliseDivergenceEditDTO(Analise analise) {
         return modelMapper.map(analise, AnaliseDivergenceEditDTO.class);
+        
     }
 
     public Analise convertToEntity(AnaliseEditDTO analiseEditDTO) {
