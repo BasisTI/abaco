@@ -176,7 +176,7 @@ public class AnaliseResource {
     @PutMapping("/analises/{id}/block")
     @Timed
     @Secured("ROLE_ABACO_ANALISE_BLOQUEAR_DESBLOQUEAR")
-    public ResponseEntity<AnaliseEditDTO> blockUnblockAnalise(@PathVariable Long id, @Valid @RequestBody Analise analiseUpdate) throws URISyntaxException {
+    public ResponseEntity<Analise> blockUnblockAnalise(@PathVariable Long id, @Valid @RequestBody Analise analiseUpdate) throws URISyntaxException {
         log.debug("REST request to block Analise : {}", id);
         Analise analise = analiseService.recuperarAnalise(id);
         if (analise != null && !(analise.getDataHomologacao() == null && analiseUpdate.getDataHomologacao() == null)) {
@@ -186,10 +186,10 @@ public class AnaliseResource {
             analiseService.linkFuncoesToAnalise(analise);
             analise.setBloqueiaAnalise(!analise.isBloqueiaAnalise());
             Analise result = analiseRepository.save(analise);
-            analiseSearchRepository.save(analiseService.convertToEntity(analiseService.convertToDto(analise)));
-            return ResponseEntity.ok().headers(HeaderUtil.blockEntityUpdateAlert(ENTITY_NAME, analise.getId().toString())).body(analiseService.convertToAnaliseEditDTO(result));
+            analiseSearchRepository.save(result);
+            return ResponseEntity.ok().headers(HeaderUtil.blockEntityUpdateAlert(ENTITY_NAME, analise.getId().toString())).body(result);
         } else {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new AnaliseEditDTO());
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new Analise());
         }
     }
 
@@ -584,17 +584,17 @@ public class AnaliseResource {
     @GetMapping("/analises/change-status/{id}/{idStatus}")
     @Timed
     @Secured("ROLE_ABACO_ANALISE_ALTERAR_STATUS")
-    public ResponseEntity<AnaliseEditDTO> alterStatusAnalise(@PathVariable Long id, @PathVariable Long idStatus) {
+    public ResponseEntity<Analise> alterStatusAnalise(@PathVariable Long id, @PathVariable Long idStatus) {
         Analise analise = analiseService.recuperarAnalise(id);
         Status status = statusRepository.findById(idStatus);
         User user = userRepository.findOneByLogin(SecurityUtils.getCurrentUserLogin()).get();
         if (analise.getId() != null && status.getId() != null && analiseService.changeStatusAnalise(analise, status, user)) {
-            analiseRepository.save(analise);
-            analiseSearchRepository.save(analiseService.convertToEntity(analiseService.convertToDto(analise)));
+            Analise result = analiseRepository.save(analise);
+            analiseSearchRepository.save(result);
             return ResponseEntity.ok().headers(HeaderUtil.blockEntityUpdateAlert(ENTITY_NAME, analise.getId().toString()))
-                .body(analiseService.convertToAnaliseEditDTO(analise));
+                .body(result);
         } else {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new AnaliseEditDTO());
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new Analise());
         }
     }
 
