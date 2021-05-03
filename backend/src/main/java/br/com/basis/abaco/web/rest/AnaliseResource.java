@@ -592,7 +592,7 @@ public class AnaliseResource {
             Analise result = analiseRepository.save(analise);
             analiseSearchRepository.save(result);
             return ResponseEntity.ok().headers(HeaderUtil.blockEntityUpdateAlert(ENTITY_NAME, analise.getId().toString()))
-                .body(analiseService.convertToAnaliseEditDTO(result));
+                .body(analiseService.convertToAnaliseEditDTO(analise));
         } else {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new AnaliseEditDTO());
         }
