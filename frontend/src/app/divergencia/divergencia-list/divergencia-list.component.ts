@@ -359,6 +359,7 @@ export class DivergenciaListComponent implements OnInit {
                         const bloqueado = this.analiseTemp.bloqueiaAnalise;
                         this.mensagemAnaliseBloqueada(bloqueado, nome);
                         this.datatable._filter();
+                        this.datatable.selection = null;
                         this.showDialogDivergenceBlock = false;
                     });
                 } else {
