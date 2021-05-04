@@ -14,7 +14,14 @@
             (onUnselect)="deselecionar($event)"
             [multiple]="true"
             (onBlur)="limparCampo($event)">
-
+            <ng-template let-item pTemplate="selectedItem">
+                <span
+                  class="ui-chips-token-label ng-star-inserted"
+                  style="padding-right: 20px;"
+                  (dblclick)="doubleClickChip(item)">
+                 {{ item.text }}
+                </span>
+            </ng-template>
             </p-autoComplete>
 
         <div *ngIf="tamanhoChip" class="ui-message ui-messages-error" translate="Global.Mensagens.LimiteExcedido">
