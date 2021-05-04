@@ -387,6 +387,10 @@ export class AnaliseListComponent implements OnInit {
                 this.geraBaselinePdfBrowser();
                 break;
             case 'cloneParaEquipe':
+                if(event.selection.clonadaParaEquipe == true){
+                    return this.pageNotificationService.addErrorMessage("Essa análise já foi clonada para equipe anteriormente. ")
+                }
+
                 this.openModalCloneAnaliseEquipe(event.selection.id);
                 break;
             case 'compartilhar':
