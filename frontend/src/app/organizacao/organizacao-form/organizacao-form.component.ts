@@ -345,7 +345,6 @@ export class OrganizacaoFormComponent implements OnInit, OnDestroy {
         }
     }
 
-
     save(form: any) {
         this.cnpjValido = false;
 
