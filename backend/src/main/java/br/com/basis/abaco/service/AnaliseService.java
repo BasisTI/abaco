@@ -439,6 +439,7 @@ public class AnaliseService extends BaseService {
         Set<Der> ders = new HashSet<>();
         FuncaoTransacao funcaoTransacao = new FuncaoTransacao();
         funcaoTransacao.bindFuncaoTransacao(ft.getTipo(), ft.getFtrStr(), ft.getQuantidade(), alrs, null, ft.getFtrValues(), ft.getImpacto(), ders, analiseClone, ft.getComplexidade(), ft.getPf(), ft.getGrossPF(), ft.getFuncionalidade(), ft.getDetStr(), ft.getFatorAjuste(), ft.getName(), ft.getSustantation(), ft.getDerValues());
+        funcaoTransacao.setFuncionalidade(ft.getFuncionalidade());
         ft.getAlrs().forEach(alr -> {
             Alr alrClone = new Alr(null, alr.getNome(), alr.getValor(), funcaoTransacao, null);
             alrs.add(alrClone);
@@ -493,7 +494,7 @@ public class AnaliseService extends BaseService {
 
     public AnaliseDivergenceEditDTO convertToAnaliseDivergenceEditDTO(Analise analise) {
         return modelMapper.map(analise, AnaliseDivergenceEditDTO.class);
-        
+
     }
 
     public Analise convertToEntity(AnaliseEditDTO analiseEditDTO) {
@@ -535,8 +536,7 @@ public class AnaliseService extends BaseService {
         bindFilterSearchDivergence(identificador, sistema, organicoesIds, qb);
         return qb;
     }
-
-
+    
     public void saveAnaliseCompartilhada(Set<Compartilhada> lstCompartilhadas) {
         if (lstCompartilhadas != null && lstCompartilhadas.size() > 0) {
             long idAnalise = lstCompartilhadas.stream().findFirst().get().getAnaliseId();
