@@ -16,12 +16,10 @@
                                 </div>
                             </div>
                             <!-- Inicio da tabela -->
-                            <div>
+                            <div class="ui-g">
                                 <basis-datatable type="memory" [disableDelete]="this.isView"
                                     [disableEdit]="this.isView || selectButtonMultiple"
                                     [disableView]="selectButtonMultiple" id="idTabelaFuncaoTransacaoFormFuncaoTransacao"
-                                    [enableScroll]="true"
-                                    [scrollHeight]="'500px'"
                                     [enableButtonsScroll]="true"
                                     [value]="this.funcoesTransacoes" (buttonClick)="datatableClick($event)"
                                     (dblclick)="onRowDblclick($event)" (click)="selectFT()" [paginator]="false"
