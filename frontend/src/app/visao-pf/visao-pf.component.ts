@@ -106,7 +106,6 @@ export class VisaoPfComponent implements OnInit {
                             }
                         }
                     }
-
                     if(this.visaopf.atualizar==false){
                         this.showSucessMsg('Contagem concluída.')
                     }

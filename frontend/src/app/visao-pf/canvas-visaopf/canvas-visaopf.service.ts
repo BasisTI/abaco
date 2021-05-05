@@ -21,4 +21,16 @@ export class CanvasService {
   deleteComponent(telaId:any, componentId:any){
     return this.http.delete(`visaopf/tela/${telaId}/component/${componentId}`)
   }
+
+  sendOCR(coordenada:any, bucketName, fileName){
+    let formData: FormData = new FormData()
+    formData.append('coordenada', JSON.stringify(coordenada))
+    formData.append('bucketName', bucketName)
+    formData.append('fileName', fileName)
+    return this.http.post('/visaopf/component/ocr', formData, {responseType: 'text'})
+  }
+
+  getProcessoOCR(id){
+    return this.http.get(`/visaopf/processo/ocr/${id}`)
+  }
 }
