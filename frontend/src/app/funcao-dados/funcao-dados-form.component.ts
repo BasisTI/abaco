@@ -32,6 +32,7 @@ import { FuncaoDados} from './funcao-dados.model';
 import { FuncaoDadosService } from './funcao-dados.service';
 import { BlockUiService } from '@nuvem/angular-base';
 import { Visaopf } from '../visao-pf/visao-pf.model'
+import { Rlr } from '../rlr/rlr.model';
 
 @Component({
     selector: 'app-analise-funcao-dados',
@@ -175,6 +176,7 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
         this.desconverterChips()
         if(this.visaopf){
             funcDados.ders = []
+            funcDados.rlrs = []
             funcDados.sustantation= ""
         }
         this.router.navigate([routerNavigate], {
@@ -203,6 +205,9 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
                             }
                         }
                     })
+                    if(tela.rlrName){
+                        this.seletedFuncaoDados.rlrs.push(new Rlr(undefined, tela.rlrName))
+                    }
                 }
             }
             if(this.routeState.isEdit){
@@ -1073,7 +1078,7 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
 
     cancelar() {
         this.showDialog = false;
-        this.visaopf.telaResult = undefined
+        this.visaopf = new Visaopf()
         this.fecharDialog();
     }
 

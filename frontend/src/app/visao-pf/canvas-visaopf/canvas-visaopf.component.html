@@ -1,10 +1,13 @@
 <div class="ui-g-12" *ngIf="toolbar" >
-    <div class="ui-g-6">
+    <div class="ui-g-5">
         <div *ngIf="imageName">
             <p class="imgName"> <strong>Imagem:</strong> {{imageName}}</p>
         </div>
     </div>
-    <div class="ui-g-2" style="text-align: right">
+    <div class="ui-g-2" style="text-align: center">
+        <button pButton type="button" icon="pi pi-check" label="Salvar RLR(TR)" [disabled]="!markDisable" (click)="buttonSaveRLR()"></button>
+    </div>
+    <div class="ui-g-1" style="text-align: right">
         <button pButton type="button" icon="pi pi-check" label="Salvar" [disabled]="!markDisable" (click)="saveMark()"></button>
     </div>
     <div class="ui-g-2" style="text-align: right">
@@ -29,15 +32,22 @@
     </div>
     <div class="ui-g-12 ui-md-12" >
         <div class="ui-g-12 ui-md-8" style="margin-top:5%; margin-left: 24%">
-            <div class="ui-float-label ui-label-dialog-componente ui-g-12 ui-md-10">
-                <input id="float-input" ngDefaultControl [(ngModel)]="componente.nome" type="text" size="30" pInputText>
-                <label for="float-input">Nome</label>
+            <div class="ui-g-12">
+                <div class="ui-g-8">
+                    <div class="ui-float-label ui-label-dialog-componente ui-g-12 ui-md-10">
+                        <input id="float-input" ngDefaultControl [(ngModel)]="componente.nome" type="text" size="30" style="width: 125%" pInputText>
+                        <label for="float-input">Nome</label>
+                    </div>
+                </div>
+                <div class="ui-g-4">
+                    <p-button icon="pi pi-search" (click) = "realizaOCR(false)" ></p-button>
+                </div>
             </div>
-            <div class="ui-float-label ui-label-dialog-componente ui-g-12 ui-md-10" style="margin-top: 10%">
+            <div class="ui-float-label ui-label-dialog-componente ui-g-12 ui-md-10" style="margin-top: 10%;margin-left:3%">
                 <textarea cols="30" ngDefaultControl [(ngModel)]="componente.descricao" pInputTextarea></textarea>
                 <label for="float-input">Descrição</label>
             </div>
-            <div class="ui-float-label ui-label-dialog-componente ui-g-12 ui-md-10" style="margin-top: 8%">
+            <div class="ui-float-label ui-label-dialog-componente ui-g-12 ui-md-10" style="margin-top: 8%;margin-left:3%">
                 <div class="ui-g-12 ui-md-2" >
                     <p class="style-tipo">Tipo:</p>
 
@@ -77,3 +87,37 @@
     </ng-template>
 </div>
 
+<p-dialog [(visible)]="dialogRLR" [style]="{width: '40vw'}" >
+
+    <div class="ui-g-12 ui-md-12">
+        <div class="title-rlr"> RLR(TR) </div>
+    </div>
+    <div class="ui-g-12 ui-md-12" >
+        <div class="ui-g-12 ui-md-8" style="margin-top:5%; margin-left: 24%">
+
+            <div class="ui-g-12">
+                <div class="ui-g-8">
+                    <div class="ui-float-label ui-label-dialog-componente ui-g-12 ui-md-10">
+                        <input id="float-input" ngDefaultControl [(ngModel)]="tela.rlrName" type="text" size="30" pInputText style="width: 125%">
+                        <label for="float-input">Nome</label>
+                    </div>
+                </div>
+                <div class="ui-g-4">
+                    <p-button icon="pi pi-search" (click) = "realizaOCR(true)" ></p-button>
+                </div>
+            </div>
+
+            <div class="ui-g-12 ui-md-12" style="width: 80%; height: 50%;" >
+                <p-messages  [(value)]="msgs"></p-messages>
+            </div>
+        </div>
+        <div class="ui-g-12 ui-md-6" style="margin-left: 25%">
+            <button style="width: 104%;" (click) = "saveRLR()" type="button"  pButton label="Salvar"></button>
+        </div>
+
+        <div class="ui-g-12 ui-md-6" style="margin-left: 25%; margin-top: 1%">
+            <button style="width: 104%;" (click) ="removeRLR()" pButton type="button" label="Excluir" class="ui-button-danger"></button>
+        </div>
+
+    </div>
+</p-dialog>

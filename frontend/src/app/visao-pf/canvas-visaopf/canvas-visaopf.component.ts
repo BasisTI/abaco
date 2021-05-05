@@ -1,7 +1,7 @@
 import {Component, Input, ViewChild, OnInit, Renderer2, ElementRef } from '@angular/core'
-import { fromEvent } from 'rxjs'
+import { fromEvent, interval, from } from 'rxjs'
 import { Message } from 'primeng/api'
-import { switchMap, takeUntil, pairwise } from 'rxjs/operators'
+import { switchMap, takeUntil, pairwise, takeWhile } from 'rxjs/operators'
 import {Componente} from './canvas-visaopf.model'
 import {CanvasService} from './canvas-visaopf.service'
 
@@ -33,6 +33,8 @@ export class CanvasVisaopfComponent implements OnInit {
     dialogComponent=false
     showTooltip=false
     msgs: Message[] = []
+    dialogRLR=false
+    isRLR:boolean
     static readonly TIMEOUTCANVAS = 1500
 
     constructor(private service:CanvasService, private renderer: Renderer2, private elementRef: ElementRef ){
@@ -43,9 +45,62 @@ export class CanvasVisaopfComponent implements OnInit {
         this.canvas = this.canvas.nativeElement
         this.ctx = this.canvas.getContext('2d')
         this.tela = this.telasResult[0]
+        this.tela.rlrName = undefined
         this.imageName=this.tela.originalImageName.split("@")[1]
         this.startCanvas()
         this.getEventClickPosition()
+    }
+
+    sendComponentOCR(){
+        this.showInfoMsg("Iniciando extração de texto.")
+        this.service.sendOCR(this.componente.coordenada, this.tela.bucketName, this.tela.originalImageName).subscribe(idProcesso =>{
+            if(idProcesso){
+                this.componente.nome = undefined
+                this.updateProcessos(idProcesso)
+            }
+        })
+    }
+
+    sendRLRtoOCR(){
+        if(this.markDisable ){
+            this.tela.rlrCoordenada = this.componente.coordenada
+        }
+        if(this.tela.rlrCoordenada == undefined){ this.showErrorMsg('É necessário marcar o RLR(TR)!');  return}
+        this.showInfoMsg("Iniciando extração de texto.")
+        this.service.sendOCR(this.tela.rlrCoordenada, this.tela.bucketName, this.tela.originalImageName).subscribe(idProcesso =>{
+            if(idProcesso){
+                this.tela.rlrName = undefined
+                this.updateProcessos(idProcesso)
+            }
+        })
+    }
+
+    realizaOCR(isRLR){
+        this.isRLR = isRLR
+        if(isRLR){
+            this.sendRLRtoOCR()
+        }else{
+            this.sendComponentOCR()
+        }
+
+    }
+
+    updateProcessos(idProcesso){
+        interval(2100).pipe(
+            switchMap(() => from(this.service.getProcessoOCR(idProcesso))),
+            takeWhile(((processo: any ) => {
+                if(processo.dataFim != null ){
+                    if(this.isRLR){
+                        this.tela.rlrName = processo.resultadoOCR
+                    }else{
+                        this.componente.nome = processo.resultadoOCR
+                    }
+                    this.showSucessMsg('Texto Extraído.')
+                    return false
+                }
+                return true
+            }))
+        ).subscribe( (response:any) => {})
     }
 
     tooltipPosition(comp){
@@ -59,7 +114,6 @@ export class CanvasVisaopfComponent implements OnInit {
     }
 
     getEventClickPosition(){
-
         fromEvent(this.canvas, 'mousedown').subscribe( res => {
             this.clickPosition = res
             const rect = this.canvas.getBoundingClientRect()
@@ -69,6 +123,7 @@ export class CanvasVisaopfComponent implements OnInit {
             }
             if(!this.markDisable){
                 this.clickInComponente(initPos)
+                this.clickInRlr(initPos)
             }
         })
 
@@ -90,6 +145,16 @@ export class CanvasVisaopfComponent implements OnInit {
         })
     }
 
+    clickInRlr(initPos){
+        this.msgs = []
+        if(this.tela.rlrCoordenada){
+            var rlr = this.isClickInsideRlr(initPos, this.tela.rlrCoordenada)
+            if(rlr){
+                this.dialogRLR = true
+            }
+        }
+    }
+
     clickInComponente(initPos){
         this.msgs = []
         var comp = this.findComponenteByPosition(initPos)
@@ -101,6 +166,13 @@ export class CanvasVisaopfComponent implements OnInit {
 
     findComponenteByPosition(clickposition):any{
         return this.tela.componentes.filter(component => this.isClickInsideComponent(component, clickposition))[0]
+    }
+
+    isClickInsideRlr(position, coordenada){
+        if( (position.x*this.proporcaoW ) >= coordenada.xmin && (position.x*this.proporcaoW ) <=  coordenada.xmax && (position.y*this.proporcaoH) >= coordenada.ymin && (position.y*this.proporcaoH) <=  coordenada.ymax){
+            return true
+        }
+        return false
     }
 
     isClickInsideComponent(component, position): any{
@@ -125,7 +197,6 @@ export class CanvasVisaopfComponent implements OnInit {
             }
         }
         this.draw()
-
     }
 
     updateComponent(){
@@ -153,7 +224,6 @@ export class CanvasVisaopfComponent implements OnInit {
                 this.showSucessMsg('Componente removido!')
             })
         }
-
         this.dialogComponent = false
         this.draw()
         this.componente = new Componente()
@@ -164,8 +234,6 @@ export class CanvasVisaopfComponent implements OnInit {
         if(this.componente.coordenada.xmax == undefined){ this.showErrorMsg('É necessário marcar o Componente!');  return saved}
         if(this.componente.tipo == undefined){ this.showErrorMsg('É necessário informar o Tipo do Componente!');  return saved}
         if(this.componente.nome == undefined){this.showErrorMsg('É necessário informar o Nome para o Componente!');  return saved}
-
-        // this.dialogComponent = false
         this.markDisable = false
         this.service.setComponenteTela(this.tela.id, this.componente).subscribe( (resp:any) => {
             this.tela.componentes=resp.componentes
@@ -173,6 +241,30 @@ export class CanvasVisaopfComponent implements OnInit {
         })
         saved=true
         return saved
+    }
+
+    removeRLR(){
+        this.tela.rlrCoordenada = undefined
+        this.tela.rlrName = undefined
+        this.dialogRLR = false
+        this.draw()
+    }
+
+    saveRLR(){
+        if(this.markDisable){
+            this.tela.rlrCoordenada = this.componente.coordenada
+            this.componente= new Componente()
+        }
+        if(this.tela.rlrCoordenada == undefined){ this.showErrorMsg('É necessário marcar o RLR(TR)!');  return}
+        if(this.tela.rlrName == undefined){this.showErrorMsg('É necessário informar o nome RLR(TR)!');  return }
+        this.markDisable = false
+        this.dialogRLR = false
+        this.draw()
+    }
+
+    buttonSaveRLR(){
+        this.msgs=[]
+        this.dialogRLR = true
     }
 
     saveMark(){
@@ -186,7 +278,6 @@ export class CanvasVisaopfComponent implements OnInit {
     }
 
     captureEvents(canvasEl: HTMLCanvasElement) {
-
         fromEvent(canvasEl, 'mousedown').pipe( switchMap((e) => {
             this.clickPosition = e
             return fromEvent(canvasEl, 'mousemove').pipe(
@@ -244,6 +335,11 @@ export class CanvasVisaopfComponent implements OnInit {
         for(var comp of this.tela.componentes){
             this.ctx.strokeStyle = this.colorByTipo(comp.tipo)
             this.ctx.strokeRect(comp.coordenada.xmin/this.proporcaoW, comp.coordenada.ymin /this.proporcaoH, (comp.coordenada.xmax - comp.coordenada.xmin )/this.proporcaoW , (comp.coordenada.ymax - comp.coordenada.ymin)/this.proporcaoH)
+        }
+
+        if(this.tela.rlrCoordenada){
+            this.ctx.strokeStyle = "#FF5722"
+            this.ctx.strokeRect(this.tela.rlrCoordenada.xmin/this.proporcaoW, this.tela.rlrCoordenada.ymin /this.proporcaoH, (this.tela.rlrCoordenada.xmax - this.tela.rlrCoordenada.xmin )/this.proporcaoW , (this.tela.rlrCoordenada.ymax - this.tela.rlrCoordenada.ymin)/this.proporcaoH)
         }
     }
 

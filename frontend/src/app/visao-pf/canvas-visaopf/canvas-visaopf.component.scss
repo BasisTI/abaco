@@ -6,9 +6,6 @@ canvas {
     border: 1px solid #000;
 }
 
-.ui-label-dialog-componente{
-    margin-left: 8% ;
-}
 
 .customer-component:before{
     overflow: hidden;
@@ -59,6 +56,20 @@ canvas {
     &.tipo-checkbox {
         background-color:#EF7C8E
     }
+}
+
+.title-rlr{
+    padding: .25em .5em;
+    text-transform: uppercase;
+    font-weight: 700;
+    font-size: 12px;
+    letter-spacing: .3px;
+    text-align: center;
+    width: 50%;
+    margin-left: 25%;
+    text-indent: 1ch;
+    background-color: #FF5722;
+    color: white;
 }
 
 .style-tipo{
