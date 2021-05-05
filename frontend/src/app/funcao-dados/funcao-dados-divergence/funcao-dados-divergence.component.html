@@ -16,7 +16,7 @@
                                     </app-green-button>
                                 </div>
                             </div>
-                            <div >
+                            <div class="ui-g">
                                 <basis-datatable
                                         type="memory"
                                         id="idTabelaFuncaoDados"
@@ -31,8 +31,6 @@
                                         (click)="selectFD()"
                                         [paginator]="false"
                                         [rows]="20"
-                                        [enableScroll]="true"
-                                        [scrollHeight]="'500px'"
                                         [enableButtonsScroll]="true"
                                         [filterOnColumn]="true"
                                         [rowsPerPageOptions]="[20,50,100]"
