@@ -20,7 +20,7 @@
                                 </div>
                             </div>
                             <!-- Inicio da tabela -->
-                            <div>
+                            <div class="ui-g">
                                 <basis-datatable
                                         type="memory"
                                         [disableDelete]="this.isView"
@@ -32,8 +32,6 @@
                                         (click)="selectFT()"
                                         [paginator]="false"
                                         [rows]="20"
-                                        [enableScroll]="true"
-                                        [scrollHeight]="'500px'"
                                         [enableButtonsScroll]="true"
                                         [filterOnColumn]="true"
                                         [rowsPerPageOptions]="[20,50,100]"

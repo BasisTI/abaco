@@ -14,15 +14,13 @@
                                     </app-green-button>
                                 </div>
                             </div>
-                            <div>
+                            <div class="ui-g">
                                 <basis-datatable type="memory" id="idTabelaFuncaoDados" [disableDelete]="this.isView"
-                                    [disableEdit]="this.isView || selectButtonMultiple" [enableScroll]="true"
-                                    [scrollHeight]="'500px'" [enableButtonsScroll]="true"
+                                    [disableEdit]="this.isView || selectButtonMultiple" [enableButtonsScroll]="true"
                                     [disableView]="selectButtonMultiple" (dblclick)="onRowDblclick($event)"
                                     [value]="funcoesDados" (buttonClick)="datatableClick($event)" (click)="selectFD()"
-                                    [paginator]="false" [scrollable]="true" [rows]="20" [selectionMode]="'multiple'"
-                                    [filterOnColumn]="true" [rowsPerPageOptions]="[20,50,100]"
-                                    [showVisibleColumnsControl]="true" #tables>
+                                    [paginator]="false" [rows]="20" [selectionMode]="'multiple'" [filterOnColumn]="true"
+                                    [rowsPerPageOptions]="[20,50,100]" [showVisibleColumnsControl]="true" #tables>
 
                                     <p-column field="nomeModulo" header="Módulo" [filter]="true" [sortable]="true">
                                     </p-column>
@@ -284,36 +282,36 @@
                                 </p-editor>
                             </span>
                             <p-fileUpload (onSelect)="onUpload($event)" multiple="multiple" accept="image/*"
-                            chooseLabel="Selecionar Arquivo" [showUploadButton]=false [showCancelButton]=false
-                            maxFileSize="1000000" #componenteFile>
-                            <ng-template pTemplate="content">
-                                <div *ngIf="seletedFuncaoDados.files?.length" class="ui-g-12 ui-md-12 ui-sm-12"
-                                    style="padding: 0;">
-                                    <ul *ngIf="seletedFuncaoDados.files" style="margin: 0 ;">
-                                        <li *ngFor="let file of seletedFuncaoDados.files" style="list-style: none;">
-                                            <div style="display: flex;">
-                                                <div style="padding: 7px 14px">
-                                                    <img style="width: 50px; height: 35px;" [src]="file.safeUrl"
-                                                        class="image" />
+                                chooseLabel="Selecionar Arquivo" [showUploadButton]=false [showCancelButton]=false
+                                maxFileSize="1000000" #componenteFile>
+                                <ng-template pTemplate="content">
+                                    <div *ngIf="seletedFuncaoDados.files?.length" class="ui-g-12 ui-md-12 ui-sm-12"
+                                        style="padding: 0;">
+                                        <ul *ngIf="seletedFuncaoDados.files" style="margin: 0 ;">
+                                            <li *ngFor="let file of seletedFuncaoDados.files" style="list-style: none;">
+                                                <div style="display: flex;">
+                                                    <div style="padding: 7px 14px">
+                                                        <img style="width: 50px; height: 35px;" [src]="file.safeUrl"
+                                                            class="image" />
+                                                    </div>
+                                                    <div style="padding: 7px 14px">
+                                                        <p>{{file.originalName}}</p>
+                                                    </div>
+                                                    <div style="padding: 7px 14px">
+                                                        <p>{{file.sizeOf}}Kb</p>
+                                                    </div>
+                                                    <basis-datatable-button
+                                                        style="display: inline-table; margin-left: 10px; max-zoom: 10px;"
+                                                        (click)="confirmDeleteFileUpload(file)" name="deleteArquivo"
+                                                        [bTooltip]="'Remover arquivo'" icon="clear">
+                                                    </basis-datatable-button>
                                                 </div>
-                                                <div style="padding: 7px 14px">
-                                                    <p>{{file.originalName}}</p>
-                                                </div>
-                                                <div style="padding: 7px 14px">
-                                                    <p>{{file.sizeOf}}Kb</p>
-                                                </div>
-                                                <basis-datatable-button
-                                                    style="display: inline-table; margin-left: 10px; max-zoom: 10px;"
-                                                    (click)="confirmDeleteFileUpload(file)" name="deleteArquivo"
-                                                    [bTooltip]="'Remover arquivo'" icon="clear">
-                                                </basis-datatable-button>
-                                            </div>
-                                        </li>
-                                    </ul>
-                                </div>
-                                <div>Arraste suas imagens e solte aqui</div>
-                            </ng-template>
-                        </p-fileUpload>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <div>Arraste suas imagens e solte aqui</div>
+                                </ng-template>
+                            </p-fileUpload>
                         </div>
 
                         <div class="ui-g ui-md-12 ui-sm-12" style="justify-content: flex-end">
@@ -464,8 +462,8 @@
     </p-footer>
 </p-dialog>
 
-<p-dialog [modal]="true" [style]="{width: '55vw'}" [closable]="false" header="Editar em lote" [(visible)]="mostrarDialogEditarEmLote"
-[contentStyle]="{'height': ['windowHeightDialog']}">
+<p-dialog [modal]="true" [style]="{width: '55vw'}" [closable]="false" header="Editar em lote"
+    [(visible)]="mostrarDialogEditarEmLote" [contentStyle]="{'height': ['windowHeightDialog']}">
     <div *ngIf="modulos">
         <div class="ui-g">
             <div class="ui-g-12">
@@ -521,8 +519,7 @@
 
             <span class="md-inputfield">
                 <p-editor maxlength="5000" [rows]="3" id="idEvidenciaFormFuncaoDados" [cols]="180"
-                    [disabled]="isDisabled" pInputTextarea name="funcaoDadosSustentacao"
-                    [(ngModel)]="evidenciaEmLote">
+                    [disabled]="isDisabled" pInputTextarea name="funcaoDadosSustentacao" [(ngModel)]="evidenciaEmLote">
                     <!-- Inicio configuração toolbar-->
                     <p-header>
                         <span class="ql-formats">
@@ -547,10 +544,8 @@
                             <select class="ql-background"></select>
                         </span>
                         <span class="ql-formats">
-                            <button class="ql-list" value="ordered" aria-label="Ordered List"
-                                type="button"></button>
-                            <button class="ql-list" value="bullet" aria-label="Unordered List"
-                                type="button"></button>
+                            <button class="ql-list" value="ordered" aria-label="Ordered List" type="button"></button>
+                            <button class="ql-list" value="bullet" aria-label="Unordered List" type="button"></button>
                             <select class="ql-align">
                                 <option selected></option>
                                 <option value="center"></option>
@@ -560,8 +555,7 @@
                         </span>
                         <span class="ql-formats">
                             <button class="ql-link" aria-label="Insert Link" type="button"></button>
-                            <button class="ql-code-block" aria-label="Insert Code Block"
-                                type="button"></button>
+                            <button class="ql-code-block" aria-label="Insert Code Block" type="button"></button>
                         </span>
                         <span class="ql-formats">
                             <button class="ql-clean" aria-label="Remove Styles" type="button"></button>
