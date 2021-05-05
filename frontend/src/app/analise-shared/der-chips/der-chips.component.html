@@ -5,7 +5,7 @@
         <p-autoComplete id="autoComplete"
             [(ngModel)]="values"
             [field]="'text'"
-            [delay]="500"
+            [delay]="200"
             [suggestions]="options"
             [maxlength]="50"
             (completeMethod)="search($event)"
@@ -14,9 +14,15 @@
             (onUnselect)="deselecionar($event)"
             [multiple]="true"
             (onBlur)="limparCampo($event)">
-
+            <ng-template let-item pTemplate="selectedItem">
+                <span
+                  class="ui-chips-token-label ng-star-inserted"
+                  style="padding-right: 20px;"
+                  (dblclick)="doubleClickChip(item)">
+                 {{ item.text }}
+                </span>
+            </ng-template>
             </p-autoComplete>
-
         <div *ngIf="tamanhoChip" class="ui-message ui-messages-error" translate="Global.Mensagens.LimiteExcedido">
             Limite de caracteres excedido (50)
         </div>
@@ -94,7 +100,8 @@
     </div>
 </p-dialog>
 
-<p-dialog [header]="this.getLabel('Analise.Analise.Editar')" [(visible)]="mostrarDialogEdicao"
+<p-dialog [header]="this.getLabel('Editar campo')" [(visible)]="mostrarDialogEdicao"
+[modal]="true" [style]="{width: '55vw'}"
     [contentStyle]="{'overflow': 'visible'}">
 
     <div class="ui-g">

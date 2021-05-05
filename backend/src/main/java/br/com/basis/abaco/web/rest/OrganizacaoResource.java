@@ -197,11 +197,6 @@ public class OrganizacaoResource {
       return this.createBadRequest(this.erro[i], this.mensagem[i]);
     }
 
-    Organizacao organizacaoOld = organizacaoRepository.findOne(organizacao.getId());
-    if(organizacaoOld.getLogoId() != null && filesRepository.exists(organizacaoOld.getLogoId())){
-        filesRepository.delete(organizacaoOld.getLogoId());
-    }
-
     Organizacao result = organizacaoRepository.saveAndFlush(organizacao);
     organizacaoSearchRepository.save(result);
 

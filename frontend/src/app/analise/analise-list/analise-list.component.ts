@@ -387,6 +387,10 @@ export class AnaliseListComponent implements OnInit {
                 this.geraBaselinePdfBrowser();
                 break;
             case 'cloneParaEquipe':
+                if(event.selection.clonadaParaEquipe == true){
+                    return this.pageNotificationService.addErrorMessage("Essa análise já foi clonada para equipe anteriormente. ")
+                }
+
                 this.openModalCloneAnaliseEquipe(event.selection.id);
                 break;
             case 'compartilhar':
@@ -741,10 +745,12 @@ export class AnaliseListComponent implements OnInit {
     public cloneAnaliseToEquipe() {
         if (this.idAnaliseCloneToEquipe && this.equipeToClone) {
             this.analiseService.clonarAnaliseToEquipe(this.idAnaliseCloneToEquipe, this.equipeToClone).subscribe(value => {
-                this.pageNotificationService.addSuccessMessage(this.getLabel('clonada com sucesso!'));
+                this.pageNotificationService.addSuccessMessage(this.getLabel('Clonada com sucesso!'));
                 this.showDialogAnaliseCloneTipoEquipe = false;
                 this.equipeToClone = undefined;
                 this.idAnaliseCloneToEquipe = undefined;
+                this.datatable.filter();
+                this.datatable.selectedRow = null;
             });
         }
     }
