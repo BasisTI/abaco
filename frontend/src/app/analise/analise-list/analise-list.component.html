@@ -201,7 +201,7 @@
                             [disabled]="datatable.selectedRow == null" class="ui-button-info">
                         </basis-datatable-button>
                         <basis-datatable-button name="importJson" [bTooltip]="'Importar análise'" icon="file-upload"
-                            [disabled]="datatable.selectedRow == null" class="ui-button-success">
+                           class="ui-button-success" (click)="openModalImportAnalise()">
                         </basis-datatable-button>
                     </basis-datatable>
                     <div class="ui-g-12 ui-md-2">
@@ -378,4 +378,19 @@
         style="float:right; margin: 5px"></app-green-button>
     <app-white-button buttonLabel="Cancelar" (click)="cancelGenerateDivergence()" style="float:right; margin: 5px">
     </app-white-button>
+</p-dialog>
+
+<p-dialog header="Importar análise" [(visible)]="showDialogImportar" [style]="{width: '50vw'}" [minHeight]="300"
+[modal]="true">
+
+<p-fileUpload name="jsonAnalise" [showCancelButton]="false" [showUploadButton]="false" [chooseLabel]="'Escolha o arquivo'"
+    (onSelect)="selectJsonAnalise($event)"
+    accept="application/json"></p-fileUpload>
+
+
+    <app-green-button buttonLabel="Importar" (click)="importarAnalise()"
+        style="float:right; margin: 5px"></app-green-button>
+    <app-white-button buttonLabel="Cancelar" (click)="closeModalImportAnalise()" style="float:right; margin: 5px">
+    </app-white-button>
+
 </p-dialog>
