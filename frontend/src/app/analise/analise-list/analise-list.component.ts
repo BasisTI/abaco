@@ -18,6 +18,7 @@ import { Status } from 'src/app/status/status.model';
 import { Divergencia, DivergenciaService } from 'src/app/divergencia';
 import { FaseFilter } from 'src/app/fase/model/fase.filter';
 import { AuthService } from 'src/app/util/auth.service';
+import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 
 @Component({
     selector: 'app-analise',
@@ -145,7 +146,8 @@ export class AnaliseListComponent implements OnInit {
         private blockUiService: BlockUiService,
         private statusService: StatusService,
         private divergenceServie: DivergenciaService,
-        private authService: AuthService
+        private authService: AuthService,
+        private sanitizer: DomSanitizer
     ) {
 
     }
@@ -409,8 +411,13 @@ export class AnaliseListComponent implements OnInit {
                     this.openModalDivergence(event.selection);
                 }
                 break;
+            case 'exportJson':
+                this.exportarAnalise(event.selection);
+                break;
+
         }
     }
+
 
     compartilharAnalise() {
         let canShared = false;
@@ -920,4 +927,23 @@ export class AnaliseListComponent implements OnInit {
     criarAnalise(){
         this.router.navigate(["/analise/new"])
     }
+
+    downloadJsonHref;
+
+    exportarAnalise(analise: Analise) {
+        this.analiseService.find(analise.id).subscribe(response => {
+            let theJSON = JSON.stringify(response);
+            let blob = new Blob([theJSON], { type: 'text/json' });
+            let url= window.URL.createObjectURL(blob);
+            this.downloadJsonHref = url;
+            const anchor = document.createElement('a');
+            anchor.download = 'analise-'+analise.identificadorAnalise+'.json';
+            anchor.href = this.downloadJsonHref;
+            document.body.appendChild(anchor);
+            anchor.click();
+        })
+    }
+
+
+
 }
