@@ -43,6 +43,7 @@ import { ConfiguracaoBaselineModule } from './configuracao-baseline/configuracao
 import { PerfilModule } from './perfil/perfil.module';
 import { AuthService } from './util/auth.service';
 import { AuthGuardService } from './util/auth.guard.service';
+import { FirstGuardService } from './util/first.guard.service';
 
 @NgModule({
     declarations: [
@@ -95,7 +96,7 @@ import { AuthGuardService } from './util/auth.guard.service';
     ],
     providers: [
         { provide: LocationStrategy, useClass: HashLocationStrategy },
-        UploadService, AuthService, AuthGuardService
+        UploadService, AuthService, AuthGuardService, FirstGuardService
     ],
     bootstrap: [AppComponent],
     exports: [ RouterModule]
