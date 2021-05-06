@@ -147,7 +147,7 @@ export class AnaliseService {
 
 
 
-   
+
     /**
      *
      */
@@ -426,6 +426,15 @@ export class AnaliseService {
                     return Observable.throw(new Error(error.status));
                 }
             }));
+    }
+
+    public importar(analise: Analise): Observable<Analise> {
+        return this.http.post<Analise>(this.resourceUrl, analise).pipe(catchError((error: any) => {
+            if (error.status === 403) {
+                this.pageNotificationService.addErrorMessage(this.getLabel('Você não possui permissão!'));
+                return Observable.throw(new Error(error.status));
+            }
+        }));
     }
 
 }
