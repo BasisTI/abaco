@@ -295,7 +295,7 @@ export class ModuloFuncionalidadeComponent implements OnInit, OnDestroy {
         const moduloId = modulo.id;
         this.funcionalidadeService.findFuncionalidadesDropdownByModulo(moduloId).subscribe((funcionalidades: Funcionalidade[]) => {
             this.funcionalidades = funcionalidades;
-            this.selecionaFuncionalidadeFromCurrentAnalise();
+            // this.selecionaFuncionalidadeFromCurrentAnalise();
         });
         this.moduloSelectedEvent.emit(modulo);
     }
