@@ -1056,9 +1056,9 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
                 funcaoDadosSelecionada.forEach(funcaoDados => {
                     this.funcaoDadosService.delete(funcaoDados.id).subscribe(value => {
                         this.funcoesDados = this.funcoesDados.filter((funcaoDadosEdit) => (funcaoDadosEdit.id !== funcaoDados.id));
+                        this.analiseService.updateSomaPf(this.analise.id).subscribe();
                     });
                 })
-                this.analiseService.updateSomaPf(this.analise.id).subscribe();
                 this.pageNotificationService.addDeleteMsg("Funções deletadas com sucesso!");
             }
         });

@@ -874,9 +874,9 @@ export class FuncaoTransacaoFormComponent implements OnInit {
                         this.funcoesTransacoes = this.funcoesTransacoes.filter((funcaoTransacaoEdit) => (
                             funcaoTransacaoEdit.id !== funcaoTransacao.id
                         ));
+                        this.analiseService.updateSomaPf(this.analise.id).subscribe();
                     });
                 })
-                this.analiseService.updateSomaPf(this.analise.id).subscribe();
                 this.pageNotificationService.addDeleteMsg("Funções deletadas com sucesso!");
             }
         });
