@@ -1110,7 +1110,6 @@ export class FuncaoTransacaoDivergenceComponent implements OnInit {
         if (this.funcionalidadeSelecionadaEmLote) {
             this.funcaoTransacaoEmLote.forEach(funcaoTransacao => {
                 funcaoTransacao.funcionalidade = this.funcionalidadeSelecionadaEmLote;
-                funcaoTransacao.funcionalidade.modulo = this.moduloSelecionadoEmLote;
             });
         }
         if (this.classificacaoEmLote) {
@@ -1152,7 +1151,10 @@ export class FuncaoTransacaoDivergenceComponent implements OnInit {
             return this.pageNotificationService.addErrorMessage("Coloque uma quantidade para o deflator!")
         }
         this.editarCamposEmLote();
-
+        let moduloSelecionado;
+        if(this.moduloSelecionadoEmLote){
+             moduloSelecionado = this.moduloSelecionadoEmLote;
+        }
         for (let i = 0; i < this.funcaoTransacaoEmLote.length; i++) {
             let funcaoTransacao = this.funcaoTransacaoEmLote[i];
             funcaoTransacao = new FuncaoTransacao().copyFromJSON(funcaoTransacao);
@@ -1160,6 +1162,9 @@ export class FuncaoTransacaoDivergenceComponent implements OnInit {
                 this.analise.metodoContagem, funcaoTransacao, this.analise.contrato.manual);
             this.funcaoTransacaoService.update(funcaoTransacaoCalculada, funcaoTransacao.files?.map(item => item.logo)).subscribe(value => {
                 this.funcoesTransacoes = this.funcoesTransacoes.filter((funcaoTransacao) => (funcaoTransacao.id !== funcaoTransacaoCalculada.id));
+                if(moduloSelecionado){
+                    funcaoTransacaoCalculada.funcionalidade.modulo = moduloSelecionado;
+                }
                 this.setFields(funcaoTransacaoCalculada);
                 this.funcoesTransacoes.push(funcaoTransacaoCalculada);
             });
