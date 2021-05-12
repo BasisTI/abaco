@@ -698,6 +698,7 @@ export class AnaliseListComponent implements OnInit {
                 this.mensagemAnaliseBloqueada(bloqueado, nome);
                 this.recarregarDataTable();
                 this.datatable.filter();
+                this.datatable.selectedRow = null;
                 this.showDialogAnaliseBlock = false;
             });
         }
