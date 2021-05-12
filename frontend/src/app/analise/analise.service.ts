@@ -281,7 +281,12 @@ export class AnaliseService {
     }
     public clonarAnaliseToEquipe(id: number, equipe: TipoEquipe) {
         const url = this.clonarAnaliseUrl + id + '/' + equipe.id;
-        return this.http.get<Analise>(url);
+        return this.http.get<Analise>(url).pipe(catchError((error: any) => {
+            if (error.status === 403) {
+                this.pageNotificationService.addErrorMessage(this.getLabel('Erro ao clonar para equipe está análise.!'));
+                return Observable.throw(new Error(error.status));
+            }
+        }));
     }
     public changeStatusAnalise(id: number, status: Status) {
         const url = this.changeStatusUrl + id + '/' + status.id;

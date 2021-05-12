@@ -156,6 +156,17 @@
                                 </li>
                             </ng-template>
                         </p-column>
+                        <p-column [styleClass]="'analise-clonada'" header="Análise Clonada" field="analiseClonadaParaEquipe" [sortable]="true"
+                            filterType="">
+                            <ng-template let-col let-analise="rowData" pTemplate="body">
+                                <div *ngIf="analise.analiseClonadaParaEquipe?.id !== null">
+                                {{ analise.analiseClonou ? 'Análise clonou  ' : 'Análise foi clonada de ' }}
+                                {{ analise.analiseClonadaParaEquipe.numeroOs === null ?
+                                    "Identificador: "+analise.analiseClonadaParaEquipe.identificadorAnalise :
+                                    "Número de OS: "+analise.analiseClonadaParaEquipe.numeroOs}}
+                                </div>
+                            </ng-template>
+                        </p-column>
                         <basis-datatable-button *ngIf="blocked && canBloquearDesbloquear" name="desbloquear"
                             [bTooltip]="datatable.selectedRow != null ? 'Desbloquear' : 'Escolha um registro para desbloquear.'"
                             icon="block" (click)="bloqueiaAnalise(blocked)" [disabled]="datatable.selectedRow == null"
@@ -197,12 +208,12 @@
                             [bTooltip]="changeDivergenceTooltip()" icon="compare-arrows"
                             [disabled]="datatable.selectedRow == null" class="ui-button-info">
                         </basis-datatable-button>
-                        <basis-datatable-button name="exportJson" [bTooltip]="'Exportar análise'" icon="file-download"
+                        <!-- <basis-datatable-button name="exportJson" [bTooltip]="'Exportar análise'" icon="file-download"
                             [disabled]="datatable.selectedRow == null" class="ui-button-info">
                         </basis-datatable-button>
                         <basis-datatable-button name="importJson" [bTooltip]="'Importar análise'" icon="file-upload"
                            class="ui-button-success" (click)="openModalImportAnalise()">
-                        </basis-datatable-button>
+                        </basis-datatable-button> -->
                     </basis-datatable>
                     <div class="ui-g-12 ui-md-2">
                         <app-export-button [dataTable]="datatable" resourceName="analise"
