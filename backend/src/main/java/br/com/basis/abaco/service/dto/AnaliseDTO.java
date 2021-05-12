@@ -1,9 +1,11 @@
 package br.com.basis.abaco.service.dto;
 
+import br.com.basis.abaco.domain.Analise;
 import br.com.basis.abaco.domain.Compartilhada;
 import br.com.basis.abaco.domain.enumeration.MetodoContagem;
 import br.com.basis.abaco.domain.enumeration.TipoAnalise;
 import br.com.basis.dynamicexports.pojo.ReportObject;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -37,6 +39,10 @@ public class AnaliseDTO implements ReportObject, Serializable {
     private StatusDTO status;
     private AnaliseDivergenceDTO analiseDivergence;
     private Set<AnaliseDivergenceDTO> analisesComparadas = new HashSet<>();
+
+    @JsonIgnoreProperties("analiseClonadaParaEquipe")
+    private AnaliseDTO analiseClonadaParaEquipe;
+    private Boolean analiseClonou;
 
     public void setDataCriacaoOrdemServico(Timestamp dataCriacaoOrdemServico) {
         this.dataCriacaoOrdemServico = dataCriacaoOrdemServico == null ? null : new Timestamp(dataCriacaoOrdemServico.getTime());

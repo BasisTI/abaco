@@ -43,6 +43,7 @@ export class AnaliseListComponent implements OnInit {
         { value: 'dataCriacaoOrdemServico', label: 'Data de criação' },
         { value: 'bloqueiaAnalise', label: 'Bloqueado' },
         { value: 'clonadaParaEquipe', label: 'Clonada' },
+        { value: 'analiseClonadaParaEquipe', label: "Análise Clonada"},
         { value: 'users', label: 'Usuários' },
     ];
 
@@ -394,10 +395,21 @@ export class AnaliseListComponent implements OnInit {
                 break;
             case 'cloneParaEquipe':
                 if (event.selection.clonadaParaEquipe == true) {
-                    return this.pageNotificationService.addErrorMessage("Essa análise já foi clonada para equipe anteriormente. ")
-                }
+                    if (event.selection.analiseClonadaParaEquipe?.id != null && event.selection.analiseClonadaParaEquipe?.id != undefined) {
+                        let msgStart = event.selection.analiseClonou === true ? "Esta análise já clonou para equipe. " : "Está análise já foi clonada para equipe. ";
 
+                        msgStart += (event.selection.analiseClonadaParaEquipe?.numeroOs == null ? "Identificador de análise: "
+                        +event.selection.analiseClonadaParaEquipe?.identificadorAnalise : "Número OS: "
+                        +event.selection.analiseClonadaParaEquipe?.numeroOs);;
+
+                        return this.pageNotificationService.addErrorMessage
+                            (msgStart);
+                    } else {
+                        return this.pageNotificationService.addErrorMessage("Essa análise já foi clonada para equipe anteriormente. ")
+                    }
+                }
                 this.openModalCloneAnaliseEquipe(event.selection.id);
+
                 break;
             case 'compartilhar':
                 this.compartilharAnalise();
@@ -957,33 +969,35 @@ export class AnaliseListComponent implements OnInit {
         this.analiseFileJson = event.currentFiles[0];
         this.analisesImportar = [];
         const reader = new FileReader();
-            let analises = this.analisesImportar;
-            let analise: Analise;
-            reader.onload = function () {
-                analise = JSON.parse(reader.result.toString());
-                if (analise.id && analise.identificadorAnalise) {
-                    analise.id = null;
-                    analises.push(analise);
-                }
+        let analises = this.analisesImportar;
+        let analise: Analise;
+        reader.onloadend = function () {
+            analise = JSON.parse(reader.result.toString());
+            if (analise.id && analise.identificadorAnalise) {
+                analise.id = null;
+                analises.push(analise);
+                console.log(analise);
+
             }
-            reader.readAsText(this.analiseFileJson);
+        }
+        reader.readAsText(this.analiseFileJson);
     }
 
     analisesImportar: Analise[] = [];
 
     importarAnalise() {
-        if (this.analiseFileJson) {
-            this.analisesImportar.forEach(item => {
-                item.identificadorAnalise = item.identificadorAnalise+" - Importada";
-                this.analiseService.importar(item).subscribe(r => {
-                    this.pageNotificationService.addCreateMsg("Análise - "+r.identificadorAnalise+" importada com sucesso!");
+        if (this.analiseFileJson && this.analisesImportar.length > 0) {
+            this.analisesImportar.forEach(analise => {
+                analise.identificadorAnalise = analise.identificadorAnalise + " - Importada";
+                this.analiseService.importar(analise).subscribe(r => {
+                    this.pageNotificationService.addCreateMsg("Análise - " + r.identificadorAnalise + " importada com sucesso!");
                     this.datatable.filter();
                     this.showDialogImportar = false;
                     this.analisesImportar = [];
                 });
             });
         } else {
-            this.pageNotificationService.addErrorMessage("Selecione uma análise para importar!")
+            this.pageNotificationService.addErrorMessage("Selecione uma análise válida para importar!")
         }
     }
 }

@@ -458,6 +458,8 @@ public class AnaliseService extends BaseService {
         analiseClone.setUsers(new HashSet<>());
         analiseClone.setBloqueiaAnalise(false);
         analiseClone.setClonadaParaEquipe(true);
+        analiseClone.setAnaliseClonadaParaEquipe(analise);
+        analiseClone.setAnaliseClonou(false);
         salvaNovaData(analiseClone);
         analiseClone.setDataCriacaoOrdemServico(analise.getDataHomologacao());
     }
@@ -536,7 +538,7 @@ public class AnaliseService extends BaseService {
         bindFilterSearchDivergence(identificador, sistema, organicoesIds, qb);
         return qb;
     }
-    
+
     public void saveAnaliseCompartilhada(Set<Compartilhada> lstCompartilhadas) {
         if (lstCompartilhadas != null && lstCompartilhadas.size() > 0) {
             long idAnalise = lstCompartilhadas.stream().findFirst().get().getAnaliseId();

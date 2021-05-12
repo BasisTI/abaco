@@ -659,8 +659,6 @@ export class FuncaoTransacaoFormComponent implements OnInit {
                     this.currentFuncaoTransacao = new FuncaoTransacao().copyFromJSON(this.currentFuncaoTransacao);
                     const funcaoTransacaoCalculada = CalculadoraTransacao.calcular(
                         this.analise.metodoContagem, this.currentFuncaoTransacao, this.analise.contrato.manual);
-                        console.log(funcaoTransacaoCalculada);
-
                     this.funcaoTransacaoService.update(funcaoTransacaoCalculada, funcaoTransacaoCalculada.files?.map(item => item.logo)).subscribe(value => {
                         this.funcoesTransacoes = this.funcoesTransacoes.filter((funcaoTransacao) => (
                             funcaoTransacao.id !== funcaoTransacaoCalculada.id
