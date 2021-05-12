@@ -1257,7 +1257,6 @@ export class FuncaoDadosDivergenceComponent implements OnInit {
         if (this.funcionalidadeSelecionadaEmLote) {
             this.funcaoDadosEmLote.forEach(funcaoDado => {
                 funcaoDado.funcionalidade = this.funcionalidadeSelecionadaEmLote;
-                funcaoDado.funcionalidade.modulo = this.moduloSelecionadoEmLote;
             });
         }
         if (this.classificacaoEmLote) {
@@ -1299,6 +1298,10 @@ export class FuncaoDadosDivergenceComponent implements OnInit {
             return this.pageNotificationService.addErrorMessage("Coloque uma quantidade para o deflator!")
         }
         this.editarCamposEmLote();
+        let moduloSelecionado;
+        if(this.moduloSelecionadoEmLote){
+             moduloSelecionado = this.moduloSelecionadoEmLote;
+        }
         for (let i = 0; i < this.funcaoDadosEmLote.length; i++) {
             let funcaoDado = this.funcaoDadosEmLote[i];
             funcaoDado = new FuncaoDados().copyFromJSON(funcaoDado);
@@ -1306,6 +1309,9 @@ export class FuncaoDadosDivergenceComponent implements OnInit {
                 this.analise.metodoContagem, funcaoDado, this.analise.contrato.manual);
             this.funcaoDadosService.update(funcaoDadosCalculada, funcaoDadosCalculada.files?.map(item => item.logo)).subscribe(value => {
                 this.funcoesDados = this.funcoesDados.filter((funcaoDados) => (funcaoDados.id !== funcaoDadosCalculada.id));
+                if(moduloSelecionado){
+                    funcaoDadosCalculada.funcionalidade.modulo = moduloSelecionado;
+                }
                 this.setFields(funcaoDadosCalculada);
                 this.funcoesDados.push(funcaoDadosCalculada);
             });

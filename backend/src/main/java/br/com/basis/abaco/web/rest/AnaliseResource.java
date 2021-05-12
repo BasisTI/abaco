@@ -221,12 +221,15 @@ public class AnaliseResource {
         Analise analise = analiseService.recuperarAnalise(id);
         TipoEquipe tipoEquipe = tipoEquipeRepository.findById(idEquipe);
         if (analise.getId() != null && tipoEquipe.getId() != null && !(analise.getClonadaParaEquipe())) {
-            analise.setClonadaParaEquipe(true);
             Analise analiseClone = new Analise(analise, userRepository.findOneByLogin(SecurityUtils.getCurrentUserLogin()).get());
             analiseService.bindAnaliseCloneForTipoEquipe(analise, tipoEquipe, analiseClone);
             analiseRepository.save(analiseClone);
             analiseSearchRepository.save(analiseService.convertToEntity(analiseService.convertToDto(analiseClone)));
+            analise.setClonadaParaEquipe(true);
+            analise.setAnaliseClonou(true);
+            analise.setAnaliseClonadaParaEquipe(analiseClone);
             analiseRepository.save(analise);
+            analiseClone.setAnaliseClonadaParaEquipe(null);
             analiseSearchRepository.save(analiseService.convertToEntity(analiseService.convertToDto(analise)));
             return ResponseEntity.ok().headers(HeaderUtil.blockEntityUpdateAlert(ENTITY_NAME, analiseClone.getId().toString()))
                 .body(analiseService.convertToAnaliseEditDTO(analiseClone));
@@ -281,6 +284,15 @@ public class AnaliseResource {
         User user = userRepository.findOneByLogin(SecurityUtils.getCurrentUserLogin()).get();
         if (analise != null) {
             if (user.getOrganizacoes().contains(analise.getOrganizacao()) && user.getTipoEquipes().contains(analise.getEquipeResponsavel())) {
+                if(analise.getAnaliseClonadaParaEquipe() != null){
+                    Analise analiseClonada = analiseService.recuperarAnalise(analise.getAnaliseClonadaParaEquipe().getId());
+                    analise.setAnaliseClonadaParaEquipe(null);
+                    analiseClonada.setAnaliseClonadaParaEquipe(null);
+                    analiseClonada.setAnaliseClonou(false);
+                    analiseClonada.setClonadaParaEquipe(false);
+                    analiseRepository.save(analiseClonada);
+                    analiseSearchRepository.save(analiseService.convertToEntity(analiseService.convertToDto(analiseClonada)));
+                }
                 analiseRepository.delete(id);
                 analiseSearchRepository.delete(id);
             }

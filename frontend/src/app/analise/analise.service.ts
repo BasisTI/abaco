@@ -147,7 +147,7 @@ export class AnaliseService {
 
 
 
-   
+
     /**
      *
      */
@@ -281,7 +281,12 @@ export class AnaliseService {
     }
     public clonarAnaliseToEquipe(id: number, equipe: TipoEquipe) {
         const url = this.clonarAnaliseUrl + id + '/' + equipe.id;
-        return this.http.get<Analise>(url);
+        return this.http.get<Analise>(url).pipe(catchError((error: any) => {
+            if (error.status === 403) {
+                this.pageNotificationService.addErrorMessage(this.getLabel('Erro ao clonar para equipe está análise.!'));
+                return Observable.throw(new Error(error.status));
+            }
+        }));
     }
     public changeStatusAnalise(id: number, status: Status) {
         const url = this.changeStatusUrl + id + '/' + status.id;
@@ -426,6 +431,15 @@ export class AnaliseService {
                     return Observable.throw(new Error(error.status));
                 }
             }));
+    }
+
+    public importar(analise: Analise): Observable<Analise> {
+        return this.http.post<Analise>(this.resourceUrl, analise).pipe(catchError((error: any) => {
+            if (error.status === 403) {
+                this.pageNotificationService.addErrorMessage(this.getLabel('Você não possui permissão!'));
+                return Observable.throw(new Error(error.status));
+            }
+        }));
     }
 
 }
