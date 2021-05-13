@@ -142,7 +142,7 @@
                                 {{ analise.bloqueiaAnalise ? 'Sim' : 'Não' }}
                             </ng-template>
                         </p-column>
-                        <p-column [styleClass]="'clonada'" header="Clonada" field="clonadaParaEquipe" [sortable]="true"
+                        <p-column [styleClass]="'clonada'" header="Clonada para outra equipe" field="clonadaParaEquipe" [sortable]="true"
                             filterType="">
                             <ng-template let-col let-analise="rowData" pTemplate="body">
                                 {{ analise.clonadaParaEquipe ? 'Sim' : 'Não' }}
@@ -156,14 +156,11 @@
                                 </li>
                             </ng-template>
                         </p-column>
-                        <p-column [styleClass]="'analise-clonada'" header="Análise Clonada" field="analiseClonadaParaEquipe" [sortable]="true"
+                        <p-column [styleClass]="'analise-clonada'" header="Análise Relacionada" field="analiseClonadaParaEquipe" [sortable]="true"
                             filterType="">
                             <ng-template let-col let-analise="rowData" pTemplate="body">
                                 <div *ngIf="analise.analiseClonadaParaEquipe?.id !== null">
-                                {{ analise.analiseClonou ? 'Análise clonou  ' : 'Análise foi clonada de ' }}
-                                {{ analise.analiseClonadaParaEquipe.numeroOs === null ?
-                                    "Identificador: "+analise.analiseClonadaParaEquipe.identificadorAnalise :
-                                    "Número de OS: "+analise.analiseClonadaParaEquipe.numeroOs}}
+                                    {{analise.analiseClonadaParaEquipe.identificadorAnalise}}
                                 </div>
                             </ng-template>
                         </p-column>
