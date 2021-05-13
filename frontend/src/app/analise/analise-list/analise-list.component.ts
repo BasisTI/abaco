@@ -42,8 +42,8 @@ export class AnaliseListComponent implements OnInit {
         { value: 'adjustPFTotal', label: 'PF Ajustado' },
         { value: 'dataCriacaoOrdemServico', label: 'Data de criação' },
         { value: 'bloqueiaAnalise', label: 'Bloqueado' },
-        { value: 'clonadaParaEquipe', label: 'Clonada' },
-        { value: 'analiseClonadaParaEquipe', label: "Análise Clonada"},
+        { value: 'clonadaParaEquipe', label: 'Clonada para outra equipe' },
+        { value: 'analiseClonadaParaEquipe', label: "Análise Relacionada"},
         { value: 'users', label: 'Usuários' },
     ];
 
