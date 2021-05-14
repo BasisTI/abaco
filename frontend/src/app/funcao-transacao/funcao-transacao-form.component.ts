@@ -659,8 +659,6 @@ export class FuncaoTransacaoFormComponent implements OnInit {
                     this.currentFuncaoTransacao = new FuncaoTransacao().copyFromJSON(this.currentFuncaoTransacao);
                     const funcaoTransacaoCalculada = CalculadoraTransacao.calcular(
                         this.analise.metodoContagem, this.currentFuncaoTransacao, this.analise.contrato.manual);
-                        console.log(funcaoTransacaoCalculada);
-
                     this.funcaoTransacaoService.update(funcaoTransacaoCalculada, funcaoTransacaoCalculada.files?.map(item => item.logo)).subscribe(value => {
                         this.funcoesTransacoes = this.funcoesTransacoes.filter((funcaoTransacao) => (
                             funcaoTransacao.id !== funcaoTransacaoCalculada.id
@@ -874,9 +872,9 @@ export class FuncaoTransacaoFormComponent implements OnInit {
                         this.funcoesTransacoes = this.funcoesTransacoes.filter((funcaoTransacaoEdit) => (
                             funcaoTransacaoEdit.id !== funcaoTransacao.id
                         ));
+                        this.analiseService.updateSomaPf(this.analise.id).subscribe();
                     });
                 })
-                this.analiseService.updateSomaPf(this.analise.id).subscribe();
                 this.pageNotificationService.addDeleteMsg("Funções deletadas com sucesso!");
             }
         });
@@ -1050,7 +1048,6 @@ export class FuncaoTransacaoFormComponent implements OnInit {
         if (this.funcionalidadeSelecionadaEmLote) {
             this.funcaoTransacaoEmLote.forEach(funcaoTransacao => {
                 funcaoTransacao.funcionalidade = this.funcionalidadeSelecionadaEmLote;
-                funcaoTransacao.funcionalidade.modulo = this.moduloSelecionadoEmLote;
             });
         }
         if (this.classificacaoEmLote) {
@@ -1093,7 +1090,10 @@ export class FuncaoTransacaoFormComponent implements OnInit {
             return this.pageNotificationService.addErrorMessage("Coloque uma quantidade para o deflator!")
         }
         this.editarCamposEmLote();
-
+        let moduloSelecionado;
+        if(this.moduloSelecionadoEmLote){
+             moduloSelecionado = this.moduloSelecionadoEmLote;
+        }
         for (let i = 0; i < this.funcaoTransacaoEmLote.length; i++) {
             let funcaoTransacao = this.funcaoTransacaoEmLote[i];
             funcaoTransacao = new FuncaoTransacao().copyFromJSON(funcaoTransacao);
@@ -1101,6 +1101,9 @@ export class FuncaoTransacaoFormComponent implements OnInit {
                 this.analise.metodoContagem, funcaoTransacao, this.analise.contrato.manual);
             this.funcaoTransacaoService.update(funcaoTransacaoCalculada, funcaoTransacaoCalculada.files?.map(item => item.logo)).subscribe(value => {
                 this.funcoesTransacoes = this.funcoesTransacoes.filter((funcaoTransacao) => (funcaoTransacao.id !== funcaoTransacaoCalculada.id));
+                if(moduloSelecionado){
+                    funcaoTransacaoCalculada.funcionalidade.modulo = moduloSelecionado;
+                }
                 this.setFields(funcaoTransacaoCalculada);
                 this.funcoesTransacoes.push(funcaoTransacaoCalculada);
             });
