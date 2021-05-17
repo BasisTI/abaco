@@ -233,7 +233,7 @@ export class CanvasVisaopfComponent implements OnInit {
         var saved = false
         if(this.componente.coordenada.xmax == undefined){ this.showErrorMsg('É necessário marcar o Componente!');  return saved}
         if(this.componente.tipo == undefined){ this.showErrorMsg('É necessário informar o Tipo do Componente!');  return saved}
-        if(this.componente.nome == undefined){this.showErrorMsg('É necessário informar o Nome para o Componente!');  return saved}
+        if(this.componente.nome == undefined && (!(this.componente.tipo in ["visualizar" , "incluir" , "editar" , "excluir"]) )) {this.showErrorMsg('É necessário informar o Nome para o Componente!');  return saved}
         this.markDisable = false
         this.service.setComponenteTela(this.tela.id, this.componente).subscribe( (resp:any) => {
             this.tela.componentes=resp.componentes

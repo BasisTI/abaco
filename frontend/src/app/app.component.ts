@@ -70,6 +70,15 @@ export class AppComponent implements AfterViewInit, OnDestroy, OnInit {
                     { label: 'Baseline', routerLink: 'baseline', icon: 'view_list' },
                     { label: 'Validação', routerLink: 'divergencia', icon: 'compare_arrows' },
                 ]
+            },
+            {
+                label: 'Visão PF', icon: 'remove_red_eye',
+                items: [
+                    { label: 'Treinamento', routerLink: 'visaopf/model', icon: 'functions' },
+                    { label: 'Modelos', routerLink: 'visaopf/list/models', icon: 'list_alt' },
+                    { label: 'Exporta Modelo', routerLink: 'visaopf/export/model', icon: 'import_export' },
+
+                ]
             }
         ];
     }
