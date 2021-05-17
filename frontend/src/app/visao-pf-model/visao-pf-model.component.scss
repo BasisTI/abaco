@@ -1,0 +1,99 @@
+::ng-deep .ui-inputnumber-buttons-vertical .ui-inputnumber-button-up.ui-button-icon-only{
+    margin-left: 370%;
+    width: 25%;
+    margin-bottom:5%;
+}
+
+::ng-deep  .ui-inputnumber-buttons-vertical .ui-inputnumber-button-down.ui-button-icon-only {
+    margin-top:8%;
+    margin-left: 370%;
+    width: 25%;
+}
+
+::ng-deep .ui-widget-content .ui-inputtext {
+    width: 25%;
+    margin-left: 370%;
+}
+
+.treinamento{
+    margin-top: 1%;
+    text-align: center;
+}
+
+
+
+.style-td{
+    text-align: center;
+    font-weight: 650;
+    font-size: 14px;
+    height: 100%;
+    width: 100%;
+}
+
+.customer-badge {
+    padding: .25em .5em;
+    text-transform: uppercase;
+    font-weight: 700;
+    font-size: 12px;
+    letter-spacing: .3px;
+    text-align: center;
+
+    &.status-PREPARANDO_DADOS {
+        background-color: #C8E6C9;
+        color: #256029;
+    }
+
+    &.status-INICIANDO_PROCESSO {
+        background-color: #2A369B;
+        color: whitesmoke;
+    }
+
+    &.status-TREINANDO_MODELO {
+        background-color: #FFC107;
+        color: black;
+    }
+
+    &.status-EXPORTANDO {
+        background-color: #FFC107;
+        color: black;
+    }
+
+    &.status-SALVANDO_RESULTADO {
+        background-color: #C8E6C9;
+        color: #256029;
+    }
+
+    &.status-ERRO {
+        background-color: #FFCDD2;
+        color: #C63737;
+    }
+
+    &.status-ENVIADO_OCR {
+        background-color: #404040;
+        color: whitesmoke;
+    }
+
+    &.status-TREINAMENTO_FINALIZADO {
+        background-color: #C8E6C9;
+        color: #256029;
+    }
+}
+
+.textcard{
+    color: gray;
+    margin-left: 5%;
+}
+
+.card-train{
+    width: 35%;
+    margin-left: 32.5%;
+}
+
+.vlrscard{
+    text-align: center;
+    font-weight: 400;
+}
+
+.card-dataset{
+    margin-left: 5%;
+}

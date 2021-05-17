@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core'
 import {Observable} from 'rxjs'
-import {HttpClient, HttpParams} from '@angular/common/http'
-import {Tela, Cenario} from './visao-pf.model'
+import {HttpClient} from '@angular/common/http'
 
 @Injectable({
   providedIn: 'root'
@@ -9,18 +8,6 @@ import {Tela, Cenario} from './visao-pf.model'
 export class VisaoPfService {
 
   constructor(private http: HttpClient) {
-  }
-
-  sendContagemVisaopf(cenario: Cenario): Observable<any> {
-    let formData: FormData = new FormData()
-    formData.append('nomeCenario', cenario.nome)
-    formData.append('analiseId', cenario.analise.id)
-    formData.append('modelName', 'visaopf-12500')
-    for(const tela of cenario.telas){
-        formData.append('telas', tela.imagem, tela.originalImageName )
-        formData.append('tiposTelas', tela.tipo['tipo'])
-    }
-    return this.http.post('/visaopf/component/detection', formData, {responseType: 'text'})
   }
 
   updateComponent(component:any){
@@ -65,7 +52,6 @@ export class VisaoPfService {
 
   sendComponentDetection(visaopf: any): Observable<any> {
     let formData: FormData = new FormData()
-    formData.append('modelName', 'visaopf-12500')
 
     for(const tela of visaopf.cenario.telas){
         formData.append('telas', tela.imagem, tela.originalImageName )

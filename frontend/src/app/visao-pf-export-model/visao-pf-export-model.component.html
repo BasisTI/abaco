@@ -1,0 +1,12 @@
+<p-toast position="top-left" key="tl"></p-toast>
+
+<div class="selecmodel ui-g-12 ui-md-12">
+    <h1 style="text-align: center; font-weight: 500; margin-bottom: 5%">Exportar Modelo</h1>
+    <div class="ui-g-12">
+        <p-dropdown [style]="{'width': '50%'}" [options]="modelos" [(ngModel)]="modelo" placeholder="Selecione o Modelo" [virtualScroll]="true" [itemSize]="31" [filter]="true"></p-dropdown>
+    </div>
+    <div class="buttonexport ui-g-12">
+        <p-button (click)=exportModel(modelo) [style]="{'width': '400px'}"  label="Aplicar" icon="pi pi-check" styleClass="p-button" ></p-button>
+    </div>
+
+</div>

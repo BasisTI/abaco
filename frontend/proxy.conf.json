@@ -7,5 +7,10 @@
     "/visaopf": {
         "target": "http://localhost:4444",
         "secure": false
+    },
+
+    "/tfserver": {
+        "target": "http://localhost:5000",
+        "secure": false
     }
 }

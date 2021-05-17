@@ -1,0 +1,117 @@
+
+<p-messages [(value)]="msgs"></p-messages>
+
+<p-fieldset legend="Treinamento" [toggleable]="true" [collapsed]="">
+    <div class="ui-g-12 ui-md-12" *ngIf="datasetMetrica">
+        <h1 style="text-align: center; font-weight: 500; margin-bottom: 3%">Dados Marcados</h1>
+        <div class="ui-g-4 ui-md-4">
+            <div class="card  card-dataset ui-g-12 ui-md-12">
+                <h3 class="textcard">Telas</h3>
+                <h1 class="vlrscard">{{datasetMetrica.qtdTelas}} </h1>
+            </div>
+            <div class="card card-dataset ui-g-12 ui-md-12" style="margin-top: 10%">
+                <h3 class="textcard">Componentes </h3>
+                <h1 class="vlrscard">{{qtdTotalComponentes()}}</h1>
+            </div>
+            <div class="card-dataset ui-g-12 ui-md-12" style="margin-top: 16%">
+                <div class="card-train">
+                    <p-button label="Realizar Treinamento" (click) = "iniciarTreinamento()" ></p-button>
+                </div>
+            </div>
+        </div>
+        <div class="ui-g-8 ui-md-8">
+            <div class="card ui-g-10 ui-md-10" style="margin-left: 15%">
+                <p-chart type="doughnut" [data]="data"></p-chart>
+            </div>
+        </div>
+    </div>
+
+    <div *ngIf="processosTreinamento.length > 0">
+        <p-fieldset legend="Processo" [toggleable]="true" [collapsed]="">
+            <div class="ui-md-12" style="margin-top: 1%; margin-bottom: 4%">
+                <p-table #dt [value] = "processosTreinamento" dataKey="id" [rowHover]="false"
+                    [rows]="5" [showCurrentPageReport]="false" [rowsPerPageOptions]="[5,10,25,50]"
+                    [paginator]="true" styleClass = ".ui-table-customers" >
+                    <ng-template pTemplate="header">
+                        <tr>
+                            <th pSortableColumn="status">Status <p-sortIcon field="status"></p-sortIcon></th>
+                            <th pSortableColumn="dataInicio">Iniciado <p-sortIcon field="dataInicio"></p-sortIcon></th>
+                            <th pSortableColumn="dataFim">Finalizado <p-sortIcon field="dataFim"></p-sortIcon></th>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-processo>
+                        <tr>
+                            <td>
+                                <div class="ui-g-12 ui-md-8" style="margin-left: 15%">
+                                    <div  [class]="'customer-badge status-' + processo.status" >{{processo.status}}</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="ui-g-12 ui-md-8" style="margin-left: 15%">
+                                    <p class ="style-td">{{ processo.dataInicio | date: 'dd/MM/yy - HH:mm:ss'}}</p>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="ui-g-12 ui-md-8" style="margin-left: 15%">
+                                    <p class ="style-td" >{{ processo.dataFim | date: 'dd/MM/yy - HH:mm:ss'}}</p>
+                                </div>
+                            </td>
+                        </tr>
+                    </ng-template>
+                </p-table>
+            </div>
+        </p-fieldset>
+    </div>
+
+    <div *ngIf="modeloMetrica">
+        <p-fieldset legend="Métricas" [toggleable]="true" [collapsed]="">
+            <div class="ui-g-12 ui-md-12" >
+                <h2 style="text-align: left; font-weight: 500; margin-left: 1%">Resultado Final do Treinamento</h2>
+                <div class="ui-g-4 ui-md-4" >
+                    <p-card>
+                        <h3 class="textcard" style="color: #42A5F5">Total Loss</h3>
+                        <h2 class="vlrscard">{{modeloMetrica.totalLoss}} </h2>
+                    </p-card>
+                </div>
+                <div class="ui-g-4 ui-md-4" >
+                    <p-card>
+                        <h3 class="textcard" style="color: #FFC107">Box Classification Loss</h3>
+                        <h2 class="vlrscard">{{modeloMetrica.classificationLoss}} </h2>
+                    </p-card>
+                </div>
+                <div class="ui-g-4 ui-md-4" >
+                    <p-card>
+                        <h3 class="textcard" style="color: #BDB76B">Box Localization Loss</h3>
+                        <h2 class="vlrscard">{{modeloMetrica.localizationBoxClassifierLoss}} </h2>
+                    </p-card>
+                </div>
+            </div>
+            <div class="ui-g-12 ui-md-12" >
+                <div class="ui-g-4 ui-md-4" >
+                    <p-card>
+                        <h3 class="textcard">Clone Loss</h3>
+                        <h2 class="vlrscard">{{modeloMetrica.cloneLoss}} </h2>
+                    </p-card>
+                </div>
+                <div class="ui-g-4 ui-md-4" >
+                    <p-card>
+                        <h3 class="textcard" style="color: #008000">Objectness RPN Loss</h3>
+                        <h2 class="vlrscard">{{modeloMetrica.objectnessLoss}} </h2>
+                    </p-card>
+                </div>
+                <div class="ui-g-4 ui-md-4" >
+                    <p-card>
+                        <h3 class="textcard" style="color: #D2691E">Localization RPN Loss</h3>
+                        <h2 class="vlrscard">{{modeloMetrica.localizationRpnLoss}} </h2>
+                    </p-card>
+                </div>
+            </div>
+            <div class="ui-g-12 ui-md-12" *ngIf="this.metricaSteps.length > 0">
+                <div class="card">
+                    <p-chart type="line" [data]="dataLine"></p-chart>
+                </div>
+            </div>
+        </p-fieldset>
+    </div>
+</p-fieldset>
+

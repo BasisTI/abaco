@@ -20,7 +20,7 @@ export class VisaoPfComponent implements OnInit {
     data:any
     idTela:any
 
-    constructor(private activedRoute: ActivatedRoute, private router: Router, private visaoPfService: VisaoPfService) {
+    constructor( private router: Router, private visaoPfService: VisaoPfService) {
         if (this.router.getCurrentNavigation().extras.state) {
             this.routeState = this.router.getCurrentNavigation().extras.state;
         }

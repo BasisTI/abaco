@@ -41,6 +41,10 @@ import { NomenclaturaModule } from './nomenclatura/nomenclatura.module';
 import { DivergenciaModule } from './divergencia/divergencia.module';
 import { ConfiguracaoBaselineModule } from './configuracao-baseline/configuracao-baseline.module';
 import { VisaopfModule } from './visao-pf/visao-pf.module';
+import { VisaopfModelModule } from './visao-pf-model/visao-pf-model.module';
+import { VisaopfListsModelsModule } from './visaopf-list-models/visao-pf-list-models.module';
+import { VisaopfExportModelModule } from './visao-pf-export-model/visao-pf-export-model.module';
+
 
 @NgModule({
     declarations: [
@@ -90,6 +94,9 @@ import { VisaopfModule } from './visao-pf/visao-pf.module';
         DivergenciaModule,
         ConfiguracaoBaselineModule,
         VisaopfModule,
+        VisaopfModelModule,
+        VisaopfListsModelsModule,
+        VisaopfExportModelModule,
     ],
     providers: [
         { provide: LocationStrategy, useClass: HashLocationStrategy },
