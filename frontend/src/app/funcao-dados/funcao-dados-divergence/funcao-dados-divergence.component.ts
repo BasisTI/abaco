@@ -1297,6 +1297,9 @@ export class FuncaoDadosDivergenceComponent implements OnInit {
         if(this.deflatorEmLote && this.deflatorEmLote.tipoAjuste === 'UNITARIO' && !this.quantidadeEmLote){
             return this.pageNotificationService.addErrorMessage("Coloque uma quantidade para o deflator!")
         }
+        if(this.moduloSelecionadoEmLote && !this.funcionalidadeSelecionadaEmLote){
+            return this.pageNotificationService.addErrorMessage("Escolha uma funcionalidade para prosseguir!");
+        }
         this.editarCamposEmLote();
         let moduloSelecionado;
         if(this.moduloSelecionadoEmLote){
