@@ -728,7 +728,6 @@ export class FuncaoDadosDivergenceComponent implements OnInit {
         this.dersChips = [];
         this.rlrsChips = [];
         this.componenteFile.files = [];
-        window.scrollTo(0, 60);
     }
 
     limparMensagensErros() {
