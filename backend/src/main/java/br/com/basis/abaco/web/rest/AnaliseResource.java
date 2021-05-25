@@ -2,6 +2,8 @@ package br.com.basis.abaco.web.rest;
 
 import br.com.basis.abaco.domain.Analise;
 import br.com.basis.abaco.domain.Compartilhada;
+import br.com.basis.abaco.domain.FuncaoDados;
+import br.com.basis.abaco.domain.FuncaoTransacao;
 import br.com.basis.abaco.domain.Status;
 import br.com.basis.abaco.domain.TipoEquipe;
 import br.com.basis.abaco.domain.UploadedFile;
@@ -39,6 +41,7 @@ import io.github.jhipster.web.util.ResponseUtil;
 import io.swagger.annotations.ApiParam;
 import net.sf.dynamicreports.report.exception.DRException;
 import net.sf.jasperreports.engine.JRException;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.search.sort.FieldSortBuilder;
 import org.elasticsearch.search.sort.SortOrder;
@@ -73,12 +76,15 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import static org.elasticsearch.index.query.QueryBuilders.multiMatchQuery;
 
@@ -284,7 +290,7 @@ public class AnaliseResource {
         User user = userRepository.findOneByLogin(SecurityUtils.getCurrentUserLogin()).get();
         if (analise != null) {
             if (user.getOrganizacoes().contains(analise.getOrganizacao()) && user.getTipoEquipes().contains(analise.getEquipeResponsavel())) {
-                if(analise.getAnaliseClonadaParaEquipe() != null){
+                if (analise.getAnaliseClonadaParaEquipe() != null) {
                     Analise analiseClonada = analiseService.recuperarAnalise(analise.getAnaliseClonadaParaEquipe().getId());
                     analise.setAnaliseClonadaParaEquipe(null);
                     analiseClonada.setAnaliseClonadaParaEquipe(null);
@@ -450,10 +456,10 @@ public class AnaliseResource {
         try {
             new NativeSearchQueryBuilder().withQuery(multiMatchQuery(query)).build();
             Page<Analise> result = analiseSearchRepository.findAll(dynamicExportsService.obterPageableMaximoExportacao());
-             byteArrayOutputStream = dynamicExportsService.export( new RelatorioAnaliseColunas(null), result, "pdf", Optional.empty(),
-                 Optional.ofNullable(AbacoUtil.REPORT_LOGO_PATH),
-                 Optional.ofNullable(AbacoUtil.getReportFooter()));
-        }catch ( DRException | ClassNotFoundException | JRException | NoClassDefFoundError e ){
+            byteArrayOutputStream = dynamicExportsService.export(new RelatorioAnaliseColunas(null), result, "pdf", Optional.empty(),
+                Optional.ofNullable(AbacoUtil.REPORT_LOGO_PATH),
+                Optional.ofNullable(AbacoUtil.getReportFooter()));
+        } catch (DRException | ClassNotFoundException | JRException | NoClassDefFoundError e) {
             throw new RelatorioException(e);
         }
         return DynamicExporter.output(byteArrayOutputStream, "relatorio" + "pdf");
@@ -463,7 +469,7 @@ public class AnaliseResource {
     @Timed
     @Secured("ROLE_ABACO_ANALISE_EXPORTAR")
     public ResponseEntity<InputStreamResource> gerarRelatorioExportacao(@PathVariable String tipoRelatorio,
-            @RequestBody AnaliseFilterDTO filter) throws RelatorioException {
+                                                                        @RequestBody AnaliseFilterDTO filter) throws RelatorioException {
         ByteArrayOutputStream byteArrayOutputStream;
         try {
             Page<Analise> page = elasticsearchTemplate.queryForPage(analiseService.getQueryExportRelatorio(filter, dynamicExportsService.obterPageableMaximoExportacao()), Analise.class);
@@ -497,7 +503,7 @@ public class AnaliseResource {
     @Secured("ROLE_ABACO_VALIDACAO_EXPORTAR")
     public ResponseEntity<byte[]> gerarRelatorioDivergenciaImprimir(@RequestBody AnaliseFilterDTO filter, @ApiParam Pageable pageable) throws RelatorioException {
         ByteArrayOutputStream byteArrayOutputStream = gerarRelatorioDivergencia("pdf", filter, dynamicExportsService.obterPageableMaximoExportacao());
-         return new ResponseEntity<byte[]>(byteArrayOutputStream.toByteArray(), HttpStatus.OK);
+        return new ResponseEntity<byte[]>(byteArrayOutputStream.toByteArray(), HttpStatus.OK);
     }
 
 
@@ -505,21 +511,21 @@ public class AnaliseResource {
     @Timed
     @Secured("ROLE_ABACO_VALIDACAO_EXPORTAR")
     public ResponseEntity<InputStreamResource> gerarRelatorioDivergenciaExportacao(@PathVariable String tipoRelatorio,
-            @RequestBody AnaliseFilterDTO filter, @ApiParam Pageable pageable) throws RelatorioException {
+                                                                                   @RequestBody AnaliseFilterDTO filter, @ApiParam Pageable pageable) throws RelatorioException {
         ByteArrayOutputStream byteArrayOutputStream = gerarRelatorioDivergencia(tipoRelatorio, filter, dynamicExportsService.obterPageableMaximoExportacao());
         return DynamicExporter.output(byteArrayOutputStream, NOME_RELATORIO + tipoRelatorio);
     }
 
 
     private ByteArrayOutputStream gerarRelatorioDivergencia(String tipoRelatorio, AnaliseFilterDTO filter, Pageable pageable)
-            throws RelatorioException {
+        throws RelatorioException {
         ByteArrayOutputStream byteArrayOutputStream;
         try {
             pageable = dynamicExportsService.obterPageableMaximoExportacao();
             Page<Analise> page = elasticsearchTemplate.queryForPage(analiseService.getQueryExportRelatorioDivergencia(filter, pageable), Analise.class);
             byteArrayOutputStream = dynamicExportsService.export(new RelatorioDivergenciaColunas(), page, tipoRelatorio,
-                    Optional.empty(), Optional.ofNullable(AbacoUtil.REPORT_LOGO_PATH),
-                    Optional.ofNullable(AbacoUtil.getReportFooter()));
+                Optional.empty(), Optional.ofNullable(AbacoUtil.REPORT_LOGO_PATH),
+                Optional.ofNullable(AbacoUtil.getReportFooter()));
         } catch (DRException | ClassNotFoundException | JRException | NoClassDefFoundError e) {
             throw new RelatorioException(e);
         }
@@ -629,7 +635,7 @@ public class AnaliseResource {
     @GetMapping("/analises/gerar-divergencia/{idAnalisePadao}/{idAnaliseComparada}")
     @Timed
     @Secured("ROLE_ABACO_ANALISE_GERAR_VALIDACAO")
-    public ResponseEntity<AnaliseEditDTO> gerarDivergencia(@PathVariable Long idAnalisePadao, @PathVariable Long idAnaliseComparada,  @RequestParam(value = "isUnion", defaultValue = "false" ) boolean isUnionFunction) {
+    public ResponseEntity<AnaliseEditDTO> gerarDivergencia(@PathVariable Long idAnalisePadao, @PathVariable Long idAnaliseComparada, @RequestParam(value = "isUnion", defaultValue = "false") boolean isUnionFunction) {
         Analise analisePadrão = analiseRepository.findOne(idAnalisePadao);
         Analise analiseComparada = analiseRepository.findOne(idAnaliseComparada);
         Status status = statusRepository.findFirstByDivergenciaTrue();
@@ -662,12 +668,12 @@ public class AnaliseResource {
     @Timed
     @Secured({"ROLE_ABACO_VALIDACAO_ACESSAR", "ROLE_ABACO_VALIDACAO_PESQUISAR"})
     public ResponseEntity<List<AnaliseDTO>> getDivergence(@RequestParam(defaultValue = "ASC", required = false) String order,
-                                                                  @RequestParam(defaultValue = "0", name = PAGE) int pageNumber,
-                                                                  @RequestParam(defaultValue = "20") int size,
-                                                                  @RequestParam(defaultValue = "id") String sort,
-                                                                  @RequestParam(value = "identificador", required = false) String identificador,
-                                                                  @RequestParam(value = "sistema", required = false) Set<Long> sistema,
-                                                                  @RequestParam(value = "organizacao", required = false) Set<Long> organizacao)
+                                                          @RequestParam(defaultValue = "0", name = PAGE) int pageNumber,
+                                                          @RequestParam(defaultValue = "20") int size,
+                                                          @RequestParam(defaultValue = "id") String sort,
+                                                          @RequestParam(value = "identificador", required = false) String identificador,
+                                                          @RequestParam(value = "sistema", required = false) Set<Long> sistema,
+                                                          @RequestParam(value = "organizacao", required = false) Set<Long> organizacao)
         throws URISyntaxException {
         log.debug("DEBUG Consulta Validação -  Inicio método");
         Sort.Direction sortOrder = PageUtils.getSortDirection(order);
@@ -716,7 +722,37 @@ public class AnaliseResource {
         return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id.toString())).build();
     }
 
-
+    @GetMapping(value = "/analises/importar-excel/{id}", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
+    public ResponseEntity<byte[]> importarExcel(@PathVariable Long id) throws IOException{
+        Analise analise = analiseService.recuperarAnalise(id);
+        analise.setFuncaoDados(funcaoDadosRepository.findByAnaliseIdOrderByFuncionalidadeModuloNomeAscFuncionalidadeNomeAscNameAsc(id));
+        analise.setFuncaoTransacaos(funcaoTransacaoRepository.findByAnaliseIdOrderByFuncionalidadeModuloNomeAscFuncionalidadeNomeAscNameAsc(id));
+        List<FuncaoDados> funcaoDadosList = analise.getFuncaoDados().stream().collect(Collectors.toList());
+        List<FuncaoTransacao> funcaoTransacaoList = analise.getFuncaoTransacaos().stream().collect(Collectors.toList());
+        File file = new File("src/main/resources/reports/planilhas/modelo1.xlsx");
+        FileInputStream inputStream = new FileInputStream(file);
+        XSSFWorkbook excelFile = new XSSFWorkbook(inputStream);
+        analiseService.setarDeflatoresExcel(excelFile, analise);
+        analiseService.setarResumoExcel(excelFile, analise);
+        if(analise.getMetodoContagem().equals(MetodoContagem.INDICATIVA)){
+            analiseService.setarFuncoesIndicativaExcel(excelFile, funcaoDadosList);
+        }
+        else{
+            analiseService.setarFuncoesINMExcel(excelFile, funcaoTransacaoList);
+            if(analise.getMetodoContagem().equals(MetodoContagem.DETALHADA)){
+                analiseService.setarFuncoesDetalhadaExcel(excelFile, funcaoDadosList, funcaoTransacaoList);
+            }
+            else if(analise.getMetodoContagem().equals(MetodoContagem.ESTIMADA)){
+                analiseService.setarFuncoesEstimadaExcel(excelFile, funcaoDadosList, funcaoTransacaoList);
+            }
+        }
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        excelFile.write(outputStream);
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.parseMediaType("application/vnd.ms-excel"));
+        headers.set(HttpHeaders.CONTENT_DISPOSITION, String.format("attachment; filename=\"%s.xlsx\"", analise.getIdentificadorAnalise().trim()));
+        return new ResponseEntity<byte[]>(outputStream.toByteArray(),headers, HttpStatus.OK);
+    }
 }
 
 

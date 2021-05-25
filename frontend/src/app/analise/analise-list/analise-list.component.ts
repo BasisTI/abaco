@@ -137,6 +137,17 @@ export class AnaliseListComponent implements OnInit {
     analiseFileJson;
     showDialogImportar: boolean;
 
+    showDialogImportarExcel: boolean = false;
+
+    analiseImportarExcel: Analise = new Analise();
+    lstModelosExcel = [
+        {label: "Modelo 1", value: 1},
+    ];
+    modeloSelecionado: number;
+
+    //JSON
+    analisesImportar: Analise[] = [];
+
     constructor(
         private router: Router,
         private confirmationService: ConfirmationService,
@@ -429,6 +440,9 @@ export class AnaliseListComponent implements OnInit {
                 break;
             case 'exportJson':
                 this.exportarAnalise(event.selection);
+                break;
+            case 'importExcel':
+                this.openModalExportarExcel(event.selection);
                 break;
         }
     }
@@ -984,8 +998,6 @@ export class AnaliseListComponent implements OnInit {
         reader.readAsText(this.analiseFileJson);
     }
 
-    analisesImportar: Analise[] = [];
-
     importarAnalise() {
         if (this.analiseFileJson && this.analisesImportar.length > 0) {
             this.analisesImportar.forEach(analise => {
@@ -999,6 +1011,21 @@ export class AnaliseListComponent implements OnInit {
             });
         } else {
             this.pageNotificationService.addErrorMessage("Selecione uma análise válida para importar!")
+        }
+    }
+
+    openModalExportarExcel(analise: Analise){
+        this.showDialogImportarExcel = true;
+        this.analiseImportarExcel = analise;
+    }
+
+    closeModalExportarExcel(){
+        this.showDialogImportarExcel = false;
+    }
+
+    exportarPlanilha(){
+        if(this.analiseImportarExcel != null){
+            this.analiseService.importarModeloExcel(this.analiseImportarExcel.id);
         }
     }
 }
