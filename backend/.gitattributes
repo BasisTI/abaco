@@ -21,4 +21,4 @@
 *.ai binary
 *.eps binary
 *.swf binary
-*.xlsx text
+*.xlsx binary
