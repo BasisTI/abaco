@@ -690,7 +690,7 @@ export class FuncaoTransacaoFormComponent implements OnInit {
         this.currentFuncaoTransacao = new FuncaoTransacao();
         this.dersChips = [];
         this.alrsChips = [];
-        window.scrollTo(0, 60);
+        this.componenteFile.files = [];
     }
 
     limparMensagensErros() {

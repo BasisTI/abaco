@@ -758,7 +758,6 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
         this.dersChips = [];
         this.rlrsChips = [];
         this.componenteFile.files = [];
-        window.scrollTo(0, 60);
     }
 
     limparMensagensErros() {
