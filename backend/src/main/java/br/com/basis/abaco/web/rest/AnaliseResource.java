@@ -729,7 +729,7 @@ public class AnaliseResource {
         analise.setFuncaoTransacaos(funcaoTransacaoRepository.findByAnaliseIdOrderByFuncionalidadeModuloNomeAscFuncionalidadeNomeAscNameAsc(id));
         List<FuncaoDados> funcaoDadosList = analise.getFuncaoDados().stream().collect(Collectors.toList());
         List<FuncaoTransacao> funcaoTransacaoList = analise.getFuncaoTransacaos().stream().collect(Collectors.toList());
-        File file = new File("src/main/resources/reports/planilhas/modelo1.xlsx");
+        File file = new File("src/main/resources/reports/planilhas/modelo1.xls");
         FileInputStream inputStream = new FileInputStream(file);
         XSSFWorkbook excelFile = new XSSFWorkbook(inputStream);
         analiseService.setarDeflatoresExcel(excelFile, analise);
