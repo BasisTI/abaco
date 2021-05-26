@@ -75,10 +75,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
+import java.io.*;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
@@ -729,9 +726,8 @@ public class AnaliseResource {
         analise.setFuncaoTransacaos(funcaoTransacaoRepository.findByAnaliseIdOrderByFuncionalidadeModuloNomeAscFuncionalidadeNomeAscNameAsc(id));
         List<FuncaoDados> funcaoDadosList = analise.getFuncaoDados().stream().collect(Collectors.toList());
         List<FuncaoTransacao> funcaoTransacaoList = analise.getFuncaoTransacaos().stream().collect(Collectors.toList());
-        File file = new File("src/main/resources/reports/planilhas/modelo1.xlsx");
-        FileInputStream inputStream = new FileInputStream(file);
-        XSSFWorkbook excelFile = new XSSFWorkbook(inputStream);
+        InputStream stream = getClass().getClassLoader().getResourceAsStream("reports/planilhas/modelo1.xlsx");
+        XSSFWorkbook excelFile = new XSSFWorkbook(stream);
         analiseService.setarDeflatoresExcel(excelFile, analise);
         analiseService.setarResumoExcel(excelFile, analise);
         if(analise.getMetodoContagem().equals(MetodoContagem.INDICATIVA)){
