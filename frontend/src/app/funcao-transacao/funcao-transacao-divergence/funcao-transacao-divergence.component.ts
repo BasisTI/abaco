@@ -1170,10 +1170,10 @@ export class FuncaoTransacaoDivergenceComponent implements OnInit {
                 }
                 this.setFields(funcaoTransacaoCalculada);
                 this.funcoesTransacoes.push(funcaoTransacaoCalculada);
+                this.divergenciaService.updateSomaPf(this.analise.id).subscribe();
             });
         }
         this.pageNotificationService.addSuccessMessage("Funções de transações editadas com sucesso!")
-        this.divergenciaService.updateSomaPf(this.analise.id).subscribe();
         this.fecharDialogEditarEmLote();
     }
 

@@ -1316,10 +1316,10 @@ export class FuncaoDadosDivergenceComponent implements OnInit {
                 }
                 this.setFields(funcaoDadosCalculada);
                 this.funcoesDados.push(funcaoDadosCalculada);
+                this.divergenciaService.updateSomaPf(this.analise.id).subscribe();
             });
         }
         this.pageNotificationService.addSuccessMessage("Funções de dados editadas com sucesso!")
-        this.divergenciaService.updateSomaPf(this.analise.id).subscribe();
         this.fecharDialogEditarEmLote();
     }
 

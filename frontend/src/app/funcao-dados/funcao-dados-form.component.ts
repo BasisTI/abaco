@@ -1296,10 +1296,10 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
                 }
                 this.setFields(funcaoDadosCalculada);
                 this.funcoesDados.push(funcaoDadosCalculada);
+                this.analiseService.updateSomaPf(this.analise.id).subscribe();
             });
         }
         this.pageNotificationService.addSuccessMessage("Funções de dados editadas com sucesso!")
-        this.analiseService.updateSomaPf(this.analise.id).subscribe();
         this.fecharDialogEditarEmLote();
     }
 
