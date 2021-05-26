@@ -1109,10 +1109,10 @@ export class FuncaoTransacaoFormComponent implements OnInit {
                 }
                 this.setFields(funcaoTransacaoCalculada);
                 this.funcoesTransacoes.push(funcaoTransacaoCalculada);
+                this.analiseService.updateSomaPf(this.analise.id).subscribe();
             });
         }
         this.pageNotificationService.addSuccessMessage("Funções de transações editadas com sucesso!")
-        this.analiseService.updateSomaPf(this.analise.id).subscribe();
         this.fecharDialogEditarEmLote();
     }
 
