@@ -690,7 +690,7 @@ export class FuncaoTransacaoFormComponent implements OnInit {
         this.currentFuncaoTransacao = new FuncaoTransacao();
         this.dersChips = [];
         this.alrsChips = [];
-        window.scrollTo(0, 60);
+        this.componenteFile.files = [];
     }
 
     limparMensagensErros() {
@@ -1089,6 +1089,9 @@ export class FuncaoTransacaoFormComponent implements OnInit {
         if(this.deflatorEmLote && this.deflatorEmLote.tipoAjuste === 'UNITARIO' && !this.quantidadeEmLote){
             return this.pageNotificationService.addErrorMessage("Coloque uma quantidade para o deflator!")
         }
+        if(this.moduloSelecionadoEmLote && !this.funcionalidadeSelecionadaEmLote){
+            return this.pageNotificationService.addErrorMessage("Escolha uma funcionalidade para prosseguir!");
+        }
         this.editarCamposEmLote();
         let moduloSelecionado;
         if(this.moduloSelecionadoEmLote){
@@ -1106,10 +1109,10 @@ export class FuncaoTransacaoFormComponent implements OnInit {
                 }
                 this.setFields(funcaoTransacaoCalculada);
                 this.funcoesTransacoes.push(funcaoTransacaoCalculada);
+                this.analiseService.updateSomaPf(this.analise.id).subscribe();
             });
         }
         this.pageNotificationService.addSuccessMessage("Funções de transações editadas com sucesso!")
-        this.analiseService.updateSomaPf(this.analise.id).subscribe();
         this.fecharDialogEditarEmLote();
     }
 

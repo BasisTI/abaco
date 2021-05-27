@@ -728,7 +728,6 @@ export class FuncaoDadosDivergenceComponent implements OnInit {
         this.dersChips = [];
         this.rlrsChips = [];
         this.componenteFile.files = [];
-        window.scrollTo(0, 60);
     }
 
     limparMensagensErros() {
@@ -1297,6 +1296,9 @@ export class FuncaoDadosDivergenceComponent implements OnInit {
         if(this.deflatorEmLote && this.deflatorEmLote.tipoAjuste === 'UNITARIO' && !this.quantidadeEmLote){
             return this.pageNotificationService.addErrorMessage("Coloque uma quantidade para o deflator!")
         }
+        if(this.moduloSelecionadoEmLote && !this.funcionalidadeSelecionadaEmLote){
+            return this.pageNotificationService.addErrorMessage("Escolha uma funcionalidade para prosseguir!");
+        }
         this.editarCamposEmLote();
         let moduloSelecionado;
         if(this.moduloSelecionadoEmLote){
@@ -1314,10 +1316,10 @@ export class FuncaoDadosDivergenceComponent implements OnInit {
                 }
                 this.setFields(funcaoDadosCalculada);
                 this.funcoesDados.push(funcaoDadosCalculada);
+                this.divergenciaService.updateSomaPf(this.analise.id).subscribe();
             });
         }
         this.pageNotificationService.addSuccessMessage("Funções de dados editadas com sucesso!")
-        this.divergenciaService.updateSomaPf(this.analise.id).subscribe();
         this.fecharDialogEditarEmLote();
     }
 

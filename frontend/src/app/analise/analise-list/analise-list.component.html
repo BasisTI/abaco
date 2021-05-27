@@ -142,8 +142,8 @@
                                 {{ analise.bloqueiaAnalise ? 'Sim' : 'Não' }}
                             </ng-template>
                         </p-column>
-                        <p-column [styleClass]="'clonada'" header="Clonada para outra equipe" field="clonadaParaEquipe" [sortable]="true"
-                            filterType="">
+                        <p-column [styleClass]="'clonada'" header="Clonada para outra equipe" field="clonadaParaEquipe"
+                            [sortable]="true" filterType="">
                             <ng-template let-col let-analise="rowData" pTemplate="body">
                                 {{ analise.clonadaParaEquipe ? 'Sim' : 'Não' }}
                             </ng-template>
@@ -156,8 +156,8 @@
                                 </li>
                             </ng-template>
                         </p-column>
-                        <p-column [styleClass]="'analise-clonada'" header="Análise Relacionada" field="analiseClonadaParaEquipe" [sortable]="true"
-                            filterType="">
+                        <p-column [styleClass]="'analise-clonada'" header="Análise Relacionada"
+                            field="analiseClonadaParaEquipe" [sortable]="true" filterType="">
                             <ng-template let-col let-analise="rowData" pTemplate="body">
                                 <div *ngIf="analise.analiseClonadaParaEquipe?.id !== null">
                                     {{analise.analiseClonadaParaEquipe.identificadorAnalise}}
@@ -210,6 +210,9 @@
                         </basis-datatable-button>
                         <basis-datatable-button name="importJson" [bTooltip]="'Importar análise'" icon="file-upload"
                            class="ui-button-success" (click)="openModalImportAnalise()">
+                        </basis-datatable-button> -->
+                        <basis-datatable-button name="importExcel" [bTooltip]="'Exportar planilha excel'"
+                            icon="file-upload" class="ui-button-success" [disabled]="datatable.selectedRow == null">
                         </basis-datatable-button> -->
                     </basis-datatable>
                     <div class="ui-g-12 ui-md-2">
@@ -389,16 +392,30 @@
 </p-dialog>
 
 <p-dialog header="Importar análise" [(visible)]="showDialogImportar" [style]="{width: '50vw'}" [minHeight]="300"
-[modal]="true">
+    [modal]="true">
 
-<p-fileUpload name="jsonAnalise" [showCancelButton]="false" [showUploadButton]="false" [chooseLabel]="'Escolha o arquivo'"
-    (onSelect)="selectJsonAnalise($event)"
-    accept="application/json"></p-fileUpload>
+    <p-fileUpload name="jsonAnalise" [showCancelButton]="false" [showUploadButton]="false"
+        [chooseLabel]="'Escolha o arquivo'" (onSelect)="selectJsonAnalise($event)" accept="application/json">
+    </p-fileUpload>
 
 
-    <app-green-button buttonLabel="Importar" (click)="importarAnalise()"
-        style="float:right; margin: 5px"></app-green-button>
+    <app-green-button buttonLabel="Importar" (click)="importarAnalise()" style="float:right; margin: 5px">
+    </app-green-button>
     <app-white-button buttonLabel="Cancelar" (click)="closeModalImportAnalise()" style="float:right; margin: 5px">
+    </app-white-button>
+
+</p-dialog>
+
+<p-dialog header="Exportar planilha excel" [(visible)]="showDialogImportarExcel" [style]="{width: '50vw'}"
+    [minHeight]="300" [modal]="true">
+
+    <p-dropdown [style]="{'width':'100%', 'margin-bottom': '55px'}" [options]="lstModelosExcel" optionLabel="label"
+        id="idModeloExcel" [(ngModel)]="modeloSelecionado" placeholder="Selecione um modelo">
+    </p-dropdown>
+
+    <app-green-button buttonLabel="Exportar" (click)="exportarPlanilha()" style="float:right; margin: 5px">
+    </app-green-button>
+    <app-white-button buttonLabel="Cancelar" (click)="closeModalExportarExcel()" style="float:right; margin: 5px">
     </app-white-button>
 
 </p-dialog>
