@@ -842,7 +842,7 @@ public class AnaliseService extends BaseService {
         }
         switch(analise.getMetodoContagem()){
             case ESTIMADA:
-                excelSheet.getRow(4).getCell(1).setCellValue("Estimada");
+                excelSheet.getRow(4).getCell(1).setCellValue("Estimativa");
                 break;
             case DETALHADA:
                 excelSheet.getRow(4).getCell(1).setCellValue("Detalhada");
