@@ -722,6 +722,7 @@ public class AnaliseResource {
     }
 
     @GetMapping(value = "/analises/importar-excel/{id}", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
+    @Secured("ROLE_ABACO_ANALISE_EXPORTAR_RELATORIO_EXCEL")
     public ResponseEntity<byte[]> importarExcel(@PathVariable Long id) throws IOException{
         Analise analise = analiseService.recuperarAnalise(id);
         analise.setFuncaoDados(funcaoDadosRepository.findByAnaliseIdOrderByFuncionalidadeModuloNomeAscFuncionalidadeNomeAscNameAsc(id));
