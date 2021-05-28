@@ -9,5 +9,5 @@ import java.util.Set;
 @Repository
 public interface VwFuncaoTransacaoRepository extends JpaRepository<VwFuncaoTransacao, Long> {
 
-    Set<VwFuncaoTransacao> findByAnaliseId(Long analiseId);
+    Set<VwFuncaoTransacao> findByAnaliseIdOrderById(Long analiseId);
 }

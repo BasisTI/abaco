@@ -665,6 +665,7 @@ export class FuncaoTransacaoFormComponent implements OnInit {
                         ));
                         this.setFields(funcaoTransacaoCalculada);
                         this.funcoesTransacoes.push(funcaoTransacaoCalculada);
+                        this.funcoesTransacoes.sort((a, b) => a.id - b.id);
                         this.resetarEstadoPosSalvar();
                         this.fecharDialog();
                         this.analiseService.updateSomaPf(this.analise.id).subscribe();
@@ -1109,6 +1110,7 @@ export class FuncaoTransacaoFormComponent implements OnInit {
                 }
                 this.setFields(funcaoTransacaoCalculada);
                 this.funcoesTransacoes.push(funcaoTransacaoCalculada);
+                this.funcoesTransacoes.sort((a, b) => a.id - b.id);
                 this.analiseService.updateSomaPf(this.analise.id).subscribe();
             });
         }

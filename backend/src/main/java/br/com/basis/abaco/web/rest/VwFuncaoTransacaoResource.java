@@ -23,7 +23,7 @@ public class VwFuncaoTransacaoResource {
     @GetMapping("/vw-funcao-transacaos/{analiseId}")
     @Timed
     public Set<VwFuncaoTransacao> getFuncaoBySistemaAndModuloAndFuncionalidade(@PathVariable Long analiseId) {
-        return vwFuncaoTransacaoRepository.findByAnaliseId(analiseId);
+        return vwFuncaoTransacaoRepository.findByAnaliseIdOrderById(analiseId);
     }
 
 }
