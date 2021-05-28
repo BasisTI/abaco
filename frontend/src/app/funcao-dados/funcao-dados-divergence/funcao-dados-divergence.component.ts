@@ -710,6 +710,7 @@ export class FuncaoDadosDivergenceComponent implements OnInit {
                         this.funcoesDados = this.funcoesDados.filter((funcaoDados) => (funcaoDados.id !== funcaoDadosCalculada.id));
                         this.setFields(funcaoDadosCalculada);
                         this.funcoesDados.push(funcaoDadosCalculada);
+                        this.funcoesDados.sort((a, b) => a.id - b.id);
                         this.resetarEstadoPosSalvar();
                         this.pageNotificationService.addCreateMsg(funcaoDadosCalculada.name);
                         this.fecharDialog();
@@ -1316,6 +1317,7 @@ export class FuncaoDadosDivergenceComponent implements OnInit {
                 }
                 this.setFields(funcaoDadosCalculada);
                 this.funcoesDados.push(funcaoDadosCalculada);
+                this.funcoesDados.sort((a, b) => a.id - b.id);
                 this.divergenciaService.updateSomaPf(this.analise.id).subscribe();
             });
         }
