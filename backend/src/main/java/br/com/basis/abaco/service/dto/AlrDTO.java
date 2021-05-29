@@ -4,6 +4,8 @@ import lombok.Getter;
 import lombok.Setter;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Objects;
+
 /**
  * @author eduardo.andrade
  * @since 29/06/2018
@@ -24,5 +26,21 @@ public class AlrDTO implements Comparable{
         }else{
             return 1;
         }
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        AlrDTO alrDTO = (AlrDTO) o;
+        return Objects.equals(id, alrDTO.id) &&
+            Objects.equals(nome, alrDTO.nome) &&
+            Objects.equals(valor, alrDTO.valor) &&
+            Objects.equals(numeracao, alrDTO.numeracao);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, nome, valor, numeracao);
     }
 }
