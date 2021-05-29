@@ -25,6 +25,7 @@ export class DerChipConverter {
             chips.forEach(chipItem => {
                 const ref = new type();
                 ref.id = chipItem.id;
+                ref.numeracao = chipItem.numeracao;
 
                 // FIXME mais logica embolada
                 // se length > 0 salvar como texto, ao inves de valor?
