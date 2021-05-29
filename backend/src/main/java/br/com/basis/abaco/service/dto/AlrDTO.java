@@ -1,5 +1,6 @@
 package br.com.basis.abaco.service.dto;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import org.jetbrains.annotations.NotNull;
@@ -12,6 +13,7 @@ import java.util.Objects;
  */
 @Getter
 @Setter
+@EqualsAndHashCode
 public class AlrDTO implements Comparable{
     private Long id;
     private String nome;
@@ -26,21 +28,5 @@ public class AlrDTO implements Comparable{
         }else{
             return 1;
         }
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        AlrDTO alrDTO = (AlrDTO) o;
-        return Objects.equals(id, alrDTO.id) &&
-            Objects.equals(nome, alrDTO.nome) &&
-            Objects.equals(valor, alrDTO.valor) &&
-            Objects.equals(numeracao, alrDTO.numeracao);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, nome, valor, numeracao);
     }
 }
