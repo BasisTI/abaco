@@ -991,8 +991,6 @@ export class AnaliseListComponent implements OnInit {
             if (analise.id && analise.identificadorAnalise) {
                 analise.id = null;
                 analises.push(analise);
-                console.log(analise);
-
             }
         }
         reader.readAsText(this.analiseFileJson);
