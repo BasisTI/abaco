@@ -8,6 +8,7 @@ import lombok.Setter;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Set;
+import java.util.TreeSet;
 
 @Getter
 @Setter
@@ -15,8 +16,8 @@ import java.util.Set;
 @AllArgsConstructor
 public class FuncaoDadosSaveDTO extends FuncaoDadosEditSaveDTO {
 
-    private Set<RlrDTO> rlrs = new HashSet<>();
-    private Set<DerDTO> ders = new LinkedHashSet<>();
+    private TreeSet<RlrDTO> rlrs = new TreeSet<>();
+    private TreeSet<DerDTO> ders = new TreeSet<>();
 
 
 

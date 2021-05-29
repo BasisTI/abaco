@@ -11,6 +11,7 @@ export class Der implements BaseEntity, AnaliseReferenciavel {
     public valor?: number,
     public funcaoDados?: FuncaoDados,
     public funcaoTransacao?: FuncaoTransacao,
+    public numeracao?: number
   ) { }
 
   toJSONState(): Der {
