@@ -5,21 +5,11 @@ import static org.elasticsearch.index.query.QueryBuilders.queryStringQuery;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
-import br.com.basis.abaco.domain.Alr;
-import br.com.basis.abaco.domain.Analise;
-import br.com.basis.abaco.domain.Der;
-import br.com.basis.abaco.domain.FuncaoTransacao;
-import br.com.basis.abaco.domain.UploadedFile;
-import br.com.basis.abaco.domain.VwAlr;
-import br.com.basis.abaco.domain.VwDer;
+import br.com.basis.abaco.domain.*;
 import br.com.basis.abaco.service.FuncaoDadosService;
 import br.com.basis.abaco.service.dto.FuncaoDadosSaveDTO;
 import br.com.basis.abaco.service.dto.FuncaoTransacaoSaveDTO;
@@ -328,7 +318,7 @@ public class FuncaoTransacaoResource {
 
     @NotNull
     private Set<Der> bindDers(@RequestBody FuncaoTransacao funcaoTransacao) {
-        Set<Der> ders = new HashSet<>();
+        Set<Der> ders = new LinkedHashSet<>();
         funcaoTransacao.getDers().forEach(der -> {
             if (der.getId() != null) {
                 der = derRepository.findOne(der.getId());
@@ -342,7 +332,24 @@ public class FuncaoTransacaoResource {
     }
 
     private FuncaoTransacao convertToEntity(FuncaoTransacaoSaveDTO funcaoTransacaoSaveDTO){
-        return modelMapper.map(funcaoTransacaoSaveDTO, FuncaoTransacao.class);
+        Set<Der> ders = new LinkedHashSet<>();
+        Set<Alr> alrs = new LinkedHashSet<>();
+        FuncaoTransacao map = modelMapper.map(funcaoTransacaoSaveDTO, FuncaoTransacao.class);
+        funcaoTransacaoSaveDTO.getDers().forEach(derDto -> {
+            Der der = new Der();
+            der.setNome(derDto.getNome());
+            der.setValor(derDto.getValor());
+            ders.add(der);
+        });
+        funcaoTransacaoSaveDTO.getAlrs().forEach(alrDto -> {
+            Alr alr = new Alr();
+            alr.setNome(alrDto.getNome());
+            alr.setValor(alrDto.getValor());
+            alrs.add(alr);
+        });
+        map.setDers(ders);
+        map.setAlrs(alrs);
+        return map;
     }
 
     private void saveVwDersAndVwAlrs(Set<Der> ders, Set<Alr> alrs, Long idSistema) {
