@@ -5,11 +5,7 @@ import static org.elasticsearch.index.query.QueryBuilders.queryStringQuery;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
@@ -374,7 +370,24 @@ public class FuncaoDadosResource {
 
 
     private FuncaoDados convertToEntity(FuncaoDadosSaveDTO funcaoDadosSaveDTO){
-        return modelMapper.map(funcaoDadosSaveDTO, FuncaoDados.class);
+        Set<Der> ders = new LinkedHashSet<>();
+        Set<Rlr> rlrs = new LinkedHashSet<>();
+        FuncaoDados map = modelMapper.map(funcaoDadosSaveDTO, FuncaoDados.class);
+        funcaoDadosSaveDTO.getDers().forEach(derDto -> {
+            Der der = new Der();
+            der.setNome(derDto.getNome());
+            der.setValor(derDto.getValor());
+            ders.add(der);
+        });
+        funcaoDadosSaveDTO.getRlrs().forEach(rlrDto -> {
+            Rlr rlr = new Rlr();
+            rlr.setNome(rlrDto.getNome());
+            rlr.setValor(rlrDto.getValor());
+            rlrs.add(rlr);
+        });
+        map.setDers(ders);
+        map.setRlrs(rlrs);
+        return map;
     }
 
     private FuncaoDados updateFuncaoDados(FuncaoDados funcaoDadosOld, FuncaoDados funcaoDados) {
@@ -395,8 +408,8 @@ public class FuncaoDadosResource {
     }
 
     private void setDersAndRlrs(FuncaoDados funcaoDadosOld, FuncaoDados funcaoDados) {
-        Set<Der> lstDers = new HashSet<>();
-        Set<Rlr> lstRlrs = new HashSet<>();
+        Set<Der> lstDers = new LinkedHashSet<>();
+        Set<Rlr> lstRlrs = new LinkedHashSet<>();
         funcaoDados.getDers().forEach(der -> {
             der.setFuncaoDados(funcaoDadosOld);
             lstDers.add(der);
