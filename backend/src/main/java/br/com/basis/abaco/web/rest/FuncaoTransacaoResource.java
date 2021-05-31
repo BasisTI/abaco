@@ -21,7 +21,10 @@ import br.com.basis.abaco.domain.UploadedFile;
 import br.com.basis.abaco.domain.VwAlr;
 import br.com.basis.abaco.domain.VwDer;
 import br.com.basis.abaco.service.FuncaoDadosService;
-import br.com.basis.abaco.service.dto.FuncaoDadosSaveDTO;
+import br.com.basis.abaco.service.dto.AlrDTO;
+import br.com.basis.abaco.service.dto.DerFtDTO;
+import br.com.basis.abaco.service.dto.FuncaoTransacaoAnaliseDTO;
+import br.com.basis.abaco.service.dto.FuncaoTransacaoApiDTO;
 import br.com.basis.abaco.service.dto.FuncaoTransacaoSaveDTO;
 import org.jetbrains.annotations.NotNull;
 import org.modelmapper.ModelMapper;
@@ -52,8 +55,6 @@ import br.com.basis.abaco.repository.search.FuncaoTransacaoSearchRepository;
 import br.com.basis.abaco.repository.search.VwAlrSearchRepository;
 import br.com.basis.abaco.repository.search.VwDerSearchRepository;
 import br.com.basis.abaco.service.FuncaoTransacaoService;
-import br.com.basis.abaco.service.dto.FuncaoTransacaoAnaliseDTO;
-import br.com.basis.abaco.service.dto.FuncaoTransacaoApiDTO;
 import br.com.basis.abaco.web.rest.util.HeaderUtil;
 import io.github.jhipster.web.util.ResponseUtil;
 
@@ -196,6 +197,22 @@ public class FuncaoTransacaoResource {
         log.debug("REST request to get FuncaoTransacao : {}", id);
         FuncaoTransacao funcaoTransacao = funcaoTransacaoRepository.findOne(id);
         FuncaoTransacaoApiDTO funcaoDadosDTO = modelMapper.map(funcaoTransacao, FuncaoTransacaoApiDTO.class);
+        Set<DerFtDTO> ders = new LinkedHashSet<>();
+        Set<AlrDTO> alrs = new LinkedHashSet<>();
+        funcaoTransacao.getDers().forEach(der -> {
+            DerFtDTO derDto = new DerFtDTO();
+            derDto.setNome(der.getNome());
+            derDto.setValor(der.getValor());
+            ders.add(derDto);
+        });
+        funcaoTransacao.getAlrs().forEach(alr -> {
+            AlrDTO alrDto = new AlrDTO();
+            alrDto.setNome(alr.getNome());
+            alrDto.setValor(alr.getValor());
+            alrs.add(alrDto);
+        });
+        funcaoDadosDTO.setDers(ders);
+        funcaoDadosDTO.setAlrs(alrs);
         return ResponseUtil.wrapOrNotFound(Optional.ofNullable(funcaoDadosDTO));
     }
 
