@@ -13,10 +13,11 @@ import lombok.Setter;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+
 /**
  * @author alexandre.costa
  * @since 27/02/2019
@@ -31,7 +32,7 @@ public class FuncaoDadoApiDTO {
     private BigDecimal pf;
     private BigDecimal grossPF;
     private FuncionalidadeDTO funcionalidade;
-    private Set<DerFdDTO> ders = new HashSet<>();
+    private Set<DerFdDTO> ders = new LinkedHashSet<>();
     private String detStr;
     private FatorAjusteDTO fatorAjuste;
     private String name;
@@ -39,7 +40,7 @@ public class FuncaoDadoApiDTO {
     private TipoFuncaoDados tipo;
     private String retStr;
     private Integer quantidade;
-    private Set<RlrFdDTO> rlrs = new HashSet<>();
+    private Set<RlrFdDTO> rlrs = new LinkedHashSet<>();
     private Alr alr;
     private ImpactoFatorAjuste impacto;
     private StatusFuncao statusFuncao;

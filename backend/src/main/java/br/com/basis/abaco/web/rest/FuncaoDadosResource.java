@@ -13,6 +13,13 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
+import br.com.basis.abaco.service.dto.DerFdDTO;
+import br.com.basis.abaco.service.dto.DropdownDTO;
+import br.com.basis.abaco.service.dto.FuncaoDadoAnaliseDTO;
+import br.com.basis.abaco.service.dto.FuncaoDadoApiDTO;
+import br.com.basis.abaco.service.dto.FuncaoDadosEditDTO;
+import br.com.basis.abaco.service.dto.FuncaoDadosSaveDTO;
+import br.com.basis.abaco.service.dto.RlrFdDTO;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,11 +54,6 @@ import br.com.basis.abaco.repository.search.FuncaoDadosSearchRepository;
 import br.com.basis.abaco.repository.search.VwDerSearchRepository;
 import br.com.basis.abaco.repository.search.VwRlrSearchRepository;
 import br.com.basis.abaco.service.FuncaoDadosService;
-import br.com.basis.abaco.service.dto.DropdownDTO;
-import br.com.basis.abaco.service.dto.FuncaoDadoAnaliseDTO;
-import br.com.basis.abaco.service.dto.FuncaoDadoApiDTO;
-import br.com.basis.abaco.service.dto.FuncaoDadosEditDTO;
-import br.com.basis.abaco.service.dto.FuncaoDadosSaveDTO;
 import br.com.basis.abaco.web.rest.util.HeaderUtil;
 import io.github.jhipster.web.util.ResponseUtil;
 
@@ -103,9 +105,11 @@ public class FuncaoDadosResource {
         log.debug("REST request to save FuncaoDados : {}", funcaoDadosSaveDTO);
         Analise analise = analiseRepository.findOne(idAnalise);
 
-        funcaoDadosSaveDTO.getDers().forEach(der -> { der.setFuncaoDados(funcaoDadosSaveDTO);});
-        funcaoDadosSaveDTO.getRlrs().forEach(rlr -> { rlr.setFuncaoDados(funcaoDadosSaveDTO);});
         FuncaoDados funcaoDados = convertToEntity(funcaoDadosSaveDTO);
+
+        funcaoDados.getDers().forEach(der -> { der.setFuncaoDados(funcaoDados);});
+        funcaoDados.getRlrs().forEach(rlr -> { rlr.setFuncaoDados(funcaoDados);});
+
         funcaoDados.setAnalise(analise);
         if (funcaoDados.getId() != null || funcaoDados.getAnalise() == null || funcaoDados.getAnalise().getId() == null) {
             return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert(ENTITY_NAME, "idexists", "A new funcaoDados cannot already have an ID")).body(null);
@@ -365,7 +369,24 @@ public class FuncaoDadosResource {
     }
 
     private FuncaoDadoApiDTO getFuncaoDadoApiDTO(FuncaoDados funcaoDados) {
-        return modelMapper.map(funcaoDados, FuncaoDadoApiDTO.class);
+        Set<DerFdDTO> ders = new LinkedHashSet<>();
+        Set<RlrFdDTO> rlrs = new LinkedHashSet<>();
+        FuncaoDadoApiDTO map = modelMapper.map(funcaoDados, FuncaoDadoApiDTO.class);
+        funcaoDados.getDers().forEach(der -> {
+            DerFdDTO derDto = new DerFdDTO();
+            derDto.setNome(der.getNome());
+            derDto.setValor(der.getValor());
+            ders.add(derDto);
+        });
+        funcaoDados.getRlrs().forEach(rlr -> {
+            RlrFdDTO rlrDto = new RlrFdDTO();
+            rlrDto.setNome(rlr.getNome());
+            rlrDto.setValor(rlr.getValor());
+            rlrs.add(rlrDto);
+        });
+        map.setDers(ders);
+        map.setRlrs(rlrs);
+        return map;
     }
 
     private FuncaoDadosEditDTO convertFuncaoDadoAEditDTO(FuncaoDados funcaoDados) {
