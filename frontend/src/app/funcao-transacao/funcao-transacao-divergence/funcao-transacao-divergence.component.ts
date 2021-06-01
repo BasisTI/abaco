@@ -1251,6 +1251,10 @@ export class FuncaoTransacaoDivergenceComponent implements OnInit {
         const res = file.type.search(/^image\//i) === 0;
         return (res);
     }
+
+    refreshFuncoes(){
+        this.funcoesTransacoes.sort((a, b) => a.id - b.id);
+    }
 }
 
 enum StatusFunction {

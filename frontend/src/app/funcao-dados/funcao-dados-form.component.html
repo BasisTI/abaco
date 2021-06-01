@@ -43,23 +43,27 @@
                                     </p-column>
                                     <basis-datatable-button name="crud" [allowMultipleSelection]="false"
                                         *ngIf="!isView && !(analise && analise.metodoContagem && analise.metodoContagem === 'INDICATIVA')"
-                                        [pTooltip]="funcaoDadosEditar[0] != undefined ? this.getLabel('Criar Crud') : this.getLabel('Escolha um registro para criar crud.')"
+                                        [bTooltip]="funcaoDadosEditar[0] != undefined ? this.getLabel('Criar Crud') : this.getLabel('Escolha um registro para criar crud.')"
                                         [disabled]="funcaoDadosEditar[0] == undefined" class="ui-button-success"
                                         icon="input">
                                     </basis-datatable-button>
                                     <basis-datatable-button *ngIf="!isView" [allowMultipleSelection]="false"
                                         name="clone"
-                                        [pTooltip]="funcaoDadosEditar[0] != undefined ? this.getLabel('Criar Clone') : this.getLabel('Escolha um registro para criar Clone.')"
+                                        [bTooltip]="funcaoDadosEditar[0] != undefined ? this.getLabel('Criar Clone') : this.getLabel('Escolha um registro para criar Clone.')"
                                         [disabled]="funcaoDadosEditar[0] == undefined" class="ui-button-dark"
                                         icon="content-copy">
                                     </basis-datatable-button>
                                     <basis-datatable-button *ngIf="!isView" name="filter"
-                                        pTooltip="Copiar funções de dados." class="ui-button-info" icon="import-export">
+                                        bTooltip="Copiar funções de dados." class="ui-button-info" icon="import-export">
                                     </basis-datatable-button>
                                     <basis-datatable-button name="edicaoLote"
                                         *ngIf="!isView && funcaoDadosEditar?.length > 1"
-                                        (click)="prepararEditarEmLote()" pTooltip="Edição em lote."
+                                        (click)="prepararEditarEmLote()" bTooltip="Edição em lote."
                                         class="ui-button-success" icon="border-color">
+                                    </basis-datatable-button>
+                                    <basis-datatable-button name="refresh"
+                                        (click)="refreshFuncoes()" bTooltip="Ordernar funções."
+                                        class="ui-button-success" icon="refresh">
                                     </basis-datatable-button>
                                 </basis-datatable>
                             </div>

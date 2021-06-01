@@ -1412,10 +1412,14 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
         return (null);
     }
 
+
     private isImageFile(file: File): boolean {
         const res = file.type.search(/^image\//i) === 0;
         return (res);
     }
 
+    refreshFuncoes(){
+        this.funcoesDados.sort((a, b) => a.id - b.id);
+    }
 
 }
