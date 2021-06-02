@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.TreeSet;
 
 /**
  * @author pedro.h.santos
@@ -43,7 +44,7 @@ public class FuncaoTransacaoSaveDTO {
 
     private Funcionalidade funcionalidade;
 
-    private Set<Alr> alrs;
+    private TreeSet<AlrDTO> alrs = new TreeSet<>();
 
     private String ftrStr;
 
@@ -69,7 +70,7 @@ public class FuncaoTransacaoSaveDTO {
 
     private ImpactoFatorAjuste impacto;
 
-    private Set<Der> ders = new HashSet<>();
+    private TreeSet<DerDTO> ders = new TreeSet<>();
 
     private Analise analise;
 

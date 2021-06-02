@@ -717,7 +717,6 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
     }
 
     private editar() {
-
         const retorno: boolean = this.verifyDataRequire();
         if (!retorno) {
             this.pageNotificationService.addErrorMessage(this.getLabel('Por favor preencher o campo obrigatório!'));
@@ -739,6 +738,7 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
                         this.funcoesDados = this.funcoesDados.filter((funcaoDados) => (funcaoDados.id !== funcaoDadosCalculada.id));
                         this.setFields(funcaoDadosCalculada);
                         this.funcoesDados.push(funcaoDadosCalculada);
+                        this.funcoesDados.sort((a, b) => a.id - b.id);
                         this.resetarEstadoPosSalvar();
                         this.pageNotificationService.addSuccessMessage(`${this.getLabel('Cadastros.FuncaoDados.Mensagens.msgFuncaoDados')}
                 '${funcaoDadosCalculada.name}' ${this.getLabel(' alterada com sucesso')}`);
@@ -1296,6 +1296,7 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
                 }
                 this.setFields(funcaoDadosCalculada);
                 this.funcoesDados.push(funcaoDadosCalculada);
+                this.funcoesDados.sort((a, b) => a.id - b.id);
                 this.analiseService.updateSomaPf(this.analise.id).subscribe();
             });
         }
@@ -1411,10 +1412,14 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
         return (null);
     }
 
+
     private isImageFile(file: File): boolean {
         const res = file.type.search(/^image\//i) === 0;
         return (res);
     }
 
+    refreshFuncoes(){
+        this.funcoesDados.sort((a, b) => a.id - b.id);
+    }
 
 }

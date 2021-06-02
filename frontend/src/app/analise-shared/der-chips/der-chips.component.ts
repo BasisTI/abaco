@@ -61,6 +61,8 @@ export class DerChipsComponent implements OnChanges, OnInit {
     listFuncoesDados: FuncaoDados[] = [];
     listFuncoesTransacoes: FuncaoTransacao[] = [];
 
+    contagem: number;
+
     canEnter: boolean;
 
     @ViewChild(AutoComplete) component: AutoComplete;
@@ -73,6 +75,7 @@ export class DerChipsComponent implements OnChanges, OnInit {
     ) { }
 
     ngOnInit() {
+        this.contagem = 0;
     }
 
     getLabel(label) {
@@ -89,7 +92,7 @@ export class DerChipsComponent implements OnChanges, OnInit {
     onAddValue(value: string) {
         // removendo o adicionado pelo primeng no keydown de enter
         this.values.pop();
-        this.addItem(new DerChipItem(undefined, value));
+        this.addItem(new DerChipItem(undefined, value, this.contagem++));
     }
 
     pressEnter(event) {
@@ -102,7 +105,7 @@ export class DerChipsComponent implements OnChanges, OnInit {
                         return this.tamanhoChip = true;
                     }
                     if (valores.indexOf(event.target.value.toLowerCase()) === -1) {
-                        this.values.push(new DerChipItem(undefined, event.target.value));
+                        this.values.push(new DerChipItem(undefined, event.target.value, this.contagem++));
                         this.valuesChange.emit(this.values);
                         event.target.value = "";
                         this.chipRepetido = false;
@@ -166,6 +169,7 @@ export class DerChipsComponent implements OnChanges, OnInit {
     }
 
     selecionar(object) {
+        object.numeracao = this.contagem++;
         this.canEnter = false;
         this.valuesChange.emit(this.values);
         this.chipRepetido = false;
@@ -305,9 +309,9 @@ export class DerChipsComponent implements OnChanges, OnInit {
     private converteMultiplos(): DerChipItem[] {
         const parseResult: ParseResult = DerTextParser.parse(this.addMultiplosTexto);
         if (parseResult.textos) {
-            return parseResult.textos.map(txt => new DerChipItem(undefined, txt));
+            return parseResult.textos.map(txt => new DerChipItem(undefined, txt, this.contagem++));
         } else {
-            return [new DerChipItem(undefined, parseResult.numero.toString())];
+            return [new DerChipItem(undefined, parseResult.numero.toString(), this.contagem++)];
         }
     }
 
@@ -340,7 +344,7 @@ export class DerChipsComponent implements OnChanges, OnInit {
     }
 
     funcaoDadosReferenciada(name: string) {
-        this.addItem(new DerChipItem(undefined, name));
+        this.addItem(new DerChipItem(undefined, name, this.contagem++));
     }
 
     dersReferenciados(ders: Der[]) {

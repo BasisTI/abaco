@@ -6,14 +6,25 @@ import java.lang.reflect.InvocationTargetException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
+import br.com.basis.abaco.domain.Alr;
+import br.com.basis.abaco.domain.Analise;
+import br.com.basis.abaco.domain.Der;
+import br.com.basis.abaco.domain.FuncaoTransacao;
+import br.com.basis.abaco.domain.UploadedFile;
+import br.com.basis.abaco.domain.VwAlr;
+import br.com.basis.abaco.domain.VwDer;
 import br.com.basis.abaco.service.FuncaoDadosService;
+import br.com.basis.abaco.service.dto.AlrDTO;
+import br.com.basis.abaco.service.dto.DerFtDTO;
+import br.com.basis.abaco.service.dto.FuncaoTransacaoAnaliseDTO;
+import br.com.basis.abaco.service.dto.FuncaoTransacaoApiDTO;
 import br.com.basis.abaco.service.dto.FuncaoTransacaoSaveDTO;
 import org.jetbrains.annotations.NotNull;
 import org.modelmapper.ModelMapper;
@@ -35,13 +46,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.codahale.metrics.annotation.Timed;
 
-import br.com.basis.abaco.domain.Alr;
-import br.com.basis.abaco.domain.Analise;
-import br.com.basis.abaco.domain.Der;
-import br.com.basis.abaco.domain.FuncaoTransacao;
-import br.com.basis.abaco.domain.UploadedFile;
-import br.com.basis.abaco.domain.VwAlr;
-import br.com.basis.abaco.domain.VwDer;
 import br.com.basis.abaco.domain.enumeration.StatusFuncao;
 import br.com.basis.abaco.repository.AnaliseRepository;
 import br.com.basis.abaco.repository.DerRepository;
@@ -51,8 +55,6 @@ import br.com.basis.abaco.repository.search.FuncaoTransacaoSearchRepository;
 import br.com.basis.abaco.repository.search.VwAlrSearchRepository;
 import br.com.basis.abaco.repository.search.VwDerSearchRepository;
 import br.com.basis.abaco.service.FuncaoTransacaoService;
-import br.com.basis.abaco.service.dto.FuncaoTransacaoAnaliseDTO;
-import br.com.basis.abaco.service.dto.FuncaoTransacaoApiDTO;
 import br.com.basis.abaco.web.rest.util.HeaderUtil;
 import io.github.jhipster.web.util.ResponseUtil;
 
@@ -87,13 +89,16 @@ public class FuncaoTransacaoResource {
     /**
      * POST  /funcao-transacaos : Create a new funcaoTransacao.
      *
-     * @param funcaoTransacao the funcaoTransacao to create
+     * @param funcaoTransacaoSaveDTO the funcaoTransacao to create
      * @return the ResponseEntity with status 201 (Created) and with body the new funcaoTransacao, or with status 400 (Bad Request) if the funcaoTransacao has already an ID
      * @throws URISyntaxException if the Location URI syntax is incorrect
      */
     @PostMapping(path = "/funcao-transacaos/{idAnalise}", consumes = {"multipart/form-data"})
     @Timed
-    public ResponseEntity<FuncaoTransacao> createFuncaoTransacao(@PathVariable Long idAnalise, @RequestPart("funcaoTransacao") FuncaoTransacao funcaoTransacao, @RequestPart("files")List<MultipartFile> files) throws URISyntaxException {
+    public ResponseEntity<FuncaoTransacao> createFuncaoTransacao(@PathVariable Long idAnalise, @RequestPart("funcaoTransacao") FuncaoTransacaoSaveDTO funcaoTransacaoSaveDTO, @RequestPart("files")List<MultipartFile> files) throws URISyntaxException {
+
+        FuncaoTransacao funcaoTransacao = convertToEntity(funcaoTransacaoSaveDTO);
+
         log.debug("REST request to save FuncaoTransacao : {}", funcaoTransacao);
         Analise analise = analiseRepository.findOne(idAnalise);
         funcaoTransacao.getDers().forEach(alr -> {alr.setFuncaoTransacao(funcaoTransacao);});
@@ -122,7 +127,7 @@ public class FuncaoTransacaoResource {
     /**
      * PUT  /funcao-transacaos : Updates an existing funcaoTransacao.
      *
-     * @param funcaoTransacao the funcaoTransacao to update
+     * @param funcaoTransacaoDTO the funcaoTransacao to update
      * @return the ResponseEntity with status 200 (OK) and with body the updated funcaoTransacao,
      * or with status 400 (Bad Request) if the funcaoTransacao is not valid,
      * or with status 500 (Internal Server Error) if the funcaoTransacao couldnt be updated
@@ -131,7 +136,7 @@ public class FuncaoTransacaoResource {
     @PutMapping(path = "/funcao-transacaos/{id}", consumes = {"multipart/form-data"})
     @Timed
     public ResponseEntity<FuncaoTransacao> updateFuncaoTransacao(@PathVariable Long id, @RequestPart("funcaoTransacao") FuncaoTransacaoSaveDTO funcaoTransacaoDTO, @RequestPart("files")List<MultipartFile> files) throws URISyntaxException, InvocationTargetException, IllegalAccessException {
-        FuncaoTransacao funcaoTransacao = funcaoTransacaoDTO.toEntity();
+        FuncaoTransacao funcaoTransacao = convertToEntity(funcaoTransacaoDTO);
 
         log.debug("REST request to update FuncaoTransacao : {}", funcaoTransacao);
         FuncaoTransacao funcaoTransacaoOld = funcaoTransacaoRepository.findOne(id);
@@ -141,7 +146,7 @@ public class FuncaoTransacaoResource {
         funcaoTransacao.setAnalise(analise);
 
         if (funcaoTransacao.getId() == null) {
-            return createFuncaoTransacao(analise.getId(), funcaoTransacao, files);
+            return createFuncaoTransacao(analise.getId(), funcaoTransacaoDTO, files);
         }
 
         if (funcaoTransacao.getAnalise() == null || funcaoTransacao.getAnalise().getId() == null) {
@@ -192,6 +197,22 @@ public class FuncaoTransacaoResource {
         log.debug("REST request to get FuncaoTransacao : {}", id);
         FuncaoTransacao funcaoTransacao = funcaoTransacaoRepository.findOne(id);
         FuncaoTransacaoApiDTO funcaoDadosDTO = modelMapper.map(funcaoTransacao, FuncaoTransacaoApiDTO.class);
+        Set<DerFtDTO> ders = new LinkedHashSet<>();
+        Set<AlrDTO> alrs = new LinkedHashSet<>();
+        funcaoTransacao.getDers().forEach(der -> {
+            DerFtDTO derDto = new DerFtDTO();
+            derDto.setNome(der.getNome());
+            derDto.setValor(der.getValor());
+            ders.add(derDto);
+        });
+        funcaoTransacao.getAlrs().forEach(alr -> {
+            AlrDTO alrDto = new AlrDTO();
+            alrDto.setNome(alr.getNome());
+            alrDto.setValor(alr.getValor());
+            alrs.add(alrDto);
+        });
+        funcaoDadosDTO.setDers(ders);
+        funcaoDadosDTO.setAlrs(alrs);
         return ResponseUtil.wrapOrNotFound(Optional.ofNullable(funcaoDadosDTO));
     }
 
@@ -324,7 +345,7 @@ public class FuncaoTransacaoResource {
 
     @NotNull
     private Set<Der> bindDers(@RequestBody FuncaoTransacao funcaoTransacao) {
-        Set<Der> ders = new HashSet<>();
+        Set<Der> ders = new LinkedHashSet<>();
         funcaoTransacao.getDers().forEach(der -> {
             if (der.getId() != null) {
                 der = derRepository.findOne(der.getId());
@@ -335,6 +356,27 @@ public class FuncaoTransacaoResource {
             }
         });
         return ders;
+    }
+
+    private FuncaoTransacao convertToEntity(FuncaoTransacaoSaveDTO funcaoTransacaoSaveDTO){
+        Set<Der> ders = new LinkedHashSet<>();
+        Set<Alr> alrs = new LinkedHashSet<>();
+        FuncaoTransacao map = modelMapper.map(funcaoTransacaoSaveDTO, FuncaoTransacao.class);
+        funcaoTransacaoSaveDTO.getDers().forEach(derDto -> {
+            Der der = new Der();
+            der.setNome(derDto.getNome());
+            der.setValor(derDto.getValor());
+            ders.add(der);
+        });
+        funcaoTransacaoSaveDTO.getAlrs().forEach(alrDto -> {
+            Alr alr = new Alr();
+            alr.setNome(alrDto.getNome());
+            alr.setValor(alrDto.getValor());
+            alrs.add(alr);
+        });
+        map.setDers(ders);
+        map.setAlrs(alrs);
+        return map;
     }
 
     private void saveVwDersAndVwAlrs(Set<Der> ders, Set<Alr> alrs, Long idSistema) {

@@ -665,6 +665,7 @@ export class FuncaoTransacaoDivergenceComponent implements OnInit {
                 ));
                 this.setFields(funcaoTransacaoCalculada);
                 this.funcoesTransacoes.push(funcaoTransacaoCalculada);
+                this.funcoesTransacoes.sort((a, b) => a.id - b.id);
                 this.resetarEstadoPosSalvar();
                 this.fecharDialog();
                 this.divergenciaService.updateDivergenciaSomaPf(this.analise.id).subscribe();
@@ -1170,6 +1171,7 @@ export class FuncaoTransacaoDivergenceComponent implements OnInit {
                 }
                 this.setFields(funcaoTransacaoCalculada);
                 this.funcoesTransacoes.push(funcaoTransacaoCalculada);
+                this.funcoesTransacoes.sort((a, b) => a.id - b.id);
                 this.divergenciaService.updateSomaPf(this.analise.id).subscribe();
             });
         }
@@ -1248,6 +1250,10 @@ export class FuncaoTransacaoDivergenceComponent implements OnInit {
     private isImageFile(file: File): boolean {
         const res = file.type.search(/^image\//i) === 0;
         return (res);
+    }
+
+    refreshFuncoes(){
+        this.funcoesTransacoes.sort((a, b) => a.id - b.id);
     }
 }
 
