@@ -82,6 +82,7 @@
                         <p-table
                             [value]="fn"
                             [paginator]="true" [rows]="10"
+                            [rowsPerPageOptions]="[10,25,50]"
                             [(selection)]="selections" #table>
                             <ng-template pTemplate="caption">
                                 {{isFuncaoDados? 'Função de dados':'Função de transação'}}
