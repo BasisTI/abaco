@@ -383,8 +383,8 @@ public class AnaliseResource {
     public @ResponseBody
     ResponseEntity<byte[]> downloadPdfDetalhadoBrowser(@PathVariable Long id) throws URISyntaxException, IOException, JRException {
         Analise analise = analiseService.recuperarAnalise(id);
-        analise.setFuncaoDados(funcaoDadosRepository.findByAnaliseIdOrderByFuncionalidadeModuloNomeAscFuncionalidadeNomeAscNameAsc(id));
-        analise.setFuncaoTransacaos(funcaoTransacaoRepository.findByAnaliseIdOrderByFuncionalidadeModuloNomeAscFuncionalidadeNomeAscNameAsc(id));
+        analise.setFuncaoDados(funcaoDadosRepository.findAllByAnaliseIdOrderById(id));
+        analise.setFuncaoTransacaos(funcaoTransacaoRepository.findAllByAnaliseIdOrderById(id));
         relatorioAnaliseRest = new RelatorioAnaliseRest(this.response, this.request);
         return relatorioAnaliseRest.downloadPdfBrowser(analise, TipoRelatorio.ANALISE_DETALHADA);
     }
@@ -395,8 +395,8 @@ public class AnaliseResource {
     public @ResponseBody
     ResponseEntity<byte[]> downloadPdfDivergenciaDetalhadoBrowser(@PathVariable Long id) throws URISyntaxException, IOException, JRException {
         Analise analise = analiseService.recuperarAnalise(id);
-        analise.setFuncaoDados(funcaoDadosRepository.findByAnaliseIdAndStatusFuncaoOrderByFuncionalidadeModuloNomeAscFuncionalidadeNomeAscNameAsc(id, StatusFuncao.VALIDADO));
-        analise.setFuncaoTransacaos(funcaoTransacaoRepository.findByAnaliseIdAndStatusFuncaoOrderByFuncionalidadeModuloNomeAscFuncionalidadeNomeAscNameAsc(id, StatusFuncao.VALIDADO));
+        analise.setFuncaoDados(funcaoDadosRepository.findByAnaliseIdAndStatusFuncaoOrderById(id, StatusFuncao.VALIDADO));
+        analise.setFuncaoTransacaos(funcaoTransacaoRepository.findByAnaliseIdAndStatusFuncaoOrderById(id, StatusFuncao.VALIDADO));
         relatorioAnaliseRest = new RelatorioAnaliseRest(this.response, this.request);
         return relatorioAnaliseRest.downloadPdfBrowser(analise, TipoRelatorio.ANALISE_DETALHADA);
     }
@@ -407,8 +407,8 @@ public class AnaliseResource {
     public @ResponseBody
     ResponseEntity<byte[]> downloadRelatorioExcel(@PathVariable Long id) throws URISyntaxException, IOException, JRException {
         Analise analise = analiseService.recuperarAnalise(id);
-        analise.setFuncaoDados(funcaoDadosRepository.findByAnaliseIdOrderByFuncionalidadeModuloNomeAscFuncionalidadeNomeAscNameAsc(id));
-        analise.setFuncaoTransacaos(funcaoTransacaoRepository.findByAnaliseIdOrderByFuncionalidadeModuloNomeAscFuncionalidadeNomeAscNameAsc(id));
+        analise.setFuncaoDados(funcaoDadosRepository.findAllByAnaliseIdOrderById(id));
+        analise.setFuncaoTransacaos(funcaoTransacaoRepository.findAllByAnaliseIdOrderById(id));
         relatorioAnaliseRest = new RelatorioAnaliseRest(this.response, this.request);
         Long idLogo = analise.getOrganizacao().getLogoId();
         UploadedFile uploadedFiles = new UploadedFile();
@@ -424,8 +424,8 @@ public class AnaliseResource {
     public @ResponseBody
     ResponseEntity<byte[]> downloadDivergenciaRelatorioExcel(@PathVariable Long id) throws URISyntaxException, IOException, JRException {
         Analise analise = analiseService.recuperarAnalise(id);
-        analise.setFuncaoDados(funcaoDadosRepository.findByAnaliseIdAndStatusFuncaoOrderByFuncionalidadeModuloNomeAscFuncionalidadeNomeAscNameAsc(id, StatusFuncao.VALIDADO));
-        analise.setFuncaoTransacaos(funcaoTransacaoRepository.findByAnaliseIdAndStatusFuncaoOrderByFuncionalidadeModuloNomeAscFuncionalidadeNomeAscNameAsc(id, StatusFuncao.VALIDADO));
+        analise.setFuncaoDados(funcaoDadosRepository.findByAnaliseIdAndStatusFuncaoOrderById(id, StatusFuncao.VALIDADO));
+        analise.setFuncaoTransacaos(funcaoTransacaoRepository.findByAnaliseIdAndStatusFuncaoOrderById(id, StatusFuncao.VALIDADO));
         relatorioAnaliseRest = new RelatorioAnaliseRest(this.response, this.request);
         Long idLogo = analise.getOrganizacao().getLogoId();
         UploadedFile uploadedFiles = new UploadedFile();
@@ -441,8 +441,8 @@ public class AnaliseResource {
     public @ResponseBody
     ResponseEntity<InputStreamResource> gerarRelatorioContagemPdf(@PathVariable Long id) throws IOException, JRException {
         Analise analise = analiseService.recuperarAnaliseContagem(id);
-        analise.setFuncaoDados(funcaoDadosRepository.findByAnaliseIdOrderByFuncionalidadeModuloNomeAscFuncionalidadeNomeAscNameAsc(id));
-        analise.setFuncaoTransacaos(funcaoTransacaoRepository.findByAnaliseIdOrderByFuncionalidadeModuloNomeAscFuncionalidadeNomeAscNameAsc(id));
+        analise.setFuncaoDados(funcaoDadosRepository.findAllByAnaliseIdOrderById(id));
+        analise.setFuncaoTransacaos(funcaoTransacaoRepository.findAllByAnaliseIdOrderById(id));
         relatorioAnaliseRest = new RelatorioAnaliseRest(this.response, this.request);
         return relatorioAnaliseRest.downloadReportContagem(analise);
     }
@@ -725,8 +725,8 @@ public class AnaliseResource {
     @Secured("ROLE_ABACO_ANALISE_EXPORTAR_RELATORIO_EXCEL")
     public ResponseEntity<byte[]> importarExcel(@PathVariable Long id) throws IOException{
         Analise analise = analiseService.recuperarAnalise(id);
-        analise.setFuncaoDados(funcaoDadosRepository.findByAnaliseIdOrderByFuncionalidadeModuloNomeAscFuncionalidadeNomeAscNameAsc(id));
-        analise.setFuncaoTransacaos(funcaoTransacaoRepository.findByAnaliseIdOrderByFuncionalidadeModuloNomeAscFuncionalidadeNomeAscNameAsc(id));
+        analise.setFuncaoDados(funcaoDadosRepository.findAllByAnaliseIdOrderById(id));
+        analise.setFuncaoTransacaos(funcaoTransacaoRepository.findAllByAnaliseIdOrderById(id));
         List<FuncaoDados> funcaoDadosList = analise.getFuncaoDados().stream().collect(Collectors.toList());
         List<FuncaoTransacao> funcaoTransacaoList = analise.getFuncaoTransacaos().stream().collect(Collectors.toList());
         InputStream stream = getClass().getClassLoader().getResourceAsStream("reports/planilhas/modelo1.xlsx");
