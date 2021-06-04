@@ -64,7 +64,7 @@ public class FuncaoTransacao extends FuncaoAnalise implements Serializable {
 
     @OneToMany(mappedBy = FUNCAOTRANSACAO, cascade = CascadeType.ALL, orphanRemoval = true)
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-    @OrderBy("nome")
+    @OrderBy("id")
     private Set<Alr> alrs = new HashSet<>();
 
     @OneToMany(mappedBy = FUNCAOTRANSACAO, cascade = CascadeType.ALL, orphanRemoval = true)
@@ -81,7 +81,7 @@ public class FuncaoTransacao extends FuncaoAnalise implements Serializable {
     private ImpactoFatorAjuste impacto;
 
     @OneToMany(mappedBy = FUNCAOTRANSACAO, cascade = CascadeType.ALL, orphanRemoval = true)
-    @OrderBy("nome")
+    @OrderBy("id")
     private Set<Der> ders = new HashSet<>();
 
     @JsonIgnore
