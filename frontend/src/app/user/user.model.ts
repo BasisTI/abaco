@@ -4,6 +4,7 @@ import { Organizacao } from '../organizacao';
 import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 import { UserService } from './user.service';
 import { Perfil } from '../perfil/perfil.model';
+import { PerfilOrganizacao } from '../perfil/perfil-organizacao.model';
 
 
 export class User implements BaseEntity {
@@ -18,8 +19,10 @@ export class User implements BaseEntity {
     public imageUrl?: string,
     public tipoEquipes?: TipoEquipe[],
     public perfils?: Perfil[],
+    public perfilOrganizacoes?: PerfilOrganizacao[],
     public organizacoes?: Organizacao[]
-  ) { }
+  ) {
+   }
 
 
   // Não funcionando na busca pois dataTableService retorna um Object e não um User

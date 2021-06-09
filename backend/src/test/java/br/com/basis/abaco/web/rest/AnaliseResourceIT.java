@@ -16,6 +16,7 @@ import br.com.basis.abaco.repository.VwAnaliseSomaPfRepository;
 import br.com.basis.abaco.repository.search.AnaliseSearchRepository;
 import br.com.basis.abaco.repository.search.UserSearchRepository;
 import br.com.basis.abaco.service.AnaliseService;
+import br.com.basis.abaco.service.PerfilService;
 import br.com.basis.abaco.web.rest.errors.ExceptionTranslator;
 import br.com.basis.dynamicexports.service.DynamicExportsService;
 import org.junit.Before;
@@ -133,6 +134,8 @@ public class AnaliseResourceIT {
 
     private Analise analise;
 
+    private PerfilService perfilService;
+
     private AnaliseService analiseService;
 
 
@@ -147,7 +150,7 @@ public class AnaliseResourceIT {
             compartilhadaRepository,
             funcaoTransacaoRepository,
             elasticsearchTemplate,
-            analiseService, statusRepository);
+            analiseService, statusRepository, perfilService);
         this.restAnaliseMockMvc = MockMvcBuilders.standaloneSetup(analiseResource)
             .setCustomArgumentResolvers(pageableArgumentResolver).setControllerAdvice(exceptionTranslator)
             .setMessageConverters(jacksonMessageConverter).build();

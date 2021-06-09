@@ -49,17 +49,17 @@
                                     </p-column>
                                     <basis-datatable-button [allowMultipleSelection]="false" name="clone"
                                         *ngIf="!isView"
-                                        [pTooltip]="funcaoTransacaoEditar[0] != undefined ? this.getLabel('Criar Clone') : this.getLabel('Escolha um registro para criar Clone.')"
+                                        [bTooltip]="funcaoTransacaoEditar[0] != undefined ? this.getLabel('Criar Clone') : this.getLabel('Escolha um registro para criar Clone.')"
                                         [disabled]="funcaoTransacaoEditar[0] == undefined" class="ui-button-dark"
                                         icon="content-copy">
                                     </basis-datatable-button>
                                     <basis-datatable-button name="filter" *ngIf="!isView"
-                                        pTooltip="Copiar funções de transação." class="ui-button-info"
+                                    bTooltip="Copiar funções de transação." class="ui-button-info"
                                         icon="import-export">
                                     </basis-datatable-button>
                                     <basis-datatable-button name="edicaoLote"
                                         *ngIf="!isView && funcaoTransacaoEditar?.length > 1"
-                                        (click)="prepararEditarEmLote()" pTooltip="Edição em lote."
+                                        (click)="prepararEditarEmLote()" bTooltip="Edição em lote."
                                         class="ui-button-success" icon="border-color">
                                     </basis-datatable-button>
                                     <basis-datatable-button name="refresh"

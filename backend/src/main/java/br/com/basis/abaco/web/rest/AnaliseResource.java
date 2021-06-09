@@ -23,6 +23,7 @@ import br.com.basis.abaco.repository.UserRepository;
 import br.com.basis.abaco.repository.search.AnaliseSearchRepository;
 import br.com.basis.abaco.security.SecurityUtils;
 import br.com.basis.abaco.service.AnaliseService;
+import br.com.basis.abaco.service.PerfilService;
 import br.com.basis.abaco.service.dto.AnaliseDTO;
 import br.com.basis.abaco.service.dto.AnaliseDivergenceEditDTO;
 import br.com.basis.abaco.service.dto.AnaliseEditDTO;
@@ -107,6 +108,7 @@ public class AnaliseResource {
     private final DynamicExportsService dynamicExportsService;
     private final ElasticsearchTemplate elasticsearchTemplate;
     private static final String NOME_RELATORIO = "relatorio.";
+    private final PerfilService perfilService;
     private HttpServletRequest request;
     private HttpServletResponse response;
 
@@ -125,7 +127,7 @@ public class AnaliseResource {
                            FuncaoTransacaoRepository funcaoTransacaoRepository,
                            ElasticsearchTemplate elasticsearchTemplate,
                            AnaliseService analiseService,
-                           StatusRepository statusRepository) {
+                           StatusRepository statusRepository, PerfilService perfilService) {
         this.analiseRepository = analiseRepository;
         this.analiseSearchRepository = analiseSearchRepository;
         this.dynamicExportsService = dynamicExportsService;
@@ -136,6 +138,7 @@ public class AnaliseResource {
         this.elasticsearchTemplate = elasticsearchTemplate;
         this.analiseService = analiseService;
         this.statusRepository = statusRepository;
+        this.perfilService = perfilService;
     }
 
     @PostMapping("/analises")
@@ -552,13 +555,14 @@ public class AnaliseResource {
         Pageable pageable = new PageRequest(pageNumber, size, sortOrder, sort);
         FieldSortBuilder sortBuilder = new FieldSortBuilder(sort).order(SortOrder.ASC);
         BoolQueryBuilder qb = analiseService.getBoolQueryBuilder(identificador, sistema, metodo, organizacao, equipe, usuario, status);
-        SearchQuery searchQuery = new NativeSearchQueryBuilder().withQuery(qb).withPageable(pageable).withSort(sortBuilder).build();
+        SearchQuery searchQuery = new NativeSearchQueryBuilder().withQuery(qb).withPageable(dynamicExportsService.obterPageableMaximoExportacao()).withSort(sortBuilder).build();
         Page<Analise> page = elasticsearchTemplate.queryForPage(searchQuery, Analise.class);
         log.debug("DEBUG Consulta Analises -  Consulta realizada");
         Page<AnaliseDTO> dtoPage = page.map(analise -> analiseService.convertToDto(analise));
+        Page<AnaliseDTO> newDTOPage = perfilService.validarPerfilAnalise(dtoPage, pageable, false);
         log.debug("DEBUG Consulta Analises -  Conversão realizada");
-        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, API_ANALISES);
-        return new ResponseEntity<>(dtoPage.getContent(), headers, HttpStatus.OK);
+        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(newDTOPage, API_ANALISES);
+        return new ResponseEntity<>(newDTOPage.getContent(), headers, HttpStatus.OK);
     }
 
     @GetMapping("/analises/update-pf/{id}")
@@ -679,13 +683,15 @@ public class AnaliseResource {
         Pageable pageable = new PageRequest(pageNumber, size, sortOrder, sort);
         FieldSortBuilder sortBuilder = new FieldSortBuilder(sort).order(SortOrder.ASC);
         BoolQueryBuilder qb = analiseService.getBoolQueryBuilderDivergence(identificador, sistema, organizacao);
-        SearchQuery searchQuery = new NativeSearchQueryBuilder().withQuery(qb).withPageable(pageable).withSort(sortBuilder).build();
+        SearchQuery searchQuery = new NativeSearchQueryBuilder().withQuery(qb).withPageable(dynamicExportsService.obterPageableMaximoExportacao()).withSort(sortBuilder).build();
         Page<Analise> page = elasticsearchTemplate.queryForPage(searchQuery, Analise.class);
         log.debug("DEBUG Consulta Validação -  Consulta realizada");
         Page<AnaliseDTO> dtoPage = page.map(analise -> analiseService.convertToDto(analise));
+
+        Page<AnaliseDTO> newDTOPage = perfilService.validarPerfilAnalise(dtoPage, pageable, true);
         log.debug("DEBUG Consulta Validação -  Conversão realizada");
-        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, API_ANALISES);
-        return new ResponseEntity<>(dtoPage.getContent(), headers, HttpStatus.OK);
+        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(newDTOPage, API_ANALISES);
+        return new ResponseEntity<>(newDTOPage.getContent(), headers, HttpStatus.OK);
     }
 
 

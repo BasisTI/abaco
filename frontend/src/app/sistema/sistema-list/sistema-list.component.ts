@@ -7,6 +7,8 @@ import { ElasticQuery } from 'src/app/shared/elastic-query';
 import { Organizacao, OrganizacaoService } from 'src/app/organizacao';
 import { SistemaService } from '../sistema.service';
 import { AuthService } from 'src/app/util/auth.service';
+import { PerfilOrganizacao } from 'src/app/perfil/perfil-organizacao.model';
+import { PerfilService } from 'src/app/perfil/perfil.service';
 
 @Component({
     selector: 'app-sistema',
@@ -39,22 +41,17 @@ export class SistemaListComponent {
     canDeletar: boolean = false;
     canPesquisar: boolean = false;
 
+    perfisOrganizacao: PerfilOrganizacao[] = [];
+
     constructor(
         private router: Router,
         private sistemaService: SistemaService,
         private confirmationService: ConfirmationService,
         private organizacaoService: OrganizacaoService,
         private pageNotificationService: PageNotificationService,
-        private authService: AuthService
+        private authService: AuthService,
+        private perfilService: PerfilService
     ) {
-        const emptyOrganization = new Organizacao();
-        this.organizacaoService.dropDown().subscribe(response => {
-            this.customOptions['organizacao'] = response.map((item) => {
-                return { label: item.nome, value: item.id };
-            });
-            this.organizations = response;
-            this.organizations.push(emptyOrganization);
-        });
     }
 
     getLabel(label) {
@@ -71,6 +68,25 @@ export class SistemaListComponent {
             });
         }
         this.verificarPermissoes();
+
+        this.perfilService.getPerfilOrganizacaoByUser().subscribe(r => {
+            this.perfisOrganizacao = r;
+        })
+        const emptyOrganization = new Organizacao();
+        let organizacoesPesquisar: Organizacao[] = [];
+        this.organizacaoService.dropDown().subscribe(response => {
+            response.forEach(organizacao => {
+                if(PerfilService.consultarPerfilOrganizacao("SISTEMA", "PESQUISAR", this.perfisOrganizacao, organizacao) == true){
+                    organizacoesPesquisar.push(organizacao);
+                }
+            })
+
+            this.customOptions['organizacao'] = organizacoesPesquisar.map((item) => {
+                return { label: item.nome, value: item.id };
+            });
+            this.organizations = organizacoesPesquisar;
+            this.organizations.push(emptyOrganization);
+        });
     }
 
     verificarPermissoes() {
@@ -89,6 +105,12 @@ export class SistemaListComponent {
         if (this.authService.possuiRole(AuthService.PREFIX_ROLE + "SISTEMA_PESQUISAR") == true) {
             this.canPesquisar = true;
         }
+    }
+
+    verificarBotoes(sistema: Sistema) {
+        this.canEditar = PerfilService.consultarPerfilSistema("SISTEMA", "EDITAR", this.perfisOrganizacao, sistema);
+        this.canConsultar = PerfilService.consultarPerfilSistema("SISTEMA", "CONSULTAR", this.perfisOrganizacao, sistema);
+        this.canDeletar = PerfilService.consultarPerfilSistema("SISTEMA", "EXCLUIR", this.perfisOrganizacao, sistema);
     }
 
     public datatableClick(event: DatatableClickEvent) {
@@ -224,6 +246,7 @@ export class SistemaListComponent {
         if (this.datatable && this.datatable.selectedRow) {
             if (this.datatable.selectedRow && this.datatable.selectedRow) {
                 this.sistemaSelecionado = this.datatable.selectedRow;
+                this.verificarBotoes(this.sistemaSelecionado);
             }
         }
     }

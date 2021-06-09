@@ -19,6 +19,8 @@ import { Divergencia, DivergenciaService } from 'src/app/divergencia';
 import { FaseFilter } from 'src/app/fase/model/fase.filter';
 import { AuthService } from 'src/app/util/auth.service';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
+import { PerfilOrganizacao } from 'src/app/perfil/perfil-organizacao.model';
+import { PerfilService } from 'src/app/perfil/perfil.service';
 
 @Component({
     selector: 'app-analise',
@@ -132,13 +134,11 @@ export class AnaliseListComponent implements OnInit {
     canPesquisar: boolean = false;
     canCadastrar: boolean = false;
     canBloquearDesbloquear: boolean = false;
+    canExportarPlanilha: boolean = false;
 
-    downloadJsonHref;
-    analiseFileJson;
-    showDialogImportar: boolean;
+    perfisOrganizacao: PerfilOrganizacao[] = [];
 
     showDialogImportarExcel: boolean = false;
-
     analiseImportarExcel: Analise = new Analise();
     lstModelosExcel = [
         {label: "Modelo 1", value: 1},
@@ -147,6 +147,10 @@ export class AnaliseListComponent implements OnInit {
 
     //JSON
     analisesImportar: Analise[] = [];
+
+    downloadJsonHref;
+    analiseFileJson;
+    showDialogImportar: boolean;
 
     constructor(
         private router: Router,
@@ -163,12 +167,16 @@ export class AnaliseListComponent implements OnInit {
         private statusService: StatusService,
         private divergenceServie: DivergenciaService,
         private authService: AuthService,
-        private sanitizer: DomSanitizer
+        private sanitizer: DomSanitizer,
+        private perfilService: PerfilService
     ) {
 
     }
 
     public ngOnInit() {
+        this.perfilService.getPerfilOrganizacaoByUser().subscribe(r => {
+            this.perfisOrganizacao = r;
+        })
         this.userAnaliseUrl = this.grupoService.grupoUrl + this.changeUrl();
         this.estadoInicial();
         this.verificarPermissoes();
@@ -222,6 +230,25 @@ export class AnaliseListComponent implements OnInit {
         if (this.authService.possuiRole(AuthService.PREFIX_ROLE + "ANALISE_BLOQUEAR_DESBLOQUEAR") == true) {
             this.canBloquearDesbloquear = true;
         }
+        if (this.authService.possuiRole(AuthService.PREFIX_ROLE + "ANALISE_EXPORTAR") == true) {
+            this.canExportarPlanilha = true;
+        }
+    }
+
+    verificarBotoes(analise: Analise) {
+        this.canEditar = PerfilService.consultarPerfilAnalise("ANALISE", "EDITAR", this.perfisOrganizacao, analise);
+        this.canConsultar = PerfilService.consultarPerfilAnalise("ANALISE", "CONSULTAR", this.perfisOrganizacao, analise);
+        this.canDeletar = PerfilService.consultarPerfilAnalise("ANALISE", "EXCLUIR", this.perfisOrganizacao, analise);
+        this.canRelatorioDetalhado = PerfilService.consultarPerfilAnalise("ANALISE", "EXPORTAR_RELATORIO_DETALHADO", this.perfisOrganizacao, analise);;
+        this.canAlterarStatus = PerfilService.consultarPerfilAnalise("ANALISE", "ALTERAR_STATUS", this.perfisOrganizacao, analise);
+        this.canBloquearDesbloquear = PerfilService.consultarPerfilAnalise("ANALISE", "BLOQUEAR_DESBLOQUEAR", this.perfisOrganizacao, analise);
+        this.canClonar = PerfilService.consultarPerfilAnalise("ANALISE", "CLONAR", this.perfisOrganizacao, analise);
+        this.canClonarEquipe = PerfilService.consultarPerfilAnalise("ANALISE", "CLONAR_EQUIPE", this.perfisOrganizacao, analise);
+        this.canCompartilhar = PerfilService.consultarPerfilAnalise("ANALISE", "COMPARTILHAR", this.perfisOrganizacao, analise);
+        this.canGerarValidacao = PerfilService.consultarPerfilAnalise("ANALISE", "GERAR_VALIDACAO", this.perfisOrganizacao, analise);
+        this.canRelatorioExcel = PerfilService.consultarPerfilAnalise("ANALISE", "EXPORTAR_RELATORIO_EXCEL", this.perfisOrganizacao, analise);
+        this.canRelatorioFundamentacao = PerfilService.consultarPerfilAnalise("ANALISE", "EXPORTAR_RELATORIO_FUNDAMENTACAO", this.perfisOrganizacao, analise);
+        this.canExportarPlanilha = PerfilService.consultarPerfilAnalise("ANALISE", "EXPORTAR", this.perfisOrganizacao, analise);
     }
 
     estadoInicial() {
@@ -308,9 +335,15 @@ export class AnaliseListComponent implements OnInit {
     }
 
     recuperarOrganizacoes() {
+        let organizacoesPesquisar: Organizacao[] = [];
         this.organizacaoService.dropDown().subscribe(response => {
-            this.organizations = response;
-            this.customOptions['organizacao.nome'] = response.map((item) => {
+            response.forEach(organizacao => {
+                if(PerfilService.consultarPerfilOrganizacao("VALIDACAO", "PESQUISAR", this.perfisOrganizacao, organizacao) == true){
+                    organizacoesPesquisar.push(organizacao);
+                }
+            })
+            this.organizations = organizacoesPesquisar;
+            this.customOptions['organizacao.nome'] = organizacoesPesquisar.map((item) => {
                 return { label: item.nome, value: item.id };
             });
         });
@@ -515,6 +548,9 @@ export class AnaliseListComponent implements OnInit {
     }
 
     abrirEditar() {
+        if(!this.canEditar){
+            return false;
+        }
         this.router.navigate(['/analise', this.analiseSelecionada.id, 'edit']);
     }
 
@@ -578,6 +614,7 @@ export class AnaliseListComponent implements OnInit {
             if (this.datatable.selectedRow && this.datatable.selectedRow[0]) {
                 this.analiseSelecionada = this.datatable.selectedRow[0];
                 this.blocked = this.datatable.selectedRow[0].bloqueiaAnalise;
+                this.verificarBotoes(this.analiseSelecionada);
             }
         }
     }
