@@ -8,6 +8,10 @@ import { Organizacao, SearchGroup } from '../organizacao.model';
 import { ElasticQuery } from 'src/app/shared/elastic-query';
 import { OrganizacaoService } from '../organizacao.service';
 import { AuthService } from 'src/app/util/auth.service';
+import { AuthenticationService } from '@nuvem/angular-base';
+import { User } from 'src/app/user';
+import { Perfil, PerfilService } from 'src/app/perfil';
+import { PerfilOrganizacao } from 'src/app/perfil/perfil-organizacao.model';
 
 
 @Component({
@@ -53,13 +57,16 @@ export class OrganizacaoListComponent implements OnInit {
     canConsultar: boolean = false;
     canDeletar: boolean = false;
 
+    perfisOrganizacao: PerfilOrganizacao[] = [];
+
     constructor(
         public _DomSanitizer: DomSanitizer,
         private router: Router,
         private organizacaoService: OrganizacaoService,
         private confirmationService: ConfirmationService,
         private pageNotificationService: PageNotificationService,
-        private authService: AuthService
+        private authService: AuthService,
+        private perfilService: PerfilService
     ) { }
 
     getLabel(label) {
@@ -77,9 +84,13 @@ export class OrganizacaoListComponent implements OnInit {
         }
         this.organizacaoFiltro = new SearchGroup();
         this.verificarPermissoes();
+
+        this.perfilService.getPerfilOrganizacaoByUser().subscribe(r => {
+            this.perfisOrganizacao = r;
+        })
     }
 
-    verificarPermissoes(){
+    verificarPermissoes() {
         if (this.authService.possuiRole(AuthService.PREFIX_ROLE + "ORGANIZACAO_EDITAR") == true) {
             this.canEditar = true;
         }
@@ -97,11 +108,19 @@ export class OrganizacaoListComponent implements OnInit {
         }
     }
 
+    verificarBotoes(organizacao: Organizacao) {
+        this.canEditar = PerfilService.consultarPerfilOrganizacao("ORGANIZACAO", "EDITAR", this.perfisOrganizacao, organizacao);
+        this.canConsultar = PerfilService.consultarPerfilOrganizacao("ORGANIZACAO", "CONSULTAR", this.perfisOrganizacao, organizacao);
+        this.canDeletar = PerfilService.consultarPerfilOrganizacao("ORGANIZACAO", "EXCLUIR", this.perfisOrganizacao, organizacao);
+    }
+
+
+
     onClick(event: DatatableClickEvent) {
         if (!event.selection) {
-
             return;
         }
+
         switch (event.button) {
             case 'edit':
                 this.router.navigate(['/organizacao', event.selection.id, 'edit']);
@@ -125,7 +144,8 @@ export class OrganizacaoListComponent implements OnInit {
     }
 
     abrirEditar() {
-        if (this.authService.possuiRole(AuthService.PREFIX_ROLE + "ORGANIZACAO_EDITAR") == false) {
+        if (this.authService.possuiRole(AuthService.PREFIX_ROLE + "ORGANIZACAO_EDITAR") == false
+        || PerfilService.consultarPerfilOrganizacao("ORGANIZACAO", "EDITAR", this.perfisOrganizacao, this.organizacaoSelecionada) == false) {
             return false;
         }
         this.router.navigate(['/organizacao', this.organizacaoSelecionada.id, 'edit']);
@@ -168,6 +188,7 @@ export class OrganizacaoListComponent implements OnInit {
         if (this.datatable && this.datatable.selectedRow) {
             if (this.datatable.selectedRow && this.datatable.selectedRow) {
                 this.organizacaoSelecionada = this.datatable.selectedRow;
+                this.verificarBotoes(this.organizacaoSelecionada);
             }
         }
     }

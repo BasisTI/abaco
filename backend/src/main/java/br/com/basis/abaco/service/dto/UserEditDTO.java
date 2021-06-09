@@ -5,7 +5,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Getter
@@ -32,6 +34,8 @@ public class UserEditDTO {
     private String nome;
 
     private Set<Perfil> perfils = new HashSet<>();
+
+    private List<PerfilOrganizacaoDTO> perfilOrganizacoes = new ArrayList<>();
 
     public String getNome() {
         return this.firstName + ' ' + this.lastName ;

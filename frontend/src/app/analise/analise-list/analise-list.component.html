@@ -211,7 +211,7 @@
                         <basis-datatable-button name="importJson" [bTooltip]="'Importar análise'" icon="file-upload"
                            class="ui-button-success" (click)="openModalImportAnalise()">
                         </basis-datatable-button> -->
-                        <basis-datatable-button name="importExcel" [bTooltip]="'Exportar planilha excel'"
+                        <basis-datatable-button *ngIf="canExportarPlanilha" name="importExcel" [bTooltip]="'Exportar planilha excel'"
                             icon="file-upload" class="ui-button-success" [disabled]="datatable.selectedRow == null">
                         </basis-datatable-button> -->
                     </basis-datatable>

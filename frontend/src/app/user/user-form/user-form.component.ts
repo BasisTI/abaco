@@ -1,19 +1,22 @@
-import {Component, OnInit, OnDestroy, OnChanges} from '@angular/core';
-import {ActivatedRoute, Router, UrlSegment} from '@angular/router';
-import { TipoEquipe, TipoEquipeService } from 'src/app/tipo-equipe';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { ActivatedRoute, Router, UrlSegment } from '@angular/router';
+import { AuthGuard } from '@nuvem/angular-base';
+import { DatatableComponent, PageNotificationService } from '@nuvem/primeng-components';
+import { ConfirmationService, SelectItem } from 'primeng';
+import { Observable, Subscription } from 'rxjs';
 import { Organizacao, OrganizacaoService } from 'src/app/organizacao';
-import { User } from '../user.model';
-import { Subscription, Observable } from 'rxjs';
-import { UserService } from '../user.service';
-import { PageNotificationService } from '@nuvem/primeng-components';
-import { AuthorizationService, Authorization, Authentication, AuthGuard } from '@nuvem/angular-base';
-import { ResponseWrapper } from 'src/app/shared';
 import { Perfil, PerfilService } from 'src/app/perfil';
+import { PerfilOrganizacao } from 'src/app/perfil/perfil-organizacao.model';
+import { TipoEquipe, TipoEquipeService } from 'src/app/tipo-equipe';
+import { User } from '../user.model';
+import { UserService } from '../user.service';
+
 
 
 @Component({
     selector: 'jhi-user-form',
-    templateUrl: './user-form.component.html'
+    templateUrl: './user-form.component.html',
+    providers: [ConfirmationService],
 })
 export class UserFormComponent implements OnInit, OnDestroy {
 
@@ -29,7 +32,22 @@ export class UserFormComponent implements OnInit, OnDestroy {
     private url: string;
     emaild: any;
 
+    perfilNovo: Perfil;
+    organizacoesSelecionada: Organizacao[];
+    organizacoesOptions: SelectItem[];
+    perfilOrganizacao: PerfilOrganizacao;
+    perfilOrganizacaoEdit: PerfilOrganizacao = null;
+    contagem: number = 0;
+
+    @ViewChild(DatatableComponent) tables: DatatableComponent;
+
+
+    mostrarDialogOrgPerfil: boolean;
+
+    rowsPerPageOptions: number[] = [5, 10, 20, 100];
+
     constructor(
+        private confirmationService: ConfirmationService,
         private authService: AuthGuard,
         private route: ActivatedRoute,
         private router: Router,
@@ -56,7 +74,7 @@ export class UserFormComponent implements OnInit, OnDestroy {
         this.recuperarUsuarioPeloId();
     }
 
-    private recuperarListaPerfis(){
+    private recuperarListaPerfis() {
         this.perfilService.getAllPerfisAtivo().subscribe((response) => {
             this.perfils = response;
         })
@@ -79,7 +97,12 @@ export class UserFormComponent implements OnInit, OnDestroy {
             if (params['id']) {
                 this.userService.find(params['id']).subscribe(user => {
                     this.user = user;
-                    this.setEquipeOrganizacao(this.user.organizacoes);
+                    if (this.user.perfilOrganizacoes) {
+                        this.setEquipeOrganizacao(this.user.organizacoes);
+                    } else {
+                        this.user.perfils = [];
+                        this.user.organizacoes = [];
+                    }
                 });
             }
         });
@@ -90,12 +113,18 @@ export class UserFormComponent implements OnInit, OnDestroy {
             this.pageNotificationService.addErrorMessage('E-mail Inválido');
             return;
         }
-
         if (!form.valid) {
             this.pageNotificationService.addErrorMessage('Por favor preencher os campos Obrigatórios!');
             return;
         }
-
+        this.user.perfils = [];
+        this.user.perfilOrganizacoes.forEach(item => {
+            item.id = undefined;
+            if (this.user.perfils.indexOf(item.perfil) === -1) {
+                this.user.perfils.push(item.perfil);
+            }
+        })
+        this.carregarOrganizacoes();
         if (this.user.id !== undefined) {
             this.isEdit = true;
             this.subscribeToSaveResponse(this.userService.update(this.user));
@@ -226,4 +255,117 @@ export class UserFormComponent implements OnInit, OnDestroy {
             return true;
         });
     }
+
+    abrirDialogOrgPerfil() {
+        this.mostrarDialogOrgPerfil = true;
+        this.perfilOrganizacao = new PerfilOrganizacao();
+        this.organizacoesOptions = [];
+        this.perfilNovo = null;
+        if (this.carregarOrganizacoes().length > 0) {
+            for (let index = 0; index < this.organizacoes.length; index++) {
+                const organizacao = this.organizacoes[index];
+                if (this.carregarOrganizacoes().findIndex(i => i.id === organizacao.id) < 0) {
+                    this.organizacoesOptions.push({
+                        value: organizacao,
+                        label: organizacao.nome
+                    });
+                }
+            }
+        } else {
+            for (let index = 0; index < this.organizacoes.length; index++) {
+                const organizacao = this.organizacoes[index];
+                this.organizacoesOptions.push({
+                    value: organizacao,
+                    label: organizacao.nome
+                });
+            }
+        }
+    }
+    fecharDialogOrgPerfil() {
+        this.mostrarDialogOrgPerfil = false;
+        this.organizacoesSelecionada = [];
+        this.perfilNovo = null;
+        this.carregarOrganizacoes()
+        this.setOrganizacao(this.user.organizacoes);
+
+    }
+    adicionarOrgPerfil() {
+        if (this.organizacoesSelecionada.length > 0 && this.perfilNovo) {
+            if (!this.user.perfils) {
+                this.user.perfils = [];
+            }
+            if (!this.user.organizacoes) {
+                this.user.organizacoes = [];
+            }
+            if (!this.user.perfilOrganizacoes) {
+                this.user.perfilOrganizacoes = [];
+            }
+            this.organizacoesSelecionada.forEach(org => {
+                this.perfilOrganizacao.organizacoes.push(org);
+            });
+
+            this.perfilOrganizacao.perfil = this.perfilNovo;
+
+            this.perfilOrganizacao.id = this.contagem++;
+
+
+            this.user.perfilOrganizacoes.push(this.perfilOrganizacao);
+            this.fecharDialogOrgPerfil();
+
+        }
+        else {
+            this.pageNotificationService.addErrorMessage("Selecione uma organização e um perfil para adicionar!")
+        }
+    }
+
+    carregarOrganizacoes(): Organizacao[] {
+        let organizacoes: Organizacao[] = [];
+        this.user.organizacoes = [];
+        if (this.user.perfilOrganizacoes) {
+            this.user.perfilOrganizacoes.forEach(perfilOrganizacao => {
+                perfilOrganizacao.organizacoes.forEach(organizacao => {
+                    if (organizacoes.indexOf(organizacao) === -1) {
+                        organizacoes.push(organizacao);
+                        this.user.organizacoes.push(organizacao);
+                    }
+                })
+            })
+        }
+        return organizacoes;
+    }
+
+    selectColumn() {
+        this.tables.pDatatableComponent.metaKeySelection = true;
+        if (this.tables && this.tables.selectedRow) {
+            this.perfilOrganizacaoEdit = this.tables.selectedRow;
+        }
+    }
+    datatableClickOrgPerfil(event) {
+        if (!event.selection) {
+            return;
+        }
+        switch (event.button) {
+            case "delete":
+                this.confirmDeletePerfilOrg();
+                break;
+            default:
+                break;
+        }
+    }
+
+    confirmDeletePerfilOrg() {
+        if (this.perfilOrganizacaoEdit != null) {
+            this.confirmationService.confirm({
+                message: this.getLabel('Tem certeza que deseja excluir o registro?'),
+                accept: () => {
+                    this.user.perfilOrganizacoes.splice(this.user.perfilOrganizacoes.indexOf(this.perfilOrganizacaoEdit), 1);
+                    this.carregarOrganizacoes();
+                    this.setOrganizacao(this.user.organizacoes);
+                    this.tables.refresh();
+                    this.perfilOrganizacaoEdit = null;
+                }
+            })
+        }
+    }
 }
+

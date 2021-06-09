@@ -14,6 +14,7 @@ import java.util.List;
 
 import javax.persistence.EntityManager;
 
+import br.com.basis.abaco.service.PerfilService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -90,7 +91,10 @@ public class SistemaResourceIT {
 
     @Autowired
     private SistemaService sistemaService;
-    
+
+    @Autowired
+    private PerfilService perfilService;
+
     @Autowired
     private AnaliseRepository analiseRepository;
 
@@ -99,7 +103,7 @@ public class SistemaResourceIT {
     public void setup() {
         MockitoAnnotations.initMocks(this);
         SistemaResource sistemaResource = new SistemaResource(sistemaRepository, sistemaSearchRepository,
-                funcaoDadosVersionavelRepository, funcaoDadosRepository, sistemaService,analiseRepository);
+                funcaoDadosVersionavelRepository, funcaoDadosRepository, sistemaService,analiseRepository, perfilService, dynamicExportsService);
         this.restSistemaMockMvc = MockMvcBuilders.standaloneSetup(sistemaResource)
                 .setCustomArgumentResolvers(pageableArgumentResolver).setControllerAdvice(exceptionTranslator)
                 .setMessageConverters(jacksonMessageConverter).build();

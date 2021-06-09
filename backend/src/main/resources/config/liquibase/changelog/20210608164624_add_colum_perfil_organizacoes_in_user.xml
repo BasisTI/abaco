@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+   <changeSet author="basis (generated)" id="1623170823988-8">
+      <createTable tableName="perfil_organizacao">
+         <column autoIncrement="true" name="id" type="BIGINT">
+            <constraints primaryKey="true" primaryKeyName="perfil_organizacaoPK"/>
+         </column>
+         <column name="perfil_id" type="BIGINT"/>
+         <column name="user_id" type="BIGINT"/>
+      </createTable>
+   </changeSet>
+   <changeSet author="basis (generated)" id="1623170823988-9">
+      <createTable tableName="perfil_organizacao_organizacao">
+         <column name="perfil_organizacao_id" type="BIGINT">
+            <constraints nullable="false"/>
+         </column>
+         <column name="organizacao_id" type="BIGINT">
+            <constraints nullable="false"/>
+         </column>
+      </createTable>
+   </changeSet>
+   <changeSet author="basis (generated)" id="1623170823988-41">
+      <addForeignKeyConstraint baseColumnNames="organizacao_id"
+                               baseTableName="perfil_organizacao_organizacao"
+                               constraintName="FK3m9oc33dpmbi4v4t03hq2apdg"
+                               deferrable="false"
+                               initiallyDeferred="false"
+                               referencedColumnNames="id"
+                               referencedTableName="organizacao"/>
+   </changeSet>
+   <changeSet author="basis (generated)" id="1623170823988-42">
+      <addForeignKeyConstraint baseColumnNames="perfil_id"
+                               baseTableName="perfil_organizacao"
+                               constraintName="FKfck5gpqgwhfkjhx5lyju2wbub"
+                               deferrable="false"
+                               initiallyDeferred="false"
+                               referencedColumnNames="id"
+                               referencedTableName="perfil"/>
+   </changeSet>
+   <changeSet author="basis (generated)" id="1623170823988-43">
+      <addForeignKeyConstraint baseColumnNames="user_id"
+                               baseTableName="perfil_organizacao"
+                               constraintName="FKnpbx72dvt5wdcmle9hw2fbxy2"
+                               deferrable="false"
+                               initiallyDeferred="false"
+                               referencedColumnNames="id"
+                               referencedTableName="jhi_user"/>
+   </changeSet>
+   <changeSet author="basis (generated)" id="1623170823988-44">
+      <addForeignKeyConstraint baseColumnNames="perfil_organizacao_id"
+                               baseTableName="perfil_organizacao_organizacao"
+                               constraintName="FKnq7cwuw4acmty0d22ewnskagt"
+                               deferrable="false"
+                               initiallyDeferred="false"
+                               referencedColumnNames="id"
+                               referencedTableName="perfil_organizacao"/>
+   </changeSet>
+</databaseChangeLog>
