@@ -84,19 +84,16 @@ public class OrganizacaoResource {
 
     private final OrganizacaoService organizacaoService;
 
-    private final UserService userService;
-
     private final PerfilService perfilService;
 
     public OrganizacaoResource(OrganizacaoRepository organizacaoRepository,
                                OrganizacaoSearchRepository organizacaoSearchRepository, UploadedFilesRepository filesRepository, DynamicExportsService dynamicExportsService,
-                               OrganizacaoService organizacaoService, UserService userService, PerfilService perfilService) {
+                               OrganizacaoService organizacaoService, PerfilService perfilService) {
         this.organizacaoRepository = organizacaoRepository;
         this.organizacaoSearchRepository = organizacaoSearchRepository;
         this.filesRepository = filesRepository;
         this.dynamicExportsService = dynamicExportsService;
         this.organizacaoService = organizacaoService;
-        this.userService = userService;
         this.perfilService = perfilService;
     }
 

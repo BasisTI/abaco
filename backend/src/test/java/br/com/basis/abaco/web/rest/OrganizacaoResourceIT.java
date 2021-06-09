@@ -88,8 +88,6 @@ public class OrganizacaoResourceIT {
 
     private Organizacao organizacao;
 
-    private UserService userService;
-
     private PerfilService perfilService;
 
     @Autowired
@@ -99,7 +97,7 @@ public class OrganizacaoResourceIT {
     public void setup() {
         MockitoAnnotations.initMocks(this);
         OrganizacaoResource organizacaoResource = new OrganizacaoResource(organizacaoRepository,
-                organizacaoSearchRepository, filesRepository, dynamicExportsService, organizacaoService, userService, perfilService);
+                organizacaoSearchRepository, filesRepository, dynamicExportsService, organizacaoService, perfilService);
         this.restOrganizacaoMockMvc = MockMvcBuilders.standaloneSetup(organizacaoResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)
