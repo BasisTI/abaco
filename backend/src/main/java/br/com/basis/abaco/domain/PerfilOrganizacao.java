@@ -50,14 +50,14 @@ public class PerfilOrganizacao implements Serializable{
 
     public List<Organizacao> getOrganizacoes() {
         return Optional.ofNullable(this.organizacoes)
-            .map(lista -> new ArrayList<Organizacao>(lista))
-            .orElse(new ArrayList<Organizacao>());
+            .map(lista -> new LinkedList(lista))
+            .orElse(new LinkedList<Organizacao>());
     }
 
     public void setOrganizacoes(List<Organizacao> organizacoes) {
         this.organizacoes = Optional.ofNullable(organizacoes)
-            .map(lista -> new ArrayList<Organizacao>(lista))
-            .orElse(new ArrayList<Organizacao>());
+            .map(lista -> new LinkedList<Organizacao>(lista))
+            .orElse(new LinkedList<Organizacao>());
     }
 
     public Perfil getPerfil() {
