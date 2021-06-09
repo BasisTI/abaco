@@ -71,22 +71,22 @@ export class SistemaListComponent {
 
         this.perfilService.getPerfilOrganizacaoByUser().subscribe(r => {
             this.perfisOrganizacao = r;
-        })
-        const emptyOrganization = new Organizacao();
-        let organizacoesPesquisar: Organizacao[] = [];
-        this.organizacaoService.dropDown().subscribe(response => {
-            response.forEach(organizacao => {
-                if(PerfilService.consultarPerfilOrganizacao("SISTEMA", "PESQUISAR", this.perfisOrganizacao, organizacao) == true){
-                    organizacoesPesquisar.push(organizacao);
-                }
-            })
-
-            this.customOptions['organizacao'] = organizacoesPesquisar.map((item) => {
-                return { label: item.nome, value: item.id };
+            const emptyOrganization = new Organizacao();
+            let organizacoesPesquisar: Organizacao[] = [];
+            this.organizacaoService.dropDown().subscribe(response => {
+                response.forEach(organizacao => {
+                    if (PerfilService.consultarPerfilOrganizacao("SISTEMA", "PESQUISAR", this.perfisOrganizacao, organizacao) == true) {
+                        organizacoesPesquisar.push(organizacao);
+                    }
+                })
+                this.customOptions['organizacao'] = organizacoesPesquisar.map((item) => {
+                    return { label: item.nome, value: item.id };
+                });
+                this.organizations = organizacoesPesquisar;
+                this.organizations.push(emptyOrganization);
             });
-            this.organizations = organizacoesPesquisar;
-            this.organizations.push(emptyOrganization);
-        });
+        })
+
     }
 
     verificarPermissoes() {

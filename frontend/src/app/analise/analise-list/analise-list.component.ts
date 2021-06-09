@@ -45,7 +45,7 @@ export class AnaliseListComponent implements OnInit {
         { value: 'dataCriacaoOrdemServico', label: 'Data de criação' },
         { value: 'bloqueiaAnalise', label: 'Bloqueado' },
         { value: 'clonadaParaEquipe', label: 'Clonada para outra equipe' },
-        { value: 'analiseClonadaParaEquipe', label: "Análise Relacionada"},
+        { value: 'analiseClonadaParaEquipe', label: "Análise Relacionada" },
         { value: 'users', label: 'Usuários' },
     ];
 
@@ -141,7 +141,7 @@ export class AnaliseListComponent implements OnInit {
     showDialogImportarExcel: boolean = false;
     analiseImportarExcel: Analise = new Analise();
     lstModelosExcel = [
-        {label: "Modelo 1", value: 1},
+        { label: "Modelo 1", value: 1 },
     ];
     modeloSelecionado: number;
 
@@ -174,9 +174,6 @@ export class AnaliseListComponent implements OnInit {
     }
 
     public ngOnInit() {
-        this.perfilService.getPerfilOrganizacaoByUser().subscribe(r => {
-            this.perfisOrganizacao = r;
-        })
         this.userAnaliseUrl = this.grupoService.grupoUrl + this.changeUrl();
         this.estadoInicial();
         this.verificarPermissoes();
@@ -335,18 +332,22 @@ export class AnaliseListComponent implements OnInit {
     }
 
     recuperarOrganizacoes() {
-        let organizacoesPesquisar: Organizacao[] = [];
-        this.organizacaoService.dropDown().subscribe(response => {
-            response.forEach(organizacao => {
-                if(PerfilService.consultarPerfilOrganizacao("VALIDACAO", "PESQUISAR", this.perfisOrganizacao, organizacao) == true){
-                    organizacoesPesquisar.push(organizacao);
-                }
-            })
-            this.organizations = organizacoesPesquisar;
-            this.customOptions['organizacao.nome'] = organizacoesPesquisar.map((item) => {
-                return { label: item.nome, value: item.id };
+        this.perfilService.getPerfilOrganizacaoByUser().subscribe(r => {
+            this.perfisOrganizacao = r;
+            let organizacoesPesquisar: Organizacao[] = [];
+            this.organizacaoService.dropDown().subscribe(response => {
+                response.forEach(organizacao => {
+                    if (PerfilService.consultarPerfilOrganizacao("VALIDACAO", "PESQUISAR", this.perfisOrganizacao, organizacao) == true) {
+                        organizacoesPesquisar.push(organizacao);
+                    }
+                })
+                this.organizations = organizacoesPesquisar;
+                this.customOptions['organizacao.nome'] = organizacoesPesquisar.map((item) => {
+                    return { label: item.nome, value: item.id };
+                });
             });
-        });
+        })
+
     }
 
     recuperarSistema() {
@@ -443,8 +444,8 @@ export class AnaliseListComponent implements OnInit {
                         let msgStart = event.selection.analiseClonou === true ? "Esta análise já clonou para equipe. " : "Está análise já foi clonada para equipe. ";
 
                         msgStart += (event.selection.analiseClonadaParaEquipe?.numeroOs == null ? "Identificador de análise: "
-                        +event.selection.analiseClonadaParaEquipe?.identificadorAnalise : "Número OS: "
-                        +event.selection.analiseClonadaParaEquipe?.numeroOs);;
+                            + event.selection.analiseClonadaParaEquipe?.identificadorAnalise : "Número OS: "
+                        + event.selection.analiseClonadaParaEquipe?.numeroOs);;
 
                         return this.pageNotificationService.addErrorMessage
                             (msgStart);
@@ -548,7 +549,7 @@ export class AnaliseListComponent implements OnInit {
     }
 
     abrirEditar() {
-        if(!this.canEditar){
+        if (!this.canEditar) {
             return false;
         }
         this.router.navigate(['/analise', this.analiseSelecionada.id, 'edit']);
@@ -1049,17 +1050,17 @@ export class AnaliseListComponent implements OnInit {
         }
     }
 
-    openModalExportarExcel(analise: Analise){
+    openModalExportarExcel(analise: Analise) {
         this.showDialogImportarExcel = true;
         this.analiseImportarExcel = analise;
     }
 
-    closeModalExportarExcel(){
+    closeModalExportarExcel() {
         this.showDialogImportarExcel = false;
     }
 
-    exportarPlanilha(){
-        if(this.analiseImportarExcel != null){
+    exportarPlanilha() {
+        if (this.analiseImportarExcel != null) {
             this.analiseService.importarModeloExcel(this.analiseImportarExcel.id);
         }
     }

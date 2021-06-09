@@ -120,9 +120,6 @@ export class DivergenciaListComponent implements OnInit {
     }
 
     public ngOnInit() {
-        this.perfilService.getPerfilOrganizacaoByUser().subscribe(r => {
-            this.perfisOrganizacao = r;
-        })
         this.estadoInicial();
         this.datatable.onLazyLoad.subscribe((event: LazyLoadEvent) => this.loadDirvenceLazy(event));
         this.datatable.lazy = true;
@@ -174,18 +171,22 @@ export class DivergenciaListComponent implements OnInit {
     }
 
     recuperarOrganizacoes() {
-        let organizacoesPesquisar: Organizacao[] = [];
-        this.organizacaoService.dropDown().subscribe(response => {
-            response.forEach(organizacao => {
-                if(PerfilService.consultarPerfilOrganizacao("VALIDACAO", "PESQUISAR", this.perfisOrganizacao, organizacao) == true){
-                    organizacoesPesquisar.push(organizacao);
-                }
-            })
-            this.organizations = organizacoesPesquisar;
-            this.customOptions['organizacao.nome'] = organizacoesPesquisar.map((item) => {
-                return { label: item.nome, value: item.id };
+        this.perfilService.getPerfilOrganizacaoByUser().subscribe(r => {
+            this.perfisOrganizacao = r;
+            let organizacoesPesquisar: Organizacao[] = [];
+            this.organizacaoService.dropDown().subscribe(response => {
+                response.forEach(organizacao => {
+                    if(PerfilService.consultarPerfilOrganizacao("VALIDACAO", "PESQUISAR", this.perfisOrganizacao, organizacao) == true){
+                        organizacoesPesquisar.push(organizacao);
+                    }
+                })
+                this.organizations = organizacoesPesquisar;
+                this.customOptions['organizacao.nome'] = organizacoesPesquisar.map((item) => {
+                    return { label: item.nome, value: item.id };
+                });
             });
-        });
+        })
+
     }
 
     recuperarSistema() {
