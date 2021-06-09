@@ -170,7 +170,7 @@ public class PerfilService {
         return organizacaoList;
     }
 
-    public Page validarPerfilOrganizacoes(Page<Organizacao> page, Pageable pageable){
+    public Page<Organizacao> validarPerfilOrganizacoes(Page<Organizacao> page, Pageable pageable){
         List<Organizacao> organizacoes = new ArrayList<>();
         List<Organizacao> organizacoesPermitidas = consultarPerfilOrganizacoes("ORGANIZACAO");
         organizacoesPermitidas.forEach(organizacao -> {
