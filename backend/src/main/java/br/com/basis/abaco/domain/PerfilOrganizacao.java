@@ -49,11 +49,15 @@ public class PerfilOrganizacao implements Serializable{
     }
 
     public List<Organizacao> getOrganizacoes() {
-        return organizacoes;
+        return Optional.ofNullable(this.organizacoes)
+            .map(lista -> new ArrayList<Organizacao>(lista))
+            .orElse(new ArrayList<Organizacao>());
     }
 
     public void setOrganizacoes(List<Organizacao> organizacoes) {
-        this.organizacoes = organizacoes;
+        this.organizacoes = Optional.ofNullable(organizacoes)
+            .map(lista -> new ArrayList<Organizacao>(lista))
+            .orElse(new ArrayList<Organizacao>());
     }
 
     public Perfil getPerfil() {
