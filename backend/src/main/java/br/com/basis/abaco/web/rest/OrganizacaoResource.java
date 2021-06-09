@@ -1,19 +1,27 @@
 package br.com.basis.abaco.web.rest;
 
-import static org.elasticsearch.index.query.QueryBuilders.multiMatchQuery;
-import static org.elasticsearch.index.query.QueryBuilders.queryStringQuery;
-
-import java.io.ByteArrayOutputStream;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.List;
-import java.util.Optional;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import javax.validation.Valid;
-
+import br.com.basis.abaco.domain.Organizacao;
+import br.com.basis.abaco.repository.OrganizacaoRepository;
 import br.com.basis.abaco.repository.UploadedFilesRepository;
+import br.com.basis.abaco.repository.search.OrganizacaoSearchRepository;
+import br.com.basis.abaco.service.OrganizacaoService;
+import br.com.basis.abaco.service.PerfilService;
+import br.com.basis.abaco.service.UserService;
+import br.com.basis.abaco.service.dto.DropdownDTO;
+import br.com.basis.abaco.service.dto.OrganizacaoDropdownDTO;
+import br.com.basis.abaco.service.dto.filter.SearchFilterDTO;
+import br.com.basis.abaco.service.exception.RelatorioException;
+import br.com.basis.abaco.service.relatorio.RelatorioOrganizacaoColunas;
+import br.com.basis.abaco.utils.AbacoUtil;
+import br.com.basis.abaco.utils.PageUtils;
+import br.com.basis.abaco.web.rest.util.HeaderUtil;
+import br.com.basis.abaco.web.rest.util.PaginationUtil;
+import br.com.basis.dynamicexports.service.DynamicExportsService;
+import br.com.basis.dynamicexports.util.DynamicExporter;
+import com.codahale.metrics.annotation.Timed;
+import io.github.jhipster.web.util.ResponseUtil;
+import net.sf.dynamicreports.report.exception.DRException;
+import net.sf.jasperreports.engine.JRException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.InputStreamResource;
@@ -37,26 +45,17 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.codahale.metrics.annotation.Timed;
+import javax.validation.Valid;
+import java.io.ByteArrayOutputStream;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.List;
+import java.util.Optional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
-import br.com.basis.abaco.domain.Organizacao;
-import br.com.basis.abaco.repository.OrganizacaoRepository;
-import br.com.basis.abaco.repository.search.OrganizacaoSearchRepository;
-import br.com.basis.abaco.service.OrganizacaoService;
-import br.com.basis.abaco.service.dto.DropdownDTO;
-import br.com.basis.abaco.service.dto.OrganizacaoDropdownDTO;
-import br.com.basis.abaco.service.dto.filter.SearchFilterDTO;
-import br.com.basis.abaco.service.exception.RelatorioException;
-import br.com.basis.abaco.service.relatorio.RelatorioOrganizacaoColunas;
-import br.com.basis.abaco.utils.AbacoUtil;
-import br.com.basis.abaco.utils.PageUtils;
-import br.com.basis.abaco.web.rest.util.HeaderUtil;
-import br.com.basis.abaco.web.rest.util.PaginationUtil;
-import br.com.basis.dynamicexports.service.DynamicExportsService;
-import br.com.basis.dynamicexports.util.DynamicExporter;
-import io.github.jhipster.web.util.ResponseUtil;
-import net.sf.dynamicreports.report.exception.DRException;
-import net.sf.jasperreports.engine.JRException;
+import static org.elasticsearch.index.query.QueryBuilders.multiMatchQuery;
+import static org.elasticsearch.index.query.QueryBuilders.queryStringQuery;
 
 /**
  * REST controller for managing Organizacao.
@@ -85,14 +84,20 @@ public class OrganizacaoResource {
 
     private final OrganizacaoService organizacaoService;
 
+    private final UserService userService;
+
+    private final PerfilService perfilService;
+
     public OrganizacaoResource(OrganizacaoRepository organizacaoRepository,
                                OrganizacaoSearchRepository organizacaoSearchRepository, UploadedFilesRepository filesRepository, DynamicExportsService dynamicExportsService,
-                               OrganizacaoService organizacaoService) {
+                               OrganizacaoService organizacaoService, UserService userService, PerfilService perfilService) {
         this.organizacaoRepository = organizacaoRepository;
         this.organizacaoSearchRepository = organizacaoSearchRepository;
         this.filesRepository = filesRepository;
         this.dynamicExportsService = dynamicExportsService;
         this.organizacaoService = organizacaoService;
+        this.userService = userService;
+        this.perfilService = perfilService;
     }
 
   /**
@@ -273,17 +278,19 @@ public class OrganizacaoResource {
   @Timed
   @Secured({"ROLE_ABACO_ORGANIZACAO_PESQUISAR", "ROLE_ABACO_ORGANIZACAO_ACESSAR"})
   public ResponseEntity<List<Organizacao>> searchOrganizacaos(@RequestParam(defaultValue = "*") String query,
-      @RequestParam(defaultValue = "ASC") String order, @RequestParam(name = "page") int pageNumber, @RequestParam int size,
-      @RequestParam(defaultValue = "id", required = false) String sort) throws URISyntaxException {
-    log.debug("REST request to search Organizacaos for query {}", query);
+                                                              @RequestParam(defaultValue = "ASC") String order, @RequestParam(name = "page") int pageNumber, @RequestParam int size,
+                                                              @RequestParam(defaultValue = "id", required = false) String sort) throws URISyntaxException {
+      log.debug("REST request to search Organizacaos for query {}", query);
 
-    Sort.Direction sortOrder = PageUtils.getSortDirection(order);
-    Pageable newPageable = new PageRequest(pageNumber, size, sortOrder, sort);
+      Sort.Direction sortOrder = PageUtils.getSortDirection(order);
+      Pageable newPageable = new PageRequest(pageNumber, size, sortOrder, sort);
 
-    Page<Organizacao> page = organizacaoSearchRepository.search(queryStringQuery(query), newPageable);
-    HttpHeaders headers = PaginationUtil.generateSearchPaginationHttpHeaders(query, page,
-        "/api/_search/organizacaos");
-    return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
+      Page<Organizacao> page = organizacaoSearchRepository.search(queryStringQuery(query), dynamicExportsService.obterPageableMaximoExportacao());
+      Page<Organizacao> pageNew = perfilService.validarPerfilOrganizacoes(page, newPageable);
+
+      HttpHeaders headers = PaginationUtil.generateSearchPaginationHttpHeaders(query, pageNew,
+          "/api/_search/organizacaos");
+    return new ResponseEntity<>(pageNew.getContent(), headers, HttpStatus.OK);
   }
 
     @GetMapping("/organizacaos/active")

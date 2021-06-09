@@ -26,5 +26,5 @@
     <include file="classpath:config/liquibase/changelog/20210309164436_add_permissao_perfil_permissao.xml" relativeToChangelogFile="false"/>
     <include file="classpath:config/liquibase/changelog/20210315123600_alter_funcionalidade.xml" relativeToChangelogFile="false"/>
     <include file="classpath:config/liquibase/changelog/20210511164516_add_columns_analise_clonada_equipe.xml" relativeToChangelogFile="false"/>
-
+    <include file="classpath:config/liquibase/changelog/20210608164624_add_colum_perfil_organizacoes_in_user.xml" relativeToChangelogFile="false"/>
 </databaseChangeLog>

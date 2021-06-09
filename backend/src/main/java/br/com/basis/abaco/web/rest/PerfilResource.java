@@ -1,11 +1,17 @@
 package br.com.basis.abaco.web.rest;
 
 import br.com.basis.abaco.domain.Perfil;
+import br.com.basis.abaco.domain.PerfilOrganizacao;
+import br.com.basis.abaco.domain.User;
+import br.com.basis.abaco.repository.PerfilOrganizacaoRepository;
 import br.com.basis.abaco.repository.PerfilRepository;
 import br.com.basis.abaco.repository.search.PerfilSearchRepository;
 import br.com.basis.abaco.service.PerfilService;
+import br.com.basis.abaco.service.UserService;
 import br.com.basis.abaco.service.dto.DropdownDTO;
+import br.com.basis.abaco.service.dto.OrganizacaoDTO;
 import br.com.basis.abaco.service.dto.PerfilDTO;
+import br.com.basis.abaco.service.dto.PerfilOrganizacaoDTO;
 import br.com.basis.abaco.service.exception.RelatorioException;
 import br.com.basis.abaco.utils.PageUtils;
 import br.com.basis.abaco.web.rest.errors.CustomParameterizedException;
@@ -16,6 +22,7 @@ import com.codahale.metrics.annotation.Timed;
 import io.github.jhipster.web.util.ResponseUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -26,8 +33,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.access.method.P;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -43,6 +49,7 @@ import java.io.ByteArrayOutputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -65,10 +72,16 @@ public class PerfilResource {
 
     private final PerfilSearchRepository perfilSearchRepository;
 
-    public PerfilResource(PerfilService perfilService, PerfilRepository perfilRepository, PerfilSearchRepository perfilSearchRepository) {
+    private final UserService userService;
+
+    private final PerfilOrganizacaoRepository perfilOrganizacaoRepository;
+
+    public PerfilResource(PerfilService perfilService, PerfilRepository perfilRepository, PerfilSearchRepository perfilSearchRepository, UserService userService, PerfilOrganizacaoRepository perfilOrganizacaoRepository) {
         this.perfilService = perfilService;
         this.perfilRepository = perfilRepository;
         this.perfilSearchRepository = perfilSearchRepository;
+        this.userService = userService;
+        this.perfilOrganizacaoRepository = perfilOrganizacaoRepository;
     }
 
     /**
@@ -214,5 +227,29 @@ public class PerfilResource {
     public List<DropdownDTO> getPerfilDropdown() {
         log.debug("REST request to get dropdown Perfil");
         return perfilService.getPerfilDropdown();
+    }
+
+    @GetMapping("/perfil-organizacao/user-logado")
+    @Timed
+    public List<PerfilOrganizacaoDTO> getPerfilOrganizaoByUser(){
+        Optional<List<PerfilOrganizacao>> list = perfilOrganizacaoRepository.findAllByUser(userService.getUserWithAuthorities());
+        List<PerfilOrganizacaoDTO> perfilOrganizacaoDTOList = new ArrayList<>();
+        if(list.isPresent()){
+            List<PerfilOrganizacao> perfilOrganizacaoList = list.get();
+            perfilOrganizacaoList.forEach(perfilOrganizacao -> {
+                PerfilOrganizacaoDTO perfilOrganizacaoDTO = new PerfilOrganizacaoDTO();
+                perfilOrganizacaoDTO.setId(perfilOrganizacao.getId());
+                PerfilDTO perfilDTO = new PerfilDTO();
+                BeanUtils.copyProperties(perfilOrganizacao.getPerfil(), perfilDTO);
+                perfilOrganizacaoDTO.setPerfil(perfilDTO);
+                perfilOrganizacao.getOrganizacoes().forEach(organizacao -> {
+                    OrganizacaoDTO organizacaoDTO = new OrganizacaoDTO();
+                    BeanUtils.copyProperties(organizacao, organizacaoDTO);
+                    perfilOrganizacaoDTO.getOrganizacoes().add(organizacaoDTO);
+                });
+                perfilOrganizacaoDTOList.add(perfilOrganizacaoDTO);
+            });
+        }
+        return perfilOrganizacaoDTOList;
     }
 }

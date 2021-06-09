@@ -12,6 +12,8 @@ import java.util.Set;
 import javax.transaction.Transactional;
 import javax.validation.Valid;
 
+import br.com.basis.abaco.service.PerfilService;
+import br.com.basis.dynamicexports.service.DynamicExportsService;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.search.sort.FieldSortBuilder;
 import org.elasticsearch.search.sort.SortOrder;
@@ -75,6 +77,8 @@ public class SistemaResource {
     private final FuncaoDadosRepository funcaoDadosRepository;
     private final SistemaService sistemaService;
     private final AnaliseRepository analiseRepository;
+    private final PerfilService perfilService;
+    private final DynamicExportsService dynamicExportsService;
     private static final String PAGE = "page";
 
     public SistemaResource(
@@ -83,7 +87,7 @@ public class SistemaResource {
         FuncaoDadosVersionavelRepository funcaoDadosVersionavelRepository,
         FuncaoDadosRepository funcaoDadosRepository,
         SistemaService sistemaService,
-        AnaliseRepository analiseRepository) {
+        AnaliseRepository analiseRepository, PerfilService perfilService, DynamicExportsService dynamicExportsService) {
 
         this.sistemaRepository = sistemaRepository;
         this.sistemaSearchRepository = sistemaSearchRepository;
@@ -91,6 +95,8 @@ public class SistemaResource {
         this.funcaoDadosRepository = funcaoDadosRepository;
         this.sistemaService = sistemaService;
         this.analiseRepository = analiseRepository;
+        this.perfilService = perfilService;
+        this.dynamicExportsService = dynamicExportsService;
     }
 
     @PostMapping("/sistemas")
@@ -232,10 +238,13 @@ public class SistemaResource {
         Pageable pageable = new PageRequest(pageNumber, size, sortOrder, sort);
         FieldSortBuilder sortBuilder = new FieldSortBuilder(sort).order(SortOrder.ASC);
         BoolQueryBuilder qb = sistemaService.bindFilterSearch(nome, sigla, numeroOcorrencia, organizacao);
-        SearchQuery searchQuery = new NativeSearchQueryBuilder().withQuery(qb).withPageable(pageable).withSort(sortBuilder).build();
+        SearchQuery searchQuery = new NativeSearchQueryBuilder().withPageable(dynamicExportsService.obterPageableMaximoExportacao()).withQuery(qb).withSort(sortBuilder).build();
         Page<Sistema> page = sistemaSearchRepository.search(searchQuery);
-        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/_search/sistemas");
-        return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
+
+        Page<Sistema> pageNew = perfilService.validarPerfilSistema(page, pageable);
+
+        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(pageNew, "/api/_search/sistemas");
+        return new ResponseEntity<>(pageNew.getContent(), headers, HttpStatus.OK);
     }
 
     @PostMapping(value = "/sistema/exportacao/{tipoRelatorio}", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
