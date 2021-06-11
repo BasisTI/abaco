@@ -231,6 +231,11 @@ export class FuncaoDadosService {
         const url = `${this.resourceUrlPEAnalitico}funcaoDados/${idSistema}?name=${nome}&idModulo=${idModulo}&idFuncionalidade=${idFuncionalidade}`;
         return this.http.get<[]>(url);
     }
+
+    public getFuncaoDadosByModuloOrFuncionalidadeEstimada(idSistema: Number, nome?: String, idModulo?: Number, idFuncionalidade?: Number): Observable<any[]> {
+        const url = `${this.resourceUrlPEAnalitico}funcaoDados/estimada/${idSistema}?name=${nome}&idModulo=${idModulo}&idFuncionalidade=${idFuncionalidade}`;
+        return this.http.get<[]>(url);
+    }
 }
 enum StatusFunction {
     DIVERGENTE = 'DIVERGENTE',
