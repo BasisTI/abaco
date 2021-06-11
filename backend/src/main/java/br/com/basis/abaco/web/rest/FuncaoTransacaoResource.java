@@ -20,6 +20,8 @@ import br.com.basis.abaco.domain.FuncaoTransacao;
 import br.com.basis.abaco.domain.UploadedFile;
 import br.com.basis.abaco.domain.VwAlr;
 import br.com.basis.abaco.domain.VwDer;
+import br.com.basis.abaco.domain.enumeration.Complexidade;
+import br.com.basis.abaco.domain.enumeration.MetodoContagem;
 import br.com.basis.abaco.service.FuncaoDadosService;
 import br.com.basis.abaco.service.dto.AlrDTO;
 import br.com.basis.abaco.service.dto.DerFtDTO;
@@ -112,6 +114,9 @@ public class FuncaoTransacaoResource {
             List<UploadedFile> uploadedFiles = funcaoDadosService.uploadFiles(files);
             funcaoTransacao.setFiles(uploadedFiles);
         }
+        if(analise.getMetodoContagem().equals(MetodoContagem.ESTIMADA)){
+            funcaoTransacao.setComplexidade(Complexidade.MEDIA);
+        }
 
         funcaoTransacao.setDers(bindDers(funcaoTransacao));
 
@@ -155,6 +160,9 @@ public class FuncaoTransacaoResource {
         if(!files.isEmpty()){
             List<UploadedFile> uploadedFiles = funcaoDadosService.uploadFiles(files);
             funcaoTransacao.setFiles(uploadedFiles);
+        }
+        if(analise.getMetodoContagem().equals(MetodoContagem.ESTIMADA)){
+            funcaoTransacao.setComplexidade(Complexidade.MEDIA);
         }
 
         FuncaoTransacao result = funcaoTransacaoRepository.save(funcaoTransacao);
