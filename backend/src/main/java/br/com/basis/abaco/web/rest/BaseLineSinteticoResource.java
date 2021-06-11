@@ -72,7 +72,7 @@ public class BaseLineSinteticoResource {
     @GetMapping("/baseline-sinteticos/update/{id}/{idEquipe}")
     @Timed
     @Transactional
-    @Secured("ROLE_ABACO_BASELINE_EDITAR")
+    @Secured("ROLE_ABACO_BASELINE_ATUALIZAR")
     public ResponseEntity<BaseLineSintetico> updateBaseLineSintetico(@PathVariable(value = "id") Long id, @PathVariable(value = "idEquipe") Long idEquipe) {
         log.debug("REST request to update BaseLineSinteticos");
         if (id == null) {

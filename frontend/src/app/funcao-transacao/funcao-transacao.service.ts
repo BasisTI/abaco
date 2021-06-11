@@ -133,6 +133,12 @@ export class FuncaoTransacaoService {
         const url = `${this.resourceUrlPEAnalitico}funcaoTransacao/${idSistema}?name=${nome}&idModulo=${idModulo}&idFuncionalidade=${idFuncionalidade}`;
         return this.http.get<[]>(url);
     }
+
+    public getFuncaoTransacaoByModuloOrFuncionalidadeEstimada(idSistema: Number, nome?: String, idModulo?: Number, idFuncionalidade?: Number): Observable<any[]> {
+        const url = `${this.resourceUrlPEAnalitico}funcaoTransacao/estimada/${idSistema}?name=${nome}&idModulo=${idModulo}&idFuncionalidade=${idFuncionalidade}`;
+        return this.http.get<[]>(url);
+    }
+
     public getVwFuncaoTransacaoByIdAnalise(id: Number): Observable<any[]> {
         const url = `${this.vwFuncaoTransacaoResourceUrl}/${id}`;
         return this.http.get<[]>(url);
