@@ -13,6 +13,8 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
+import br.com.basis.abaco.domain.enumeration.Complexidade;
+import br.com.basis.abaco.domain.enumeration.MetodoContagem;
 import br.com.basis.abaco.service.dto.DerFdDTO;
 import br.com.basis.abaco.service.dto.DropdownDTO;
 import br.com.basis.abaco.service.dto.FuncaoDadoAnaliseDTO;
@@ -121,6 +123,9 @@ public class FuncaoDadosResource {
             List<UploadedFile> uploadedFiles = funcaoDadosService.uploadFiles(files);
             funcaoDados.setFiles(uploadedFiles);
         }
+        if(analise.getMetodoContagem().equals(MetodoContagem.ESTIMADA)){
+            funcaoDados.setComplexidade(Complexidade.BAIXA);
+        }
 
         FuncaoDados result = funcaoDadosRepository.save(funcaoDados);
         FuncaoDadosEditDTO  funcaoDadosEditDTO = convertFuncaoDadoAEditDTO(result);
@@ -161,6 +166,9 @@ public class FuncaoDadosResource {
         if(!files.isEmpty()){
             List<UploadedFile> uploadedFiles = funcaoDadosService.uploadFiles(files);
             funcaoDadosOld.setFiles(uploadedFiles);
+        }
+        if(analise.getMetodoContagem().equals(MetodoContagem.ESTIMADA)){
+            funcaoDados.setComplexidade(Complexidade.BAIXA);
         }
 
         FuncaoDados funcaoDadosUpdate = updateFuncaoDados(funcaoDadosOld, funcaoDados);
