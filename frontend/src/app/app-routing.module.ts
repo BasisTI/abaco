@@ -13,7 +13,7 @@ import { FirstGuardService } from './util/first.guard.service';
 
 
 const routes: Routes = [
-  { path: '', component: DashboardComponent, canActivate: [FirstGuardService]},
+  { path: '', component: LoginComponent, canActivate: [FirstGuardService]},
   { path: 'diario-erros', component: DiarioErrosComponent, canActivate: [AuthGuardService] ,  data: { breadcrumb: 'Diário de Erros'} },
   { path: 'login-success', component: LoginSuccessComponent},
   { path: 'indexador', component: IndexadorComponent , canActivate: [AuthGuardService] , data: { breadcrumb: 'Reindexar'} },

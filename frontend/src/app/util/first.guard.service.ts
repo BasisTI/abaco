@@ -16,8 +16,8 @@ export class FirstGuardService implements CanActivate {
         this.authService.getRoles().subscribe(r => {});
 
         let authenticated = this.authService.isAuthenticated();
-        if (!authenticated) {
-            return this.router.navigate(["/login"]);
+        if (authenticated) {
+            return this.router.navigate(["/dashboard"]);
         }
         return true;
     }
