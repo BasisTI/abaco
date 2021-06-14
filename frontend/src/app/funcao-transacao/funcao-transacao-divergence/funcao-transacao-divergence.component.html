@@ -8,7 +8,7 @@
                 <div class="card card-w-title">
                     <div class="ui-g">
                         <div class="ui-g-12">
-                            <div class="ui-g ui-md-12"
+                            <!-- <div class="ui-g ui-md-12"
                                  style="justify-content: flex-end;">
                                 <div class="ui-md-2" *ngIf="!isView">
                                     <app-green-button
@@ -18,7 +18,7 @@
                                             (click)="openDialog(false)">
                                     </app-green-button>
                                 </div>
-                            </div>
+                            </div> -->
                             <!-- Inicio da tabela -->
                             <div class="ui-g">
                                 <basis-datatable
@@ -62,6 +62,10 @@
                                     <p-column header=" PF Liquído" field="pf"  >
                                         <ng-template let-pf="rowData.pf" pTemplate="body"> {{ pf | number }} </ng-template>
                                     </p-column>
+                                    <basis-datatable-button name="add" *ngIf="!isView"
+                                        (click)="openDialog(false)" bTooltip="Incluir nova função"
+                                        class="ui-button-success" icon="add">
+                                    </basis-datatable-button>
                                     <basis-datatable-button
                                         name="delete"
                                         *ngIf="!isView"

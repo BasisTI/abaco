@@ -7,13 +7,13 @@
                 <div class="card card-w-title">
                     <div class="ui-g">
                         <div class="ui-g-12">
-                            <div class="ui-g ui-md-12" style="justify-content: flex-end;">
+                            <!-- <div class="ui-g ui-md-12" style="justify-content: flex-end;">
                                 <div class="ui-md-2" *ngIf="!isView">
                                     <app-green-button [buttonLabel]="'Novo'" id="idNovoFormFuncaoDados"
                                         buttonIcon="ui-icon-add" (click)="openDialog(false)">
                                     </app-green-button>
                                 </div>
-                            </div>
+                            </div> -->
                             <div class="ui-g">
                                 <basis-datatable type="memory" id="idTabelaFuncaoDados" [disableDelete]="this.isView"
                                     [disableEdit]="this.isView || selectButtonMultiple" [enableButtonsScroll]="true"
@@ -41,6 +41,10 @@
                                             this.getLabel('Não') }}
                                         </ng-template>
                                     </p-column>
+                                    <basis-datatable-button name="add" *ngIf="!isView"
+                                        (click)="openDialog(false)" bTooltip="Incluir nova função"
+                                        class="ui-button-success" icon="add">
+                                    </basis-datatable-button>
                                     <basis-datatable-button name="crud" [allowMultipleSelection]="false"
                                         *ngIf="!isView && !(analise && analise.metodoContagem && analise.metodoContagem === 'INDICATIVA')"
                                         [bTooltip]="funcaoDadosEditar[0] != undefined ? this.getLabel('Criar Crud') : this.getLabel('Escolha um registro para criar crud.')"
