@@ -695,6 +695,9 @@ export class PesquisarFtComponent implements OnInit {
     puxarFuncoes(): any[]{
         let funcoes: any[] = [];
         this.fn.forEach(item => {
+            item.idfuncaodados = undefined;
+            item.idModulo = undefined;
+            item.idFuncionalidade = undefined;
             funcoes.push(item);
         })
         return funcoes;
@@ -703,7 +706,7 @@ export class PesquisarFtComponent implements OnInit {
     exportExcel() {
         if (this.fn && this.fn.length > 0) {
             let funcoes = this.puxarFuncoes();
-            let heading: any = {idfuncaodados: "ID", classificacao: "Classificação", name: "Nome", complexidade: "Complexidade", nomeFuncionalidade: "Funcionalidade", nomeModulo: "Módulo", idFuncionalidade: "ID Funcionalidade", idModulo: "ID Módulo"};
+            let heading: any = {nomeModulo: "Módulo", nomeFuncionalidade: "Funcionalidade", name: "Nome", classificacao: "Classificação", complexidade: "Complexidade", };
             funcoes.unshift(heading);
             const worksheet = XLSX.utils.json_to_sheet(funcoes, {skipHeader: true});
             const workbook = { Sheets: { 'data': worksheet }, SheetNames: ['data'] };
