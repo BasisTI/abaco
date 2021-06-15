@@ -19,6 +19,8 @@ import { Divergencia, DivergenciaService } from 'src/app/divergencia';
 import { FaseFilter } from 'src/app/fase/model/fase.filter';
 import { AuthService } from 'src/app/util/auth.service';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
+import { PerfilOrganizacao } from 'src/app/perfil/perfil-organizacao.model';
+import { PerfilService } from 'src/app/perfil/perfil.service';
 
 @Component({
     selector: 'app-analise',
@@ -43,7 +45,7 @@ export class AnaliseListComponent implements OnInit {
         { value: 'dataCriacaoOrdemServico', label: 'Data de criação' },
         { value: 'bloqueiaAnalise', label: 'Bloqueado' },
         { value: 'clonadaParaEquipe', label: 'Clonada para outra equipe' },
-        { value: 'analiseClonadaParaEquipe', label: "Análise Relacionada"},
+        { value: 'analiseClonadaParaEquipe', label: "Análise Relacionada" },
         { value: 'users', label: 'Usuários' },
     ];
 
@@ -132,21 +134,23 @@ export class AnaliseListComponent implements OnInit {
     canPesquisar: boolean = false;
     canCadastrar: boolean = false;
     canBloquearDesbloquear: boolean = false;
+    canExportarPlanilha: boolean = false;
 
-    downloadJsonHref;
-    analiseFileJson;
-    showDialogImportar: boolean;
+    perfisOrganizacao: PerfilOrganizacao[] = [];
 
     showDialogImportarExcel: boolean = false;
-
     analiseImportarExcel: Analise = new Analise();
     lstModelosExcel = [
-        {label: "Modelo 1", value: 1},
+        { label: "Modelo 1", value: 1 },
     ];
     modeloSelecionado: number;
 
     //JSON
     analisesImportar: Analise[] = [];
+
+    downloadJsonHref;
+    analiseFileJson;
+    showDialogImportar: boolean;
 
     constructor(
         private router: Router,
@@ -163,7 +167,8 @@ export class AnaliseListComponent implements OnInit {
         private statusService: StatusService,
         private divergenceServie: DivergenciaService,
         private authService: AuthService,
-        private sanitizer: DomSanitizer
+        private sanitizer: DomSanitizer,
+        private perfilService: PerfilService
     ) {
 
     }
@@ -222,6 +227,25 @@ export class AnaliseListComponent implements OnInit {
         if (this.authService.possuiRole(AuthService.PREFIX_ROLE + "ANALISE_BLOQUEAR_DESBLOQUEAR") == true) {
             this.canBloquearDesbloquear = true;
         }
+        if (this.authService.possuiRole(AuthService.PREFIX_ROLE + "ANALISE_EXPORTAR") == true) {
+            this.canExportarPlanilha = true;
+        }
+    }
+
+    verificarBotoes(analise: Analise) {
+        this.canEditar = PerfilService.consultarPerfilAnalise("ANALISE", "EDITAR", this.perfisOrganizacao, analise);
+        this.canConsultar = PerfilService.consultarPerfilAnalise("ANALISE", "CONSULTAR", this.perfisOrganizacao, analise);
+        this.canDeletar = PerfilService.consultarPerfilAnalise("ANALISE", "EXCLUIR", this.perfisOrganizacao, analise);
+        this.canRelatorioDetalhado = PerfilService.consultarPerfilAnalise("ANALISE", "EXPORTAR_RELATORIO_DETALHADO", this.perfisOrganizacao, analise);;
+        this.canAlterarStatus = PerfilService.consultarPerfilAnalise("ANALISE", "ALTERAR_STATUS", this.perfisOrganizacao, analise);
+        this.canBloquearDesbloquear = PerfilService.consultarPerfilAnalise("ANALISE", "BLOQUEAR_DESBLOQUEAR", this.perfisOrganizacao, analise);
+        this.canClonar = PerfilService.consultarPerfilAnalise("ANALISE", "CLONAR", this.perfisOrganizacao, analise);
+        this.canClonarEquipe = PerfilService.consultarPerfilAnalise("ANALISE", "CLONAR_EQUIPE", this.perfisOrganizacao, analise);
+        this.canCompartilhar = PerfilService.consultarPerfilAnalise("ANALISE", "COMPARTILHAR", this.perfisOrganizacao, analise);
+        this.canGerarValidacao = PerfilService.consultarPerfilAnalise("ANALISE", "GERAR_VALIDACAO", this.perfisOrganizacao, analise);
+        this.canRelatorioExcel = PerfilService.consultarPerfilAnalise("ANALISE", "EXPORTAR_RELATORIO_EXCEL", this.perfisOrganizacao, analise);
+        this.canRelatorioFundamentacao = PerfilService.consultarPerfilAnalise("ANALISE", "EXPORTAR_RELATORIO_FUNDAMENTACAO", this.perfisOrganizacao, analise);
+        this.canExportarPlanilha = PerfilService.consultarPerfilAnalise("ANALISE", "EXPORTAR", this.perfisOrganizacao, analise);
     }
 
     estadoInicial() {
@@ -308,12 +332,22 @@ export class AnaliseListComponent implements OnInit {
     }
 
     recuperarOrganizacoes() {
-        this.organizacaoService.dropDown().subscribe(response => {
-            this.organizations = response;
-            this.customOptions['organizacao.nome'] = response.map((item) => {
-                return { label: item.nome, value: item.id };
+        this.perfilService.getPerfilOrganizacaoByUser().subscribe(r => {
+            this.perfisOrganizacao = r;
+            let organizacoesPesquisar: Organizacao[] = [];
+            this.organizacaoService.dropDown().subscribe(response => {
+                response.forEach(organizacao => {
+                    if (PerfilService.consultarPerfilOrganizacao("VALIDACAO", "PESQUISAR", this.perfisOrganizacao, organizacao) == true) {
+                        organizacoesPesquisar.push(organizacao);
+                    }
+                })
+                this.organizations = organizacoesPesquisar;
+                this.customOptions['organizacao.nome'] = organizacoesPesquisar.map((item) => {
+                    return { label: item.nome, value: item.id };
+                });
             });
-        });
+        })
+
     }
 
     recuperarSistema() {
@@ -357,6 +391,32 @@ export class AnaliseListComponent implements OnInit {
             return sessionSearchGroup;
         } else {
             return new SearchGroup();
+        }
+    }
+
+    clonarEquipe(){
+        if (this.analiseSelecionada.clonadaParaEquipe == true) {
+            if (this.analiseSelecionada.analiseClonadaParaEquipe?.id != null && this.analiseSelecionada.analiseClonadaParaEquipe?.id != undefined) {
+                let msgStart = this.analiseSelecionada.analiseClonou === true ? "Esta análise já clonou para equipe. " : "Está análise já foi clonada para equipe. ";
+
+                msgStart += (this.analiseSelecionada.analiseClonadaParaEquipe?.numeroOs == null ? "Identificador de análise: "
+                    + this.analiseSelecionada.analiseClonadaParaEquipe?.identificadorAnalise : "Número OS: "
+                + this.analiseSelecionada.analiseClonadaParaEquipe?.numeroOs);;
+
+                return this.pageNotificationService.addErrorMessage
+                    (msgStart);
+            } else {
+                return this.pageNotificationService.addErrorMessage("Essa análise já foi clonada para equipe anteriormente. ")
+            }
+        }
+        this.openModalCloneAnaliseEquipe(this.analiseSelecionada.id);
+    }
+
+    gerarDivergencia(){
+        if (this.analiseSelecionada.id) {
+            this.confirmDivergenceGenerate(this.analiseSelecionada);
+        } else {
+            this.openModalDivergence(this.analiseSelecionada);
         }
     }
 
@@ -405,22 +465,7 @@ export class AnaliseListComponent implements OnInit {
                 this.geraBaselinePdfBrowser();
                 break;
             case 'cloneParaEquipe':
-                if (event.selection.clonadaParaEquipe == true) {
-                    if (event.selection.analiseClonadaParaEquipe?.id != null && event.selection.analiseClonadaParaEquipe?.id != undefined) {
-                        let msgStart = event.selection.analiseClonou === true ? "Esta análise já clonou para equipe. " : "Está análise já foi clonada para equipe. ";
-
-                        msgStart += (event.selection.analiseClonadaParaEquipe?.numeroOs == null ? "Identificador de análise: "
-                        +event.selection.analiseClonadaParaEquipe?.identificadorAnalise : "Número OS: "
-                        +event.selection.analiseClonadaParaEquipe?.numeroOs);;
-
-                        return this.pageNotificationService.addErrorMessage
-                            (msgStart);
-                    } else {
-                        return this.pageNotificationService.addErrorMessage("Essa análise já foi clonada para equipe anteriormente. ")
-                    }
-                }
-                this.openModalCloneAnaliseEquipe(event.selection.id);
-
+                //Está em uma função 'clonarEquipe()'
                 break;
             case 'compartilhar':
                 this.compartilharAnalise();
@@ -515,6 +560,9 @@ export class AnaliseListComponent implements OnInit {
     }
 
     abrirEditar() {
+        if (!this.canEditar) {
+            return false;
+        }
         this.router.navigate(['/analise', this.analiseSelecionada.id, 'edit']);
     }
 
@@ -578,6 +626,7 @@ export class AnaliseListComponent implements OnInit {
             if (this.datatable.selectedRow && this.datatable.selectedRow[0]) {
                 this.analiseSelecionada = this.datatable.selectedRow[0];
                 this.blocked = this.datatable.selectedRow[0].bloqueiaAnalise;
+                this.verificarBotoes(this.analiseSelecionada);
             }
         }
     }
@@ -1012,17 +1061,17 @@ export class AnaliseListComponent implements OnInit {
         }
     }
 
-    openModalExportarExcel(analise: Analise){
+    openModalExportarExcel(analise: Analise) {
         this.showDialogImportarExcel = true;
         this.analiseImportarExcel = analise;
     }
 
-    closeModalExportarExcel(){
+    closeModalExportarExcel() {
         this.showDialogImportarExcel = false;
     }
 
-    exportarPlanilha(){
-        if(this.analiseImportarExcel != null){
+    exportarPlanilha() {
+        if (this.analiseImportarExcel != null) {
             this.analiseService.importarModeloExcel(this.analiseImportarExcel.id);
         }
     }

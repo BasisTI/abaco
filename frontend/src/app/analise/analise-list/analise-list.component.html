@@ -176,43 +176,52 @@
                         </basis-datatable-button>
                         <basis-datatable-button name="compartilhar" *ngIf="canCompartilhar"
                             [bTooltip]="compartilharTooltip()" icon="share" class="ui-button-info"
+                            (click)="compartilharAnalise()"
                             [disabled]="datatable.selectedRow == null">
                         </basis-datatable-button>
                         <basis-datatable-button name="clone" *ngIf="canClonar" [bTooltip]="clonarTooltip()"
+                            (click)="clonar(analiseSelecionada.id)"
                             icon="content-copy" [disabled]="datatable.selectedRow == null">
                         </basis-datatable-button>
                         <basis-datatable-button name="relatorioBrowserDetalhado" *ngIf="canRelatorioDetalhado"
                             [bTooltip]="relatorioTooltip()" icon="description"
+                            (click)="geraRelatorioPdfDetalhadoBrowser(analiseSelecionada)"
                             [disabled]="datatable.selectedRow == null">
                         </basis-datatable-button>
                         <basis-datatable-button name="relatorioExcelDetalhado" *ngIf="canRelatorioExcel"
                             [bTooltip]="relatorioExcelTooltip()" icon="description"
+                            (click)="gerarRelatorioExcel(analiseSelecionada)"
                             [disabled]="datatable.selectedRow == null" class="ui-button-success">
                         </basis-datatable-button>
                         <basis-datatable-button name="relatorioAnaliseContagem" *ngIf="canRelatorioFundamentacao"
                             [bTooltip]="relatorioContagemTooltip()" icon="description"
+                            (click)="gerarRelatorioContagem(analiseSelecionada)"
                             [disabled]="datatable.selectedRow == null" class="ui-button-danger">
                         </basis-datatable-button>
                         <basis-datatable-button name="cloneParaEquipe" *ngIf="canClonarEquipe"
                             [bTooltip]="clonarParaEquipeTooltip()" icon="content-copy"
+                            (click)="clonarEquipe()"
                             [disabled]="datatable.selectedRow == null" class="ui-button-success">
                         </basis-datatable-button>
                         <basis-datatable-button name="changeStatus" *ngIf="canAlterarStatus"
                             [bTooltip]="changeStatusTooltip()" icon="swap-vert"
+                            (click)="openModalChangeStatus(analiseSelecionada.id);"
                             [disabled]="datatable.selectedRow == null" class="ui-button-info">
                         </basis-datatable-button>
                         <basis-datatable-button name="generateDivergence" *ngIf="canGerarValidacao"
                             [bTooltip]="changeDivergenceTooltip()" icon="compare-arrows"
+                            (click)="gerarDivergencia()"
                             [disabled]="datatable.selectedRow == null" class="ui-button-info">
                         </basis-datatable-button>
+                        <basis-datatable-button *ngIf="canExportarPlanilha" name="importExcel" [bTooltip]="'Exportar planilha excel'"
+                            (click)="openModalExportarExcel(analiseSelecionada)"
+                            icon="file-upload" class="ui-button-success" [disabled]="datatable.selectedRow == null">
+                        </basis-datatable-button> -->
                         <!-- <basis-datatable-button name="exportJson" [bTooltip]="'Exportar análise'" icon="file-download"
                             [disabled]="datatable.selectedRow == null" class="ui-button-info">
                         </basis-datatable-button>
                         <basis-datatable-button name="importJson" [bTooltip]="'Importar análise'" icon="file-upload"
                            class="ui-button-success" (click)="openModalImportAnalise()">
-                        </basis-datatable-button> -->
-                        <basis-datatable-button name="importExcel" [bTooltip]="'Exportar planilha excel'"
-                            icon="file-upload" class="ui-button-success" [disabled]="datatable.selectedRow == null">
                         </basis-datatable-button> -->
                     </basis-datatable>
                     <div class="ui-g-12 ui-md-2">

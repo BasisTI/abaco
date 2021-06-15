@@ -7,6 +7,8 @@ import { Table as DataTable } from 'primeng/table';
 import { Subscription } from 'rxjs';
 import { Analise, SearchGroup } from 'src/app/analise';
 import { Organizacao, OrganizacaoService } from 'src/app/organizacao';
+import { PerfilOrganizacao } from 'src/app/perfil/perfil-organizacao.model';
+import { PerfilService } from 'src/app/perfil/perfil.service';
 import { Sistema, SistemaService } from 'src/app/sistema';
 import { StatusService } from 'src/app/status';
 import { Status } from 'src/app/status/status.model';
@@ -33,6 +35,8 @@ export class DivergenciaListComponent implements OnInit {
     lstDivergence;
     selectedDivergence;
     totalRecords;
+
+    perfisOrganizacao: PerfilOrganizacao[] = [];
 
     cols: any[];
 
@@ -110,7 +114,8 @@ export class DivergenciaListComponent implements OnInit {
         private statusService: StatusService,
         private confirmationService: ConfirmationService,
         private divergenciaService: DivergenciaService,
-        private authService: AuthService
+        private authService: AuthService,
+        private perfilService: PerfilService
     ) {
     }
 
@@ -143,6 +148,13 @@ export class DivergenciaListComponent implements OnInit {
         }
     }
 
+    verificarBotoes(analise: Analise) {
+        this.canEditar = PerfilService.consultarPerfilAnalise("VALIDACAO", "EDITAR", this.perfisOrganizacao, analise);
+        this.canDeletar = PerfilService.consultarPerfilAnalise("VALIDACAO", "EXCLUIR", this.perfisOrganizacao, analise);
+        this.canAlterarStatus = PerfilService.consultarPerfilAnalise("VALIDACAO", "ALTERAR_STATUS", this.perfisOrganizacao, analise);
+        this.canBloquearDesbloquear = PerfilService.consultarPerfilAnalise("VALIDACAO", "BLOQUEAR_DESBLOQUEAR", this.perfisOrganizacao, analise);
+    }
+
     estadoInicial() {
         this.getEquipesFromActiveLoggedUser();
         this.recuperarOrganizacoes();
@@ -159,12 +171,22 @@ export class DivergenciaListComponent implements OnInit {
     }
 
     recuperarOrganizacoes() {
-        this.organizacaoService.dropDown().subscribe(response => {
-            this.organizations = response;
-            this.customOptions['organizacao.nome'] = response.map((item) => {
-                return { label: item.nome, value: item.id };
+        this.perfilService.getPerfilOrganizacaoByUser().subscribe(r => {
+            this.perfisOrganizacao = r;
+            let organizacoesPesquisar: Organizacao[] = [];
+            this.organizacaoService.dropDown().subscribe(response => {
+                response.forEach(organizacao => {
+                    if(PerfilService.consultarPerfilOrganizacao("VALIDACAO", "PESQUISAR", this.perfisOrganizacao, organizacao) == true){
+                        organizacoesPesquisar.push(organizacao);
+                    }
+                })
+                this.organizations = organizacoesPesquisar;
+                this.customOptions['organizacao.nome'] = organizacoesPesquisar.map((item) => {
+                    return { label: item.nome, value: item.id };
+                });
             });
-        });
+        })
+
     }
 
     recuperarSistema() {
@@ -267,7 +289,7 @@ export class DivergenciaListComponent implements OnInit {
     }
 
     public onRowDblclick(event) {
-        if (this.authService.possuiRole(AuthService.PREFIX_ROLE + "VALIDACAO_EDITAR") == false) {
+        if (!this.canEditar) {
             return false;
         }
         if (event.target.nodeName === 'TD') {
@@ -324,6 +346,7 @@ export class DivergenciaListComponent implements OnInit {
             if (this.datatable.value && this.datatable.value[ind]) {
                 this.analiseSelecionada = this.datatable.value[ind];
                 this.blocked = this.datatable.value[ind].bloqueiaAnalise;
+                this.verificarBotoes(this.analiseSelecionada);
             }
         }
     }

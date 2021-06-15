@@ -55,6 +55,20 @@ public class PEAnaliticoResource {
         return this.peAnaliticoService.getPeAnaliticoDTOS(idModulo, idFuncionalidade, name, idSistema, "fd");
     }
 
+    @GetMapping("/peanalitico/funcaoTransacao/estimada/{idSistema}")
+    @Timed
+    public Set<PEAnaliticoDTO> getFuncaoTransacaoByModuloOrFuncionalidadeEstimada(@RequestParam(required = false) Long idModulo, @RequestParam(required = false) Long idFuncionalidade, @RequestParam(required = false) String name, @PathVariable(required = false) Long idSistema) {
+        return this.peAnaliticoService.getPeAnaliticoEstimadaDTOS(idModulo, idFuncionalidade, name, idSistema, "ft");
+    }
+
+    @GetMapping("/peanalitico/funcaoDados/estimada/{idSistema}")
+    @Timed
+    public Set<PEAnaliticoDTO> getFuncaoDadosyModuloOrFuncionalidadeEstimada(@RequestParam(required = false) Long idModulo, @RequestParam(required = false) Long idFuncionalidade, @RequestParam(required = false) String name, @PathVariable(required = false) Long idSistema) {
+        return this.peAnaliticoService.getPeAnaliticoEstimadaDTOS(idModulo, idFuncionalidade, name, idSistema, "fd");
+    }
+
+
+
     private DropdownFuncaoDadosDTO convertToDto(PEAnalitico peAnalitico) {
         return new DropdownFuncaoDadosDTO(peAnalitico.getIdfuncaodados(), peAnalitico.getName());
     }

@@ -7,7 +7,7 @@
                 <div class="card card-w-title">
                     <div class="ui-g">
                         <div class="ui-g-12">
-                            <div class="ui-g ui-md-12"
+                            <!-- <div class="ui-g ui-md-12"
                                  style="justify-content: flex-end;">
                                 <div class="ui-md-2" *ngIf="!isView">
                                     <app-green-button [buttonLabel]="'Novo'"
@@ -15,7 +15,7 @@
                                                       (click)="openDialog(false)">
                                     </app-green-button>
                                 </div>
-                            </div>
+                            </div> -->
                             <div class="ui-g">
                                 <basis-datatable
                                         type="memory"
@@ -58,6 +58,10 @@
                                     <p-column field="complexidade" header="Complexidade" [sortable]="true" ></p-column>
                                     <p-column field="grossPF" header="PF Bruto" [sortable]="true"></p-column>
                                     <p-column field="pf" header="PF Líquido" [sortable]="true" ></p-column>
+                                    <basis-datatable-button name="add" *ngIf="!isView"
+                                        (click)="openDialog(false)" bTooltip="Incluir nova função"
+                                        class="ui-button-success" icon="add">
+                                    </basis-datatable-button>
                                     <basis-datatable-button
                                         name="delete"
                                         *ngIf="!isView"
@@ -84,7 +88,7 @@
                                     </basis-datatable-button>
                                     <basis-datatable-button name="edicaoLote"
                                         *ngIf="!isView && funcaoDadosEditar?.length > 1"
-                                        (click)="prepararEditarEmLote()" pTooltip="Edição em lote."
+                                        (click)="prepararEditarEmLote()" bTooltip="Edição em lote."
                                         class="ui-button-success" icon="border-color">
                                     </basis-datatable-button>
                                     <basis-datatable-button name="refresh"

@@ -183,6 +183,12 @@ public class UserService extends BaseService {
         userCopy.setResetKey(RandomUtil.generateResetKey());
         userCopy.setResetDate(ZonedDateTime.now());
         userCopy.setPerfils(user.getPerfils());
+        userCopy.setPerfilOrganizacoes(user.getPerfilOrganizacoes());
+        if(!userCopy.getPerfilOrganizacoes().isEmpty()){
+            userCopy.getPerfilOrganizacoes().forEach(perfilOrganizacao -> {
+                perfilOrganizacao.setUser(userCopy);
+            });
+        }
         return userCopy;
     }
 
@@ -284,7 +290,7 @@ public class UserService extends BaseService {
     }
 
     @Transactional(readOnly = true)
-    public User getUserWithAuthorities(Long id) {
+    public User  getUserWithAuthorities(Long id) {
         User user = userRepository.findOneWithAuthoritiesById(id);
         Optional<List<Perfil>> listPerfil = perfilRepository.findAllByUsers(user);
         if(listPerfil.isPresent()){
@@ -359,6 +365,12 @@ public class UserService extends BaseService {
         updatableUser.setPerfils(user.getPerfils());
         updatableUser.setOrganizacoes(user.getOrganizacoes());
         updatableUser.setTipoEquipes(user.getTipoEquipes());
+        updatableUser.setPerfilOrganizacoes(user.getPerfilOrganizacoes());
+        if(!updatableUser.getPerfilOrganizacoes().isEmpty()){
+            updatableUser.getPerfilOrganizacoes().forEach(perfilOrganizacao -> {
+                perfilOrganizacao.setUser(updatableUser);
+            });
+        }
         User updatedUser = userRepository.save(updatableUser);
         return userSearchRepository.save(bindUserForSaveElatiscSearch(updatedUser));
     }

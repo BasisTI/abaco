@@ -38,6 +38,13 @@
                         [(ngModel)]="funcionalidadeAtual">
                     </p-dropdown>
                 </div>
+
+                <div class="ui-g-4 ui-md-2 ui-sm-4">
+                    <p-radioButton name="groupname" [value]="1" label="Detalhada" [(ngModel)]="metodoContagem"></p-radioButton>
+                </div>
+                <div class="ui-g-4 ui-md-4 ui-sm-12">
+                    <p-radioButton name="groupname" [value]="2" label="Estimada" [(ngModel)]="metodoContagem"></p-radioButton>
+                </div>
             </div>
             <div class="ui-g ui-md-12" style="justify-content: center; margin-bottom: px; margin-top: 05px">
                 <div class="ui-g-2 ui-md-2 ui-sm-12">

@@ -8,13 +8,13 @@
                 <div class="card card-w-title">
                     <div class="ui-g">
                         <div class="ui-g-12">
-                            <div class="ui-g ui-md-12" style="justify-content: flex-end;">
+                            <!-- <div class="ui-g ui-md-12" style="justify-content: flex-end;">
                                 <div class="ui-md-2" *ngIf="!isView">
                                     <app-green-button [buttonLabel]="'Novo'" id="idBtnNovoFormFuncaoTransacao"
                                         buttonIcon="ui-icon-add" (click)="openDialog(false)">
                                     </app-green-button>
                                 </div>
-                            </div>
+                            </div> -->
                             <!-- Inicio da tabela -->
                             <div class="ui-g">
                                 <basis-datatable type="memory" [disableDelete]="this.isView"
@@ -47,19 +47,23 @@
                                             sustantation && sustantation !== emptySustantion ? this.getLabel('Sim') :
                                             this.getLabel('Não') }}</ng-template>
                                     </p-column>
+                                    <basis-datatable-button name="add" *ngIf="!isView"
+                                        (click)="openDialog(false)" bTooltip="Incluir nova função"
+                                        class="ui-button-success" icon="add">
+                                    </basis-datatable-button>
                                     <basis-datatable-button [allowMultipleSelection]="false" name="clone"
                                         *ngIf="!isView"
-                                        [pTooltip]="funcaoTransacaoEditar[0] != undefined ? this.getLabel('Criar Clone') : this.getLabel('Escolha um registro para criar Clone.')"
+                                        [bTooltip]="funcaoTransacaoEditar[0] != undefined ? this.getLabel('Criar Clone') : this.getLabel('Escolha um registro para criar Clone.')"
                                         [disabled]="funcaoTransacaoEditar[0] == undefined" class="ui-button-dark"
                                         icon="content-copy">
                                     </basis-datatable-button>
                                     <basis-datatable-button name="filter" *ngIf="!isView"
-                                        pTooltip="Copiar funções de transação." class="ui-button-info"
+                                    bTooltip="Copiar funções de transação." class="ui-button-info"
                                         icon="import-export">
                                     </basis-datatable-button>
                                     <basis-datatable-button name="edicaoLote"
                                         *ngIf="!isView && funcaoTransacaoEditar?.length > 1"
-                                        (click)="prepararEditarEmLote()" pTooltip="Edição em lote."
+                                        (click)="prepararEditarEmLote()" bTooltip="Edição em lote."
                                         class="ui-button-success" icon="border-color">
                                     </basis-datatable-button>
                                     <basis-datatable-button name="refresh"

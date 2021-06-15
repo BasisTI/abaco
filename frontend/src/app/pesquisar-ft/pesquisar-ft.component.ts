@@ -1,24 +1,24 @@
-import {ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild, Input} from '@angular/core';
-import {MessageUtil} from '../util/message.util';
-import {SelectItem} from 'primeng/primeng';
-import {Analise, AnaliseService} from '../analise';
-import {Organizacao} from '../organizacao';
-import {Contrato} from '../contrato';
-import {Sistema, SistemaService} from '../sistema';
-import {EsforcoFase} from '../esforco-fase';
-import {TipoEquipeService, TipoEquipe} from '../tipo-equipe';
-import {FatorAjuste} from '../fator-ajuste';
-import {FatorAjusteLabelGenerator} from '../shared/fator-ajuste-label-generator';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild, Input } from '@angular/core';
+import { MessageUtil } from '../util/message.util';
+import { SelectItem } from 'primeng/primeng';
+import { Analise, AnaliseService } from '../analise';
+import { Organizacao } from '../organizacao';
+import { Contrato } from '../contrato';
+import { Sistema, SistemaService } from '../sistema';
+import { EsforcoFase } from '../esforco-fase';
+import { TipoEquipeService, TipoEquipe } from '../tipo-equipe';
+import { FatorAjuste } from '../fator-ajuste';
+import { FatorAjusteLabelGenerator } from '../shared/fator-ajuste-label-generator';
 import * as _ from 'lodash';
-import {Modulo} from '../modulo';
-import {FuncaoDadosService} from '../funcao-dados/funcao-dados.service';
+import { Modulo } from '../modulo';
+import { FuncaoDadosService } from '../funcao-dados/funcao-dados.service';
 
-import {Funcionalidade, FuncionalidadeService} from '../funcionalidade';
-import {FuncaoTransacao} from '../funcao-transacao';
-import {CalculadoraTransacao, Calculadora} from '../analise-shared';
-import {FuncaoTransacaoService} from '../funcao-transacao/funcao-transacao.service';
-import {BaselineService} from '../baseline';
-import {Router} from '@angular/router';
+import { Funcionalidade, FuncionalidadeService } from '../funcionalidade';
+import { FuncaoTransacao } from '../funcao-transacao';
+import { CalculadoraTransacao, Calculadora } from '../analise-shared';
+import { FuncaoTransacaoService } from '../funcao-transacao/funcao-transacao.service';
+import { BaselineService } from '../baseline';
+import { Router } from '@angular/router';
 import { Subscription, forkJoin, Observable } from 'rxjs';
 import { DatatableComponent, PageNotificationService } from '@nuvem/primeng-components';
 import { AnaliseSharedDataService } from '../shared/analise-shared-data.service';
@@ -113,13 +113,15 @@ export class PesquisarFtComponent implements OnInit {
 
     erroUnitario = false;
 
-    deflaPadrao: SelectItem = {label: 'Não Alterar', value: 'original-bAsis'};
+    deflaPadrao: SelectItem = { label: 'Não Alterar', value: 'original-bAsis' };
 
     nameSearch: String;
 
     cols: any[];
 
     exportColumns: any[];
+
+    metodoContagem = 1;
 
 
     constructor(
@@ -148,13 +150,13 @@ export class PesquisarFtComponent implements OnInit {
             { field: 'name', header: 'Nome' },
             { field: 'classificacao', header: 'Classificação' }
         ];
-        this.exportColumns = this.cols.map(col => ({title: col.header, dataKey: col.field}));
+        this.exportColumns = this.cols.map(col => ({ title: col.header, dataKey: col.field }));
     }
 
     tiposAnalise: SelectItem[] = [
-        {label: MessageUtil.PROJETO_DESENVOLVIMENTO, value: MessageUtil.DESENVOLVIMENTO},
-        {label: MessageUtil.PROJETO_MELHORIA, value: MessageUtil.MELHORIA},
-        {label: MessageUtil.CONTAGEM_APLICACAO, value: MessageUtil.APLICACAO}
+        { label: MessageUtil.PROJETO_DESENVOLVIMENTO, value: MessageUtil.DESENVOLVIMENTO },
+        { label: MessageUtil.PROJETO_MELHORIA, value: MessageUtil.MELHORIA },
+        { label: MessageUtil.CONTAGEM_APLICACAO, value: MessageUtil.APLICACAO }
     ];
 
 
@@ -300,7 +302,7 @@ export class PesquisarFtComponent implements OnInit {
         const fatorAjuste: FatorAjuste = this.analise.fatorAjuste;
         if (fatorAjuste) {
             const fatorAjusteSelectItem: SelectItem['value']
-                = _.find(this.fatoresAjuste, {value: {id: fatorAjuste.id}});
+                = _.find(this.fatoresAjuste, { value: { id: fatorAjuste.id } });
             this.analise.fatorAjuste = fatorAjusteSelectItem;
         }
     }
@@ -310,7 +312,7 @@ export class PesquisarFtComponent implements OnInit {
         this.fatoresAjuste =
             faS.map(fa => {
                 const label = FatorAjusteLabelGenerator.generate(fa);
-                return {label: label, value: fa};
+                return { label: label, value: fa };
             });
         this.carregarModulosQuandoTiverSistemaDisponivel();
     }
@@ -339,8 +341,8 @@ export class PesquisarFtComponent implements OnInit {
     }
 
     private selecionarModuloBaseline(moduloId: number, funcionalideId: number) {
-        this.moduloSelecionado = _.find(this.modulos, {'id': moduloId});
-        this.funcionalidadeSelecionada = _.find(this.funcionalidades, {'id': funcionalideId});
+        this.moduloSelecionado = _.find(this.modulos, { 'id': moduloId });
+        this.funcionalidadeSelecionada = _.find(this.funcionalidades, { 'id': funcionalideId });
     }
 
     moduloSelected(modulo: Modulo) {
@@ -362,7 +364,7 @@ export class PesquisarFtComponent implements OnInit {
 
     private deselecionaFuncionalidadeSeModuloSelecionadoForDiferente() {
         if (this.moduloSelecionado && this.moduloSelecionado.id !== this.oldModuloSelectedId) {
-                this.funcionalidadeSelecionada = new Funcionalidade();
+            this.funcionalidadeSelecionada = new Funcionalidade();
         }
     }
 
@@ -375,9 +377,9 @@ export class PesquisarFtComponent implements OnInit {
         if (!(this.novoDeflator)) {
             this.deflaPesquisa = false;
             this.pageNotificationService.addErrorMessage('Deflator é um campo obrigatório.');
-        } else if (this.novoDeflator.tipoAjuste === 'UNITARIO' && this.quantidadeINM <= 0 ) {
+        } else if (this.novoDeflator.tipoAjuste === 'UNITARIO' && this.quantidadeINM <= 0) {
             this.erroUnitario = true;
-        } else if (!(this.selections) || this.selections.length <= 0 ) {
+        } else if (!(this.selections) || this.selections.length <= 0) {
             this.pageNotificationService.addErrorMessage('É obrigatório selecionar uma Função.');
         } else {
             if (!(this.isFuncaoDados)) {
@@ -395,7 +397,7 @@ export class PesquisarFtComponent implements OnInit {
                             this.analise.id,
                             select.idFuncionalidade,
                             select.idModulo,
-                            ));
+                        ));
                 });
                 forkJoin(lstToInclude).subscribe(respLStInclude => {
                     respLStInclude.forEach((include, index) => {
@@ -408,7 +410,7 @@ export class PesquisarFtComponent implements OnInit {
                         } else {
                             this.pageNotificationService.addErrorMessage(
                                 'Já existe uma função com o nome "' + ft.name +
-                                 '" na funcionalidade "' + ft.nomeFuncionalidade + '".');
+                                '" na funcionalidade "' + ft.nomeFuncionalidade + '".');
                         }
                     });
                     forkJoin(getFuncaoTransacoes).subscribe(result => {
@@ -448,9 +450,9 @@ export class PesquisarFtComponent implements OnInit {
                                 response.forEach((ftCreated) => {
                                     this.pageNotificationService.addCreateMsg(ftCreated.name);
                                 });
-                            this.analiseService.updateSomaPf(this.analise.id).subscribe();
-                            this.blockUiService.hide();
-                        });
+                                this.analiseService.updateSomaPf(this.analise.id).subscribe();
+                                this.blockUiService.hide();
+                            });
                     });
                 });
             } else {
@@ -467,7 +469,7 @@ export class PesquisarFtComponent implements OnInit {
                             this.analise.id,
                             select.idFuncionalidade,
                             select.idModulo,
-                            ));
+                        ));
                 });
                 forkJoin(lstToInclude).subscribe(respLStInclude => {
                     respLStInclude.forEach((include, index) => {
@@ -480,7 +482,7 @@ export class PesquisarFtComponent implements OnInit {
                         } else {
                             this.pageNotificationService.addErrorMessage(
                                 'Já existe uma função com o nome "' + ft.name +
-                                    '" na funcionalidade "' + ft.nomeFuncionalidade + '".');
+                                '" na funcionalidade "' + ft.nomeFuncionalidade + '".');
                         }
                     });
 
@@ -517,15 +519,15 @@ export class PesquisarFtComponent implements OnInit {
                             }
                         });
                         forkJoin(saveFuncaoDados).subscribe(
-                                response => {
-                                    response.forEach((fdCreated) => {
-                                        this.pageNotificationService.addCreateMsg(fdCreated.name);
-                                    });
+                            response => {
+                                response.forEach((fdCreated) => {
+                                    this.pageNotificationService.addCreateMsg(fdCreated.name);
+                                });
                                 this.analiseService.updateSomaPf(this.analise.id).subscribe();
                                 this.blockUiService.hide();
                             });
-                        });
                     });
+                });
             }
         }
     }
@@ -536,18 +538,30 @@ export class PesquisarFtComponent implements OnInit {
         this.nameSearch = this.nameSearch ? this.nameSearch : '';
         if (this.isFuncaoDados) {
             this.blockUiService.show();
-            this.funcaoDadosService.getFuncaoDadosByModuloOrFuncionalidade(this.analise.sistema.id, this.nameSearch, this.moduloSelecionado.id,  this.funcionalidadeAtual.id)
-            .subscribe(value => {
-                this.blockUiService.hide();
-                this.fn = value;
-            });
+            if (this.metodoContagem === 1) {
+                this.funcaoDadosService.getFuncaoDadosByModuloOrFuncionalidade(this.analise.sistema.id, this.nameSearch, this.moduloSelecionado.id, this.funcionalidadeAtual.id).subscribe(value => {
+                    this.blockUiService.hide();
+                    this.fn = value;
+                });
+            } else {
+                this.funcaoDadosService.getFuncaoDadosByModuloOrFuncionalidadeEstimada(this.analise.sistema.id, this.nameSearch, this.moduloSelecionado.id, this.funcionalidadeAtual.id).subscribe(value => {
+                    this.blockUiService.hide();
+                    this.fn = value;
+                });
+            }
         } else {
             this.blockUiService.show();
-            this.funcaoTransacaoService.getFuncaoTransacaoByModuloOrFuncionalidade(this.analise.sistema.id, this.nameSearch, this.moduloSelecionado.id,  this.funcionalidadeAtual.id)
-            .subscribe(value => {
-                this.blockUiService.hide();
-                this.fn = value;
-            });
+            if (this.metodoContagem === 1) {
+                this.funcaoTransacaoService.getFuncaoTransacaoByModuloOrFuncionalidade(this.analise.sistema.id, this.nameSearch, this.moduloSelecionado.id, this.funcionalidadeAtual.id).subscribe(value => {
+                    this.blockUiService.hide();
+                    this.fn = value;
+                });
+            } else {
+                this.funcaoTransacaoService.getFuncaoTransacaoByModuloOrFuncionalidadeEstimada(this.analise.sistema.id, this.nameSearch, this.moduloSelecionado.id, this.funcionalidadeAtual.id).subscribe(value => {
+                    this.blockUiService.hide();
+                    this.fn = value;
+                });
+            }
         }
     }
 
@@ -637,7 +651,7 @@ export class PesquisarFtComponent implements OnInit {
 
     mudarDeflator(event: FatorAjuste) {
         this.novoDeflator = event;
-        if ( event) {
+        if (event) {
             if (event.tipoAjuste === 'UNITARIO') {
                 this.hideShowQuantidade = false;
             } else {
@@ -647,7 +661,7 @@ export class PesquisarFtComponent implements OnInit {
     }
 
     alterarQuatindade(event) {
-       this.quantidadeINM = event;
+        this.quantidadeINM = event;
     }
 
     calcularComNovoDeflator(funcao: FuncaoTransacao) {
@@ -678,9 +692,20 @@ export class PesquisarFtComponent implements OnInit {
 
     }
 
+    puxarFuncoes(): any[]{
+        let funcoes: any[] = [];
+        this.fn.forEach(item => {
+            funcoes.push(item);
+        })
+        return funcoes;
+    }
+
     exportExcel() {
         if (this.fn && this.fn.length > 0) {
-            const worksheet = XLSX.utils.json_to_sheet(this.fn);
+            let funcoes = this.puxarFuncoes();
+            let heading: any = {idfuncaodados: "ID", classificacao: "Classificação", name: "Nome", complexidade: "Complexidade", nomeFuncionalidade: "Funcionalidade", nomeModulo: "Módulo", idFuncionalidade: "ID Funcionalidade", idModulo: "ID Módulo"};
+            funcoes.unshift(heading);
+            const worksheet = XLSX.utils.json_to_sheet(funcoes, {skipHeader: true});
             const workbook = { Sheets: { 'data': worksheet }, SheetNames: ['data'] };
             const excelBuffer: any = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
             this.saveAsExcelFile(excelBuffer, 'funcoes');

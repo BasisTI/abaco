@@ -15,6 +15,7 @@ import org.springframework.data.elasticsearch.annotations.Field;
 import org.springframework.data.elasticsearch.annotations.FieldIndex;
 import org.springframework.data.elasticsearch.annotations.FieldType;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -23,6 +24,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Transient;
@@ -31,8 +33,10 @@ import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.time.ZonedDateTime;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -111,12 +115,15 @@ public class User extends AbstractAuditingEntity implements Serializable, Report
     @Column(name = "reset_date")
     private ZonedDateTime resetDate = null;
 
-    
+
     @ManyToMany
     @JoinTable(name = "user_perfil", joinColumns = {
         @JoinColumn(name = "user_id", referencedColumnName = "id")}, inverseJoinColumns = {
         @JoinColumn(name = "perfil_id", referencedColumnName = "id")})
     private Set<Perfil> perfils = new HashSet<>();
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<PerfilOrganizacao> perfilOrganizacoes = new ArrayList<>();
 
     @Field(type = FieldType.Nested)
     @ManyToMany
@@ -310,5 +317,17 @@ public class User extends AbstractAuditingEntity implements Serializable, Report
         this.perfils = Optional.ofNullable(perfils)
             .map(lista -> new LinkedHashSet<Perfil>(lista))
             .orElse(new LinkedHashSet<Perfil>());
+    }
+
+    public List<PerfilOrganizacao> getPerfilOrganizacoes() {
+        return Optional.ofNullable(this.perfilOrganizacoes)
+            .map(lista -> new ArrayList<PerfilOrganizacao>(lista))
+            .orElse(new ArrayList<PerfilOrganizacao>());
+    }
+
+    public void setPerfilOrganizacoes(List<PerfilOrganizacao> perfilOrganizacoes) {
+        this.perfilOrganizacoes = Optional.ofNullable(perfilOrganizacoes)
+            .map(lista -> new ArrayList<PerfilOrganizacao>(lista))
+            .orElse(new ArrayList<PerfilOrganizacao>());
     }
 }
