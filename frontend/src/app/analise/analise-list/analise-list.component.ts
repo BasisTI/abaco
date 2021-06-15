@@ -394,6 +394,32 @@ export class AnaliseListComponent implements OnInit {
         }
     }
 
+    clonarEquipe(){
+        if (this.analiseSelecionada.clonadaParaEquipe == true) {
+            if (this.analiseSelecionada.analiseClonadaParaEquipe?.id != null && this.analiseSelecionada.analiseClonadaParaEquipe?.id != undefined) {
+                let msgStart = this.analiseSelecionada.analiseClonou === true ? "Esta análise já clonou para equipe. " : "Está análise já foi clonada para equipe. ";
+
+                msgStart += (this.analiseSelecionada.analiseClonadaParaEquipe?.numeroOs == null ? "Identificador de análise: "
+                    + this.analiseSelecionada.analiseClonadaParaEquipe?.identificadorAnalise : "Número OS: "
+                + this.analiseSelecionada.analiseClonadaParaEquipe?.numeroOs);;
+
+                return this.pageNotificationService.addErrorMessage
+                    (msgStart);
+            } else {
+                return this.pageNotificationService.addErrorMessage("Essa análise já foi clonada para equipe anteriormente. ")
+            }
+        }
+        this.openModalCloneAnaliseEquipe(this.analiseSelecionada.id);
+    }
+
+    gerarDivergencia(){
+        if (this.analiseSelecionada.id) {
+            this.confirmDivergenceGenerate(this.analiseSelecionada);
+        } else {
+            this.openModalDivergence(this.analiseSelecionada);
+        }
+    }
+
     public datatableClick(event: DatatableClickEvent) {
         if (!event.selection) {
             return;
@@ -439,22 +465,7 @@ export class AnaliseListComponent implements OnInit {
                 this.geraBaselinePdfBrowser();
                 break;
             case 'cloneParaEquipe':
-                if (event.selection.clonadaParaEquipe == true) {
-                    if (event.selection.analiseClonadaParaEquipe?.id != null && event.selection.analiseClonadaParaEquipe?.id != undefined) {
-                        let msgStart = event.selection.analiseClonou === true ? "Esta análise já clonou para equipe. " : "Está análise já foi clonada para equipe. ";
-
-                        msgStart += (event.selection.analiseClonadaParaEquipe?.numeroOs == null ? "Identificador de análise: "
-                            + event.selection.analiseClonadaParaEquipe?.identificadorAnalise : "Número OS: "
-                        + event.selection.analiseClonadaParaEquipe?.numeroOs);;
-
-                        return this.pageNotificationService.addErrorMessage
-                            (msgStart);
-                    } else {
-                        return this.pageNotificationService.addErrorMessage("Essa análise já foi clonada para equipe anteriormente. ")
-                    }
-                }
-                this.openModalCloneAnaliseEquipe(event.selection.id);
-
+                //Está em uma função 'clonarEquipe()'
                 break;
             case 'compartilhar':
                 this.compartilharAnalise();
