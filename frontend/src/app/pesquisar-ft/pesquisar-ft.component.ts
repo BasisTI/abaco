@@ -145,10 +145,11 @@ export class PesquisarFtComponent implements OnInit {
         this.analiseSharedDataService.analiseCarregada();
         this.estadoInicial();
         this.cols = [
-            { field: 'nome', header: 'Módulo' },
+            { field: 'nomeModulo', header: 'Módulo' },
             { field: 'nomeFuncionalidade', header: 'Funcionalidade' },
             { field: 'name', header: 'Nome' },
-            { field: 'classificacao', header: 'Classificação' }
+            { field: 'classificacao', header: 'Classificação' },
+            { field: 'complexidade', header: 'Complexidade' }
         ];
         this.exportColumns = this.cols.map(col => ({ title: col.header, dataKey: col.field }));
     }
