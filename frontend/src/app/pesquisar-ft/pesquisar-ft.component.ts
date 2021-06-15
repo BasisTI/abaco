@@ -692,9 +692,20 @@ export class PesquisarFtComponent implements OnInit {
 
     }
 
+    puxarFuncoes(): any[]{
+        let funcoes: any[] = [];
+        this.fn.forEach(item => {
+            funcoes.push(item);
+        })
+        return funcoes;
+    }
+
     exportExcel() {
         if (this.fn && this.fn.length > 0) {
-            const worksheet = XLSX.utils.json_to_sheet(this.fn);
+            let funcoes = this.puxarFuncoes();
+            let heading: any = {idfuncaodados: "ID", classificacao: "Classificação", name: "Nome", complexidade: "Complexidade", nomeFuncionalidade: "Funcionalidade", nomeModulo: "Módulo", idFuncionalidade: "ID Funcionalidade", idModulo: "ID Módulo"};
+            funcoes.unshift(heading);
+            const worksheet = XLSX.utils.json_to_sheet(funcoes, {skipHeader: true});
             const workbook = { Sheets: { 'data': worksheet }, SheetNames: ['data'] };
             const excelBuffer: any = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
             this.saveAsExcelFile(excelBuffer, 'funcoes');
