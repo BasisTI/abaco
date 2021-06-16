@@ -12,7 +12,8 @@ export const funcaoTransacaoRoute: Routes = [
         canActivate: [AuthGuard, AuthGuardService],
         data: {
             roleParaVerificar: ['ROLE_ABACO_ANALISE_CONSULTAR',
-            'ROLE_ABACO_ANALISE_EDITAR']
+            'ROLE_ABACO_ANALISE_EDITAR'],
+            breadcrumb: "Função de transação"
         }
     },
     {
@@ -21,7 +22,8 @@ export const funcaoTransacaoRoute: Routes = [
         canActivate: [AuthGuard, AuthGuardService],
         data: {
             roleParaVerificar: ['ROLE_ABACO_ANALISE_CONSULTAR',
-            'ROLE_ABACO_ANALISE_EDITAR']
+            'ROLE_ABACO_ANALISE_EDITAR'],
+            breadcrumb: "Função de transação"
         }
     },
     {
@@ -29,7 +31,8 @@ export const funcaoTransacaoRoute: Routes = [
         component: FuncaoTransacaoDivergenceComponent,
         canActivate: [AuthGuard, AuthGuardService],
         data: {
-            roleParaVerificar: ['ROLE_ABACO_VALIDACAO_EDITAR']
+            roleParaVerificar: ['ROLE_ABACO_VALIDACAO_EDITAR'],
+            breadcrumb: "Função de transação"
         }
     },
     {
@@ -37,7 +40,8 @@ export const funcaoTransacaoRoute: Routes = [
         component: FuncaoTransacaoDivergenceComponent,
         canActivate: [AuthGuard, AuthGuardService],
         data: {
-            roleParaVerificar: ['ROLE_ABACO_VALIDACAO_EDITAR']
+            roleParaVerificar: ['ROLE_ABACO_VALIDACAO_EDITAR'],
+            breadcrumb: "Função de transação"
         }
     }
 ];

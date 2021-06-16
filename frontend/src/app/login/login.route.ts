@@ -3,8 +3,11 @@ import { LoginComponent } from './login.component';
 
 
 export const loginRoute: Routes = [
-  {
-    path: 'login',
-    component: LoginComponent
-  }
+    {
+        path: 'login',
+        component: LoginComponent,
+        data: {
+            breadcrumb: "Login"
+        }
+    }
 ];

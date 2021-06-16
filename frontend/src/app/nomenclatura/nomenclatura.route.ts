@@ -12,7 +12,8 @@ export const nomenclaturaRoute: Routes = [
     component: NomenclaturaListComponent,
     canActivate: [AuthGuard, AuthGuardService],
     data: {
-        roleParaVerificar: ['ROLE_ABACO_NOMENCLATURA_ACESSAR']
+        roleParaVerificar: ['ROLE_ABACO_NOMENCLATURA_ACESSAR'],
+        breadcrumb: "Nomenclatura"
     }
   },
   {
@@ -20,7 +21,8 @@ export const nomenclaturaRoute: Routes = [
     component: NomenclaturaFormComponent,
     canActivate: [AuthGuard, AuthGuardService],
     data: {
-        roleParaVerificar: ['ROLE_ABACO_NOMENCLATURA_CADASTRAR']
+        roleParaVerificar: ['ROLE_ABACO_NOMENCLATURA_CADASTRAR'],
+        breadcrumb: "Nomenclatura"
     }
   },
   {
@@ -28,7 +30,8 @@ export const nomenclaturaRoute: Routes = [
     component: NomenclaturaFormComponent,
     canActivate: [AuthGuard, AuthGuardService],
     data: {
-        roleParaVerificar: ['ROLE_ABACO_NOMENCLATURA_EDITAR']
+        roleParaVerificar: ['ROLE_ABACO_NOMENCLATURA_EDITAR'],
+        breadcrumb: "Nomenclatura"
     }
   },
   {
@@ -36,7 +39,8 @@ export const nomenclaturaRoute: Routes = [
     component: NomenclaturaDetailComponent,
     canActivate: [AuthGuard, AuthGuardService],
     data: {
-        roleParaVerificar: ['ROLE_ABACO_NOMENCLATURA_CONSULTAR']
+        roleParaVerificar: ['ROLE_ABACO_NOMENCLATURA_CONSULTAR'],
+        breadcrumb: "Nomenclatura"
     }
   },
 ];

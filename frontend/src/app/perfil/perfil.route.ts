@@ -13,7 +13,8 @@ export const perfilRoute: Routes = [
         component: PerfilListComponent,
         canActivate: [AuthGuard, AuthGuardService],
         data: {
-            roleParaVerificar: ['ROLE_ABACO_PERFIL_ACESSAR']
+            roleParaVerificar: ['ROLE_ABACO_PERFIL_ACESSAR'],
+            breadcrumb: "Perfil"
         }
     },
     {
@@ -21,7 +22,8 @@ export const perfilRoute: Routes = [
         component: PerfilFormComponent,
         canActivate: [AuthGuard, AuthGuardService],
         data: {
-            roleParaVerificar: ['ROLE_ABACO_PERFIL_CADASTRAR']
+            roleParaVerificar: ['ROLE_ABACO_PERFIL_CADASTRAR'],
+            breadcrumb: "Perfil"
         }
     },
     {
@@ -29,7 +31,8 @@ export const perfilRoute: Routes = [
         component: PerfilFormComponent,
         canActivate: [AuthGuard, AuthGuardService],
         data: {
-            roleParaVerificar: ['ROLE_ABACO_PERFIL_EDITAR']
+            roleParaVerificar: ['ROLE_ABACO_PERFIL_EDITAR'],
+            breadcrumb: "Perfil"
         }
     },
     {
@@ -37,7 +40,8 @@ export const perfilRoute: Routes = [
         component: PerfilDetailComponent,
         canActivate: [AuthGuard, AuthGuardService],
         data: {
-            roleParaVerificar: ['ROLE_ABACO_PERFIL_CONSULTAR']
+            roleParaVerificar: ['ROLE_ABACO_PERFIL_CONSULTAR'],
+            breadcrumb: "Perfil"
         }
     },
 ];

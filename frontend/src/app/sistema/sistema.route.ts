@@ -14,7 +14,8 @@ export const sistemaRoute: Routes = [
     component: SistemaListComponent,
     canActivate: [AuthGuard, AuthGuardService],
     data: {
-        roleParaVerificar: ['ROLE_ABACO_SISTEMA_ACESSAR']
+        roleParaVerificar: ['ROLE_ABACO_SISTEMA_ACESSAR'],
+        breadcrumb: "Sistema"
     }
   },
   {
@@ -22,7 +23,8 @@ export const sistemaRoute: Routes = [
     component: SistemaFormComponent,
     canActivate: [AuthGuard, AuthGuardService],
     data: {
-        roleParaVerificar: ['ROLE_ABACO_SISTEMA_CADASTRAR']
+        roleParaVerificar: ['ROLE_ABACO_SISTEMA_CADASTRAR'],
+        breadcrumb: "Sistema"
     }
   },
   {
@@ -30,7 +32,8 @@ export const sistemaRoute: Routes = [
     component: SistemaFormComponent,
     canActivate: [AuthGuard, AuthGuardService],
     data: {
-        roleParaVerificar: ['ROLE_ABACO_SISTEMA_EDITAR']
+        roleParaVerificar: ['ROLE_ABACO_SISTEMA_EDITAR'],
+        breadcrumb: "Sistema"
     }
   },
   {
@@ -38,7 +41,8 @@ export const sistemaRoute: Routes = [
     component: SistemaDetailComponent,
     canActivate: [AuthGuard, AuthGuardService],
     data: {
-        roleParaVerificar: ['ROLE_ABACO_SISTEMA_CONSULTAR']
+        roleParaVerificar: ['ROLE_ABACO_SISTEMA_CONSULTAR'],
+        breadcrumb: "Sistema"
     }
   },
 ];

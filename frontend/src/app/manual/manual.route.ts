@@ -13,7 +13,8 @@ export const manualRoute: Routes = [
         component: ManualListComponent,
         canActivate: [AuthGuard, AuthGuardService],
         data: {
-            roleParaVerificar: ['ROLE_ABACO_MANUAL_ACESSAR']
+            roleParaVerificar: ['ROLE_ABACO_MANUAL_ACESSAR'],
+            breadcrumb: "Manual"
         }
     },
     {
@@ -21,7 +22,8 @@ export const manualRoute: Routes = [
         component: ManualFormComponent,
         canActivate: [AuthGuard, AuthGuardService],
         data: {
-            roleParaVerificar: ['ROLE_ABACO_MANUAL_CADASTRAR']
+            roleParaVerificar: ['ROLE_ABACO_MANUAL_CADASTRAR'],
+            breadcrumb: "Manual"
         }
     },
     {
@@ -29,7 +31,8 @@ export const manualRoute: Routes = [
         component: ManualFormComponent,
         canActivate: [AuthGuard, AuthGuardService],
         data: {
-            roleParaVerificar: ['ROLE_ABACO_MANUAL_EDITAR']
+            roleParaVerificar: ['ROLE_ABACO_MANUAL_EDITAR'],
+            breadcrumb: "Manual"
         }
     },
     {
@@ -37,7 +40,8 @@ export const manualRoute: Routes = [
         component: ManualDetailComponent,
         canActivate: [AuthGuard, AuthGuardService],
         data: {
-            roleParaVerificar: ['ROLE_ABACO_MANUAL_CONSULTAR']
+            roleParaVerificar: ['ROLE_ABACO_MANUAL_CONSULTAR'],
+            breadcrumb: "Manual"
         }
     },
 ];

@@ -14,7 +14,8 @@ export const analiseRoute: Routes = [
         component: AnaliseListComponent,
         canActivate: [AuthGuard, AuthGuardService],
         data: {
-            roleParaVerificar: ['ROLE_ABACO_ANALISE_ACESSAR']
+            roleParaVerificar: ['ROLE_ABACO_ANALISE_ACESSAR'],
+            breadcrumb: "Análise"
         }
     },
     {
@@ -22,7 +23,8 @@ export const analiseRoute: Routes = [
         component: AnaliseFormComponent,
         canActivate: [AuthGuard, AuthGuardService],
         data: {
-            roleParaVerificar: ['ROLE_ABACO_ANALISE_CADASTRAR']
+            roleParaVerificar: ['ROLE_ABACO_ANALISE_CADASTRAR'],
+            breadcrumb: "Análise"
         }
     },
     {
@@ -30,7 +32,8 @@ export const analiseRoute: Routes = [
         component: AnaliseFormComponent,
         canActivate: [AuthGuard, AuthGuardService],
         data: {
-            roleParaVerificar:['ROLE_ABACO_ANALISE_EDITAR']
+            roleParaVerificar:['ROLE_ABACO_ANALISE_EDITAR'],
+            breadcrumb: "Análise"
         }
     },
     {
@@ -38,7 +41,8 @@ export const analiseRoute: Routes = [
         component: AnaliseDetailComponent,
         canActivate: [AuthGuard, AuthGuardService],
         data: {
-            roleParaVerificar: ['ROLE_ABACO_ANALISE_CONSULTAR']
+            roleParaVerificar: ['ROLE_ABACO_ANALISE_CONSULTAR'],
+            breadcrumb: "Análise"
         }
     },
     {
@@ -47,7 +51,8 @@ export const analiseRoute: Routes = [
         canActivate: [AuthGuard, AuthGuardService],
         data: {
             roleParaVerificar: ['ROLE_ABACO_ANALISE_CONSULTAR',
-            'ROLE_ABACO_ANALISE_EDITAR']
+            'ROLE_ABACO_ANALISE_EDITAR'],
+            breadcrumb: "Análise"
         }
     },
     {
@@ -56,7 +61,8 @@ export const analiseRoute: Routes = [
         canActivate: [AuthGuard, AuthGuardService],
         data: {
             roleParaVerificar: ['ROLE_ABACO_ANALISE_CONSULTAR',
-            'ROLE_ABACO_ANALISE_EDITAR']
+            'ROLE_ABACO_ANALISE_EDITAR'],
+            breadcrumb: "Análise"
         }
     },
     {
@@ -65,7 +71,8 @@ export const analiseRoute: Routes = [
         canActivate: [AuthGuard, AuthGuardService],
         data: {
             roleParaVerificar: ['ROLE_ABACO_ANALISE_CONSULTAR',
-            'ROLE_ABACO_ANALISE_EDITAR']
+            'ROLE_ABACO_ANALISE_EDITAR'],
+            breadcrumb: "Análise"
         }
     },
 ];
