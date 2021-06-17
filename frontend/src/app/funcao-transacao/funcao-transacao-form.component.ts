@@ -208,6 +208,7 @@ export class FuncaoTransacaoFormComponent implements OnInit {
         this.alrsChips = [];
         this.traduzirImpactos();
         this.subscribeDisplay();
+        this.inicializaFatoresAjuste(this.analise.manual);
     }
 
     sortColumn(event: any) {

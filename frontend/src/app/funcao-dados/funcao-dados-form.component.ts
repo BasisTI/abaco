@@ -206,6 +206,7 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
         }
         this.traduzirClassificacoes();
         this.traduzirImpactos();
+        this.inicializaFatoresAjuste(this.analise.manual);
     }
 
     public onRowDblclick(event) {
@@ -1003,7 +1004,6 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
     }
 
     private carregarFatorDeAjusteNaEdicao(funcaoSelecionada: FuncaoDados) {
-        this.inicializaFatoresAjuste(this.analise.manual);
         if (funcaoSelecionada.fatorAjuste !== undefined) {
             const item: SelectItem = this.fatoresAjuste.find(selectItem => {
                 return selectItem.value && funcaoSelecionada.fatorAjuste.id === selectItem.value['id'];

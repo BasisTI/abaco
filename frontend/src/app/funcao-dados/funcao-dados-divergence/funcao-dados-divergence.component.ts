@@ -198,6 +198,7 @@ export class FuncaoDadosDivergenceComponent implements OnInit {
         }
         this.traduzirClassificacoes();
         this.traduzirImpactos();
+        this.inicializaFatoresAjuste(this.analise.manual);
     }
 
     public onRowDblclick(event) {
