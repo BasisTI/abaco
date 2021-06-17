@@ -215,6 +215,7 @@ export class FuncaoTransacaoDivergenceComponent implements OnInit {
         this.alrsChips = [];
         this.traduzirImpactos();
         this.subscribeDisplay();
+        this.inicializaFatoresAjuste(this.analise.manual);
     }
 
     sortColumn(event: any) {
