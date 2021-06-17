@@ -12,7 +12,8 @@ export const funcaoDadosRoute: Routes = [
         canActivate: [AuthGuard, AuthGuardService],
         data: {
             roleParaVerificar: ['ROLE_ABACO_ANALISE_CONSULTAR',
-            'ROLE_ABACO_ANALISE_EDITAR']
+            'ROLE_ABACO_ANALISE_EDITAR'],
+            breadcrumb: "Função de dados"
         }
     },
     {
@@ -21,7 +22,8 @@ export const funcaoDadosRoute: Routes = [
         canActivate: [AuthGuard, AuthGuardService],
         data: {
             roleParaVerificar: ['ROLE_ABACO_ANALISE_CONSULTAR',
-            'ROLE_ABACO_ANALISE_EDITAR']
+            'ROLE_ABACO_ANALISE_EDITAR'],
+            breadcrumb: "Função de dados"
         }
     },
     {
@@ -29,7 +31,8 @@ export const funcaoDadosRoute: Routes = [
         component: FuncaoDadosDivergenceComponent,
         canActivate: [AuthGuard, AuthGuardService],
         data: {
-            roleParaVerificar: ['ROLE_ABACO_VALIDACAO_EDITAR']
+            roleParaVerificar: ['ROLE_ABACO_VALIDACAO_EDITAR'],
+            breadcrumb: "Função de dados"
         }
     },
     {
@@ -37,7 +40,8 @@ export const funcaoDadosRoute: Routes = [
         component: FuncaoDadosDivergenceComponent,
         canActivate: [AuthGuard, AuthGuardService],
         data: {
-            roleParaVerificar: ['ROLE_ABACO_VALIDACAO_EDITAR']
+            roleParaVerificar: ['ROLE_ABACO_VALIDACAO_EDITAR'],
+            breadcrumb: "Função de dados"
         }
     },
 ];

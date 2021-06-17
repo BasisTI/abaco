@@ -14,7 +14,8 @@ export const statusRoute: Routes = [
     component: StatusListComponent,
     canActivate: [AuthGuard, AuthGuardService],
     data: {
-        roleParaVerificar: ['ROLE_ABACO_STATUS_ACESSAR']
+        roleParaVerificar: ['ROLE_ABACO_STATUS_ACESSAR'],
+        breadcrumb: "Status"
     }
   },
   {
@@ -22,7 +23,8 @@ export const statusRoute: Routes = [
     component: StatusFormComponent,
     canActivate: [AuthGuard, AuthGuardService],
     data: {
-        roleParaVerificar: ['ROLE_ABACO_STATUS_CADASTRAR']
+        roleParaVerificar: ['ROLE_ABACO_STATUS_CADASTRAR'],
+        breadcrumb: "Status"
     }
   },
   {
@@ -30,7 +32,8 @@ export const statusRoute: Routes = [
     component: StatusFormComponent,
     canActivate: [AuthGuard, AuthGuardService],
     data: {
-        roleParaVerificar: ['ROLE_ABACO_STATUS_EDITAR']
+        roleParaVerificar: ['ROLE_ABACO_STATUS_EDITAR'],
+        breadcrumb: "Status"
     }
   },
   {
@@ -38,7 +41,8 @@ export const statusRoute: Routes = [
     component: StatusDetailComponent,
     canActivate: [AuthGuard, AuthGuardService],
     data: {
-        roleParaVerificar: ['ROLE_ABACO_STATUS_CONSULTAR']
+        roleParaVerificar: ['ROLE_ABACO_STATUS_CONSULTAR'],
+        breadcrumb: "Status"
     }
   },
 ];
