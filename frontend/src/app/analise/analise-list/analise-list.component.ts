@@ -446,48 +446,8 @@ export class AnaliseListComponent implements OnInit {
             case 'delete':
                 this.confirmDelete(event.selection);
                 break;
-            // case 'relatorioBrowser':
-            //     this.geraRelatorioPdfBrowser(event.selection);
-            //     break;
-            // case 'relatorioArquivo':
-            //     this.gerarRelatorioPdfArquivo(event.selection);
-            //     break;
-            // case 'relatorioBrowserDetalhado':
-            //     this.geraRelatorioPdfDetalhadoBrowser(event.selection);
-            //     break;
-            // case 'relatorioExcelDetalhado':
-            //     this.gerarRelatorioExcel(event.selection);
-            //     break;
-            // case 'clone':
-            //     this.clonar(event.selection.id);
-            //     break;
-            // case 'geraBaselinePdfBrowser':
-            //     this.geraBaselinePdfBrowser();
-            //     break;
-            // case 'cloneParaEquipe':
-            //     //Está em uma função 'clonarEquipe()'
-            //     break;
-            // case 'compartilhar':
-            //     this.compartilharAnalise();
-            //     break;
-            // case 'relatorioAnaliseContagem':
-            //     this.gerarRelatorioContagem(event.selection);
-            //     break;
-            // case 'changeStatus':
-            //     this.openModalChangeStatus(event.selection.id);
-            //     break;
-            // case 'generateDivergence':
-            //     if (event.selection.id) {
-            //         this.confirmDivergenceGenerate(event.selection);
-            //     } else {
-            //         this.openModalDivergence(event.selection);
-            //     }
-            //     break;
             // case 'exportJson':
             //     this.exportarAnalise(event.selection);
-            //     break;
-            // case 'importExcel':
-            //     this.openModalExportarExcel(event.selection);
             //     break;
         }
     }

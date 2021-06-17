@@ -91,9 +91,6 @@ export class FuncaoTransacaoFormComponent implements OnInit {
     public isDisabled = false;
 
     private fatorAjusteNenhumSelectItem = { label: 'Nenhum', value: undefined };
-    private analiseCarregadaSubscription: Subscription;
-    private subscriptionSistemaSelecionado: Subscription;
-    private nomeDasFuncoesDoSistema: string[] = [];
     public erroModulo: boolean;
     public erroTR: boolean;
     public erroTD: boolean;
@@ -191,9 +188,7 @@ export class FuncaoTransacaoFormComponent implements OnInit {
                         this.hideShowQuantidade = true;
                         this.currentFuncaoTransacao = new FuncaoTransacao();
                         this.estadoInicial();
-                        this.subscribeToAnaliseCarregada();
                         this.initClassificacoes();
-                        this.estadoInicial();
                         this.blockUiService.hide();
                     });
                 }
@@ -413,12 +408,6 @@ export class FuncaoTransacaoFormComponent implements OnInit {
     disableTRDER() {
         this.hideElementTDTR = this.analise.metodoContagem === 'INDICATIVA'
             || this.analise.metodoContagem === 'ESTIMADA';
-    }
-
-    private subscribeToAnaliseCarregada() {
-        this.analiseCarregadaSubscription = this.analiseSharedDataService.getLoadSubject().subscribe(() => {
-            //  this.loadDataFunctionsName();
-        });
     }
 
     getTextDialog() {
@@ -887,7 +876,6 @@ export class FuncaoTransacaoFormComponent implements OnInit {
     }
 
     openDialog(param: boolean) {
-        this.subscribeToAnaliseCarregada();
         this.isEdit = param;
         this.disableTRDER();
         this.configurarDialog();
