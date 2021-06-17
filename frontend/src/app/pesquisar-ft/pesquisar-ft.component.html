@@ -107,6 +107,12 @@
                                         <input class="column-filter-input" (click)="$event.stopPropagation()" pInputText type="text" (input)="table.filter($event.target.value, 'name', 'contains')"/>
                                     </th>
                                     <th pSortableColumn="fase.classificacao" style="text-align: center; width: 9em;">Classificação <p-sortIcon></p-sortIcon>
+                                        <p-dropdown  class="column-filter-input" [(options)]="classificacoes"
+                                        name="classificaoFiltro" [(ngModel)]="classificacaoSearch"
+                                        [autoWidth]="false" [style]="{'min-width':'50%'}"
+                                        (onChange)="table.filter(classificacaoSearch, 'classificacao', 'contains')"
+                                            [placeholder]="''" (click)="$event.stopPropagation()" >
+                                        </p-dropdown>
                                     </th>
                                 </tr>
                             </ng-template>

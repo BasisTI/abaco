@@ -115,6 +115,10 @@ export class PesquisarFtComponent implements OnInit {
 
     deflaPadrao: SelectItem = { label: 'Não Alterar', value: 'original-bAsis' };
 
+    classificacoes: SelectItem[] = [];
+
+    classificacaoSearch: String;
+
     nameSearch: String;
 
     cols: any[];
@@ -122,6 +126,8 @@ export class PesquisarFtComponent implements OnInit {
     exportColumns: any[];
 
     metodoContagem = 1;
+
+
 
 
     constructor(
@@ -281,7 +287,16 @@ export class PesquisarFtComponent implements OnInit {
                 this.inicializaFatoresAjuste();
             }
         }
-
+        if(this.isFuncaoDados){
+            this.classificacoes = [{label: "", value: ""},
+                                    {label: "ALI", value: "ALI"},
+                                    {label: "AIE", value: "AIE"}]
+        }else{
+            this.classificacoes = [{label: "", value: ""},
+                                    {label: "CE", value: "CE"},
+                                    {label: "EE", value: "EE"},
+                                    {label: "SE", value: "SE"}]
+        }
     }
 
     setSistamaOrganizacao(org: Organizacao) {
