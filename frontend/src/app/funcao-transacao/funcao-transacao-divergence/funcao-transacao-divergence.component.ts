@@ -785,7 +785,9 @@ export class FuncaoTransacaoDivergenceComponent implements OnInit {
         this.funcaoDadosService.mod.next(funcaoTransacaoSelecionada.funcionalidade);
         this.analiseSharedDataService.funcaoAnaliseCarregada();
         this.analiseSharedDataService.currentFuncaoTransacao = funcaoTransacaoSelecionada;
-        this.carregarDerEAlr(funcaoTransacaoSelecionada);
+        if(this.analise.metodoContagem !== "ESTIMADA"){
+            this.carregarDerEAlr(funcaoTransacaoSelecionada);
+        }
         this.carregarFatorDeAjusteNaEdicao(funcaoTransacaoSelecionada);
         this.carregarArquivos();
     }

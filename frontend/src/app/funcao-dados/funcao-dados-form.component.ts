@@ -998,7 +998,9 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
         this.funcaoDadosService.mod.next(funcaoDadosSelecionada.funcionalidade);
         this.analiseSharedDataService.funcaoAnaliseCarregada();
         this.analiseSharedDataService.currentFuncaoDados = funcaoDadosSelecionada;
-        this.carregarDerERlr(funcaoDadosSelecionada);
+        if(this.analise.metodoContagem !== "ESTIMADA"){
+            this.carregarDerERlr(funcaoDadosSelecionada);
+        }
         this.carregarFatorDeAjusteNaEdicao(funcaoDadosSelecionada);
         this.carregarArquivos();
     }
