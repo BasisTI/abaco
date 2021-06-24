@@ -88,6 +88,8 @@ export class FuncaoTransacaoFormComponent implements OnInit {
     @ViewChild(DatatableComponent) tables: DatatableComponent;
     viewFuncaoTransacao = false;
 
+    isOrderning: boolean = false;
+
     public isDisabled = false;
 
     private fatorAjusteNenhumSelectItem = { label: 'Nenhum', value: undefined };
@@ -179,6 +181,7 @@ export class FuncaoTransacaoFormComponent implements OnInit {
             this.isView = params['view'] !== undefined;
             this.funcaoTransacaoService.getVwFuncaoTransacaoByIdAnalise(this.idAnalise).subscribe(value => {
                 this.funcoesTransacoes = value;
+                this.funcoesTransacoes.sort((a, b) => a.ordem - b.ordem);
                 if (!this.isView) {
                     this.analiseService.find(this.idAnalise).subscribe(analise => {
                         this.analise = analise;
@@ -655,7 +658,6 @@ export class FuncaoTransacaoFormComponent implements OnInit {
                         ));
                         this.setFields(funcaoTransacaoCalculada);
                         this.funcoesTransacoes.push(funcaoTransacaoCalculada);
-                        this.funcoesTransacoes.sort((a, b) => a.id - b.id);
                         this.resetarEstadoPosSalvar();
                         this.fecharDialog();
                         this.analiseService.updateSomaPf(this.analise.id).subscribe();
@@ -722,6 +724,16 @@ export class FuncaoTransacaoFormComponent implements OnInit {
         this.impactoInvalido = false;
     }
 
+    clonar(){
+        this.disableTRDER();
+        this.configurarDialog();
+        this.isEdit = false;
+        this.prepareToClone(this.funcaoTransacaoEditar[0]);
+        this.currentFuncaoTransacao.id = undefined;
+        this.currentFuncaoTransacao.artificialId = undefined;
+        this.textHeader = this.getLabel('Clonar Função de Transação');
+    }
+
     datatableClick(event: DatatableClickEvent) {
         const button = event.button;
         if (button !== 'filter' && !event.selection) {
@@ -735,18 +747,6 @@ export class FuncaoTransacaoFormComponent implements OnInit {
                 break;
             case 'delete':
                 this.confirmDelete(this.funcaoTransacaoEditar);
-                break;
-            case 'clone':
-                this.disableTRDER();
-                this.configurarDialog();
-                this.isEdit = false;
-                this.prepareToClone(this.funcaoTransacaoEditar[0]);
-                this.currentFuncaoTransacao.id = undefined;
-                this.currentFuncaoTransacao.artificialId = undefined;
-                this.textHeader = this.getLabel('Clonar Função de Transação');
-                break;
-            case 'filter':
-                this.display = true;
                 break;
             case 'view':
                 this.viewFuncaoTransacao = true;
@@ -803,7 +803,9 @@ export class FuncaoTransacaoFormComponent implements OnInit {
         this.funcaoDadosService.mod.next(funcaoTransacaoSelecionada.funcionalidade);
         this.analiseSharedDataService.funcaoAnaliseCarregada();
         this.analiseSharedDataService.currentFuncaoTransacao = funcaoTransacaoSelecionada;
-        this.carregarDerEAlr(funcaoTransacaoSelecionada);
+        if(this.analise.metodoContagem !== "ESTIMADA"){
+            this.carregarDerEAlr(funcaoTransacaoSelecionada);
+        }
         this.carregarFatorDeAjusteNaEdicao(funcaoTransacaoSelecionada);
         this.carregarArquivos();
     }
@@ -1099,7 +1101,6 @@ export class FuncaoTransacaoFormComponent implements OnInit {
                 }
                 this.setFields(funcaoTransacaoCalculada);
                 this.funcoesTransacoes.push(funcaoTransacaoCalculada);
-                this.funcoesTransacoes.sort((a, b) => a.id - b.id);
                 this.analiseService.updateSomaPf(this.analise.id).subscribe();
             });
         }
@@ -1188,8 +1189,86 @@ export class FuncaoTransacaoFormComponent implements OnInit {
         return (res);
     }
 
-    refreshFuncoes(){
+    refreshFuncoes() {
         this.funcoesTransacoes.sort((a, b) => a.id - b.id);
+        this.updateIndex();
+    }
+
+    public updateIndex() {
+        let temp = 1
+        for (let i = 0; i < this.funcoesTransacoes.length; i++) {
+            this.funcoesTransacoes[i].ordem = temp
+            temp++
+        }
+    }
+
+    public orderList(botao: String) {
+
+        let i = this.funcoesTransacoes.indexOf(this.funcaoTransacaoEditar[0])
+        let del = i
+
+        if (botao == 'order-top' && this.funcaoTransacaoEditar[0] != null) {
+            if (i == 0) {
+                return
+            } else {
+                this.funcoesTransacoes.splice(del, 1);
+                this.funcoesTransacoes.unshift(this.funcaoTransacaoEditar[0]);
+            }
+        }
+
+        if (botao == 'order-up' && this.funcaoTransacaoEditar != null) {
+            if (i == 0) {
+                return
+            } else {
+                let pos = i - 1
+                this.funcoesTransacoes.splice(del, 1)
+                this.funcoesTransacoes.splice(pos, 0, this.funcaoTransacaoEditar[0])
+                this.funcoesTransacoes.indexOf(this.funcaoTransacaoEditar[0])
+            }
+        }
+
+        if (botao == 'order-down' && this.funcaoTransacaoEditar[0] != null) {
+            if (i == this.funcoesTransacoes.length - 1) {
+                return
+            } else {
+                let pos = i + 1;
+                this.funcoesTransacoes.splice(del, 1);
+                this.funcoesTransacoes.splice(pos, 0, this.funcaoTransacaoEditar[0]);
+                this.funcoesTransacoes.indexOf(this.funcaoTransacaoEditar[0]);
+            }
+        }
+
+        if (botao == 'order-botton' && this.funcaoTransacaoEditar[0] != null) {
+            if (i == this.funcoesTransacoes.length - 1) {
+                return
+            }
+            this.funcoesTransacoes.splice(del, 1);
+            this.funcoesTransacoes.push(this.funcaoTransacaoEditar[0]);
+            this.funcoesTransacoes.indexOf(this.funcaoTransacaoEditar[0]);
+        }
+
+        this.updateIndex()
+    }
+
+    ordernarFuncoes() {
+        this.isOrderning = true;
+    }
+
+    salvarOrdernacao() {
+        this.blockUiService.show();
+        this.funcoesTransacoes.forEach((funcaoTransacao, index) => {
+            this.funcaoTransacaoService.getById(funcaoTransacao.id).subscribe(funcao => {
+                let func: FuncaoTransacao;
+                func = new FuncaoTransacao().copyFromJSON(funcao);
+                const funcaoTransacao = CalculadoraTransacao.calcular(
+                    this.analise.metodoContagem, func, this.analise.contrato.manual);
+                    funcaoTransacao.ordem = index + 1;
+                this.funcaoTransacaoService.update(funcaoTransacao, null).subscribe();
+            })
+        })
+        this.pageNotificationService.addSuccessMessage("Ordenação salva com sucesso.");
+        this.isOrderning = false;
+        this.blockUiService.hide();
     }
 }
 
