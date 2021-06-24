@@ -77,7 +77,8 @@ public abstract class FuncaoAnalise implements AbacoAuditable {
     @Column(name = "status_funcao")
     private StatusFuncao statusFuncao;
 
-
+    @Column(name="ordem")
+    private Long ordem;
 
 
     @Embedded
@@ -207,5 +208,13 @@ public abstract class FuncaoAnalise implements AbacoAuditable {
 
     public void setStatusFuncao(StatusFuncao statusFuncao) {
         this.statusFuncao = statusFuncao;
+    }
+
+    public Long getOrdem() {
+        return ordem;
+    }
+
+    public void setOrdem(Long ordem) {
+        this.ordem = ordem;
     }
 }

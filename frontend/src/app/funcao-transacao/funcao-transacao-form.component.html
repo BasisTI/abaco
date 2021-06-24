@@ -17,14 +17,19 @@
                             </div> -->
                             <!-- Inicio da tabela -->
                             <div class="ui-g">
-                                <basis-datatable type="memory" [disableDelete]="this.isView"
-                                    [disableEdit]="this.isView || selectButtonMultiple"
-                                    [disableView]="selectButtonMultiple" id="idTabelaFuncaoTransacaoFormFuncaoTransacao"
+                                <basis-datatable type="memory" [disableDelete]="this.isView || isOrderning"
+                                    [disableEdit]="this.isView || selectButtonMultiple || isOrderning"
+                                    [disableView]="selectButtonMultiple || isOrderning" id="idTabelaFuncaoTransacaoFormFuncaoTransacao"
                                     [enableButtonsScroll]="true"
                                     [value]="this.funcoesTransacoes" (buttonClick)="datatableClick($event)"
                                     (dblclick)="onRowDblclick($event)" (click)="selectFT()" [paginator]="false"
                                     [rows]="20" [selectionMode]="'multiple'" [filterOnColumn]="true"
                                     [rowsPerPageOptions]="[20,50,100]" [showVisibleColumnsControl]="true" #tables>
+                                    <p-column header="Ordem" field="ordem">
+                                        <ng-template let-col let-funcaoTransacao="rowData" pTemplate="body">
+                                            {{ funcaoTransacao.ordem ? funcaoTransacao.ordem : funcoesTransacoes.indexOf(funcaoTransacao) +1 }}
+                                        </ng-template>
+                                    </p-column>
                                     <p-column field="nomeModulo" header="Módulo" sortable="true"></p-column>
                                     <p-column field="nomeFuncionalidade" header="Funcionalidade" sortable="true">
                                     </p-column>
@@ -47,28 +52,58 @@
                                             sustantation && sustantation !== emptySustantion ? this.getLabel('Sim') :
                                             this.getLabel('Não') }}</ng-template>
                                     </p-column>
-                                    <basis-datatable-button name="add" *ngIf="!isView"
+                                    <basis-datatable-button name="add" *ngIf="!isView && !isOrderning"
                                         (click)="openDialog(false)" bTooltip="Incluir nova função"
                                         class="ui-button-success" icon="add">
                                     </basis-datatable-button>
                                     <basis-datatable-button [allowMultipleSelection]="false" name="clone"
-                                        *ngIf="!isView"
+                                        (click)="clonar()"
+                                        *ngIf="!isView && !isOrderning"
                                         [bTooltip]="funcaoTransacaoEditar[0] != undefined ? this.getLabel('Criar Clone') : this.getLabel('Escolha um registro para criar Clone.')"
                                         [disabled]="funcaoTransacaoEditar[0] == undefined" class="ui-button-dark"
                                         icon="content-copy">
                                     </basis-datatable-button>
-                                    <basis-datatable-button name="filter" *ngIf="!isView"
+                                    <basis-datatable-button name="filter" *ngIf="!isView && !isOrderning"
+                                    (click)="this.display=true;"
                                     bTooltip="Copiar funções de transação." class="ui-button-info"
                                         icon="import-export">
                                     </basis-datatable-button>
                                     <basis-datatable-button name="edicaoLote"
-                                        *ngIf="!isView && funcaoTransacaoEditar?.length > 1"
+                                        *ngIf="!isView && funcaoTransacaoEditar?.length > 1 && !isOrderning"
                                         (click)="prepararEditarEmLote()" bTooltip="Edição em lote."
                                         class="ui-button-success" icon="border-color">
                                     </basis-datatable-button>
-                                    <basis-datatable-button name="refresh"
-                                        (click)="refreshFuncoes()" bTooltip="Ordernar funções."
-                                        class="ui-button-success" icon="refresh">
+                                    <basis-datatable-button name="ordernar" (click)="ordernarFuncoes()"
+                                        *ngIf="!isView && !isOrderning"
+                                        bTooltip="Ordernar funções." class="ui-button-success" icon="sort">
+                                    </basis-datatable-button>
+                                    <basis-datatable-button name="refresh" (click)="refreshFuncoes()"
+                                        *ngIf="!isView && isOrderning"
+                                        bTooltip="Ordernar (ID)." class="ui-button-success" icon="refresh">
+                                    </basis-datatable-button>
+                                    <basis-datatable-button name="order-up" [bTooltip]="'Mover para cima.'"
+                                        *ngIf="!isView && isOrderning"
+                                        (click)="orderList('order-up')"
+                                        icon="arrow-drop-up">
+                                    </basis-datatable-button>
+                                    <basis-datatable-button name="order-top" [bTooltip]="'Mover ao topo.'"
+                                        *ngIf="!isView && isOrderning"
+                                        (click)="orderList('order-top')"
+                                        icon="skip-next">
+                                    </basis-datatable-button>
+                                    <basis-datatable-button name="order-down" [bTooltip]="'Mover para baixo.'"
+                                        *ngIf="!isView && isOrderning"
+                                        (click)="orderList('order-down')"
+                                        icon="arrow-drop-down">
+                                    </basis-datatable-button>
+                                    <basis-datatable-button style="transform: rotate(-90deg);" name="order-botton"
+                                        *ngIf="!isView && isOrderning"
+                                        (click)="orderList('order-botton')"
+                                        [bTooltip]="'Mover ao final.'" icon="skip-previous">
+                                    </basis-datatable-button>
+                                    <basis-datatable-button name="saveOrder" (click)="salvarOrdernacao()"
+                                        *ngIf="!isView && isOrderning"
+                                        bTooltip="Salvar ordenação." class="ui-button-success" icon="save">
                                     </basis-datatable-button>
                                 </basis-datatable>
                             </div>

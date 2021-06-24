@@ -15,13 +15,18 @@
                                 </div>
                             </div> -->
                             <div class="ui-g">
-                                <basis-datatable type="memory" id="idTabelaFuncaoDados" [disableDelete]="this.isView"
-                                    [disableEdit]="this.isView || selectButtonMultiple" [enableButtonsScroll]="true"
-                                    [disableView]="selectButtonMultiple" (dblclick)="onRowDblclick($event)"
+                                <basis-datatable type="memory" id="idTabelaFuncaoDados" [disableDelete]="this.isView || isOrderning"
+                                    [disableEdit]="this.isView || selectButtonMultiple || isOrderning" [enableButtonsScroll]="true"
+                                    [disableView]="selectButtonMultiple || isOrderning" (dblclick)="onRowDblclick($event)"
                                     [value]="funcoesDados" (buttonClick)="datatableClick($event)" (click)="selectFD()"
                                     [paginator]="false" [rows]="20" [selectionMode]="'multiple'" [filterOnColumn]="true"
                                     [rowsPerPageOptions]="[20,50,100]" [showVisibleColumnsControl]="true" #tables>
-
+                                    <p-column header="Ordem" field="ordem">
+                                        <ng-template let-col let-funcaoDado="rowData" pTemplate="body">
+                                            {{ funcaoDado.ordem ? funcaoDado.ordem : funcoesDados.indexOf(funcaoDado) +
+                                            1 }}
+                                        </ng-template>
+                                    </p-column>
                                     <p-column field="nomeModulo" header="Módulo" [filter]="true" [sortable]="true">
                                     </p-column>
                                     <p-column field="nomeFuncionalidade" [filter]="true" header="Funcionalidade"
@@ -41,33 +46,62 @@
                                             this.getLabel('Não') }}
                                         </ng-template>
                                     </p-column>
-                                    <basis-datatable-button name="add" *ngIf="!isView"
-                                        (click)="openDialog(false)" bTooltip="Incluir nova função"
-                                        class="ui-button-success" icon="add">
+                                    <basis-datatable-button name="add" *ngIf="!isView && !isOrderning" (click)="openDialog(false)"
+                                        bTooltip="Incluir nova função" class="ui-button-success" icon="add">
                                     </basis-datatable-button>
                                     <basis-datatable-button name="crud" [allowMultipleSelection]="false"
-                                        *ngIf="!isView && !(analise && analise.metodoContagem && analise.metodoContagem === 'INDICATIVA')"
+                                        *ngIf="!isView && !(analise && analise.metodoContagem && analise.metodoContagem === 'INDICATIVA')  && !isOrderning"
+                                        (click)="createCrud(this.funcaoDadosEditar[0])"
                                         [bTooltip]="funcaoDadosEditar[0] != undefined ? this.getLabel('Criar Crud') : this.getLabel('Escolha um registro para criar crud.')"
                                         [disabled]="funcaoDadosEditar[0] == undefined" class="ui-button-success"
                                         icon="input">
                                     </basis-datatable-button>
-                                    <basis-datatable-button *ngIf="!isView" [allowMultipleSelection]="false"
-                                        name="clone"
+                                    <basis-datatable-button *ngIf="!isView && !isOrderning" [allowMultipleSelection]="false"
+                                        name="clone" (click)="clonar()"
                                         [bTooltip]="funcaoDadosEditar[0] != undefined ? this.getLabel('Criar Clone') : this.getLabel('Escolha um registro para criar Clone.')"
                                         [disabled]="funcaoDadosEditar[0] == undefined" class="ui-button-dark"
                                         icon="content-copy">
                                     </basis-datatable-button>
-                                    <basis-datatable-button *ngIf="!isView" name="filter"
+                                    <basis-datatable-button *ngIf="!isView && !isOrderning" name="filter"
+                                        (click)="display = true"
                                         bTooltip="Copiar funções de dados." class="ui-button-info" icon="import-export">
                                     </basis-datatable-button>
                                     <basis-datatable-button name="edicaoLote"
-                                        *ngIf="!isView && funcaoDadosEditar?.length > 1"
+                                        *ngIf="!isView && funcaoDadosEditar?.length > 1  && !isOrderning"
                                         (click)="prepararEditarEmLote()" bTooltip="Edição em lote."
                                         class="ui-button-success" icon="border-color">
                                     </basis-datatable-button>
-                                    <basis-datatable-button name="refresh"
-                                        (click)="refreshFuncoes()" bTooltip="Ordernar funções."
-                                        class="ui-button-success" icon="refresh">
+                                    <basis-datatable-button name="ordernar" (click)="ordernarFuncoes()"
+                                        *ngIf="!isView && !isOrderning"
+                                        bTooltip="Ordernar funções." class="ui-button-success" icon="sort">
+                                    </basis-datatable-button>
+                                    <basis-datatable-button name="refresh" (click)="refreshFuncoes()"
+                                        *ngIf="!isView && isOrderning"
+                                        bTooltip="Ordernar (ID)." class="ui-button-success" icon="refresh">
+                                    </basis-datatable-button>
+                                    <basis-datatable-button name="order-up" [bTooltip]="'Mover para cima.'"
+                                        *ngIf="!isView && isOrderning"
+                                        (click)="orderList('order-up')"
+                                        icon="arrow-drop-up">
+                                    </basis-datatable-button>
+                                    <basis-datatable-button name="order-top" [bTooltip]="'Mover ao topo.'"
+                                        *ngIf="!isView && isOrderning"
+                                        (click)="orderList('order-top')"
+                                        icon="skip-next">
+                                    </basis-datatable-button>
+                                    <basis-datatable-button name="order-down" [bTooltip]="'Mover para baixo.'"
+                                        *ngIf="!isView && isOrderning"
+                                        (click)="orderList('order-down')"
+                                        icon="arrow-drop-down">
+                                    </basis-datatable-button>
+                                    <basis-datatable-button style="transform: rotate(-90deg);" name="order-botton"
+                                        *ngIf="!isView && isOrderning"
+                                        (click)="orderList('order-botton')"
+                                        [bTooltip]="'Mover ao final.'" icon="skip-previous">
+                                    </basis-datatable-button>
+                                    <basis-datatable-button name="saveOrder" (click)="salvarOrdernacao()"
+                                        *ngIf="!isView && isOrderning"
+                                        bTooltip="Salvar ordenação." class="ui-button-success" icon="save">
                                     </basis-datatable-button>
                                 </basis-datatable>
                             </div>

@@ -167,9 +167,6 @@ public class FuncaoDadosResource {
             List<UploadedFile> uploadedFiles = funcaoDadosService.uploadFiles(files);
             funcaoDadosOld.setFiles(uploadedFiles);
         }
-        if(analise.getMetodoContagem().equals(MetodoContagem.ESTIMADA)){
-            funcaoDados.setComplexidade(Complexidade.BAIXA);
-        }
 
         FuncaoDados funcaoDadosUpdate = updateFuncaoDados(funcaoDadosOld, funcaoDados);
 
@@ -437,6 +434,7 @@ public class FuncaoDadosResource {
         funcaoDadosOld.setComplexidade(funcaoDados.getComplexidade());
         funcaoDadosOld.setStatusFuncao(funcaoDados.getStatusFuncao());
         funcaoDadosOld.setQuantidade(funcaoDados.getQuantidade());
+        funcaoDadosOld.setOrdem(funcaoDados.getOrdem());
         return  funcaoDadosOld;
     }
 
