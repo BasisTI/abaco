@@ -44,7 +44,10 @@ export class DerChipsComponent implements OnChanges, OnInit {
 
     duplicatesResult: DuplicatesResult;
     mostrarDialogAddMultiplos = false;
+    mostrarDialogEditarMultiplos = false;
+
     addMultiplosTexto = '';
+    newValues = '';
 
     validaMultiplos = false;
     validaMultiplosRegistrados = false;
@@ -121,13 +124,13 @@ export class DerChipsComponent implements OnChanges, OnInit {
 
     search(event) {
         this.canEnter = true;
-        switch(this.tipoChip){
+        switch (this.tipoChip) {
             case 'DER':
-                switch(this.tipoFuncao){
+                switch (this.tipoFuncao) {
                     case 'FD':
                         this.derService.getDersFuncaoDadosByNomeSistema(event.query, this.idSistema).subscribe(response => {
                             this.listOptions = response.map(item => new DerChipItem(undefined, item.nome));
-                            this.options = this.listOptions.filter(item =>{
+                            this.options = this.listOptions.filter(item => {
                                 return this.values.find(value => value.text === item.text) === undefined;
                             });
                         });
@@ -136,7 +139,7 @@ export class DerChipsComponent implements OnChanges, OnInit {
                     case 'FT':
                         this.derService.getDersFuncaoTransacaoByNomeSistema(event.query, this.idSistema).subscribe(response => {
                             this.listOptions = response.map(item => new DerChipItem(undefined, item.nome));
-                            this.options = this.listOptions.filter(item =>{
+                            this.options = this.listOptions.filter(item => {
                                 return this.values.find(value => value.text === item.text) === undefined;
                             });
                         })
@@ -178,6 +181,30 @@ export class DerChipsComponent implements OnChanges, OnInit {
 
     deselecionar(object) {
         this.valuesChange.emit(this.values);
+    }
+
+    abrirDialogEditarMultiplos() {
+        this.mostrarDialogEditarMultiplos = true;
+        this.newValues = this.values.map(item => item.text).join("\n");
+    }
+
+    fecharDialogEditarMultiplos() {
+        this.mostrarDialogEditarMultiplos = false;
+        this.newValues = "";
+        this.validaMultiplos = false;
+    }
+
+    editarMultiplos() {
+        this.validaMultiplos = false;
+        this.validaMultiplosRegistrados = false;
+        if (this.verificaMultiplosDuplicados(this.newValues)) {
+            this.values = this.converteEditarMultiplos();
+            this.valuesChange.emit(this.values);
+            this.fecharDialogEditarMultiplos();
+            this.validaMultiplos = false;
+        } else {
+            this.validaMultiplos = true;
+        }
     }
 
     private addItem(derChipItem: DerChipItem) {
@@ -315,6 +342,15 @@ export class DerChipsComponent implements OnChanges, OnInit {
         }
     }
 
+    private converteEditarMultiplos(): DerChipItem[] {
+        const parseResult: ParseResult = DerTextParser.parse(this.newValues);
+        if (parseResult.textos) {
+            return parseResult.textos.map(txt => new DerChipItem(undefined, txt, this.contagem++));
+        } else {
+            return [new DerChipItem(undefined, parseResult.numero.toString(), this.contagem++)];
+        }
+    }
+
     fecharDialogAddMultiplos() {
         this.validaMultiplos = false;
         this.validaMultiplosRegistrados = false;
@@ -352,20 +388,5 @@ export class DerChipsComponent implements OnChanges, OnInit {
     }
 
 }
-
-
-// <p-chips id="chips"
-// [(ngModel)]="values"
-// addOnTab="true"
-// addOnBlur="true"
-// (onAdd)="onAddValue($event.value)"
-// (onRemove)="onRemove($event.value)">
-
-// <ng-template let-item pTemplate="item">
-//     <span class="ui-chips-token-label ng-star-inserted" (dblclick)="doubleClickChip(item)">
-//         {{ item.text }}
-//     </span>
-// </ng-template>
-// </p-chips>
 
 

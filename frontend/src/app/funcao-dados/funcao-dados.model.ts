@@ -61,7 +61,8 @@ export class FuncaoDados implements FuncaoResumivel, BaseEntity, FuncaoAnalise{
         public modulo?: Modulo,
         public statusFuncao?: StatusFunction,
         public lstDivergenceComments?: CommentFuncaoDados[],
-        public files?: any[]
+        public files?: any[],
+        public ordem?: number
     ) {
         if (!pf) {
             this.pf = 0;

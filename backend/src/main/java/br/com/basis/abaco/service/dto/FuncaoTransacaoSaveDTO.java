@@ -74,6 +74,8 @@ public class FuncaoTransacaoSaveDTO {
 
     private Analise analise;
 
+    private Long ordem;
+
     public FuncaoTransacao toEntity() throws InvocationTargetException, IllegalAccessException {
         FuncaoTransacao funcaoTransacao = new FuncaoTransacao();
         BeanUtils.copyProperties(funcaoTransacao, this);
