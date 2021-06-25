@@ -4,6 +4,7 @@ import br.com.basis.abaco.domain.TipoEquipe;
 import br.com.basis.abaco.service.EntityMapper;
 import br.com.basis.abaco.service.dto.TipoEquipeDTO;
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 import java.util.stream.Collectors;

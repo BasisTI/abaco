@@ -20,6 +20,7 @@ import { PesquisarFuncaoTransacaoModule } from '../pesquisar-ft/pesquisar-ft.mod
 import { FuncaoTransacaoDivergenceComponent } from '../funcao-transacao';
 import { FuncaoDadosDivergenceComponent } from './funcao-dados-divergence/funcao-dados-divergence.component';
 import { PaginatorModule } from 'primeng';
+import { RlrService } from '../rlr/rlr.service';
 
 
 
@@ -53,6 +54,7 @@ import { PaginatorModule } from 'primeng';
   providers: [
     FuncaoDadosService,
     DerService,
+    RlrService,
     BaselineService,
     AnaliseSharedDataService,
   ],

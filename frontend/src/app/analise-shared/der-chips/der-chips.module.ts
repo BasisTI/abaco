@@ -7,6 +7,7 @@ import { FormsModule } from '@angular/forms';
 import { AbacoDerTextModule } from '../der-text/der-text.module';
 import { ReferenciadorArComponent } from './referenciador-ar/referenciador-ar.component';
 import { SharedModule } from 'src/app/shared/shared.module';
+import { AbacoButtonsModule } from 'src/app/components/abaco-buttons/abaco-buttons.module';
 
 
 @NgModule({
@@ -16,6 +17,7 @@ import { SharedModule } from 'src/app/shared/shared.module';
     BrowserModule,
     AbacoDerTextModule,
     SharedModule,
+    AbacoButtonsModule,
   ],
   declarations: [
     DerChipsComponent,

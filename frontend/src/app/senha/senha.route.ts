@@ -6,16 +6,25 @@ import { SenhaFormComponent } from './senha.form-component';
 
 
 export const senhaRoute: Routes = [
-  {
-    path: 'senha',
-    component: SenhaFormComponent
-  },
-  {
-    path: 'senha/rec',
-    component: RecuperarSenhaComponent
-  },
-  {
-    path: 'reset/finish',
-           component:RecuperarSenhaFormComponent
-  }
+    {
+        path: 'senha',
+        component: SenhaFormComponent,
+        data: {
+            breadcrumb: "Senha"
+        }
+    },
+    {
+        path: 'senha/rec',
+        component: RecuperarSenhaComponent,
+        data: {
+            breadcrumb: "Senha"
+        }
+    },
+    {
+        path: 'reset/finish',
+        component: RecuperarSenhaFormComponent,
+        data: {
+            breadcrumb: "Senha"
+        }
+    }
 ];

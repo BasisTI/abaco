@@ -12,10 +12,11 @@
           </div>
         <div class="ui-g ui-md-6" style="justify-content: flex-end;">
             <app-green-button
+                *ngIf="canCadastrar"
               buttonLabel="Novo"
               id="idBtnNovoComponentAnalise"
               buttonIcon="ui-icon-add"
-              routerLink="/sistema/new">
+              (click)="criarSistema()">
           </app-green-button>
         </div>
 
@@ -24,11 +25,14 @@
             [url]="searchUrl"
             (dblclick)="onRowDblclick($event)"
             (click) = "selectTipoEquipe()"
-            [filterOnColumn]="true"
+            [filterOnColumn]="canPesquisar"
             [customFilterOptions]="customOptions"
             (buttonClick)="datatableClick($event)"
             id="idTabelaComponentSistema"
             [rows]="20"
+            [disableDelete]="!canDeletar"
+            [disableEdit]="!canEditar"
+            [disableView]="!canConsultar"
             [rowsPerPageOptions]="rowsPerPageOptions"
             [showPaginationFooter]="true"
             #datatable>
@@ -43,7 +47,7 @@
         </basis-datatable>
 
         <div class="ui-g-12 ui-md-2">
-            <app-export-button [dataTable]="datatable" resourceName="sistema" [filter]="datatable.filterParams">
+            <app-export-button [dataTable]="datatable" resourceName="sistema" [filter]="datatable.filterParams" funcionalidadeName="sistema">
             </app-export-button>
         </div>
 

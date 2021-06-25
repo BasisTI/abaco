@@ -1,15 +1,17 @@
 package br.com.basis.abaco.web.rest;
 
 import br.com.basis.abaco.domain.Rlr;
+import br.com.basis.abaco.domain.VwRlr;
 import br.com.basis.abaco.repository.RlrRepository;
 import br.com.basis.abaco.repository.search.RlrSearchRepository;
+import br.com.basis.abaco.service.RlrService;
 import br.com.basis.abaco.web.rest.util.HeaderUtil;
 import com.codahale.metrics.annotation.Timed;
 import io.github.jhipster.web.util.ResponseUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -45,17 +47,12 @@ public class RlrResource {
 
     private final RlrSearchRepository rlrSearchRepository;
 
-    private static final String ROLE_ANALISTA = "ROLE_ANALISTA";
+    private final RlrService rlrService;
 
-    private static final String ROLE_ADMIN = "ROLE_ADMIN";
-
-    private static final String ROLE_USER = "ROLE_USER";
-
-    private static final String ROLE_GESTOR = "ROLE_GESTOR";
-
-    public RlrResource(RlrRepository rlrRepository, RlrSearchRepository rlrSearchRepository) {
+    public RlrResource(RlrRepository rlrRepository, RlrSearchRepository rlrSearchRepository, RlrService rlrService) {
         this.rlrRepository = rlrRepository;
         this.rlrSearchRepository = rlrSearchRepository;
+        this.rlrService = rlrService;
     }
 
     /**
@@ -67,7 +64,6 @@ public class RlrResource {
      */
     @PostMapping("/rlrs")
     @Timed
-    @Secured({ROLE_ADMIN, ROLE_USER, ROLE_GESTOR, ROLE_ANALISTA})
     public ResponseEntity<Rlr> createRlr(@Valid @RequestBody Rlr rlr) throws URISyntaxException {
         log.debug("REST request to save Rlr : {}", rlr);
         if (rlr.getId() != null) {
@@ -91,7 +87,6 @@ public class RlrResource {
      */
     @PutMapping("/rlrs")
     @Timed
-    @Secured({ROLE_ADMIN, ROLE_USER, ROLE_GESTOR, ROLE_ANALISTA})
     public ResponseEntity<Rlr> updateRlr(@Valid @RequestBody Rlr rlr) throws URISyntaxException {
         log.debug("REST request to update Rlr : {}", rlr);
         if (rlr.getId() == null) {
@@ -138,7 +133,6 @@ public class RlrResource {
      */
     @DeleteMapping("/rlrs/{id}")
     @Timed
-    @Secured({ROLE_ADMIN, ROLE_USER, ROLE_GESTOR, ROLE_ANALISTA})
     public ResponseEntity<Void> deleteRlr(@PathVariable Long id) {
         log.debug("REST request to delete Rlr : {}", id);
         rlrRepository.delete(id);
@@ -160,6 +154,15 @@ public class RlrResource {
         return StreamSupport
             .stream(rlrSearchRepository.search(queryStringQuery(query)).spliterator(), false)
             .collect(Collectors.toList());
+    }
+
+    @GetMapping("/rlrs/sistema/{idSistema}")
+    @Timed
+    public ResponseEntity<List<VwRlr>> getRlrByNomeSistema(@RequestParam("nome") String nome, @PathVariable Long idSistema){
+        log.debug("REST request to get Rlrs for Sistema {}", idSistema);
+
+        List<VwRlr> rlrs = rlrService.bindFilterSearchRlrsSistema(nome, idSistema);
+        return new ResponseEntity<>(rlrs, HttpStatus.OK);
     }
 
 

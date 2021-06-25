@@ -1,6 +1,5 @@
 package br.com.basis.abaco.service;
 
-import br.com.basis.abaco.domain.Status;
 import br.com.basis.abaco.domain.TipoEquipe;
 import br.com.basis.abaco.repository.TipoEquipeRepository;
 import br.com.basis.abaco.repository.search.TipoEquipeSearchRepository;
@@ -8,7 +7,6 @@ import br.com.basis.abaco.security.SecurityUtils;
 import br.com.basis.abaco.service.dto.DropdownDTO;
 import br.com.basis.abaco.service.dto.TipoEquipeDTO;
 import br.com.basis.abaco.service.exception.RelatorioException;
-import br.com.basis.abaco.service.relatorio.RelatorioStatusColunas;
 import br.com.basis.abaco.service.relatorio.RelatorioTipoEquipeColunas;
 import br.com.basis.abaco.utils.AbacoUtil;
 import br.com.basis.dynamicexports.service.DynamicExportsService;
@@ -36,10 +34,13 @@ public class TipoEquipeService {
     private final TipoEquipeSearchRepository tipoEquipeSearchRepository;
     private final DynamicExportsService dynamicExportsService;
 
-    public TipoEquipeService(TipoEquipeRepository tipoEquipeRepository, TipoEquipeSearchRepository tipoEquipeSearchRepository, DynamicExportsService dynamicExportsService) {
+    private final ModelMapper modelMapper;
+
+    public TipoEquipeService(TipoEquipeRepository tipoEquipeRepository, TipoEquipeSearchRepository tipoEquipeSearchRepository, DynamicExportsService dynamicExportsService, ModelMapper modelMapper) {
         this.tipoEquipeRepository = tipoEquipeRepository;
         this.tipoEquipeSearchRepository = tipoEquipeSearchRepository;
         this.dynamicExportsService = dynamicExportsService;
+        this.modelMapper = modelMapper;
     }
 
     @Transactional(readOnly = true)
@@ -53,11 +54,11 @@ public class TipoEquipeService {
     }
 
     public TipoEquipeDTO convertToDto(TipoEquipe tipoEquipe) {
-        return new ModelMapper().map(tipoEquipe, TipoEquipeDTO.class);
+        return modelMapper.map(tipoEquipe, TipoEquipeDTO.class);
     }
 
     public TipoEquipe convertToEntity(TipoEquipeDTO tipoEquipeDTO) {
-        return new ModelMapper().map(tipoEquipeDTO, TipoEquipe.class);
+        return modelMapper.map(tipoEquipeDTO, TipoEquipe.class);
     }
 
     public TipoEquipe setEntityToElatischSearch(TipoEquipe tipoEquipe){

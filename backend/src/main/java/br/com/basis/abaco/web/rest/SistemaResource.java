@@ -12,6 +12,8 @@ import java.util.Set;
 import javax.transaction.Transactional;
 import javax.validation.Valid;
 
+import br.com.basis.abaco.service.PerfilService;
+import br.com.basis.dynamicexports.service.DynamicExportsService;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.search.sort.FieldSortBuilder;
 import org.elasticsearch.search.sort.SortOrder;
@@ -41,16 +43,17 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.codahale.metrics.annotation.Timed;
 
+import br.com.basis.abaco.domain.Analise;
 import br.com.basis.abaco.domain.FuncaoDados;
 import br.com.basis.abaco.domain.FuncaoDadosVersionavel;
 import br.com.basis.abaco.domain.Modulo;
 import br.com.basis.abaco.domain.Organizacao;
 import br.com.basis.abaco.domain.Sistema;
+import br.com.basis.abaco.repository.AnaliseRepository;
 import br.com.basis.abaco.repository.FuncaoDadosRepository;
 import br.com.basis.abaco.repository.FuncaoDadosVersionavelRepository;
 import br.com.basis.abaco.repository.SistemaRepository;
 import br.com.basis.abaco.repository.search.SistemaSearchRepository;
-import br.com.basis.abaco.security.AuthoritiesConstants;
 import br.com.basis.abaco.service.SistemaService;
 import br.com.basis.abaco.service.dto.SistemaDropdownDTO;
 import br.com.basis.abaco.service.dto.filter.SistemaFilterDTO;
@@ -73,10 +76,9 @@ public class SistemaResource {
     private final FuncaoDadosVersionavelRepository funcaoDadosVersionavelRepository;
     private final FuncaoDadosRepository funcaoDadosRepository;
     private final SistemaService sistemaService;
-    private static final String ROLE_ANALISTA = "ROLE_ANALISTA";
-    private static final String ROLE_ADMIN = "ROLE_ADMIN";
-    private static final String ROLE_USER = "ROLE_USER";
-    private static final String ROLE_GESTOR = "ROLE_GESTOR";
+    private final AnaliseRepository analiseRepository;
+    private final PerfilService perfilService;
+    private final DynamicExportsService dynamicExportsService;
     private static final String PAGE = "page";
 
     public SistemaResource(
@@ -84,18 +86,22 @@ public class SistemaResource {
         SistemaSearchRepository sistemaSearchRepository,
         FuncaoDadosVersionavelRepository funcaoDadosVersionavelRepository,
         FuncaoDadosRepository funcaoDadosRepository,
-        SistemaService sistemaService) {
+        SistemaService sistemaService,
+        AnaliseRepository analiseRepository, PerfilService perfilService, DynamicExportsService dynamicExportsService) {
 
         this.sistemaRepository = sistemaRepository;
         this.sistemaSearchRepository = sistemaSearchRepository;
         this.funcaoDadosVersionavelRepository = funcaoDadosVersionavelRepository;
         this.funcaoDadosRepository = funcaoDadosRepository;
         this.sistemaService = sistemaService;
+        this.analiseRepository = analiseRepository;
+        this.perfilService = perfilService;
+        this.dynamicExportsService = dynamicExportsService;
     }
 
     @PostMapping("/sistemas")
     @Timed
-    @Secured({ROLE_ADMIN, ROLE_USER, ROLE_GESTOR, ROLE_ANALISTA})
+    @Secured("ROLE_ABACO_SISTEMA_CADASTRAR")
     public ResponseEntity<Sistema> createSistema(@Valid @RequestBody Sistema sistema) throws URISyntaxException {
         log.debug("REST request to save Sistema : {}", sistema);
         if (sistema.getId() != null) {
@@ -138,7 +144,7 @@ public class SistemaResource {
 
     @PutMapping("/sistemas")
     @Timed
-    @Secured({ROLE_ADMIN, ROLE_USER, ROLE_GESTOR, ROLE_ANALISTA})
+    @Secured("ROLE_ABACO_SISTEMA_EDITAR")
     public ResponseEntity<Sistema> updateSistema(@Valid @RequestBody Sistema sistema) throws URISyntaxException {
         log.debug("REST request to update Sistema : {}", sistema);
         if (sistema.getId() == null) {
@@ -151,7 +157,6 @@ public class SistemaResource {
 
     @PostMapping("/sistemas/organizations")
     @Timed
-    @Secured({ROLE_ADMIN, ROLE_USER, ROLE_GESTOR, ROLE_ANALISTA})
     public List<Sistema> getAllSistemasByOrganization(@Valid @RequestBody Organizacao organization) {
         log.debug("REST request to get all Sistemas");
         return sistemaRepository.findAllByOrganizacao(organization);
@@ -174,6 +179,7 @@ public class SistemaResource {
 
     @GetMapping("/sistemas/{id}")
     @Timed
+    @Secured({"ROLE_ABACO_SISTEMA_CONSULTAR", "ROLE_ABACO_SISTEMA_EDITAR"})
     public ResponseEntity<Sistema> getSistema(@PathVariable Long id) {
         log.debug("REST request to get Sistema : {}", id);
         Sistema sistema = sistemaRepository.findOne(id);
@@ -202,12 +208,13 @@ public class SistemaResource {
 
     @DeleteMapping("/sistemas/{id}")
     @Timed
-    @Secured({AuthoritiesConstants.ADMIN, AuthoritiesConstants.GESTOR, AuthoritiesConstants.USER, AuthoritiesConstants.ANALISTA})
+    @Secured("ROLE_ABACO_SISTEMA_EXCLUIR")
     public ResponseEntity<Void> deleteSistema(@PathVariable Long id) {
         Sistema sistema = sistemaRepository.findOne(id);
+        List<Analise> analises = analiseRepository.findAllBySistema(sistema);
         if (sistema == null) {
             return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert(ENTITY_NAME, "not_found_system", "This system can not found for delete.")).body(null);
-        } else if (sistema.getAnalises().size() > 0) {
+        } else if (analises.size() > 0) {
             return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert(ENTITY_NAME, "analise_exists", "This System can not be deleted")).body(null);
         } else {
             sistemaSearchRepository.delete(id);
@@ -218,6 +225,7 @@ public class SistemaResource {
 
     @GetMapping("/_search/sistemas")
     @Timed
+    @Secured({"ROLE_ABACO_SISTEMA_PESQUISAR", "ROLE_ABACO_SISTEMA_ACESSAR"})
     public ResponseEntity<List<Sistema>> searchSistemas(@RequestParam(required = false) String sigla,
                                                         @RequestParam(required = false) String nome,
                                                         @RequestParam(required = false) String numeroOcorrencia,
@@ -230,14 +238,18 @@ public class SistemaResource {
         Pageable pageable = new PageRequest(pageNumber, size, sortOrder, sort);
         FieldSortBuilder sortBuilder = new FieldSortBuilder(sort).order(SortOrder.ASC);
         BoolQueryBuilder qb = sistemaService.bindFilterSearch(nome, sigla, numeroOcorrencia, organizacao);
-        SearchQuery searchQuery = new NativeSearchQueryBuilder().withQuery(qb).withPageable(pageable).withSort(sortBuilder).build();
+        SearchQuery searchQuery = new NativeSearchQueryBuilder().withPageable(dynamicExportsService.obterPageableMaximoExportacao()).withQuery(qb).withSort(sortBuilder).build();
         Page<Sistema> page = sistemaSearchRepository.search(searchQuery);
-        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/_search/sistemas");
-        return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
+
+        Page<Sistema> pageNew = perfilService.validarPerfilSistema(page, pageable);
+
+        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(pageNew, "/api/_search/sistemas");
+        return new ResponseEntity<>(pageNew.getContent(), headers, HttpStatus.OK);
     }
 
     @PostMapping(value = "/sistema/exportacao/{tipoRelatorio}", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
     @Timed
+    @Secured("ROLE_ABACO_SISTEMA_EXPORTAR")
     public ResponseEntity<InputStreamResource> gerarRelatorioExportacao(@PathVariable String tipoRelatorio, @RequestBody SistemaFilterDTO filtro) throws RelatorioException {
         ByteArrayOutputStream byteArrayOutputStream = sistemaService.gerarRelatorio(filtro, tipoRelatorio);
         return DynamicExporter.output(byteArrayOutputStream,
@@ -246,6 +258,7 @@ public class SistemaResource {
 
     @PostMapping(value = "/sistema/exportacao-arquivo", produces = MediaType.APPLICATION_PDF_VALUE)
     @Timed
+    @Secured("ROLE_ABACO_SISTEMA_EXPORTAR")
     public ResponseEntity<byte[]> gerarRelatorioImprimir(@RequestBody SistemaFilterDTO filtro) throws RelatorioException {
         ByteArrayOutputStream byteArrayOutputStream = sistemaService.gerarRelatorio(filtro, "pdf");
         return new ResponseEntity<byte[]>(byteArrayOutputStream.toByteArray(), HttpStatus.OK);

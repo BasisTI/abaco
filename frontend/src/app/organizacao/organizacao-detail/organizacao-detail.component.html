@@ -2,9 +2,9 @@
     <div class="ui-g-12">
         <div class="card card-w-title">
             <h1>Organização</h1>
-            <div class="ui-g">
+            <div class="ui-g" *ngIf="logo">
                 <div class="ui-g-4">
-                    <img src="data:image/png;base64,{{logo}}" style="max-width:100%; height:auto;" alt="">
+                    <img src="data:image/png;base64,{{logo}}" style="max-width:50%; height:auto;" alt="">
                 </div>
             </div>
             <div class="ui-g">

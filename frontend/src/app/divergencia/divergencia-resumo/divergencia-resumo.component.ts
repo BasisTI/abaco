@@ -192,9 +192,9 @@ export class DivergenciaResumoComponent implements OnInit {
         this.pfTotal = 0;
         this.linhaResumo.forEach(element => {
             this.pfTotal = element.pfTotal
-            
+
         });
-        
+
         return this.pfTotal.toFixed(2);;
     }
 
@@ -202,9 +202,9 @@ export class DivergenciaResumoComponent implements OnInit {
         this.pfAjustada = 0;
         this.linhaResumo.forEach(element => {
             this.pfAjustada = element.pfAjustada
-            
+
         });
-        
+
         return this.pfAjustada.toFixed(2);
     }
 

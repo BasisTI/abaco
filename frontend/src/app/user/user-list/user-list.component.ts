@@ -3,11 +3,12 @@ import { Router } from '@angular/router';
 import { ConfirmationService } from 'primeng';
 import { DatatableComponent, PageNotificationService, DatatableClickEvent } from '@nuvem/primeng-components';
 import { Organizacao, OrganizacaoService } from 'src/app/organizacao';
-import { Authority } from '../authority.model';
 import { TipoEquipe, TipoEquipeService } from 'src/app/tipo-equipe';
 import { UserService } from '../user.service';
 import { User } from '../user.model';
 import { SearchGroup } from '..';
+import { AuthService } from 'src/app/util/auth.service';
+import { PerfilService } from 'src/app/perfil';
 
 @Component({
     selector: 'app-user',
@@ -26,7 +27,7 @@ export class UserListComponent implements OnInit {
 
     customOptions: Object = {};
 
-    userFiltro : SearchGroup;
+    userFiltro: SearchGroup;
 
     searchParams: any = {
         fullName: undefined,
@@ -38,18 +39,17 @@ export class UserListComponent implements OnInit {
     };
     query: string;
     organizations: Array<Organizacao>;
-    authorities: Array<Authority>;
     teams: TipoEquipe[];
 
     allColumnsTable = [
-        {value: 'nome',  label: 'Nome'},
-        {value: 'login',  label: 'Login'},
-        {value: 'organizacao',  label: 'Organização'},
-        {value: 'perfil',  label: 'Perfil'},
-        {value: 'equipe',  label: 'Equipe'},
-        {value: 'activated',  label: 'Ativo'},
+        { value: 'nome', label: 'Nome' },
+        { value: 'login', label: 'Login' },
+        { value: 'organizacao', label: 'Organização' },
+        { value: 'perfil', label: 'Perfil' },
+        { value: 'equipe', label: 'Equipe' },
+        { value: 'activated', label: 'Ativo' },
     ];
-    
+
     columnsVisible = [
         'nome',
         'login',
@@ -59,6 +59,12 @@ export class UserListComponent implements OnInit {
         'activated',];
     private lastColumn: any[] = [];
 
+    canCadastrar: boolean = false;
+    canEditar: boolean = false;
+    canConsultar: boolean = false;
+    canDeletar: boolean = false;
+    canPesquisar: boolean = false;
+
     constructor(
         private router: Router,
         private userService: UserService,
@@ -66,6 +72,8 @@ export class UserListComponent implements OnInit {
         private organizacaoService: OrganizacaoService,
         private tipoEquipeService: TipoEquipeService,
         private pageNotificationService: PageNotificationService,
+        private authService: AuthService,
+        private perfilService: PerfilService
     ) {
     }
 
@@ -75,8 +83,8 @@ export class UserListComponent implements OnInit {
 
     ngOnInit() {
         this.recuperarOrganizacoes();
-        this.recuperarAutorizacoes();
         this.recuperarEquipe();
+        this.recuperarPerfis();
         this.query = this.changeUrl();
         if (this.datatable) {
 
@@ -89,24 +97,42 @@ export class UserListComponent implements OnInit {
         }
         this.userFiltro = new SearchGroup();
         this.userFiltro.columnsVisible = this.columnsVisible;
+
+        this.verificarPermissoes();
+    }
+
+    verificarPermissoes() {
+        if (this.authService.possuiRole(AuthService.PREFIX_ROLE + "USUARIO_EDITAR") == true) {
+            this.canEditar = true;
+        }
+        if (this.authService.possuiRole(AuthService.PREFIX_ROLE + "USUARIO_CONSULTAR") == true) {
+            this.canConsultar = true;
+        }
+        if (this.authService.possuiRole(AuthService.PREFIX_ROLE + "USUARIO_EXCLUIR") == true) {
+            this.canDeletar = true;
+        }
+        if (this.authService.possuiRole(AuthService.PREFIX_ROLE + "USUARIO_CADASTRAR") == true) {
+            this.canCadastrar = true;
+        }
+        if (this.authService.possuiRole(AuthService.PREFIX_ROLE + "USUARIO_PESQUISAR") == true) {
+            this.canPesquisar = true;
+        }
     }
 
     recuperarOrganizacoes() {
         this.organizacaoService.dropDown().subscribe(response => {
             this.organizations = response;
-            this.customOptions['organizacao.nome'] = response.map((item) => {
-                return {label: item.nome, value: item.id};
-              });
+            this.customOptions['organizacao'] = response.map((item) => {
+                return { label: item.nome, value: item.id };
+            });
         });
     }
 
-    recuperarAutorizacoes() {
-        this.userService.authorities().subscribe(response => {
-            this.authorities = response;
-            this.popularNomesAuthorities();
-            this.customOptions['perfil'] = this.authorities.map((item) => {
-                return {label: item.description, value: item.name};
-              });
+    recuperarPerfis() {
+        this.perfilService.dropDown().subscribe(response => {
+            this.customOptions['perfil'] = response.map((item) => {
+                return { label: item.nome, value: item.id };
+            });
         });
     }
 
@@ -115,38 +141,9 @@ export class UserListComponent implements OnInit {
             this.teams = response;
             const emptyTeam = new TipoEquipe();
             this.customOptions['equipe'] = response.map((item) => {
-                return {label: item.nome, value: item.id};
-              });
-        });
-    }
-
-    popularNomesAuthorities() {
-        if (this.authorities) {
-            this.authorities.forEach((authority) => {
-                switch (authority.name) {
-                    case 'ROLE_ADMIN': {
-                        authority.description = this.getLabel('Administrador');
-                        break;
-                    }
-                    case 'ROLE_USER': {
-                        authority.description = this.getLabel('Usuário');
-                        break;
-                    }
-                    case 'ROLE_VIEW': {
-                        authority.description = this.getLabel('Observador');
-                        break;
-                    }
-                    case 'ROLE_ANALISTA': {
-                        authority.description = this.getLabel('Analista');
-                        break;
-                    }
-                    case 'ROLE_GESTOR': {
-                        authority.description = this.getLabel('Gestor');
-                        break;
-                    }
-                }
+                return { label: item.nome, value: item.id };
             });
-        }
+        });
     }
 
     datatableClick(event: DatatableClickEvent) {
@@ -175,8 +172,11 @@ export class UserListComponent implements OnInit {
     }
 
     abrirEditar() {
+        if (!this.canEditar) {
+            return false;
+        }
         const id = this.usuarioSelecionado.id;
-        if (id > 0 ) {
+        if (id > 0) {
             this.router.navigate(['/admin/user', id, 'edit']);
         }
     }
@@ -228,23 +228,23 @@ export class UserListComponent implements OnInit {
         this.datatable.reset();
     }
 
-    public preencheFiltro(){
-        if(this.datatable.filterParams.nome){
+    public preencheFiltro() {
+        if (this.datatable.filterParams.nome) {
             this.userFiltro.nome = this.datatable.filterParams.nome;
         }
-        if(this.datatable.filterParams.login){
+        if (this.datatable.filterParams.login) {
             this.userFiltro.login = this.datatable.filterParams.login;
         }
-        if(this.datatable.filterParams.email){
+        if (this.datatable.filterParams.email) {
             this.userFiltro.email = this.datatable.filterParams.email;
         }
-        if(this.datatable.filterParams.organizacao){
+        if (this.datatable.filterParams.organizacao) {
             this.userFiltro.organizacao = this.datatable.filterParams.organizacao;
         }
-        if(this.datatable.filterParams.perfil){
+        if (this.datatable.filterParams.perfil) {
             this.userFiltro.perfil = this.datatable.filterParams.perfil;
         }
-        if(this.datatable.filterParams.equipe){
+        if (this.datatable.filterParams.equipe) {
             this.userFiltro.tipoEquipe = this.datatable.filterParams.equipe;
         }
     }
@@ -289,7 +289,7 @@ export class UserListComponent implements OnInit {
             this.pageNotificationService.addErrorMessage('Não é possível exibir menos de uma coluna');
         }
     }
-    
+
     updateVisibleColumns(columns) {
         this.allColumnsTable.forEach(col => {
             if (this.visibleColumnCheck(col.value, columns)) {
@@ -299,11 +299,14 @@ export class UserListComponent implements OnInit {
             }
         });
     }
-    
+
     visibleColumnCheck(column: string, visibleColumns: any[]) {
         return visibleColumns.some((item: any) => {
             return (item) ? item === column : true;
         });
     }
 
+    criarUsuario() {
+        this.router.navigate(["/admin/user/new"])
+    }
 }

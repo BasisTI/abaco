@@ -1,6 +1,5 @@
 package br.com.basis.abaco.service.dto;
 
-import br.com.basis.abaco.domain.Authority;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -27,7 +26,5 @@ public class UserListDTO {
     private Set<TipoEquipeDTO> tipoEquipes = new HashSet<>();
 
     private Set<OrganizacaoDTO> organizacoes = new HashSet<>();
-
-    private Set<Authority> authorities = new HashSet<>();
 
 }

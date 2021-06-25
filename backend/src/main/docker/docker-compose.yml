@@ -36,12 +36,11 @@ services:
       TZ: America/Sao_Paulo
     volumes:
     - ./abaco-pgsql-vol:/var/lib/postgresql/data
-    - ./postgresql/dump20210113.dmp:/dump20210113.dmp
   es-abaco:
     image: elasticsearch:2.4-alpine
     environment:
       ES_JAVA_OPTS: -Xms1g -Xmx1g -Des.path.conf=/usr/share/elasticsearch/config -Des.cluster.name=abaco -Des.discovery.zen.minimum_master_nodes=1 -Des.discovery.zen.ping.unicast.hosts=es-abaco
     volumes:
-    - abaco-es-vol:/usr/share/elasticsearch/data
+    - abaco-es-vol:/usr/share/elasticsearch/data  
     command:
     - -Dcluster.name=abaco

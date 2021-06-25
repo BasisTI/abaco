@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { DatatableClickEvent, DatatableComponent, PageNotificationService } from '@nuvem/primeng-components';
 import { ElasticQuery } from 'src/app/shared/elastic-query';
 import { TipoEquipe, TipoEquipeService } from 'src/app/tipo-equipe';
+import { AuthService } from 'src/app/util/auth.service';
 import { Sistema } from '../../sistema';
 import { SistemaService } from '../../sistema/sistema.service';
 import { BaselineSintetico } from '../baseline-sintetico.model';
@@ -31,12 +32,18 @@ export class BaselineComponent implements OnInit {
     lstBasilineSintetico: BaselineSintetico[];
     showUpdateBaseline: boolean = false;
 
+    canPesquisar: boolean = false;
+    canAtualizar: boolean = false;
+    canConsultar: boolean = false;
+    canExportar: boolean = false;
+
     constructor(
         private router: Router,
         private baselineService: BaselineService,
         private sistemaService: SistemaService,
         private equipeService: TipoEquipeService,
         private pageNotificationService: PageNotificationService,
+        private authService: AuthService
     ) {
     }
 
@@ -47,6 +54,22 @@ export class BaselineComponent implements OnInit {
     ngOnInit(): void {
         this.recuperarSistema();
         this. recuperarEquipe();
+        this.verificarPermissoes();
+    }
+
+    verificarPermissoes(){
+        if (this.authService.possuiRole(AuthService.PREFIX_ROLE + "BASELINE_CONSULTAR") == true) {
+            this.canConsultar = true;
+        }
+        if (this.authService.possuiRole(AuthService.PREFIX_ROLE + "BASELINE_EXPORTAR") == true) {
+            this.canExportar = true;
+        }
+        if (this.authService.possuiRole(AuthService.PREFIX_ROLE + "BASELINE_PESQUISAR") == true) {
+            this.canPesquisar = true;
+        }
+        if (this.authService.possuiRole(AuthService.PREFIX_ROLE + "BASELINE_ATUALIZAR") == true) {
+            this.canAtualizar = true;
+        }
     }
 
     public carregarDataTable() {

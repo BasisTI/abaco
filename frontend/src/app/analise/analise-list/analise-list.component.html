@@ -59,13 +59,13 @@
                         </app-white-button>
                     </div>
                     <div class="ui-g-2 ui-md-2 ui-sm-12">
-                        <app-blue-button [buttonLabel]="'Pesquisar' " id="idBtnPesquisarComponentAnalise"
-                            buttonIcon="ui-icon-search" (click)="performSearch()">
+                        <app-blue-button *ngIf="canPesquisar" [buttonLabel]="'Pesquisar' "
+                            id="idBtnPesquisarComponentAnalise" buttonIcon="ui-icon-search" (click)="performSearch()">
                         </app-blue-button>
                     </div>
                     <div class="ui-g-2 ui-md-2 ui-sm-12">
-                        <app-green-button [buttonLabel]="'Novo'" id="idBtnNovoComponentAnalise" buttonIcon="ui-icon-add"
-                            routerLink="new">
+                        <app-green-button *ngIf="canCadastrar" [buttonLabel]="'Novo'" id="idBtnNovoComponentAnalise"
+                            buttonIcon="ui-icon-add" (click)="criarAnalise()">
                         </app-green-button>
                     </div>
                 </div>
@@ -85,6 +85,7 @@
                     <basis-datatable type="server" [url]="userAnaliseUrl" (dblclick)="onRowDblclick($event)"
                         (buttonClick)="datatableClick($event)" (finishedLoading)="setParamsLoad()" [rows]="20"
                         id="idTabelaComponentAnalise" [rowsPerPageOptions]="rowsPerPageOptions"
+                        [disableDelete]="!canDeletar" [disableEdit]="!canEditar" [disableView]="!canConsultar"
                         (click)="selectAnalise()" [enableScroll]="true" [scrollHeight]="'500px'"
                         [showPaginationFooter]="true" [selectionMode]="'multiple'" #datatable>
                         <p-column header="Organização" field="organizacao.nome" [sortable]="true" filterType="select"
@@ -141,8 +142,8 @@
                                 {{ analise.bloqueiaAnalise ? 'Sim' : 'Não' }}
                             </ng-template>
                         </p-column>
-                        <p-column [styleClass]="'clonada'" header="Clonada" field="clonadaParaEquipe" [sortable]="true"
-                            filterType="">
+                        <p-column [styleClass]="'clonada'" header="Clonada para outra equipe" field="clonadaParaEquipe"
+                            [sortable]="true" filterType="">
                             <ng-template let-col let-analise="rowData" pTemplate="body">
                                 {{ analise.clonadaParaEquipe ? 'Sim' : 'Não' }}
                             </ng-template>
@@ -155,43 +156,77 @@
                                 </li>
                             </ng-template>
                         </p-column>
-                        <basis-datatable-button *ngIf="blocked" name="desbloquear"
+                        <p-column [styleClass]="'analise-clonada'" header="Análise Relacionada"
+                            field="analiseClonadaParaEquipe" [sortable]="true" filterType="">
+                            <ng-template let-col let-analise="rowData" pTemplate="body">
+                                <div *ngIf="analise.analiseClonadaParaEquipe?.id !== null">
+                                    {{analise.analiseClonadaParaEquipe.identificadorAnalise}}
+                                </div>
+                            </ng-template>
+                        </p-column>
+                        <basis-datatable-button *ngIf="blocked && canBloquearDesbloquear" name="desbloquear"
                             [bTooltip]="datatable.selectedRow != null ? 'Desbloquear' : 'Escolha um registro para desbloquear.'"
                             icon="block" (click)="bloqueiaAnalise(blocked)" [disabled]="datatable.selectedRow == null"
                             class="ui-button-success">
                         </basis-datatable-button>
-                        <basis-datatable-button *ngIf="!blocked && inicial" name="bloquear"
+                        <basis-datatable-button *ngIf="!blocked && inicial && canBloquearDesbloquear" name="bloquear"
                             [bTooltip]="datatable.selectedRow != null ? 'Bloquear' : 'Escolha um registro para bloquear.'"
                             icon="block" (click)="bloqueiaAnalise(blocked)" [disabled]="datatable.selectedRow == null"
                             class="ui-button-danger">
                         </basis-datatable-button>
-                        <basis-datatable-button name="compartilhar" [bTooltip]="compartilharTooltip()" icon="share"
-                            class="ui-button-info" [disabled]="datatable.selectedRow == null">
-                        </basis-datatable-button>
-                        <basis-datatable-button name="clone" [bTooltip]="clonarTooltip()" icon="content-copy"
+                        <basis-datatable-button name="compartilhar" *ngIf="canCompartilhar"
+                            [bTooltip]="compartilharTooltip()" icon="share" class="ui-button-info"
+                            (click)="compartilharAnalise()"
                             [disabled]="datatable.selectedRow == null">
                         </basis-datatable-button>
-                        <basis-datatable-button name="relatorioBrowserDetalhado" [bTooltip]="relatorioTooltip()"
-                            icon="description" [disabled]="datatable.selectedRow == null">
+                        <basis-datatable-button name="clone" *ngIf="canClonar" [bTooltip]="clonarTooltip()"
+                            (click)="clonar(analiseSelecionada.id)"
+                            icon="content-copy" [disabled]="datatable.selectedRow == null">
                         </basis-datatable-button>
-                        <basis-datatable-button name="relatorioExcelDetalhado" [bTooltip]="relatorioExcelTooltip()"
-                            icon="description" [disabled]="datatable.selectedRow == null" class="ui-button-success">
+                        <basis-datatable-button name="relatorioBrowserDetalhado" *ngIf="canRelatorioDetalhado"
+                            [bTooltip]="relatorioTooltip()" icon="description"
+                            (click)="geraRelatorioPdfDetalhadoBrowser(analiseSelecionada)"
+                            [disabled]="datatable.selectedRow == null">
                         </basis-datatable-button>
-                        <basis-datatable-button name="relatorioAnaliseContagem" [bTooltip]="relatorioContagemTooltip()"
-                            icon="description" [disabled]="datatable.selectedRow == null" class="ui-button-danger">
+                        <basis-datatable-button name="relatorioExcelDetalhado" *ngIf="canRelatorioExcel"
+                            [bTooltip]="relatorioExcelTooltip()" icon="description"
+                            (click)="gerarRelatorioExcel(analiseSelecionada)"
+                            [disabled]="datatable.selectedRow == null" class="ui-button-success">
                         </basis-datatable-button>
-                        <basis-datatable-button name="cloneParaEquipe" [bTooltip]="clonarParaEquipeTooltip()"
-                            icon="content-copy" [disabled]="datatable.selectedRow == null" class="ui-button-success">
+                        <basis-datatable-button name="relatorioAnaliseContagem" *ngIf="canRelatorioFundamentacao"
+                            [bTooltip]="relatorioContagemTooltip()" icon="description"
+                            (click)="gerarRelatorioContagem(analiseSelecionada)"
+                            [disabled]="datatable.selectedRow == null" class="ui-button-danger">
                         </basis-datatable-button>
-                        <basis-datatable-button name="changeStatus" [bTooltip]="changeStatusTooltip()" icon="swap-vert"
+                        <basis-datatable-button name="cloneParaEquipe" *ngIf="canClonarEquipe"
+                            [bTooltip]="clonarParaEquipeTooltip()" icon="content-copy"
+                            (click)="clonarEquipe()"
+                            [disabled]="datatable.selectedRow == null" class="ui-button-success">
+                        </basis-datatable-button>
+                        <basis-datatable-button name="changeStatus" *ngIf="canAlterarStatus"
+                            [bTooltip]="changeStatusTooltip()" icon="swap-vert"
+                            (click)="openModalChangeStatus(analiseSelecionada.id);"
                             [disabled]="datatable.selectedRow == null" class="ui-button-info">
                         </basis-datatable-button>
-                        <basis-datatable-button name="generateDivergence" [bTooltip]="changeDivergenceTooltip()"
-                            icon="compare-arrows" [disabled]="datatable.selectedRow == null" class="ui-button-info">
+                        <basis-datatable-button name="generateDivergence" *ngIf="canGerarValidacao"
+                            [bTooltip]="changeDivergenceTooltip()" icon="compare-arrows"
+                            (click)="gerarDivergencia()"
+                            [disabled]="datatable.selectedRow == null" class="ui-button-info">
                         </basis-datatable-button>
+                        <basis-datatable-button *ngIf="canExportarPlanilha" name="importExcel" [bTooltip]="'Exportar planilha excel'"
+                            (click)="openModalExportarExcel(analiseSelecionada)"
+                            icon="file-upload" class="ui-button-success" [disabled]="datatable.selectedRow == null">
+                        </basis-datatable-button> -->
+                        <!-- <basis-datatable-button name="exportJson" [bTooltip]="'Exportar análise'" icon="file-download"
+                            [disabled]="datatable.selectedRow == null" class="ui-button-info">
+                        </basis-datatable-button>
+                        <basis-datatable-button name="importJson" [bTooltip]="'Importar análise'" icon="file-upload"
+                           class="ui-button-success" (click)="openModalImportAnalise()">
+                        </basis-datatable-button> -->
                     </basis-datatable>
                     <div class="ui-g-12 ui-md-2">
-                        <app-export-button [dataTable]="datatable" resourceName="analise" [columnsVisible]="columnsVisible" [filter]="searchGroup">
+                        <app-export-button [dataTable]="datatable" resourceName="analise"
+                            [columnsVisible]="columnsVisible" [filter]="searchGroup" funcionalidadeName="analise">
                         </app-export-button>
                     </div>
                 </div>
@@ -363,4 +398,33 @@
         style="float:right; margin: 5px"></app-green-button>
     <app-white-button buttonLabel="Cancelar" (click)="cancelGenerateDivergence()" style="float:right; margin: 5px">
     </app-white-button>
+</p-dialog>
+
+<p-dialog header="Importar análise" [(visible)]="showDialogImportar" [style]="{width: '50vw'}" [minHeight]="300"
+    [modal]="true">
+
+    <p-fileUpload name="jsonAnalise" [showCancelButton]="false" [showUploadButton]="false"
+        [chooseLabel]="'Escolha o arquivo'" (onSelect)="selectJsonAnalise($event)" accept="application/json">
+    </p-fileUpload>
+
+
+    <app-green-button buttonLabel="Importar" (click)="importarAnalise()" style="float:right; margin: 5px">
+    </app-green-button>
+    <app-white-button buttonLabel="Cancelar" (click)="closeModalImportAnalise()" style="float:right; margin: 5px">
+    </app-white-button>
+
+</p-dialog>
+
+<p-dialog header="Exportar planilha excel" [(visible)]="showDialogImportarExcel" [style]="{width: '50vw'}"
+    [minHeight]="300" [modal]="true">
+
+    <p-dropdown [style]="{'width':'100%', 'margin-bottom': '55px'}" [options]="lstModelosExcel" optionLabel="label"
+        id="idModeloExcel" [(ngModel)]="modeloSelecionado" placeholder="Selecione um modelo">
+    </p-dropdown>
+
+    <app-green-button buttonLabel="Exportar" (click)="exportarPlanilha()" style="float:right; margin: 5px">
+    </app-green-button>
+    <app-white-button buttonLabel="Cancelar" (click)="closeModalExportarExcel()" style="float:right; margin: 5px">
+    </app-white-button>
+
 </p-dialog>

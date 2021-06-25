@@ -1,6 +1,8 @@
 package br.com.basis.abaco.domain;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Cache;
@@ -48,11 +50,11 @@ public class Der implements Serializable {
     @ManyToOne
     private Rlr rlr;
 
-    @JsonBackReference(value = "funcaoDados")
+    @JsonIgnore
     @ManyToOne
     private FuncaoDados funcaoDados;
 
-    @JsonBackReference(value = "funcaoTransacao")
+    @JsonIgnore
     @ManyToOne
     private FuncaoTransacao funcaoTransacao;
 
