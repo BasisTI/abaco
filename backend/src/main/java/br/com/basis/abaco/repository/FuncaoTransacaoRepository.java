@@ -1,11 +1,14 @@
 package br.com.basis.abaco.repository;
 
+import br.com.basis.abaco.domain.FuncaoDados;
 import br.com.basis.abaco.domain.FuncaoTransacao;
 import br.com.basis.abaco.domain.enumeration.StatusFuncao;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 /**
@@ -35,7 +38,13 @@ public interface FuncaoTransacaoRepository extends JpaRepository<FuncaoTransacao
 
     Set<FuncaoTransacao> findByAnaliseIdOrderByFuncionalidadeModuloNomeAscFuncionalidadeNomeAscNameAsc(Long id);
 
+    Set<FuncaoTransacao> findAllByAnaliseIdOrderById(Long idAnalise);
+
+    Set<FuncaoTransacao> findByAnaliseIdAndStatusFuncaoOrderById(Long id, StatusFuncao statusFuncao);
+
     Set<FuncaoTransacao> findByAnaliseIdAndStatusFuncaoOrderByFuncionalidadeModuloNomeAscFuncionalidadeNomeAscNameAsc(Long id, StatusFuncao statusFuncao);
 
     long countByFuncionalidadeId(Long id);
+
+    Optional<List<FuncaoTransacao>> findAllByFuncionalidadeId(Long id);
 }

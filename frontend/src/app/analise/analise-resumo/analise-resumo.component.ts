@@ -20,6 +20,7 @@ import { Analise } from '../analise.model';
 import { AnaliseService } from '../analise.service';
 import { Resumo } from './resumo.model';
 import { BlockUiService } from '@nuvem/angular-base';
+import { AuthService } from 'src/app/util/auth.service';
 
 @Component({
     selector: 'app-analise-resumo',
@@ -67,6 +68,7 @@ export class AnaliseResumoComponent implements OnInit {
         private pageNotificationService: PageNotificationService,
         private userService: UserService,
         private blockUiService: BlockUiService,
+        private authService: AuthService
     ) {
     }
 
@@ -188,14 +190,23 @@ export class AnaliseResumoComponent implements OnInit {
     }
 
     public geraRelatorioExcelBrowser() {
+        if (this.authService.possuiRole(AuthService.PREFIX_ROLE + "ANALISE_EXPORTAR_RELATORIO_EXCEL") == false) {
+            return false;
+        }
         this.analiseService.gerarRelatorioExcel(this.idAnalise);
     }
 
     public geraRelatorioPdfDetalhadoBrowser() {
+        if (this.authService.possuiRole(AuthService.PREFIX_ROLE + "ANALISE_EXPORTAR_RELATORIO_DETALHADO") == false) {
+            return false;
+        }
         this.analiseService.geraRelatorioPdfDetalhadoBrowser(this.idAnalise);
     }
 
     public bloquearAnalise() {
+        if (this.authService.possuiRole(AuthService.PREFIX_ROLE + "ANALISE_BLOQUEAR_DESBLOQUEAR") == false) {
+            return false;
+        }
         if (!this.analise.dataHomologacao) {
             this.pageNotificationService.addInfoMessage(this.getLabel('Informe a data de homolagação para continuar'));
         }
@@ -232,6 +243,9 @@ export class AnaliseResumoComponent implements OnInit {
     }
 
     public openCompartilharDialog() {
+        if (this.authService.possuiRole(AuthService.PREFIX_ROLE + "ANALISE_COMPARTILHAR") == false) {
+            return false;
+        }
         if (this.checkUserAnaliseEquipes()) {
             this.equipeService.findAllCompartilhaveis(this.analise.organizacao.id,
                 this.analise.id,

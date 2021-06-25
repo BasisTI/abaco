@@ -31,10 +31,13 @@ public class NomenclaturaService {
     private final NomenclaturaRepository nomenclaturaRepository;
     private final DynamicExportsService dynamicExportsService;
 
-    public NomenclaturaService(NomenclaturaSearchRepository nomenclaturaSearchRepository, NomenclaturaRepository nomenclaturaRepository, DynamicExportsService dynamicExportsService) {
+    private final ModelMapper modelMapper;
+
+    public NomenclaturaService(NomenclaturaSearchRepository nomenclaturaSearchRepository, NomenclaturaRepository nomenclaturaRepository, DynamicExportsService dynamicExportsService, ModelMapper modelMapper) {
         this.nomenclaturaSearchRepository = nomenclaturaSearchRepository;
         this.nomenclaturaRepository = nomenclaturaRepository;
         this.dynamicExportsService = dynamicExportsService;
+        this.modelMapper = modelMapper;
     }
 
     @Transactional
@@ -47,11 +50,11 @@ public class NomenclaturaService {
 
 
     public NomenclaturaDTO convertToDto(Nomenclatura nomenclatura) {
-        return new ModelMapper().map(nomenclatura, NomenclaturaDTO.class);
+        return modelMapper.map(nomenclatura, NomenclaturaDTO.class);
     }
 
     public Nomenclatura convertToEntity(NomenclaturaDTO nomenclaturaDTO) {
-        return new ModelMapper().map(nomenclaturaDTO, Nomenclatura.class);
+        return modelMapper.map(nomenclaturaDTO, Nomenclatura.class);
     }
 
     public Nomenclatura setEntityToElatischSearch(Nomenclatura nomenclatura){

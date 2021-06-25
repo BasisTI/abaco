@@ -2,6 +2,8 @@ import { Component } from '@angular/core';
 import { AppComponent } from '../../app.component';
 import { AuthenticationService } from '@nuvem/angular-base';
 import { User } from '../../user/user.model';
+import { LoginService } from 'src/app/login';
+import { PageNotificationService } from '@nuvem/primeng-components';
 
 
 @Component({
@@ -14,12 +16,13 @@ export class AppTopbarComponent {
 
 
     constructor(public app: AppComponent,
-
+        private loginService: LoginService,
+        private pageNotificationService: PageNotificationService,
         private readonly _authentication:
 
 
-        AuthenticationService<User>)    {
-        }
+            AuthenticationService<User>) {
+    }
 
     get usuario() {
         return this._authentication.getUser();
@@ -27,17 +30,18 @@ export class AppTopbarComponent {
 
     isAuthenticated() {
         return this._authentication.isAuthenticated();
-      }
+    }
     AuthenticationService() {
         return this._authentication.isAuthenticated();
     }
     authenticatedUserFirstName(): string {
-        const storageUser  = this._authentication.getUser();
+        const storageUser = this._authentication.getUser();
         if (!storageUser) {
             return null;
         }
 
         return storageUser.firstName;
     }
+
 }
 

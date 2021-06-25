@@ -1,12 +1,13 @@
-import { Component, AfterViewInit, ElementRef, Renderer2, ViewChild, OnDestroy, OnInit, NgZone } from '@angular/core';
+import { Component, AfterViewInit, ElementRef, Renderer2, ViewChild, OnDestroy, OnInit, NgZone, AfterContentChecked } from '@angular/core';
 import { ScrollPanel } from 'primeng';
 import { MenusService, MenuOrientation } from '@nuvem/primeng-components';
+import { AuthService } from './util/auth.service';
 
 @Component({
     selector: 'app-root',
     templateUrl: './app.component.html'
 })
-export class AppComponent implements AfterViewInit, OnDestroy, OnInit {
+export class AppComponent implements AfterViewInit, OnDestroy, OnInit, AfterContentChecked {
 
     layoutCompact = true;
 
@@ -44,31 +45,35 @@ export class AppComponent implements AfterViewInit, OnDestroy, OnInit {
 
     rippleMouseDownListener: EventListenerOrEventListenerObject;
 
-    constructor(public renderer2: Renderer2, public zone: NgZone, public menuService: MenusService) { }
+    constructor(public renderer2: Renderer2, public zone: NgZone, public menuService: MenusService, private authAbacoService : AuthService) { }
+
+    ngAfterContentChecked(): void {
+        this.carregarMenu();
+    }
 
     ngOnInit() {
         this.zone.runOutsideAngular(() => { this.bindRipple(); });
-
         this.menuService.itens =  [
             {
-                label: 'Cadastros', icon: 'description',
+                label: 'Cadastros', icon: 'description',  visible : false,
                 items: [
-                    { label: 'Fase', routerLink: 'fase', icon: 'beenhere' },
-                    { label: 'Manual', routerLink: 'manual', icon: 'description' },
-                    { label: 'Organização', routerLink: 'organizacao', icon: 'business' },
-                    { label: 'Sistema', routerLink: 'sistema', icon: 'laptop' },
-                    { label: 'Tipo Equipe', routerLink: 'admin/tipoEquipe', icon: 'people' },
-                    { label: 'Usuários', routerLink: 'admin/user', icon: 'person' },
-                    { label: 'Status', routerLink: 'status', icon: 'assignment' },
-                    { label: 'Nomenclatura', routerLink: 'nomenclatura', icon: 'comment_bank' },
+                    { label: 'Fase', routerLink: 'fase', icon: 'beenhere', visible : false },
+                    { label: 'Manual', routerLink: 'manual', icon: 'description', visible : false },
+                    { label: 'Organização', routerLink: 'organizacao', icon: 'business', visible : false },
+                    { label: 'Sistema', routerLink: 'sistema', icon: 'laptop', visible : false },
+                    { label: 'Tipo Equipe', routerLink: 'admin/tipoEquipe', icon: 'people', visible :false },
+                    { label: 'Usuários', routerLink: 'admin/user', icon: 'person', visible : false },
+                    { label: 'Status', routerLink: 'status', icon: 'assignment', visible : false },
+                    { label: 'Nomenclatura', routerLink: 'nomenclatura', icon: 'comment_bank', visible : false },
+                    { label: 'Perfil', routerLink: 'perfil', icon: 'assignment_ind', visible : false },
                 ]
             },
             {
-                label: 'Análise', icon: 'insert_chart',
+                label: 'Análise', icon: 'insert_chart',visible : false,
                 items: [
-                    { label: 'Análise', routerLink: 'analise', icon: 'description' },
-                    { label: 'Baseline', routerLink: 'baseline', icon: 'view_list' },
-                    { label: 'Validação', routerLink: 'divergencia', icon: 'compare_arrows' },
+                    { label: 'Análise', routerLink: 'analise', icon: 'description', visible : false },
+                    { label: 'Baseline', routerLink: 'baseline', icon: 'view_list' , visible : false},
+                    { label: 'Validação', routerLink: 'divergencia', icon: 'compare_arrows', visible : false },
                 ]
             },
             {
@@ -195,6 +200,56 @@ export class AppComponent implements AfterViewInit, OnDestroy, OnInit {
         this.layoutContainer = this.layourContainerViewChild.nativeElement as HTMLDivElement;
         const time = 100;
         setTimeout(() => { this.layoutMenuScrollerViewChild.moveBar(); }, time);
+    }
+
+
+    carregarMenu() {
+        for (let index = 0; index < this.menuService.itens.length; index++) {
+            const menu = this.menuService.itens[index];
+            if (menu.label == 'Análise' && this.authAbacoService.possuiAlgumaRoles([AuthService.PREFIX_ROLE + 'ANALISE_ACESSAR',
+            AuthService.PREFIX_ROLE + 'BASELINE_ACESSAR',
+            AuthService.PREFIX_ROLE + 'VALIDACAO_ACESSAR'])) {
+                menu.visible = true;
+            } else if (menu.label == 'Cadastros' && this.authAbacoService.possuiAlgumaRoles([AuthService.PREFIX_ROLE + 'FASE_ACESSAR',
+            AuthService.PREFIX_ROLE + 'MANUAL_ACESSAR',
+            AuthService.PREFIX_ROLE + 'ORGANIZACAO_ACESSAR',
+            AuthService.PREFIX_ROLE + 'SISTEMA_ACESSAR',
+            AuthService.PREFIX_ROLE + 'TIPO_EQUIPE_ACESSAR',
+            AuthService.PREFIX_ROLE + 'USUARIO_ACESSAR',
+            AuthService.PREFIX_ROLE + 'STATUS_ACESSAR',
+            AuthService.PREFIX_ROLE + 'NOMENCLATURA_ACESSAR',
+            AuthService.PREFIX_ROLE + 'PERFIL_ACESSAR'])) {
+                menu.visible = true;
+            }
+            for (let index = 0; index < menu.items.length; index++) {
+                const submenu = menu.items[index];
+                if (submenu.label == 'Fase') {
+                    submenu.visible = this.authAbacoService.possuiRole(AuthService.PREFIX_ROLE + 'FASE_ACESSAR');
+                } else if (submenu.label == 'Manual') {
+                    submenu.visible = this.authAbacoService.possuiRole(AuthService.PREFIX_ROLE + 'MANUAL_ACESSAR');
+                } else if (submenu.label == 'Organização') {
+                    submenu.visible = this.authAbacoService.possuiRole(AuthService.PREFIX_ROLE + 'ORGANIZACAO_ACESSAR');
+                } else if (submenu.label == 'Sistema') {
+                    submenu.visible = this.authAbacoService.possuiRole(AuthService.PREFIX_ROLE + 'SISTEMA_ACESSAR');
+                } else if (submenu.label == 'Tipo Equipe') {
+                    submenu.visible = this.authAbacoService.possuiRole(AuthService.PREFIX_ROLE + 'TIPO_EQUIPE_ACESSAR');
+                } else if (submenu.label == 'Usuários') {
+                    submenu.visible = this.authAbacoService.possuiRole(AuthService.PREFIX_ROLE + 'USUARIO_ACESSAR');
+                } else if (submenu.label == 'Status') {
+                    submenu.visible = this.authAbacoService.possuiRole(AuthService.PREFIX_ROLE + 'STATUS_ACESSAR');
+                } else if (submenu.label == 'Nomenclatura') {
+                    submenu.visible = this.authAbacoService.possuiRole(AuthService.PREFIX_ROLE + 'NOMENCLATURA_ACESSAR');
+                } else if (submenu.label == 'Perfil') {
+                    submenu.visible = this.authAbacoService.possuiRole(AuthService.PREFIX_ROLE + 'PERFIL_ACESSAR');
+                } else if (submenu.label == 'Análise') {
+                    submenu.visible = this.authAbacoService.possuiRole(AuthService.PREFIX_ROLE + 'ANALISE_ACESSAR');
+                } else if (submenu.label == 'Baseline') {
+                    submenu.visible = this.authAbacoService.possuiRole(AuthService.PREFIX_ROLE + 'BASELINE_ACESSAR');
+                } else if (submenu.label == 'Validação' && this.authAbacoService.possuiRole(AuthService.PREFIX_ROLE + 'VALIDACAO_ACESSAR')) {
+                    submenu.visible = true;
+                }
+            }
+        }
     }
 
     onLayoutClick() {

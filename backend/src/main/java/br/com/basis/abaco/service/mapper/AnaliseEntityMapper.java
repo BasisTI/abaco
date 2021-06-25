@@ -46,7 +46,7 @@ public class AnaliseEntityMapper extends DefaultEntityMapper {
     private User newUser(String firstName) {
         return User.builder()
                 .firstName(firstName)
-                .authorities(Collections.emptySet())
+//                .authorities(Collections.emptySet())
                 .tipoEquipes(Collections.emptySet())
                 .analises(Collections.emptySet())
                 .organizacoes(Collections.emptySet())

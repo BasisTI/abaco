@@ -7,18 +7,21 @@ import { Table as DataTable } from 'primeng/table';
 import { Subscription } from 'rxjs';
 import { Analise, SearchGroup } from 'src/app/analise';
 import { Organizacao, OrganizacaoService } from 'src/app/organizacao';
+import { PerfilOrganizacao } from 'src/app/perfil/perfil-organizacao.model';
+import { PerfilService } from 'src/app/perfil/perfil.service';
 import { Sistema, SistemaService } from 'src/app/sistema';
 import { StatusService } from 'src/app/status';
 import { Status } from 'src/app/status/status.model';
 import { TipoEquipe, TipoEquipeService } from 'src/app/tipo-equipe';
 import { User } from 'src/app/user';
+import { AuthService } from 'src/app/util/auth.service';
 import { Divergencia } from '../divergencia.model';
 import { DivergenciaService } from '../divergencia.service';
 
 @Component({
     selector: 'app-divergencia-list',
     templateUrl: './divergencia-list.component.html',
-    providers: [ ConfirmationService]
+    providers: [ConfirmationService]
 })
 export class DivergenciaListComponent implements OnInit {
 
@@ -33,20 +36,22 @@ export class DivergenciaListComponent implements OnInit {
     selectedDivergence;
     totalRecords;
 
+    perfisOrganizacao: PerfilOrganizacao[] = [];
+
     cols: any[];
 
     loading: boolean;
 
     allColumnsTable = [
-        {field: 'organizacao.nome',  header: 'Organização'},
-        {field: 'identificadorAnalise',  header: 'Identificador da Validação'},
-        {field: 'sistema.nome',  header: 'Sistema'},
-        {field: 'metodoContagem',  header: 'Metodo Contagem'},
-        {field: 'pfTotal',  header: 'PF total'},
-        {field: 'adjustPFTotal',  header: 'PF Ajustado'},
-        {field: 'dataCriacaoOrdemServico',  header: 'Data de criação'},
-        {field: 'status',  header: 'Status'},
-        {field: 'bloqueiaAnalise',  header: 'Bloqueado'},
+        { field: 'organizacao.nome', header: 'Organização' },
+        { field: 'identificadorAnalise', header: 'Identificador da Validação' },
+        { field: 'sistema.nome', header: 'Sistema' },
+        { field: 'metodoContagem', header: 'Metodo Contagem' },
+        { field: 'pfTotal', header: 'PF total' },
+        { field: 'adjustPFTotal', header: 'PF Ajustado' },
+        { field: 'dataCriacaoOrdemServico', header: 'Data de criação' },
+        { field: 'status', header: 'Status' },
+        { field: 'bloqueiaAnalise', header: 'Bloqueado' },
     ];
 
     customOptions: Object = {};
@@ -75,9 +80,9 @@ export class DivergenciaListComponent implements OnInit {
     translateSusbscriptions: Subscription[] = [];
 
     metsContagens = [
-        {label: 'Detalhada', value: 'DETALHADA'},
-        {label: 'Indicativa', value: 'INDICATIVA'},
-        {label: 'Estimada', value: 'ESTIMADA'}
+        { label: 'Detalhada', value: 'DETALHADA' },
+        { label: 'Indicativa', value: 'INDICATIVA' },
+        { label: 'Estimada', value: 'ESTIMADA' }
     ];
     blocked;
     inicial: boolean;
@@ -91,6 +96,12 @@ export class DivergenciaListComponent implements OnInit {
     showDialogDivergenceBlock = false;
     showDialogDivergenceStatus = false;
 
+    canPesquisar: boolean = false;
+    canEditar: boolean = false;
+    canDeletar: boolean = false;
+    canAlterarStatus: boolean = false;
+    canBloquearDesbloquear: boolean = false;
+
     constructor(
         private router: Router,
         private sistemaService: SistemaService,
@@ -103,6 +114,8 @@ export class DivergenciaListComponent implements OnInit {
         private statusService: StatusService,
         private confirmationService: ConfirmationService,
         private divergenciaService: DivergenciaService,
+        private authService: AuthService,
+        private perfilService: PerfilService
     ) {
     }
 
@@ -110,10 +123,36 @@ export class DivergenciaListComponent implements OnInit {
         this.estadoInicial();
         this.datatable.onLazyLoad.subscribe((event: LazyLoadEvent) => this.loadDirvenceLazy(event));
         this.datatable.lazy = true;
+        this.verificarPermissoes();
     }
 
     getLabel(label) {
         return label;
+    }
+
+    verificarPermissoes() {
+        if (this.authService.possuiRole(AuthService.PREFIX_ROLE + "VALIDACAO_EDITAR") == true) {
+            this.canEditar = true;
+        }
+        if (this.authService.possuiRole(AuthService.PREFIX_ROLE + "VALIDACAO_EXCLUIR") == true) {
+            this.canDeletar = true;
+        }
+        if (this.authService.possuiRole(AuthService.PREFIX_ROLE + "VALIDACAO_PESQUISAR") == true) {
+            this.canPesquisar = true;
+        }
+        if (this.authService.possuiRole(AuthService.PREFIX_ROLE + "VALIDACAO_ALTERAR_STATUS") == true) {
+            this.canAlterarStatus = true;
+        }
+        if (this.authService.possuiRole(AuthService.PREFIX_ROLE + "VALIDACAO_BLOQUEAR_DESBLOQUEAR") == true) {
+            this.canBloquearDesbloquear = true;
+        }
+    }
+
+    verificarBotoes(analise: Analise) {
+        this.canEditar = PerfilService.consultarPerfilAnalise("VALIDACAO", "EDITAR", this.perfisOrganizacao, analise);
+        this.canDeletar = PerfilService.consultarPerfilAnalise("VALIDACAO", "EXCLUIR", this.perfisOrganizacao, analise);
+        this.canAlterarStatus = PerfilService.consultarPerfilAnalise("VALIDACAO", "ALTERAR_STATUS", this.perfisOrganizacao, analise);
+        this.canBloquearDesbloquear = PerfilService.consultarPerfilAnalise("VALIDACAO", "BLOQUEAR_DESBLOQUEAR", this.perfisOrganizacao, analise);
     }
 
     estadoInicial() {
@@ -132,20 +171,30 @@ export class DivergenciaListComponent implements OnInit {
     }
 
     recuperarOrganizacoes() {
-        this.organizacaoService.dropDown().subscribe(response => {
-            this.organizations = response;
-            this.customOptions['organizacao.nome'] = response.map((item) => {
-                return {label: item.nome, value: item.id};
-              });
-        });
+        this.perfilService.getPerfilOrganizacaoByUser().subscribe(r => {
+            this.perfisOrganizacao = r;
+            let organizacoesPesquisar: Organizacao[] = [];
+            this.organizacaoService.dropDown().subscribe(response => {
+                response.forEach(organizacao => {
+                    if(PerfilService.consultarPerfilOrganizacao("VALIDACAO", "PESQUISAR", this.perfisOrganizacao, organizacao) == true){
+                        organizacoesPesquisar.push(organizacao);
+                    }
+                })
+                this.organizations = organizacoesPesquisar;
+                this.customOptions['organizacao.nome'] = organizacoesPesquisar.map((item) => {
+                    return { label: item.nome, value: item.id };
+                });
+            });
+        })
+
     }
 
     recuperarSistema() {
         this.sistemaService.dropDown().subscribe(response => {
             this.nomeSistemas = response;
             this.customOptions['sistema.nome'] = response.map((item) => {
-                return {label: item.nome, value: item.id};
-              });
+                return { label: item.nome, value: item.id };
+            });
         });
     }
 
@@ -178,14 +227,10 @@ export class DivergenciaListComponent implements OnInit {
             this.pageNotificationService.addErrorMessage('Você não pode editar uma análise bloqueada!');
             return;
         }
-        this.router.navigate(['/divergencia', this.analiseSelecionada.id, 'edit']);
+        this.router.navigate(['/divergencia', analiseDivergence.id, 'edit']);
     }
 
     public confirmDeleteDivergence(divergence: Analise) {
-        if (divergence.bloqueiaAnalise) {
-            this.pageNotificationService.addErrorMessage('Você não pode excluir uma análise bloqueada!');
-            return;
-        }
         if (!divergence) {
             this.pageNotificationService.addErrorMessage('Nenhuma Validação foi selecionada.');
             return;
@@ -197,7 +242,7 @@ export class DivergenciaListComponent implements OnInit {
                     this.divergenciaService.delete(divergence.id).subscribe(() => {
                         this.pageNotificationService.addDeleteMsg(divergence.identificadorAnalise);
                         this.blockUiService.hide();
-                        this. performSearch();
+                        this.performSearch();
                     });
                 }
             });
@@ -223,7 +268,7 @@ export class DivergenciaListComponent implements OnInit {
     }
 
     public performSearch() {
-        this.enableTable = true ;
+        this.enableTable = true;
         sessionStorage.setItem('searchDivergence', JSON.stringify(this.searchDivergence));
         this.event.first = 0;
         this.loadDirvenceLazy(this.event);
@@ -244,6 +289,9 @@ export class DivergenciaListComponent implements OnInit {
     }
 
     public onRowDblclick(event) {
+        if (!this.canEditar) {
+            return false;
+        }
         if (event.target.nodeName === 'TD') {
             this.editDivergence(this.analiseSelecionada);
         } else if (event.target.parentNode.nodeName === 'TD') {
@@ -256,19 +304,19 @@ export class DivergenciaListComponent implements OnInit {
             return;
         } else if (event.selection.length === 1) {
             event.selection = event.selection[0];
-        } else if ( event.selection.length > 1 && event.button !== 'generateDivergence') {
+        } else if (event.selection.length > 1 && event.button !== 'generateDivergence') {
             this.pageNotificationService.addErrorMessage('Selecione somente uma Análise para essa ação.');
-            return ;
+            return;
         } else if (event.selection.length > 2) {
             this.pageNotificationService.addErrorMessage('Selecione somente duas Análises para gerar a Validação.');
-            return ;
+            return;
         }
     }
 
     /**
-     * funcionalidade para bloqueio e mudança de status 
+     * funcionalidade para bloqueio e mudança de status
     */
-    public confirmBlockDivegence(divergence: Analise){
+    public confirmBlockDivegence(divergence: Analise) {
         if (!divergence) {
             this.pageNotificationService.addErrorMessage('Nenhuma Validação foi selecionada.');
             return;
@@ -287,27 +335,9 @@ export class DivergenciaListComponent implements OnInit {
         this.showDialogDivergenceStatus = true;
     }
 
-    public divergenceBlock(){
+    public divergenceBlock() {
         this.bloqueiaDivegence(this.blocked);
     }
-    
-    public alterStatusAnalise(){
-        if(this.idDivergenceStatus && this.statusToChange){
-                this.divergenciaService.changeStatusDivergence(this.idDivergenceStatus, this.statusToChange).subscribe(data => {
-                this.statusService = undefined;
-                this.idDivergenceStatus = undefined;
-                this.showDialogDivergenceBlock = false;
-                this.showDialogDivergenceStatus = false;
-                this.datatable._filter();
-                this.pageNotificationService.addSuccessMessage('O status da análise '+ data.identificadorAnalise + ' foi alterado.');
-            },
-            err => this.pageNotificationService.addErrorMessage('Não foi possível alterar o status da Análise.'));
-        }
-        else {
-            this.pageNotificationService.addErrorMessage('Selecione um Status para continuar.');
-        }
-    }
-
     public selectAnalise() {
         var values = this.datatable.value;
         var ind = values.indexOf(this.selectedDivergence)
@@ -316,44 +346,71 @@ export class DivergenciaListComponent implements OnInit {
             if (this.datatable.value && this.datatable.value[ind]) {
                 this.analiseSelecionada = this.datatable.value[ind];
                 this.blocked = this.datatable.value[ind].bloqueiaAnalise;
+                this.verificarBotoes(this.analiseSelecionada);
             }
         }
     }
 
     public bloqueiaDivegence(bloquear: boolean) {
-        this.alterStatusAnalise();
-        this.divergenciaService.findAnalise(this.analiseSelecionada.id).subscribe((res) => {
-            this.analiseTemp = new Analise().copyFromJSON(res);
-            let canBloqued = false;
-            if (this.tipoEquipesLoggedUser) {
-                this.tipoEquipesLoggedUser.forEach(equipe => {
-                    if (equipe.id === this.analiseTemp.equipeResponsavel.id) {
-                        canBloqued = true;
-                    }
-                });
-            }          
-            if (canBloqued) {
-                this.alterAnaliseBlock(); 
-            } else {
-                this.pageNotificationService.addErrorMessage(this.getLabel('Somente membros da equipe responsável podem excluir esta análise!'));
-            }
-        },
-        err => {
-            this.pageNotificationService.addErrorMessage(
-                this.getLabel('Somente membros da equipe responsável podem excluir esta análise!'));
-        });
+        this.analiseTemp = new Analise().copyFromJSON(this.analiseSelecionada);
+        let canBloqued = false;
+        if (this.tipoEquipesLoggedUser) {
+            this.tipoEquipesLoggedUser.forEach(equipe => {
+                if (equipe.id === this.analiseTemp.equipeResponsavel.id) {
+                    canBloqued = true;
+                }
+            });
+        }
+        if (canBloqued) {
+            this.alterValidacaoStatusBlock();
+        } else {
+            this.pageNotificationService.addErrorMessage(this.getLabel('Somente membros da equipe responsável podem excluir esta análise!'));
+        }
     }
 
-    public alterAnaliseBlock() {
-        if (this.analiseTemp && this.analiseTemp.dataHomologacao) {
-            const copy = this.analiseTemp.toJSONState();
-            this.divergenciaService.block(copy).subscribe(() => {
-                const nome = this.analiseTemp.identificadorAnalise;
-                const bloqueado = this.analiseTemp.bloqueiaAnalise;
-                this.mensagemAnaliseBloqueada(bloqueado, nome);
+    public alterValidacaoStatusBlock() {
+        if (this.idDivergenceStatus && this.statusToChange) {
+            this.divergenciaService.changeStatusDivergence(this.idDivergenceStatus, this.statusToChange).subscribe(data => {
+                this.analiseTemp = new Analise().copyFromJSON(data);
+                this.statusService = undefined;
+                this.idDivergenceStatus = undefined;
+                this.pageNotificationService.addSuccessMessage('O status da validação ' + data.identificadorAnalise + ' foi alterado.');
+                if (this.analiseTemp && this.analiseTemp.dataHomologacao) {
+                    const copy = this.analiseTemp.toJSONState();
+                    this.divergenciaService.block(copy).subscribe(() => {
+                        const nome = this.analiseTemp.identificadorAnalise;
+                        const bloqueado = this.analiseTemp.bloqueiaAnalise;
+                        this.mensagemAnaliseBloqueada(bloqueado, nome);
+                        this.datatable._filter();
+                        this.datatable.selection = null;
+                        this.showDialogDivergenceBlock = false;
+                    });
+                } else {
+                    this.pageNotificationService.addErrorMessage('Não é possível bloquear/desbloquear essa validação');
+                    this.datatable._filter();
+                    this.showDialogDivergenceBlock = false;
+                }
+            },
+                err => this.pageNotificationService.addErrorMessage('Não foi possível alterar o status da Validação.'));
+        }
+        else {
+            this.pageNotificationService.addErrorMessage('Selecione um Status para continuar.');
+        }
+    }
+
+    public alterStatusValidacao() {
+        if (this.idDivergenceStatus && this.statusToChange) {
+            this.divergenciaService.changeStatusDivergence(this.idDivergenceStatus, this.statusToChange).subscribe(data => {
+                this.statusService = undefined;
+                this.idDivergenceStatus = undefined;
+                this.showDialogDivergenceStatus = false;
+                this.pageNotificationService.addSuccessMessage('O status da validação ' + data.identificadorAnalise + ' foi alterado.');
                 this.datatable._filter();
-                this.showDialogAnaliseBlock = false;
-            });
+            },
+                err => this.pageNotificationService.addErrorMessage('Não foi possível alterar o status da Validação.'));
+        }
+        else {
+            this.pageNotificationService.addErrorMessage('Selecione um Status para continuar.');
         }
     }
 

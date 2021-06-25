@@ -8,7 +8,8 @@ export class Rlr implements BaseEntity, AnaliseReferenciavel{
     public id?: number,
     public nome?: string,
     public valor?: number,
-    public funcaoDados?: FuncaoDados
+    public funcaoDados?: FuncaoDados,
+    public numeracao?: number
   ) { }
 
   toJSONState(): Rlr {

@@ -1,25 +1,28 @@
-import {Component, OnInit, OnDestroy, OnChanges} from '@angular/core';
-import {ActivatedRoute, Router, UrlSegment} from '@angular/router';
-import { TipoEquipe, TipoEquipeService } from 'src/app/tipo-equipe';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { ActivatedRoute, Router, UrlSegment } from '@angular/router';
+import { AuthGuard } from '@nuvem/angular-base';
+import { DatatableComponent, PageNotificationService } from '@nuvem/primeng-components';
+import { ConfirmationService, SelectItem } from 'primeng';
+import { Observable, Subscription } from 'rxjs';
 import { Organizacao, OrganizacaoService } from 'src/app/organizacao';
-import { Authority } from '../authority.model';
+import { Perfil, PerfilService } from 'src/app/perfil';
+import { PerfilOrganizacao } from 'src/app/perfil/perfil-organizacao.model';
+import { TipoEquipe, TipoEquipeService } from 'src/app/tipo-equipe';
 import { User } from '../user.model';
-import { Subscription, Observable } from 'rxjs';
 import { UserService } from '../user.service';
-import { PageNotificationService } from '@nuvem/primeng-components';
-import { AuthorizationService, Authorization, Authentication, AuthGuard } from '@nuvem/angular-base';
-import { ResponseWrapper } from 'src/app/shared';
+
 
 
 @Component({
     selector: 'jhi-user-form',
-    templateUrl: './user-form.component.html'
+    templateUrl: './user-form.component.html',
+    providers: [ConfirmationService],
 })
 export class UserFormComponent implements OnInit, OnDestroy {
 
     tipoEquipes: TipoEquipe[];
     organizacoes: Organizacao[];
-    authorities: Authority[];
+    perfils: Perfil[];
     user: User;
     isSaving: boolean;
     isEdit: boolean;
@@ -29,7 +32,22 @@ export class UserFormComponent implements OnInit, OnDestroy {
     private url: string;
     emaild: any;
 
+    perfilNovo: Perfil;
+    organizacoesSelecionada: Organizacao[];
+    organizacoesOptions: SelectItem[];
+    perfilOrganizacao: PerfilOrganizacao;
+    perfilOrganizacaoEdit: PerfilOrganizacao = null;
+    contagem: number = 0;
+
+    @ViewChild(DatatableComponent) tables: DatatableComponent;
+
+
+    mostrarDialogOrgPerfil: boolean;
+
+    rowsPerPageOptions: number[] = [5, 10, 20, 100];
+
     constructor(
+        private confirmationService: ConfirmationService,
         private authService: AuthGuard,
         private route: ActivatedRoute,
         private router: Router,
@@ -37,6 +55,7 @@ export class UserFormComponent implements OnInit, OnDestroy {
         private tipoEquipeService: TipoEquipeService,
         private organizacaoService: OrganizacaoService,
         private pageNotificationService: PageNotificationService,
+        private perfilService: PerfilService
     ) {
         this.isAdmin = this.isUserAdmin();
         this.recuperarUrl();
@@ -54,15 +73,16 @@ export class UserFormComponent implements OnInit, OnDestroy {
         this.recuperarListaPerfis();
         this.recuperarUsuarioPeloId();
     }
+
+    private recuperarListaPerfis() {
+        this.perfilService.getAllPerfisAtivo().subscribe((response) => {
+            this.perfils = response;
+        })
+    }
+
     private recuperarListaOrganizacao() {
         this.organizacaoService.dropDownActive().subscribe((res) => {
             this.organizacoes = res;
-        });
-    }
-    private recuperarListaPerfis() {
-        this.userService.authorities().subscribe((res: Authority[]) => {
-            this.authorities = res;
-            this.populateAuthoritiesArtificialIds();
         });
     }
     private recuperarUrl() {
@@ -77,93 +97,34 @@ export class UserFormComponent implements OnInit, OnDestroy {
             if (params['id']) {
                 this.userService.find(params['id']).subscribe(user => {
                     this.user = user;
-                    this.setEquipeOrganizacao(this.user.organizacoes);
-                    this.populateUserAuthoritiesWithArtificialId();
+                    if (this.user.perfilOrganizacoes) {
+                        this.setEquipeOrganizacao(this.user.organizacoes);
+                    } else {
+                        this.user.perfils = [];
+                        this.user.organizacoes = [];
+                    }
                 });
             }
         });
     }
-    // FIXME parte da solução rápida e ruim, porém dinâmica
-    // Horrível para muitas permissões
-    private populateAuthoritiesArtificialIds() {
-        if (this.authorities) {
-            this.authorities.forEach((authority, index) => {
-                authority.artificialId = index;
-                switch (index) {
-                    case 0: {
-                        authority.description ='Administrador';
-                        break;
-                    }
-                    case 1: {
-                        authority.description = 'Usuário';
-                        break;
-                    }
-                    case 2: {
-                        authority.description = 'Observador';
-                        break;
-                    }
-                    case 3: {
-                        authority.description = 'Analista';
-                        break;
-                    }
-                    case 4: {
-                        authority.description = 'Gestor';
-                        break;
-                    }
-                }
-            });
-        }
-    }
-    // FIXME Solução rápida e ruim. O(n^2) no pior caso
-    // Funciona para qualquer autoridade que vier no banco
-    // Em oposição a uma solução mais simples porém hardcoded.
-    private populateUserAuthoritiesWithArtificialId() {
-        if (this.user.authorities) {
-            this.user.authorities.forEach(authority => {
-                switch (authority.name) {
-                    case 'ROLE_ADMIN': {
-                        authority.description = 'Administrador';
-                        authority.artificialId = 0;
-                        break;
-                    }
 
-                    case 'ROLE_USER': {
-                        authority.description = 'Usuário';
-                        authority.artificialId = 1;
-                        break;
-                    }
-
-                    case 'ROLE_VIEW': {
-                        authority.description = 'Observador';
-                        authority.artificialId = 2;
-                        break;
-                    }
-                    case 'ROLE_ANALISTA': {
-                        authority.description = 'Analista';
-                        authority.artificialId = 3;
-                        break;
-                    }
-                    case 'ROLE_GESTOR': {
-                        authority.description = 'Gestor';
-                        authority.artificialId = 4;
-                        break;
-                    }
-
-                }
-            });
-        }
-    }
     save(form) {
         if (!form.controls.email.valid && this.user.email) {
             this.pageNotificationService.addErrorMessage('E-mail Inválido');
             return;
         }
-
         if (!form.valid) {
             this.pageNotificationService.addErrorMessage('Por favor preencher os campos Obrigatórios!');
             return;
         }
-
+        this.user.perfils = [];
+        this.user.perfilOrganizacoes.forEach(item => {
+            item.id = undefined;
+            if (this.user.perfils.indexOf(item.perfil) === -1) {
+                this.user.perfils.push(item.perfil);
+            }
+        })
+        this.carregarOrganizacoes();
         if (this.user.id !== undefined) {
             this.isEdit = true;
             this.subscribeToSaveResponse(this.userService.update(this.user));
@@ -250,7 +211,6 @@ export class UserFormComponent implements OnInit, OnDestroy {
         this.userService.findCurrentUser().subscribe((res: User) => {
             this.user = res;
             this.setEquipeOrganizacao(this.user.organizacoes);
-            this.populateUserAuthoritiesWithArtificialId();
         });
     }
 
@@ -295,4 +255,117 @@ export class UserFormComponent implements OnInit, OnDestroy {
             return true;
         });
     }
+
+    abrirDialogOrgPerfil() {
+        this.mostrarDialogOrgPerfil = true;
+        this.perfilOrganizacao = new PerfilOrganizacao();
+        this.organizacoesOptions = [];
+        this.perfilNovo = null;
+        if (this.carregarOrganizacoes().length > 0) {
+            for (let index = 0; index < this.organizacoes.length; index++) {
+                const organizacao = this.organizacoes[index];
+                if (this.carregarOrganizacoes().findIndex(i => i.id === organizacao.id) < 0) {
+                    this.organizacoesOptions.push({
+                        value: organizacao,
+                        label: organizacao.nome
+                    });
+                }
+            }
+        } else {
+            for (let index = 0; index < this.organizacoes.length; index++) {
+                const organizacao = this.organizacoes[index];
+                this.organizacoesOptions.push({
+                    value: organizacao,
+                    label: organizacao.nome
+                });
+            }
+        }
+    }
+    fecharDialogOrgPerfil() {
+        this.mostrarDialogOrgPerfil = false;
+        this.organizacoesSelecionada = [];
+        this.perfilNovo = null;
+        this.carregarOrganizacoes()
+        this.setOrganizacao(this.user.organizacoes);
+
+    }
+    adicionarOrgPerfil() {
+        if (this.organizacoesSelecionada.length > 0 && this.perfilNovo) {
+            if (!this.user.perfils) {
+                this.user.perfils = [];
+            }
+            if (!this.user.organizacoes) {
+                this.user.organizacoes = [];
+            }
+            if (!this.user.perfilOrganizacoes) {
+                this.user.perfilOrganizacoes = [];
+            }
+            this.organizacoesSelecionada.forEach(org => {
+                this.perfilOrganizacao.organizacoes.push(org);
+            });
+
+            this.perfilOrganizacao.perfil = this.perfilNovo;
+
+            this.perfilOrganizacao.id = this.contagem++;
+
+
+            this.user.perfilOrganizacoes.push(this.perfilOrganizacao);
+            this.fecharDialogOrgPerfil();
+
+        }
+        else {
+            this.pageNotificationService.addErrorMessage("Selecione uma organização e um perfil para adicionar!")
+        }
+    }
+
+    carregarOrganizacoes(): Organizacao[] {
+        let organizacoes: Organizacao[] = [];
+        this.user.organizacoes = [];
+        if (this.user.perfilOrganizacoes) {
+            this.user.perfilOrganizacoes.forEach(perfilOrganizacao => {
+                perfilOrganizacao.organizacoes.forEach(organizacao => {
+                    if (organizacoes.indexOf(organizacao) === -1) {
+                        organizacoes.push(organizacao);
+                        this.user.organizacoes.push(organizacao);
+                    }
+                })
+            })
+        }
+        return organizacoes;
+    }
+
+    selectColumn() {
+        this.tables.pDatatableComponent.metaKeySelection = true;
+        if (this.tables && this.tables.selectedRow) {
+            this.perfilOrganizacaoEdit = this.tables.selectedRow;
+        }
+    }
+    datatableClickOrgPerfil(event) {
+        if (!event.selection) {
+            return;
+        }
+        switch (event.button) {
+            case "delete":
+                this.confirmDeletePerfilOrg();
+                break;
+            default:
+                break;
+        }
+    }
+
+    confirmDeletePerfilOrg() {
+        if (this.perfilOrganizacaoEdit != null) {
+            this.confirmationService.confirm({
+                message: this.getLabel('Tem certeza que deseja excluir o registro?'),
+                accept: () => {
+                    this.user.perfilOrganizacoes.splice(this.user.perfilOrganizacoes.indexOf(this.perfilOrganizacaoEdit), 1);
+                    this.carregarOrganizacoes();
+                    this.setOrganizacao(this.user.organizacoes);
+                    this.tables.refresh();
+                    this.perfilOrganizacaoEdit = null;
+                }
+            })
+        }
+    }
 }
+

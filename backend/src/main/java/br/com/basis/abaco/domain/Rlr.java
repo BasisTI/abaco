@@ -57,7 +57,7 @@ public class Rlr implements Serializable {
     private Set<Der> ders = new HashSet<>();
 
     @ManyToOne
-    @JsonBackReference(value = "funcaoDados")
+    @JsonIgnore
     private FuncaoDados funcaoDados;
 
     public Long getId() {

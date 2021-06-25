@@ -1,27 +1,39 @@
 package br.com.basis.abaco.web.rest;
 
+import static org.elasticsearch.index.query.QueryBuilders.queryStringQuery;
+
+import java.lang.reflect.InvocationTargetException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
+
 import br.com.basis.abaco.domain.Alr;
 import br.com.basis.abaco.domain.Analise;
 import br.com.basis.abaco.domain.Der;
 import br.com.basis.abaco.domain.FuncaoTransacao;
-import br.com.basis.abaco.domain.enumeration.StatusFuncao;
-import br.com.basis.abaco.repository.AnaliseRepository;
-import br.com.basis.abaco.repository.DerRepository;
-import br.com.basis.abaco.repository.FuncaoTransacaoRepository;
-import br.com.basis.abaco.repository.search.FuncaoTransacaoSearchRepository;
-import br.com.basis.abaco.security.AuthoritiesConstants;
+import br.com.basis.abaco.domain.UploadedFile;
+import br.com.basis.abaco.domain.VwAlr;
+import br.com.basis.abaco.domain.VwDer;
+import br.com.basis.abaco.domain.enumeration.Complexidade;
+import br.com.basis.abaco.domain.enumeration.MetodoContagem;
+import br.com.basis.abaco.service.FuncaoDadosService;
+import br.com.basis.abaco.service.dto.AlrDTO;
+import br.com.basis.abaco.service.dto.DerFtDTO;
 import br.com.basis.abaco.service.dto.FuncaoTransacaoAnaliseDTO;
 import br.com.basis.abaco.service.dto.FuncaoTransacaoApiDTO;
-import br.com.basis.abaco.web.rest.util.HeaderUtil;
-import com.codahale.metrics.annotation.Timed;
-import io.github.jhipster.web.util.ResponseUtil;
+import br.com.basis.abaco.service.dto.FuncaoTransacaoSaveDTO;
 import org.jetbrains.annotations.NotNull;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -30,18 +42,23 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
+import com.codahale.metrics.annotation.Timed;
 
-import static org.elasticsearch.index.query.QueryBuilders.queryStringQuery;
+import br.com.basis.abaco.domain.enumeration.StatusFuncao;
+import br.com.basis.abaco.repository.AnaliseRepository;
+import br.com.basis.abaco.repository.DerRepository;
+import br.com.basis.abaco.repository.FuncaoTransacaoRepository;
+import br.com.basis.abaco.repository.UploadedFilesRepository;
+import br.com.basis.abaco.repository.search.FuncaoTransacaoSearchRepository;
+import br.com.basis.abaco.repository.search.VwAlrSearchRepository;
+import br.com.basis.abaco.repository.search.VwDerSearchRepository;
+import br.com.basis.abaco.service.FuncaoTransacaoService;
+import br.com.basis.abaco.web.rest.util.HeaderUtil;
+import io.github.jhipster.web.util.ResponseUtil;
 
 /**
  * REST controller for managing FuncaoTransacao.
@@ -54,34 +71,59 @@ public class FuncaoTransacaoResource {
     private final FuncaoTransacaoRepository funcaoTransacaoRepository;
     private final FuncaoTransacaoSearchRepository funcaoTransacaoSearchRepository;
     private final AnaliseRepository analiseRepository;
+    private final VwDerSearchRepository vwDerSearchRepository;
+    private final VwAlrSearchRepository vwAlrSearchRepository;
+    private final FuncaoDadosService funcaoDadosService;
     @Autowired
     private DerRepository derRepository;
+    @Autowired
+    private ModelMapper modelMapper;
 
-    public FuncaoTransacaoResource(FuncaoTransacaoRepository funcaoTransacaoRepository, FuncaoTransacaoSearchRepository funcaoTransacaoSearchRepository, AnaliseRepository analiseRepository) {
+    public FuncaoTransacaoResource(FuncaoTransacaoRepository funcaoTransacaoRepository, FuncaoTransacaoSearchRepository funcaoTransacaoSearchRepository, AnaliseRepository analiseRepository, VwDerSearchRepository vwDerSearchRepository, VwAlrSearchRepository vwAlrSearchRepository, FuncaoDadosService funcaoDadosService) {
         this.funcaoTransacaoRepository = funcaoTransacaoRepository;
         this.funcaoTransacaoSearchRepository = funcaoTransacaoSearchRepository;
         this.analiseRepository = analiseRepository;
+        this.vwDerSearchRepository = vwDerSearchRepository;
+        this.vwAlrSearchRepository = vwAlrSearchRepository;
+        this.funcaoDadosService = funcaoDadosService;
     }
 
     /**
      * POST  /funcao-transacaos : Create a new funcaoTransacao.
      *
-     * @param funcaoTransacao the funcaoTransacao to create
+     * @param funcaoTransacaoSaveDTO the funcaoTransacao to create
      * @return the ResponseEntity with status 201 (Created) and with body the new funcaoTransacao, or with status 400 (Bad Request) if the funcaoTransacao has already an ID
      * @throws URISyntaxException if the Location URI syntax is incorrect
      */
-    @PostMapping("/funcao-transacaos/{idAnalise}")
+    @PostMapping(path = "/funcao-transacaos/{idAnalise}", consumes = {"multipart/form-data"})
     @Timed
-    @Secured({AuthoritiesConstants.ADMIN, AuthoritiesConstants.USER, AuthoritiesConstants.GESTOR, AuthoritiesConstants.ANALISTA})
-    public ResponseEntity<FuncaoTransacao> createFuncaoTransacao(@PathVariable Long idAnalise, @RequestBody FuncaoTransacao funcaoTransacao) throws URISyntaxException {
+    public ResponseEntity<FuncaoTransacao> createFuncaoTransacao(@PathVariable Long idAnalise, @RequestPart("funcaoTransacao") FuncaoTransacaoSaveDTO funcaoTransacaoSaveDTO, @RequestPart("files")List<MultipartFile> files) throws URISyntaxException {
+
+        FuncaoTransacao funcaoTransacao = convertToEntity(funcaoTransacaoSaveDTO);
+
         log.debug("REST request to save FuncaoTransacao : {}", funcaoTransacao);
         Analise analise = analiseRepository.findOne(idAnalise);
+        funcaoTransacao.getDers().forEach(alr -> {alr.setFuncaoTransacao(funcaoTransacao);});
+        funcaoTransacao.getAlrs().forEach((der -> {der.setFuncaoTransacao(funcaoTransacao);}));
         funcaoTransacao.setAnalise(analise);
         if (funcaoTransacao.getId() != null || analise.getId() == null) {
             return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert(ENTITY_NAME, "idexists", "A new funcaoTransacao cannot already have an ID")).body(null);
         }
+
+        if(!files.isEmpty()){
+            List<UploadedFile> uploadedFiles = funcaoDadosService.uploadFiles(files);
+            funcaoTransacao.setFiles(uploadedFiles);
+        }
+        if(analise.getMetodoContagem().equals(MetodoContagem.ESTIMADA)){
+            funcaoTransacao.setComplexidade(Complexidade.MEDIA);
+        }
+
         funcaoTransacao.setDers(bindDers(funcaoTransacao));
+
         FuncaoTransacao result = funcaoTransacaoRepository.save(funcaoTransacao);
+
+        saveVwDersAndVwAlrs(result.getDers(), result.getAlrs(), analise.getSistema().getId());
+
         return ResponseEntity.created(new URI("/api/funcao-transacaos/" + result.getId()))
                 .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString()))
                 .body(result);
@@ -90,27 +132,43 @@ public class FuncaoTransacaoResource {
     /**
      * PUT  /funcao-transacaos : Updates an existing funcaoTransacao.
      *
-     * @param funcaoTransacao the funcaoTransacao to update
+     * @param funcaoTransacaoDTO the funcaoTransacao to update
      * @return the ResponseEntity with status 200 (OK) and with body the updated funcaoTransacao,
      * or with status 400 (Bad Request) if the funcaoTransacao is not valid,
      * or with status 500 (Internal Server Error) if the funcaoTransacao couldnt be updated
      * @throws URISyntaxException if the Location URI syntax is incorrect
      */
-    @PutMapping("/funcao-transacaos/{id}")
+    @PutMapping(path = "/funcao-transacaos/{id}", consumes = {"multipart/form-data"})
     @Timed
-    @Secured({AuthoritiesConstants.ADMIN, AuthoritiesConstants.USER, AuthoritiesConstants.GESTOR, AuthoritiesConstants.ANALISTA})
-    public ResponseEntity<FuncaoTransacao> updateFuncaoTransacao(@PathVariable Long id, @RequestBody FuncaoTransacao funcaoTransacao) throws URISyntaxException {
+    public ResponseEntity<FuncaoTransacao> updateFuncaoTransacao(@PathVariable Long id, @RequestPart("funcaoTransacao") FuncaoTransacaoSaveDTO funcaoTransacaoDTO, @RequestPart("files")List<MultipartFile> files) throws URISyntaxException, InvocationTargetException, IllegalAccessException {
+        FuncaoTransacao funcaoTransacao = convertToEntity(funcaoTransacaoDTO);
+
         log.debug("REST request to update FuncaoTransacao : {}", funcaoTransacao);
         FuncaoTransacao funcaoTransacaoOld = funcaoTransacaoRepository.findOne(id);
         Analise analise = analiseRepository.findOne(funcaoTransacaoOld.getAnalise().getId());
+        funcaoTransacao.getDers().forEach(alr -> {alr.setFuncaoTransacao(funcaoTransacao);});
+        funcaoTransacao.getAlrs().forEach((der -> {der.setFuncaoTransacao(funcaoTransacao);}));
         funcaoTransacao.setAnalise(analise);
+
         if (funcaoTransacao.getId() == null) {
-            return createFuncaoTransacao(analise.getId(), funcaoTransacao);
+            return createFuncaoTransacao(analise.getId(), funcaoTransacaoDTO, files);
         }
+
         if (funcaoTransacao.getAnalise() == null || funcaoTransacao.getAnalise().getId() == null) {
             return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert(ENTITY_NAME, "idexists", "A new funcaoTransacao cannot already have an ID")).body(null);
         }
+        if(!files.isEmpty()){
+            List<UploadedFile> uploadedFiles = funcaoDadosService.uploadFiles(files);
+            funcaoTransacao.setFiles(uploadedFiles);
+        }
+        if(analise.getMetodoContagem().equals(MetodoContagem.ESTIMADA)){
+            funcaoTransacao.setComplexidade(Complexidade.MEDIA);
+        }
+
         FuncaoTransacao result = funcaoTransacaoRepository.save(funcaoTransacao);
+
+        saveVwDersAndVwAlrs(result.getDers(), result.getAlrs(), analise.getSistema().getId());
+
         return ResponseEntity.ok().headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, funcaoTransacao.getId().toString())).body(result);
     }
 
@@ -146,8 +204,23 @@ public class FuncaoTransacaoResource {
     public ResponseEntity<FuncaoTransacaoApiDTO> getFuncaoTransacao(@PathVariable Long id) {
         log.debug("REST request to get FuncaoTransacao : {}", id);
         FuncaoTransacao funcaoTransacao = funcaoTransacaoRepository.findOne(id);
-        ModelMapper modelMapper = new ModelMapper();
         FuncaoTransacaoApiDTO funcaoDadosDTO = modelMapper.map(funcaoTransacao, FuncaoTransacaoApiDTO.class);
+        Set<DerFtDTO> ders = new LinkedHashSet<>();
+        Set<AlrDTO> alrs = new LinkedHashSet<>();
+        funcaoTransacao.getDers().forEach(der -> {
+            DerFtDTO derDto = new DerFtDTO();
+            derDto.setNome(der.getNome());
+            derDto.setValor(der.getValor());
+            ders.add(derDto);
+        });
+        funcaoTransacao.getAlrs().forEach(alr -> {
+            AlrDTO alrDto = new AlrDTO();
+            alrDto.setNome(alr.getNome());
+            alrDto.setValor(alr.getValor());
+            alrs.add(alrDto);
+        });
+        funcaoDadosDTO.setDers(ders);
+        funcaoDadosDTO.setAlrs(alrs);
         return ResponseUtil.wrapOrNotFound(Optional.ofNullable(funcaoDadosDTO));
     }
 
@@ -172,7 +245,6 @@ public class FuncaoTransacaoResource {
     public ResponseEntity<FuncaoTransacaoApiDTO> getFuncaoTransacaoCompleta(@PathVariable Long id) {
         log.debug("REST request to get FuncaoTransacao Completa : {}", id);
         FuncaoTransacao funcaoTransacao = funcaoTransacaoRepository.findWithDerAndAlr(id);
-        ModelMapper modelMapper = new ModelMapper();
         FuncaoTransacaoApiDTO funcaoDadosDTO = modelMapper.map(funcaoTransacao, FuncaoTransacaoApiDTO.class);
         return ResponseUtil.wrapOrNotFound(Optional.ofNullable(funcaoDadosDTO));
     }
@@ -185,9 +257,11 @@ public class FuncaoTransacaoResource {
      */
     @DeleteMapping("/funcao-transacaos/{id}")
     @Timed
-    @Secured({AuthoritiesConstants.ADMIN, AuthoritiesConstants.USER, AuthoritiesConstants.GESTOR, AuthoritiesConstants.ANALISTA})
     public ResponseEntity<Void> deleteFuncaoTransacao(@PathVariable Long id) {
         log.debug("REST request to delete FuncaoTransacao : {}", id);
+        FuncaoTransacao funcaoTransacao = funcaoTransacaoRepository.findOne(id);
+        funcaoTransacao.getDers().forEach(item -> vwDerSearchRepository.delete(item.getId()));
+        funcaoTransacao.getAlrs().forEach(item -> vwAlrSearchRepository.delete(item.getId()));
         funcaoTransacaoRepository.delete(id);
         funcaoTransacaoSearchRepository.delete(id);
         return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id.toString())).build();
@@ -231,20 +305,18 @@ public class FuncaoTransacaoResource {
      */
     @GetMapping("/funcao-transacaos/update-status/{id}/{statusFuncao}")
     @Timed
-    @Secured({AuthoritiesConstants.ADMIN, AuthoritiesConstants.USER, AuthoritiesConstants.GESTOR, AuthoritiesConstants.ANALISTA})
     public ResponseEntity<FuncaoTransacaoApiDTO> updateFuncaoTransacao(@PathVariable Long id, @PathVariable StatusFuncao statusFuncao) {
         log.debug("REST request to get FuncaoTransacao by Status : {}", id);
         FuncaoTransacao funcaoTransacao = funcaoTransacaoRepository.findOne(id);
         funcaoTransacao.setStatusFuncao(statusFuncao);
         funcaoTransacaoRepository.save(funcaoTransacao);
-        ModelMapper modelMapper = new ModelMapper();
         FuncaoTransacaoApiDTO funcaoDadosDTO = modelMapper.map(funcaoTransacao, FuncaoTransacaoApiDTO.class);
         return ResponseUtil.wrapOrNotFound(Optional.ofNullable(funcaoDadosDTO));
     }
 
 
     private FuncaoTransacaoAnaliseDTO convertToDto(FuncaoTransacao funcaoTransacao) {
-        FuncaoTransacaoAnaliseDTO funcaoTransacaoAnaliseDTO = new ModelMapper().map(funcaoTransacao, FuncaoTransacaoAnaliseDTO.class);
+        FuncaoTransacaoAnaliseDTO funcaoTransacaoAnaliseDTO = modelMapper.map(funcaoTransacao, FuncaoTransacaoAnaliseDTO.class);
         funcaoTransacaoAnaliseDTO.setFtrFilter(getValueFtr(funcaoTransacao));
         funcaoTransacaoAnaliseDTO.setDerFilter(getValueDer(funcaoTransacao));
         funcaoTransacaoAnaliseDTO.setHasSustantation(getSustantation(funcaoTransacao));
@@ -281,7 +353,7 @@ public class FuncaoTransacaoResource {
 
     @NotNull
     private Set<Der> bindDers(@RequestBody FuncaoTransacao funcaoTransacao) {
-        Set<Der> ders = new HashSet<>();
+        Set<Der> ders = new LinkedHashSet<>();
         funcaoTransacao.getDers().forEach(der -> {
             if (der.getId() != null) {
                 der = derRepository.findOne(der.getId());
@@ -292,6 +364,75 @@ public class FuncaoTransacaoResource {
             }
         });
         return ders;
+    }
+
+    private FuncaoTransacao convertToEntity(FuncaoTransacaoSaveDTO funcaoTransacaoSaveDTO){
+        Set<Der> ders = new LinkedHashSet<>();
+        Set<Alr> alrs = new LinkedHashSet<>();
+        FuncaoTransacao map = modelMapper.map(funcaoTransacaoSaveDTO, FuncaoTransacao.class);
+        funcaoTransacaoSaveDTO.getDers().forEach(derDto -> {
+            Der der = new Der();
+            der.setNome(derDto.getNome());
+            der.setValor(derDto.getValor());
+            ders.add(der);
+        });
+        funcaoTransacaoSaveDTO.getAlrs().forEach(alrDto -> {
+            Alr alr = new Alr();
+            alr.setNome(alrDto.getNome());
+            alr.setValor(alrDto.getValor());
+            alrs.add(alr);
+        });
+        map.setDers(ders);
+        map.setAlrs(alrs);
+        return map;
+    }
+
+    private void saveVwDersAndVwAlrs(Set<Der> ders, Set<Alr> alrs, Long idSistema) {
+        List<VwDer> vwDerList = vwDerSearchRepository.findAllByIdSistemaFT(idSistema);
+        List<VwAlr> vwAlrList = vwAlrSearchRepository.findAllByIdSistema(idSistema);
+
+        saveVwDers(ders, vwDerList, idSistema);
+        saveVwAlrs(alrs, vwAlrList, idSistema);
+    }
+
+    private void saveVwAlrs(Set<Alr> alrs, List<VwAlr> vwAlrList, Long idSistema) {
+        List<VwAlr> vwAlrs = new ArrayList<>();
+        if(!alrs.isEmpty()){
+            alrs.forEach(item -> {
+                VwAlr vwAlr = new VwAlr();
+                if(item.getId() != null){
+                    vwAlr.setId(item.getId());
+                }
+                vwAlr.setNome(item.getNome());
+                vwAlr.setIdSistema(idSistema);
+                if(!vwAlrList.contains(vwAlr)){
+                    vwAlrs.add(vwAlr);
+                }
+            });
+            if(!vwAlrs.isEmpty()){
+                vwAlrSearchRepository.save(vwAlrs);
+            }
+        }
+    }
+
+    private void saveVwDers(Set<Der> ders, List<VwDer> vwDerList, Long idSistema) {
+        List<VwDer> vwDers = new ArrayList<>();
+        if(!ders.isEmpty()){
+            ders.forEach(item -> {
+                VwDer vwDer = new VwDer();
+                if(item.getId() != null){
+                    vwDer.setId(item.getId());
+                }
+                vwDer.setNome(item.getNome());
+                vwDer.setIdSistemaFT(idSistema);
+                if(!vwDerList.contains(vwDer)){
+                    vwDers.add(vwDer);
+                }
+            });
+            if(!vwDers.isEmpty()){
+                vwDerSearchRepository.save(vwDers);
+            }
+        }
     }
 
 }

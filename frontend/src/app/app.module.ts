@@ -45,6 +45,9 @@ import { VisaopfModelModule } from './visao-pf-model/visao-pf-model.module';
 import { VisaopfListsModelsModule } from './visaopf-list-models/visao-pf-list-models.module';
 import { VisaopfExportModelModule } from './visao-pf-export-model/visao-pf-export-model.module';
 
+import { PerfilModule } from './perfil/perfil.module';
+import { AuthService } from './util/auth.service';
+import { AuthGuardService } from './util/auth.guard.service';
 
 @NgModule({
     declarations: [
@@ -53,7 +56,7 @@ import { VisaopfExportModelModule } from './visao-pf-export-model/visao-pf-expor
         AppFooterComponent,
         AppRightpanelComponent,
         AppInlineProfileComponent,
-        DiarioErrosComponent,
+        DiarioErrosComponent
     ],
     imports: [
         BrowserModule,
@@ -64,7 +67,7 @@ import { VisaopfExportModelModule } from './visao-pf-export-model/visao-pf-expor
         PageNotificationModule,
         BreadcrumbModule,
         ErrorStackModule,
-        VersionTagModule,
+        VersionTagModule.forRoot(environment),
         SecurityModule.forRoot(environment.auth),
         MenuModule,
         FaseModule,
@@ -97,10 +100,11 @@ import { VisaopfExportModelModule } from './visao-pf-export-model/visao-pf-expor
         VisaopfModelModule,
         VisaopfListsModelsModule,
         VisaopfExportModelModule,
+        PerfilModule
     ],
     providers: [
         { provide: LocationStrategy, useClass: HashLocationStrategy },
-        UploadService,
+        UploadService, AuthService, AuthGuardService
     ],
     bootstrap: [AppComponent],
     exports: [ RouterModule]

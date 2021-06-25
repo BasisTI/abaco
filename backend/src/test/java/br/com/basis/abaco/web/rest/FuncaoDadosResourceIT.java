@@ -16,7 +16,9 @@ import java.util.List;
 import javax.persistence.EntityManager;
 
 import br.com.basis.abaco.repository.AnaliseRepository;
-import br.com.basis.abaco.repository.search.AnaliseSearchRepository;
+import br.com.basis.abaco.repository.FuncionalidadeRepository;
+import br.com.basis.abaco.repository.search.VwDerSearchRepository;
+import br.com.basis.abaco.repository.search.VwRlrSearchRepository;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -84,11 +86,17 @@ public class FuncaoDadosResourceIT {
 
     private FuncaoDados funcaoDados;
 
+    @Autowired
+    private VwDerSearchRepository vwDerSearchRepository;
+    @Autowired
+    private VwRlrSearchRepository vwRlrSearchRepository;
+
+
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
         FuncaoDadosResource funcaoDadosResource = new FuncaoDadosResource(funcaoDadosRepository,
-                funcaoDadosSearchRepository, funcaoDadosService, analiseRepository);
+                funcaoDadosSearchRepository, funcaoDadosService, analiseRepository, vwDerSearchRepository, vwRlrSearchRepository);
         this.restFuncaoDadosMockMvc = MockMvcBuilders.standaloneSetup(funcaoDadosResource)
                 .setCustomArgumentResolvers(pageableArgumentResolver)
                 .setControllerAdvice(exceptionTranslator)

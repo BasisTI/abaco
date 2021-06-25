@@ -1,58 +1,46 @@
 <div class="ui-g ui-fluid">
-	<div class="ui-g-12">
-		<div class="card card-w-title">
-			<h1>{{ user.id ? 'Editar Usuário' :'Cadastrar Usuário' }}</h1>
-			<form name="editForm" role="form" novalidate (ngSubmit)="save(editForm)" #editForm="ngForm">
-				<div class="ui-g">
+    <div class="ui-g-12">
+        <div class="card card-w-title">
+            <h1>{{ user.id ? 'Editar Usuário' :'Cadastrar Usuário' }}</h1>
+            <form name="editForm" role="form" novalidate (ngSubmit)="save(editForm)" #editForm="ngForm">
+                <div class="ui-g">
 
-					<div class="ui-g-6 ui-md-6 ui-sm-12" style="margin-bottom: 25px">
+                    <div class="ui-g-6 ui-md-6 ui-sm-12" style="margin-bottom: 25px">
                         <span class="md-inputfield">
-                            <input
-                                    type="text"
-                                    name="firstNameUser"
-                                    #firstNameUser='ngModel'
-                                    maxlength="50"
-                                    [(ngModel)]="user.firstName"
-                                    pInputText required/>
+                            <input type="text" name="firstNameUser" #firstNameUser='ngModel' maxlength="50"
+                                [(ngModel)]="user.firstName" pInputText required />
                             <label>Primeiro Nome *</label>
                             <div *ngIf="editForm.controls['firstNameUser']
                               && !editForm.controls['firstNameUser'].valid
                               && (editForm.controls['firstNameUser'].touched
-                              || editForm.submitted)"
-                               class="ui-message ui-messages-error">
-                                Campo obrigatório.
-                            </div>
-                        </span>
-					</div>
-					<div class="ui-g-6 ui-md-6 ui-sm-12" style="margin-bottom: 25px">
-                        <span class="md-inputfield">
-                            <input
-                                    type="text"
-                                    name="lastNameUser"
-                                    maxlength="50"
-                                    #lastNameUser='ngModel'
-                                    [(ngModel)]="user.lastName"
-                                    pInputText required/>
-                            <label >Último Nome *</label>
-                            <div *ngIf="editForm.controls['lastNameUser']
-                            && !editForm.controls['lastNameUser'].valid
-                            && (editForm.controls['lastNameUser'].touched
-                            || editForm.submitted)"
-                                 class="ui-message ui-messages-error" >
+                              || editForm.submitted)" class="ui-message ui-messages-error">
                                 Campo obrigatório.
                             </div>
                         </span>
                     </div>
                     <div class="ui-g-6 ui-md-6 ui-sm-12" style="margin-bottom: 25px">
                         <span class="md-inputfield">
-                            <input [disabled]="this.desabilitado()" type="text" name="loginUser" maxlength="255" [(ngModel)]="user.login" #loginUser='ngModel' pInputText required/>
-                            <label >Login *</label>
+                            <input type="text" name="lastNameUser" maxlength="50" #lastNameUser='ngModel'
+                                [(ngModel)]="user.lastName" pInputText required />
+                            <label>Último Nome *</label>
+                            <div *ngIf="editForm.controls['lastNameUser']
+                            && !editForm.controls['lastNameUser'].valid
+                            && (editForm.controls['lastNameUser'].touched
+                            || editForm.submitted)" class="ui-message ui-messages-error">
+                                Campo obrigatório.
+                            </div>
+                        </span>
+                    </div>
+                    <div class="ui-g-6 ui-md-6 ui-sm-12" style="margin-bottom: 25px">
+                        <span class="md-inputfield">
+                            <input [disabled]="this.desabilitado()" type="text" name="loginUser" maxlength="255"
+                                [(ngModel)]="user.login" #loginUser='ngModel' pInputText required />
+                            <label>Login *</label>
                             <div *ngIf="editForm.controls['loginUser']
                                     && !this.desabilitado()
                                     && !editForm.controls['loginUser'].valid
                                     && (editForm.controls['loginUser'].touched
-                                    || editForm.submitted)"
-                                    class="ui-message ui-messages-error" >
+                                    || editForm.submitted)" class="ui-message ui-messages-error">
                                 Campo obrigatório.
                             </div>
                         </span>
@@ -60,119 +48,83 @@
 
                     <div class="ui-g-6 ui-md-6 ui-sm-12" style="margin-bottom: 25px">
                         <span class="md-inputfield">
-                            <input type="email"
-                                    name="email"
-                                    [(ngModel)]="user.email"
-                                    pInputText
-                                    maxlength="100"
-                                    #email='ngModel'
-                                    required email/>
+                            <input type="email" name="email" [(ngModel)]="user.email" pInputText maxlength="100"
+                                #email='ngModel' required email />
                             <label>E-mail *</label>
                             <div *ngIf="editForm.controls['email']
                                     && !editForm.controls['email'].valid
                                     && this.user.email
                                     && (editForm.controls['email'].touched
-                                    || editForm.submitted)"
-                                    class="ui-message ui-messages-error">
-                                    Email Inválido
+                                    || editForm.submitted)" class="ui-message ui-messages-error">
+                                Email Inválido
                             </div>
                             <div *ngIf="editForm.controls['email']
                                 && !this.desabilitado()
                                 && !editForm.controls['email'].valid
                                 && !this.user.email
                                 && (editForm.controls['email'].touched
-                                || editForm.submitted)"
-                                class="ui-message ui-messages-error">
+                                || editForm.submitted)" class="ui-message ui-messages-error">
                                 Campo obrigatório.
                             </div>
                         </span>
                     </div>
                     <div class="ui-g-6 ui-md-6 ui-sm-12" style="margin-bottom: 25px">
-						<div class="ui-g">
-							<div class="ui-g-12 ui-md-4">
-								<label>Ativo</label>
-							</div>
-							<div class="ui-g-12 ui-md-4">
-								<p-radioButton name="user_ativo"
-								               [disabled]="this.desabilitado()"
-								               [value]="true"
-								               label="Sim"
-								               [(ngModel)]="user.activated">
-								</p-radioButton>
-							</div>
-							<div class="ui-g-12 ui-md-4">
-								<p-radioButton name="user_ativo"
-								               [disabled]="this.desabilitado()"
-								               [value]="false"
-								               label="Não"
-								               [(ngModel)]="user.activated">
-								</p-radioButton>
-							</div>
-						</div>
-					</div>
-                    <div class="ui-g-6 ui-md-6 ui-sm-12" style="margin-bottom: 25px">
-                        <span>
-                            <h3 class="first">Perfil *</h3>
-                            <p-multiSelect
-                                    [disabled]="this.desabilitado()"
-                                    name="authoritiesMultiselect"
-                                    defaultLabel="Selecione ao menos um perfil"
-                                    [options]="authorities"
-                                    [(ngModel)]="user.authorities"
-                                    dataKey="artificialId"
-                                    optionLabel="description"
-                                    selectedItemsLabel="{0} perfis selecionados"
-                                    #authoritiesMultiselect='ngModel'
-                                    required>
-                            </p-multiSelect>
-                            <div *ngIf="editForm.controls['authoritiesMultiselect']
-                                && !this.desabilitado()
-                                && !editForm.controls['authoritiesMultiselect'].valid
-                                && (editForm.controls['authoritiesMultiselect'].touched
-                                || editForm.submitted)">
-                                <span style="color: red">Campo obrigatório.</span>
+                        <div class="ui-g">
+                            <div class="ui-g-12 ui-md-4">
+                                <label>Ativo</label>
                             </div>
-                        </span>
-                    </div>
-					<div class="ui-g-6 ui-md-6 ui-sm-12" style="margin-bottom: 25px">
-                        <span>
-                            <h3 class="first">Organização *</h3>
-                            <p-multiSelect
-                                    (onChange)="setOrganizacao($event.value)"
-                                    [disabled]="this.desabilitado()"
-                                    name="organizacoesMultiSelect"
-                                    [options]="organizacoes"
-                                    [(ngModel)]="user.organizacoes"
-                                    dataKey="id"
-                                    defaultLabel="Selecione ao menos uma Organização"
-                                    optionLabel="nome"
-                                    selectedItemsLabel="{0} organizações selecionadas"
-                                    #organizacoesMultiSelect='ngModel'
-                                    required>
-                            </p-multiSelect>
-                            <div *ngIf="editForm.controls['organizacoesMultiSelect']
-                                && !this.desabilitado()
-                                && !editForm.controls['organizacoesMultiSelect'].valid
-                                && (editForm.controls['organizacoesMultiSelect'].touched
-                                || editForm.submitted)">
-                                <span style="color: red">Campo obrigatório.</span>
+                            <div class="ui-g-12 ui-md-4">
+                                <p-radioButton name="user_ativo" [disabled]="this.desabilitado()" [value]="true"
+                                    label="Sim" [(ngModel)]="user.activated">
+                                </p-radioButton>
                             </div>
-                        </span>
+                            <div class="ui-g-12 ui-md-4">
+                                <p-radioButton name="user_ativo" [disabled]="this.desabilitado()" [value]="false"
+                                    label="Não" [(ngModel)]="user.activated">
+                                </p-radioButton>
+                            </div>
+                        </div>
                     </div>
+
+                    <div class="ui-g">
+                        <h4 style="margin-bottom: 0px; margin-top: 0px;">Organizações e Perfis*</h4>
+                        <div class="ui-g ui-md-12" style="justify-content: flex-end">
+                            <div class="ui-g-2 ui-md-3 ui-sm-12">
+                                <app-blue-button [buttonLabel]="'Adicionar'" buttonIcon="ui-icon-add"
+                                    id="idBtnOrgPerfilFormUsuario" (click)="abrirDialogOrgPerfil()">
+                                </app-blue-button>
+                            </div>
+                        </div>
+                        <!-- Datatable Org-Perfil -->
+                        <basis-datatable type="memory" [value]="user.perfilOrganizacoes" [disableView]="true" (click)="selectColumn()"
+                            (buttonClick)="datatableClickOrgPerfil($event)" [disableEdit]="true"
+                            [enableButtonsScroll]="true"
+                            [enableScroll]="true"
+                            [scrollHeight]="'500px'"
+                            [rowsPerPageOptions]="rowsPerPageOptions"
+                            [rows]="20" #tables>
+                            <p-column header="Organização" field="organizacoes" [sortable]="true">
+                                <ng-template let-row="rowData" pTemplate="body">
+                                    <li *ngFor="let org of row.organizacoes">
+                                        {{ org.nome }}
+                                    </li>
+                                </ng-template>
+                            </p-column>
+                            <p-column header="Perfil"  field="perfil" [sortable]="true">
+                                <ng-template let-row="rowData" pTemplate="body">
+                                    {{row.perfil.nome}}
+                                </ng-template>
+                            </p-column>
+                        </basis-datatable>
+                    </div>
+
                     <div class="ui-g-6 ui-md-6 ui-sm-12" style="margin-bottom: 25px">
                         <span>
                             <h3 class="first">Equipe *</h3>
-                            <p-multiSelect
-                                    [disabled]="this.disableEquipeDropdown()"
-                                    name="equipesMultiSelect"
-                                    [(options)]="tipoEquipes"
-                                    [(ngModel)]="user.tipoEquipes"
-                                    dataKey="id"
-                                    defaultLabel="Selecione ao menos uma equipe"
-                                    optionLabel="nome"
-                                    selectedItemsLabel="{0} equipes selecionadas"
-                                    #equipesMultiSelect='ngModel'
-                                    required>
+                            <p-multiSelect [disabled]="this.disableEquipeDropdown()" name="equipesMultiSelect"
+                                [(options)]="tipoEquipes" [(ngModel)]="user.tipoEquipes" dataKey="id"
+                                defaultLabel="Selecione ao menos uma equipe" optionLabel="nome"
+                                selectedItemsLabel="{0} equipes selecionadas" #equipesMultiSelect='ngModel' required>
                             </p-multiSelect>
                             <div *ngIf="editForm.controls['equipesMultiSelect']
                                     && !this.desabilitado() && !this.disableEquipeDropdown()
@@ -186,15 +138,56 @@
                 </div>
                 <div class="ui-g" style="justify-content: center; margin-top: 25px;">
                     <div class="ui-g-2 ui-md-2 ui-sm-12" *ngIf="this.isAdmin">
-                        <app-white-button buttonLabel="Cancelar"
-                                            routerLink="/admin/user"></app-white-button>
+                        <app-white-button buttonLabel="Cancelar" routerLink="/admin/user"></app-white-button>
                     </div>
                     <div class="ui-g-2 ui-md-2 ui-sm-12">
-                        <app-submit-button buttonLabel="Salvar" 
-                                           [disabled]="editForm.form.invalid || isSaving"></app-submit-button>
+                        <app-submit-button buttonLabel="Salvar" [disabled]="editForm.form.invalid || isSaving">
+                        </app-submit-button>
                     </div>
                 </div>
-			</form>
-		</div>
-	</div>
+            </form>
+        </div>
+    </div>
 </div>
+
+<p-dialog header="Organização - Perfil" [(visible)]="mostrarDialogOrgPerfil" [style]="{width: '35vw'}"
+    [contentStyle]="{'overflow':'visible'}" #dialogPerfilOrg>
+    <div class="ui-g-12 ui-md-12 ui-sm-12" style="margin-bottom: 25px">
+        <span>
+            <h3 class="first">Organização *</h3>
+            <p-multiSelect [appendTo]="dialogPerfilOrg"  [disabled]="this.desabilitado()"
+                name="organizacoesMultiSelect" [options]="organizacoesOptions" [(ngModel)]="organizacoesSelecionada"
+                defaultLabel="Selecione ao menos uma Organização"
+                selectedItemsLabel="{0} organizações selecionadas" #organizacoesMultiSelect='ngModel' required>
+            </p-multiSelect>
+        </span>
+    </div>
+    <div class="ui-g-12 ui-md-12 ui-sm-12" style="margin-bottom: 25px">
+        <span>
+            <h3 class="first">Perfil *</h3>
+            <p-dropdown [appendTo]="dialogPerfilOrg" name="perfisDropdown" [options]="perfils" [(ngModel)]="perfilNovo"
+                [placeholder]="'Selecione um perfil'"
+                optionLabel="nome" #perfisDropdown='ngModel' required>
+            </p-dropdown>
+        </span>
+    </div>
+    <div class="ui-g ui-md-12" style="justify-content: flex-end; padding-top: 25px">
+        <div class="ui-g-2 ui-md-2 ui-sm-12">
+            <app-white-button [buttonLabel]="'Cancelar'" id="idBtnCancelarOrgPerfilSaveFormUsuario"
+                (click)="fecharDialogOrgPerfil()">
+            </app-white-button>
+        </div>
+
+        <div class="ui-g-2 ui-md-2 ui-sm-12">
+            <app-green-button [buttonLabel]="'Salvar'" id="idSalvarOrgPerfilSaveFormUsuario"
+                (click)="adicionarOrgPerfil()">
+            </app-green-button>
+        </div>
+    </div>
+</p-dialog>
+<p-confirmDialog [header]="this.getLabel('Confirmação')" #dialog>
+    <p-footer>
+        <button type="button" pButton icon="fa-close" [label]="this.getLabel('Não')" (click)="dialog.reject()"></button>
+        <button type="button" pButton icon="fa-check" [label]="this.getLabel('Sim')" (click)="dialog.accept()"></button>
+    </p-footer>
+</p-confirmDialog>

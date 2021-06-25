@@ -34,10 +34,13 @@ public class SistemaService extends BaseService {
     private final SistemaSearchRepository sistemaSearchRepository;
     private final DynamicExportsService dynamicExportsService;
 
-    public SistemaService(SistemaRepository sistemaRepository, SistemaSearchRepository sistemaSearchRepository, DynamicExportsService dynamicExportsService) {
+    private final ModelMapper modelMapper;
+
+    public SistemaService(SistemaRepository sistemaRepository, SistemaSearchRepository sistemaSearchRepository, DynamicExportsService dynamicExportsService, ModelMapper modelMapper) {
         this.sistemaRepository = sistemaRepository;
         this.sistemaSearchRepository = sistemaSearchRepository;
         this.dynamicExportsService = dynamicExportsService;
+        this.modelMapper = modelMapper;
     }
 
     @Transactional(readOnly = true)
@@ -65,11 +68,11 @@ public class SistemaService extends BaseService {
     }
 
     public Sistema convertToEntity(SistemaListDTO sistemaListDTO) {
-        return new ModelMapper().map(sistemaListDTO, Sistema.class);
+        return modelMapper.map(sistemaListDTO, Sistema.class);
     }
 
     public SistemaListDTO convertToAnaliseEditDTO(Sistema sistema) {
-        return new ModelMapper().map(sistema, SistemaListDTO.class);
+        return modelMapper.map(sistema, SistemaListDTO.class);
     }
 
 
@@ -83,7 +86,7 @@ public class SistemaService extends BaseService {
             BoolQueryBuilder qb = bindFilterSearch(filtro.getNome(), filtro.getSigla(), filtro.getNumeroOcorrencia(), organizacoes != null ? filtro.getOrganizacao().toArray(organizacoes) : null);
             SearchQuery searchQuery = new NativeSearchQueryBuilder().withQuery(qb).withPageable(dynamicExportsService.obterPageableMaximoExportacao()).build();
             Page<Sistema> page = sistemaSearchRepository.search(searchQuery);
-  
+
             byteArrayOutputStream = dynamicExportsService.export(new RelatorioSistemaColunas(), page, tipoRelatorio, Optional.empty(), Optional.ofNullable(AbacoUtil.REPORT_LOGO_PATH), Optional.ofNullable(AbacoUtil.getReportFooter()));
         } catch (DRException | ClassNotFoundException | JRException | NoClassDefFoundError e) {
             throw new RelatorioException(e);

@@ -3,13 +3,13 @@ import { FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
 import { DatatableClickEvent, DatatableComponent, PageNotificationService } from '@nuvem/primeng-components';
 import { ConfirmationService } from 'primeng';
-import { Manual } from '../manual.model';
+import { Manual, SearchGroup } from '../manual.model';
 import { ManualService } from '../manual.service';
 import { ElasticQuery } from 'src/app/shared/elastic-query';
 import { FatorAjuste } from 'src/app/fator-ajuste';
 import { EsforcoFase } from 'src/app/esforco-fase';
 import { MessageUtil } from 'src/app/util/message.util';
-import { SearchGroup } from '..';
+import { AuthService } from 'src/app/util/auth.service';
 
 @Component({
     selector: 'app-manual',
@@ -41,7 +41,7 @@ export class ManualListComponent implements OnInit {
         {value: 'parametroConversao',  label: 'Conversão'},
         {value: 'observacao',  label: 'Observação'},
     ];
-    
+
     columnsVisible = [
         'nome',
         'valorVariacaoEstimada',
@@ -52,14 +52,23 @@ export class ManualListComponent implements OnInit {
         'parametroConversao',
         'observacao'];
       private lastColumn: any[] = [];
-      
+
       manualFiltro : SearchGroup = new SearchGroup();
+
+    canPesquisar: boolean = false;
+    canCadastrar: boolean = false;
+    canEditar: boolean = false;
+    canConsultar: boolean = false;
+    canDeletar: boolean = false;
+    canClonar: boolean = false;
+    canExportarFatorAjuste: boolean = false;
 
     constructor(
         private router: Router,
         private manualService: ManualService,
         private confirmationService: ConfirmationService,
         private pageNotificationService: PageNotificationService,
+        private authService: AuthService
     ) {
     }
 
@@ -74,6 +83,31 @@ export class ManualListComponent implements OnInit {
                 this.manualSelecionado = undefined;
             });
         }
+        this.verificarPermissoes();
+    }
+
+    verificarPermissoes(){
+        if (this.authService.possuiRole(AuthService.PREFIX_ROLE + "MANUAL_EDITAR") == true) {
+            this.canEditar = true;
+        }
+        if (this.authService.possuiRole(AuthService.PREFIX_ROLE + "MANUAL_CONSULTAR") == true) {
+            this.canConsultar = true;
+        }
+        if (this.authService.possuiRole(AuthService.PREFIX_ROLE + "MANUAL_PESQUISAR") == true) {
+            this.canPesquisar = true;
+        }
+        if (this.authService.possuiRole(AuthService.PREFIX_ROLE + "MANUAL_EXCLUIR") == true) {
+            this.canDeletar = true;
+        }
+        if (this.authService.possuiRole(AuthService.PREFIX_ROLE + "MANUAL_CLONAR") == true) {
+            this.canClonar = true;
+        }
+        if (this.authService.possuiRole(AuthService.PREFIX_ROLE + "MANUAL_EXPORTAR_FATOR_AJUSTE") == true) {
+            this.canExportarFatorAjuste = true;
+        }
+        if (this.authService.possuiRole(AuthService.PREFIX_ROLE + "MANUAL_CADASTRAR") == true) {
+            this.canCadastrar = true;
+        }
     }
 
     getLabel(label) {
@@ -81,6 +115,9 @@ export class ManualListComponent implements OnInit {
     }
 
     public onRowDblclick(event) {
+        if (this.authService.possuiRole(AuthService.PREFIX_ROLE + "MANUAL_EDITAR") == false) {
+            return false;
+        }
         if (event.target.nodeName === 'TD') {
             this.abrirEditar(this.manualSelecionado);
         } else if (event.target.parentNode.nodeName === 'TD') {
@@ -217,7 +254,8 @@ export class ManualListComponent implements OnInit {
         if (!(this.datatable && this.datatable.selectedRow)) {
             return this.getLabel('Selecione um registro para gerar o relatório');
         }
-        return this.getLabel('Relatório Fator Ajuste');
+
+        return this.getLabel('Guia de Métricas');
     }
 
     mostrarColunas(event) {
@@ -229,7 +267,7 @@ export class ManualListComponent implements OnInit {
             this.pageNotificationService.addErrorMessage('Não é possível exibir menos de uma coluna');
         }
     }
-    
+
     updateVisibleColumns(columns) {
         this.allColumnsTable.forEach(col => {
             if (this.visibleColumnCheck(col.value, columns)) {
@@ -239,11 +277,15 @@ export class ManualListComponent implements OnInit {
             }
         });
     }
-    
+
     visibleColumnCheck(column: string, visibleColumns: any[]) {
         return visibleColumns.some((item: any) => {
             return (item) ? item === column : true;
         });
     }
 
+
+    criarManual(){
+        this.router.navigate(["/manual/new"])
+    }
 }

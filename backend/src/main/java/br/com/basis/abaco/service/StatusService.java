@@ -32,10 +32,13 @@ public class StatusService {
     private final StatusSearchRepository statusSearchRepository;
     private final DynamicExportsService dynamicExportsService;
 
-    public StatusService(StatusRepository statusRepository, StatusSearchRepository statusSearchRepository, DynamicExportsService dynamicExportsService) {
+    private final ModelMapper modelMapper;
+
+    public StatusService(StatusRepository statusRepository, StatusSearchRepository statusSearchRepository, DynamicExportsService dynamicExportsService, ModelMapper modelMapper) {
         this.statusRepository = statusRepository;
         this.statusSearchRepository = statusSearchRepository;
         this.dynamicExportsService = dynamicExportsService;
+        this.modelMapper = modelMapper;
     }
 
     @Transactional(readOnly = true)
@@ -57,10 +60,10 @@ public class StatusService {
         return statusRepository.findAll();
     }
     public StatusDTO convertToDto(Status status) {
-        return new ModelMapper().map(status, StatusDTO.class);
+        return modelMapper.map(status, StatusDTO.class);
     }
     public Status convertToEntity(StatusDTO statusDTO) {
-        return new ModelMapper().map(statusDTO, Status.class);
+        return modelMapper.map(statusDTO, Status.class);
     }
     public Status setEntityToElatischSearch(Status status){
         return convertToEntity(convertToDto(status));

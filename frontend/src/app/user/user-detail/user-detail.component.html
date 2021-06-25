@@ -21,29 +21,26 @@
           <div class="ui-g-4"></div>
 
           <div class="ui-g-6" style="margin-bottom: 25px">
-            <h3 class="first">Perfil</h3>
+            <h3 class="first">Perfil-Organização</h3>
             <basis-datatable
                 type="memory"
-                [value]="user.authorities"
+                [value]="user.perfilOrganizacoes"
                 disableEdit="true"
                 disableView="true"
                 disableDelete="true"
                 disableClone="true">
-              <p-column field="description" header="Nome"></p-column>
-            </basis-datatable>
-          </div>
-
-          <div class="ui-g-6" style="margin-bottom: 25px">
-            <h3 class="first" >Organização</h3>
-            <basis-datatable 
-                  type="memory"
-                  [value]="user.organizacoes"
-                  disableEdit="true"
-                  disableView="true"
-                  disableDelete="true"
-                  disableClone="true"
-                  >
-              <p-column field="nome" header="Nome"></p-column>
+                <p-column header="Organização" field="organizacoes" [sortable]="true">
+                    <ng-template let-row="rowData" pTemplate="body">
+                        <li *ngFor="let org of row.organizacoes">
+                            {{ org.nome }}
+                        </li>
+                    </ng-template>
+                </p-column>
+                <p-column header="Perfil"  field="perfil" [sortable]="true">
+                    <ng-template let-row="rowData" pTemplate="body">
+                        {{row.perfil.nome}}
+                    </ng-template>
+                </p-column>
             </basis-datatable>
           </div>
 

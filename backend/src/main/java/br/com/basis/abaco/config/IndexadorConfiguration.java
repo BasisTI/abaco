@@ -17,11 +17,15 @@ import br.com.basis.abaco.domain.ManualContrato;
 import br.com.basis.abaco.domain.Modulo;
 import br.com.basis.abaco.domain.Nomenclatura;
 import br.com.basis.abaco.domain.Organizacao;
+import br.com.basis.abaco.domain.Perfil;
 import br.com.basis.abaco.domain.Rlr;
 import br.com.basis.abaco.domain.Sistema;
 import br.com.basis.abaco.domain.Status;
 import br.com.basis.abaco.domain.TipoEquipe;
 import br.com.basis.abaco.domain.User;
+import br.com.basis.abaco.domain.VwAlr;
+import br.com.basis.abaco.domain.VwDer;
+import br.com.basis.abaco.domain.VwRlr;
 import br.com.basis.abaco.domain.enumeration.IndexadoresUtil;
 import br.com.basis.abaco.repository.AlrRepository;
 import br.com.basis.abaco.repository.AnaliseRepository;
@@ -40,18 +44,17 @@ import br.com.basis.abaco.repository.ManualRepository;
 import br.com.basis.abaco.repository.ModuloRepository;
 import br.com.basis.abaco.repository.NomenclaturaRepository;
 import br.com.basis.abaco.repository.OrganizacaoRepository;
+import br.com.basis.abaco.repository.PerfilRepository;
 import br.com.basis.abaco.repository.RlrRepository;
 import br.com.basis.abaco.repository.SistemaRepository;
 import br.com.basis.abaco.repository.StatusRepository;
 import br.com.basis.abaco.repository.TipoEquipeRepository;
 import br.com.basis.abaco.repository.UserRepository;
-import br.com.basis.abaco.repository.search.AlrSearchRepository;
 import br.com.basis.abaco.repository.search.AnaliseSearchRepository;
 import br.com.basis.abaco.repository.search.BaseLineAnaliticoFDSearchRepository;
 import br.com.basis.abaco.repository.search.BaseLineAnaliticoFTSearchRepository;
 import br.com.basis.abaco.repository.search.BaseLineSinteticoSearchRepository;
 import br.com.basis.abaco.repository.search.ContratoSearchRepository;
-import br.com.basis.abaco.repository.search.DerSearchRepository;
 import br.com.basis.abaco.repository.search.EsforcoFaseSearchRepository;
 import br.com.basis.abaco.repository.search.FatorAjusteSearchRepository;
 import br.com.basis.abaco.repository.search.FuncaoDadosSearchRepository;
@@ -62,11 +65,14 @@ import br.com.basis.abaco.repository.search.ManualSearchRepository;
 import br.com.basis.abaco.repository.search.ModuloSearchRepository;
 import br.com.basis.abaco.repository.search.NomenclaturaSearchRepository;
 import br.com.basis.abaco.repository.search.OrganizacaoSearchRepository;
-import br.com.basis.abaco.repository.search.RlrSearchRepository;
+import br.com.basis.abaco.repository.search.PerfilSearchRepository;
 import br.com.basis.abaco.repository.search.SistemaSearchRepository;
 import br.com.basis.abaco.repository.search.StatusSearchRepository;
 import br.com.basis.abaco.repository.search.TipoEquipeSearchRepository;
 import br.com.basis.abaco.repository.search.UserSearchRepository;
+import br.com.basis.abaco.repository.search.VwAlrSearchRepository;
+import br.com.basis.abaco.repository.search.VwDerSearchRepository;
+import br.com.basis.abaco.repository.search.VwRlrSearchRepository;
 import br.com.basis.abaco.service.Indexador;
 import br.com.basis.abaco.service.IndexadorComMapper;
 import br.com.basis.abaco.service.IndexadorSemMapper;
@@ -74,11 +80,15 @@ import br.com.basis.abaco.service.dto.AnaliseDTO;
 import br.com.basis.abaco.service.dto.SistemaListDTO;
 import br.com.basis.abaco.service.dto.TipoEquipeDTO;
 import br.com.basis.abaco.service.dto.UserEditDTO;
+import br.com.basis.abaco.service.mapper.AlrMapper;
 import br.com.basis.abaco.service.mapper.AnaliseMapper;
+import br.com.basis.abaco.service.mapper.DerMapper;
+import br.com.basis.abaco.service.mapper.RlrMapper;
 import br.com.basis.abaco.service.mapper.SistemaElasticSearchMapper;
 import br.com.basis.abaco.service.mapper.TipoEquipeMapper;
 import br.com.basis.abaco.service.mapper.UserElasticSearchMapper;
 import lombok.AllArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.elasticsearch.core.ElasticsearchTemplate;
@@ -88,6 +98,7 @@ import org.springframework.data.elasticsearch.core.ElasticsearchTemplate;
 public class IndexadorConfiguration {
 
     private ElasticsearchTemplate elasticsearchTemplate;
+    private ModelMapper modelMapper;
 
     private AnaliseRepository analiseRepository;
     private AlrRepository alrRepository;
@@ -111,13 +122,14 @@ public class IndexadorConfiguration {
     private BaseLineSinteticoRepository baseLineSinteticoRepository;
     private StatusRepository statusRepository;
     private NomenclaturaRepository nomenclaturaRepository;
+    private PerfilRepository perfilRepository;
 
     private AnaliseSearchRepository analiseSearchRepository;
-    private AlrSearchRepository alrSearchRepository;
+    private VwAlrSearchRepository vwAlrSearchRepository;
     private UserSearchRepository userSearchRepository;
     private SistemaSearchRepository sistemaSearchRepository;
     private ContratoSearchRepository contratoSearchRepository;
-    private DerSearchRepository derSearchRepository;
+    private VwDerSearchRepository vwDerSearchRepository;
     private EsforcoFaseSearchRepository esforcoFaseSearchRepository;
     private FatorAjusteSearchRepository fatorAjusteSearchRepository;
     private FuncaoDadosSearchRepository funcaoDadosSearchRepository;
@@ -127,13 +139,14 @@ public class IndexadorConfiguration {
     private ManualContratoSearchRepository manualContratoSearchRepository;
     private ModuloSearchRepository moduloSearchRepository;
     private OrganizacaoSearchRepository organizacaoSearchRepository;
-    private RlrSearchRepository rlrSearchRepository;
+    private VwRlrSearchRepository vwRlrSearchRepository;
     private TipoEquipeSearchRepository tipoEquipeSearchRepository;
     private BaseLineAnaliticoFDSearchRepository baseLineAnaliticoFDSearchRepository;
     private BaseLineAnaliticoFTSearchRepository baseLineAnaliticoFTSearchRepository;
     private BaseLineSinteticoSearchRepository baseLineSinteticoSearchRepository;
     private StatusSearchRepository statusSearchRepository;
     private NomenclaturaSearchRepository nomenclaturaSearchRepository;
+    private PerfilSearchRepository perfilSearchRepository;
 
     @Bean
     public Indexador indexadorUser() {
@@ -162,11 +175,12 @@ public class IndexadorConfiguration {
         return indexador;
     }
 
-
     @Bean
     public Indexador indexadorAlr() {
-        IndexadorSemMapper<Alr, Long> indexador = new IndexadorSemMapper<>(alrRepository,
-            alrSearchRepository, elasticsearchTemplate);
+        AlrMapper alrMapper = new AlrMapper(alrRepository);
+        IndexadorComMapper<VwAlr, VwAlr, Long, Alr> indexador = new IndexadorComMapper<>(vwAlrSearchRepository,
+            alrMapper,
+            elasticsearchTemplate);
         indexador.setCodigo(IndexadoresUtil.ALR.name());
         indexador.setDescricao(IndexadoresUtil.ALR.label);
         return indexador;
@@ -195,8 +209,10 @@ public class IndexadorConfiguration {
 
     @Bean
     public Indexador indexadorDer() {
-        IndexadorSemMapper<Der, Long> indexador = new IndexadorSemMapper<>(derRepository,
-            derSearchRepository, elasticsearchTemplate);
+        DerMapper derMapper = new DerMapper(derRepository);
+        IndexadorComMapper<VwDer, VwDer, Long, Der> indexador = new IndexadorComMapper<>(vwDerSearchRepository
+            , derMapper
+            , elasticsearchTemplate);
         indexador.setCodigo(IndexadoresUtil.DER.name());
         indexador.setDescricao(IndexadoresUtil.DER.label);
         return indexador;
@@ -284,9 +300,20 @@ public class IndexadorConfiguration {
     }
 
     @Bean
+    public Indexador indexadorPerfil() {
+        IndexadorSemMapper<Perfil, Long> indexador = new IndexadorSemMapper<>(perfilRepository,
+            perfilSearchRepository, elasticsearchTemplate);
+        indexador.setCodigo(IndexadoresUtil.PERFIL.name());
+        indexador.setDescricao(IndexadoresUtil.PERFIL.label);
+        return indexador;
+    }
+
+    @Bean
     public Indexador indexadorRlr() {
-        IndexadorSemMapper<Rlr, Long> indexador = new IndexadorSemMapper<>(rlrRepository,
-            rlrSearchRepository, elasticsearchTemplate);
+        RlrMapper rlrMapper = new RlrMapper(rlrRepository);
+        IndexadorComMapper<VwRlr, VwRlr, Long, Rlr> indexador = new IndexadorComMapper<>(vwRlrSearchRepository,
+            rlrMapper,
+            elasticsearchTemplate);
         indexador.setCodigo(IndexadoresUtil.RLR.name());
         indexador.setDescricao(IndexadoresUtil.RLR.label);
         return indexador;
