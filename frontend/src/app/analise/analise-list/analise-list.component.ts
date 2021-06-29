@@ -95,6 +95,10 @@ export class AnaliseListComponent implements OnInit {
     public equipeToClone?: TipoEquipe;
     public statusToChange?: Status;
 
+    analisesSelecionadasEmLote: Analise[] = [];
+    analisesBlocks: Analise[] = [];
+    dataHomologacaoAnalises;
+
     public changeOrderAnalise;
 
     translateSusbscriptions: Subscription[] = [];
@@ -394,7 +398,7 @@ export class AnaliseListComponent implements OnInit {
         }
     }
 
-    clonarEquipe(){
+    clonarEquipe() {
         if (this.analiseSelecionada.clonadaParaEquipe == true) {
             if (this.analiseSelecionada.analiseClonadaParaEquipe?.id != null && this.analiseSelecionada.analiseClonadaParaEquipe?.id != undefined) {
                 let msgStart = this.analiseSelecionada.analiseClonou === true ? "Esta análise já clonou para equipe. " : "Está análise já foi clonada para equipe. ";
@@ -412,7 +416,7 @@ export class AnaliseListComponent implements OnInit {
         this.openModalCloneAnaliseEquipe(this.analiseSelecionada.id);
     }
 
-    gerarDivergencia(){
+    gerarDivergencia() {
         if (this.analiseSelecionada.id) {
             this.confirmDivergenceGenerate(this.analiseSelecionada);
         } else {
@@ -446,48 +450,8 @@ export class AnaliseListComponent implements OnInit {
             case 'delete':
                 this.confirmDelete(event.selection);
                 break;
-            // case 'relatorioBrowser':
-            //     this.geraRelatorioPdfBrowser(event.selection);
-            //     break;
-            // case 'relatorioArquivo':
-            //     this.gerarRelatorioPdfArquivo(event.selection);
-            //     break;
-            // case 'relatorioBrowserDetalhado':
-            //     this.geraRelatorioPdfDetalhadoBrowser(event.selection);
-            //     break;
-            // case 'relatorioExcelDetalhado':
-            //     this.gerarRelatorioExcel(event.selection);
-            //     break;
-            // case 'clone':
-            //     this.clonar(event.selection.id);
-            //     break;
-            // case 'geraBaselinePdfBrowser':
-            //     this.geraBaselinePdfBrowser();
-            //     break;
-            // case 'cloneParaEquipe':
-            //     //Está em uma função 'clonarEquipe()'
-            //     break;
-            // case 'compartilhar':
-            //     this.compartilharAnalise();
-            //     break;
-            // case 'relatorioAnaliseContagem':
-            //     this.gerarRelatorioContagem(event.selection);
-            //     break;
-            // case 'changeStatus':
-            //     this.openModalChangeStatus(event.selection.id);
-            //     break;
-            // case 'generateDivergence':
-            //     if (event.selection.id) {
-            //         this.confirmDivergenceGenerate(event.selection);
-            //     } else {
-            //         this.openModalDivergence(event.selection);
-            //     }
-            //     break;
             // case 'exportJson':
             //     this.exportarAnalise(event.selection);
-            //     break;
-            // case 'importExcel':
-            //     this.openModalExportarExcel(event.selection);
             //     break;
         }
     }
@@ -621,10 +585,12 @@ export class AnaliseListComponent implements OnInit {
     }
 
     public selectAnalise() {
+
         if (this.datatable && this.datatable.selectedRow) {
             this.inicial = true;
-            if (this.datatable.selectedRow && this.datatable.selectedRow[0]) {
+            if (this.datatable.selectedRow) {
                 this.analiseSelecionada = this.datatable.selectedRow[0];
+                this.analisesSelecionadasEmLote = this.datatable.selectedRow;
                 this.blocked = this.datatable.selectedRow[0].bloqueiaAnalise;
                 this.verificarBotoes(this.analiseSelecionada);
             }
@@ -719,51 +685,78 @@ export class AnaliseListComponent implements OnInit {
         return !this.datatable;
     }
 
-    public bloqueiaAnalise(bloquear: boolean) {
-        this.analiseService.find(this.analiseSelecionada.id).subscribe((res) => {
-            this.analiseTemp = new Analise().copyFromJSON(res);
-            let canBloqued = false;
-            if (this.tipoEquipesLoggedUser) {
-                this.tipoEquipesLoggedUser.forEach(equipe => {
-                    if (equipe.id === this.analiseTemp.equipeResponsavel.id) {
-                        canBloqued = true;
-                    }
-                });
+    public async bloqueiaAnalise(bloquear: boolean) {
+        let analisesBloq: Analise[] = [];
+        this.analisesSelecionadasEmLote.forEach(analise => {
+            if (PerfilService.consultarPerfilAnalise("ANALISE", "BLOQUEAR_DESBLOQUEAR", this.perfisOrganizacao, analise)) {
+                analisesBloq.push(analise);
             }
-            if (canBloqued) {
-                if (!this.analiseTemp.dataHomologacao && !bloquear) {
-                    this.analiseTemp.dataHomologacao = new Date();
-                    this.showDialogAnaliseBlock = true;
-                } else {
-                    this.confirmationService.confirm({
-                        message: this.mensagemDialogBloquear(bloquear),
-                        accept: () => {
-                            this.alterAnaliseBlock();
+        })
+        for (let i = 0; i < analisesBloq.length; i++) {
+            const analise = analisesBloq[i];
+            this.analiseService.find(analise.id).subscribe((res) => {
+                let analiseTemp = new Analise().copyFromJSON(res);
+                if (this.tipoEquipesLoggedUser) {
+                    for (let j = 0; j < this.tipoEquipesLoggedUser.length; j++) {
+                        const equipe = this.tipoEquipesLoggedUser[j];
+                        if (equipe.id === analiseTemp.equipeResponsavel.id && analiseTemp.bloqueiaAnalise === bloquear) {
+                            this.analisesBlocks.push(analiseTemp);
                         }
-                    });
+                    }
                 }
-            } else {
-                this.pageNotificationService.addErrorMessage(this.getLabel('Somente membros da equipe responsável podem excluir esta análise!'));
-            }
-        },
-            err => {
-                this.pageNotificationService.addErrorMessage(
-                    this.getLabel('Somente membros da equipe responsável podem excluir esta análise!'));
+
             });
+
+        }
+        this.confirmationService.confirm({
+            message: this.mensagemDialogBloquear(bloquear),
+            accept: () => {
+                this.finalizarBlock(bloquear);
+            }
+        });
+    }
+
+    finalizarBlock(bloquear: boolean) {
+        let mostrarDialogBlock: boolean = false;
+        if (this.analisesBlocks.length > 0) {
+            this.analisesBlocks.forEach(analise => {
+                if (!analise.dataHomologacao && !bloquear) {
+                    analise.dataHomologacao = new Date();
+                    mostrarDialogBlock = true;
+                }
+            })
+            if (mostrarDialogBlock !== false) {
+                this.showDialogAnaliseBlock = true;
+            }else{
+                this.alterAnaliseBlock();
+            }
+        } else {
+            this.pageNotificationService.addErrorMessage(this.getLabel('Nenhuma análise selecionada é permitida para essa ação.'));
+        }
     }
 
     public alterAnaliseBlock() {
-        if (this.analiseTemp && this.analiseTemp.dataHomologacao) {
-            const copy = this.analiseTemp.toJSONState();
-            this.analiseService.block(copy).subscribe(() => {
-                const nome = this.analiseTemp.identificadorAnalise;
-                const bloqueado = this.analiseTemp.bloqueiaAnalise;
-                this.mensagemAnaliseBloqueada(bloqueado, nome);
-                this.recarregarDataTable();
-                this.datatable.filter();
-                this.datatable.selectedRow = null;
-                this.showDialogAnaliseBlock = false;
+        if (this.dataHomologacaoAnalises) {
+            this.analisesBlocks.forEach(analise => {
+                if(analise.dataHomologacao === undefined || analise.dataHomologacao === null){
+                    analise.dataHomologacao = this.dataHomologacaoAnalises;
+                }
             });
+        }
+        if (this.analisesBlocks.length > 0) {
+            this.analisesBlocks.forEach(analise => {
+                const copy = analise.toJSONState();
+                this.analiseService.block(copy).subscribe(() => {
+                    const nome = copy.identificadorAnalise;
+                    const bloqueado = copy.bloqueiaAnalise;
+                    this.mensagemAnaliseBloqueada(bloqueado, nome);
+                    this.recarregarDataTable();
+                    this.datatable.filter();
+                });
+            });
+            this.datatable.selectedRow = null;
+            this.showDialogAnaliseBlock = false;
+            this.analisesBlocks = [];
         }
     }
 

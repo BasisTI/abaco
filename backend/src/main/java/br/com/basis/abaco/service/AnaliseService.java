@@ -553,6 +553,7 @@ public class AnaliseService extends BaseService {
             Analise analise = analiseRepository.findOne(idAnalise);
             analise.setCompartilhadas(lstCompartilhadas);
             analiseRepository.save(analise);
+            analise.setAnaliseClonadaParaEquipe(null);
             analiseSearchRepository.save(convertToEntity(convertToDto(analise)));
             lstCompartilhadas.forEach(compartilhada -> {
                 TipoEquipe tipoEquipe = this.tipoEquipeRepository.findById(compartilhada.getEquipeId());
@@ -734,6 +735,7 @@ public class AnaliseService extends BaseService {
         analise = analiseRepository.save(analise);
         AnaliseDTO analiseDTO = convertToDto(analise);
         analise = convertToEntity(analiseDTO);
+        analise.setAnaliseClonadaParaEquipe(null);
         analise = analiseSearchRepository.save(analise);
         return analise;
     }

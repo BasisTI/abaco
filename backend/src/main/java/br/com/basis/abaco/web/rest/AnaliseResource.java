@@ -176,6 +176,7 @@ public class AnaliseResource {
         analise.setEditedBy(analiseRepository.findOne(analise.getId()).getCreatedBy());
         analiseRepository.save(analise);
         AnaliseEditDTO analiseEditDTO = analiseService.convertToAnaliseEditDTO(analise);
+        analise.setAnaliseClonadaParaEquipe(null);
         analiseSearchRepository.save(analiseService.convertToEntity(analiseService.convertToDto(analise)));
         return ResponseEntity.ok().headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, analise.getId().toString()))
             .body(analiseEditDTO);
@@ -194,6 +195,7 @@ public class AnaliseResource {
             analiseService.linkFuncoesToAnalise(analise);
             analise.setBloqueiaAnalise(!analise.isBloqueiaAnalise());
             analiseRepository.save(analise);
+            analise.setAnaliseClonadaParaEquipe(null);
             analiseSearchRepository.save(analiseService.convertToEntity(analiseService.convertToDto(analise)));
             return ResponseEntity.ok().headers(HeaderUtil.blockEntityUpdateAlert(ENTITY_NAME, analise.getId().toString())).body(analiseService.convertToAnaliseEditDTO(analise));
         } else {
@@ -336,6 +338,7 @@ public class AnaliseResource {
         Analise analise = analiseRepository.getOne(compartilhada.getAnaliseId());
         analise.getCompartilhadas().remove(compartilhada);
         analiseRepository.save(analise);
+        analise.setAnaliseClonadaParaEquipe(null);
         analiseSearchRepository.save(analiseService.convertToEntity(analiseService.convertToDto(analise)));
         compartilhadaRepository.delete(id);
         return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id.toString())).build();
@@ -573,6 +576,7 @@ public class AnaliseResource {
         if (analise.getId() != null) {
             analiseService.updatePf(analise);
             analiseRepository.save(analise);
+            analise.setAnaliseClonadaParaEquipe(null);
             analiseSearchRepository.save(analiseService.convertToEntity(analiseService.convertToDto(analise)));
             return ResponseEntity.ok().headers(HeaderUtil.blockEntityUpdateAlert(ENTITY_NAME, analise.getId().toString()))
                 .body(analiseService.convertToAnaliseEditDTO(analise));
@@ -592,6 +596,7 @@ public class AnaliseResource {
         if (analise.getId() != null) {
             analiseService.updatePFDivergente(analise);
             analiseRepository.save(analise);
+            analise.setAnaliseClonadaParaEquipe(null);
             analiseSearchRepository.save(analiseService.convertToEntity(analiseService.convertToDto(analise)));
             return ResponseEntity.ok().headers(HeaderUtil.blockEntityUpdateAlert(ENTITY_NAME, analise.getId().toString()))
                 .body(analiseService.convertToAnaliseEditDTO(analise));
@@ -611,6 +616,7 @@ public class AnaliseResource {
         User user = userRepository.findOneByLogin(SecurityUtils.getCurrentUserLogin()).get();
         if (analise.getId() != null && status.getId() != null && analiseService.changeStatusAnalise(analise, status, user)) {
             analiseRepository.save(analise);
+            analise.setAnaliseClonadaParaEquipe(null);
             analiseSearchRepository.save(analiseService.convertToEntity(analiseService.convertToDto(analise)));
             return ResponseEntity.ok().headers(HeaderUtil.blockEntityUpdateAlert(ENTITY_NAME, analise.getId().toString()))
                 .body(analiseService.convertToAnaliseEditDTO(analise));

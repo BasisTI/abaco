@@ -7,6 +7,9 @@ import { AuthGuardService } from '../util/auth.guard.service';
 export const dashboardRoute: Routes = [
   {
     path: 'dashboard',
-    component: DashboardComponent
+    component: DashboardComponent,
+    data: {
+        breadcrumb: "Dashboard"
+    }
   }
 ];

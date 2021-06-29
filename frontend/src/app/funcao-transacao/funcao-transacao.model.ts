@@ -55,6 +55,7 @@ export class FuncaoTransacao implements FuncaoResumivel, BaseEntity, FuncaoAnali
     public statusFuncao?: String,
     public lstDivergenceComments?: CommentFuncaoTransacao[],
     public files?: any[],
+    public ordem?: number
   ) {
     if (!pf) {
       this.pf = 0;
