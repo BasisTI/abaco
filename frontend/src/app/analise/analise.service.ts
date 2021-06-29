@@ -196,8 +196,6 @@ export class AnaliseService {
         })).subscribe(
             (response) => {
                 let filename = response.headers.get("content-disposition").split("filename=");
-                console.log(filename);
-
                 const mediaType = 'application/vnd.ms-excel';
                 const blob = new Blob([response.body], { type: mediaType });
                 const fileURL = window.URL.createObjectURL(blob);
