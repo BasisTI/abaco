@@ -212,7 +212,9 @@ public class RelatorioUtil {
             numeroOs = analise.getIdentificadorAnalise().split("-");
             nomeRelatorio += numeroOs[0];
             nomeRelatorio += "_OS_";
-            nomeRelatorio += numeroOs[1];
+            if(numeroOs.length > 1){
+                nomeRelatorio += numeroOs[1];
+            }
         }else{
             nomeRelatorio += "_OS_Contagem";
         }
