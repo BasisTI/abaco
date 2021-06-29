@@ -206,8 +206,9 @@ public class RelatorioUtil {
             numeroOs = analise.getNumeroOs().split("-");
             nomeRelatorio += numeroOs[0];
             nomeRelatorio += "_OS_";
-            nomeRelatorio += numeroOs[1];
-
+            if(numeroOs.length > 1) {
+                nomeRelatorio += numeroOs[1];
+            }
         }else if(analise.getIdentificadorAnalise() != null){
             numeroOs = analise.getIdentificadorAnalise().split("-");
             nomeRelatorio += numeroOs[0];
