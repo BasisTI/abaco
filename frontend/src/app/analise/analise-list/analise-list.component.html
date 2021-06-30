@@ -324,12 +324,12 @@
         </app-green-button>
     </div>
 </p-dialog>
-<p-dialog header="Tem certeza que deseja bloquear o registro ?" [(visible)]="showDialogAnaliseBlock" [modal]="true">
-    <div *ngIf="analiseTemp && analiseTemp && showDialogAnaliseBlock">
+<p-dialog header="Tem certeza que deseja bloquear os registros ?" [(visible)]="showDialogAnaliseBlock" [modal]="true">
+    <div *ngIf="analisesBlocks && showDialogAnaliseBlock">
         <div class="ui-g-12 ui-md-12 ui-sm-12 ui-label" style="margin-bottom: 05px; margin-top: 05px;">
             <label>Data de Homologação: </label>
             <div class="ui-g-12 ui-md-12 ui-sm-12">
-                <p-calendar name="dataHomologacao" [(ngModel)]="analiseTemp.dataHomologacao" dateFormat="dd/mm/yy"
+                <p-calendar name="dataHomologacao" [(ngModel)]="dataHomologacaoAnalises" dateFormat="dd/mm/yy"
                     [inline]="true" showIcon="true">
                 </p-calendar>
             </div>

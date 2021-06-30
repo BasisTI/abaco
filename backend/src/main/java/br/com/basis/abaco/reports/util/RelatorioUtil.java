@@ -56,7 +56,7 @@ import java.util.Set;
  */
 public class RelatorioUtil {
 
-    private static final String ATTACHMENT_FILENAME_S_PDF = "attachment; filename=\"%s.pdf\"";
+    private static final String ATTACHMENT_FILENAME_S_PDF = "attachment; filename=%s.pdf";
 
     private static final String INLINE_FILENAME = "inline; filename=";
 
@@ -130,7 +130,7 @@ public class RelatorioUtil {
         JasperExportManager.exportReportToPdfStream(jasperPrint, outputStream);
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_PDF);
-        headers.set(HttpHeaders.CONTENT_DISPOSITION, String.format(ATTACHMENT_FILENAME_S_PDF, analise.getIdentificadorAnalise().trim()));
+        headers.set(HttpHeaders.CONTENT_DISPOSITION, String.format(ATTACHMENT_FILENAME_S_PDF, pegarNomeRelatorio(analise)));
         return new ResponseEntity<byte[]>(outputStream.toByteArray(),headers, HttpStatus.OK);
     }
 
@@ -145,7 +145,7 @@ public class RelatorioUtil {
      */
     @SuppressWarnings({ RAW_TYPES, UNCHECKED })
     public @ResponseBody ResponseEntity<byte[]> downloadPdfBrowser(Analise analise, String caminhoJasperResolucao, Map parametrosJasper) throws FileNotFoundException, JRException {
-        return buildPDFBrowser(caminhoJasperResolucao, parametrosJasper, new JREmptyDataSource());
+        return buildPDFBrowser(caminhoJasperResolucao, parametrosJasper, new JREmptyDataSource(), analise);
     }
 
     /**
@@ -160,10 +160,10 @@ public class RelatorioUtil {
     @SuppressWarnings({ RAW_TYPES, UNCHECKED })
     public @ResponseBody ResponseEntity<byte[]> downloadPdfBrowser(Analise analise, String caminhoJasperResolucao, JRBeanCollectionDataSource dataSource) throws JRException {
 
-        return buildPDFBrowser(caminhoJasperResolucao, new HashMap(), dataSource);
+        return buildPDFBrowser(caminhoJasperResolucao, new HashMap(), dataSource, analise);
     }
 
-    private @ResponseBody ResponseEntity<byte[]> buildPDFBrowser(String caminhoJasperResolucao, Map parametters, JRDataSource dataSource) throws JRException {
+    private @ResponseBody ResponseEntity<byte[]> buildPDFBrowser(String caminhoJasperResolucao, Map parametters, JRDataSource dataSource, Analise analise) throws JRException {
         InputStream stream = getClass().getClassLoader().getResourceAsStream(caminhoJasperResolucao);
 
         JasperPrint jasperPrint = (JasperPrint) JasperFillManager.fillReport(stream, parametters, dataSource);
@@ -184,7 +184,7 @@ public class RelatorioUtil {
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_PDF);
-        headers.set(HttpHeaders.CONTENT_DISPOSITION, String.format(ATTACHMENT_FILENAME_S_PDF, "analise"));
+        headers.set(HttpHeaders.CONTENT_DISPOSITION, String.format(ATTACHMENT_FILENAME_S_PDF, pegarNomeRelatorio(analise)));
         return new ResponseEntity<byte[]>(outputStream.toByteArray(),headers, HttpStatus.OK);
     }
 
@@ -195,9 +195,31 @@ public class RelatorioUtil {
         document.setMargins(factory.getTopMargin(), factory.getRightMargin(), factory.getBottomMargin(), factory.getLeftMargin());
         buildHeader(document, factory);
         buildBodyAnaliseDetail(analise, document, factory);
-
         document.close();
-        return DynamicExporter.output(byteArray, CONTAGEM_PDF);
+        return DynamicExporter.output(byteArray, pegarNomeRelatorio(analise));
+    }
+
+    public String pegarNomeRelatorio(Analise analise){
+        String nomeRelatorio = "";
+        String[] numeroOs;
+        if(analise.getNumeroOs() != null){
+            numeroOs = analise.getNumeroOs().split("-");
+            nomeRelatorio += numeroOs[0];
+            nomeRelatorio += "_OS_";
+            if(numeroOs.length > 1) {
+                nomeRelatorio += numeroOs[1];
+            }
+        }else if(analise.getIdentificadorAnalise() != null){
+            numeroOs = analise.getIdentificadorAnalise().split("-");
+            nomeRelatorio += numeroOs[0];
+            nomeRelatorio += "_OS_";
+            if(numeroOs.length > 1){
+                nomeRelatorio += numeroOs[1];
+            }
+        }else{
+            nomeRelatorio += "_OS_Contagem";
+        }
+        return nomeRelatorio += "_Contagem";
     }
 
     /**
@@ -395,7 +417,7 @@ public class RelatorioUtil {
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.parseMediaType(EXCEL));
-        headers.set(HttpHeaders.CONTENT_DISPOSITION, String.format("attachment; filename=\"%s.xls\"", analise.getIdentificadorAnalise().trim()));
+        headers.set(HttpHeaders.CONTENT_DISPOSITION, String.format("attachment; filename=%s.xls", pegarNomeRelatorio(analise)));
         return new ResponseEntity<byte[]>(outputStream.toByteArray(),headers, HttpStatus.OK);
     }
 

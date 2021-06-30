@@ -147,6 +147,8 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
 
     @ViewChild(FileUpload) componenteFile: FileUpload;
 
+    isOrderning: boolean = false;
+
     constructor(
         private analiseSharedDataService: AnaliseSharedDataService,
         private confirmationService: ConfirmationService,
@@ -181,6 +183,7 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
             this.isView = params['view'] !== undefined;
             this.funcaoDadosService.getVWFuncaoDadosByIdAnalise(this.idAnalise).subscribe(value => {
                 this.funcoesDados = value;
+                this.funcoesDados.sort((a, b) => a.ordem - b.ordem);
                 if (!this.isView) {
                     this.analiseService.find(this.idAnalise).subscribe(analise => {
                         // analise = new Analise().copyFromJSON(analise);
@@ -803,7 +806,6 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
                         this.funcoesDados = this.funcoesDados.filter((funcaoDados) => (funcaoDados.id !== funcaoDadosCalculada.id));
                         this.setFields(funcaoDadosCalculada);
                         this.funcoesDados.push(funcaoDadosCalculada);
-                        this.funcoesDados.sort((a, b) => a.id - b.id);
                         this.resetarEstadoPosSalvar();
                         this.pageNotificationService.addSuccessMessage(`${this.getLabel('Cadastros.FuncaoDados.Mensagens.msgFuncaoDados')}
                 '${funcaoDadosCalculada.name}' ${this.getLabel(' alterada com sucesso')}`);
@@ -879,6 +881,17 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
             });
     }
 
+    clonar() {
+        this.disableTRDER();
+        this.configurarDialog();
+        this.isEdit = false;
+        this.prepareToClone(this.funcaoDadosEditar[0]);
+        this.seletedFuncaoDados.id = undefined;
+        this.seletedFuncaoDados.artificialId = undefined;
+        this.textHeader = this.getLabel('Clonar Função de Dados');
+    }
+
+
     datatableClick(event: DatatableClickEvent) {
         if (!(event.selection) && event.button !== 'filter') {
             return;
@@ -893,13 +906,6 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
                 this.confirmDelete(this.funcaoDadosEditar);
                 break;
             case 'clone':
-                this.disableTRDER();
-                this.configurarDialog();
-                this.isEdit = false;
-                this.prepareToClone(this.funcaoDadosEditar[0]);
-                this.seletedFuncaoDados.id = undefined;
-                this.seletedFuncaoDados.artificialId = undefined;
-                this.textHeader = this.getLabel('Clonar Função de Dados');
                 break;
             case 'crud':
                 this.createCrud(this.funcaoDadosEditar[0]);
@@ -909,10 +915,8 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
                 this.prepararParaVisualizar(this.funcaoDadosEditar[0]);
                 break;
             case 'filter':
-                this.display = true;
                 break;
             case 'edicaoLote':
-                this.prepararEditarEmLote();
                 break;
         }
     }
@@ -948,7 +952,7 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
         }
     }
 
-    private createCrud(funcaoDadosSelecionada) {
+    public createCrud(funcaoDadosSelecionada) {
         const lstFuncaoTransacaoCrud: FuncaoTransacao[] = [];
         const lstFuncaoTransacaoToVerify: Observable<any>[] = [];
         const lstFuncaoTransacaoToInclud: Observable<any>[] = [];
@@ -1062,7 +1066,9 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
         this.funcaoDadosService.mod.next(funcaoDadosSelecionada.funcionalidade);
         this.analiseSharedDataService.funcaoAnaliseCarregada();
         this.analiseSharedDataService.currentFuncaoDados = funcaoDadosSelecionada;
-        this.carregarDerERlr(funcaoDadosSelecionada);
+        if(this.analise.metodoContagem !== "ESTIMADA"){
+            this.carregarDerERlr(funcaoDadosSelecionada);
+        }
         this.carregarFatorDeAjusteNaEdicao(funcaoDadosSelecionada);
         this.carregarArquivos();
     }
@@ -1341,13 +1347,13 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
         if (this.deflatorEmLote && this.deflatorEmLote.tipoAjuste === 'UNITARIO' && !this.quantidadeEmLote) {
             return this.pageNotificationService.addErrorMessage("Coloque uma quantidade para o deflator!")
         }
-        if(this.moduloSelecionadoEmLote && !this.funcionalidadeSelecionadaEmLote){
+        if (this.moduloSelecionadoEmLote && !this.funcionalidadeSelecionadaEmLote) {
             return this.pageNotificationService.addErrorMessage("Escolha uma funcionalidade para prosseguir!");
         }
         this.editarCamposEmLote();
         let moduloSelecionado;
-        if(this.moduloSelecionadoEmLote){
-             moduloSelecionado = this.moduloSelecionadoEmLote;
+        if (this.moduloSelecionadoEmLote) {
+            moduloSelecionado = this.moduloSelecionadoEmLote;
         }
 
         for (let i = 0; i < this.funcaoDadosEmLote.length; i++) {
@@ -1357,12 +1363,11 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
                 this.analise.metodoContagem, funcaoDado, this.analise.contrato.manual);
             this.funcaoDadosService.update(funcaoDadosCalculada, funcaoDadosCalculada.files?.map(item => item.logo)).subscribe(value => {
                 this.funcoesDados = this.funcoesDados.filter((funcaoDados) => (funcaoDados.id !== funcaoDadosCalculada.id));
-                if(moduloSelecionado){
+                if (moduloSelecionado) {
                     funcaoDadosCalculada.funcionalidade.modulo = moduloSelecionado;
                 }
                 this.setFields(funcaoDadosCalculada);
                 this.funcoesDados.push(funcaoDadosCalculada);
-                this.funcoesDados.sort((a, b) => a.id - b.id);
                 this.analiseService.updateSomaPf(this.analise.id).subscribe();
             });
         }
@@ -1484,8 +1489,85 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
         return (res);
     }
 
-    refreshFuncoes(){
+    refreshFuncoes() {
         this.funcoesDados.sort((a, b) => a.id - b.id);
+        this.updateIndex();
     }
 
+    public updateIndex() {
+        let temp = 1
+        for (let i = 0; i < this.funcoesDados.length; i++) {
+            this.funcoesDados[i].ordem = temp
+            temp++
+        }
+    }
+
+    public orderList(botao: String) {
+
+        let i = this.funcoesDados.indexOf(this.funcaoDadosEditar[0])
+        let del = i
+
+        if (botao == 'order-top' && this.funcaoDadosEditar[0] != null) {
+            if (i == 0) {
+                return
+            } else {
+                this.funcoesDados.splice(del, 1);
+                this.funcoesDados.unshift(this.funcaoDadosEditar[0]);
+            }
+        }
+
+        if (botao == 'order-up' && this.funcaoDadosEditar != null) {
+            if (i == 0) {
+                return
+            } else {
+                let pos = i - 1
+                this.funcoesDados.splice(del, 1)
+                this.funcoesDados.splice(pos, 0, this.funcaoDadosEditar[0])
+                this.funcoesDados.indexOf(this.funcaoDadosEditar[0])
+            }
+        }
+
+        if (botao == 'order-down' && this.funcaoDadosEditar[0] != null) {
+            if (i == this.funcoesDados.length - 1) {
+                return
+            } else {
+                let pos = i + 1;
+                this.funcoesDados.splice(del, 1);
+                this.funcoesDados.splice(pos, 0, this.funcaoDadosEditar[0]);
+                this.funcoesDados.indexOf(this.funcaoDadosEditar[0]);
+            }
+        }
+
+        if (botao == 'order-botton' && this.funcaoDadosEditar[0] != null) {
+            if (i == this.funcoesDados.length - 1) {
+                return
+            }
+            this.funcoesDados.splice(del, 1);
+            this.funcoesDados.push(this.funcaoDadosEditar[0]);
+            this.funcoesDados.indexOf(this.funcaoDadosEditar[0]);
+        }
+
+        this.updateIndex()
+    }
+
+    ordernarFuncoes() {
+        this.isOrderning = true;
+    }
+
+    salvarOrdernacao() {
+        this.blockUiService.show();
+        this.funcoesDados.forEach((funcaoDado, index) => {
+            this.funcaoDadosService.getById(funcaoDado.id).subscribe(funcao => {
+                let func: FuncaoDados;
+                func = new FuncaoDados().copyFromJSON(funcao);
+                const funcaoDadosCalculada = Calculadora.calcular(
+                    this.analise.metodoContagem, func, this.analise.contrato.manual);
+                funcaoDadosCalculada.ordem = index + 1;
+                this.funcaoDadosService.update(funcaoDadosCalculada, null).subscribe();
+            })
+        })
+        this.pageNotificationService.addSuccessMessage("Ordenação salva com sucesso.");
+        this.isOrderning = false;
+        this.blockUiService.hide();
+    }
 }

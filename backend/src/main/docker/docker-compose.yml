@@ -36,6 +36,8 @@ services:
       TZ: America/Sao_Paulo
     volumes:
     - ./abaco-pgsql-vol:/var/lib/postgresql/data
+    ports:
+      - 5432:5432
   es-abaco:
     image: elasticsearch:2.4-alpine
     environment:
@@ -44,3 +46,7 @@ services:
     - abaco-es-vol:/usr/share/elasticsearch/data  
     command:
     - -Dcluster.name=abaco
+    ports:
+      - 9300:9300
+      - 9200:9200
+    

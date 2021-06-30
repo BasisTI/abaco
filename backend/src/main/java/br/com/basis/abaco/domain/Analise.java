@@ -6,6 +6,7 @@ import br.com.basis.abaco.domain.enumeration.TipoAnalise;
 import br.com.basis.dynamicexports.pojo.ReportObject;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import io.swagger.annotations.ApiModel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -141,6 +142,7 @@ public class Analise implements Serializable, ReportObject {
     @OneToOne
     @JoinColumn(name = "analise_clonada_equipe_id", referencedColumnName = "id")
     @Field(type = FieldType.Nested, ignoreFields = {"analiseClonadaParaEquipe", "analisesComparadas"})
+    @JsonIgnoreProperties("analiseClonadaParaEquipe")
     private Analise analiseClonadaParaEquipe;
 
 //    Saber se a análise clonou ou foi clonada de outra.
@@ -195,13 +197,13 @@ public class Analise implements Serializable, ReportObject {
     @JsonInclude
     @OneToMany(mappedBy = ANALISE, cascade = CascadeType.ALL)
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-    @OrderBy("name ASC, funcionalidade ASC, id ASC")
+    @OrderBy("ordem DESC, name ASC, funcionalidade ASC, id ASC")
     private Set<FuncaoDados> funcaoDados = new HashSet<>();
 
     @JsonInclude
     @OneToMany(mappedBy = ANALISE, cascade = CascadeType.ALL)
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-    @OrderBy("name ASC, funcionalidade ASC, id ASC")
+    @OrderBy("ordem DESC, name ASC, funcionalidade ASC, id ASC")
     private Set<FuncaoTransacao> funcaoTransacaos = new HashSet<>();
 
     @Nullable
