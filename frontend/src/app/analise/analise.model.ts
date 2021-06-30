@@ -79,6 +79,8 @@ export class Analise implements BaseEntity {
         public users?: User[],
         public status?: Status,
         public analisesComparadas?: Analise[],
+        public analiseClonadaParaEquipe?: Analise,
+        public analiseClonou?: boolean,
     ) {
         this.inicializaMappables(funcaoDados, funcaoTransacaos);
         this.inicializaResumos();
@@ -299,7 +301,12 @@ export class Analise implements BaseEntity {
             this.compartilhadas,
             this.dataCriacaoOrdemServico,
             this.manual,
-            this.users);
+            this.users,
+            this.status,
+            this.analisesComparadas,
+            this.analiseClonadaParaEquipe,
+            this.analiseClonou
+            );
     }
 
 }

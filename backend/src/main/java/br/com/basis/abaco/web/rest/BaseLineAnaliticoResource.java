@@ -28,6 +28,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.elasticsearch.core.ElasticsearchTemplate;
 import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
 import org.springframework.data.elasticsearch.core.query.SearchQuery;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -62,12 +63,15 @@ public class BaseLineAnaliticoResource {
     private static final String PAGE = "page";
     private static final String DBG_MSG_FD = "REST request to get FD BaseLineAnalitico : {}";
     private final ElasticsearchTemplate elasticsearchTemplate;
+
     @Autowired
     private HttpServletRequest request;
 
     @Autowired
     private HttpServletResponse response;
 
+    @Autowired
+    private ModelMapper modelMapper;
 
     public BaseLineAnaliticoResource(
                                      FuncaoDadosRepository funcaoDadosRepository,
@@ -111,11 +115,11 @@ public class BaseLineAnaliticoResource {
 
     @GetMapping("/baseline-analiticos/fd/{id}")
     @Timed
+    @Secured("ROLE_ABACO_BASELINE_CONSULTAR")
     public List<BaselineAnaliticoDTO> getBaseLineAnaliticoFDDTO(@PathVariable Long id) {
         log.debug(DBG_MSG_FD, id);
         List<BaseLineAnaliticoFD> baseLineAnaliticos = baseLineAnaliticoFDSearchRepository.findByIdsistemaOrderByNameAsc(id);
         List<BaselineAnaliticoDTO> baselineAnaliticoDTOS = new ArrayList<>();
-        ModelMapper modelMapper = new ModelMapper();
         baseLineAnaliticos.forEach(baseLineAnalitico ->
             baselineAnaliticoDTOS.add(modelMapper.map(baseLineAnalitico, BaselineAnaliticoDTO.class))
         );
@@ -133,12 +137,11 @@ public class BaseLineAnaliticoResource {
 
     @GetMapping("/baseline-analiticos/ft/{id}")
     @Timed
+    @Secured("ROLE_ABACO_BASELINE_CONSULTAR")
     public List<BaselineAnaliticoDTO> getBaseLineAnaliticoFTDTO(@PathVariable Long id) {
         log.debug("REST request to get FT BaseLineAnaliticoDTO : {}", id);
         List<BaseLineAnaliticoFT> baseLineAnaliticos = baseLineAnaliticoFTSearchRepository.findByIdsistemaOrderByNameAsc(id);
         List<BaselineAnaliticoDTO> baselineAnaliticoDTOS = new ArrayList<>();
-
-        ModelMapper modelMapper = new ModelMapper();
 
         baseLineAnaliticos.forEach(baseLineAnalitico ->
             baselineAnaliticoDTOS.add(modelMapper.map(baseLineAnalitico, BaselineAnaliticoDTO.class))
@@ -177,6 +180,7 @@ public class BaseLineAnaliticoResource {
 
     @GetMapping("/downloadPdfBaselineBrowser/{id}")
     @Timed
+    @Secured("ROLE_ABACO_BASELINE_EXPORTAR")
     public @ResponseBody
     byte[] downloadPdfBaselineBrowser(@PathVariable Long id) throws URISyntaxException, IOException, JRException {
         relatorioBaselineRest = new RelatorioBaselineRest(this.response, this.request);
@@ -186,6 +190,7 @@ public class BaseLineAnaliticoResource {
 
     @GetMapping("/baseline-analiticos/fd/{id}/equipe/{idEquipe}")
     @Timed
+    @Secured("ROLE_ABACO_BASELINE_CONSULTAR")
     public Page<BaseLineAnaliticoFD> getBaseLineAnaliticoFDEquipe(@PathVariable String id,
                                                                 @PathVariable String idEquipe,
                                                                 @RequestParam(defaultValue = "ASC") String order,
@@ -203,6 +208,7 @@ public class BaseLineAnaliticoResource {
 
     @GetMapping("/baseline-analiticos/ft/{id}/equipe/{idEquipe}")
     @Timed
+    @Secured("ROLE_ABACO_BASELINE_CONSULTAR")
     public Page<BaseLineAnaliticoFT> getBaseLineAnaliticoFTEquipe(@PathVariable String id,
                                                                 @PathVariable String idEquipe,
                                                                 @RequestParam(defaultValue = "ASC") String order,

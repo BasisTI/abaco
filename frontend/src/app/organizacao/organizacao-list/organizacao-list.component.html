@@ -6,7 +6,6 @@
         <div class="ui-g-12 ui-md-12 ui-sm-12">
           <span class="md-inputfield">
             <input type="text" pInputText class="ui-inputtext" (input)="elasticQuery.value = $event.target.value"
-              (keyup.enter)="recarregarDataTable()"
               #filter maxlength="80" />
               <label translate="Cadastros.Organizacao.Descricao">Descrição</label>
           </span>
@@ -26,6 +25,7 @@
               <div class="ui-g-2 ui-md-2 ui-sm-12">
                 <app-blue-button
                   [buttonLabel]="'Pesquisar' "
+                  *ngIf="canPesquisar"
                   buttonIcon="ui-icon-search"
                   id="idBtnPesquisarComponentOrganizacao"
                   (click)="recarregarDataTable()">
@@ -34,9 +34,10 @@
               <div class="ui-g-2 ui-md-2 ui-sm-12">
                 <app-green-button
                   [buttonLabel]="'Novo'"
+                  *ngIf="canCadastrar"
                   id="idBtnNovoComponentOrganizacao"
                   buttonIcon="ui-icon-add"
-                  routerLink="/organizacao/new"></app-green-button>
+                  (click)="criarOrganizacao()"></app-green-button>
               </div>
         </div>
         <div class="ui-g-12 ui-g-nopad">
@@ -60,6 +61,9 @@
             [rows]="20"
             [rowsPerPageOptions]="rowsPerPageOptions"
             [showPaginationFooter]="true"
+            [disableDelete]="!canDeletar"
+            [disableEdit]="!canEditar"
+            [disableView]="!canConsultar"
             [showVisibleColumnsControl]="false"
             #datatable>
           <p-column header="Sigla" field="sigla" [sortable]="true" ></p-column>
@@ -78,7 +82,7 @@
 
         </basis-datatable>
         <div class="ui-g-12 ui-md-2">
-            <app-export-button [dataTable]="datatable" resourceName="organizacaos" [columnsVisible]="columnsVisible" [filter]="organizacaoFiltro">
+            <app-export-button [dataTable]="datatable" resourceName="organizacaos" [columnsVisible]="columnsVisible" [filter]="organizacaoFiltro" funcionalidadeName="organizacao">
             </app-export-button>
         </div>
       </div>

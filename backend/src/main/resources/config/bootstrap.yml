@@ -17,6 +17,7 @@ spring:
         active: #spring.profiles.active#
     cloud:
         config:
+            enabled: false 
             fail-fast: true
             uri: http://admin:${jhipster.registry.password}@localhost:8761/config
             # name of the config server's property source (file.yml) that we want to use

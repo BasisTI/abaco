@@ -38,6 +38,13 @@
                         [(ngModel)]="funcionalidadeAtual">
                     </p-dropdown>
                 </div>
+
+                <div class="ui-g-4 ui-md-2 ui-sm-4">
+                    <p-radioButton name="groupname" [value]="1" label="Detalhada" [(ngModel)]="metodoContagem"></p-radioButton>
+                </div>
+                <div class="ui-g-4 ui-md-4 ui-sm-12">
+                    <p-radioButton name="groupname" [value]="2" label="Estimada" [(ngModel)]="metodoContagem"></p-radioButton>
+                </div>
             </div>
             <div class="ui-g ui-md-12" style="justify-content: center; margin-bottom: px; margin-top: 05px">
                 <div class="ui-g-2 ui-md-2 ui-sm-12">
@@ -81,17 +88,32 @@
                     <div class="ui-g" style="margin-bottom: 05px">
                         <p-table
                             [value]="fn"
-                            [(selection)]="selections" >
+                            [paginator]="true" [rows]="10"
+                            [rowsPerPageOptions]="[10,25,50]"
+                            [(selection)]="selections" #table>
                             <ng-template pTemplate="caption">
                                 {{isFuncaoDados? 'Função de dados':'Função de transação'}}
                             </ng-template>
                             <ng-template pTemplate="header">
                                 <tr>
                                     <th style="text-align:left; width: 3em;"><p-tableHeaderCheckbox></p-tableHeaderCheckbox></th>
-                                    <th pSortableColumn="fase.nome">Módulo <p-sortIcon></p-sortIcon></th>
-                                    <th pSortableColumn="fase.nomeFuncionalidade">Funcionalidade <p-sortIcon></p-sortIcon></th>
-                                    <th pSortableColumn="fase.name">Nome <p-sortIcon></p-sortIcon></th>
-                                    <th pSortableColumn="fase.classificacao" style="text-align: center; width: 9em;">Classificação <p-sortIcon></p-sortIcon></th>
+                                    <th pSortableColumn="fase.nome">Módulo <p-sortIcon></p-sortIcon>
+                                        <input class="column-filter-input" (click)="$event.stopPropagation()" pInputText type="text" (input)="table.filter($event.target.value, 'nomeModulo', 'contains')"/>
+                                    </th>
+                                    <th pSortableColumn="fase.nomeFuncionalidade">Funcionalidade <p-sortIcon></p-sortIcon>
+                                        <input class="column-filter-input" (click)="$event.stopPropagation()" pInputText type="text" (input)="table.filter($event.target.value, 'nomeFuncionalidade', 'contains')"/>
+                                    </th>
+                                    <th pSortableColumn="fase.name">Nome <p-sortIcon></p-sortIcon>
+                                        <input class="column-filter-input" (click)="$event.stopPropagation()" pInputText type="text" (input)="table.filter($event.target.value, 'name', 'contains')"/>
+                                    </th>
+                                    <th pSortableColumn="fase.classificacao" style="text-align: center; width: 9em;">Classificação <p-sortIcon></p-sortIcon>
+                                        <p-dropdown  class="column-filter-input" [(options)]="classificacoes"
+                                        name="classificaoFiltro" [(ngModel)]="classificacaoSearch"
+                                        [autoWidth]="false" [style]="{'min-width':'50%'}"
+                                        (onChange)="table.filter(classificacaoSearch, 'classificacao', 'contains')"
+                                            [placeholder]="''" (click)="$event.stopPropagation()" >
+                                        </p-dropdown>
+                                    </th>
                                 </tr>
                             </ng-template>
                             <ng-template pTemplate="body" let-funcao>
@@ -122,7 +144,7 @@
                                 <button type="button" pButton icon="pi pi-file-pdf" iconPos="left" label="PDF" (click)="exportPdf()" ></button>
                             </div>
                         </div>
-                        
+
                     </div>
                 </div>
             </p-fieldset>

@@ -1,11 +1,13 @@
 package br.com.basis.abaco.service.dto;
 
-import br.com.basis.abaco.domain.Authority;
+import br.com.basis.abaco.domain.Perfil;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Getter
@@ -25,13 +27,15 @@ public class UserEditDTO {
 
     private boolean activated = true;
 
-    private Set<Authority> authorities = new HashSet<>();
-
     private Set<TipoEquipeDTO> tipoEquipes = new HashSet<>();
 
     private Set<OrganizacaoDTO> organizacoes = new HashSet<>();
 
     private String nome;
+
+    private Set<Perfil> perfils = new HashSet<>();
+
+    private List<PerfilOrganizacaoDTO> perfilOrganizacoes = new ArrayList<>();
 
     public String getNome() {
         return this.firstName + ' ' + this.lastName ;

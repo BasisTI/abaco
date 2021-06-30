@@ -6,41 +6,73 @@ import { AnaliseFormComponent } from './analise-form/analise-form.component';
 import { AnaliseDetailComponent } from './analise-detail/analise-detail.component';
 import { AnaliseViewComponent } from './analise-view/analise-view.component';
 import { AnaliseResumoComponent } from './analise-resumo/analise-resumo.component';
+import { AuthGuardService } from '../util/auth.guard.service';
 
 export const analiseRoute: Routes = [
     {
         path: 'analise',
         component: AnaliseListComponent,
-        canActivate: [AuthGuard]
+        canActivate: [AuthGuard, AuthGuardService],
+        data: {
+            roleParaVerificar: ['ROLE_ABACO_ANALISE_ACESSAR'],
+            breadcrumb: "Análise"
+        }
     },
     {
         path: 'analise/new',
         component: AnaliseFormComponent,
-        canActivate: [AuthGuard]
+        canActivate: [AuthGuard, AuthGuardService],
+        data: {
+            roleParaVerificar: ['ROLE_ABACO_ANALISE_CADASTRAR'],
+            breadcrumb: "Análise"
+        }
     },
     {
         path: 'analise/:id/edit',
         component: AnaliseFormComponent,
-        canActivate: [AuthGuard]
+        canActivate: [AuthGuard, AuthGuardService],
+        data: {
+            roleParaVerificar:['ROLE_ABACO_ANALISE_EDITAR'],
+            breadcrumb: "Análise"
+        }
     },
     {
         path: 'analise/:id',
         component: AnaliseDetailComponent,
-        canActivate: [AuthGuard]
+        canActivate: [AuthGuard, AuthGuardService],
+        data: {
+            roleParaVerificar: ['ROLE_ABACO_ANALISE_CONSULTAR'],
+            breadcrumb: "Análise"
+        }
     },
     {
         path: 'analise/:id/view',
         component: AnaliseViewComponent,
-        canActivate: [AuthGuard]
+        canActivate: [AuthGuard, AuthGuardService],
+        data: {
+            roleParaVerificar: ['ROLE_ABACO_ANALISE_CONSULTAR',
+            'ROLE_ABACO_ANALISE_EDITAR'],
+            breadcrumb: "Análise"
+        }
     },
     {
         path: 'analise/:id/resumo',
         component: AnaliseResumoComponent,
-        canActivate: [AuthGuard]
+        canActivate: [AuthGuard, AuthGuardService],
+        data: {
+            roleParaVerificar: ['ROLE_ABACO_ANALISE_CONSULTAR',
+            'ROLE_ABACO_ANALISE_EDITAR'],
+            breadcrumb: "Análise"
+        }
     },
     {
         path: 'analise/:id/resumo/:view',
         component: AnaliseResumoComponent,
-        canActivate: [AuthGuard]
+        canActivate: [AuthGuard, AuthGuardService],
+        data: {
+            roleParaVerificar: ['ROLE_ABACO_ANALISE_CONSULTAR',
+            'ROLE_ABACO_ANALISE_EDITAR'],
+            breadcrumb: "Análise"
+        }
     },
 ];

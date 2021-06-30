@@ -9,6 +9,7 @@ import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
 
 import java.math.BigInteger;
 import java.time.ZonedDateTime;
@@ -16,6 +17,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
+@Repository
 public interface UserRepository extends JpaRepository<User, Long> {
 
     Optional<User> findOneByActivationKey(String activationKey);
@@ -32,10 +34,10 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     Optional<User> findOneByFirstNameAndLastName(String firstName, String lastName);
 
-    @EntityGraph(attributePaths = {"authorities", "tipoEquipes", "organizacoes"})
+    @EntityGraph(attributePaths = {"perfils", "tipoEquipes", "organizacoes"})
     User findOneWithAuthoritiesById(Long id);
 
-    @EntityGraph(attributePaths = {"authorities", "tipoEquipes", "organizacoes"})
+    @EntityGraph(attributePaths = {"perfils", "tipoEquipes", "organizacoes"})
     Optional<User> findOneWithAuthoritiesByLogin(String login);
 
     @Query(value = "SELECT u.tipoEquipes FROM User u WHERE u.login = :login")

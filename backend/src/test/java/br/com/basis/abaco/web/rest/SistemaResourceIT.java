@@ -14,6 +14,7 @@ import java.util.List;
 
 import javax.persistence.EntityManager;
 
+import br.com.basis.abaco.service.PerfilService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -30,6 +31,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import br.com.basis.abaco.AbacoApp;
 import br.com.basis.abaco.domain.Sistema;
+import br.com.basis.abaco.repository.AnaliseRepository;
 import br.com.basis.abaco.repository.FuncaoDadosRepository;
 import br.com.basis.abaco.repository.FuncaoDadosVersionavelRepository;
 import br.com.basis.abaco.repository.SistemaRepository;
@@ -90,12 +92,18 @@ public class SistemaResourceIT {
     @Autowired
     private SistemaService sistemaService;
 
+    @Autowired
+    private PerfilService perfilService;
+
+    @Autowired
+    private AnaliseRepository analiseRepository;
+
 
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
         SistemaResource sistemaResource = new SistemaResource(sistemaRepository, sistemaSearchRepository,
-                funcaoDadosVersionavelRepository, funcaoDadosRepository, sistemaService);
+                funcaoDadosVersionavelRepository, funcaoDadosRepository, sistemaService,analiseRepository, perfilService, dynamicExportsService);
         this.restSistemaMockMvc = MockMvcBuilders.standaloneSetup(sistemaResource)
                 .setCustomArgumentResolvers(pageableArgumentResolver).setControllerAdvice(exceptionTranslator)
                 .setMessageConverters(jacksonMessageConverter).build();

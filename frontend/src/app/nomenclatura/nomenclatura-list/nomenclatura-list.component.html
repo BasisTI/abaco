@@ -1,57 +1,62 @@
 <div class="ui-g ui-fluid">
 
     <div class="ui-g-12">
-  
+
       <div class="card card-w-title">
-  
+
         <h1>Nomenclatura</h1>
         <div class="ui-g">
-  
+
           <div class="ui-g-12 ui-md-12 ui-sm-12">
             <span class="md-inputfield">
               <input type="text" pInputText class="ui-inputtext" name="filtroTipoEquipe" maxlength="250" [(ngModel)]="elasticQuery.value"
-              (keyup.enter)="recarregarDataTable()" #filter/>
-                
+               #filter/>
+
                 <label>Descrição</label>
             </span>
           </div>
-  
+
         </div>
-  
+
         <div class="ui-g">
-  
+
           <div class="ui-g ui-md-12" style="justify-content: center; margin-bottom: 25px; margin-top: 25px">
-  
+
             <div class="ui-g-2 ui-md-2 ui-sm-12">
               <app-white-button [buttonLabel]="'Limpar Pesquisa'" buttonIcon="ui-icon-clear-all" (click)="limparPesquisa()">
               </app-white-button>
             </div>
-  
+
             <div class="ui-g-2 ui-md-2 ui-sm-12">
-              <app-blue-button [buttonLabel]="'Pesquisar'" buttonIcon="ui-icon-search" (click)="datatable.refresh(elasticQuery.query)"></app-blue-button>
+              <app-blue-button *ngIf="canPesquisar"
+               [buttonLabel]="'Pesquisar'" buttonIcon="ui-icon-search" (click)="datatable.refresh(elasticQuery.query)"></app-blue-button>
             </div>
-  
+
             <div class="uui-g-2 ui-md-2 ui-sm-12">
-              <app-green-button [buttonLabel]="'Novo'" buttonIcon="ui-icon-add" routerLink="/nomenclatura/new"></app-green-button>
+            <app-green-button *ngIf="canCadastrar"
+              [buttonLabel]="'Novo'" buttonIcon="ui-icon-add" (click)="criarNomenclatura()"></app-green-button>
             </div>
-            
+
           </div>
-  
+
           <basis-datatable
-            [url]="searchUrl" 
-            (buttonClick)="datatableClick($event)" 
+            [url]="searchUrl"
+            (buttonClick)="datatableClick($event)"
             (dblclick)="onRowDblclick($event)"
             (click) = "selectNomenclatura()"
             [rows]="20"
             [rowsPerPageOptions]="rowsPerPageOptions"
-            [showPaginationFooter]="true" 
+            [showPaginationFooter]="true"
+            [disableDelete]="!canDeletar"
+            [disableEdit]="!canEditar"
+            [disableView]="!canConsultar"
             #datatable>
-  
+
             <p-column header="Nome" field="nome" [sortable]="true" ></p-column>
             <p-column header="Descrição" field="descricao" [sortable]="true" ></p-column>
           </basis-datatable>
           <div class="ui-g-12 ui-md-2">
-            <app-export-button [dataTable]="datatable" resourceName="nomenclatura" [filter]="nomenclaturaFiltro">
+            <app-export-button [dataTable]="datatable" resourceName="nomenclatura" [filter]="nomenclaturaFiltro" funcionalidadeName="nomenclatura">
             </app-export-button>
         </div>
           <div class="ui-g-12 ui-md-2">
@@ -61,7 +66,7 @@
       </div>
     </div>
   </div>
-  
+
   <p-confirmDialog header="Confirmação" #dialog>
     <p-footer>
       <button type="button" pButton icon="fa-close" [label]="this.getLabel('Não')" (click)="dialog.reject()"></button>

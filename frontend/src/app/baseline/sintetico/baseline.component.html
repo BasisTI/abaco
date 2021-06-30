@@ -28,6 +28,7 @@
                     </div>
                     <div class="ui-g-2 ui-md-2 ui-sm-12">
                         <app-blue-button
+                                *ngIf="canPesquisar"
                                 [buttonLabel]="'Pesquisar'"
                                 id="idBtnPesquisarComponentAnalise"
                                 buttonIcon="ui-icon-search"
@@ -35,7 +36,8 @@
                         </app-blue-button>
                     </div>
                     <div class="ui-g-2 ui-md-2 ui-sm-12">
-                        <app-green-button 
+                        <app-green-button
+                            *ngIf="canAtualizar"
                             [buttonLabel]="'Atualizar'"
                             buttonIcon="ui-icon-update"
                             (click)="atualizarBaseline()">
@@ -52,12 +54,14 @@
                                     [rows]="20"
                                     [disableDelete]="true"
                                     [disableEdit]="true"
+                                    [disableView] = "!canConsultar"
                                     [rowsPerPageOptions]="rowsPerPageOptions"
                                     #datatable>
 
                                 <basis-datatable-button
+                                    *ngIf="canExportar"
                                     name="geraBaselinePdfBrowser"
-                                    tooltip="Relatório Baseline"
+                                    [pTooltip]="'Relatório Baseline'"
                                     icon="description"
                                     disabled="selecionada">
                                 </basis-datatable-button>

@@ -61,6 +61,8 @@ export class FuncaoDados implements FuncaoResumivel, BaseEntity, FuncaoAnalise{
         public modulo?: Modulo,
         public statusFuncao?: StatusFunction,
         public lstDivergenceComments?: CommentFuncaoDados[],
+        public files?: any[],
+        public ordem?: number
     ) {
         if (!pf) {
             this.pf = 0;
@@ -138,7 +140,7 @@ export class FuncaoDados implements FuncaoResumivel, BaseEntity, FuncaoAnalise{
             this.pf, this.analise, this.funcionalidades, this.funcionalidade,
             this.fatorAjuste, this.alr, this.name, this.sustantation, this.der, this.rlr,
             this.grossPF, this.derValues, this.rlrValues, this.ders, this.rlrs, this.impacto,
-            this.quantidade, this.modulo, this.statusFuncao, this.lstDivergenceComments);
+            this.quantidade, this.modulo, this.statusFuncao, this.lstDivergenceComments, this.files);
     }
 
 }
@@ -178,7 +180,7 @@ class FuncaoDadosCopyFromJSON {
         this._funcaoDados.quantidade = this._json.quantidade;
         this._funcaoDados.statusFuncao = this._json.statusFuncao;
         this._funcaoDados.lstDivergenceComments = this._json.lstDivergenceComments;
-
+        this._funcaoDados.files = this._json.files;
     }
 
     private converteBaseEntities() {

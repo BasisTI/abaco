@@ -1,0 +1,146 @@
+<div class="ui-g ui-fluid">
+    <div class="ui-g-12">
+        <div class="card card-w-title">
+            <h1>{{ perfil.id ? 'Editar Perfil' : 'Cadastrar Perfil' }}</h1>
+            <form name="editForm" role="form" novalidate (ngSubmit)="save(editForm)" #editForm="ngForm"
+                (keydown.enter)="$event.preventDefault()">
+                <div class="ui-g">
+                    <div class="ui-g-6 ui-md-6 ui-sm-12" style="margin-bottom: 25px">
+                        <span class="md-inputfield">
+                            <input id="nome_perfil" type="text" name="nomePerfil" [(ngModel)]="perfil.nome"
+                                maxlength="255" pInputText required #nomePerfil='ngModel' />
+                            <label>Nome: *</label>
+                            <div *ngIf="editForm.controls['nomePerfil']
+                                && !editForm.controls['nomePerfil'].valid
+                                && (editForm.controls['nomePerfil'].touched
+                                || editForm.submitted)" class="ui-message ui-messages-error">
+                                Campo obrigatório.
+                            </div>
+                        </span>
+                    </div>
+                    <div class="ui-g-6 ui-md-6 ui-sm-12" style="margin-bottom: 25px">
+                        <span class="md-inputfield">
+                            <input id="descricao_perfil" type="text" name="descricaoPerfil"
+                                [(ngModel)]="perfil.descricao" maxlength="255" pInputText required
+                                #descricaoPerfil='ngModel' />
+                            <label>Descrição: *</label>
+                            <div *ngIf="editForm.controls['descricaoPerfil']
+                                && !editForm.controls['descricaoPerfil'].valid
+                                && (editForm.controls['descricaoPerfil'].touched
+                                || editForm.submitted)" class="ui-message ui-messages-error">
+                                Campo obrigatório.
+                            </div>
+                        </span>
+                    </div>
+                    <div class="ui-g-12 ui-md-12 ui-sm-12" style="margin-bottom: 25px">
+                        <div class="ui-g">
+                            <div class="ui-g-1 ui-md-1 ui-sm-12">
+                                <label>Ativo:</label>
+                            </div>
+                            <div class="ui-g-1 ui-md-1 ui-sm-12">
+                                <p-radioButton name="flg_ativo" id="idAtivoSimFormPerfil" [value]="true" [label]="'Sim'"
+                                    [(ngModel)]="perfil.flgAtivo"></p-radioButton>
+                            </div>
+                            <div class="ui-g-1 ui-md-1 ui-sm-12">
+                                <p-radioButton name="flg_ativo" id="idAtivoNaoFormPerfil" [value]="false"
+                                    [label]="'Não'" [(ngModel)]="perfil.flgAtivo"></p-radioButton>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <!-- Permissao -->
+                <div class="ui-g">
+                    <h4 style="margin-bottom: 0px; margin-top: 0px;">Permissões*</h4>
+                    <div class="ui-g ui-md-12" style="justify-content: flex-end">
+                        <div class="ui-g-2 ui-md-3 ui-sm-12">
+                            <app-blue-button [buttonLabel]="'Nova Permissão'" buttonIcon="ui-icon-add"
+                                id="idBtnNovaPermissaoFormPerfil" (click)="abrirDialogPermissao()">
+                            </app-blue-button>
+                        </div>
+                    </div>
+                    <!-- Datatable Permissao -->
+                    <basis-datatable type="memory" [value]="perfil.permissaos" [disableView]="true" (click)="selectFT()"
+                        (buttonClick)="datatableClickPermissao($event)" [disableEdit]="true"
+                        [selectionMode]="'multiple'"
+                        [filterOnColumn]="true"
+                        [enableScroll]="true"
+                        [scrollHeight]="'500px'"
+                        [enableButtonsScroll]="true"
+                        [rowsPerPageOptions]="rowsPerPageOptions"
+                        [rows]="20" #datatablePermissao>
+                        <p-column header="Ação" field="acao.descricao" [sortable]="true">
+                            <ng-template let-row="rowData" pTemplate="body">
+                                {{ row.acao.descricao }}
+                            </ng-template>
+                        </p-column>
+                        <p-column header="Funcionalidade" field="funcionalidadeAbaco.nome" [sortable]="true">
+                            <ng-template let-row="rowData" pTemplate="body">
+                                {{ row.funcionalidadeAbaco.nome }}
+                            </ng-template>
+                        </p-column>
+                    </basis-datatable>
+                </div>
+
+                <!-- Botões salvar e cancelar do fim da página -->
+                <div class="ui-g" style="justify-content: center; padding-top: 25px;">
+                    <div class="ui-g-4 ui-md-4 ui-sm-12">
+                        <app-white-button buttonLabel="Cancelar" id="idBtnCancelarFormPerfil" routerLink="/perfil">
+                        </app-white-button>
+                    </div>
+                    <div class="ui-g-4 ui-md-4 ui-sm-12">
+                        <app-submit-button buttonLabel="Salvar" id="idBtnSalvarFormPerfil"
+                            [disabled]="editForm.form.invalid || isSaving"></app-submit-button>
+                    </div>
+                </div>
+
+                <!-- Dialog confirmação deleção -->
+                <p-confirmDialog header="Confirmação" #dialog>
+                    <p-footer>
+                        <button type="button" id="idNaoDeleteFormPerfil" pButton icon="fa-close" label="Não"
+                            (click)="dialog.reject()"></button>
+                        <button type="button" id="idSimDeleteFormPerfil" pButton icon="fa-check" label="Sim"
+                            (click)="dialog.accept()"></button>
+                    </p-footer>
+                </p-confirmDialog>
+
+                <!-- Dialog Permissão -->
+                <p-dialog header="Permissão" [(visible)]="mostrarDialogPermissao" [style]="{width: '55vw'}"
+                    [contentStyle]="{'overflow':'visible'}">
+                    <div class="ui-g-12 ui-md-12 ui-sm-12" style="margin-bottom: 25px">
+                        <span>
+                            <h3 class="first">Permissões *</h3>
+                            <p-multiSelect defaultLabel="Selecione ao menos uma permissão"
+                                *ngIf="mostrarDialogPermissao"
+                                [options]="permissoesOptions"
+                                [(ngModel)]="novasPermissoes"
+                                [ngModelOptions]="{ standalone: true }"
+                                required
+                                #editPermissoes='ngModel'>
+                            </p-multiSelect>
+                            <div *ngIf="editForm.controls['editPermissoes']
+                                            && !editForm.controls['editPermissoes'].valid
+                                            && (editForm.controls['editPermissoes'].touched
+                                            || editForm.submitted)" class="ui-message-select ui-messages-error-select">
+                                Campo obrigatório.
+                            </div>
+                        </span>
+                    </div>
+                    <div class="ui-g ui-md-12" style="justify-content: flex-end; padding-top: 25px">
+                        <div class="ui-g-2 ui-md-2 ui-sm-12">
+                            <app-white-button [buttonLabel]="'Cancelar'" id="idBtnCancelarPermissaoSaveFormPerfil"
+                                (click)="fecharDialogPermissao()">
+                            </app-white-button>
+                        </div>
+
+                        <div class="ui-g-2">
+                            <app-green-button [buttonLabel]="'Salvar'" id="idSalvarPermissaoSaveFormPerfil"
+                                (click)="adicionarPermissao()">
+                            </app-green-button>
+                        </div>
+                    </div>
+                </p-dialog>
+            </form>
+        </div>
+    </div>
+</div>

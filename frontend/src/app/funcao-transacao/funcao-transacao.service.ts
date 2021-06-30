@@ -61,14 +61,37 @@ export class FuncaoTransacaoService {
         return result;
     }
 
-    create(funcaoTransacao: FuncaoTransacao, idAnalise: Number): Observable<any> {
-        const json = funcaoTransacao.toJSONState();
-        return this.http.post(`${this.funcaoTransacaoResourceUrl}/${idAnalise}`, json);
+    create(funcaoTransacao: FuncaoTransacao, idAnalise: Number, files?: File[]): Observable<any> {
+
+        let body = new FormData();
+        if (files) {
+            for (let i = 0; i < files.length; i++) {
+                body.append('files', files[i]);
+            }
+        }
+        const json = JSON.stringify(funcaoTransacao);
+        const blob = new Blob([json], {
+            type: 'application/json'
+        });
+        body.append('funcaoTransacao', blob);
+
+        return this.http.post(`${this.funcaoTransacaoResourceUrl}/${idAnalise}`, body);
     }
 
-    update(funcaoTransacao: FuncaoTransacao) {
-        const copy = funcaoTransacao.toJSONState();
-        return this.http.put(`${this.funcaoTransacaoResourceUrl}/${copy.id}`, copy).pipe(catchError((error: any) => {
+    update(funcaoTransacao: FuncaoTransacao, files?: File[]) {
+        let body = new FormData();
+        if (files) {
+            for (let i = 0; i < files.length; i++) {
+                body.append('files', files[i]);
+            }
+        }
+        const json = JSON.stringify(funcaoTransacao);
+        const blob = new Blob([json], {
+            type: 'application/json'
+        });
+        body.append('funcaoTransacao', blob);
+
+        return this.http.put(`${this.funcaoTransacaoResourceUrl}/${funcaoTransacao.id}`, body).pipe(catchError((error: any) => {
             if (error.name === 403) {
                 this.pageNotificationService.addErrorMessage(error);
                 return Observable.throw(new Error(error.status));
@@ -110,6 +133,12 @@ export class FuncaoTransacaoService {
         const url = `${this.resourceUrlPEAnalitico}funcaoTransacao/${idSistema}?name=${nome}&idModulo=${idModulo}&idFuncionalidade=${idFuncionalidade}`;
         return this.http.get<[]>(url);
     }
+
+    public getFuncaoTransacaoByModuloOrFuncionalidadeEstimada(idSistema: Number, nome?: String, idModulo?: Number, idFuncionalidade?: Number): Observable<any[]> {
+        const url = `${this.resourceUrlPEAnalitico}funcaoTransacao/estimada/${idSistema}?name=${nome}&idModulo=${idModulo}&idFuncionalidade=${idFuncionalidade}`;
+        return this.http.get<[]>(url);
+    }
+
     public getVwFuncaoTransacaoByIdAnalise(id: Number): Observable<any[]> {
         const url = `${this.vwFuncaoTransacaoResourceUrl}/${id}`;
         return this.http.get<[]>(url);

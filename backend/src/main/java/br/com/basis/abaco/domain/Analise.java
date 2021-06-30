@@ -6,6 +6,7 @@ import br.com.basis.abaco.domain.enumeration.TipoAnalise;
 import br.com.basis.dynamicexports.pojo.ReportObject;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import io.swagger.annotations.ApiModel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -38,6 +39,7 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.OrderBy;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
@@ -136,6 +138,18 @@ public class Analise implements Serializable, ReportObject {
     @Column(name = "clonada_para_equipe")
     private Boolean clonadaParaEquipe = false;
 
+//    Saber qual análise foi clonada
+    @OneToOne
+    @JoinColumn(name = "analise_clonada_equipe_id", referencedColumnName = "id")
+    @Field(type = FieldType.Nested, ignoreFields = {"analiseClonadaParaEquipe", "analisesComparadas"})
+    @JsonIgnoreProperties("analiseClonadaParaEquipe")
+    private Analise analiseClonadaParaEquipe;
+
+//    Saber se a análise clonou ou foi clonada de outra.
+    @Column(name = "analise_clonou")
+    @Field(type = FieldType.Boolean)
+    private Boolean analiseClonou;
+
     @Column(name = "is_divergence")
     @Field(type = FieldType.Boolean, index = FieldIndex.not_analyzed)
     private Boolean isDivergence = false;
@@ -183,13 +197,13 @@ public class Analise implements Serializable, ReportObject {
     @JsonInclude
     @OneToMany(mappedBy = ANALISE, cascade = CascadeType.ALL)
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-    @OrderBy("name ASC, funcionalidade ASC, id ASC")
+    @OrderBy("ordem DESC, name ASC, funcionalidade ASC, id ASC")
     private Set<FuncaoDados> funcaoDados = new HashSet<>();
 
     @JsonInclude
     @OneToMany(mappedBy = ANALISE, cascade = CascadeType.ALL)
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-    @OrderBy("name ASC, funcionalidade ASC, id ASC")
+    @OrderBy("ordem DESC, name ASC, funcionalidade ASC, id ASC")
     private Set<FuncaoTransacao> funcaoTransacaos = new HashSet<>();
 
     @Nullable

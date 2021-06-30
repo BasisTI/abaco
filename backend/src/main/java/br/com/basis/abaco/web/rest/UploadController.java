@@ -1,9 +1,12 @@
 package br.com.basis.abaco.web.rest;
 
+import br.com.basis.abaco.domain.FuncaoDados;
 import br.com.basis.abaco.domain.Manual;
 import br.com.basis.abaco.domain.UploadedFile;
+import br.com.basis.abaco.repository.FuncaoDadosRepository;
 import br.com.basis.abaco.repository.ManualRepository;
 import br.com.basis.abaco.repository.UploadedFilesRepository;
+import br.com.basis.abaco.service.dto.UploadedFileDTO;
 import br.com.basis.abaco.web.rest.errors.UploadException;
 import br.com.basis.abaco.web.rest.util.HeaderUtil;
 import com.google.common.net.HttpHeaders;
@@ -42,13 +45,13 @@ public class UploadController {
     private final Logger log = LoggerFactory.getLogger(UploadController.class);
 
     @Autowired
-    private ServletContext servletContext;
-
-    @Autowired
     private UploadedFilesRepository filesRepository;
 
     @Autowired
     private ManualRepository manualRepository;
+
+    @Autowired
+    private FuncaoDadosRepository funcaoDadosRepository;
 
     @Autowired
     ServletContext context;
@@ -100,6 +103,15 @@ public class UploadController {
     response.getOutputStream().write(arquivo);
     }
 
+    @GetMapping("/downloadImage/{id}")
+    public void downloadImageResource(HttpServletResponse response, @PathVariable Long id) throws IOException {
+        UploadedFile uploadedFile = filesRepository.findOne(id);
+        byte [] arquivo = uploadedFile.getLogo();
+        response.setContentType("image/*");
+        response.addHeader("Content-Disposition", "attachment; filename="+uploadedFile.getOriginalName());
+        response.getOutputStream().write(arquivo);
+    }
+
     @DeleteMapping("/deleteFile")
     public ResponseEntity<Void> deleteFile(@RequestParam("arquivoId") Long id, @RequestParam("manualId") Long manualId) {
         log.debug("REST request to delete File : {}", id);
@@ -107,10 +119,7 @@ public class UploadController {
         UploadedFile file = filesRepository.findOne(id);
         Manual manual = manualRepository.findOne(manualId);
 
-
-
         manual.removeArquivoManual(file);
-
 
         manualRepository.save(manual);
         filesRepository.save(file);
@@ -120,7 +129,19 @@ public class UploadController {
         }
 
         return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert("UploadedFile", id.toString())).build();
+    }
+    @DeleteMapping("/deleteFileEvidence")
+    public ResponseEntity<Void> deleteFileEvidencia(@RequestParam("fileId") Long id, @RequestParam("funcaoDadosId") Long funcaoId) {
+        log.debug("REST request to delete File : {}", id);
 
+        UploadedFile file = filesRepository.findOne(id);
+        FuncaoDados funcaoDados = funcaoDadosRepository.findOne(funcaoId);
+
+        funcaoDados.removeArquivoEvidencia(file);
+
+        funcaoDadosRepository.save(funcaoDados);
+
+        return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert("UploadedFile", funcaoDados.toString())).build();
     }
 
     @GetMapping("/getLogo/info/{id}")
@@ -129,21 +150,34 @@ public class UploadController {
     }
 
     @GetMapping("/getLogo/{id}")
-    public UploadedFile getLogo(@PathVariable Long id) {
-        return filesRepository.findOne(id);
+    public UploadedFileDTO getLogo(@PathVariable Long id) {
+        UploadedFile uploadedFile = filesRepository.findOne(id);
+        UploadedFileDTO uploadedFileDTO = new UploadedFileDTO();
+        uploadedFileDTO.setId(uploadedFile.getId());
+        uploadedFileDTO.setOriginalName(uploadedFile.getOriginalName());
+        uploadedFileDTO.setLogo(uploadedFile.getLogo());
+        uploadedFileDTO.setSizeOf(uploadedFile.getSizeOf());
+        return uploadedFileDTO;
     }
 
     @PostMapping("/uploadLogo")
-    @Secured({ "ROLE_ADMIN", "ROLE_USER", "ROLE_GESTOR" })
-    public ResponseEntity<UploadedFile> singleFileUpload(@RequestParam("file") MultipartFile file) throws IOException {
+    public ResponseEntity<UploadedFileDTO> singleFileUpload(@RequestParam("file") MultipartFile file) throws IOException {
         this.bytes = file.getBytes();
 
         UploadedFile uploadedFile = new UploadedFile();
 
         uploadedFile.setLogo(bytes);
         uploadedFile.setDateOf(new Date());
+        uploadedFile.setSizeOf((int) file.getSize());
+        uploadedFile.setOriginalName(file.getOriginalFilename());
         uploadedFile = filesRepository.save(uploadedFile);
 
-        return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION, "/saveFile").body(uploadedFile);
+        UploadedFileDTO uploadedFileDTO = new UploadedFileDTO();
+        uploadedFileDTO.setId(uploadedFile.getId());
+        uploadedFileDTO.setOriginalName(uploadedFile.getOriginalName());
+        uploadedFileDTO.setLogo(uploadedFile.getLogo());
+        uploadedFileDTO.setSizeOf(uploadedFile.getSizeOf());
+
+        return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION, "/saveFile").body(uploadedFileDTO);
     }
 }

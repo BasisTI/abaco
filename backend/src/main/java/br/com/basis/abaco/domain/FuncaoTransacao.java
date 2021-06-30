@@ -6,7 +6,6 @@ import br.com.basis.abaco.domain.enumeration.TipoFuncaoTransacao;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,16 +14,16 @@ import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.springframework.data.elasticsearch.annotations.Document;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.OrderBy;
 import javax.persistence.Table;
+import javax.persistence.Enumerated;
+import javax.persistence.EnumType;
+import javax.persistence.Column;
+import javax.persistence.ManyToOne;
+import javax.persistence.OrderBy;
+import javax.persistence.OneToMany;
 import javax.persistence.Transient;
+import javax.persistence.CascadeType;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -51,11 +50,10 @@ public class FuncaoTransacao extends FuncaoAnalise implements Serializable {
     @Column(name = "tipo")
     private TipoFuncaoTransacao tipo;
 
-    @OneToMany(mappedBy = FUNCAOTRANSACAO)
-    @JsonIgnore
+    @ManyToOne
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     @OrderBy("nome ASC, id ASC")
-    private Set<Funcionalidade> funcionalidades = new HashSet<>();
+    private Funcionalidade funcionalidade;
 
     @Column
     private String ftrStr;
@@ -64,10 +62,9 @@ public class FuncaoTransacao extends FuncaoAnalise implements Serializable {
     private Integer quantidade;
 
 
-    @JsonManagedReference(value = FUNCAOTRANSACAO)
     @OneToMany(mappedBy = FUNCAOTRANSACAO, cascade = CascadeType.ALL, orphanRemoval = true)
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-    @OrderBy("nome")
+    @OrderBy("id")
     private Set<Alr> alrs = new HashSet<>();
 
     @OneToMany(mappedBy = FUNCAOTRANSACAO, cascade = CascadeType.ALL, orphanRemoval = true)
@@ -83,9 +80,8 @@ public class FuncaoTransacao extends FuncaoAnalise implements Serializable {
     @Column(name = "impacto")
     private ImpactoFatorAjuste impacto;
 
-    @JsonManagedReference(value = FUNCAOTRANSACAO)
     @OneToMany(mappedBy = FUNCAOTRANSACAO, cascade = CascadeType.ALL, orphanRemoval = true)
-    @OrderBy("nome")
+    @OrderBy("id")
     private Set<Der> ders = new HashSet<>();
 
     @JsonIgnore
@@ -104,6 +100,20 @@ public class FuncaoTransacao extends FuncaoAnalise implements Serializable {
         this.ders = ders == null ? null : Collections.unmodifiableSet(ders);
         this.analise = analise;
         bindFuncaoAnalise(null, complexidade, pf, grossPF, analise, funcionalidade, detStr, fatorAjuste, name, sustantation, derValues, null);
+    }
+    public void addFiles(UploadedFile file){
+        this.files.add(file);
+        file.setFuncaoTransacao(this);
+    }
+
+    public void setFiles(List<UploadedFile> files) {
+        this.files.clear();
+        if (files != null) {
+            this.files.addAll(files);
+            files.forEach(item -> {
+                item.setFuncaoTransacao(this);
+            });
+        }
     }
 
 }

@@ -3,17 +3,26 @@ import { Routes } from '@angular/router';
 import {BaselineComponent} from './sintetico/baseline.component';
 import { BaselineViewComponent } from './analitico/baseline-view.component';
 import { AuthGuard } from '@nuvem/angular-base';
+import { AuthGuardService } from '../util/auth.guard.service';
 
 
 export const baselineRoute: Routes = [
   {
     path: 'baseline',
     component: BaselineComponent,
-    canActivate: [AuthGuard]
+    canActivate: [AuthGuard, AuthGuardService],
+    data: {
+        roleParaVerificar: ['ROLE_ABACO_BASELINE_ACESSAR'],
+        breadcrumb: "Baseline"
+    }
   },
   {
     path: 'baseline/:id/:equipe',
     component: BaselineViewComponent,
-    canActivate: [AuthGuard]
+    canActivate: [AuthGuard, AuthGuardService],
+    data: {
+        roleParaVerificar: ['ROLE_ABACO_BASELINE_CONSULTAR'],
+        breadcrumb: "Baseline"
+    }
   }
 ];

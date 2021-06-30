@@ -1,3 +1,4 @@
+import { version } from 'package.json';
 export const environment = {
     production: true,
     apiUrl: '/api',
@@ -12,5 +13,6 @@ export const environment = {
         tokenValidationUrl: '/api/token/validate',
         storage: localStorage,
         loginSuccessRoute: '/#/login-success'
-    }
+    },
+    appVersion: version
 };

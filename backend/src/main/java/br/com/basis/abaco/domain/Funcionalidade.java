@@ -2,6 +2,7 @@ package br.com.basis.abaco.domain;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Cache;
@@ -17,7 +18,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
-import javax.persistence.OrderBy;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Transient;
@@ -56,22 +56,13 @@ public class Funcionalidade implements Serializable {
     @JsonBackReference
     private Modulo modulo;
 
-    @ManyToOne
     @JsonIgnore
-    @OrderBy("name ASC, id ASC")
-    private FuncaoDados funcaoDados;
-
     @Transient
-    @JsonIgnore
     private Set<FuncaoDados> funcoesDados = new HashSet<>();
 
-    @ManyToOne
-    @JsonIgnore
-    @OrderBy("name ASC, id ASC")
-    private FuncaoTransacao funcaoTransacao;
 
-    @Transient
     @JsonIgnore
+    @Transient
     private Set<FuncaoTransacao> funcoesTransacao = new HashSet<>();
 
     public Long getId() {
@@ -108,31 +99,7 @@ public class Funcionalidade implements Serializable {
         this.modulo = modulo;
     }
 
-    public FuncaoDados getFuncaoDados() {
-        return funcaoDados;
-    }
 
-    public Funcionalidade funcaoDados(FuncaoDados funcaoDados) {
-        this.funcaoDados = funcaoDados;
-        return this;
-    }
-
-    public void setFuncaoDados(FuncaoDados funcaoDados) {
-        this.funcaoDados = funcaoDados;
-    }
-
-    public FuncaoTransacao getFuncaoTransacao() {
-        return funcaoTransacao;
-    }
-
-    public Funcionalidade funcaoTransacao(FuncaoTransacao funcaoTransacao) {
-        this.funcaoTransacao = funcaoTransacao;
-        return this;
-    }
-
-    public void setFuncaoTransacao(FuncaoTransacao funcaoTransacao) {
-        this.funcaoTransacao = funcaoTransacao;
-    }
 
     public Set<FuncaoDados> getFuncoesDados() {
         return Optional.ofNullable(funcoesDados)

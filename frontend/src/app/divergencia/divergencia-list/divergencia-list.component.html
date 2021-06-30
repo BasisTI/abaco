@@ -9,7 +9,6 @@
                               type="text"
                               pInputText class="ui-inputtext"
                               [(ngModel)]="searchDivergence.identificadorAnalise"
-                              (keyup.enter)="performSearch()"
                               id="idIdentificadorComponentAnalise"
                               maxlength="50">
                         <label>Identificador</label>
@@ -50,6 +49,7 @@
                     </div>
                     <div class="ui-g-2 ui-md-2 ui-sm-12">
                         <app-blue-button
+                                *ngIf="canPesquisar"
                                 [buttonLabel]="'Pesquisar' "
                                 id="idBtnPesquisarComponentAnalise"
                                 buttonIcon="ui-icon-search"
@@ -58,12 +58,15 @@
                     </div>
                 </div>
                 <div>
+
                     <div class="ui-g-12 ui-md-11" >
-                        <p-table [columns]="allColumnsTable" 
+                        <p-table [columns]="allColumnsTable"
                                     [value]="lstDivergence"
                                     [lazy]="true"
                                     [paginator]="true"
                                     [rows]="20"
+                                    [scrollable]="true"
+                                    [scrollHeight]="'500px'"
                                     [rowsPerPageOptions]="rowsPerPageOptions"
                                     selectionMode="single"
                                     (click) = "selectAnalise()"
@@ -73,7 +76,7 @@
                                     #data >
                             <ng-template pTemplate="header" let-columns>
                                 <tr>
-                                    <th style="width: 3em"></th>
+                                    <th></th>
                                     <th *ngFor="let col of columns" [pSortableColumn]="col.field">
                                         {{col.header}}
                                         <p-sortIcon [field]="col.field"></p-sortIcon>
@@ -147,13 +150,15 @@
                     </div>
                     <div class="ui-g-12 ui-md-1" >
                         <basis-datatable-button
+                            *ngIf="canEditar"
                             name="generateDivergence"
                             icon="edit"
                             [disabled]="!selectedDivergence"
-                            (click)="editDivergence(selectedDivergence)"
+                            (click)="editDivergence(analiseSelecionada)"
                             class="ui-button-info">
                         </basis-datatable-button>
                         <basis-datatable-button
+                            *ngIf="canDeletar"
                             name="generateDivergence"
                             icon="delete"
                             [disabled]="!selectedDivergence"
@@ -161,7 +166,7 @@
                             class="ui-button-danger">
                         </basis-datatable-button>
                         <basis-datatable-button
-                            *ngIf="blocked"
+                            *ngIf="blocked && canBloquearDesbloquear"
                             name="blockDivergence"
                             [bTooltip]="selectedDivergence != null ? 'Desbloquear' : 'Escolha um registro para desbloquear.'"
                             icon="block"
@@ -170,25 +175,26 @@
                             class="ui-button-success">
                         </basis-datatable-button>
                         <basis-datatable-button
-                            *ngIf="!blocked && inicial"
+                            *ngIf="!blocked && inicial && canBloquearDesbloquear"
                             name="unlockDivergemce"
                             [bTooltip]="selectedDivergence != null ? 'Bloquear' : 'Escolha um registro para bloquear.'"
                             icon="block"
                             [disabled]="!selectedDivergence"
                             (click)="confirmBlockDivegence(selectedDivergence)"
                             class="ui-button-danger">
-                        </basis-datatable-button>        
+                        </basis-datatable-button>
                         <basis-datatable-button
+                            *ngIf="canAlterarStatus"
                             name="generateDivergence"
                             [bTooltip]="selectedDivergence != null ? 'Alterar' : 'Escolha um registro para alterar status.'"
                             icon="swap-vert"
                             [disabled]="!selectedDivergence"
                             (click)="changeStatus(selectedDivergence)"
                             class="ui-button-info">
-                        </basis-datatable-button>               
+                        </basis-datatable-button>
                     </div>
                     <div class="ui-g-12 ui-md-2">
-                        <app-export-button [dataTable]="datatable" resourceName="divergencia" [filter]="searchDivergence">
+                        <app-export-button [dataTable]="datatable" resourceName="divergencia" [filter]="searchDivergence" funcionalidadeName="divergencia">
                         </app-export-button>
                     </div>
                     <!-- Dialog confirmação deleção -->
@@ -236,7 +242,7 @@
                                     </p-dropdown>
                                 </div>
                             </div>
-                            <app-green-button buttonLabel="Alterar" (click)="alterStatusAnalise()" style="float:right; margin-top: 5px"></app-green-button>
+                            <app-green-button buttonLabel="Alterar" (click)="alterStatusValidacao()" style="float:right; margin-top: 5px"></app-green-button>
                         </div>
                     </p-dialog>
 

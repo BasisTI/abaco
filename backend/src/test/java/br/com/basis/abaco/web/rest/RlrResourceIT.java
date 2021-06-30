@@ -5,6 +5,7 @@ import br.com.basis.abaco.AbacoApp;
 import br.com.basis.abaco.domain.Rlr;
 import br.com.basis.abaco.repository.RlrRepository;
 import br.com.basis.abaco.repository.search.RlrSearchRepository;
+import br.com.basis.abaco.service.RlrService;
 import br.com.basis.abaco.web.rest.errors.ExceptionTranslator;
 
 import org.junit.Before;
@@ -63,10 +64,13 @@ public class RlrResourceIT {
 
     private Rlr rlr;
 
+    @Autowired
+    private RlrService rlrService;
+
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-            RlrResource rlrResource = new RlrResource(rlrRepository, rlrSearchRepository);
+            RlrResource rlrResource = new RlrResource(rlrRepository, rlrSearchRepository, rlrService);
         this.restRlrMockMvc = MockMvcBuilders.standaloneSetup(rlrResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)

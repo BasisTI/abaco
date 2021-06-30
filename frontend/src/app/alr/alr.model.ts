@@ -9,6 +9,7 @@ export class Alr implements BaseEntity, AnaliseReferenciavel {
     public nome?: string,
     public valor?: number,
     public funcaoTransacao?: FuncaoTransacao,
+    public numeracao?: number
   ) { }
 
   toJSONState(): Alr {

@@ -22,5 +22,11 @@
     <include file="classpath:config/liquibase/changelog/20201129204722_alter_view_for_function.xml" relativeToChangelogFile="false"/>
     <include file="classpath:config/liquibase/changelog/20210114160352_add_many_to_many_manual_files.xml" relativeToChangelogFile="false"/>
     <include file="classpath:config/liquibase/changelog/20210217170852_add_table_config_baseline_sistema_tipo_equipe.xml" relativeToChangelogFile="false"/>
-
+    <include file="classpath:config/liquibase/changelog/20210303112708_add_table_perfil_permissao_acao_funcionalidade_and_relations.xml" relativeToChangelogFile="false"/>
+    <include file="classpath:config/liquibase/changelog/20210309164436_add_permissao_perfil_permissao.xml" relativeToChangelogFile="false"/>
+    <include file="classpath:config/liquibase/changelog/20210315123600_alter_funcionalidade.xml" relativeToChangelogFile="false"/>
+    <include file="classpath:config/liquibase/changelog/20210511164516_add_columns_analise_clonada_equipe.xml" relativeToChangelogFile="false"/>
+    <include file="classpath:config/liquibase/changelog/20210608164624_add_colum_perfil_organizacoes_in_user.xml" relativeToChangelogFile="false"/>
+    <include file="classpath:config/liquibase/changelog/20210610180753_add_view_pe_analitico_estimada.xml" relativeToChangelogFile="false"/>
+    <include file="classpath:config/liquibase/changelog/20210623192004_alter_view_funcao_add_ordem.xml" relativeToChangelogFile="false"/>
 </databaseChangeLog>

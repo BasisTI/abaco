@@ -8,136 +8,160 @@
                 <div class="card card-w-title">
                     <div class="ui-g">
                         <div class="ui-g-12">
-                            <div class="ui-g ui-md-12"
-                                 style="justify-content: flex-end;">
+                            <!-- <div class="ui-g ui-md-12" style="justify-content: flex-end;">
                                 <div class="ui-md-2" *ngIf="!isView">
-                                    <app-green-button
-                                            [buttonLabel]="'Novo'"
-                                            id="idBtnNovoFormFuncaoTransacao"
-                                            buttonIcon="ui-icon-add"
-                                            (click)="openDialog(false)">
+                                    <app-green-button [buttonLabel]="'Novo'" id="idBtnNovoFormFuncaoTransacao"
+                                        buttonIcon="ui-icon-add" (click)="openDialog(false)">
                                     </app-green-button>
                                 </div>
-                            </div>
+                            </div> -->
                             <!-- Inicio da tabela -->
-                            <div>
-                                <basis-datatable
-                                        type="memory"
-                                        [disableDelete]="this.isView"
-                                        [disableEdit]="this.isView"
-                                        id="idTabelaFuncaoTransacaoFormFuncaoTransacao"
-                                        [value]="this.funcoesTransacoes"
-                                        (buttonClick)="datatableClick($event)"
-                                        (selectRow)="selectRow($event)"
-                                        (dblclick)="onRowDblclick($event)"
-                                        (click)="selectFT()"
-                                        [paginator]="false"
-                                        [rows]="20"
-                                        [filterOnColumn]="true"
-                                        [rowsPerPageOptions]="[20,50,100]"
-                                        [showVisibleColumnsControl]="true"
-                                        #tables>
+                            <div class="ui-g">
+                                <basis-datatable type="memory" [disableDelete]="this.isView || isOrderning"
+                                    [disableEdit]="this.isView || selectButtonMultiple || isOrderning"
+                                    [disableView]="selectButtonMultiple || isOrderning" id="idTabelaFuncaoTransacaoFormFuncaoTransacao"
+                                    [enableButtonsScroll]="true"
+                                    [value]="this.funcoesTransacoes" (buttonClick)="datatableClick($event)"
+                                    (dblclick)="onRowDblclick($event)" (click)="selectFT()" [paginator]="false"
+                                    [rows]="20" [selectionMode]="'multiple'" [filterOnColumn]="true"
+                                    [rowsPerPageOptions]="[20,50,100]" [showVisibleColumnsControl]="true" #tables>
+                                    <p-column header="Ordem" field="ordem">
+                                        <ng-template let-col let-funcaoTransacao="rowData" pTemplate="body">
+                                            {{ funcaoTransacao.ordem ? funcaoTransacao.ordem : funcoesTransacoes.indexOf(funcaoTransacao) +1 }}
+                                        </ng-template>
+                                    </p-column>
                                     <p-column field="nomeModulo" header="Módulo" sortable="true"></p-column>
-                                    <p-column field="nomeFuncionalidade" header="Funcionalidade" sortable="true"></p-column>
+                                    <p-column field="nomeFuncionalidade" header="Funcionalidade" sortable="true">
+                                    </p-column>
                                     <p-column field="name" header=" Nome" sortable="true"></p-column>
                                     <p-column field="deflator" header=" Deflator" sortable="true"></p-column>
                                     <p-column field="tipo" header=" Classificação" sortable="true"></p-column>
                                     <p-column field="totalDers" header=" DER(TD)" sortable="true"></p-column>
-                                    <p-column field="totalAlrs" header=" FTR (AR)" sortable="true" ></p-column>
-                                    <p-column field="complexidade" header=" Complexidade" sortable="true" ></p-column>
-                                    <p-column header=" PF Bruto"   field="grossPf" filter="true">
-                                        <ng-template let-grossPF="rowData.grossPF" pTemplate="body"> {{ grossPF | number }}</ng-template>
+                                    <p-column field="totalAlrs" header=" FTR (AR)" sortable="true"></p-column>
+                                    <p-column field="complexidade" header=" Complexidade" sortable="true"></p-column>
+                                    <p-column header=" PF Bruto" field="grossPf" filter="true">
+                                        <ng-template let-grossPF="rowData.grossPF" pTemplate="body"> {{ grossPF | number
+                                            }}</ng-template>
                                     </p-column>
-                                    <p-column header=" PF Liquído" field="pf"  >
-                                        <ng-template let-pf="rowData.pf" pTemplate="body"> {{ pf | number }} </ng-template>
+                                    <p-column header=" PF Liquído" field="pf">
+                                        <ng-template let-pf="rowData.pf" pTemplate="body"> {{ pf | number }}
+                                        </ng-template>
                                     </p-column>
-                                    <p-column header=" Possui Fundamentação ?" field="sustantation" >
-                                        <ng-template let-sustantation="rowData.sustantation" pTemplate="body"> {{ sustantation && sustantation !== emptySustantion ? this.getLabel('Sim') : this.getLabel('Não') }}</ng-template>
+                                    <p-column header=" Possui Fundamentação ?" field="sustantation">
+                                        <ng-template let-sustantation="rowData.sustantation" pTemplate="body"> {{
+                                            sustantation && sustantation !== emptySustantion ? this.getLabel('Sim') :
+                                            this.getLabel('Não') }}</ng-template>
                                     </p-column>
-                                    <basis-datatable-button
-                                        name="clone"
-                                        *ngIf="!isView"
-                                        [pTooltip]="FuncaoTransacaoEditar && FuncaoTransacaoEditar.id != null ? this.getLabel('Criar Clone') : this.getLabel('Escolha um registro para criar Clone.')" 
-                                        [disabled]="FuncaoTransacaoEditar.id == null"
-                                        class="ui-button-dark"
+                                    <basis-datatable-button name="add" *ngIf="!isView && !isOrderning"
+                                        (click)="openDialog(false)" bTooltip="Incluir nova função"
+                                        class="ui-button-success" icon="add">
+                                    </basis-datatable-button>
+                                    <basis-datatable-button [allowMultipleSelection]="false" name="clone"
+                                        (click)="clonar()"
+                                        *ngIf="!isView && !isOrderning"
+                                        [bTooltip]="funcaoTransacaoEditar[0] != undefined ? this.getLabel('Criar Clone') : this.getLabel('Escolha um registro para criar Clone.')"
+                                        [disabled]="funcaoTransacaoEditar[0] == undefined" class="ui-button-dark"
                                         icon="content-copy">
                                     </basis-datatable-button>
-                                    <basis-datatable-button
-                                        name="filter"
-                                        *ngIf="!isView"
-                                        pTooltip="Copiar funções de transação." 
-                                        class="ui-button-info"
+                                    <basis-datatable-button name="filter" *ngIf="!isView && !isOrderning"
+                                    (click)="this.display=true;"
+                                    bTooltip="Copiar funções de transação." class="ui-button-info"
                                         icon="import-export">
+                                    </basis-datatable-button>
+                                    <basis-datatable-button name="edicaoLote"
+                                        *ngIf="!isView && funcaoTransacaoEditar?.length > 1 && !isOrderning"
+                                        (click)="prepararEditarEmLote()" bTooltip="Edição em lote."
+                                        class="ui-button-success" icon="border-color">
+                                    </basis-datatable-button>
+                                    <basis-datatable-button name="ordernar" (click)="ordernarFuncoes()"
+                                        *ngIf="!isView && !isOrderning"
+                                        bTooltip="Ordernar funções." class="ui-button-success" icon="sort">
+                                    </basis-datatable-button>
+                                    <basis-datatable-button name="refresh" (click)="refreshFuncoes()"
+                                        *ngIf="!isView && isOrderning"
+                                        bTooltip="Ordernar (ID)." class="ui-button-success" icon="refresh">
+                                    </basis-datatable-button>
+                                    <basis-datatable-button name="order-up" [bTooltip]="'Mover para cima.'"
+                                        *ngIf="!isView && isOrderning"
+                                        (click)="orderList('order-up')"
+                                        icon="arrow-drop-up">
+                                    </basis-datatable-button>
+                                    <basis-datatable-button name="order-top" [bTooltip]="'Mover ao topo.'"
+                                        *ngIf="!isView && isOrderning"
+                                        (click)="orderList('order-top')"
+                                        icon="skip-next">
+                                    </basis-datatable-button>
+                                    <basis-datatable-button name="order-down" [bTooltip]="'Mover para baixo.'"
+                                        *ngIf="!isView && isOrderning"
+                                        (click)="orderList('order-down')"
+                                        icon="arrow-drop-down">
+                                    </basis-datatable-button>
+                                    <basis-datatable-button style="transform: rotate(-90deg);" name="order-botton"
+                                        *ngIf="!isView && isOrderning"
+                                        (click)="orderList('order-botton')"
+                                        [bTooltip]="'Mover ao final.'" icon="skip-previous">
+                                    </basis-datatable-button>
+                                    <basis-datatable-button name="saveOrder" (click)="salvarOrdernacao()"
+                                        *ngIf="!isView && isOrderning"
+                                        bTooltip="Salvar ordenação." class="ui-button-success" icon="save">
                                     </basis-datatable-button>
                                 </basis-datatable>
                             </div>
                             <!-- fim table -->
                         </div>
                     </div>
-                    <p-dialog
-                            [closable]="false"
-                            [(visible)]="showDialog"
-                            [(header)]="textHeader"
-                            [contentStyle]="{'height': ['windowHeightDialog']}"
-                            [style]="{width: '80vw'}">
-                        <app-analise-modulo-funcionalidade
-                                [erroModulo]="erroModulo" [isFuncaoDados]="false"
-                                (moduloSelectedEvent)="moduloSelected($event)"
-                                (funcionalidadeSelectedEvent)="functionalitySelected($event)">
-                        </app-analise-modulo-funcionalidade>
+                    <p-dialog [closable]="false" [(visible)]="showDialog" [(header)]="textHeader"
+                        [contentStyle]="{'height': ['windowHeightDialog']}" [style]="{width: '80vw'}">
+                        <div *ngIf="showDialog && modulos">
+                            <app-analise-modulo-funcionalidade [(analise)]="analise" [erroModulo]="erroModulo"
+                                [isFuncaoDados]="false" (moduloSelectedEvent)="moduloSelected($event)"
+                                [(funcionalidade)]="currentFuncaoTransacao.funcionalidade"
+                                (funcionalidadeSelectedEvent)="functionalitySelected($event)"
+                                [(modulosSistema)]="modulos">
+                            </app-analise-modulo-funcionalidade>
+                        </div>
                         <div *ngIf="!isEdit">
                             <div class="ui-g" *ngIf="!showMultiplos">
                                 <div class="ui-g-9">
                                     <label>Nome do Processo Elementar *</label>
-                                    <p-autoComplete
-                                            [(ngModel)]="currentFuncaoTransacao.name"
-                                            [suggestions]="baselineResultados"
-                                            id="idNomeProcessoElementarFormFuncaoTransacao"
-                                            (completeMethod)="searchBaseline($event)"
-                                            (onSelect)="recuperarNomeSelecionado($event)">
+                                    <p-autoComplete [(ngModel)]="currentFuncaoTransacao.name"
+                                        [suggestions]="baselineResultados"
+                                        id="idNomeProcessoElementarFormFuncaoTransacao"
+                                        (completeMethod)="searchBaseline($event)"
+                                        (onSelect)="recuperarNomeSelecionado($event)">
                                         <ng-template let-currentFuncaoTransacao pTemplate="name">
                                             <div class="ui-helper-clearfix">
-                                                <div style="font-size:15px;float:left;margin:10px 10px 0 0">{{currentFuncaoTransacao.name}}</div>
+                                                <div style="font-size:15px;float:left;margin:10px 10px 0 0">
+                                                    {{currentFuncaoTransacao.name}}</div>
                                             </div>
                                         </ng-template>
                                     </p-autoComplete>
                                     <span class="md-inputfield">
                                         <div *ngIf="nomeInvalido && !currentFuncaoTransacao.name"
-                                             class="ui-message ui-messages-error"
-                                             >Campo obrigatório.
+                                            class="ui-message ui-messages-error">Campo obrigatório.
                                         </div>
                                     </span>
                                 </div>
                                 <div class="ui-g-12 ui-md-3 ui-lg-3">
-                                    <app-blue-button
-                                            [buttonLabel]="this.getLabel('Multiplos')"
-                                            id="idBtnMultiplosFormFuncaoTransacao"
-                                            (click)="buttonMultiplos()">
+                                    <app-blue-button [buttonLabel]="this.getLabel('Multiplos')"
+                                        id="idBtnMultiplosFormFuncaoTransacao" (click)="buttonMultiplos()">
                                     </app-blue-button>
                                 </div>
                             </div>
                             <div class="ui-g" *ngIf="showMultiplos">
                                 <div class="ui-g-9">
-                                    <label >Nomes dos
+                                    <label>Nomes dos
                                         Processos*</label>
-                                    <textarea pInputTextarea
-                                              [(ngModel)]="text"
-                                              style="white-space: nowrap; overflow: auto;"
-                                              [autoResize]="false"
-                                              (keyup.enter)="textChanged()"
-                                              id="idNomesFormFuncaoTransacao"
-                                              (keyup.backspace)="textChanged()"
-                                              (keyup.delete)="textChanged()"
-                                              (change)="textChanged()"
-                                              [rows]="6" [cols]="180"
-                                              name="{{ label }}">
+                                    <textarea pInputTextarea [(ngModel)]="text"
+                                        style="white-space: nowrap; overflow: auto;" [autoResize]="false"
+                                        (keyup.enter)="textChanged()" id="idNomesFormFuncaoTransacao"
+                                        (keyup.backspace)="textChanged()" (keyup.delete)="textChanged()"
+                                        (change)="textChanged()" [rows]="6" [cols]="180" name="{{ label }}">
                                     </textarea>
                                 </div>
                                 <div class="ui-g-3">
-                                    <app-blue-button
-                                            [buttonLabel]="this.getLabel('Unitario')"
-                                            id="idUnitarioFormFuncaoTransacao"
-                                            (click)="buttonMultiplos()">
+                                    <app-blue-button [buttonLabel]="this.getLabel('Unitario')"
+                                        id="idUnitarioFormFuncaoTransacao" (click)="buttonMultiplos()">
                                     </app-blue-button>
                                 </div>
                             </div>
@@ -147,28 +171,22 @@
                                 <div class="ui-g-12 ui-md-12 ui-sm-12" style="margin-bottom: 25px">
                                     <label>Nome do Processo
                                         Elementar *</label>
-                                    <input type="text" class="ui-inputtext"
-                                           id="idNomesFormFuncaoTransacao"
-                                           [(ngModel)]="currentFuncaoTransacao.name">
+                                    <input type="text" class="ui-inputtext" id="idNomesFormFuncaoTransacao"
+                                        [(ngModel)]="currentFuncaoTransacao.name">
                                 </div>
                             </div>
                         </div>
                         <div class="ui-g">
                             <div class="ui-g-6 ui-md-12 ui-sm-12">
-                                <label >Classificação *</label>
-                                <p-dropdown
-                                        [filter]="true"
-                                        [options]="classificacoes"
-                                        id="idClassificacoesFormFuncaoTransacao"
-                                        [(ngModel)]="currentFuncaoTransacao.tipo"
-                                        [placeholder]="this.getLabel('Selecione Classificação')"
-                                        name="classificacao"
-                                        
-                                        (onChange)="classValida()">
+                                <label>Classificação *</label>
+                                <p-dropdown [filter]="true" [options]="classificacoes"
+                                    id="idClassificacoesFormFuncaoTransacao" [(ngModel)]="currentFuncaoTransacao.tipo"
+                                    [placeholder]="this.getLabel('Selecione Classificação')" name="classificacao"
+                                    (onChange)="classValida()">
                                 </p-dropdown>
                                 <span class="md-inputfield">
                                     <div *ngIf="classInvalida" class="ui-message ui-messages-error">
-                                    Campo obrigatório.
+                                        Campo obrigatório.
                                     </div>
                                 </span>
                             </div>
@@ -176,73 +194,57 @@
                         <div class="ui-g">
                             <div class="ui-g-11 ui-md-11 ui-sm-11">
                                 <label>Deflator *</label>
-                                <p-dropdown
-                                        [filter]="true"
-                                        [options]="fatoresAjuste"
-                                        id="idDeflatorFormFuncaoTransacao"
-                                        [(ngModel)]="currentFuncaoTransacao.fatorAjuste"
-                                        [placeholder]="fatoresAjusteDropdownPlaceholder()"
-                                        (onChange)="contratoSelecionado()"
-                                        name="fatorAjuste" >
+                                <p-dropdown [filter]="true" [options]="fatoresAjuste" id="idDeflatorFormFuncaoTransacao"
+                                    [(ngModel)]="currentFuncaoTransacao.fatorAjuste"
+                                    [placeholder]="fatoresAjusteDropdownPlaceholder()"
+                                    (onChange)="contratoSelecionado()" name="fatorAjuste">
                                 </p-dropdown>
                                 <span class="md-inputfield">
-                                    <div *ngIf="deflatorVazio" class="ui-message ui-messages-error"
-                                        >
-                                    Campo obrigatório.
+                                    <div *ngIf="deflatorVazio" class="ui-message ui-messages-error">
+                                        Campo obrigatório.
                                     </div>
                                 </span>
                             </div>
-                            <div class="ui-g-1 ui-md-1 ui-sm-1" >
-                                <app-blue-button
-                                        buttonIcon="ui-icon-info-outline"
-                                        (click)="showDeflator()">
+                            <div class="ui-g-1 ui-md-1 ui-sm-1">
+                                <app-blue-button buttonIcon="ui-icon-info-outline" (click)="showDeflator()">
                                 </app-blue-button>
                             </div>
                             <div class="ui-g-3 ui-md-6 ui-sm-12" [hidden]="hideShowQuantidade">
-                                <label >Quantidade *</label>
-                                <input type="number" class="ui-inputtext" min="1"
-                                       id="idQuantidadeFormFuncaoTransacao"
-                                       name="quantidade"
-                                       [(ngModel)]="currentFuncaoTransacao.quantidade">
+                                <label>Quantidade *</label>
+                                <input type="number" class="ui-inputtext" min="1" id="idQuantidadeFormFuncaoTransacao"
+                                    name="quantidade" [(ngModel)]="currentFuncaoTransacao.quantidade">
                                 <span class="md-inputfield">
-                                    <div *ngIf="erroUnitario"
-                                         class="ui-message ui-messages-error"
-                                         >
-                                    Campo obrigatório.
+                                    <div *ngIf="erroUnitario" class="ui-message ui-messages-error">
+                                        Campo obrigatório.
                                     </div>
                                 </span>
                             </div>
                         </div>
                         <div class="ui-g-6 ui-md-6 ui-sm-12" [hidden]="hideElementTDTR">
-                            <h2 >FTR (AR)</h2>
+                            <h2>FTR (AR)</h2>
                             <div class="ui-g-12" style="padding: 0px">
-                                <app-analise-der-chips
-                                        [(values)]="alrsChips"
-                                        id="idFTRFormFuncaoTransacao"
-                                        [relacionarDers]="true"
-                                        (dersReferenciadosEvent)="dersReferenciados($event)">
+                                <app-analise-der-chips [tipoChip]="'ALR'" [idSistema]="this.analise?.sistema?.id" [(values)]="alrsChips" id="idFTRFormFuncaoTransacao"
+                                    [relacionarDers]="true" (dersReferenciadosEvent)="dersReferenciados($event)">
                                 </app-analise-der-chips>
                             </div>
                             <div class="ui-g-12" style="padding: 0px">
                                 <span class="md-inputfield">
-                                    <div *ngIf="erroTR && alrsChips.length == 0" class="ui-message ui-messages-error"
-                                        >
-                                    Campo obrigatório.
+                                    <div *ngIf="erroTR && alrsChips.length == 0" class="ui-message ui-messages-error">
+                                        Campo obrigatório.
                                     </div>
                                 </span>
                             </div>
                         </div>
                         <div class="ui-g-6 ui-md-6 ui-sm-12" [hidden]="hideElementTDTR">
-                            <h2 >DER (TD)</h2>
+                            <h2>DER (TD)</h2>
                             <div class="ui-g-12" style="padding: 0px">
-                                <app-analise-der-chips id="idDERFormFuncaoTransacao"
-                                                       [(values)]="dersChips"></app-analise-der-chips>
+                                <app-analise-der-chips [tipoChip]="'DER'" [tipoFuncao]="'FT'" [idSistema]="this.analise?.sistema?.id" id="idDERFormFuncaoTransacao" [(values)]="dersChips">
+                                </app-analise-der-chips>
                             </div>
                             <div class="ui-g-12" style="padding: 0px">
                                 <span class="md-inputfield">
-                                    <div *ngIf="erroTD && dersChips.length == 0" class="ui-message ui-messages-error"
-                                        >
-                                    Campo obrigatório.
+                                    <div *ngIf="erroTD && dersChips.length == 0" class="ui-message ui-messages-error">
+                                        Campo obrigatório.
                                     </div>
                                 </span>
                             </div>
@@ -250,6 +252,7 @@
 
                         <div class="ui-g-12 ui-md-12 ui-sm-12">
                             <label>Evidência</label>
+
                             <span class="md-inputfield">
                                  <p-editor
                                          [rows]="3"
@@ -258,33 +261,100 @@
                                          [disabled]="isDisabled"
                                          pInputTextarea name="funcaoDadosSustentacao"
                                          [(ngModel)]="currentFuncaoTransacao.sustantation">
+                                           <!-- Inicio configuração toolbar-->
+                                    <p-header>
+                                        <span class="ql-formats">
+                                            <select class="ql-header">
+                                              <option value="1">Heading</option>
+                                              <option value="2">Subheading</option>
+                                              <option selected>Normal</option>
+                                            </select>
+                                            <select class="ql-font">
+                                              <option selected>Sans Serif</option>
+                                              <option value="serif">Serif</option>
+                                              <option value="monospace">Monospace</option>
+                                            </select>
+                                        </span>
+                                        <span class="ql-formats">
+                                            <button class="ql-bold" aria-label="Bold" type="button"></button>
+                                            <button class="ql-italic" aria-label="Italic" type="button"></button>
+                                            <button class="ql-underline" aria-label="Underline" type="button"></button>
+                                        </span>
+                                        <span class="ql-formats">
+                                            <select class="ql-color"></select>
+                                            <select class="ql-background"></select>
+                                        </span>
+                                        <span class="ql-formats">
+                                            <button class="ql-list" value="ordered" aria-label="Ordered List" type="button"></button>
+                                            <button class="ql-list" value="bullet" aria-label="Unordered List" type="button"></button>
+                                            <select class="ql-align">
+                                                <option selected></option>
+                                                <option value="center"></option>
+                                                <option value="right"></option>
+                                                <option value="justify"></option>
+                                            </select>
+                                        </span>
+                                        <span class="ql-formats">
+                                            <button class="ql-link" aria-label="Insert Link" type="button"></button>
+                                            <button class="ql-code-block" aria-label="Insert Code Block" type="button"></button>
+                                        </span>
+                                        <span class="ql-formats">
+                                            <button class="ql-clean" aria-label="Remove Styles" type="button"></button>
+                                        </span>
+                                    </p-header>
+                                    <!-- fim configuração toolbar-->
                                  </p-editor>
                             </span>
+
+                            <p-fileUpload (onSelect)="onUpload($event)" multiple="multiple" accept="image/*"
+                                chooseLabel="Selecionar Arquivo" [showUploadButton]=false [showCancelButton]=false
+                                maxFileSize="1000000" #componenteFile>
+                                <ng-template pTemplate="content">
+                                    <div *ngIf="currentFuncaoTransacao.files?.length" class="ui-g-12 ui-md-12 ui-sm-12"
+                                        style="padding: 0;">
+                                        <ul *ngIf="currentFuncaoTransacao.files" style="margin: 0 ;">
+                                            <li *ngFor="let file of currentFuncaoTransacao.files" style="list-style: none;">
+                                                <div style="display: flex;">
+                                                    <div style="padding: 7px 14px">
+                                                        <img style="width: 50px; height: 35px;" [src]="file.safeUrl"
+                                                            class="image" />
+                                                    </div>
+                                                    <div style="padding: 7px 14px">
+                                                        <p>{{file.originalName}}</p>
+                                                    </div>
+                                                    <div style="padding: 7px 14px">
+                                                        <p>{{file.sizeOf}}Kb</p>
+                                                    </div>
+                                                    <basis-datatable-button
+                                                        style="display: inline-table; margin-left: 10px; max-zoom: 10px;"
+                                                        (click)="confirmDeleteFileUpload(file)" name="deleteArquivo"
+                                                        [bTooltip]="'Remover arquivo'" icon="clear">
+                                                    </basis-datatable-button>
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <div>Arraste suas imagens e solte aqui</div>
+                                </ng-template>
+                            </p-fileUpload>
                         </div>
 
                         <div class="ui-g ui-md-12 ui-sm-12" style="justify-content: flex-end">
                             <div class="ui-md-3 ui-sm-12" *ngIf="isEdit">
-                                <app-white-button
-                                        [buttonLabel]="'Cancelar'"
-                                        id="idBtnCancelarFormFuncaoTransacao"
-                                        (click)="cancelar()">
+                                <app-white-button [buttonLabel]="'Cancelar'" id="idBtnCancelarFormFuncaoTransacao"
+                                    (click)="cancelar()">
                                 </app-white-button>
                             </div>
 
                             <div class="ui-g-3 ui-md-3 ui-sm-12" *ngIf="!isEdit">
-                                <app-white-button
-                                        [buttonLabel]="'Fechar'"
-                                        id="idBtnFecharFormFuncaoTransacao"
-                                        (click)="cancelar()">
+                                <app-white-button [buttonLabel]="'Fechar'" id="idBtnFecharFormFuncaoTransacao"
+                                    (click)="cancelar()">
                                 </app-white-button>
                             </div>
 
                             <div class="ui-md-3 ui-sm-12">
-                                <app-blue-button
-                                        [buttonLabel]="'Salvar'"
-                                        id="idBtnSalvarFormFuncaoTransacao"
-                                        buttonIcon="ui-icon-add"
-                                        (click)="buttonSaveEdit()">
+                                <app-blue-button [buttonLabel]="'Salvar'" id="idBtnSalvarFormFuncaoTransacao"
+                                    buttonIcon="ui-icon-add" (click)="buttonSaveEdit()">
                                 </app-blue-button>
                             </div>
                         </div>
@@ -295,10 +365,7 @@
         </div>
         <div class="ui-g ui-md-12" style="justify-content: center; margin-bottom: 05px; margin-top: 05px">
             <div class="ui-g-12 ui-md-12 ui-lg-2" style="margin-bottom: 05px">
-                <app-white-button
-                        [buttonLabel]="'Voltar'"
-                        id="idBtnVoltarFormAnalise"
-                        routerLink="/analise">
+                <app-white-button [buttonLabel]="'Voltar'" id="idBtnVoltarFormAnalise" routerLink="/analise">
                 </app-white-button>
             </div>
         </div>
@@ -309,96 +376,226 @@
 <!-- Dialog confirmação deleção -->
 <p-confirmDialog [header]="this.getLabel('Confirmacao')" #dialog>
     <p-footer>
-        <button type="button" pButton icon="fa-close" [label]="'Não'"  (click)="dialog.reject()"></button>
-        <button type="button" pButton icon="fa-check" [label]="'Sim'"   (click)="dialog.accept()"></button>
+        <button type="button" pButton icon="fa-close" [label]="'Não'" (click)="dialog.reject()"></button>
+        <button type="button" pButton icon="fa-check" [label]="'Sim'" (click)="dialog.accept()"></button>
     </p-footer>
 </p-confirmDialog>
-<p-dialog [header]="this.getLabel('Descrição')" [(visible)]="displayDescriptionDeflator" [style]="{width: '60vw'}" *ngIf="currentFuncaoTransacao.fatorAjuste">
+<p-dialog [header]="this.getLabel('Descrição')" [(visible)]="displayDescriptionDeflator" [style]="{width: '60vw'}"
+    *ngIf="currentFuncaoTransacao.fatorAjuste">
     {{currentFuncaoTransacao.fatorAjuste.descricao}}
     <p-footer *ngIf="!viewFuncaoTransacao">
-        <app-white-button buttonLabel="Copiar para Evidência" buttonIcon="ui-icon-add"(click)="copyToEvidence()"></app-white-button>
+        <app-white-button buttonLabel="Copiar para Evidência" buttonIcon="ui-icon-add" (click)="copyToEvidence()">
+        </app-white-button>
     </p-footer>
 </p-dialog>
- <!-- DIALOG: COPIAR FUNÇÕES DE TRANSAÇÃO -->
- <div *ngIf="analise && analise.organizacao" >
-    <p-dialog [header]="this.getLabel('Importa funções de transação')" [(visible)]="display" [style]="{width: '80vw'}" [closable]="false">
+<!-- DIALOG: COPIAR FUNÇÕES DE TRANSAÇÃO -->
+<div *ngIf="analise && analise.organizacao && analise.sistema.modulos">
+    <p-dialog [header]="this.getLabel('Importa funções de transação')" [(visible)]="display" [style]="{width: '80vw'}"
+        [closable]="false">
         <app-pesquisar-ft></app-pesquisar-ft>
     </p-dialog>
 </div>
-<p-dialog header="Visualizar Função de Dados" [(visible)]="viewFuncaoTransacao"  [style]="{width: '80vw'}" >
+
+<p-dialog [modal]="true" [style]="{width: '55vw'}" [closable]="false" header="Editar em lote" [(visible)]="mostrarDialogEditarEmLote"
+[contentStyle]="{'height': ['windowHeightDialog']}">
+
+
+    <div *ngIf="modulos">
+        <div class="ui-g">
+            <div class="ui-g-12">
+                <div class="ui-g-6 ui-md-6 ui-sm-12">
+                    <!-- filtro/pesquisa? -->
+                    <label>Módulo: </label>
+                    <p-dropdown [filter]="true" optionLabel="nome" name="modulo" datakey="id"
+                        [placeholder]="this.getLabel('Selecione')" [options]="modulos"
+                        [(ngModel)]="moduloSelecionadoEmLote">
+                    </p-dropdown>
+                </div>
+                <div class="ui-g-6 ui-md-6 ui-sm-12">
+                    <!-- filtro/pesquisa? -->
+                    <label>Funcionalidade: </label>
+                    <p-dropdown [filter]="true" optionLabel="nome" name="funcionalidade"
+                        [options]="moduloSelecionadoEmLote?.funcionalidades"
+                        [(ngModel)]="funcionalidadeSelecionadaEmLote" [placeholder]="'Selecione a funcionalidade'"
+                        [disabled]="!moduloSelecionadoEmLote">
+                    </p-dropdown>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="ui-g">
+        <div class="ui-g-3 ui-md-12 ui-sm-12">
+            <label>Classificação: </label>
+            <p-dropdown [filter]="true" [options]="classificacoes" id="idClassificacoesFormEmLoteFuncaoDados"
+                [(ngModel)]="classificacaoEmLote" [placeholder]="this.getLabel('Selecione Classificação')"
+                name="classificacao">
+            </p-dropdown>
+        </div>
+    </div>
+
+    <div class="ui-g">
+        <div class="ui-g-11 ui-md-11 ui-sm-11">
+            <label>Deflator: </label>
+            <p-dropdown [filter]="true" [options]="fatoresAjuste" id="idDeflatorFormEmLoteFuncaoDados"
+                [placeholder]="'Selecione um deflator'" name="fatorAjuste" [(ngModel)]="deflatorEmLote"
+                (onChange)="selecionarDeflatorEmLote($event.value)">
+            </p-dropdown>
+        </div>
+        <div class="ui-g-3 ui-md-6 ui-sm-12" [hidden]="hideShowQuantidade">
+            <label>Quantidade *</label>
+            <input type="number" class="ui-inputtext" min="1" [(ngModel)]="quantidadeEmLote"
+                id="idQuantidadeFormFuncaoDados">
+        </div>
+    </div>
+
+    <div class="ui-g-12 ui-md-12 ui-sm-12">
+        <label>Evidência</label>
+
+        <span class="md-inputfield">
+            <p-editor maxlength="5000" [rows]="3" id="idEvidenciaFormFuncaoDados" [cols]="180"
+                [disabled]="isDisabled" pInputTextarea name="funcaoDadosSustentacao"
+                [(ngModel)]="evidenciaEmLote">
+                <!-- Inicio configuração toolbar-->
+                <p-header>
+                    <span class="ql-formats">
+                        <select class="ql-header">
+                            <option value="1">Heading</option>
+                            <option value="2">Subheading</option>
+                            <option selected>Normal</option>
+                        </select>
+                        <select class="ql-font">
+                            <option selected>Sans Serif</option>
+                            <option value="serif">Serif</option>
+                            <option value="monospace">Monospace</option>
+                        </select>
+                    </span>
+                    <span class="ql-formats">
+                        <button class="ql-bold" aria-label="Bold" type="button"></button>
+                        <button class="ql-italic" aria-label="Italic" type="button"></button>
+                        <button class="ql-underline" aria-label="Underline" type="button"></button>
+                    </span>
+                    <span class="ql-formats">
+                        <select class="ql-color"></select>
+                        <select class="ql-background"></select>
+                    </span>
+                    <span class="ql-formats">
+                        <button class="ql-list" value="ordered" aria-label="Ordered List"
+                            type="button"></button>
+                        <button class="ql-list" value="bullet" aria-label="Unordered List"
+                            type="button"></button>
+                        <select class="ql-align">
+                            <option selected></option>
+                            <option value="center"></option>
+                            <option value="right"></option>
+                            <option value="justify"></option>
+                        </select>
+                    </span>
+                    <span class="ql-formats">
+                        <button class="ql-link" aria-label="Insert Link" type="button"></button>
+                        <button class="ql-code-block" aria-label="Insert Code Block"
+                            type="button"></button>
+                    </span>
+                    <span class="ql-formats">
+                        <button class="ql-clean" aria-label="Remove Styles" type="button"></button>
+                    </span>
+                </p-header>
+                <!-- fim configuração toolbar-->
+            </p-editor>
+        </span>
+        <app-arquivo-upload [(arquivos)]="arquivosEmLote"></app-arquivo-upload>
+    </div>
+
+    <div class="ui-g ui-md-12" style="justify-content: flex-end; padding-top: 25px">
+        <div class="ui-g-2">
+            <app-white-button [buttonLabel]="'Cancelar'" id="idBtnCancelarPermissaoSaveFormPerfil"
+                (click)="fecharDialogEditarEmLote()">
+            </app-white-button>
+        </div>
+
+        <div class="ui-g-2">
+            <app-green-button [buttonLabel]="'Salvar'" id="idSalvarPermissaoSaveFormPerfil" (click)="editarEmLote()">
+            </app-green-button>
+        </div>
+    </div>
+</p-dialog>
+
+<p-dialog header="Visualizar Função de Dados" [(visible)]="viewFuncaoTransacao" [style]="{width: '80vw'}">
     <div *ngIf="currentFuncaoTransacao && currentFuncaoTransacao.funcionalidade && viewFuncaoTransacao">
-         <div class="ui-g">
-             <div class="ui-md-6 ui-sm-12">
-                 <label><b>Modulo: </b></label>
-                 {{currentFuncaoTransacao.funcionalidade.modulo.nome}}
-             </div>
-             <div class="ui-md-6 ui-sm-12">
-                 <label><b>Funcionalidade: </b></label>
-                 {{currentFuncaoTransacao.funcionalidade.nome}}
-             </div>
+        <div class="ui-g">
+            <div class="ui-md-6 ui-sm-12">
+                <label><b>Modulo: </b></label>
+                {{currentFuncaoTransacao.funcionalidade.modulo.nome}}
+            </div>
+            <div class="ui-md-6 ui-sm-12">
+                <label><b>Funcionalidade: </b></label>
+                {{currentFuncaoTransacao.funcionalidade.nome}}
+            </div>
         </div>
         <div class="ui-g">
-             <div class="ui-md-6 ui-sm-12">
-                 <label><b>Nome: </b></label>
-                 {{currentFuncaoTransacao.name}}
-             </div>
-             <div class="ui-md-6 ui-sm-12">
-                 <label><b>Classificação: </b></label>
-                 {{currentFuncaoTransacao.tipo}}
-             </div>
-         </div>
-         <div class="ui-g">
-             <div class="ui-md-6 ui-sm-12">
-                 <label><b>Complexidade: </b></label>
-                 {{currentFuncaoTransacao.complexidade}}
-             </div>
-             <div class="ui-md-6 ui-sm-12" >
-                 <div>
-                     <label><b>Deflator: </b></label>
-                     {{currentFuncaoTransacao.fatorAjuste.origem}} - {{currentFuncaoTransacao.fatorAjuste.codigo}} - {{currentFuncaoTransacao.fatorAjuste.nome}} - {{currentFuncaoTransacao.fatorAjuste.fator}} {{ currentFuncaoTransacao.fatorAjuste.tipoAjuste === 'PERCENTUAL'? '%' : 'pf'}} 
-                 </div>
-                 <div>
-                     <app-blue-button
-                            buttonIcon="ui-icon-info-outline"
-                            (click)="showDeflator()">
+            <div class="ui-md-6 ui-sm-12">
+                <label><b>Nome: </b></label>
+                {{currentFuncaoTransacao.name}}
+            </div>
+            <div class="ui-md-6 ui-sm-12">
+                <label><b>Classificação: </b></label>
+                {{currentFuncaoTransacao.tipo}}
+            </div>
+        </div>
+        <div class="ui-g">
+            <div class="ui-md-6 ui-sm-12">
+                <label><b>Complexidade: </b></label>
+                {{currentFuncaoTransacao.complexidade}}
+            </div>
+            <div class="ui-md-6 ui-sm-12">
+                <div>
+                    <label><b>Deflator: </b></label>
+                    {{currentFuncaoTransacao.fatorAjuste.origem}} - {{currentFuncaoTransacao.fatorAjuste.codigo}} -
+                    {{currentFuncaoTransacao.fatorAjuste.nome}} - {{currentFuncaoTransacao.fatorAjuste.fator}} {{
+                    currentFuncaoTransacao.fatorAjuste.tipoAjuste === 'PERCENTUAL'? '%' : 'pf'}}
+                </div>
+                <div>
+                    <app-blue-button buttonIcon="ui-icon-info-outline" (click)="showDeflator()">
                     </app-blue-button>
-                 </div>
-             </div>
-         </div>
-         <div class="ui-g">
-             <div class="ui-md-6 ui-sm-12">
-                 <div class="ui-12">
-                     <label><b>FTR (AR) : </b></label>
-                 </div >
-                 <p-chips [(ngModel)]="currentFuncaoTransacao.alrs" disabled >
-                     <ng-template let-item pTemplate="item">
-                         {{item && item.nome ? item.nome : item.valor }}
-                     </ng-template>
-                 </p-chips>
-             </div>
-             <div class="ui-md-6 ui-sm-12">
-                 <div class="ui-12">
-                     <label><b>DER (TD): </b></label>
-                 </div >
-                 <p-chips class="ui-12" [(ngModel)]="currentFuncaoTransacao.ders" disabled>
-                     <ng-template let-item pTemplate="item">
-                         {{item && item.nome ? item.nome : item.valor }}
-                     </ng-template>
-                 </p-chips>
-             </div>
-         </div>
-         <div class="ui-g">
-             <div class="ui-md-6 ui-sm-12">
-                 <label><b>PF Total: </b></label>
-                 {{currentFuncaoTransacao.grossPF}}
-             </div>
-             <div class="ui-md-6 ui-sm-12">
-                 <label><b>PF Ajustado: </b></label>
-                 {{currentFuncaoTransacao.pf}}
-             </div>
-         </div>
-         <div class="ui-md-12 ui-sm-12">
-             <label><b>Evidência: </b></label>
+                </div>
+            </div>
+        </div>
+        <div class="ui-g">
+            <div class="ui-md-6 ui-sm-12">
+                <div class="ui-12">
+                    <label><b>FTR (AR) : </b></label>
+                </div>
+                <p-chips [(ngModel)]="currentFuncaoTransacao.alrs" disabled>
+                    <ng-template let-item pTemplate="item">
+                        {{item && item.nome ? item.nome : item.valor }}
+                    </ng-template>
+                </p-chips>
+            </div>
+            <div class="ui-md-6 ui-sm-12">
+                <div class="ui-12">
+                    <label><b>DER (TD): </b></label>
+                </div>
+                <p-chips class="ui-12" [(ngModel)]="currentFuncaoTransacao.ders" disabled>
+                    <ng-template let-item pTemplate="item">
+                        {{item && item.nome ? item.nome : item.valor }}
+                    </ng-template>
+                </p-chips>
+            </div>
+        </div>
+        <div class="ui-g">
+            <div class="ui-md-6 ui-sm-12">
+                <label><b>PF Total: </b></label>
+                {{currentFuncaoTransacao.grossPF}}
+            </div>
+            <div class="ui-md-6 ui-sm-12">
+                <label><b>PF Ajustado: </b></label>
+                {{currentFuncaoTransacao.pf}}
+            </div>
+        </div>
+        <div class="ui-md-12 ui-sm-12">
+            <label><b>Evidência: </b></label>
+
              <div class="ui-g-12 ui-md-12 ui-sm-12">
                  <span class="md-inputfield">
                      <p-editor
@@ -411,14 +608,18 @@
                      </p-editor>
                  </span>
              </div>
-         </div>
-     </div> 
-     <p-footer>
-         <div class="ui-g ui-md-12 ui-sm-12" style="justify-content: flex-end">
-             <div class="ui-md-3 ui-sm-12">
-                 <app-white-button [buttonLabel]="'Fechar'" (click)="viewFuncaoTransacao=false" ></app-white-button>
-             </div>
-         </div>
-     </p-footer>
- </p-dialog>
- 
+             <div *ngIf="currentFuncaoTransacao.files?.length" class="ui-g-12 ui-md-12 ui-sm-12">
+                <ul *ngFor="let file of currentFuncaoTransacao.files">
+                    <li><a  target="_self" href="/api/downloadImage/{{ file?.id }}" [download]="file?.originalName" >{{file?.originalName}}</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <p-footer>
+        <div class="ui-g ui-md-12 ui-sm-12" style="justify-content: flex-end">
+            <div class="ui-md-3 ui-sm-12">
+                <app-white-button [buttonLabel]="'Fechar'" (click)="viewFuncaoTransacao=false"></app-white-button>
+            </div>
+        </div>
+    </p-footer>
+</p-dialog>

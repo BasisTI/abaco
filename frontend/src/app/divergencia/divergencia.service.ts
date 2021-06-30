@@ -93,7 +93,7 @@ export class DivergenciaService {
         this.blockUiService.show();
         this.http.request('get', `${this.relatoriosUrl}/${id}`, {
             responseType: 'blob',
-        }).subscribe( 
+        }).subscribe(
             (response) => {
                 const mediaType = 'application/pdf';
                 const blob = new Blob([response], {type: mediaType});
@@ -311,7 +311,7 @@ export class DivergenciaService {
     }
 
     updateSomaPf(analiseId: number): Observable<Response> {
-        const url = `${this.resourceUrl}/update-pf/${analiseId}`;
+        const url = `${this.analiseResourceUrl}/update-divergente-pf/${analiseId}`;
         return this.http.get<Response>(url);
     }
 
@@ -349,7 +349,7 @@ export class DivergenciaService {
     }
 
     updateDivergenciaSomaPf(analiseId: number): Observable<Response> {
-        const url = `${this.resourceUrl}/update-divergente-pf/${analiseId}`;
+        const url = `${this.analiseResourceUrl}/update-divergente-pf/${analiseId}`;
         return this.http.get<Response>(url);
     }
 

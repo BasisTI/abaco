@@ -1,23 +1,30 @@
 package br.com.basis.abaco.security.jwt;
 
-import br.com.basis.abaco.security.AuthoritiesConstants;
-import io.github.jhipster.config.JHipsterProperties;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
-import org.junit.Before;
-import org.junit.Test;
-import org.mockito.Mockito;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.test.util.ReflectionTestUtils;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import org.junit.Before;
+import org.junit.Test;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.MockitoAnnotations;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.test.util.ReflectionTestUtils;
+
+import br.com.basis.abaco.domain.User;
+import br.com.basis.abaco.repository.PermissaoRepository;
+import br.com.basis.abaco.repository.UserRepository;
+import io.github.jhipster.config.JHipsterProperties;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
 
 public class TokenProviderTest {
 
@@ -25,11 +32,23 @@ public class TokenProviderTest {
     private final long ONE_MINUTE = 60000;
     private JHipsterProperties jHipsterProperties;
     private TokenProvider tokenProvider;
+    
+    @Mock
+    private UserRepository mockUsersRepository;
+    
+    @Mock
+    private PermissaoRepository mockPermissaoRepository;
+    
 
+    @SuppressWarnings("unchecked")
     @Before
     public void setup() {
+        MockitoAnnotations.initMocks(this);
+        User u = new User();
+        u.setPerfils(Collections.EMPTY_SET);
+        when(mockUsersRepository.findByLogin(anyString())).thenReturn(u);
         jHipsterProperties = Mockito.mock(JHipsterProperties.class);
-        tokenProvider = new TokenProvider(jHipsterProperties);
+        tokenProvider = new TokenProvider(jHipsterProperties, mockUsersRepository, mockPermissaoRepository);
         ReflectionTestUtils.setField(tokenProvider, "secretKey", secretKey);
         ReflectionTestUtils.setField(tokenProvider, "tokenValidityInMilliseconds", ONE_MINUTE);
     }
@@ -65,9 +84,6 @@ public class TokenProviderTest {
 
     @Test
     public void testReturnFalseWhenJWTisUnsupported() {
-        Date expirationDate = new Date(new Date().getTime() + ONE_MINUTE);
-
-        Authentication authentication = createAuthentication();
 
         String unsupportedToken = createUnsupportedToken();
 
@@ -86,7 +102,6 @@ public class TokenProviderTest {
 
     private Authentication createAuthentication() {
         Collection<GrantedAuthority> authorities = new ArrayList<>();
-        authorities.add(new SimpleGrantedAuthority(AuthoritiesConstants.ANONYMOUS));
         return new UsernamePasswordAuthenticationToken("anonymous", "anonymous", authorities);
     }
 

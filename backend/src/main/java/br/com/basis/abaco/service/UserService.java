@@ -1,17 +1,23 @@
 package br.com.basis.abaco.service;
 
-import static org.elasticsearch.index.query.QueryBuilders.boolQuery;
-import static org.elasticsearch.index.query.QueryBuilders.nestedQuery;
-
-import java.io.ByteArrayOutputStream;
-import java.time.ZonedDateTime;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
-
+import br.com.basis.abaco.config.Constants;
+import br.com.basis.abaco.domain.Perfil;
+import br.com.basis.abaco.domain.User;
+import br.com.basis.abaco.repository.PerfilRepository;
+import br.com.basis.abaco.repository.UserRepository;
+import br.com.basis.abaco.repository.search.UserSearchRepository;
+import br.com.basis.abaco.security.SecurityUtils;
+import br.com.basis.abaco.service.dto.UserAnaliseDTO;
+import br.com.basis.abaco.service.dto.UserDTO;
+import br.com.basis.abaco.service.dto.UserEditDTO;
+import br.com.basis.abaco.service.dto.filter.UserFilterDTO;
+import br.com.basis.abaco.service.exception.RelatorioException;
+import br.com.basis.abaco.service.relatorio.RelatorioUserColunas;
+import br.com.basis.abaco.service.util.RandomUtil;
+import br.com.basis.abaco.utils.AbacoUtil;
+import br.com.basis.dynamicexports.service.DynamicExportsService;
+import net.sf.dynamicreports.report.exception.DRException;
+import net.sf.jasperreports.engine.JRException;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.modelmapper.ModelMapper;
@@ -25,25 +31,15 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import br.com.basis.abaco.config.Constants;
-import br.com.basis.abaco.domain.Authority;
-import br.com.basis.abaco.domain.User;
-import br.com.basis.abaco.repository.AuthorityRepository;
-import br.com.basis.abaco.repository.UserRepository;
-import br.com.basis.abaco.repository.search.UserSearchRepository;
-import br.com.basis.abaco.security.AuthoritiesConstants;
-import br.com.basis.abaco.security.SecurityUtils;
-import br.com.basis.abaco.service.dto.UserAnaliseDTO;
-import br.com.basis.abaco.service.dto.UserDTO;
-import br.com.basis.abaco.service.dto.UserEditDTO;
-import br.com.basis.abaco.service.dto.filter.UserFilterDTO;
-import br.com.basis.abaco.service.exception.RelatorioException;
-import br.com.basis.abaco.service.relatorio.RelatorioUserColunas;
-import br.com.basis.abaco.service.util.RandomUtil;
-import br.com.basis.abaco.utils.AbacoUtil;
-import br.com.basis.dynamicexports.service.DynamicExportsService;
-import net.sf.dynamicreports.report.exception.DRException;
-import net.sf.jasperreports.engine.JRException;
+import java.io.ByteArrayOutputStream;
+import java.time.ZonedDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
+import static org.elasticsearch.index.query.QueryBuilders.boolQuery;
+import static org.elasticsearch.index.query.QueryBuilders.nestedQuery;
 
 /**
  * Service class for managing users.
@@ -62,18 +58,21 @@ public class UserService extends BaseService {
 
     private final UserSearchRepository userSearchRepository;
 
-    private final AuthorityRepository authorityRepository;
-
     private final DynamicExportsService dynamicExportsService;
 
+    private final PerfilRepository perfilRepository;
+
+    private final ModelMapper modelMapper;
+
     public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, SocialService socialService,
-                       UserSearchRepository userSearchRepository, AuthorityRepository authorityRepository, DynamicExportsService dynamicExportsService) {
+                       UserSearchRepository userSearchRepository, DynamicExportsService dynamicExportsService, PerfilRepository perfilRepository, ModelMapper modelMapper) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.socialService = socialService;
         this.userSearchRepository = userSearchRepository;
-        this.authorityRepository = authorityRepository;
         this.dynamicExportsService = dynamicExportsService;
+        this.perfilRepository = perfilRepository;
+        this.modelMapper = modelMapper;
     }
 
     public Optional<User> activateRegistration(String key) {
@@ -123,8 +122,6 @@ public class UserService extends BaseService {
     public User createUser(String login, String password, String firstName, String lastName, String email,
                            String imageUrl, String langKey) {
         User newUser = new User();
-        Authority authority = authorityRepository.findOne(AuthoritiesConstants.USER);
-        Set<Authority> authorities = new HashSet<>();
         String encryptedPassword = passwordEncoder.encode(password);
         newUser.setLogin(login);
         newUser.setPassword(encryptedPassword);
@@ -135,8 +132,6 @@ public class UserService extends BaseService {
         newUser.setLangKey(langKey);
         newUser.setActivated(false);
         newUser.setActivationKey(RandomUtil.generateActivationKey());
-        authorities.add(authority);
-        newUser.setAuthorities(authorities);
         userRepository.save(newUser);
         userSearchRepository.save(newUser);
         return newUser;
@@ -150,12 +145,6 @@ public class UserService extends BaseService {
             user.setLangKey("pt-br");
         } else {
             user.setLangKey(userDTO.getLangKey());
-        }
-        if (userDTO.getAuthorities() != null) {
-            Set<Authority> authorities = new HashSet<>();
-            Optional.ofNullable(userDTO.getAuthorities()).orElse(Collections.emptySet())
-                .forEach(authority -> authorities.add(authorityRepository.findOne(authority)));
-            user.setAuthorities(authorities);
         }
         setUserProperties(user);
         userRepository.save(user);
@@ -193,6 +182,13 @@ public class UserService extends BaseService {
         userCopy.setPassword(encryptedPassword);
         userCopy.setResetKey(RandomUtil.generateResetKey());
         userCopy.setResetDate(ZonedDateTime.now());
+        userCopy.setPerfils(user.getPerfils());
+        userCopy.setPerfilOrganizacoes(user.getPerfilOrganizacoes());
+        if(!userCopy.getPerfilOrganizacoes().isEmpty()){
+            userCopy.getPerfilOrganizacoes().forEach(perfilOrganizacao -> {
+                perfilOrganizacao.setUser(userCopy);
+            });
+        }
         return userCopy;
     }
 
@@ -223,7 +219,7 @@ public class UserService extends BaseService {
         copy.setActivationKey(user.getActivationKey());
         copy.setResetKey(user.getResetKey());
         copy.setResetDate(user.getResetDate());
-        copy.setAuthorities(user.getAuthorities());
+        copy.setPerfils(user.getPerfils());
         copy.setTipoEquipes(user.getTipoEquipes());
         copy.setOrganizacoes(user.getOrganizacoes());
         return copy;
@@ -245,25 +241,6 @@ public class UserService extends BaseService {
         });
     }
 
-    /**
-     * Update all information for a specific user, and return the modified user.
-     */
-    public Optional<UserDTO> updateUser(UserDTO userDTO) {
-        return Optional.of(userRepository.findOne(userDTO.getId())).map(user -> {
-            user.setLogin(userDTO.getLogin());
-            user.setFirstName(userDTO.getFirstName());
-            user.setLastName(userDTO.getLastName());
-            user.setEmail(userDTO.getEmail());
-            user.setImageUrl(userDTO.getImageUrl());
-            user.setActivated(userDTO.isActivated());
-            user.setLangKey(userDTO.getLangKey());
-            Set<Authority> managedAuthorities = user.getAuthorities();
-            managedAuthorities.clear();
-            userDTO.getAuthorities().stream().map(authorityRepository::findOne).forEach(managedAuthorities::add);
-            log.debug("Changed Information for User: {}", user);
-            return user;
-        }).map(UserDTO::new);
-    }
 
     public void deleteUser(Long id) {
         userRepository.findOneById(id).ifPresent(user -> {
@@ -302,7 +279,7 @@ public class UserService extends BaseService {
         List<User> lista = userRepository.findAllUsersOrgEquip(idOrg, idEquip);
         List<UserAnaliseDTO> lst = new ArrayList<>();
         for (int i = 0; i < lista.size(); i++) {
-            lst.add(new ModelMapper().map(lista.get(i), UserAnaliseDTO.class));
+            lst.add(modelMapper.map(lista.get(i), UserAnaliseDTO.class));
         }
         return lst;
     }
@@ -313,8 +290,13 @@ public class UserService extends BaseService {
     }
 
     @Transactional(readOnly = true)
-    public User getUserWithAuthorities(Long id) {
-        return userRepository.findOneWithAuthoritiesById(id);
+    public User  getUserWithAuthorities(Long id) {
+        User user = userRepository.findOneWithAuthoritiesById(id);
+        Optional<List<Perfil>> listPerfil = perfilRepository.findAllByUsers(user);
+        if(listPerfil.isPresent()){
+            user.setPerfils(listPerfil.get().stream().collect(Collectors.toSet()));
+        }
+        return user;
     }
 
     @Transactional(readOnly = true)
@@ -322,7 +304,7 @@ public class UserService extends BaseService {
         return userRepository.findOneWithAuthoritiesByLogin(SecurityUtils.getCurrentUserLogin()).orElse(null);
     }
 
-    public BoolQueryBuilder bindFilterSearch(String nome, String login, String email, Long [] organizacao, String[] perfil, Long[] equipeId) {
+    public BoolQueryBuilder bindFilterSearch(String nome, String login, String email, Long [] organizacao, Long[] perfil, Long[] equipeId) {
         BoolQueryBuilder qb = new BoolQueryBuilder();
         mustMatchWildcardContainsQueryLowerCase(nome, qb, "nome");
         mustMatchWildcardContainsQueryLowerCase(login, qb, "login");
@@ -341,8 +323,8 @@ public class UserService extends BaseService {
             BoolQueryBuilder boolQueryBuilderOrganizacao = QueryBuilders.boolQuery()
                 .must(
                     nestedQuery(
-                        "authorities",
-                        boolQuery().must(QueryBuilders.termsQuery("authorities.name", perfil))
+                        "perfils",
+                        boolQuery().must(QueryBuilders.termsQuery("perfils.id", perfil))
                     )
                 );
             qb.must(boolQueryBuilderOrganizacao);
@@ -365,11 +347,11 @@ public class UserService extends BaseService {
     }
 
     public UserEditDTO convertToDto(User user) {
-        return new ModelMapper().map(user, UserEditDTO.class);
+        return modelMapper.map(user, UserEditDTO.class);
     }
 
     public User convertToEntity(UserEditDTO userEditDTO) {
-        return new ModelMapper().map(userEditDTO, User.class);
+        return modelMapper.map(userEditDTO, User.class);
     }
 
     public User bindUserForSaveElatiscSearch(User user){
@@ -377,20 +359,25 @@ public class UserService extends BaseService {
     }
 
     public User setUserToSave(User user) {
-        Authority adminAuth = new Authority();
-        adminAuth.setName(AuthoritiesConstants.ADMIN);
-        adminAuth.setDescription("Administrador");
         Optional<User> oldUserdata = userRepository.findOneById(user.getId());
-        User loggedUser = getLoggedUser();
-        User userTmp = bindUser(user, oldUserdata, loggedUser);
+        User userTmp = bindUser(user, oldUserdata);
         User updatableUser = generateUpdatableUser(userTmp);
+        updatableUser.setPerfils(user.getPerfils());
+        updatableUser.setOrganizacoes(user.getOrganizacoes());
+        updatableUser.setTipoEquipes(user.getTipoEquipes());
+        updatableUser.setPerfilOrganizacoes(user.getPerfilOrganizacoes());
+        if(!updatableUser.getPerfilOrganizacoes().isEmpty()){
+            updatableUser.getPerfilOrganizacoes().forEach(perfilOrganizacao -> {
+                perfilOrganizacao.setUser(updatableUser);
+            });
+        }
         User updatedUser = userRepository.save(updatableUser);
         return userSearchRepository.save(bindUserForSaveElatiscSearch(updatedUser));
     }
 
-    private User bindUser(User user, Optional<User> oldUserdata, User loggedUser) {
+    private User bindUser(User user, Optional<User> oldUserdata) {
         User userTmp;
-        if (!loggedUser.verificarAuthority() && oldUserdata.isPresent()) {
+        if (oldUserdata.isPresent()) {
             String newFirstName = user.getFirstName();
             String newLastName = user.getLastName();
             String newEmail = user.getEmail();
@@ -412,7 +399,7 @@ public class UserService extends BaseService {
     public ByteArrayOutputStream gerarRelatorio(UserFilterDTO filtro, String tipoRelatorio) throws RelatorioException {
         ByteArrayOutputStream byteArrayOutputStream;
         try {
-            BoolQueryBuilder qb = bindFilterSearch(filtro.getNome(), filtro.getLogin(), filtro.getEmail(), filtro.getOrganizacao() == null ? null : filtro.getOrganizacao().stream().toArray(Long[]::new), filtro.getPerfil()== null ? null : filtro.getPerfil().stream().toArray(String[]::new), filtro.getEquipe()== null ? null : filtro.getEquipe().stream().toArray(Long[]::new));
+            BoolQueryBuilder qb = bindFilterSearch(filtro.getNome(), filtro.getLogin(), filtro.getEmail(), filtro.getOrganizacao() == null ? null : filtro.getOrganizacao().stream().toArray(Long[]::new), filtro.getPerfil()== null ? null : filtro.getPerfil().stream().toArray(Long[]::new), filtro.getEquipe()== null ? null : filtro.getEquipe().stream().toArray(Long[]::new));
             SearchQuery searchQuery = new NativeSearchQueryBuilder().withQuery(qb).withPageable(dynamicExportsService.obterPageableMaximoExportacao()).build();
             Page<User> page = userSearchRepository.search(searchQuery);
             byteArrayOutputStream = dynamicExportsService.export(new RelatorioUserColunas(filtro.getColumnsVisible()), page, tipoRelatorio,

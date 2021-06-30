@@ -1,39 +1,11 @@
 package br.com.basis.abaco.service;
 
-import static org.elasticsearch.index.query.QueryBuilders.boolQuery;
-import static org.elasticsearch.index.query.QueryBuilders.nestedQuery;
-
-import java.math.BigDecimal;
-import java.math.BigInteger;
-import java.sql.Timestamp;
-import java.time.Instant;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
-
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
-
-import org.elasticsearch.index.query.BoolQueryBuilder;
-import org.elasticsearch.index.query.QueryBuilders;
-import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
-import org.springframework.data.elasticsearch.core.query.SearchQuery;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.RequestBody;
-
 import br.com.basis.abaco.domain.Alr;
 import br.com.basis.abaco.domain.Analise;
 import br.com.basis.abaco.domain.Compartilhada;
 import br.com.basis.abaco.domain.Der;
 import br.com.basis.abaco.domain.EsforcoFase;
+import br.com.basis.abaco.domain.FatorAjuste;
 import br.com.basis.abaco.domain.FuncaoDados;
 import br.com.basis.abaco.domain.FuncaoDadosVersionavel;
 import br.com.basis.abaco.domain.FuncaoTransacao;
@@ -47,6 +19,8 @@ import br.com.basis.abaco.domain.VwAnaliseDivergenteSomaPf;
 import br.com.basis.abaco.domain.VwAnaliseSomaPf;
 import br.com.basis.abaco.domain.enumeration.MetodoContagem;
 import br.com.basis.abaco.domain.enumeration.StatusFuncao;
+import br.com.basis.abaco.domain.enumeration.TipoFatorAjuste;
+import br.com.basis.abaco.domain.enumeration.TipoFuncaoTransacao;
 import br.com.basis.abaco.repository.AnaliseRepository;
 import br.com.basis.abaco.repository.CompartilhadaRepository;
 import br.com.basis.abaco.repository.FuncaoDadosRepository;
@@ -65,6 +39,38 @@ import br.com.basis.abaco.service.dto.AnaliseEditDTO;
 import br.com.basis.abaco.service.dto.filter.AnaliseFilterDTO;
 import br.com.basis.abaco.utils.StringUtils;
 import br.com.basis.dynamicexports.service.DynamicExportsService;
+import org.apache.poi.ss.usermodel.FormulaEvaluator;
+import org.apache.poi.xssf.usermodel.XSSFCell;
+import org.apache.poi.xssf.usermodel.XSSFRow;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.elasticsearch.index.query.BoolQueryBuilder;
+import org.elasticsearch.index.query.QueryBuilders;
+import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
+import org.springframework.data.elasticsearch.core.query.SearchQuery;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.RequestBody;
+
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.sql.Timestamp;
+import java.time.Instant;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
+
+import static org.elasticsearch.index.query.QueryBuilders.boolQuery;
+import static org.elasticsearch.index.query.QueryBuilders.nestedQuery;
 
 @Service
 public class AnaliseService extends BaseService {
@@ -91,6 +97,9 @@ public class AnaliseService extends BaseService {
 
     @Autowired
     private UserSearchRepository userSearchRepository;
+
+    @Autowired
+    private ModelMapper modelMapper;
 
 
     public AnaliseService(AnaliseRepository analiseRepository,
@@ -438,6 +447,7 @@ public class AnaliseService extends BaseService {
         Set<Der> ders = new HashSet<>();
         FuncaoTransacao funcaoTransacao = new FuncaoTransacao();
         funcaoTransacao.bindFuncaoTransacao(ft.getTipo(), ft.getFtrStr(), ft.getQuantidade(), alrs, null, ft.getFtrValues(), ft.getImpacto(), ders, analiseClone, ft.getComplexidade(), ft.getPf(), ft.getGrossPF(), ft.getFuncionalidade(), ft.getDetStr(), ft.getFatorAjuste(), ft.getName(), ft.getSustantation(), ft.getDerValues());
+        funcaoTransacao.setFuncionalidade(ft.getFuncionalidade());
         ft.getAlrs().forEach(alr -> {
             Alr alrClone = new Alr(null, alr.getNome(), alr.getValor(), funcaoTransacao, null);
             alrs.add(alrClone);
@@ -456,12 +466,14 @@ public class AnaliseService extends BaseService {
         analiseClone.setUsers(new HashSet<>());
         analiseClone.setBloqueiaAnalise(false);
         analiseClone.setClonadaParaEquipe(true);
+        analiseClone.setAnaliseClonadaParaEquipe(analise);
+        analiseClone.setAnaliseClonou(false);
         salvaNovaData(analiseClone);
         analiseClone.setDataCriacaoOrdemServico(analise.getDataHomologacao());
     }
 
     private void bindFuncaoDados(Analise analiseClone, FuncaoDados fd, Set<Rlr> rlrs, Set<Der> ders, FuncaoDados funcaoDado) {
-        funcaoDado.bindFuncaoDados(fd.getComplexidade(), fd.getPf(), fd.getGrossPF(), analiseClone, fd.getFuncionalidade(), fd.getDetStr(), fd.getFatorAjuste(), fd.getName(), fd.getSustantation(), fd.getDerValues(), fd.getTipo(), fd.getFuncionalidades(), fd.getRetStr(), fd.getQuantidade(), rlrs, fd.getAlr(), fd.getFiles(), fd.getRlrValues(), ders, fd.getFuncaoDadosVersionavel(), fd.getImpacto());
+        funcaoDado.bindFuncaoDados(fd.getComplexidade(), fd.getPf(), fd.getGrossPF(), analiseClone, fd.getFuncionalidade(), fd.getDetStr(), fd.getFatorAjuste(), fd.getName(), fd.getSustantation(), fd.getDerValues(), fd.getTipo(), fd.getRetStr(), fd.getQuantidade(), rlrs, fd.getAlr(), fd.getFiles(), fd.getRlrValues(), ders, fd.getFuncaoDadosVersionavel(), fd.getImpacto());
         Optional.ofNullable(fd.getDers()).orElse(Collections.emptySet())
             .forEach(der -> {
                 Rlr rlr = null;
@@ -479,23 +491,24 @@ public class AnaliseService extends BaseService {
     }
 
     public AnaliseDTO convertToDto(Analise analise) {
-        return new ModelMapper().map(analise, AnaliseDTO.class);
+        return modelMapper.map(analise, AnaliseDTO.class);
     }
 
     public Analise convertToEntity(AnaliseDTO analiseDTO) {
-        return new ModelMapper().map(analiseDTO, Analise.class);
+        return modelMapper.map(analiseDTO, Analise.class);
     }
 
     public AnaliseEditDTO convertToAnaliseEditDTO(Analise analise) {
-        return new ModelMapper().map(analise, AnaliseEditDTO.class);
+        return modelMapper.map(analise, AnaliseEditDTO.class);
     }
 
     public AnaliseDivergenceEditDTO convertToAnaliseDivergenceEditDTO(Analise analise) {
-        return new ModelMapper().map(analise, AnaliseDivergenceEditDTO.class);
+        return modelMapper.map(analise, AnaliseDivergenceEditDTO.class);
+
     }
 
     public Analise convertToEntity(AnaliseEditDTO analiseEditDTO) {
-        return new ModelMapper().map(analiseEditDTO, Analise.class);
+        return modelMapper.map(analiseEditDTO, Analise.class);
     }
 
     public void bindAnalise(@RequestBody @Valid Analise analiseUpdate, Analise analise) {
@@ -534,13 +547,13 @@ public class AnaliseService extends BaseService {
         return qb;
     }
 
-
     public void saveAnaliseCompartilhada(Set<Compartilhada> lstCompartilhadas) {
         if (lstCompartilhadas != null && lstCompartilhadas.size() > 0) {
             long idAnalise = lstCompartilhadas.stream().findFirst().get().getAnaliseId();
             Analise analise = analiseRepository.findOne(idAnalise);
             analise.setCompartilhadas(lstCompartilhadas);
             analiseRepository.save(analise);
+            analise.setAnaliseClonadaParaEquipe(null);
             analiseSearchRepository.save(convertToEntity(convertToDto(analise)));
             lstCompartilhadas.forEach(compartilhada -> {
                 TipoEquipe tipoEquipe = this.tipoEquipeRepository.findById(compartilhada.getEquipeId());
@@ -722,6 +735,7 @@ public class AnaliseService extends BaseService {
         analise = analiseRepository.save(analise);
         AnaliseDTO analiseDTO = convertToDto(analise);
         analise = convertToEntity(analiseDTO);
+        analise.setAnaliseClonadaParaEquipe(null);
         analise = analiseSearchRepository.save(analise);
         return analise;
     }
@@ -745,16 +759,16 @@ public class AnaliseService extends BaseService {
         analiseSearchRepository.delete(id);
     }
 
-    
+
     public SearchQuery getQueryExportRelatorio(AnaliseFilterDTO filter,  Pageable pageable) {
         Set<Long> sistema = new HashSet<>();
         Set<MetodoContagem> metodo = new HashSet<>();
         Set<Long> organizacao = new HashSet<>();
         Set<Long> usuario = new HashSet<>();
         Set<Long> status = new HashSet<>();
-        
+
         preencheFiltro(sistema,metodo,organizacao,usuario,status, filter);
-        
+
         pageable = dynamicExportsService.obterPageableMaximoExportacao();
         BoolQueryBuilder qb =  getBoolQueryBuilder(filter.getIdentificadorAnalise(), sistema, metodo, organizacao, filter.getEquipe() == null ? null : filter.getEquipe().getId(), usuario, status);
         SearchQuery searchQuery = new NativeSearchQueryBuilder().withQuery(qb).withPageable(pageable).build();
@@ -778,18 +792,205 @@ public class AnaliseService extends BaseService {
         if(filter.getStatus() != null) {
             status.add(filter.getStatus().getId());
         }
-        
+
     }
 
     public SearchQuery getQueryExportRelatorioDivergencia(AnaliseFilterDTO filter, Pageable pageable) {
         Set<Long> sistema = new HashSet<>();
         Set<Long> organizacao = new HashSet<>();
         preencheFiltro(sistema,null,organizacao,null,null, filter);
-        
+
         BoolQueryBuilder qb = getBoolQueryBuilderDivergence(filter.getIdentificadorAnalise(), sistema, organizacao);
         SearchQuery searchQuery = new NativeSearchQueryBuilder().withQuery(qb).withPageable(pageable).build();
         return searchQuery;
     }
 
 
+    public void setarDeflatoresExcel(XSSFWorkbook excelFile, Analise analise) {
+        XSSFSheet deflatorSheet = excelFile.getSheet("Tipo Projeto");
+        int rownum = 2;
+        int rowNumUnitario = 2;
+        List<FatorAjuste> fatorAjusteList = analise.getManual().getFatoresAjuste().stream().collect(Collectors.toList());
+
+        for(int i = 0; i < fatorAjusteList.size(); i++){
+            FatorAjuste fatorAjuste = fatorAjusteList.get(i);
+            if(fatorAjuste.getTipoAjuste().equals(TipoFatorAjuste.PERCENTUAL)){
+                XSSFRow row = deflatorSheet.getRow(rownum++);
+
+                row.getCell(0).setCellValue(fatorAjuste.getNome());
+                row.getCell(1).setCellValue(fatorAjuste.getFator().doubleValue()/100);
+            }else if(fatorAjuste.getTipoAjuste().equals(TipoFatorAjuste.UNITARIO)){
+                XSSFRow row = deflatorSheet.getRow(rowNumUnitario++);
+
+                if (row.getCell(9) != null) {
+                    row.getCell(9).setCellValue(fatorAjuste.getNome());
+                }
+                if (row.getCell(10) != null) {
+                    row.getCell(10).setCellValue(fatorAjuste.getFator().doubleValue());
+                }
+                if (row.getCell(13) != null) {
+                    row.getCell(13).setCellValue(fatorAjuste.getDescricao());
+                }
+            }
+        }
+    }
+
+    public void setarResumoExcel(XSSFWorkbook excelFile, Analise analise){
+        XSSFSheet excelSheet = excelFile.getSheet("Resumo");
+        FormulaEvaluator evaluator = excelFile.getCreationHelper().createFormulaEvaluator();
+
+        if(analise.getNumeroOs() != null){
+            excelSheet.getRow(3).getCell(1).setCellValue(analise.getNumeroOs());
+        }
+        switch(analise.getMetodoContagem()){
+            case ESTIMADA:
+                excelSheet.getRow(4).getCell(1).setCellValue("Estimativa");
+                break;
+            case DETALHADA:
+                excelSheet.getRow(4).getCell(1).setCellValue("Detalhada");
+                break;
+            case INDICATIVA:
+                excelSheet.getRow(4).getCell(1).setCellValue("Indicativa");
+                break;
+        }
+        evaluator.evaluateFormulaCell(excelSheet.getRow(4).getCell(1));
+        for(int i = 15; i < 23; i++){
+            evaluator.evaluate(excelSheet.getRow(i).getCell(2));
+        }
+    }
+
+    public void setarFuncoesDetalhadaExcel(XSSFWorkbook excelFile, List<FuncaoDados> funcaoDadosList, List<FuncaoTransacao> funcaoTransacaoList) {
+        XSSFSheet excelSheet = excelFile.getSheet("AFP - Detalhada");
+
+        FormulaEvaluator evaluator = excelFile.getCreationHelper().createFormulaEvaluator();
+
+        int rowNumero = 9;
+        int idRow = 1;
+
+        for (int i = 0; i < funcaoDadosList.size(); i++){
+            FuncaoDados funcaoDados = funcaoDadosList.get(i);
+            XSSFRow row = excelSheet.getRow(rowNumero++);
+
+            row.getCell(5).setCellValue(funcaoDados.getName());
+            row.getCell(6).setCellValue(funcaoDados.getTipo().toString());
+            row.getCell(7).setCellValue(funcaoDados.getDers().size());row.getCell(0).setCellValue(idRow++);
+            row.getCell(1).setCellValue(funcaoDados.getFatorAjuste().getNome());
+            evaluator.evaluateFormulaCell(row.getCell(2));row.getCell(3).setCellValue(funcaoDados.getFuncionalidade().getModulo().getNome());
+            row.getCell(4).setCellValue(funcaoDados.getFuncionalidade().getNome());
+            row.getCell(9).setCellValue(funcaoDados.getRlrs().size());
+            String rlrs = funcaoDados.getRlrs().stream().map(item -> item.getNome()).collect(Collectors.joining(", "));
+            row.getCell(10).setCellValue(rlrs);
+            String ders = funcaoDados.getDers().stream().map(item -> item.getNome()).collect(Collectors.joining(", "));
+            row.getCell(8).setCellValue(ders);
+            evaluator.evaluateFormulaCell(row.getCell(16));
+        }
+
+        for (int i = 0; i < funcaoTransacaoList.size(); i++){
+            FuncaoTransacao funcaoTransacao = funcaoTransacaoList.get(i);
+            if(!funcaoTransacao.getTipo().equals(TipoFuncaoTransacao.INM)){
+                XSSFRow row = excelSheet.getRow(rowNumero++);
+                row.getCell(6).setCellValue(funcaoTransacao.getTipo().toString());
+                row.getCell(7).setCellValue(funcaoTransacao.getDers().size());
+                row.getCell(3).setCellValue(funcaoTransacao.getFuncionalidade().getModulo().getNome());
+                row.getCell(4).setCellValue(funcaoTransacao.getFuncionalidade().getNome());
+                row.getCell(5).setCellValue(funcaoTransacao.getName());
+                String ders = funcaoTransacao.getDers().stream().map(item -> item.getNome()).collect(Collectors.joining(", "));
+                row.getCell(8).setCellValue(ders);
+                String rlrs = funcaoTransacao.getAlrs().stream().map(item -> item.getNome()).collect(Collectors.joining(", "));
+                row.getCell(10).setCellValue(rlrs);
+                row.getCell(9).setCellValue(funcaoTransacao.getAlrs().size());
+                evaluator.evaluateFormulaCell(row.getCell(16));
+                row.getCell(0).setCellValue(idRow++);
+                row.getCell(1).setCellValue(funcaoTransacao.getFatorAjuste().getNome());
+                evaluator.evaluateFormulaCell(row.getCell(2));
+            }
+        }
+        evaluator.evaluateFormulaCell(excelSheet.getRow(4).getCell(3));
+    }
+
+    public void setarFuncoesEstimadaExcel(XSSFWorkbook excelFile, List<FuncaoDados> funcaoDadosList, List<FuncaoTransacao> funcaoTransacaoList) {
+        XSSFSheet excelSheetEstimada = excelFile.getSheet("AFP - Estimativa");
+
+        FormulaEvaluator evaluator = excelFile.getCreationHelper().createFormulaEvaluator();
+
+        int rownum = 10;
+        int idRow = 1;
+
+        for (int i = 0; i < funcaoDadosList.size(); i++) {
+            FuncaoDados funcaoDados = funcaoDadosList.get(i);
+            XSSFRow row = excelSheetEstimada.getRow(rownum++);
+            row.getCell(0).setCellValue(idRow++);
+            row.getCell(1).setCellValue(funcaoDados.getFatorAjuste().getNome());
+            evaluator.evaluateFormulaCell(row.getCell(2));
+            row.getCell(4).setCellValue(funcaoDados.getFuncionalidade().getModulo().getNome());
+            row.getCell(5).setCellValue(funcaoDados.getFuncionalidade().getNome());
+            row.getCell(6).setCellValue(funcaoDados.getName());
+            row.getCell(7).setCellValue(funcaoDados.getTipo().toString());
+            evaluator.evaluateFormulaCell(row.getCell(8));
+        }
+
+        for (int i = 0; i < funcaoTransacaoList.size(); i++) {
+            FuncaoTransacao funcaoTransacao = funcaoTransacaoList.get(i);
+            if(!funcaoTransacao.getTipo().equals(TipoFuncaoTransacao.INM)){
+                XSSFRow row = excelSheetEstimada.getRow(rownum++);
+                row.getCell(0).setCellValue(idRow++);
+                row.getCell(1).setCellValue(funcaoTransacao.getFatorAjuste().getNome());
+                evaluator.evaluateFormulaCell(row.getCell(2));
+                row.getCell(4).setCellValue(funcaoTransacao.getFuncionalidade().getModulo().getNome());
+                row.getCell(5).setCellValue(funcaoTransacao.getFuncionalidade().getNome());
+                row.getCell(6).setCellValue(funcaoTransacao.getName());
+                row.getCell(7).setCellValue(funcaoTransacao.getTipo().toString());
+                evaluator.evaluateFormulaCell(row.getCell(8));
+            }
+        }
+        evaluator.evaluateFormulaCell(excelSheetEstimada.getRow(4).getCell(2));
+    }
+
+
+    public void setarFuncoesIndicativaExcel(XSSFWorkbook excelFile, List<FuncaoDados> funcaoDadosList) {
+        XSSFSheet excelSheet = excelFile.getSheet("AFP - Indicativa");
+        FormulaEvaluator evaluator = excelFile.getCreationHelper().createFormulaEvaluator();
+
+        int rownum = 9;
+        int idRow = 1;
+        for (int i = 0; i < funcaoDadosList.size(); i++) {
+            FuncaoDados funcaoDados = funcaoDadosList.get(i);
+            XSSFRow row = excelSheet.getRow(rownum++);
+            row.getCell(0).setCellValue(idRow++);
+            row.getCell(2).setCellValue(funcaoDados.getFuncionalidade().getModulo().getNome());
+            row.getCell(3).setCellValue(funcaoDados.getFuncionalidade().getNome());
+            row.getCell(5).setCellValue(funcaoDados.getName());
+            row.getCell(6).setCellValue(funcaoDados.getTipo().toString());
+            evaluator.evaluateFormulaCell(row.getCell(7));
+        }
+        evaluator.evaluateFormulaCell(excelSheet.getRow(4).getCell(3));
+    }
+
+    public void setarFuncoesINMExcel(XSSFWorkbook excelFile, List<FuncaoTransacao> funcaoTransacaoList) {
+        XSSFSheet excelSheet = excelFile.getSheet("AFP - INM");
+        if(excelSheet != null){
+            FormulaEvaluator evaluator = excelFile.getCreationHelper().createFormulaEvaluator();
+            int rownum = 10;
+            int idRow = 1;
+
+            for (int i = 0; i < funcaoTransacaoList.size(); i++) {
+                FuncaoTransacao funcaoTransacao = funcaoTransacaoList.get(i);
+                if(funcaoTransacao.getTipo().equals(TipoFuncaoTransacao.INM)){
+                    XSSFRow row = excelSheet.getRow(rownum++);
+                    row.getCell(0).setCellValue(idRow++);
+                    row.getCell(1).setCellValue(funcaoTransacao.getFatorAjuste().getNome());
+                    evaluator.evaluateFormulaCell(row.getCell(2));
+                    row.getCell(5).setCellValue(funcaoTransacao.getFuncionalidade().getModulo().getNome());
+                    row.getCell(6).setCellValue(funcaoTransacao.getFuncionalidade().getNome());
+                    row.getCell(7).setCellValue(funcaoTransacao.getName());
+                    row.getCell(9).setCellValue(funcaoTransacao.getQuantidade());
+                    row.getCell(10).setCellValue(funcaoTransacao.getDers().size());
+                    row.getCell(11).setCellValue(funcaoTransacao.getAlrs().size());
+                    row.getCell(12).setCellValue("-------");
+                    evaluator.evaluateFormulaCell(row.getCell(18));
+                }
+            }
+            evaluator.evaluateFormulaCell(excelSheet.getRow(4).getCell(3));
+        }
+    }
 }

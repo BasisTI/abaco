@@ -2,29 +2,41 @@ package br.com.basis.abaco.web.rest;
 
 import static org.elasticsearch.index.query.QueryBuilders.queryStringQuery;
 
+import java.lang.reflect.InvocationTargetException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.HashSet;
+import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
+import br.com.basis.abaco.domain.enumeration.Complexidade;
+import br.com.basis.abaco.domain.enumeration.MetodoContagem;
+import br.com.basis.abaco.service.dto.DerFdDTO;
+import br.com.basis.abaco.service.dto.DropdownDTO;
+import br.com.basis.abaco.service.dto.FuncaoDadoAnaliseDTO;
+import br.com.basis.abaco.service.dto.FuncaoDadoApiDTO;
+import br.com.basis.abaco.service.dto.FuncaoDadosEditDTO;
+import br.com.basis.abaco.service.dto.FuncaoDadosSaveDTO;
+import br.com.basis.abaco.service.dto.RlrFdDTO;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.codahale.metrics.annotation.Timed;
 
@@ -32,18 +44,18 @@ import br.com.basis.abaco.domain.Analise;
 import br.com.basis.abaco.domain.Der;
 import br.com.basis.abaco.domain.FuncaoDados;
 import br.com.basis.abaco.domain.Rlr;
+import br.com.basis.abaco.domain.UploadedFile;
+import br.com.basis.abaco.domain.VwDer;
+import br.com.basis.abaco.domain.VwRlr;
 import br.com.basis.abaco.domain.enumeration.StatusFuncao;
 import br.com.basis.abaco.domain.enumeration.TipoFatorAjuste;
 import br.com.basis.abaco.repository.AnaliseRepository;
 import br.com.basis.abaco.repository.FuncaoDadosRepository;
+import br.com.basis.abaco.repository.UploadedFilesRepository;
 import br.com.basis.abaco.repository.search.FuncaoDadosSearchRepository;
-import br.com.basis.abaco.security.AuthoritiesConstants;
+import br.com.basis.abaco.repository.search.VwDerSearchRepository;
+import br.com.basis.abaco.repository.search.VwRlrSearchRepository;
 import br.com.basis.abaco.service.FuncaoDadosService;
-import br.com.basis.abaco.service.dto.DropdownDTO;
-import br.com.basis.abaco.service.dto.FuncaoDadoAnaliseDTO;
-import br.com.basis.abaco.service.dto.FuncaoDadoApiDTO;
-import br.com.basis.abaco.service.dto.FuncaoDadosEditDTO;
-import br.com.basis.abaco.service.dto.FuncaoDadosSaveDTO;
 import br.com.basis.abaco.web.rest.util.HeaderUtil;
 import io.github.jhipster.web.util.ResponseUtil;
 
@@ -64,13 +76,22 @@ public class FuncaoDadosResource {
     private final FuncaoDadosSearchRepository funcaoDadosSearchRepository;
     private final FuncaoDadosService funcaoDadosService;
     private final AnaliseRepository analiseRepository;
+    private final VwDerSearchRepository vwDerSearchRepository;
+    private final VwRlrSearchRepository vwRlrSearchRepository;
+
+    @Autowired
+    private ModelMapper modelMapper;
+    @Autowired
+    private UploadedFilesRepository filesRepository;
 
     public FuncaoDadosResource(FuncaoDadosRepository funcaoDadosRepository,
-                               FuncaoDadosSearchRepository funcaoDadosSearchRepository, FuncaoDadosService funcaoDadosService, AnaliseRepository analiseRepository) {
+                               FuncaoDadosSearchRepository funcaoDadosSearchRepository, FuncaoDadosService funcaoDadosService, AnaliseRepository analiseRepository, VwDerSearchRepository vwDerSearchRepository, VwRlrSearchRepository vwRlrSearchRepository) {
         this.funcaoDadosRepository = funcaoDadosRepository;
         this.funcaoDadosSearchRepository = funcaoDadosSearchRepository;
         this.funcaoDadosService = funcaoDadosService;
         this.analiseRepository = analiseRepository;
+        this.vwDerSearchRepository = vwDerSearchRepository;
+        this.vwRlrSearchRepository = vwRlrSearchRepository;
     }
 
     /**
@@ -80,21 +101,37 @@ public class FuncaoDadosResource {
      * @return the ResponseEntity with status 201 (Created) and with body the new funcaoDados, or with status 400 (Bad Request) if the funcaoDados has already an ID
      * @throws URISyntaxException if the Location URI syntax is incorrect
      */
-    @PostMapping("/funcao-dados/{idAnalise}")
+    @PostMapping(path = "/funcao-dados/{idAnalise}", consumes = {"multipart/form-data"})
     @Timed
-    @Secured({AuthoritiesConstants.ADMIN, AuthoritiesConstants.USER, AuthoritiesConstants.GESTOR, AuthoritiesConstants.ANALISTA})
-    public ResponseEntity<FuncaoDadosEditDTO> createFuncaoDados(@PathVariable Long idAnalise, @RequestBody FuncaoDadosSaveDTO funcaoDadosSaveDTO) throws URISyntaxException {
+    public ResponseEntity<FuncaoDadosEditDTO> createFuncaoDados(@PathVariable Long idAnalise, @RequestPart("funcaoDados") FuncaoDadosSaveDTO funcaoDadosSaveDTO, @RequestPart("files")List<MultipartFile> files) throws URISyntaxException {
         log.debug("REST request to save FuncaoDados : {}", funcaoDadosSaveDTO);
         Analise analise = analiseRepository.findOne(idAnalise);
-        funcaoDadosSaveDTO.getDers().forEach(der -> { der.setFuncaoDados(funcaoDadosSaveDTO);});
-        funcaoDadosSaveDTO.getRlrs().forEach(rlr -> { rlr.setFuncaoDados(funcaoDadosSaveDTO);});
+
         FuncaoDados funcaoDados = convertToEntity(funcaoDadosSaveDTO);
+
+        funcaoDados.getDers().forEach(der -> { der.setFuncaoDados(funcaoDados);});
+        funcaoDados.getRlrs().forEach(rlr -> { rlr.setFuncaoDados(funcaoDados);});
+
         funcaoDados.setAnalise(analise);
         if (funcaoDados.getId() != null || funcaoDados.getAnalise() == null || funcaoDados.getAnalise().getId() == null) {
             return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert(ENTITY_NAME, "idexists", "A new funcaoDados cannot already have an ID")).body(null);
         }
+        for(Der der : funcaoDados.getDers()){
+            der.setFuncaoTransacao(null);
+        }
+        if(!files.isEmpty()){
+            List<UploadedFile> uploadedFiles = funcaoDadosService.uploadFiles(files);
+            funcaoDados.setFiles(uploadedFiles);
+        }
+        if(analise.getMetodoContagem().equals(MetodoContagem.ESTIMADA)){
+            funcaoDados.setComplexidade(Complexidade.BAIXA);
+        }
+
         FuncaoDados result = funcaoDadosRepository.save(funcaoDados);
         FuncaoDadosEditDTO  funcaoDadosEditDTO = convertFuncaoDadoAEditDTO(result);
+
+        saveVwDersAndVwRlrs(result.getDers(), result.getRlrs(), analise.getSistema().getId());
+
         return ResponseEntity.created(new URI("/api/funcao-dados/" + funcaoDadosEditDTO.getId()))
                 .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, funcaoDadosEditDTO.getId().toString()))
                 .body(funcaoDadosEditDTO);
@@ -109,24 +146,34 @@ public class FuncaoDadosResource {
      * or with status 500 (Internal Server Error) if the funcaoDados couldnt be updated
      * @throws URISyntaxException if the Location URI syntax is incorrect
      */
-    @PutMapping("/funcao-dados/{id}")
+    @PutMapping(value = "/funcao-dados/{id}", consumes = {"multipart/form-data"})
     @Timed
-    @Secured({AuthoritiesConstants.ADMIN, AuthoritiesConstants.USER, AuthoritiesConstants.GESTOR, AuthoritiesConstants.ANALISTA})
-    public ResponseEntity<FuncaoDadosEditDTO> updateFuncaoDados(@PathVariable Long id, @RequestBody FuncaoDadosSaveDTO funcaoDadosSaveDTO) throws URISyntaxException {
+    public ResponseEntity<FuncaoDadosEditDTO> updateFuncaoDados(@PathVariable Long id, @RequestPart("funcaoDados")FuncaoDadosSaveDTO funcaoDadosSaveDTO, @RequestPart("files")List<MultipartFile> files) throws URISyntaxException {
         log.debug("REST request to update FuncaoDados : {}", funcaoDadosSaveDTO);
         FuncaoDados funcaoDadosOld = funcaoDadosRepository.findById(id);
         FuncaoDados funcaoDados = convertToEntity(funcaoDadosSaveDTO);
+
         if (funcaoDados.getId() == null) {
-            return createFuncaoDados(funcaoDados.getAnalise().getId(), funcaoDadosSaveDTO);
+            return createFuncaoDados(funcaoDados.getAnalise().getId(), funcaoDadosSaveDTO, files);
         }
+
         Analise analise = analiseRepository.findOne(funcaoDadosOld.getAnalise().getId());
         funcaoDados.setAnalise(analise);
+
         if (funcaoDados.getAnalise() == null || funcaoDados.getAnalise().getId() == null) {
             return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert(ENTITY_NAME, "idexists", "A new funcaoDados cannot already have an ID")).body(null);
         }
+        if(!files.isEmpty()){
+            List<UploadedFile> uploadedFiles = funcaoDadosService.uploadFiles(files);
+            funcaoDadosOld.setFiles(uploadedFiles);
+        }
+
         FuncaoDados funcaoDadosUpdate = updateFuncaoDados(funcaoDadosOld, funcaoDados);
+
         FuncaoDados result = funcaoDadosRepository.save(funcaoDadosUpdate);
         FuncaoDadosEditDTO funcaoDadosEditDTO = convertFuncaoDadoAEditDTO(result);
+
+        saveVwDersAndVwRlrs(result.getDers(), result.getRlrs(), analise.getSistema().getId());
         return ResponseEntity.ok().headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, funcaoDados.getId().toString())).body(funcaoDadosEditDTO);
     }
 
@@ -205,9 +252,11 @@ public class FuncaoDadosResource {
      */
     @DeleteMapping("/funcao-dados/{id}")
     @Timed
-    @Secured({AuthoritiesConstants.ADMIN, AuthoritiesConstants.USER, AuthoritiesConstants.GESTOR, AuthoritiesConstants.ANALISTA})
     public ResponseEntity<Void> deleteFuncaoDados(@PathVariable Long id) {
         log.debug("REST request to delete FuncaoDados : {}", id);
+        FuncaoDados funcaoDados = funcaoDadosRepository.findById(id);
+        funcaoDados.getDers().forEach(item -> vwDerSearchRepository.delete(item.getId()));
+        funcaoDados.getRlrs().forEach(item -> vwRlrSearchRepository.delete(item.getId()));
         funcaoDadosRepository.delete(id);
         funcaoDadosSearchRepository.delete(id);
         return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id.toString())).build();
@@ -258,7 +307,6 @@ public class FuncaoDadosResource {
      */
     @GetMapping("/funcao-dados/update-status/{id}/{statusFuncao}")
     @Timed
-    @Secured({AuthoritiesConstants.ADMIN, AuthoritiesConstants.USER, AuthoritiesConstants.GESTOR, AuthoritiesConstants.ANALISTA})
     public ResponseEntity<FuncaoDadoApiDTO> updateStatusFuncaoDados(@PathVariable Long id, @PathVariable StatusFuncao statusFuncao) {
         log.debug("REST request to update status FuncaoDados : {}", id);
         FuncaoDados funcaoDados = funcaoDadosRepository.findOne(id);
@@ -270,7 +318,7 @@ public class FuncaoDadosResource {
 
 
     private FuncaoDadoAnaliseDTO convertToDto(FuncaoDados funcaoDados) {
-        FuncaoDadoAnaliseDTO funcaoDadoAnaliseDTO = new ModelMapper().map(funcaoDados, FuncaoDadoAnaliseDTO.class);
+        FuncaoDadoAnaliseDTO funcaoDadoAnaliseDTO = modelMapper.map(funcaoDados, FuncaoDadoAnaliseDTO.class);
         funcaoDadoAnaliseDTO.setRlrFilter(getValueRlr(funcaoDados));
         funcaoDadoAnaliseDTO.setDerFilter(getValueDer(funcaoDados));
         funcaoDadoAnaliseDTO.setFatorAjusteFilter(getFatorAjusteFilter(funcaoDados));
@@ -326,19 +374,50 @@ public class FuncaoDadosResource {
     }
 
     private FuncaoDadoApiDTO getFuncaoDadoApiDTO(FuncaoDados funcaoDados) {
-        ModelMapper modelMapper = new ModelMapper();
-        return modelMapper.map(funcaoDados, FuncaoDadoApiDTO.class);
+        Set<DerFdDTO> ders = new LinkedHashSet<>();
+        Set<RlrFdDTO> rlrs = new LinkedHashSet<>();
+        FuncaoDadoApiDTO map = modelMapper.map(funcaoDados, FuncaoDadoApiDTO.class);
+        funcaoDados.getDers().forEach(der -> {
+            DerFdDTO derDto = new DerFdDTO();
+            derDto.setNome(der.getNome());
+            derDto.setValor(der.getValor());
+            ders.add(derDto);
+        });
+        funcaoDados.getRlrs().forEach(rlr -> {
+            RlrFdDTO rlrDto = new RlrFdDTO();
+            rlrDto.setNome(rlr.getNome());
+            rlrDto.setValor(rlr.getValor());
+            rlrs.add(rlrDto);
+        });
+        map.setDers(ders);
+        map.setRlrs(rlrs);
+        return map;
     }
 
     private FuncaoDadosEditDTO convertFuncaoDadoAEditDTO(FuncaoDados funcaoDados) {
-        ModelMapper modelMapper = new ModelMapper();
         return modelMapper.map(funcaoDados, FuncaoDadosEditDTO.class);
     }
 
 
     private FuncaoDados convertToEntity(FuncaoDadosSaveDTO funcaoDadosSaveDTO){
-        ModelMapper modelMapper = new ModelMapper();
-        return modelMapper.map(funcaoDadosSaveDTO, FuncaoDados.class);
+        Set<Der> ders = new LinkedHashSet<>();
+        Set<Rlr> rlrs = new LinkedHashSet<>();
+        FuncaoDados map = modelMapper.map(funcaoDadosSaveDTO, FuncaoDados.class);
+        funcaoDadosSaveDTO.getDers().forEach(derDto -> {
+            Der der = new Der();
+            der.setNome(derDto.getNome());
+            der.setValor(derDto.getValor());
+            ders.add(der);
+        });
+        funcaoDadosSaveDTO.getRlrs().forEach(rlrDto -> {
+            Rlr rlr = new Rlr();
+            rlr.setNome(rlrDto.getNome());
+            rlr.setValor(rlrDto.getValor());
+            rlrs.add(rlr);
+        });
+        map.setDers(ders);
+        map.setRlrs(rlrs);
+        return map;
     }
 
     private FuncaoDados updateFuncaoDados(FuncaoDados funcaoDadosOld, FuncaoDados funcaoDados) {
@@ -355,12 +434,13 @@ public class FuncaoDadosResource {
         funcaoDadosOld.setComplexidade(funcaoDados.getComplexidade());
         funcaoDadosOld.setStatusFuncao(funcaoDados.getStatusFuncao());
         funcaoDadosOld.setQuantidade(funcaoDados.getQuantidade());
+        funcaoDadosOld.setOrdem(funcaoDados.getOrdem());
         return  funcaoDadosOld;
     }
 
     private void setDersAndRlrs(FuncaoDados funcaoDadosOld, FuncaoDados funcaoDados) {
-        Set<Der> lstDers = new HashSet<>();
-        Set<Rlr> lstRlrs = new HashSet<>();
+        Set<Der> lstDers = new LinkedHashSet<>();
+        Set<Rlr> lstRlrs = new LinkedHashSet<>();
         funcaoDados.getDers().forEach(der -> {
             der.setFuncaoDados(funcaoDadosOld);
             lstDers.add(der);
@@ -373,4 +453,51 @@ public class FuncaoDadosResource {
         funcaoDadosOld.updateRlrs(lstRlrs);
     }
 
+    private void saveVwDersAndVwRlrs(Set<Der> ders, Set<Rlr> rlrs, Long idSistema) {
+        List<VwDer> vwDerList = vwDerSearchRepository.findAllByIdSistemaFD(idSistema);
+        List<VwRlr> vwRlrList = vwRlrSearchRepository.findAllByIdSistema(idSistema);
+
+        saveVwDer(ders, vwDerList, idSistema);
+        saveVwRlr(rlrs, vwRlrList, idSistema);
+    }
+
+    private void saveVwRlr(Set<Rlr> rlrs, List<VwRlr> vwRlrList, Long idSistema) {
+        List<VwRlr> vwRlrs = new ArrayList<>();
+        if(!rlrs.isEmpty()){
+            rlrs.forEach(item -> {
+                VwRlr vwRlr = new VwRlr();
+                if(item.getId() != null){
+                    vwRlr.setId(item.getId());
+                }
+                vwRlr.setNome(item.getNome());
+                vwRlr.setIdSistema(idSistema);
+                if(!vwRlrList.contains(vwRlr)){
+                    vwRlrs.add(vwRlr);
+                }
+            });
+            if(!vwRlrs.isEmpty()){
+                vwRlrSearchRepository.save(vwRlrs);
+            }
+        }
+    }
+
+    private void saveVwDer(Set<Der> ders, List<VwDer> vwDerList, Long idSistema) {
+        List<VwDer> vwDers = new ArrayList<>();
+        if(!ders.isEmpty()){
+            ders.forEach(item -> {
+                VwDer vwDer = new VwDer();
+                if(item.getId() != null){
+                    vwDer.setId(item.getId());
+                }
+                vwDer.setNome(item.getNome());
+                vwDer.setIdSistemaFD(idSistema);
+                if(!vwDerList.contains(vwDer)){
+                    vwDers.add(vwDer);
+                }
+            });
+            if(!vwDers.isEmpty()){
+                vwDerSearchRepository.save(vwDers);
+            }
+        }
+    }
 }

@@ -56,7 +56,7 @@ import java.util.Set;
  */
 public class RelatorioUtil {
 
-    private static final String ATTACHMENT_FILENAME_S_PDF = "attachment; filename=\"%s.pdf\"";
+    private static final String ATTACHMENT_FILENAME_S_PDF = "attachment; filename=%s.pdf";
 
     private static final String INLINE_FILENAME = "inline; filename=";
 
@@ -69,6 +69,8 @@ public class RelatorioUtil {
     private static final String EXCEL = "application/vnd.ms-excel";
 
     private static final String CONTAGEM_PDF = "analise_contagem.pdf";
+
+    private static final String FUNDAMENTACAO = "Fundamentação";
 
 
     private HttpServletResponse response;
@@ -128,7 +130,7 @@ public class RelatorioUtil {
         JasperExportManager.exportReportToPdfStream(jasperPrint, outputStream);
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_PDF);
-        headers.set(HttpHeaders.CONTENT_DISPOSITION, String.format(ATTACHMENT_FILENAME_S_PDF, analise.getIdentificadorAnalise().trim()));
+        headers.set(HttpHeaders.CONTENT_DISPOSITION, String.format(ATTACHMENT_FILENAME_S_PDF, pegarNomeRelatorio(analise)));
         return new ResponseEntity<byte[]>(outputStream.toByteArray(),headers, HttpStatus.OK);
     }
 
@@ -143,7 +145,7 @@ public class RelatorioUtil {
      */
     @SuppressWarnings({ RAW_TYPES, UNCHECKED })
     public @ResponseBody ResponseEntity<byte[]> downloadPdfBrowser(Analise analise, String caminhoJasperResolucao, Map parametrosJasper) throws FileNotFoundException, JRException {
-        return buildPDFBrowser(caminhoJasperResolucao, parametrosJasper, new JREmptyDataSource());
+        return buildPDFBrowser(caminhoJasperResolucao, parametrosJasper, new JREmptyDataSource(), analise);
     }
 
     /**
@@ -158,10 +160,10 @@ public class RelatorioUtil {
     @SuppressWarnings({ RAW_TYPES, UNCHECKED })
     public @ResponseBody ResponseEntity<byte[]> downloadPdfBrowser(Analise analise, String caminhoJasperResolucao, JRBeanCollectionDataSource dataSource) throws JRException {
 
-        return buildPDFBrowser(caminhoJasperResolucao, new HashMap(), dataSource);
+        return buildPDFBrowser(caminhoJasperResolucao, new HashMap(), dataSource, analise);
     }
 
-    private @ResponseBody ResponseEntity<byte[]> buildPDFBrowser(String caminhoJasperResolucao, Map parametters, JRDataSource dataSource) throws JRException {
+    private @ResponseBody ResponseEntity<byte[]> buildPDFBrowser(String caminhoJasperResolucao, Map parametters, JRDataSource dataSource, Analise analise) throws JRException {
         InputStream stream = getClass().getClassLoader().getResourceAsStream(caminhoJasperResolucao);
 
         JasperPrint jasperPrint = (JasperPrint) JasperFillManager.fillReport(stream, parametters, dataSource);
@@ -179,10 +181,10 @@ public class RelatorioUtil {
         exporter.exportReport();
 
         JasperExportManager.exportReportToPdfStream(jasperPrint, outputStream);
-        
+
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_PDF);
-        headers.set(HttpHeaders.CONTENT_DISPOSITION, String.format(ATTACHMENT_FILENAME_S_PDF, "analise"));
+        headers.set(HttpHeaders.CONTENT_DISPOSITION, String.format(ATTACHMENT_FILENAME_S_PDF, pegarNomeRelatorio(analise)));
         return new ResponseEntity<byte[]>(outputStream.toByteArray(),headers, HttpStatus.OK);
     }
 
@@ -193,9 +195,31 @@ public class RelatorioUtil {
         document.setMargins(factory.getTopMargin(), factory.getRightMargin(), factory.getBottomMargin(), factory.getLeftMargin());
         buildHeader(document, factory);
         buildBodyAnaliseDetail(analise, document, factory);
-
         document.close();
-        return DynamicExporter.output(byteArray, CONTAGEM_PDF);
+        return DynamicExporter.output(byteArray, pegarNomeRelatorio(analise));
+    }
+
+    public String pegarNomeRelatorio(Analise analise){
+        String nomeRelatorio = "";
+        String[] numeroOs;
+        if(analise.getNumeroOs() != null){
+            numeroOs = analise.getNumeroOs().split("-");
+            nomeRelatorio += numeroOs[0];
+            if(numeroOs.length > 1) {
+                nomeRelatorio += "_OS";
+                nomeRelatorio += numeroOs[1];
+            }
+        }else if(analise.getIdentificadorAnalise() != null){
+            numeroOs = analise.getIdentificadorAnalise().split("-");
+            nomeRelatorio += numeroOs[0];
+            if(numeroOs.length > 1){
+                nomeRelatorio += "_OS";
+                nomeRelatorio += numeroOs[1];
+            }
+        }else{
+            nomeRelatorio += "_OS_Contagem";
+        }
+        return nomeRelatorio += "_Contagem";
     }
 
     /**
@@ -204,7 +228,7 @@ public class RelatorioUtil {
      * @param document documento base dor elatório
      * @param factory classe cosntrutora auxiliar do relatório
      */
-    private void buildBodyAnaliseDetail(@NotNull Analise analise, @NotNull Document document, @NotNull ReportFactory factory) {
+    private void buildBodyAnaliseDetail(@NotNull Analise analise, @NotNull Document document, @NotNull ReportFactory factory) throws MalformedURLException {
         document.add(factory.makeSubTitle("Identificação da Demanda", TextAlignment.LEFT, 14F));
         buildAnaliseDetail(document, analise, factory);
         document.add(factory.makeEspaco());
@@ -212,7 +236,7 @@ public class RelatorioUtil {
         buildModules(analise.getSistema().getModulos(), document, factory);
     }
 
-    private void buildModules(Set<Modulo> modulos, Document document, ReportFactory factory) {
+    private void buildModules(Set<Modulo> modulos, Document document, ReportFactory factory) throws MalformedURLException {
         for (Modulo modulo : modulos) {
             if(verifyModulo(modulo)) {
                 document.add(factory.makeSubTitleLv2(modulo.getNome().replace("\n", "").replace("\t", "").trim(), TextAlignment.LEFT, 12F));
@@ -249,7 +273,7 @@ public class RelatorioUtil {
         return false;
     }
 
-    private void buildtableFT(FuncaoTransacao funcaoTransacao, ReportFactory factory, Document document) {
+    private void buildtableFT(FuncaoTransacao funcaoTransacao, ReportFactory factory, Document document) throws MalformedURLException {
         document.add(factory.makeTableLine("Funcionalidade/Cenário", funcaoTransacao.getName()));
         document.add(factory.makeTableLine("Tipo", translateTipo(funcaoTransacao.getTipo())));
         document.add(factory.makeTableLine("Impacto", translateFT(funcaoTransacao.getImpacto())));
@@ -259,11 +283,14 @@ public class RelatorioUtil {
         funcaoTransacao.getDers().forEach(der -> ders.add(der.getNome() != null ? der.getNome() : (der.getValor() != null ? der.getValor().toString(): null)));
         document.add(factory.makeBulletList("Entidades Referenciadas", alrs));
         document.add(factory.makeBulletList("Campos", ders));
-        document.add(factory.makeDescriptionField("Fundamentação", funcaoTransacao.getSustantation(), TextAlignment.JUSTIFIED, 12F));
+        document.add(factory.makeDescriptionField(FUNDAMENTACAO, funcaoTransacao.getSustantation(), TextAlignment.JUSTIFIED, 12F));
+        if(funcaoTransacao.getFiles() != null && !funcaoTransacao.getFiles().isEmpty()){
+            document.add(factory.makeDescriptionFieldImage(FUNDAMENTACAO, funcaoTransacao.getFiles(), TextAlignment.JUSTIFIED, 12F));
+        }
         document.add(factory.makeEspaco());
     }
 
-    private void buildTableFD(FuncaoDados funcaoDados, ReportFactory factory, Document document) {
+    private void buildTableFD(FuncaoDados funcaoDados, ReportFactory factory, Document document) throws MalformedURLException {
         document.add(factory.makeTableLine("Entidade", funcaoDados.getName()));
         document.add(factory.makeTableLine("Tipo", translateTipo(funcaoDados.getTipo())));
         document.add(factory.makeTableLine("Impacto", translateFD(funcaoDados.getImpacto())));
@@ -273,7 +300,10 @@ public class RelatorioUtil {
         funcaoDados.getDers().forEach(der -> ders.add(der.getNome() != null ? der.getNome() : (der.getValor() != null ? der.getValor().toString() : null)));
         document.add(factory.makeBulletList("Subentidades", rlrs));
         document.add(factory.makeBulletList("Campos", ders));
-        document.add(factory.makeDescriptionField("Fundamentação", funcaoDados.getSustantation(), TextAlignment.JUSTIFIED, 12F));
+        document.add(factory.makeDescriptionField(FUNDAMENTACAO, funcaoDados.getSustantation(), TextAlignment.JUSTIFIED, 12F));
+        if(funcaoDados.getFiles() != null && !funcaoDados.getFiles().isEmpty()){
+            document.add(factory.makeDescriptionFieldImage(FUNDAMENTACAO, funcaoDados.getFiles(), TextAlignment.JUSTIFIED, 12F));
+        }
         document.add(factory.makeEspaco());
     }
 
@@ -362,7 +392,7 @@ public class RelatorioUtil {
      * @throws JRException
      */
     @SuppressWarnings({ RAW_TYPES, UNCHECKED })
-    public @ResponseBody ResponseEntity<byte[]> downloadExcel(Analise analise, String caminhoJasperResolucao, Map parametrosJasper) throws FileNotFoundException, JRException {
+    public @ResponseBody ResponseEntity<byte[]> downloadExcel(Analise analise, String caminhoJasperResolucao, Map<String, Object> parametrosJasper) throws FileNotFoundException, JRException {
 
         InputStream stream = getClass().getClassLoader().getResourceAsStream(caminhoJasperResolucao);
 
@@ -384,10 +414,10 @@ public class RelatorioUtil {
         exporter.setConfiguration(configuration);
 
         exporter.exportReport();
-        
+
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.parseMediaType(EXCEL));
-        headers.set(HttpHeaders.CONTENT_DISPOSITION, String.format("attachment; filename=\"%s.xls\"", analise.getIdentificadorAnalise().trim()));
+        headers.set(HttpHeaders.CONTENT_DISPOSITION, String.format("attachment; filename=%s.xls", pegarNomeRelatorio(analise)));
         return new ResponseEntity<byte[]>(outputStream.toByteArray(),headers, HttpStatus.OK);
     }
 

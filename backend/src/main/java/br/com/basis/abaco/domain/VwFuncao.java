@@ -65,4 +65,7 @@ public class VwFuncao {
     @Enumerated(EnumType.STRING)
     @Column(name = "status_funcao")
     private StatusFuncao statusFuncao;
+
+    @Column(name="ordem")
+    private Long ordem;
 }

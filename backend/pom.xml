@@ -11,7 +11,7 @@
 
     <groupId>br.com.basis.abaco</groupId>
     <artifactId>abaco</artifactId>
-    <version>2.5.7</version>
+    <version>2.7.68</version>
     <packaging>war</packaging>
     <name>Abaco</name>
 
@@ -418,6 +418,17 @@
             <groupId>org.apache.pdfbox</groupId>
             <artifactId>pdfbox</artifactId>
             <version>2.0.16</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi</artifactId>
+            <version>3.12</version>
+        </dependency>
+        <!-- excel 2007 over-->
+        <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi-ooxml</artifactId>
+            <version>3.12</version>
         </dependency>
         <dependency>
             <groupId>org.assertj</groupId>

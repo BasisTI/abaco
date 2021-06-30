@@ -4,10 +4,10 @@ import { environment } from '../../environments/environment';
 import { Analise, AnaliseShareEquipe } from './';
 import { TipoEquipe } from '../tipo-equipe';
 import { Resumo } from './analise-resumo/resumo.model';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { PageNotificationService } from '@nuvem/primeng-components';
 import { Observable, forkJoin, pipe } from 'rxjs';
-import { catchError } from 'rxjs/operators';
+import { catchError, map, tap } from 'rxjs/operators';
 import { HttpGenericErrorService, BlockUiService } from '@nuvem/angular-base';
 import { ResponseWrapper, createRequestOption } from '../shared';
 import { FuncaoDadosService } from '../funcao-dados/funcao-dados.service';
@@ -16,6 +16,7 @@ import { FuncaoTransacao } from '../funcao-transacao';
 import { FuncaoDados } from '../funcao-dados';
 import { Status } from '../status/status.model';
 import { AbacoButtonsModule } from '../components/abaco-buttons/abaco-buttons.module';
+import { TableBody } from 'primeng';
 
 @Injectable()
 export class AnaliseService {
@@ -127,7 +128,6 @@ export class AnaliseService {
 
 
     public geraRelatorioPdfBrowser(id: number): Observable<string> {
-        this.blockUiService.show();
         this.http.request('get', `${this.relatoriosUrl}/${id}`, {
             responseType: 'blob',
         }).subscribe(
@@ -147,13 +147,14 @@ export class AnaliseService {
 
 
 
-   
+
     /**
      *
      */
     public geraRelatorioPdfDetalhadoBrowser(id: Number): Observable<string> {
         this.blockUiService.show();
         this.http.request('get', `${this.relatoriosDetalhadoUrl}/${id}`, {
+            observe: "response",
             responseType: 'blob',
         }).pipe(catchError((error: any) => {
             if (error.status === 500) {
@@ -163,11 +164,12 @@ export class AnaliseService {
             }
         })).subscribe(
             (response) => {
+                let filename = response.headers.get("content-disposition").split("filename=");
                 const mediaType = 'application/pdf';
-                const blob = new Blob([response], { type: mediaType });
+                const blob = new Blob([response.body], { type: mediaType });
                 const fileURL = window.URL.createObjectURL(blob);
                 const anchor = document.createElement('a');
-                anchor.download = 'analise.pdf';
+                anchor.download = filename[1];
                 anchor.href = fileURL;
                 document.body.appendChild(anchor);
                 anchor.click();
@@ -183,6 +185,7 @@ export class AnaliseService {
     public gerarRelatorioExcel(id: Number): Observable<string> {
         this.blockUiService.show();
         this.http.request('get', `${this.relatorioExcelUrl}/${id}`, {
+            observe: "response",
             responseType: 'blob',
         }).pipe(catchError((error: any) => {
             if (error.status === 500) {
@@ -192,11 +195,12 @@ export class AnaliseService {
             }
         })).subscribe(
             (response) => {
+                let filename = response.headers.get("content-disposition").split("filename=");
                 const mediaType = 'application/vnd.ms-excel';
-                const blob = new Blob([response], { type: mediaType });
+                const blob = new Blob([response.body], { type: mediaType });
                 const fileURL = window.URL.createObjectURL(blob);
                 const anchor = document.createElement('a');
-                anchor.download = 'analise.xls';
+                anchor.download = filename[1];
                 anchor.href = fileURL;
                 document.body.appendChild(anchor);
                 anchor.click();
@@ -233,9 +237,10 @@ export class AnaliseService {
      * @param idAnalise indentificador da análise que será utilizada como base do relatório
      * @returns
      */
-    public gerarRelatorioContagem(idAnalise: number): Observable<string> {
+    public gerarRelatorioContagem(idAnalise: number): Observable<any> {
         this.blockUiService.show();
         this.http.request('get', `${this.relatorioContagemUrl}/${idAnalise}`, {
+            observe: "response",
             responseType: 'blob',
         }).pipe(catchError((error: any) => {
             if (error.status === 500) {
@@ -245,11 +250,12 @@ export class AnaliseService {
             }
         })).subscribe(
             (response) => {
+                let filename = response.headers.get("content-disposition").split("filename=");
                 const mediaType = 'application/pdf';
-                const blob = new Blob([response], { type: mediaType });
+                const blob = new Blob([response.body], { type: mediaType });
                 const fileURL = window.URL.createObjectURL(blob);
                 const anchor = document.createElement('a');
-                anchor.download = 'analise_contagem.pdf';
+                anchor.download = filename[1];
                 anchor.href = fileURL;
                 document.body.appendChild(anchor);
                 anchor.click();
@@ -281,7 +287,12 @@ export class AnaliseService {
     }
     public clonarAnaliseToEquipe(id: number, equipe: TipoEquipe) {
         const url = this.clonarAnaliseUrl + id + '/' + equipe.id;
-        return this.http.get<Analise>(url);
+        return this.http.get<Analise>(url).pipe(catchError((error: any) => {
+            if (error.status === 403) {
+                this.pageNotificationService.addErrorMessage(this.getLabel('Erro ao clonar para equipe está análise.!'));
+                return Observable.throw(new Error(error.status));
+            }
+        }));
     }
     public changeStatusAnalise(id: number, status: Status) {
         const url = this.changeStatusUrl + id + '/' + status.id;
@@ -426,6 +437,40 @@ export class AnaliseService {
                     return Observable.throw(new Error(error.status));
                 }
             }));
+    }
+
+    public importar(analise: Analise): Observable<Analise> {
+        return this.http.post<Analise>(this.resourceUrl, analise).pipe(catchError((error: any) => {
+            if (error.status === 403) {
+                this.pageNotificationService.addErrorMessage(this.getLabel('Você não possui permissão!'));
+                return Observable.throw(new Error(error.status));
+            }
+        }));
+    }
+
+    public importarModeloExcel(id: number) {
+        this.blockUiService.show();
+        this.http.request('get', this.resourceUrl + "/importar-excel/" + id, {responseType: "blob"})
+            .pipe(catchError((error: any) => {
+                if (error.status === 500) {
+                    this.blockUiService.hide();
+                    this.pageNotificationService.addErrorMessage(this.getLabel('Erro ao gerar relatório'));
+                    return Observable.throw(new Error(error.status));
+                }
+            })).subscribe(
+                (response) => {
+                    const mediaType = 'application/vnd.ms-excel';
+                    const blob = new Blob([response], { type: mediaType });
+                    const fileURL = window.URL.createObjectURL(blob);
+                    const anchor = document.createElement('a');
+                    anchor.download = 'analise.xlsx';
+                    anchor.href = fileURL;
+                    document.body.appendChild(anchor);
+                    anchor.click();
+                    this.blockUiService.hide();
+                    return null;
+                });
+        return null;
     }
 
 }

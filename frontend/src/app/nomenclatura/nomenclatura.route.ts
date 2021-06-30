@@ -4,26 +4,43 @@ import { AuthGuard } from '@nuvem/angular-base';
 import { NomenclaturaDetailComponent } from './nomenclatura-detail/nomenclatura-detail.component';
 import { AdminGuard } from '../util/admin.guard';
 import { NomenclaturaListComponent } from './nomenclatura-list/nomenclatura-list.component';
+import { AuthGuardService } from '../util/auth.guard.service';
 
 export const nomenclaturaRoute: Routes = [
   {
     path: 'nomenclatura',
     component: NomenclaturaListComponent,
-    canActivate: [AuthGuard, AdminGuard]
+    canActivate: [AuthGuard, AuthGuardService],
+    data: {
+        roleParaVerificar: ['ROLE_ABACO_NOMENCLATURA_ACESSAR'],
+        breadcrumb: "Nomenclatura"
+    }
   },
   {
     path: 'nomenclatura/new',
     component: NomenclaturaFormComponent,
-    canActivate: [AuthGuard, AdminGuard]
+    canActivate: [AuthGuard, AuthGuardService],
+    data: {
+        roleParaVerificar: ['ROLE_ABACO_NOMENCLATURA_CADASTRAR'],
+        breadcrumb: "Nomenclatura"
+    }
   },
   {
     path: 'nomenclatura/:id/edit',
     component: NomenclaturaFormComponent,
-    canActivate: [AuthGuard, AdminGuard]
+    canActivate: [AuthGuard, AuthGuardService],
+    data: {
+        roleParaVerificar: ['ROLE_ABACO_NOMENCLATURA_EDITAR'],
+        breadcrumb: "Nomenclatura"
+    }
   },
   {
     path: 'nomenclatura/:id/view',
     component: NomenclaturaDetailComponent,
-    canActivate: [AuthGuard, AdminGuard]
+    canActivate: [AuthGuard, AuthGuardService],
+    data: {
+        roleParaVerificar: ['ROLE_ABACO_NOMENCLATURA_CONSULTAR'],
+        breadcrumb: "Nomenclatura"
+    }
   },
 ];

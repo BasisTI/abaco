@@ -5,6 +5,7 @@ import br.com.basis.abaco.AbacoApp;
 import br.com.basis.abaco.domain.Alr;
 import br.com.basis.abaco.repository.AlrRepository;
 import br.com.basis.abaco.repository.search.AlrSearchRepository;
+import br.com.basis.abaco.service.AlrService;
 import br.com.basis.abaco.web.rest.errors.ExceptionTranslator;
 
 import org.junit.Before;
@@ -60,10 +61,13 @@ public class AlrResourceIT {
 
     private Alr alr;
 
+    @Autowired
+    private AlrService alrService;
+
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-            AlrResource alrResource = new AlrResource(alrRepository, alrSearchRepository);
+            AlrResource alrResource = new AlrResource(alrRepository, alrSearchRepository, alrService);
         this.restAlrMockMvc = MockMvcBuilders.standaloneSetup(alrResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)

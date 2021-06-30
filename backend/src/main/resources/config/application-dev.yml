@@ -17,7 +17,7 @@ eureka:
     instance:
         prefer-ip-address: true
     client:
-        enabled: true
+        enabled: false
         healthcheck:
             enabled: true
         registerWithEureka: true
@@ -38,9 +38,9 @@ spring:
         serialization.indent_output: true
     datasource:
         type: com.zaxxer.hikari.HikariDataSource
-        url: jdbc:postgresql://localhost:5432/abaco
-        username: postgres
-        password: postgres
+        url: jdbc:postgresql://localhost:5432/basis
+        username: abaco
+        password: abacosenha
     jpa:
         database-platform: io.github.jhipster.domain.util.FixedPostgreSQL82Dialect
         database: POSTGRESQL
@@ -55,7 +55,7 @@ spring:
             hibernate.event.merge.entity_copy_observe: allow
     data:
         elasticsearch:
-            cluster-name:
+            cluster-name: abaco
             cluster-nodes: localhost:9300
     mail:
         host: localhost

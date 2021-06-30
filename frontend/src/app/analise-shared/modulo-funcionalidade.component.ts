@@ -8,6 +8,7 @@ import { Subscription } from 'rxjs';
 import { AnaliseSharedDataService } from '../shared/analise-shared-data.service';
 import { PageNotificationService } from '@nuvem/primeng-components';
 import { FuncaoDadosService } from '../funcao-dados/funcao-dados.service';
+import { Analise } from '../analise/analise.model';
 
 @Component({
     selector: 'app-analise-modulo-funcionalidade',
@@ -23,6 +24,12 @@ export class ModuloFuncionalidadeComponent implements OnInit, OnDestroy {
     isFuncaoDados: boolean;
 
     @Input() moduloNameParam: boolean;
+
+    @Input() analise: Analise;
+
+    @Input() funcionalidade : Funcionalidade;
+
+    @Input() modulosSistema: Modulo[];
 
     @Output()
     moduloSelectedEvent = new EventEmitter<Modulo>();
@@ -62,6 +69,8 @@ export class ModuloFuncionalidadeComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
+        this.modulos = this.modulosSistema;
+        this.analiseSharedDataService.analise = this.analise;
         if (_.isUndefined(this.isFuncaoDados)) {
             throw new Error('input isFuncaoDados é obrigatório.');
         }
@@ -100,10 +109,15 @@ export class ModuloFuncionalidadeComponent implements OnInit, OnDestroy {
         if (!this.sistema) {
             return;
         }
+        if(this.funcionalidade){
+            this.selecionarModulo(this.funcionalidade.modulo.id);
+        }
+
         const sistemaId = this.sistema.id;
         this.sistemaService.find(sistemaId).subscribe((sistemaRecarregado: Sistema) => {
             this.recarregarSistema(sistemaRecarregado);
-            this.modulos = sistemaRecarregado.modulos;
+            // this.modulos = sistemaRecarregado.modulos;
+            // this.selecionarModulo(this.funcionalidade.modulo.id);
         });
         this.changeDetectorRef.detectChanges();
     }
@@ -155,7 +169,13 @@ export class ModuloFuncionalidadeComponent implements OnInit, OnDestroy {
 
     // Para selecionar no dropdown, o objeto selecionado tem que ser o mesmo da lista de opções
     private selecionarModulo(moduloId: number) {
-        this.moduloSelecionado = _.find(this.modulos, {'id': moduloId});
+        for (let index = 0; index < this.modulos.length; index++) {
+            const element = this.modulos[index];
+            if(element.id == moduloId){
+                this.moduloSelecionado = element;
+            }
+        }
+        // this.moduloSelecionado = _.find(this.modulos, {'id': moduloId});
         this.moduloSelected(this.moduloSelecionado);
     }
 
@@ -200,13 +220,15 @@ export class ModuloFuncionalidadeComponent implements OnInit, OnDestroy {
         this.funcionalidadeSelected(this.funcionalidadeSelecionada);
     }
 
-    private selecionaFuncionalidadeFromCurrentAnalise() {
+    private selecionaFuncionalidadeFromCurrentAnalise(modulo) {
         if (!(this.currentFuncaoAnalise && this.currentFuncaoAnalise.funcionalidade)) {
             return;
         }
         const currentFuncionalidade: Funcionalidade = this.currentFuncaoAnalise.funcionalidade;
         if (currentFuncionalidade != null) {
             this.funcionalidadeSelecionada = _.find(this.funcionalidades, {'id': currentFuncionalidade.id});
+            this.funcionalidadeSelecionada.modulo = modulo;
+            this.funcionalidadeSelectedEvent.emit(this.funcionalidadeSelecionada);
         }
     }
 
@@ -275,7 +297,7 @@ export class ModuloFuncionalidadeComponent implements OnInit, OnDestroy {
         const moduloId = modulo.id;
         this.funcionalidadeService.findFuncionalidadesDropdownByModulo(moduloId).subscribe((funcionalidades: Funcionalidade[]) => {
             this.funcionalidades = funcionalidades;
-            this.selecionaFuncionalidadeFromCurrentAnalise();
+            this.selecionaFuncionalidadeFromCurrentAnalise(modulo);
         });
         this.moduloSelectedEvent.emit(modulo);
     }
@@ -399,5 +421,4 @@ export class ModuloFuncionalidadeComponent implements OnInit, OnDestroy {
         this.subscriptionFuncaoAnaliseCarregada.unsubscribe();
         this.changeDetectorRef.detach();
     }
-
 }
