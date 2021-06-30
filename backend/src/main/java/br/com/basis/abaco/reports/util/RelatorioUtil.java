@@ -205,15 +205,15 @@ public class RelatorioUtil {
         if(analise.getNumeroOs() != null){
             numeroOs = analise.getNumeroOs().split("-");
             nomeRelatorio += numeroOs[0];
-            nomeRelatorio += "_OS_";
             if(numeroOs.length > 1) {
+                nomeRelatorio += "_OS";
                 nomeRelatorio += numeroOs[1];
             }
         }else if(analise.getIdentificadorAnalise() != null){
             numeroOs = analise.getIdentificadorAnalise().split("-");
             nomeRelatorio += numeroOs[0];
-            nomeRelatorio += "_OS_";
             if(numeroOs.length > 1){
+                nomeRelatorio += "_OS";
                 nomeRelatorio += numeroOs[1];
             }
         }else{

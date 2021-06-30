@@ -758,6 +758,21 @@ export class AnaliseListComponent implements OnInit {
             this.showDialogAnaliseBlock = false;
             this.analisesBlocks = [];
         }
+        if (this.analisesBlocks.length > 0) {
+            this.analisesBlocks.forEach(analise => {
+                const copy = analise.toJSONState();
+                this.analiseService.block(copy).subscribe(() => {
+                    const nome = copy.identificadorAnalise;
+                    const bloqueado = copy.bloqueiaAnalise;
+                    this.mensagemAnaliseBloqueada(bloqueado, nome);
+                    this.recarregarDataTable();
+                    this.datatable.filter();
+                });
+            });
+            this.datatable.selectedRow = null;
+            this.showDialogAnaliseBlock = false;
+            this.analisesBlocks = [];
+        }
     }
 
     private mensagemDialogBloquear(retorno: boolean) {
