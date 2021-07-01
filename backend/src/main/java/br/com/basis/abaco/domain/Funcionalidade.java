@@ -62,7 +62,6 @@ public class Funcionalidade implements Serializable {
     @OrderBy("ordem DESC")
     private Set<FuncaoDados> funcoesDados = new HashSet<>();
 
-
     @JsonIgnore
     @Transient
     @OrderBy("ordem DESC")
