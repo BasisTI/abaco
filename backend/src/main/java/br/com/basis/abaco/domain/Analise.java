@@ -196,13 +196,13 @@ public class Analise implements Serializable, ReportObject {
     @JsonInclude
     @OneToMany(mappedBy = ANALISE, cascade = CascadeType.ALL)
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-    @OrderBy("ordem DESC, name ASC, funcionalidade ASC, id ASC")
+    @OrderBy("ordem DESC")
     private Set<FuncaoDados> funcaoDados = new HashSet<>();
 
     @JsonInclude
     @OneToMany(mappedBy = ANALISE, cascade = CascadeType.ALL)
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-    @OrderBy("ordem DESC, name ASC, funcionalidade ASC, id ASC")
+    @OrderBy("ordem DESC")
     private Set<FuncaoTransacao> funcaoTransacaos = new HashSet<>();
 
     @Nullable

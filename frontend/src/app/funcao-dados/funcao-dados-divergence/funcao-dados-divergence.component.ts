@@ -175,6 +175,7 @@ export class FuncaoDadosDivergenceComponent implements OnInit {
             this.funcaoDadosService.getVWFuncaoDadosByIdAnalise(this.idAnalise).subscribe(value => {
                 this.funcoesDados = value;
                 this.funcoesDados.sort((a, b) => a.ordem - b.ordem);
+                this.updateIndex();
                 if (!this.isView) {
                     this.divergenciaService.find(this.idAnalise).subscribe(analise => {
                         this.analise = analise;
@@ -714,6 +715,7 @@ export class FuncaoDadosDivergenceComponent implements OnInit {
                         this.funcoesDados = this.funcoesDados.filter((funcaoDados) => (funcaoDados.id !== funcaoDadosCalculada.id));
                         this.setFields(funcaoDadosCalculada);
                         this.funcoesDados.push(funcaoDadosCalculada);
+                        this.funcoesDados.sort((a, b) => a.ordem - b.ordem);
                         this.resetarEstadoPosSalvar();
                         this.pageNotificationService.addCreateMsg(funcaoDadosCalculada.name);
                         this.fecharDialog();
@@ -1312,6 +1314,7 @@ export class FuncaoDadosDivergenceComponent implements OnInit {
                 }
                 this.setFields(funcaoDadosCalculada);
                 this.funcoesDados.push(funcaoDadosCalculada);
+                this.funcoesDados.sort((a, b) => a.ordem - b.ordem)
                 this.divergenciaService.updateSomaPf(this.analise.id).subscribe();
             });
         }

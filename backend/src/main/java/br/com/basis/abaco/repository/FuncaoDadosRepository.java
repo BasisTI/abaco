@@ -43,9 +43,9 @@ public interface FuncaoDadosRepository extends JpaRepository<FuncaoDados, Long> 
     @Query("SELECT fd FROM FuncaoDados fd WHERE fd.analise.id = :idAnalise Order by fd.funcionalidade.modulo.nome ")
     Set<FuncaoDados> findByAnaliseId(@Param("idAnalise") Long idAnalise);
 
-    Set<FuncaoDados> findAllByAnaliseIdOrderById(Long idAnalise);
+    Set<FuncaoDados> findAllByAnaliseIdOrderByOrdem(Long idAnalise);
 
-    Set<FuncaoDados> findByAnaliseIdAndStatusFuncaoOrderById(Long id, StatusFuncao statusFuncao);
+    Set<FuncaoDados> findByAnaliseIdAndStatusFuncaoOrderByOrdem(Long id, StatusFuncao statusFuncao);
 
     Set<FuncaoDados> findByAnaliseIdOrderByFuncionalidadeModuloNomeAscFuncionalidadeNomeAscNameAsc(Long idAnalise);
 
