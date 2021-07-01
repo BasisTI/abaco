@@ -46,6 +46,7 @@ public class FuncaoDadoApiDTO {
     private StatusFuncao statusFuncao;
     private List<DivergenceCommentDTO> lstDivergenceComments = new ArrayList<>();
     private List<UploadedFileDTO> files;
+    private Long ordem;
 
 
     public List<DivergenceCommentDTO> getLstDivergenceComments() {
