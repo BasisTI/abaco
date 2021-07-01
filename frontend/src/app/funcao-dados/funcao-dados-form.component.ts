@@ -177,6 +177,7 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
             this.funcaoDadosService.getVWFuncaoDadosByIdAnalise(this.idAnalise).subscribe(value => {
                 this.funcoesDados = value;
                 this.funcoesDados.sort((a, b) => a.ordem - b.ordem);
+                this.updateIndex();
                 if (!this.isView) {
                     this.analiseService.find(this.idAnalise).subscribe(analise => {
                         // analise = new Analise().copyFromJSON(analise);
@@ -742,6 +743,7 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
                         this.funcoesDados = this.funcoesDados.filter((funcaoDados) => (funcaoDados.id !== funcaoDadosCalculada.id));
                         this.setFields(funcaoDadosCalculada);
                         this.funcoesDados.push(funcaoDadosCalculada);
+                        this.funcoesDados.sort((a, b) => a.ordem - b.ordem);
                         this.resetarEstadoPosSalvar();
                         this.pageNotificationService.addSuccessMessage(`${this.getLabel('Cadastros.FuncaoDados.Mensagens.msgFuncaoDados')}
                 '${funcaoDadosCalculada.name}' ${this.getLabel(' alterada com sucesso')}`);
@@ -1002,7 +1004,7 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
         this.funcaoDadosService.mod.next(funcaoDadosSelecionada.funcionalidade);
         this.analiseSharedDataService.funcaoAnaliseCarregada();
         this.analiseSharedDataService.currentFuncaoDados = funcaoDadosSelecionada;
-        if(this.analise.metodoContagem !== "ESTIMADA"){
+        if (this.analise.metodoContagem !== "ESTIMADA") {
             this.carregarDerERlr(funcaoDadosSelecionada);
         }
         this.carregarFatorDeAjusteNaEdicao(funcaoDadosSelecionada);
@@ -1302,6 +1304,7 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
                 }
                 this.setFields(funcaoDadosCalculada);
                 this.funcoesDados.push(funcaoDadosCalculada);
+                this.funcoesDados.sort((a, b) => a.ordem - b.ordem);
                 this.analiseService.updateSomaPf(this.analise.id).subscribe();
             });
         }
@@ -1489,7 +1492,6 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
     }
 
     salvarOrdernacao() {
-        this.blockUiService.show();
         this.funcoesDados.forEach((funcaoDado, index) => {
             this.funcaoDadosService.getById(funcaoDado.id).subscribe(funcao => {
                 let func: FuncaoDados;
@@ -1502,6 +1504,5 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
         })
         this.pageNotificationService.addSuccessMessage("Ordenação salva com sucesso.");
         this.isOrderning = false;
-        this.blockUiService.hide();
     }
 }
