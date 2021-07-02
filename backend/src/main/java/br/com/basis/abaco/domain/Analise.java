@@ -4,6 +4,7 @@ import br.com.basis.abaco.domain.audit.AbacoAudit;
 import br.com.basis.abaco.domain.enumeration.MetodoContagem;
 import br.com.basis.abaco.domain.enumeration.TipoAnalise;
 import br.com.basis.dynamicexports.pojo.ReportObject;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import io.swagger.annotations.ApiModel;
@@ -141,6 +142,7 @@ public class Analise implements Serializable, ReportObject {
     @OneToOne
     @JoinColumn(name = "analise_clonada_equipe_id", referencedColumnName = "id")
     @Field(type = FieldType.Nested, ignoreFields = {"analiseClonadaParaEquipe", "analisesComparadas"})
+    @JsonIgnoreProperties(value = {"analiseClonadaParaEquipe", "analisesComparadas"}, allowSetters = true)
     private Analise analiseClonadaParaEquipe;
 
 //    Saber se a análise clonou ou foi clonada de outra.
@@ -223,7 +225,7 @@ public class Analise implements Serializable, ReportObject {
 
     @OneToMany(mappedBy = "analiseDivergence")
     @OnDelete(action = OnDeleteAction.CASCADE)
-    @Field(type = FieldType.Nested, ignoreFields = {"analisesComparadas", "manual", "esforcoFases", "escopo", "dataHomologacao", "documentacao", "fronteiras", "users"})
+    @Field(type = FieldType.Nested, ignoreFields = {"analisesComparadas", "manual", "esforcoFases", "escopo", "dataHomologacao", "documentacao", "fronteiras", "users", "analiseClonadaParaEquipe"})
     private Set<Analise> analisesComparadas = new HashSet<>();
 
 
