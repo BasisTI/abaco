@@ -778,7 +778,9 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
 
     private resetarEstadoPosSalvar() {
         this.seletedFuncaoDados = this.seletedFuncaoDados.clone();
-
+        this.updateIndex();
+        this.funcaoDadosEditar = [];
+        this.tables.selectedRow = [];
         this.seletedFuncaoDados.artificialId = undefined;
         this.seletedFuncaoDados.id = undefined;
 
@@ -1306,6 +1308,7 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
                 this.funcoesDados.push(funcaoDadosCalculada);
                 this.funcoesDados.sort((a, b) => a.ordem - b.ordem);
                 this.analiseService.updateSomaPf(this.analise.id).subscribe();
+                this.resetarEstadoPosSalvar();
             });
         }
         this.pageNotificationService.addSuccessMessage("Funções de dados editadas com sucesso!")
@@ -1503,6 +1506,7 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
             })
         })
         this.pageNotificationService.addSuccessMessage("Ordenação salva com sucesso.");
+        this.resetarEstadoPosSalvar();
         this.isOrderning = false;
     }
 }
