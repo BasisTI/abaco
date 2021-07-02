@@ -701,6 +701,10 @@ export class FuncaoTransacaoFormComponent implements OnInit {
     private resetarEstadoPosSalvar() {
         this.currentFuncaoTransacao = this.currentFuncaoTransacao.clone();
 
+        this.funcaoTransacaoEditar = [];
+        this.tables.selectedRow = [];
+        this.updateIndex();
+
         this.currentFuncaoTransacao.artificialId = undefined;
         this.currentFuncaoTransacao.id = undefined;
 
@@ -1105,6 +1109,7 @@ export class FuncaoTransacaoFormComponent implements OnInit {
                 this.funcoesTransacoes.push(funcaoTransacaoCalculada);
                 this.funcoesTransacoes.sort((a, b) => a.ordem - b.ordem);
                 this.analiseService.updateSomaPf(this.analise.id).subscribe();
+                this.resetarEstadoPosSalvar();
             });
         }
         this.pageNotificationService.addSuccessMessage("Funções de transações editadas com sucesso!")
@@ -1258,7 +1263,6 @@ export class FuncaoTransacaoFormComponent implements OnInit {
     }
 
     salvarOrdernacao() {
-        this.blockUiService.show();
         this.funcoesTransacoes.forEach((funcaoTransacao, index) => {
             this.funcaoTransacaoService.getById(funcaoTransacao.id).subscribe(funcao => {
                 let func: FuncaoTransacao;
@@ -1270,8 +1274,8 @@ export class FuncaoTransacaoFormComponent implements OnInit {
             })
         })
         this.pageNotificationService.addSuccessMessage("Ordenação salva com sucesso.");
+        this.resetarEstadoPosSalvar();
         this.isOrderning = false;
-        this.blockUiService.hide();
     }
 }
 
