@@ -750,6 +750,10 @@ export class FuncaoDadosDivergenceComponent implements OnInit {
     private resetarEstadoPosSalvar() {
         this.seletedFuncaoDados = this.seletedFuncaoDados.clone();
 
+        this.funcaoDadosEditar = [];
+        this.tables.selectedRow = [];
+        this.updateIndex();
+
         this.seletedFuncaoDados.artificialId = undefined;
         this.seletedFuncaoDados.id = undefined;
 
@@ -1316,6 +1320,7 @@ export class FuncaoDadosDivergenceComponent implements OnInit {
                 this.funcoesDados.push(funcaoDadosCalculada);
                 this.funcoesDados.sort((a, b) => a.ordem - b.ordem)
                 this.divergenciaService.updateSomaPf(this.analise.id).subscribe();
+                this.resetarEstadoPosSalvar();
             });
         }
         this.pageNotificationService.addSuccessMessage("Funções de dados editadas com sucesso!")
@@ -1461,7 +1466,6 @@ export class FuncaoDadosDivergenceComponent implements OnInit {
     }
 
     salvarOrdernacao() {
-        this.blockUiService.show();
         this.funcoesDados.forEach((funcaoDado, index) => {
             this.funcaoDadosService.getById(funcaoDado.id).subscribe(funcao => {
                 let func: FuncaoDados;
@@ -1474,6 +1478,6 @@ export class FuncaoDadosDivergenceComponent implements OnInit {
         })
         this.pageNotificationService.addSuccessMessage("Ordenação salva com sucesso.");
         this.isOrderning = false;
-        this.blockUiService.hide();
+        this.resetarEstadoPosSalvar();
     }
 }

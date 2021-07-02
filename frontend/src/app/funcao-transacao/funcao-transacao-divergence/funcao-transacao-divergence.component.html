@@ -43,7 +43,7 @@
                                         #tables>
                                         <p-column header="Ordem" field="ordem">
                                             <ng-template let-col let-funcaoTransacao="rowData" pTemplate="body">
-                                                {{ funcaoTransacao.ordem ? funcaoTransacao.ordem : funcoesTransacoes.indexOf(funcaoTransacao) +1 }}
+                                                {{ funcaoTransacao?.ordem ? funcaoTransacao?.ordem : funcoesTransacoes?.indexOf(funcaoTransacao) +1 }}
                                             </ng-template>
                                         </p-column>
                                     <p-column field="statusFuncao" header="Status" [sortable]="true" >
