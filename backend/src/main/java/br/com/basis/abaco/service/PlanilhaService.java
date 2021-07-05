@@ -40,6 +40,8 @@ public class PlanilhaService {
         }
     }
 
+    //BNDES
+
     private ByteArrayOutputStream modeloPadraoBNDES(Analise analise, List<FuncaoDados> funcaoDadosList, List<FuncaoTransacao> funcaoTransacaoList) throws IOException {
         InputStream stream = getClass().getClassLoader().getResourceAsStream("reports/planilhas/modelo2-bndes.xlsx");
         XSSFWorkbook excelFile = new XSSFWorkbook(stream);
@@ -105,6 +107,8 @@ public class PlanilhaService {
             excelSheet.getRow(11).getCell(0).setCellValue(analise.getPropositoContagem());
         }
     }
+
+    //Padrão BASIS
 
     private ByteArrayOutputStream modeloPadraoBasis(Analise analise, List<FuncaoDados> funcaoDadosList, List<FuncaoTransacao> funcaoTransacaoList) throws IOException {
         InputStream stream = getClass().getClassLoader().getResourceAsStream("reports/planilhas/modelo1-basis.xlsx");
