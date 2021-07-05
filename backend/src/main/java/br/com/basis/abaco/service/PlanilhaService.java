@@ -1,47 +1,24 @@
 package br.com.basis.abaco.service;
 
-import br.com.basis.abaco.domain.*;
-import br.com.basis.abaco.domain.enumeration.ImpactoFatorAjuste;
+import br.com.basis.abaco.domain.Analise;
+import br.com.basis.abaco.domain.FatorAjuste;
+import br.com.basis.abaco.domain.FuncaoDados;
+import br.com.basis.abaco.domain.FuncaoTransacao;
 import br.com.basis.abaco.domain.enumeration.MetodoContagem;
 import br.com.basis.abaco.domain.enumeration.TipoFatorAjuste;
 import br.com.basis.abaco.domain.enumeration.TipoFuncaoTransacao;
-import br.com.basis.abaco.repository.PerfilRepository;
-import br.com.basis.abaco.repository.PermissaoRepository;
-import br.com.basis.abaco.repository.search.PerfilSearchRepository;
-import br.com.basis.abaco.service.dto.AnaliseDTO;
-import br.com.basis.abaco.service.dto.DropdownDTO;
-import br.com.basis.abaco.service.dto.PerfilDTO;
-import br.com.basis.abaco.service.exception.RelatorioException;
-import br.com.basis.abaco.service.relatorio.RelatorioPerfilColunas;
-import br.com.basis.abaco.utils.AbacoUtil;
-import br.com.basis.dynamicexports.service.DynamicExportsService;
-import net.sf.dynamicreports.report.exception.DRException;
-import net.sf.jasperreports.engine.JRException;
-import org.apache.commons.beanutils.BeanUtils;
 import org.apache.poi.ss.usermodel.FormulaEvaluator;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
-
-import static org.elasticsearch.index.query.QueryBuilders.multiMatchQuery;
-import static org.elasticsearch.index.query.QueryBuilders.queryStringQuery;
 
 /**
  * Service Implementation for managing {@link Analise}.
@@ -49,11 +26,6 @@ import static org.elasticsearch.index.query.QueryBuilders.queryStringQuery;
 @Service
 @Transactional
 public class PlanilhaService {
-
-
-
-    public PlanilhaService() {
-    }
 
     public ByteArrayOutputStream selecionarModelo(Analise analise, Long modelo) throws IOException {
         List<FuncaoDados> funcaoDadosList = analise.getFuncaoDados().stream().collect(Collectors.toList());
@@ -123,8 +95,6 @@ public class PlanilhaService {
 
     private void setarResumoExcelPadraoBNDES(XSSFWorkbook excelFile, Analise analise) {
         XSSFSheet excelSheet = excelFile.getSheet("Identificação");
-        if(analise.getNumeroOs() != null){
-        }
         if(analise.getSistema() != null){
             excelSheet.getRow(3).getCell(5).setCellValue(analise.getSistema().getNome());
         }
