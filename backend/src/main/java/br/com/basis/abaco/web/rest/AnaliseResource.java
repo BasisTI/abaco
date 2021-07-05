@@ -24,6 +24,7 @@ import br.com.basis.abaco.repository.search.AnaliseSearchRepository;
 import br.com.basis.abaco.security.SecurityUtils;
 import br.com.basis.abaco.service.AnaliseService;
 import br.com.basis.abaco.service.PerfilService;
+import br.com.basis.abaco.service.PlanilhaService;
 import br.com.basis.abaco.service.dto.AnaliseDTO;
 import br.com.basis.abaco.service.dto.AnaliseDivergenceEditDTO;
 import br.com.basis.abaco.service.dto.AnaliseEditDTO;
@@ -117,6 +118,9 @@ public class AnaliseResource {
     private TipoEquipeRepository tipoEquipeRepository;
     @Autowired
     private UploadedFilesRepository uploadedFilesRepository;
+
+    @Autowired
+    private PlanilhaService planilhaService;
 
     public AnaliseResource(AnaliseRepository analiseRepository,
                            AnaliseSearchRepository analiseSearchRepository,
@@ -733,32 +737,13 @@ public class AnaliseResource {
         return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id.toString())).build();
     }
 
-    @GetMapping(value = "/analises/importar-excel/{id}", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
+    @GetMapping(value = "/analises/importar-excel/{id}/{modelo}", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
     @Secured("ROLE_ABACO_ANALISE_EXPORTAR_RELATORIO_EXCEL")
-    public ResponseEntity<byte[]> importarExcel(@PathVariable Long id) throws IOException{
+    public ResponseEntity<byte[]> importarExcel(@PathVariable Long id,@PathVariable Long modelo) throws IOException{
         Analise analise = analiseService.recuperarAnalise(id);
         analise.setFuncaoDados(funcaoDadosRepository.findAllByAnaliseIdOrderByOrdem(id));
         analise.setFuncaoTransacaos(funcaoTransacaoRepository.findAllByAnaliseIdOrderByOrdem(id));
-        List<FuncaoDados> funcaoDadosList = analise.getFuncaoDados().stream().collect(Collectors.toList());
-        List<FuncaoTransacao> funcaoTransacaoList = analise.getFuncaoTransacaos().stream().collect(Collectors.toList());
-        InputStream stream = getClass().getClassLoader().getResourceAsStream("reports/planilhas/modelo1.xlsx");
-        XSSFWorkbook excelFile = new XSSFWorkbook(stream);
-        analiseService.setarDeflatoresExcel(excelFile, analise);
-        analiseService.setarResumoExcel(excelFile, analise);
-        if(analise.getMetodoContagem().equals(MetodoContagem.INDICATIVA)){
-            analiseService.setarFuncoesIndicativaExcel(excelFile, funcaoDadosList);
-        }
-        else{
-            analiseService.setarFuncoesINMExcel(excelFile, funcaoTransacaoList);
-            if(analise.getMetodoContagem().equals(MetodoContagem.DETALHADA)){
-                analiseService.setarFuncoesDetalhadaExcel(excelFile, funcaoDadosList, funcaoTransacaoList);
-            }
-            else if(analise.getMetodoContagem().equals(MetodoContagem.ESTIMADA)){
-                analiseService.setarFuncoesEstimadaExcel(excelFile, funcaoDadosList, funcaoTransacaoList);
-            }
-        }
-        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-        excelFile.write(outputStream);
+        ByteArrayOutputStream outputStream = planilhaService.selecionarModelo(analise, modelo);
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.parseMediaType("application/vnd.ms-excel"));
         headers.set(HttpHeaders.CONTENT_DISPOSITION, String.format("attachment; filename=\"%s.xlsx\"", analise.getIdentificadorAnalise().trim()));
