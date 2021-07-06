@@ -450,7 +450,10 @@ export class AnaliseService {
 
     public exportarModeloExcel(id: number, modelo: number) {
         this.blockUiService.show();
-        return this.http.request('get', this.resourceUrl + "/importar-excel/" + id + "/" + modelo, { responseType: "blob" })
+        return this.http.request('get', this.resourceUrl + "/importar-excel/" + id + "/" + modelo, {
+            observe: "response",
+            responseType: "blob"
+        })
             .pipe(catchError((error: any) => {
                 if (error.status === 500) {
                     this.blockUiService.hide();

@@ -28,6 +28,14 @@ import java.util.stream.Collectors;
 @Transactional
 public class PlanilhaService {
 
+    private final String estimativa = "AFP - Estimativa";
+    private final String detalhada = "AFP - Detalhada";
+    private final String resumo = "Resumo";
+
+    private final String metodoDetalhada = "Detalhada";
+    private final String metodoEstimativa = "Estimativa";
+    private final String metodoIndicativa = "Indicativa";
+
     public ByteArrayOutputStream selecionarModelo(Analise analise, Long modelo) throws IOException {
         List<FuncaoDados> funcaoDadosList = analise.getFuncaoDados().stream().collect(Collectors.toList());
         List<FuncaoTransacao> funcaoTransacaoList = analise.getFuncaoTransacaos().stream().collect(Collectors.toList());
@@ -69,83 +77,73 @@ public class PlanilhaService {
     }
 
     private void setarFuncoesEstimadaExcelPadraoEB2(XSSFWorkbook excelFile, List<FuncaoDados> funcaoDadosList, List<FuncaoTransacao> funcaoTransacaoList) {
-        XSSFSheet excelSheet = excelFile.getSheet("AFP - Estimativa");
+        XSSFSheet excelSheet = excelFile.getSheet(estimativa);
         int rowNum = 10;
         int idFuncao = 1;
-        if(!funcaoDadosList.isEmpty()){
-            for(int i = 0; i < funcaoDadosList.size(); i++){
-                FuncaoDados funcaoDados =  funcaoDadosList.get(i);
+        for(int i = 0; i < funcaoDadosList.size(); i++){
+            FuncaoDados funcaoDados =  funcaoDadosList.get(i);
+            XSSFRow row = excelSheet.getRow(rowNum++);
+            row.getCell(5).setCellValue(funcaoDados.getFuncionalidade().getNome());
+            row.getCell(6).setCellValue(funcaoDados.getName());
+            row.getCell(7).setCellValue(funcaoDados.getTipo().toString());
+            row.getCell(0).setCellValue(idFuncao++);
+            row.getCell(1).setCellValue(funcaoDados.getFatorAjuste().getNome());
+            row.getCell(4).setCellValue(funcaoDados.getFuncionalidade().getModulo().getNome());
+            row.getCell(10).setCellValue(Jsoup.parse(funcaoDados.getSustantation() != null ? funcaoDados.getSustantation() : "").text());
+        }
+        for (int i = 0; i < funcaoTransacaoList.size(); i++) {
+            FuncaoTransacao funcaoTransacao = funcaoTransacaoList.get(i);
+            if (!funcaoTransacao.getTipo().equals(TipoFuncaoTransacao.INM)) {
                 XSSFRow row = excelSheet.getRow(rowNum++);
                 row.getCell(0).setCellValue(idFuncao++);
-                row.getCell(1).setCellValue(funcaoDados.getFatorAjuste().getNome());
-                row.getCell(4).setCellValue(funcaoDados.getFuncionalidade().getModulo().getNome());
-                row.getCell(5).setCellValue(funcaoDados.getFuncionalidade().getNome());
-                row.getCell(6).setCellValue(funcaoDados.getName());
-                row.getCell(7).setCellValue(funcaoDados.getTipo().toString());
-                row.getCell(10).setCellValue(Jsoup.parse(funcaoDados.getSustantation() != null ? funcaoDados.getSustantation() : "").text());
-            }
-        }
-        rowNum++;
-        if(!funcaoTransacaoList.isEmpty()) {
-            for (int i = 0; i < funcaoTransacaoList.size(); i++) {
-                FuncaoTransacao funcaoTransacao = funcaoTransacaoList.get(i);
-                if (!funcaoTransacao.getTipo().equals(TipoFuncaoTransacao.INM)) {
-                    XSSFRow row = excelSheet.getRow(rowNum++);
-                    row.getCell(0).setCellValue(idFuncao++);
-                    row.getCell(1).setCellValue(funcaoTransacao.getFatorAjuste().getNome());
-                    row.getCell(4).setCellValue(funcaoTransacao.getFuncionalidade().getModulo().getNome());
-                    row.getCell(5).setCellValue(funcaoTransacao.getFuncionalidade().getNome());
-                    row.getCell(6).setCellValue(funcaoTransacao.getName());
-                    row.getCell(7).setCellValue(funcaoTransacao.getTipo().toString());
-                    row.getCell(10).setCellValue(Jsoup.parse(funcaoTransacao.getSustantation() != null ? funcaoTransacao.getSustantation() : "").text());
-                }
+                row.getCell(6).setCellValue(funcaoTransacao.getName());
+                row.getCell(7).setCellValue(funcaoTransacao.getTipo().toString());
+                row.getCell(1).setCellValue(funcaoTransacao.getFatorAjuste().getNome());
+                row.getCell(4).setCellValue(funcaoTransacao.getFuncionalidade().getModulo().getNome());
+                row.getCell(5).setCellValue(funcaoTransacao.getFuncionalidade().getNome());
+                row.getCell(10).setCellValue(Jsoup.parse(funcaoTransacao.getSustantation() != null ? funcaoTransacao.getSustantation() : "").text());
             }
         }
     }
 
     private void setarFuncoesDetalhadaExcelPadraoEB2(XSSFWorkbook excelFile, List<FuncaoDados> funcaoDadosList, List<FuncaoTransacao> funcaoTransacaoList) {
-        XSSFSheet excelSheet = excelFile.getSheet("AFP - Detalhada");
+        XSSFSheet excelSheet = excelFile.getSheet(detalhada);
         int rowNum = 9;
         int idFuncao = 1;
-        if(!funcaoDadosList.isEmpty()){
-            for(int i = 0; i < funcaoDadosList.size(); i++){
-                FuncaoDados funcaoDados =  funcaoDadosList.get(i);
+        for(int i = 0; i < funcaoDadosList.size(); i++){
+            FuncaoDados funcaoDados =  funcaoDadosList.get(i);
+            XSSFRow row = excelSheet.getRow(rowNum++);
+            row.getCell(0).setCellValue(idFuncao++);
+            row.getCell(1).setCellValue(funcaoDados.getFatorAjuste().getNome());
+            row.getCell(3).setCellValue(funcaoDados.getFuncionalidade().getModulo().getNome());
+            row.getCell(4).setCellValue(funcaoDados.getFuncionalidade().getNome());
+            row.getCell(5).setCellValue(funcaoDados.getName());
+            row.getCell(6).setCellValue(funcaoDados.getTipo().toString());
+            row.getCell(7).setCellValue(funcaoDados.getDers().size());
+            String ders = funcaoDados.getDers().stream().map(item -> item.getNome()).collect(Collectors.joining(", "));
+            row.getCell(8).setCellValue(ders);
+            row.getCell(9).setCellValue(funcaoDados.getRlrs().size());
+            String rlrs = funcaoDados.getRlrs().stream().map(item -> item.getNome()).collect(Collectors.joining(", "));
+            row.getCell(10).setCellValue(rlrs);
+            row.getCell(18).setCellValue(Jsoup.parse(funcaoDados.getSustantation() != null ? funcaoDados.getSustantation() : "").text());
+        }
+        for(int i = 0; i < funcaoTransacaoList.size(); i++) {
+            FuncaoTransacao funcaoTransacao = funcaoTransacaoList.get(i);
+            if (!funcaoTransacao.getTipo().equals(TipoFuncaoTransacao.INM)) {
                 XSSFRow row = excelSheet.getRow(rowNum++);
                 row.getCell(0).setCellValue(idFuncao++);
-                row.getCell(1).setCellValue(funcaoDados.getFatorAjuste().getNome());
-                row.getCell(3).setCellValue(funcaoDados.getFuncionalidade().getModulo().getNome());
-                row.getCell(4).setCellValue(funcaoDados.getFuncionalidade().getNome());
-                row.getCell(5).setCellValue(funcaoDados.getName());
-                row.getCell(6).setCellValue(funcaoDados.getTipo().toString());
-                row.getCell(7).setCellValue(funcaoDados.getDers().size());
-                String ders = funcaoDados.getDers().stream().map(item -> item.getNome()).collect(Collectors.joining(", "));
+                row.getCell(1).setCellValue(funcaoTransacao.getFatorAjuste().getNome());
+                row.getCell(3).setCellValue(funcaoTransacao.getFuncionalidade().getModulo().getNome());
+                row.getCell(4).setCellValue(funcaoTransacao.getFuncionalidade().getNome());
+                row.getCell(5).setCellValue(funcaoTransacao.getName());
+                row.getCell(6).setCellValue(funcaoTransacao.getTipo().toString());
+                row.getCell(7).setCellValue(funcaoTransacao.getDers().size());
+                String ders = funcaoTransacao.getDers().stream().map(item -> item.getNome()).collect(Collectors.joining(", "));
                 row.getCell(8).setCellValue(ders);
-                row.getCell(9).setCellValue(funcaoDados.getRlrs().size());
-                String rlrs = funcaoDados.getRlrs().stream().map(item -> item.getNome()).collect(Collectors.joining(", "));
-                row.getCell(10).setCellValue(rlrs);
-                row.getCell(18).setCellValue(Jsoup.parse(funcaoDados.getSustantation() != null ? funcaoDados.getSustantation() : "").text());
-            }
-        }
-        rowNum++;
-        if(!funcaoTransacaoList.isEmpty()) {
-            for (int i = 0; i < funcaoTransacaoList.size(); i++) {
-                FuncaoTransacao funcaoTransacao = funcaoTransacaoList.get(i);
-                if (!funcaoTransacao.getTipo().equals(TipoFuncaoTransacao.INM)) {
-                    XSSFRow row = excelSheet.getRow(rowNum++);
-                    row.getCell(0).setCellValue(idFuncao++);
-                    row.getCell(1).setCellValue(funcaoTransacao.getFatorAjuste().getNome());
-                    row.getCell(3).setCellValue(funcaoTransacao.getFuncionalidade().getModulo().getNome());
-                    row.getCell(4).setCellValue(funcaoTransacao.getFuncionalidade().getNome());
-                    row.getCell(5).setCellValue(funcaoTransacao.getName());
-                    row.getCell(6).setCellValue(funcaoTransacao.getTipo().toString());
-                    row.getCell(7).setCellValue(funcaoTransacao.getDers().size());
-                    String ders = funcaoTransacao.getDers().stream().map(item -> item.getNome()).collect(Collectors.joining(", "));
-                    row.getCell(8).setCellValue(ders);
-                    row.getCell(9).setCellValue(funcaoTransacao.getAlrs().size());
-                    String alrs = funcaoTransacao.getAlrs().stream().map(item -> item.getNome()).collect(Collectors.joining(", "));
-                    row.getCell(10).setCellValue(alrs);
-                    row.getCell(18).setCellValue(Jsoup.parse(funcaoTransacao.getSustantation() != null ? funcaoTransacao.getSustantation() : "").text());
-                }
+                row.getCell(9).setCellValue(funcaoTransacao.getAlrs().size());
+                String alrs = funcaoTransacao.getAlrs().stream().map(item -> item.getNome()).collect(Collectors.joining(", "));
+                row.getCell(10).setCellValue(alrs);
+                row.getCell(18).setCellValue(Jsoup.parse(funcaoTransacao.getSustantation() != null ? funcaoTransacao.getSustantation() : "").text());
             }
         }
     }
@@ -164,7 +162,7 @@ public class PlanilhaService {
                     row.getCell(3).setCellValue(funcaoTransacao.getFuncionalidade().getModulo().getNome());
                     row.getCell(4).setCellValue(funcaoTransacao.getFuncionalidade().getNome());
                     row.getCell(5).setCellValue(funcaoTransacao.getName());
-                    row.getCell(7).setCellValue(funcaoTransacao.getQuantidade() != null ? funcaoTransacao.getQuantidade() : 0);
+                    row.getCell(7).setCellValue(funcaoTransacao.getQuantidade() != null ? funcaoTransacao.getQuantidade() : new Integer(0));
                     row.getCell(9).setCellValue(Jsoup.parse(funcaoTransacao.getSustantation() != null ? funcaoTransacao.getSustantation() : "").text());
                 }
             }
@@ -192,16 +190,16 @@ public class PlanilhaService {
     }
 
     private void setarResumoExcelPadraoEB2(XSSFWorkbook excelFile, Analise analise) {
-        XSSFSheet excelSheet = excelFile.getSheet("Resumo");
+        XSSFSheet excelSheet = excelFile.getSheet(resumo);
         switch(analise.getMetodoContagem()){
             case DETALHADA:
-                excelSheet.getRow(3).getCell(1).setCellValue("Detalhada");
+                excelSheet.getRow(3).getCell(1).setCellValue(metodoDetalhada);
                 break;
             case ESTIMADA:
-                excelSheet.getRow(3).getCell(1).setCellValue("Estimativa");
+                excelSheet.getRow(3).getCell(1).setCellValue(metodoEstimativa);
                 break;
             case INDICATIVA:
-                excelSheet.getRow(3).getCell(1).setCellValue("Indicativa");
+                excelSheet.getRow(3).getCell(1).setCellValue(metodoIndicativa);
                 break;
         }
         if(analise.getSistema() != null){
@@ -229,80 +227,65 @@ public class PlanilhaService {
     }
 
     private void setarFuncoesDetalhadaExcelPadraoEB1(XSSFWorkbook excelFile, List<FuncaoDados> funcaoDadosList, List<FuncaoTransacao> funcaoTransacaoList) {
-        XSSFSheet excelSheet = excelFile.getSheet("AFP - Detalhada");
+        XSSFSheet excelSheet = excelFile.getSheet(detalhada);
         int rowNum = 9;
         int idFuncao = 1;
-        if(!funcaoDadosList.isEmpty()) {
-            for (int i = 0; i < funcaoDadosList.size(); i++) {
-                FuncaoDados funcaoDados = funcaoDadosList.get(i);
-                XSSFRow row = excelSheet.getRow(rowNum++);
-                row.getCell(0).setCellValue(idFuncao++);
-                row.getCell(1).setCellValue(funcaoDados.getFatorAjuste().getNome());
-                row.getCell(5).setCellValue(funcaoDados.getFuncionalidade().getModulo().getNome());
-                row.getCell(6).setCellValue(funcaoDados.getFuncionalidade().getNome());
-                row.getCell(7).setCellValue(funcaoDados.getName());
-                row.getCell(8).setCellValue(funcaoDados.getQuantidade() != null ? funcaoDados.getQuantidade() : 0);
-                row.getCell(9).setCellValue(funcaoDados.getTipo().toString());
-                row.getCell(10).setCellValue(funcaoDados.getDers().size());
-                row.getCell(11).setCellValue(funcaoDados.getRlrs().size());
-                row.getCell(19).setCellValue(Jsoup.parse(funcaoDados.getSustantation() != null ? funcaoDados.getSustantation() : "").text());
-            }
+        for (int i = 0; i < funcaoDadosList.size(); i++) {
+            FuncaoDados funcaoDados = funcaoDadosList.get(i);
+            XSSFRow row = excelSheet.getRow(rowNum++);
+            row.getCell(8).setCellValue(funcaoDados.getQuantidade() != null ? funcaoDados.getQuantidade() : new Integer(0));
+            row.getCell(9).setCellValue(funcaoDados.getTipo().toString());row.getCell(0).setCellValue(idFuncao++);
+            row.getCell(1).setCellValue(funcaoDados.getFatorAjuste().getNome());
+            row.getCell(5).setCellValue(funcaoDados.getFuncionalidade().getModulo().getNome());
+            row.getCell(6).setCellValue(funcaoDados.getFuncionalidade().getNome());
+            row.getCell(7).setCellValue(funcaoDados.getName());
+            row.getCell(10).setCellValue(funcaoDados.getDers().size());
+            row.getCell(11).setCellValue(funcaoDados.getRlrs().size());
+            row.getCell(19).setCellValue(Jsoup.parse(funcaoDados.getSustantation() != null ? funcaoDados.getSustantation() : "").text());
         }
-
-        rowNum++;
-
-        if(!funcaoTransacaoList.isEmpty()) {
-            for (int i = 0; i < funcaoTransacaoList.size(); i++) {
-                FuncaoTransacao funcaoTransacao = funcaoTransacaoList.get(i);
-                XSSFRow row = excelSheet.getRow(rowNum++);
-                row.getCell(0).setCellValue(idFuncao++);
-                row.getCell(1).setCellValue(funcaoTransacao.getFatorAjuste().getNome());
-                row.getCell(5).setCellValue(funcaoTransacao.getFuncionalidade().getModulo().getNome());
-                row.getCell(6).setCellValue(funcaoTransacao.getFuncionalidade().getNome());
-                row.getCell(7).setCellValue(funcaoTransacao.getName());
-                row.getCell(8).setCellValue(funcaoTransacao.getQuantidade() != null ? funcaoTransacao.getQuantidade() : 0);
-                row.getCell(9).setCellValue(funcaoTransacao.getTipo().toString());
-                row.getCell(10).setCellValue(funcaoTransacao.getDers().size());
-                row.getCell(11).setCellValue(funcaoTransacao.getAlrs().size());
-                row.getCell(19).setCellValue(Jsoup.parse(funcaoTransacao.getSustantation() != null ? funcaoTransacao.getSustantation() : "").text());
-            }
+        for (int i = 0; i < funcaoTransacaoList.size(); i++) {
+            FuncaoTransacao funcaoTransacao = funcaoTransacaoList.get(i);
+            XSSFRow row = excelSheet.getRow(rowNum++);
+            row.getCell(0).setCellValue(idFuncao++);
+            row.getCell(8).setCellValue(funcaoTransacao.getQuantidade() != null ? funcaoTransacao.getQuantidade() : new Integer(0));
+            row.getCell(9).setCellValue(funcaoTransacao.getTipo().toString());
+            row.getCell(10).setCellValue(funcaoTransacao.getDers().size());
+            row.getCell(11).setCellValue(funcaoTransacao.getAlrs().size());
+            row.getCell(1).setCellValue(funcaoTransacao.getFatorAjuste().getNome());
+            row.getCell(5).setCellValue(funcaoTransacao.getFuncionalidade().getModulo().getNome());
+            row.getCell(6).setCellValue(funcaoTransacao.getFuncionalidade().getNome());
+            row.getCell(7).setCellValue(funcaoTransacao.getName());
+            row.getCell(19).setCellValue(Jsoup.parse(funcaoTransacao.getSustantation() != null ? funcaoTransacao.getSustantation() : "").text());
         }
     }
 
     private void setarFuncoesEstimadaExcelPadraoEB1(XSSFWorkbook excelFile, List<FuncaoDados> funcaoDadosList, List<FuncaoTransacao> funcaoTransacaoList) {
-        XSSFSheet excelSheet = excelFile.getSheet("AFP - Estimativa");
+        XSSFSheet excelSheet = excelFile.getSheet(estimativa);
         int rowNum = 9;
         int idFuncao = 1;
-        if(!funcaoDadosList.isEmpty()) {
-            for (int i = 0; i < funcaoDadosList.size(); i++) {
-                FuncaoDados funcaoDados = funcaoDadosList.get(i);
-                XSSFRow row = excelSheet.getRow(rowNum++);
-                row.getCell(0).setCellValue(idFuncao++);
-                row.getCell(1).setCellValue(funcaoDados.getFatorAjuste().getNome());
-                row.getCell(5).setCellValue(funcaoDados.getFuncionalidade().getModulo().getNome());
-                row.getCell(6).setCellValue(funcaoDados.getFuncionalidade().getNome());
-                row.getCell(7).setCellValue(funcaoDados.getName());
-                row.getCell(8).setCellValue(funcaoDados.getQuantidade() != null ? funcaoDados.getQuantidade() : 0);
-                row.getCell(9).setCellValue(funcaoDados.getTipo().toString());
-                row.getCell(11).setCellValue(Jsoup.parse(funcaoDados.getSustantation() != null ? funcaoDados.getSustantation() : "").text());
-            }
+        for (int i = 0; i < funcaoDadosList.size(); i++) {
+            FuncaoDados funcaoDados = funcaoDadosList.get(i);
+            XSSFRow row = excelSheet.getRow(rowNum++);
+            row.getCell(0).setCellValue(idFuncao++);
+            row.getCell(1).setCellValue(funcaoDados.getFatorAjuste().getNome());
+            row.getCell(5).setCellValue(funcaoDados.getFuncionalidade().getModulo().getNome());
+            row.getCell(6).setCellValue(funcaoDados.getFuncionalidade().getNome());
+            row.getCell(7).setCellValue(funcaoDados.getName());
+            row.getCell(8).setCellValue(funcaoDados.getQuantidade() != null ? funcaoDados.getQuantidade() : new Integer(0));
+            row.getCell(9).setCellValue(funcaoDados.getTipo().toString());
+            row.getCell(11).setCellValue(Jsoup.parse(funcaoDados.getSustantation() != null ? funcaoDados.getSustantation() : "").text());
         }
-
-        rowNum++;
-
-        if(!funcaoTransacaoList.isEmpty()) {
-            for (int i = 0; i < funcaoTransacaoList.size(); i++) {
-                FuncaoTransacao funcaoTransacao = funcaoTransacaoList.get(i);
-                XSSFRow row = excelSheet.getRow(rowNum++);
-                row.getCell(0).setCellValue(idFuncao++);
-                row.getCell(1).setCellValue(funcaoTransacao.getFatorAjuste().getNome());
-                row.getCell(5).setCellValue(funcaoTransacao.getFuncionalidade().getModulo().getNome());
-                row.getCell(6).setCellValue(funcaoTransacao.getFuncionalidade().getNome());
-                row.getCell(7).setCellValue(funcaoTransacao.getName());
-                row.getCell(8).setCellValue(funcaoTransacao.getQuantidade() != null ? funcaoTransacao.getQuantidade() : 0);
-                row.getCell(9).setCellValue(funcaoTransacao.getTipo().toString());
-                row.getCell(11).setCellValue(Jsoup.parse(funcaoTransacao.getSustantation() != null ? funcaoTransacao.getSustantation() : "").text());
-            }
+        for (int i = 0; i < funcaoTransacaoList.size(); i++) {
+            FuncaoTransacao funcaoTransacao = funcaoTransacaoList.get(i);
+            XSSFRow row = excelSheet.getRow(rowNum++);
+            row.getCell(0).setCellValue(idFuncao++);
+            row.getCell(1).setCellValue(funcaoTransacao.getFatorAjuste().getNome());
+            row.getCell(5).setCellValue(funcaoTransacao.getFuncionalidade().getModulo().getNome());
+            row.getCell(6).setCellValue(funcaoTransacao.getFuncionalidade().getNome());
+            row.getCell(7).setCellValue(funcaoTransacao.getName());
+            row.getCell(8).setCellValue(funcaoTransacao.getQuantidade() != null ? funcaoTransacao.getQuantidade() : new Integer(0));
+            row.getCell(9).setCellValue(funcaoTransacao.getTipo().toString());
+            row.getCell(11).setCellValue(Jsoup.parse(funcaoTransacao.getSustantation() != null ? funcaoTransacao.getSustantation() : "").text());
         }
     }
 
@@ -322,7 +305,7 @@ public class PlanilhaService {
     }
 
     private void setarResumoExcelPadraoEB1(XSSFWorkbook excelFile, Analise analise) {
-        XSSFSheet excelSheet = excelFile.getSheet("Resumo");
+        XSSFSheet excelSheet = excelFile.getSheet(resumo);
         if(analise.getNumeroOs() != null){
             excelSheet.getRow(3).getCell(1).setCellValue(analise.getNumeroOs());
         }else{
@@ -333,13 +316,13 @@ public class PlanilhaService {
         }
         switch(analise.getMetodoContagem()){
             case DETALHADA:
-                excelSheet.getRow(4).getCell(1).setCellValue("Detalhada");
+                excelSheet.getRow(4).getCell(1).setCellValue(metodoDetalhada);
                 break;
             case ESTIMADA:
-                excelSheet.getRow(4).getCell(1).setCellValue("Estimativa");
+                excelSheet.getRow(4).getCell(1).setCellValue(metodoEstimativa);
                 break;
             case INDICATIVA:
-                excelSheet.getRow(4).getCell(1).setCellValue("Indicativa");
+                excelSheet.getRow(4).getCell(1).setCellValue(metodoIndicativa);
                 break;
         }
         excelSheet.getRow(12).getCell(0).setCellValue(analise.getEscopo());
@@ -375,7 +358,7 @@ public class PlanilhaService {
                 row.getCell(6).setCellValue(funcaoDados.getRlrs().size());
                 String rlrs = funcaoDados.getRlrs().stream().map(item -> item.getNome()).collect(Collectors.joining(", "));
                 row.getCell(7).setCellValue(rlrs);
-                row.getCell(8).setCellValue(funcaoDados.getQuantidade());
+                row.getCell(8).setCellValue(funcaoDados.getQuantidade() != null ? funcaoDados.getQuantidade() : new Integer(0));
                 row.getCell(17).setCellValue(Jsoup.parse(funcaoDados.getSustantation() != null ? funcaoDados.getSustantation() : "").text());
             }
         }
@@ -396,7 +379,7 @@ public class PlanilhaService {
                 row.getCell(6).setCellValue(funcaoTransacao.getAlrs().size());
                 String alrs = funcaoTransacao.getAlrs().stream().map(item -> item.getNome()).collect(Collectors.joining(", "));
                 row.getCell(7).setCellValue(alrs);
-                row.getCell(8).setCellValue(funcaoTransacao.getQuantidade() != null ? funcaoTransacao.getQuantidade() : 0);
+                row.getCell(8).setCellValue(funcaoTransacao.getQuantidade() != null ? funcaoTransacao.getQuantidade() : new Integer(0));
                 row.getCell(17).setCellValue(Jsoup.parse(funcaoTransacao.getSustantation()  != null ? funcaoTransacao.getSustantation() : "").text());
             }
         }
@@ -420,7 +403,7 @@ public class PlanilhaService {
     }
 
     private void setarResumoExcelPadraoANAC(XSSFWorkbook excelFile, Analise analise) {
-        XSSFSheet excelSheet = excelFile.getSheet("Resumo");
+        XSSFSheet excelSheet = excelFile.getSheet(resumo);
         if(analise.getSistema() != null){
             excelSheet.getRow(8).getCell(3).setCellValue(analise.getSistema().getNome());
         }
@@ -550,7 +533,7 @@ public class PlanilhaService {
     }
 
     private void setarResumoExcelPadraoBasis(XSSFWorkbook excelFile, Analise analise){
-        XSSFSheet excelSheet = excelFile.getSheet("Resumo");
+        XSSFSheet excelSheet = excelFile.getSheet(resumo);
         FormulaEvaluator evaluator = excelFile.getCreationHelper().createFormulaEvaluator();
 
         if(analise.getNumeroOs() != null){
@@ -558,13 +541,13 @@ public class PlanilhaService {
         }
         switch(analise.getMetodoContagem()){
             case ESTIMADA:
-                excelSheet.getRow(4).getCell(1).setCellValue("Estimativa");
+                excelSheet.getRow(4).getCell(1).setCellValue(metodoEstimativa);
                 break;
             case DETALHADA:
-                excelSheet.getRow(4).getCell(1).setCellValue("Detalhada");
+                excelSheet.getRow(4).getCell(1).setCellValue(metodoDetalhada);
                 break;
             case INDICATIVA:
-                excelSheet.getRow(4).getCell(1).setCellValue("Indicativa");
+                excelSheet.getRow(4).getCell(1).setCellValue(metodoIndicativa);
                 break;
         }
         evaluator.evaluateFormulaCell(excelSheet.getRow(4).getCell(1));
@@ -574,7 +557,7 @@ public class PlanilhaService {
     }
 
     private void setarFuncoesDetalhadaExcelPadraoBasis(XSSFWorkbook excelFile, List<FuncaoDados> funcaoDadosList, List<FuncaoTransacao> funcaoTransacaoList) {
-        XSSFSheet excelSheet = excelFile.getSheet("AFP - Detalhada");
+        XSSFSheet excelSheet = excelFile.getSheet(detalhada);
 
         FormulaEvaluator evaluator = excelFile.getCreationHelper().createFormulaEvaluator();
 
@@ -623,7 +606,7 @@ public class PlanilhaService {
     }
 
     private void setarFuncoesEstimadaExcelPadraoBasis(XSSFWorkbook excelFile, List<FuncaoDados> funcaoDadosList, List<FuncaoTransacao> funcaoTransacaoList) {
-        XSSFSheet excelSheetEstimada = excelFile.getSheet("AFP - Estimativa");
+        XSSFSheet excelSheetEstimada = excelFile.getSheet(estimativa);
 
         FormulaEvaluator evaluator = excelFile.getCreationHelper().createFormulaEvaluator();
 
@@ -697,7 +680,7 @@ public class PlanilhaService {
                     row.getCell(5).setCellValue(funcaoTransacao.getFuncionalidade().getModulo().getNome());
                     row.getCell(6).setCellValue(funcaoTransacao.getFuncionalidade().getNome());
                     row.getCell(7).setCellValue(funcaoTransacao.getName());
-                    row.getCell(9).setCellValue(funcaoTransacao.getQuantidade());
+                    row.getCell(9).setCellValue(funcaoTransacao.getQuantidade() != null ? funcaoTransacao.getQuantidade() : new Integer(0));
                     row.getCell(10).setCellValue(funcaoTransacao.getDers().size());
                     row.getCell(11).setCellValue(funcaoTransacao.getAlrs().size());
                     row.getCell(12).setCellValue("-------");
