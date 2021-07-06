@@ -47,8 +47,7 @@
                                     [rowsPerPageOptions]="[20,50,100]" [showVisibleColumnsControl]="true" #tables>
                                     <p-column header="Ordem" field="ordem">
                                         <ng-template let-col let-funcaoDado="rowData" pTemplate="body">
-                                            {{ funcaoDado.ordem ? funcaoDado.ordem : funcoesDados.indexOf(funcaoDado) +
-                                            1 }}
+                                            {{ funcaoDado?.ordem ? funcaoDado?.ordem : funcoesDados?.indexOf(funcaoDado) + 1 }}
                                         </ng-template>
                                     </p-column>
                                     <p-column field="nomeModulo" header="Módulo" [filter]="true" [sortable]="true">

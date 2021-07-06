@@ -128,7 +128,7 @@ export class FuncaoTransacao implements FuncaoResumivel, BaseEntity, FuncaoAnali
       this.complexidade, this.pf, this.analise, this.funcionalidades,
       this.funcionalidade, this.fatorAjuste, this.alrs,
       this.name, this.sustantation, this.der, this.ftr, this.grossPF,
-      this.derValues, this.ftrValues, this.ders, this.impacto, this.quantidade, this.statusFuncao, this.lstDivergenceComments, this.files);
+      this.derValues, this.ftrValues, this.ders, this.impacto, this.quantidade, this.statusFuncao, this.lstDivergenceComments, this.files, this.ordem);
   }
 
 }
@@ -168,6 +168,7 @@ class FuncaoTransacaoCopyFromJSON {
     this._funcaoTransacao.quantidade = this._json.quantidade;
     this._funcaoTransacao.statusFuncao = this._json.statusFuncao;
     this._funcaoTransacao.files = this._json.files;
+    this._funcaoTransacao.ordem = this._json.ordem;
   }
 
   private converteBaseEntities() {

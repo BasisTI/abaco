@@ -448,9 +448,9 @@ export class AnaliseService {
         }));
     }
 
-    public importarModeloExcel(id: number) {
+    public importarModeloExcel(id: number, modelo: number) {
         this.blockUiService.show();
-        this.http.request('get', this.resourceUrl + "/importar-excel/" + id, {responseType: "blob"})
+        this.http.request('get', this.resourceUrl + "/importar-excel/" + id + "/"+modelo, {responseType: "blob"})
             .pipe(catchError((error: any) => {
                 if (error.status === 500) {
                     this.blockUiService.hide();
