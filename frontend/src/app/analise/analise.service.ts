@@ -448,29 +448,16 @@ export class AnaliseService {
         }));
     }
 
-    public importarModeloExcel(id: number, modelo: number) {
+    public exportarModeloExcel(id: number, modelo: number) {
         this.blockUiService.show();
-        this.http.request('get', this.resourceUrl + "/importar-excel/" + id + "/"+modelo, {responseType: "blob"})
+        return this.http.request('get', this.resourceUrl + "/importar-excel/" + id + "/" + modelo, { responseType: "blob" })
             .pipe(catchError((error: any) => {
                 if (error.status === 500) {
                     this.blockUiService.hide();
                     this.pageNotificationService.addErrorMessage(this.getLabel('Erro ao gerar relatório'));
                     return Observable.throw(new Error(error.status));
                 }
-            })).subscribe(
-                (response) => {
-                    const mediaType = 'application/vnd.ms-excel';
-                    const blob = new Blob([response], { type: mediaType });
-                    const fileURL = window.URL.createObjectURL(blob);
-                    const anchor = document.createElement('a');
-                    anchor.download = 'analise.xlsx';
-                    anchor.href = fileURL;
-                    document.body.appendChild(anchor);
-                    anchor.click();
-                    this.blockUiService.hide();
-                    return null;
-                });
-        return null;
+            }))
     }
 
 }

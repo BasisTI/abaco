@@ -148,8 +148,8 @@ export class AnaliseListComponent implements OnInit {
         { label: "Modelo padrão BASIS", value: 1 },
         { label: "Modelo padrão BNDES", value: 2 },
         // { label: "Modelo padrão ANAC", value: 3 },
-        // { label: "Modelo padrão EB - 1", value: 4 },
-        // { label: "Modelo padrão EB - 2", value: 5 },
+        { label: "Modelo padrão EB - 1", value: 4 },
+        { label: "Modelo padrão EB - 2", value: 5 },
     ];
     modeloSelecionado: any;
 
@@ -730,7 +730,7 @@ export class AnaliseListComponent implements OnInit {
             })
             if (mostrarDialogBlock !== false) {
                 this.showDialogAnaliseBlock = true;
-            }else{
+            } else {
                 this.alterAnaliseBlock();
             }
         } else {
@@ -741,7 +741,7 @@ export class AnaliseListComponent implements OnInit {
     public alterAnaliseBlock() {
         if (this.dataHomologacaoAnalises) {
             this.analisesBlocks.forEach(analise => {
-                if(analise.dataHomologacao === undefined || analise.dataHomologacao === null){
+                if (analise.dataHomologacao === undefined || analise.dataHomologacao === null) {
                     analise.dataHomologacao = this.dataHomologacaoAnalises;
                 }
             });
@@ -1064,11 +1064,25 @@ export class AnaliseListComponent implements OnInit {
 
     closeModalExportarExcel() {
         this.showDialogImportarExcel = false;
+        this.modeloSelecionado = null;
+        this.analiseImportarExcel = null;
     }
 
     exportarPlanilha() {
         if (this.analiseImportarExcel != null) {
-            this.analiseService.importarModeloExcel(this.analiseImportarExcel.id, this.modeloSelecionado.value);
+            this.analiseService.exportarModeloExcel(this.analiseImportarExcel.id, this.modeloSelecionado.value).subscribe(
+                (response) => {
+                    const mediaType = 'application/vnd.ms-excel';
+                    const blob = new Blob([response], { type: mediaType });
+                    const fileURL = window.URL.createObjectURL(blob);
+                    const anchor = document.createElement('a');
+                    anchor.download = 'analise.xlsx';
+                    anchor.href = fileURL;
+                    document.body.appendChild(anchor);
+                    anchor.click();
+                    this.blockUiService.hide();
+                    // this.closeModalExportarExcel();
+                });;
         }
     }
 }
