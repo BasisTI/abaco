@@ -1072,16 +1072,17 @@ export class AnaliseListComponent implements OnInit {
         if (this.analiseImportarExcel != null) {
             this.analiseService.exportarModeloExcel(this.analiseImportarExcel.id, this.modeloSelecionado.value).subscribe(
                 (response) => {
+                    let filename = response.headers.get("content-disposition").split("filename=");
                     const mediaType = 'application/vnd.ms-excel';
-                    const blob = new Blob([response], { type: mediaType });
+                    const blob = new Blob([response.body], { type: mediaType });
                     const fileURL = window.URL.createObjectURL(blob);
                     const anchor = document.createElement('a');
-                    anchor.download = 'analise.xlsx';
+                    anchor.download = filename[1];
                     anchor.href = fileURL;
                     document.body.appendChild(anchor);
                     anchor.click();
                     this.blockUiService.hide();
-                    // this.closeModalExportarExcel();
+                    this.closeModalExportarExcel();
                 });;
         }
     }
