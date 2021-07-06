@@ -49,6 +49,8 @@ export class DerChipsComponent implements OnChanges, OnInit {
     addMultiplosTexto = '';
     newValues = '';
 
+    registrosDuplicados: string = "";
+
     validaMultiplos = false;
     validaMultiplosRegistrados = false;
     funcaoTransacao: FuncaoTransacao;
@@ -262,8 +264,9 @@ export class DerChipsComponent implements OnChanges, OnInit {
         this.validaMultiplos = false;
         this.validaMultiplosRegistrados = false;
 
+        this.registrosDuplicados = this.verificaMultiplosCadastrados(this.addMultiplosTexto).join(", ");
         if (this.verificaMultiplosDuplicados(this.addMultiplosTexto)) {
-            if (this.verificaMultiplosCadastrados(this.addMultiplosTexto)) {
+            if (this.verificaMultiplosCadastrados(this.addMultiplosTexto).length === 0) {
                 this.values = this.values.concat(this.converteMultiplos());
                 this.valuesChange.emit(this.values);
                 this.fecharDialogAddMultiplos();
@@ -315,22 +318,23 @@ export class DerChipsComponent implements OnChanges, OnInit {
         }
     }
 
-    verificaMultiplosCadastrados(nome: string): boolean {
+    verificaMultiplosCadastrados(nome: string): string[] {
         if (this.values === undefined) {
             this.values = [];
         }
 
+        let registrosDuplicados: string[] = [];
+
         let splitString: string[] = nome.split('\n');
-        let controle = true;
 
         for (let indexValues = 0; indexValues < this.values.length; indexValues++) {
             for (let indexSplitString = 0; indexSplitString < splitString.length; indexSplitString++) {
                 if (this.values[indexValues].text === splitString[indexSplitString]) {
-                    controle = false;
+                    registrosDuplicados.push(splitString[indexSplitString]);
                 }
             }
         }
-        return controle;
+        return registrosDuplicados;
     }
 
     private converteMultiplos(): DerChipItem[] {

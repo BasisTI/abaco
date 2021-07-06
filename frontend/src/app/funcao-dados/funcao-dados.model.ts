@@ -140,7 +140,7 @@ export class FuncaoDados implements FuncaoResumivel, BaseEntity, FuncaoAnalise{
             this.pf, this.analise, this.funcionalidades, this.funcionalidade,
             this.fatorAjuste, this.alr, this.name, this.sustantation, this.der, this.rlr,
             this.grossPF, this.derValues, this.rlrValues, this.ders, this.rlrs, this.impacto,
-            this.quantidade, this.modulo, this.statusFuncao, this.lstDivergenceComments, this.files);
+            this.quantidade, this.modulo, this.statusFuncao, this.lstDivergenceComments, this.files, this.ordem);
     }
 
 }
@@ -181,6 +181,7 @@ class FuncaoDadosCopyFromJSON {
         this._funcaoDados.statusFuncao = this._json.statusFuncao;
         this._funcaoDados.lstDivergenceComments = this._json.lstDivergenceComments;
         this._funcaoDados.files = this._json.files;
+        this._funcaoDados.ordem = this._json.ordem;
     }
 
     private converteBaseEntities() {

@@ -145,13 +145,16 @@ export class AnaliseListComponent implements OnInit {
     showDialogImportarExcel: boolean = false;
     analiseImportarExcel: Analise = new Analise();
     lstModelosExcel = [
-        { label: "Modelo 1", value: 1 },
+        { label: "Modelo padrão BASIS", value: 1 },
+        { label: "Modelo padrão BNDES", value: 2 },
+        // { label: "Modelo padrão ANAC", value: 3 },
+        // { label: "Modelo padrão EB - 1", value: 4 },
+        // { label: "Modelo padrão EB - 2", value: 5 },
     ];
-    modeloSelecionado: number;
+    modeloSelecionado: any;
 
     //JSON
     analisesImportar: Analise[] = [];
-
     downloadJsonHref;
     analiseFileJson;
     showDialogImportar: boolean;
@@ -1065,7 +1068,7 @@ export class AnaliseListComponent implements OnInit {
 
     exportarPlanilha() {
         if (this.analiseImportarExcel != null) {
-            this.analiseService.importarModeloExcel(this.analiseImportarExcel.id);
+            this.analiseService.importarModeloExcel(this.analiseImportarExcel.id, this.modeloSelecionado.value);
         }
     }
 }
