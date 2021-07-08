@@ -417,9 +417,9 @@
 </p-dialog>
 
 <p-dialog header="Exportar planilha excel" [(visible)]="showDialogImportarExcel" [style]="{width: '50vw'}"
-    [minHeight]="300" [modal]="true">
+    [minHeight]="300" [modal]="true" #dialogPlanilha>
 
-    <p-dropdown [style]="{'width':'100%', 'margin-bottom': '55px'}" [options]="lstModelosExcel" optionLabel="label"
+    <p-dropdown [style]="{'width':'100%', 'margin-bottom': '55px'}" [appendTo]="dialogPlanilha" [options]="lstModelosExcel" optionLabel="label"
         id="idModeloExcel" [(ngModel)]="modeloSelecionado" placeholder="Selecione um modelo">
     </p-dropdown>
 
