@@ -351,7 +351,7 @@ public class PlanilhaService {
             XSSFRow row = excelSheet.getRow(rowNum++);
             row.getCell(1).setCellValue(nome);
             row.getCell(2).setCellValue(funcaoDados.getTipo().toString());
-            row.getCell(3).setCellValue(funcaoDados.getFatorAjuste().getSigla().isEmpty() ? "" : funcaoDados.getFatorAjuste().getSigla());
+            row.getCell(3).setCellValue(funcaoDados.getFatorAjuste().getSigla() == null ? "" : funcaoDados.getFatorAjuste().getSigla());
             row.getCell(4).setCellValue(funcaoDados.getDers().size());
             String ders = funcaoDados.getDers().stream().map(item -> item.getNome()).collect(Collectors.joining(", "));
             row.getCell(5).setCellValue(ders);
@@ -367,7 +367,7 @@ public class PlanilhaService {
             XSSFRow row = excelSheet.getRow(rowNum++);
             row.getCell(1).setCellValue(nome);
             row.getCell(2).setCellValue(funcaoTransacao.getTipo().toString());
-            row.getCell(3).setCellValue(funcaoTransacao.getFatorAjuste().getSigla().isEmpty() ? "" : funcaoTransacao.getFatorAjuste().getSigla());
+            row.getCell(3).setCellValue(funcaoTransacao.getFatorAjuste().getSigla() == null ? "" : funcaoTransacao.getFatorAjuste().getSigla());
             row.getCell(4).setCellValue(funcaoTransacao.getDers().size());
             String ders = funcaoTransacao.getDers().stream().map(item -> item.getNome()).collect(Collectors.joining(", "));
             row.getCell(5).setCellValue(ders);
@@ -386,7 +386,7 @@ public class PlanilhaService {
         for(int i = 0; i < fatorAjusteList.size(); i++) {
             FatorAjuste fatorAjuste = fatorAjusteList.get(i);
             XSSFRow row = deflatorSheet.getRow(rowNum++);
-            row.getCell(0).setCellValue(fatorAjuste.getSigla().isEmpty() ? "" : fatorAjuste.getSigla());
+            row.getCell(0).setCellValue(fatorAjuste.getSigla() == null ? "" : fatorAjuste.getSigla());
             row.getCell(1).setCellValue(fatorAjuste.getDescricao());
             row.getCell(2)
                 .setCellValue(fatorAjuste.getTipoAjuste().equals(TipoFatorAjuste.PERCENTUAL) ? fatorAjuste.getFator().doubleValue()/100 : fatorAjuste.getFator().doubleValue());
