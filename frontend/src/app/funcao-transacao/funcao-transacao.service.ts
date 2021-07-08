@@ -48,6 +48,11 @@ export class FuncaoTransacaoService {
         return this.http.get<any[]>(url);
     }
 
+    public getFuncaoTransacaoAnalise(id: number): Observable<any> {
+        const url = `${this.funcaoTransacaoResourceUrl}/analise/${id}`;
+        return this.http.get<any>(url);
+    }
+
     public convertItemFromServer(json: any): FuncaoTransacao {
         return new FuncaoTransacao().copyFromJSON(json);
     }

@@ -214,10 +214,11 @@
                             [disabled]="datatable.selectedRow == null" class="ui-button-info">
                         </basis-datatable-button>
                         <basis-datatable-button *ngIf="canExportarPlanilha" name="importExcel" [bTooltip]="'Exportar planilha excel'"
-                            (click)="openModalExportarExcel(analiseSelecionada)"
+                            (click)="openModalImportarExcel(analiseSelecionada)"
                             icon="file-upload" class="ui-button-success" [disabled]="datatable.selectedRow == null">
                         </basis-datatable-button> -->
                         <!-- <basis-datatable-button name="exportJson" [bTooltip]="'Exportar análise'" icon="file-download"
+                            (click)="exportarAnalise(analiseSelecionada);"
                             [disabled]="datatable.selectedRow == null" class="ui-button-info">
                         </basis-datatable-button>
                         <basis-datatable-button name="importJson" [bTooltip]="'Importar análise'" icon="file-upload"
@@ -416,9 +417,9 @@
 </p-dialog>
 
 <p-dialog header="Exportar planilha excel" [(visible)]="showDialogImportarExcel" [style]="{width: '50vw'}"
-    [minHeight]="300" [modal]="true">
+    [minHeight]="300" [modal]="true" #dialogPlanilha>
 
-    <p-dropdown [style]="{'width':'100%', 'margin-bottom': '55px'}" [options]="lstModelosExcel" optionLabel="label"
+    <p-dropdown [style]="{'width':'100%', 'margin-bottom': '55px'}" [appendTo]="dialogPlanilha" [options]="lstModelosExcel" optionLabel="label"
         id="idModeloExcel" [(ngModel)]="modeloSelecionado" placeholder="Selecione um modelo">
     </p-dropdown>
 
