@@ -281,6 +281,12 @@ export class AnaliseService {
             this.funcaoTransacaoService.getFuncaoTransacaoByAnalise(analise));
     }
 
+    public findWithFuncoesNormal(id: number): any {
+        return forkJoin(this.http.get(`${this.resourceUrl}/${id}`),
+            this.funcaoDadosService.getFuncaoDadosAnalise(id),
+            this.funcaoTransacaoService.getFuncaoTransacaoAnalise(id));
+    }
+
     public clonarAnalise(id: number): Observable<Analise> {
         const url = this.clonarAnaliseUrl + id;
         return this.http.get<Analise>(url);
@@ -439,8 +445,8 @@ export class AnaliseService {
             }));
     }
 
-    public importar(analise: Analise): Observable<Analise> {
-        return this.http.post<Analise>(this.resourceUrl, analise).pipe(catchError((error: any) => {
+    public importarJson(analise: Analise): Observable<Analise> {
+        return this.http.post<Analise>(this.resourceUrl+"/importar-json", analise).pipe(catchError((error: any) => {
             if (error.status === 403) {
                 this.pageNotificationService.addErrorMessage(this.getLabel('Você não possui permissão!'));
                 return Observable.throw(new Error(error.status));

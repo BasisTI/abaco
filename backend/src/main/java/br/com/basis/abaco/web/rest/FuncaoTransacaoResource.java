@@ -224,6 +224,13 @@ public class FuncaoTransacaoResource {
         return ResponseUtil.wrapOrNotFound(Optional.ofNullable(funcaoDadosDTO));
     }
 
+    @GetMapping("/funcao-transacaos/analise/{id}")
+    @Timed
+    public Set<FuncaoTransacao> getFuncaoTransacaoAnalise(@PathVariable Long id) {
+        Set<FuncaoTransacao> lstFuncaoTransacao = funcaoTransacaoRepository.findAllByAnaliseId(id);
+        return lstFuncaoTransacao;
+    }
+
     @GetMapping("/funcao-transacaos-dto/analise/{id}")
     @Timed
     public ResponseEntity<List<FuncaoTransacaoAnaliseDTO>> getFuncaoTransacaoByAnalise(@PathVariable Long id) {

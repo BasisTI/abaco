@@ -740,7 +740,7 @@ public class AnaliseResource {
 
     @GetMapping(value = "/analises/importar-excel/{id}/{modelo}", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
     @Secured("ROLE_ABACO_ANALISE_EXPORTAR_RELATORIO_EXCEL")
-    public ResponseEntity<byte[]> importarExcel(@PathVariable Long id,@PathVariable Long modelo) throws IOException{
+    public ResponseEntity<byte[]> exportarExcel(@PathVariable Long id,@PathVariable Long modelo) throws IOException{
         Analise analise = analiseService.recuperarAnalise(id);
         analise.setFuncaoDados(funcaoDadosRepository.findAllByAnaliseIdOrderByOrdem(id));
         analise.setFuncaoTransacaos(funcaoTransacaoRepository.findAllByAnaliseIdOrderByOrdem(id));
@@ -749,6 +749,21 @@ public class AnaliseResource {
         headers.setContentType(MediaType.parseMediaType("application/vnd.ms-excel"));
         headers.set(HttpHeaders.CONTENT_DISPOSITION, String.format("attachment; filename=%s.xlsx", RelatorioUtil.pegarNomeRelatorio(analise)));
         return new ResponseEntity<byte[]>(outputStream.toByteArray(),headers, HttpStatus.OK);
+    }
+
+
+    @PostMapping("/analises/importar-json")
+//    @Secured()
+    public ResponseEntity<AnaliseEditDTO> importarJson(@Valid @RequestBody Analise analise) throws URISyntaxException {
+
+        analise.setCreatedBy(userRepository.findOneByLogin(SecurityUtils.getCurrentUserLogin()).get());
+        analise.getUsers().add(analise.getCreatedBy());
+//        analiseService.salvaNovaData(analise);
+//        analiseRepository.save(analise);
+//        AnaliseEditDTO analiseEditDTO = analiseService.convertToAnaliseEditDTO(analise);
+//        analiseSearchRepository.save(analiseService.convertToEntity(analiseService.convertToDto(analise)));
+        return ResponseEntity.created(new URI(API_ANALISES + analise.getId()))
+            .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, analise.getId().toString())).body(null);
     }
 }
 
