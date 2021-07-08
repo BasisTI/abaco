@@ -453,9 +453,6 @@ export class AnaliseListComponent implements OnInit {
             case 'delete':
                 this.confirmDelete(event.selection);
                 break;
-            // case 'exportJson':
-            //     this.exportarAnalise(event.selection);
-            //     break;
         }
     }
 
@@ -1004,8 +1001,12 @@ export class AnaliseListComponent implements OnInit {
     }
 
     exportarAnalise(analise: Analise) {
-        this.analiseService.find(analise.id).subscribe(response => {
-            let theJSON = JSON.stringify(response);
+        this.analiseService.findWithFuncoesNormal(analise.id).subscribe(response => {
+            let analise: Analise = response[0];
+            analise.funcaoDados = response[1];
+            analise.funcaoTransacaos = response[2];
+
+            let theJSON = JSON.stringify(analise);
             let blob = new Blob([theJSON], { type: 'text/json' });
             let url = window.URL.createObjectURL(blob);
             this.downloadJsonHref = url;
@@ -1033,7 +1034,7 @@ export class AnaliseListComponent implements OnInit {
         let analise: Analise;
         reader.onloadend = function () {
             analise = JSON.parse(reader.result.toString());
-            if (analise.id && analise.identificadorAnalise) {
+            if (analise.id) {
                 analise.id = null;
                 analises.push(analise);
             }
@@ -1045,7 +1046,7 @@ export class AnaliseListComponent implements OnInit {
         if (this.analiseFileJson && this.analisesImportar.length > 0) {
             this.analisesImportar.forEach(analise => {
                 analise.identificadorAnalise = analise.identificadorAnalise + " - Importada";
-                this.analiseService.importar(analise).subscribe(r => {
+                this.analiseService.importarJson(analise).subscribe(r => {
                     this.pageNotificationService.addCreateMsg("Análise - " + r.identificadorAnalise + " importada com sucesso!");
                     this.datatable.filter();
                     this.showDialogImportar = false;
@@ -1057,7 +1058,7 @@ export class AnaliseListComponent implements OnInit {
         }
     }
 
-    openModalExportarExcel(analise: Analise) {
+    openModalImportarExcel(analise: Analise) {
         this.showDialogImportarExcel = true;
         this.analiseImportarExcel = analise;
     }
