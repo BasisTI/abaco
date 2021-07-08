@@ -3,17 +3,6 @@
         <div class="card card-w-title">
             <h1>{{ manual.id ? 'Editar Manual' : 'Cadastrar Manual' }}</h1>
             <form name="editForm" role="form" novalidate (ngSubmit)="save(editForm)" #editForm="ngForm">
-
-                <div class="ui-g">
-                    <!--<div class="ui-g-12 ui-md-12 ui-sm-12" [hidden]="!manual.id" style="margin-bottom: 01px">
-                        <span class="md-inputfield">
-                            <input type="text" id="idIdFormManual" class="ui-inputtext" name="id" pInputText
-                                   [(ngModel)]="manual.id" readonly/>
-                            <label>ID</label>
-                        </span>
-                    </div>-->
-                </div>
-
                 <div class="ui-g">
                     <div class="ui-g-6 ui-md-6 ui-sm-12" style="margin-bottom: 25px">
                         <span class="md-inputfield">
@@ -244,67 +233,50 @@
 
                 <div class="ui-g">
                     <div class="ui-g-12 ui-md-12 ui-sm-12" id="tabela-deflator">
-                        <basis-datatable
-                                type="memory"
-                                [value]="manual.fatoresAjuste"
-                                id="idTabelaDeflatorFormManual"
-                                (click) = "selectFator()"
-                                (dblclick)="onRowDblclickFator($event)"
-                                [rows]="20"
-                                [enableScroll]="true"
-                                [scrollHeight]="'500px'"
-                                [enableButtonsScroll]="true"
-                                [rowsPerPageOptions]="[5,10,20,100]"
-                                (buttonClick)="adjustFactorDatatableClick($event)"
-                                [(selection)]="editedAdjustFactor"
-                                disableView="true" #dataTableFator>
-                                <p-column header="Ordem" field="ordem">
-                                    <ng-template let-col let-fatorAjuste="rowData" pTemplate="body">
-                                        {{ fatorAjuste.ordem ? fatorAjuste.ordem :  manual.fatoresAjuste.indexOf(fatorAjuste) + 1  }}
-                                    </ng-template>
-                                </p-column>
-                                <p-column header="Código" field="codigo">
-                                    <ng-template let-col let-fatorAjuste="rowData" pTemplate="body">
-                                        {{ fatorAjuste.codigo == null ? '---' : fatorAjuste.codigo}}
-                                    </ng-template>
-                                </p-column>
-                                <p-column header="Nome" field="nome"></p-column>
-                                <p-column header="Fator" field="fator"></p-column>
-                                <p-column header="Tipo Ajuste" field="tipoAjuste" filterType="">
-                                    <ng-template let-col let-fatorAjuste="rowData" pTemplate="body" >
-                                        {{ fatorAjuste.tipoAjuste === 'PERCENTUAL' ? 'Percentual' :'Unitario'}}
-                                    </ng-template>
-                                </p-column>
-                                <p-column header="Ativo" field="ativo" filterType="">
-                                    <ng-template let-col let-fatorAjuste="rowData" pTemplate="body">
-                                        {{ fatorAjuste.ativo ? 'S': 'N' }}
-                                    </ng-template>
-                                </p-column>
-                                <basis-datatable-button
-                                        name="order-up"
-                                        [bTooltip]="'Mover para cima.'"
-                                        icon="arrow-drop-up"
-
-                                        >
-                                </basis-datatable-button>
-                                <basis-datatable-button
-                                        name="order-top"
-                                        [bTooltip]="'Mover ao topo.'"
-                                        icon="skip-next"
-                                        >
-                                </basis-datatable-button>
-                                <basis-datatable-button
-                                        name="order-down"
-                                        [bTooltip]="'Mover para baixo.'"
-                                        icon="arrow-drop-down"
-                                        >
-                                </basis-datatable-button>
-                                <basis-datatable-button style="transform: rotate(-90deg);"
-                                        name="order-botton"
-                                        [bTooltip]="'Mover ao final.'"
-                                        icon="skip-previous"
-                                        >
-                                </basis-datatable-button>
+                        <basis-datatable type="memory" [value]="manual.fatoresAjuste" id="idTabelaDeflatorFormManual"
+                            (click)="selectFator()" (dblclick)="onRowDblclickFator($event)" [rows]="20"
+                            [enableScroll]="true" [scrollHeight]="'500px'" [enableButtonsScroll]="true"
+                            [rowsPerPageOptions]="[5,10,20,100]" (buttonClick)="adjustFactorDatatableClick($event)"
+                            [(selection)]="editedAdjustFactor" disableView="true" #dataTableFator>
+                            <p-column header="Ordem" field="ordem">
+                                <ng-template let-col let-fatorAjuste="rowData" pTemplate="body">
+                                    {{ fatorAjuste.ordem ? fatorAjuste.ordem : manual.fatoresAjuste.indexOf(fatorAjuste)
+                                    + 1 }}
+                                </ng-template>
+                            </p-column>
+                            <p-column header="Código" field="codigo">
+                                <ng-template let-col let-fatorAjuste="rowData" pTemplate="body">
+                                    {{ fatorAjuste.codigo == null ? '---' : fatorAjuste.codigo}}
+                                </ng-template>
+                            </p-column>
+                            <p-column header="Nome" field="nome"></p-column>
+                            <p-column header="Fator" field="fator"></p-column>
+                            <p-column header="Tipo Ajuste" field="tipoAjuste" filterType="">
+                                <ng-template let-col let-fatorAjuste="rowData" pTemplate="body">
+                                    {{ fatorAjuste.tipoAjuste === 'PERCENTUAL' ? 'Percentual' :'Unitario'}}
+                                </ng-template>
+                            </p-column>
+                            <p-column header="Ativo" field="ativo" filterType="">
+                                <ng-template let-col let-fatorAjuste="rowData" pTemplate="body">
+                                    {{ fatorAjuste.ativo ? 'S': 'N' }}
+                                </ng-template>
+                            </p-column>
+                            <p-column header="Sigla" field="sigla" filterType="">
+                                <ng-template let-col let-fatorAjuste="rowData" pTemplate="body">
+                                    {{ fatorAjuste.sigla}}
+                                </ng-template>
+                            </p-column>
+                            <basis-datatable-button name="order-up" [bTooltip]="'Mover para cima.'"
+                                icon="arrow-drop-up">
+                            </basis-datatable-button>
+                            <basis-datatable-button name="order-top" [bTooltip]="'Mover ao topo.'" icon="skip-next">
+                            </basis-datatable-button>
+                            <basis-datatable-button name="order-down" [bTooltip]="'Mover para baixo.'"
+                                icon="arrow-drop-down">
+                            </basis-datatable-button>
+                            <basis-datatable-button style="transform: rotate(-90deg);" name="order-botton"
+                                [bTooltip]="'Mover ao final.'" icon="skip-previous">
+                            </basis-datatable-button>
                         </basis-datatable>
                     </div>
                 </div>
@@ -433,8 +405,8 @@
             <form name="editForm2" role="form" novalidate (ngSubmit)="save(editForm2)" #editForm2="ngForm">
 
 
-                <p-dialog [header]="'Deflator'" [(visible)]="showDialogCreateAdjustFactor"
-                    (onHide)="closeDialogCreateAdjustFactor()" [contentStyle]="{'overflow':'visible'}">
+                <p-dialog [header]="'Deflator'" [(visible)]="showDialogCreateAdjustFactor" [modal]="true"
+                    (onHide)="closeDialogCreateAdjustFactor()" [contentStyle]="{'height': ['windowHeightDialog']}">
                     <div class="ui-g">
 
                         <div class="ui-g-6 ui-md-6 ui-sm-12" style="padding-top: 25px">
@@ -496,7 +468,7 @@
                                         && !editForm2.controls['tipoAjuste'].valid
                                         && editForm2.controls['tipoAjuste'].touched)">
                                 <span style="color: red">Campo obrigatório.</span>
-                        </div>
+                            </div>
                         </div>
                     </div>
 
@@ -513,10 +485,16 @@
                             </div>
                         </div>
 
-                        <div class="ui-g-7 ui-md-7 ui-sm-12" style="padding-top: 01px">
+                        <div class="ui-g-4 ui-md-4 ui-sm-12" style="padding-top: 01px">
                             <label>Origem</label>
                             <input id="origem_fator" type="text" name="origem" [(ngModel)]="newAdjustFactor.origem"
                                 pInputText maxlength="255" />
+                        </div>
+
+                        <div class="ui-g-3 ui-md-3 ui-sm-12" style="padding-top: 01px">
+                            <label>Sigla</label>
+                            <input id="sigla_fator" type="text" name="sigla" [(ngModel)]="newAdjustFactor.sigla"
+                                pInputText maxlength="5" />
                         </div>
 
                     </div>
@@ -544,8 +522,8 @@
             <!-- Fim Dialog Novo Deflator -->
 
             <!-- Inicio Dialog Edit Fator Ajuste -->
-            <p-dialog header="Fator de Ajuste" [(visible)]="showDialogEditAdjustFactor"
-                [contentStyle]="{'overflow':'visible'}">
+            <p-dialog header="Fator de Ajuste" [(visible)]="showDialogEditAdjustFactor" [modal]="true"
+                [contentStyle]="{'height': ['windowHeightDialog']}">
 
                 <div class="ui-g">
                     <div class="ui-g-6 ui-md-6 ui-sm-12" style="padding-top: 25px">
@@ -619,13 +597,19 @@
                                 && !editForm2.controls['tipoAjuste'].valid
                                 && editForm2.controls['tipoAjuste'].touched)">
                             <span style="color: red">Campo obrigatório.</span>
-                         </div>
+                        </div>
                     </div>
 
-                    <div class="ui-g-8 ui-md-8 ui-sm-12" style="padding-top: 25px">
+                    <div class="ui-g-4 ui-md-4 ui-sm-12" style="padding-top: 25px">
                         <label>Origem</label>
                         <input id="origem_fator" type="text" name="origem" [(ngModel)]="editedAdjustFactor.origem"
                             pInputText maxlength="255" />
+                    </div>
+
+                    <div class="ui-g-4 ui-md-4 ui-sm-12" style="padding-top: 25px">
+                        <label>Sigla</label>
+                        <input id="sigla_fator" type="text" name="sigla" [(ngModel)]="editedAdjustFactor.sigla"
+                            pInputText maxlength="5" />
                     </div>
 
                 </div>

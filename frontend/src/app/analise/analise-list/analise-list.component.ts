@@ -147,7 +147,7 @@ export class AnaliseListComponent implements OnInit {
     lstModelosExcel = [
         { label: "Modelo padrão BASIS", value: 1 },
         { label: "Modelo padrão BNDES", value: 2 },
-        // { label: "Modelo padrão ANAC", value: 3 },
+        { label: "Modelo padrão ANAC", value: 3 },
         { label: "Modelo padrão EB - 1", value: 4 },
         { label: "Modelo padrão EB - 2", value: 5 },
     ];
