@@ -521,6 +521,7 @@ export class FuncaoTransacaoDivergenceComponent implements OnInit {
                 this.disableTRDER();
                 this.configurarDialog();
                 this.currentFuncaoTransacao = res;
+                this.currentFuncaoTransacao.ordem = this.funcoesTransacoes.length + 1;
                 this.carregarValoresNaPaginaParaEdicao(this.currentFuncaoTransacao);
                 this.blockUiService.hide();
             });
@@ -1274,8 +1275,15 @@ export class FuncaoTransacaoDivergenceComponent implements OnInit {
 
     public orderList(botao: String) {
 
-        let i = this.funcoesTransacoes.indexOf(this.funcaoTransacaoEditar[0])
-        let del = i
+        let i;
+        let del;
+
+        this.funcoesTransacoes.forEach((item, index) => {
+            if (item.id === this.funcaoTransacaoEditar[0].id) {
+                i = index;
+                del = i
+            }
+        })
 
         if (botao == 'order-top' && this.funcaoTransacaoEditar[0] != null) {
             if (i == 0) {
