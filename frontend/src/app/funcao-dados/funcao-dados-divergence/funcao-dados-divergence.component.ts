@@ -758,6 +758,8 @@ export class FuncaoDadosDivergenceComponent implements OnInit {
 
         this.funcaoDadosEditar = [];
         this.tables.selectedRow = [];
+
+        this.funcoesDados.sort((a, b) => a.ordem - b.ordem);
         this.updateIndex();
 
         this.seletedFuncaoDados.artificialId = undefined;
@@ -884,6 +886,7 @@ export class FuncaoDadosDivergenceComponent implements OnInit {
         this.funcaoDadosService.getById(funcaoDadosSelecionada.id).subscribe(funcaoDados => {
             this.seletedFuncaoDados = new FuncaoDados().copyFromJSON(funcaoDados);
             this.seletedFuncaoDados.lstDivergenceComments = funcaoDados.lstDivergenceComments;
+            this.seletedFuncaoDados.ordem = funcaoDadosSelecionada.ordem;
             if (this.seletedFuncaoDados.fatorAjuste.tipoAjuste === 'UNITARIO' && this.faS[0]) {
                 this.hideShowQuantidade = false;
             } else {

@@ -714,6 +714,8 @@ export class FuncaoTransacaoDivergenceComponent implements OnInit {
 
         this.funcaoTransacaoEditar = [];
         this.tables.selectedRow = [];
+
+        this.funcoesTransacoes.sort((a, b) => a.ordem - b.ordem);
         this.updateIndex();
 
         this.currentFuncaoTransacao.artificialId = undefined;
@@ -770,6 +772,7 @@ export class FuncaoTransacaoDivergenceComponent implements OnInit {
             this.disableTRDER();
             this.currentFuncaoTransacao = new FuncaoTransacao().copyFromJSON(funcaoTransacao);
             this.currentFuncaoTransacao.lstDivergenceComments = funcaoTransacao.lstDivergenceComments;
+            this.currentFuncaoTransacao.ordem = funcaoTransacaoSelecionada.ordem;
             if (this.currentFuncaoTransacao.fatorAjuste !== undefined) {
                 if (this.currentFuncaoTransacao.fatorAjuste.tipoAjuste === 'UNITARIO' && this.faS[0]) {
                     this.hideShowQuantidade = false;
