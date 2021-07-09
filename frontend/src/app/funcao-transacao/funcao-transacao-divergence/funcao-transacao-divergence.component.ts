@@ -191,8 +191,14 @@ export class FuncaoTransacaoDivergenceComponent implements OnInit {
             this.isView = params['view'] !== undefined;
             this.funcaoTransacaoService.getVwFuncaoTransacaoByIdAnalise(this.idAnalise).subscribe(value => {
                 this.funcoesTransacoes = value;
+                let temp = 1
+                for (let i = 0; i < this.funcoesTransacoes.length; i++) {
+                    if (this.funcoesTransacoes[i].ordem === null) {
+                        this.funcoesTransacoes[i].ordem = temp
+                    }
+                    temp++
+                }
                 this.funcoesTransacoes.sort((a, b) => a.ordem - b.ordem);
-                this.updateIndex();
                 if (!this.isView) {
                     this.divergenciaService.find(this.idAnalise).subscribe(analise => {
                         this.analise = analise;
@@ -778,6 +784,7 @@ export class FuncaoTransacaoDivergenceComponent implements OnInit {
     }
 
     private carregarValoresNaPaginaParaEdicao(funcaoTransacaoSelecionada: FuncaoTransacao) {
+        this.updateIndex();
         this.funcaoDadosService.mod.next(funcaoTransacaoSelecionada.funcionalidade);
         this.analiseSharedDataService.funcaoAnaliseCarregada();
         this.analiseSharedDataService.currentFuncaoTransacao = funcaoTransacaoSelecionada;

@@ -383,6 +383,7 @@ public class PlanilhaService {
         XSSFSheet deflatorSheet = excelFile.getSheet("Lista");
         int rowNum = 2;
         List<FatorAjuste> fatorAjusteList = analise.getManual().getFatoresAjuste().stream().collect(Collectors.toList());
+        fatorAjusteList.sort((obj1, obj2) -> obj1.compareTo(obj2));
         for(int i = 0; i < fatorAjusteList.size(); i++) {
             FatorAjuste fatorAjuste = fatorAjusteList.get(i);
             XSSFRow row = deflatorSheet.getRow(rowNum++);
@@ -390,7 +391,7 @@ public class PlanilhaService {
             row.getCell(1).setCellValue(fatorAjuste.getDescricao());
             row.getCell(2)
                 .setCellValue(fatorAjuste.getTipoAjuste().equals(TipoFatorAjuste.PERCENTUAL) ? fatorAjuste.getFator().doubleValue()/100 : fatorAjuste.getFator().doubleValue());
-            row.getCell(3).setCellValue(fatorAjuste.getNome());
+            row.getCell(3).setCellValue(fatorAjuste.getNome() + ": "+fatorAjuste.getCodigo());
             row.getCell(4)
                 .setCellValue(fatorAjuste.getTipoAjuste().equals(TipoFatorAjuste.PERCENTUAL) ? "PC" : "PF");
         }

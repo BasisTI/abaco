@@ -176,8 +176,14 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
             this.isView = params['view'] !== undefined;
             this.funcaoDadosService.getVWFuncaoDadosByIdAnalise(this.idAnalise).subscribe(value => {
                 this.funcoesDados = value;
+                let temp = 1
+                for (let i = 0; i < this.funcoesDados.length; i++) {
+                    if (this.funcoesDados[i].ordem === null) {
+                        this.funcoesDados[i].ordem = temp
+                    }
+                    temp++
+                }
                 this.funcoesDados.sort((a, b) => a.ordem - b.ordem);
-                this.updateIndex();
                 if (!this.isView) {
                     this.analiseService.find(this.idAnalise).subscribe(analise => {
                         // analise = new Analise().copyFromJSON(analise);
@@ -1004,6 +1010,7 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
 
     private carregarValoresNaPaginaParaEdicao(funcaoDadosSelecionada: FuncaoDados) {
         /* Envia os dados para o componente modulo-funcionalidade-component.ts*/
+        this.updateIndex();
         this.funcaoDadosService.mod.next(funcaoDadosSelecionada.funcionalidade);
         this.analiseSharedDataService.funcaoAnaliseCarregada();
         this.analiseSharedDataService.currentFuncaoDados = funcaoDadosSelecionada;
@@ -1067,6 +1074,7 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
                     this.funcaoDadosService.delete(funcaoDados.id).subscribe(value => {
                         this.funcoesDados = this.funcoesDados.filter((funcaoDadosEdit) => (funcaoDadosEdit.id !== funcaoDados.id));
                         this.analiseService.updateSomaPf(this.analise.id).subscribe();
+                        this.updateIndex();
                     });
                 })
                 this.pageNotificationService.addDeleteMsg("Funções deletadas com sucesso!");
