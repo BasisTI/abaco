@@ -756,9 +756,6 @@ export class FuncaoDadosDivergenceComponent implements OnInit {
     private resetarEstadoPosSalvar() {
         this.seletedFuncaoDados = this.seletedFuncaoDados.clone();
 
-        this.funcaoDadosEditar = [];
-        this.tables.selectedRow = [];
-
         this.funcoesDados.sort((a, b) => a.ordem - b.ordem);
         this.updateIndex();
 

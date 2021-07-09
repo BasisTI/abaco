@@ -707,9 +707,6 @@ export class FuncaoTransacaoFormComponent implements OnInit {
     private resetarEstadoPosSalvar() {
         this.currentFuncaoTransacao = this.currentFuncaoTransacao.clone();
 
-        this.funcaoTransacaoEditar = [];
-        this.tables.selectedRow = [];
-
         this.funcoesTransacoes.sort((a, b) => a.ordem - b.ordem);
         this.updateIndex();
         this.currentFuncaoTransacao.artificialId = undefined;
