@@ -785,8 +785,6 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
         this.seletedFuncaoDados = this.seletedFuncaoDados.clone();
         this.funcoesDados.sort((a, b) => a.ordem - b.ordem);
         this.updateIndex();
-        this.funcaoDadosEditar = [];
-        this.tables.selectedRow = [];
         this.seletedFuncaoDados.artificialId = undefined;
         this.seletedFuncaoDados.id = undefined;
 
