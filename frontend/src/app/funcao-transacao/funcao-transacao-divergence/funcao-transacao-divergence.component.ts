@@ -191,8 +191,14 @@ export class FuncaoTransacaoDivergenceComponent implements OnInit {
             this.isView = params['view'] !== undefined;
             this.funcaoTransacaoService.getVwFuncaoTransacaoByIdAnalise(this.idAnalise).subscribe(value => {
                 this.funcoesTransacoes = value;
+                let temp = 1
+                for (let i = 0; i < this.funcoesTransacoes.length; i++) {
+                    if (this.funcoesTransacoes[i].ordem === null) {
+                        this.funcoesTransacoes[i].ordem = temp
+                    }
+                    temp++
+                }
                 this.funcoesTransacoes.sort((a, b) => a.ordem - b.ordem);
-                this.updateIndex();
                 if (!this.isView) {
                     this.divergenciaService.find(this.idAnalise).subscribe(analise => {
                         this.analise = analise;
@@ -706,8 +712,7 @@ export class FuncaoTransacaoDivergenceComponent implements OnInit {
     private resetarEstadoPosSalvar() {
         this.currentFuncaoTransacao = this.currentFuncaoTransacao.clone();
 
-        this.funcaoTransacaoEditar = [];
-        this.tables.selectedRow = [];
+        this.funcoesTransacoes.sort((a, b) => a.ordem - b.ordem);
         this.updateIndex();
 
         this.currentFuncaoTransacao.artificialId = undefined;
@@ -764,6 +769,7 @@ export class FuncaoTransacaoDivergenceComponent implements OnInit {
             this.disableTRDER();
             this.currentFuncaoTransacao = new FuncaoTransacao().copyFromJSON(funcaoTransacao);
             this.currentFuncaoTransacao.lstDivergenceComments = funcaoTransacao.lstDivergenceComments;
+            this.currentFuncaoTransacao.ordem = funcaoTransacaoSelecionada.ordem;
             if (this.currentFuncaoTransacao.fatorAjuste !== undefined) {
                 if (this.currentFuncaoTransacao.fatorAjuste.tipoAjuste === 'UNITARIO' && this.faS[0]) {
                     this.hideShowQuantidade = false;
@@ -778,6 +784,7 @@ export class FuncaoTransacaoDivergenceComponent implements OnInit {
     }
 
     private carregarValoresNaPaginaParaEdicao(funcaoTransacaoSelecionada: FuncaoTransacao) {
+        this.updateIndex();
         this.funcaoDadosService.mod.next(funcaoTransacaoSelecionada.funcionalidade);
         this.analiseSharedDataService.funcaoAnaliseCarregada();
         this.analiseSharedDataService.currentFuncaoTransacao = funcaoTransacaoSelecionada;

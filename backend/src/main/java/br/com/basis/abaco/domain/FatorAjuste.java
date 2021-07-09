@@ -85,6 +85,9 @@ public class FatorAjuste implements Serializable, Comparable<FatorAjuste> {
     @Column(name="ordem")
     private Long ordem;
 
+    @Column(name = "sigla")
+    private String sigla;
+
     public Long getId() {
         return id;
     }
@@ -197,6 +200,14 @@ public class FatorAjuste implements Serializable, Comparable<FatorAjuste> {
 
     public Boolean getAtivo() {
         return ativo;
+    }
+
+    public String getSigla() {
+        return sigla;
+    }
+
+    public void setSigla(String sigla) {
+        this.sigla = sigla;
     }
 
     @Override

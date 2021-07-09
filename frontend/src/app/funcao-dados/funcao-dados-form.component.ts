@@ -176,8 +176,14 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
             this.isView = params['view'] !== undefined;
             this.funcaoDadosService.getVWFuncaoDadosByIdAnalise(this.idAnalise).subscribe(value => {
                 this.funcoesDados = value;
+                let temp = 1
+                for (let i = 0; i < this.funcoesDados.length; i++) {
+                    if (this.funcoesDados[i].ordem === null) {
+                        this.funcoesDados[i].ordem = temp
+                    }
+                    temp++
+                }
                 this.funcoesDados.sort((a, b) => a.ordem - b.ordem);
-                this.updateIndex();
                 if (!this.isView) {
                     this.analiseService.find(this.idAnalise).subscribe(analise => {
                         // analise = new Analise().copyFromJSON(analise);
@@ -743,7 +749,6 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
                         this.funcoesDados = this.funcoesDados.filter((funcaoDados) => (funcaoDados.id !== funcaoDadosCalculada.id));
                         this.setFields(funcaoDadosCalculada);
                         this.funcoesDados.push(funcaoDadosCalculada);
-                        this.funcoesDados.sort((a, b) => a.ordem - b.ordem);
                         this.resetarEstadoPosSalvar();
                         this.pageNotificationService.addSuccessMessage(`${this.getLabel('Cadastros.FuncaoDados.Mensagens.msgFuncaoDados')}
                 '${funcaoDadosCalculada.name}' ${this.getLabel(' alterada com sucesso')}`);
@@ -778,9 +783,8 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
 
     private resetarEstadoPosSalvar() {
         this.seletedFuncaoDados = this.seletedFuncaoDados.clone();
+        this.funcoesDados.sort((a, b) => a.ordem - b.ordem);
         this.updateIndex();
-        this.funcaoDadosEditar = [];
-        this.tables.selectedRow = [];
         this.seletedFuncaoDados.artificialId = undefined;
         this.seletedFuncaoDados.id = undefined;
 
@@ -972,6 +976,7 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
         this.blockUiService.show();
         this.funcaoDadosService.getById(funcaoDadosSelecionada.id).subscribe(funcaoDados => {
             this.seletedFuncaoDados = new FuncaoDados().copyFromJSON(funcaoDados);
+            this.seletedFuncaoDados.ordem = funcaoDadosSelecionada.ordem;
             if (this.seletedFuncaoDados.fatorAjuste.tipoAjuste === 'UNITARIO' && this.faS[0]) {
                 this.hideShowQuantidade = false;
             } else {
@@ -1003,6 +1008,7 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
 
     private carregarValoresNaPaginaParaEdicao(funcaoDadosSelecionada: FuncaoDados) {
         /* Envia os dados para o componente modulo-funcionalidade-component.ts*/
+        this.updateIndex();
         this.funcaoDadosService.mod.next(funcaoDadosSelecionada.funcionalidade);
         this.analiseSharedDataService.funcaoAnaliseCarregada();
         this.analiseSharedDataService.currentFuncaoDados = funcaoDadosSelecionada;
@@ -1066,6 +1072,7 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
                     this.funcaoDadosService.delete(funcaoDados.id).subscribe(value => {
                         this.funcoesDados = this.funcoesDados.filter((funcaoDadosEdit) => (funcaoDadosEdit.id !== funcaoDados.id));
                         this.analiseService.updateSomaPf(this.analise.id).subscribe();
+                        this.updateIndex();
                     });
                 })
                 this.pageNotificationService.addDeleteMsg("Funções deletadas com sucesso!");

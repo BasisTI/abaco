@@ -181,8 +181,14 @@ export class FuncaoTransacaoFormComponent implements OnInit {
             this.isView = params['view'] !== undefined;
             this.funcaoTransacaoService.getVwFuncaoTransacaoByIdAnalise(this.idAnalise).subscribe(value => {
                 this.funcoesTransacoes = value;
+                let temp = 1
+                for (let i = 0; i < this.funcoesTransacoes.length; i++) {
+                    if (this.funcoesTransacoes[i].ordem === null) {
+                        this.funcoesTransacoes[i].ordem = temp
+                    }
+                    temp++
+                }
                 this.funcoesTransacoes.sort((a, b) => a.ordem - b.ordem);
-                this.updateIndex();
                 if (!this.isView) {
                     this.analiseService.find(this.idAnalise).subscribe(analise => {
                         this.analise = analise;
@@ -701,10 +707,8 @@ export class FuncaoTransacaoFormComponent implements OnInit {
     private resetarEstadoPosSalvar() {
         this.currentFuncaoTransacao = this.currentFuncaoTransacao.clone();
 
-        this.funcaoTransacaoEditar = [];
-        this.tables.selectedRow = [];
+        this.funcoesTransacoes.sort((a, b) => a.ordem - b.ordem);
         this.updateIndex();
-
         this.currentFuncaoTransacao.artificialId = undefined;
         this.currentFuncaoTransacao.id = undefined;
 
@@ -768,6 +772,7 @@ export class FuncaoTransacaoFormComponent implements OnInit {
             funcaoTransacao = new FuncaoTransacao().copyFromJSON(funcaoTransacao);
             this.disableTRDER();
             this.currentFuncaoTransacao = funcaoTransacao;
+            this.currentFuncaoTransacao.ordem = funcaoTransacaoSelecionada.ordem;
             if (this.currentFuncaoTransacao.fatorAjuste !== undefined) {
                 if (this.currentFuncaoTransacao.fatorAjuste.tipoAjuste === 'UNITARIO' && this.faS[0]) {
                     this.hideShowQuantidade = false;
@@ -806,6 +811,7 @@ export class FuncaoTransacaoFormComponent implements OnInit {
     }
 
     private carregarValoresNaPaginaParaEdicao(funcaoTransacaoSelecionada: FuncaoTransacao) {
+        this.updateIndex();
         this.funcaoDadosService.mod.next(funcaoTransacaoSelecionada.funcionalidade);
         this.analiseSharedDataService.funcaoAnaliseCarregada();
         this.analiseSharedDataService.currentFuncaoTransacao = funcaoTransacaoSelecionada;
@@ -872,6 +878,7 @@ export class FuncaoTransacaoFormComponent implements OnInit {
                             funcaoTransacaoEdit.id !== funcaoTransacao.id
                         ));
                         this.analiseService.updateSomaPf(this.analise.id).subscribe();
+                        this.updateIndex();
                     });
                 })
                 this.pageNotificationService.addDeleteMsg("Funções deletadas com sucesso!");

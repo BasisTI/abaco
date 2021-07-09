@@ -147,9 +147,9 @@ export class AnaliseListComponent implements OnInit {
     lstModelosExcel = [
         { label: "Modelo padrão BASIS", value: 1 },
         { label: "Modelo padrão BNDES", value: 2 },
-        // { label: "Modelo padrão ANAC", value: 3 },
-        // { label: "Modelo padrão EB - 1", value: 4 },
-        // { label: "Modelo padrão EB - 2", value: 5 },
+        { label: "Modelo padrão ANAC", value: 3 },
+        { label: "Modelo padrão EB - 1", value: 4 },
+        { label: "Modelo padrão EB - 2", value: 5 },
     ];
     modeloSelecionado: any;
 
@@ -453,9 +453,6 @@ export class AnaliseListComponent implements OnInit {
             case 'delete':
                 this.confirmDelete(event.selection);
                 break;
-            // case 'exportJson':
-            //     this.exportarAnalise(event.selection);
-            //     break;
         }
     }
 
@@ -730,7 +727,7 @@ export class AnaliseListComponent implements OnInit {
             })
             if (mostrarDialogBlock !== false) {
                 this.showDialogAnaliseBlock = true;
-            }else{
+            } else {
                 this.alterAnaliseBlock();
             }
         } else {
@@ -741,7 +738,7 @@ export class AnaliseListComponent implements OnInit {
     public alterAnaliseBlock() {
         if (this.dataHomologacaoAnalises) {
             this.analisesBlocks.forEach(analise => {
-                if(analise.dataHomologacao === undefined || analise.dataHomologacao === null){
+                if (analise.dataHomologacao === undefined || analise.dataHomologacao === null) {
                     analise.dataHomologacao = this.dataHomologacaoAnalises;
                 }
             });
@@ -1004,8 +1001,12 @@ export class AnaliseListComponent implements OnInit {
     }
 
     exportarAnalise(analise: Analise) {
-        this.analiseService.find(analise.id).subscribe(response => {
-            let theJSON = JSON.stringify(response);
+        this.analiseService.findWithFuncoesNormal(analise.id).subscribe(response => {
+            let analise: Analise = response[0];
+            analise.funcaoDados = response[1];
+            analise.funcaoTransacaos = response[2];
+
+            let theJSON = JSON.stringify(analise);
             let blob = new Blob([theJSON], { type: 'text/json' });
             let url = window.URL.createObjectURL(blob);
             this.downloadJsonHref = url;
@@ -1033,7 +1034,7 @@ export class AnaliseListComponent implements OnInit {
         let analise: Analise;
         reader.onloadend = function () {
             analise = JSON.parse(reader.result.toString());
-            if (analise.id && analise.identificadorAnalise) {
+            if (analise.id) {
                 analise.id = null;
                 analises.push(analise);
             }
@@ -1045,7 +1046,7 @@ export class AnaliseListComponent implements OnInit {
         if (this.analiseFileJson && this.analisesImportar.length > 0) {
             this.analisesImportar.forEach(analise => {
                 analise.identificadorAnalise = analise.identificadorAnalise + " - Importada";
-                this.analiseService.importar(analise).subscribe(r => {
+                this.analiseService.importarJson(analise).subscribe(r => {
                     this.pageNotificationService.addCreateMsg("Análise - " + r.identificadorAnalise + " importada com sucesso!");
                     this.datatable.filter();
                     this.showDialogImportar = false;
@@ -1057,18 +1058,33 @@ export class AnaliseListComponent implements OnInit {
         }
     }
 
-    openModalExportarExcel(analise: Analise) {
+    openModalImportarExcel(analise: Analise) {
         this.showDialogImportarExcel = true;
         this.analiseImportarExcel = analise;
     }
 
     closeModalExportarExcel() {
         this.showDialogImportarExcel = false;
+        this.modeloSelecionado = null;
+        this.analiseImportarExcel = null;
     }
 
     exportarPlanilha() {
         if (this.analiseImportarExcel != null) {
-            this.analiseService.importarModeloExcel(this.analiseImportarExcel.id, this.modeloSelecionado.value);
+            this.analiseService.exportarModeloExcel(this.analiseImportarExcel.id, this.modeloSelecionado.value).subscribe(
+                (response) => {
+                    let filename = response.headers.get("content-disposition").split("filename=");
+                    const mediaType = 'application/vnd.ms-excel';
+                    const blob = new Blob([response.body], { type: mediaType });
+                    const fileURL = window.URL.createObjectURL(blob);
+                    const anchor = document.createElement('a');
+                    anchor.download = filename[1];
+                    anchor.href = fileURL;
+                    document.body.appendChild(anchor);
+                    anchor.click();
+                    this.blockUiService.hide();
+                    this.closeModalExportarExcel();
+                });;
         }
     }
 }

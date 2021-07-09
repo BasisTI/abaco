@@ -12,6 +12,7 @@ import br.com.basis.abaco.domain.enumeration.MetodoContagem;
 import br.com.basis.abaco.domain.enumeration.StatusFuncao;
 import br.com.basis.abaco.domain.enumeration.TipoRelatorio;
 import br.com.basis.abaco.reports.rest.RelatorioAnaliseRest;
+import br.com.basis.abaco.reports.util.RelatorioUtil;
 import br.com.basis.abaco.repository.AnaliseRepository;
 import br.com.basis.abaco.repository.CompartilhadaRepository;
 import br.com.basis.abaco.repository.FuncaoDadosRepository;
@@ -739,14 +740,14 @@ public class AnaliseResource {
 
     @GetMapping(value = "/analises/importar-excel/{id}/{modelo}", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
     @Secured("ROLE_ABACO_ANALISE_EXPORTAR_RELATORIO_EXCEL")
-    public ResponseEntity<byte[]> importarExcel(@PathVariable Long id,@PathVariable Long modelo) throws IOException{
+    public ResponseEntity<byte[]> exportarExcel(@PathVariable Long id,@PathVariable Long modelo) throws IOException{
         Analise analise = analiseService.recuperarAnalise(id);
         analise.setFuncaoDados(funcaoDadosRepository.findAllByAnaliseIdOrderByOrdem(id));
         analise.setFuncaoTransacaos(funcaoTransacaoRepository.findAllByAnaliseIdOrderByOrdem(id));
         ByteArrayOutputStream outputStream = planilhaService.selecionarModelo(analise, modelo);
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.parseMediaType("application/vnd.ms-excel"));
-        headers.set(HttpHeaders.CONTENT_DISPOSITION, String.format("attachment; filename=\"%s.xlsx\"", analise.getIdentificadorAnalise().trim()));
+        headers.set(HttpHeaders.CONTENT_DISPOSITION, String.format("attachment; filename=%s.xlsx", RelatorioUtil.pegarNomeRelatorio(analise)));
         return new ResponseEntity<byte[]>(outputStream.toByteArray(),headers, HttpStatus.OK);
     }
 }
