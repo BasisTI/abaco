@@ -819,6 +819,7 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
             .subscribe((res: FuncaoDados) => {
                 this.seletedFuncaoDados = new FuncaoDados().copyFromJSON(res);
                 this.seletedFuncaoDados.id = null;
+                this.seletedFuncaoDados.ordem = this.funcoesDados.length + 1;
                 this.carregarValoresNaPaginaParaEdicao(this.seletedFuncaoDados);
                 this.disableTRDER();
                 this.configurarDialog();
@@ -996,6 +997,7 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
             this.seletedFuncaoDados = new FuncaoDados().copyFromJSON(funcaoDados);
             this.seletedFuncaoDados.id = null;
             this.seletedFuncaoDados.name = this.seletedFuncaoDados.name + this.getLabel('- Cópia');
+            this.seletedFuncaoDados.ordem = this.funcoesDados.length + 1;
             this.carregarValoresNaPaginaParaEdicao(this.seletedFuncaoDados);
             this.disableTRDER();
             this.configurarDialog();
@@ -1451,8 +1453,15 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
 
     public orderList(botao: String) {
 
-        let i = this.funcoesDados.indexOf(this.funcaoDadosEditar[0])
-        let del = i
+        let i;
+        let del;
+
+        this.funcoesDados.forEach((item, index) => {
+            if (item.id === this.funcaoDadosEditar[0].id) {
+                i = index;
+                del = i
+            }
+        })
 
         if (botao == 'order-top' && this.funcaoDadosEditar[0] != null) {
             if (i == 0) {
@@ -1470,7 +1479,6 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
                 let pos = i - 1
                 this.funcoesDados.splice(del, 1)
                 this.funcoesDados.splice(pos, 0, this.funcaoDadosEditar[0])
-                this.funcoesDados.indexOf(this.funcaoDadosEditar[0])
             }
         }
 
@@ -1481,7 +1489,6 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
                 let pos = i + 1;
                 this.funcoesDados.splice(del, 1);
                 this.funcoesDados.splice(pos, 0, this.funcaoDadosEditar[0]);
-                this.funcoesDados.indexOf(this.funcaoDadosEditar[0]);
             }
         }
 
@@ -1491,7 +1498,6 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
             }
             this.funcoesDados.splice(del, 1);
             this.funcoesDados.push(this.funcaoDadosEditar[0]);
-            this.funcoesDados.indexOf(this.funcaoDadosEditar[0]);
         }
 
         this.updateIndex()
@@ -1513,7 +1519,6 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
             })
         })
         this.pageNotificationService.addSuccessMessage("Ordenação salva com sucesso.");
-        this.resetarEstadoPosSalvar();
         this.isOrderning = false;
     }
 }
