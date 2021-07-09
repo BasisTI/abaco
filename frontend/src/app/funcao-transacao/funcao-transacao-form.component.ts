@@ -709,8 +709,9 @@ export class FuncaoTransacaoFormComponent implements OnInit {
 
         this.funcaoTransacaoEditar = [];
         this.tables.selectedRow = [];
-        this.updateIndex();
 
+        this.funcoesTransacoes.sort((a, b) => a.ordem - b.ordem);
+        this.updateIndex();
         this.currentFuncaoTransacao.artificialId = undefined;
         this.currentFuncaoTransacao.id = undefined;
 
@@ -774,6 +775,7 @@ export class FuncaoTransacaoFormComponent implements OnInit {
             funcaoTransacao = new FuncaoTransacao().copyFromJSON(funcaoTransacao);
             this.disableTRDER();
             this.currentFuncaoTransacao = funcaoTransacao;
+            this.currentFuncaoTransacao.ordem = funcaoTransacaoSelecionada.ordem;
             if (this.currentFuncaoTransacao.fatorAjuste !== undefined) {
                 if (this.currentFuncaoTransacao.fatorAjuste.tipoAjuste === 'UNITARIO' && this.faS[0]) {
                     this.hideShowQuantidade = false;
