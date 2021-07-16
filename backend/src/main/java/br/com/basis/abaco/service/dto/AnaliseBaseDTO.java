@@ -23,7 +23,8 @@ public class AnaliseBaseDTO {
     protected String pfTotal;
     protected String adjustPFTotal;
     protected TipoAnalise tipoAnalise;
-    protected Timestamp dataCriacaoOrdemServico ;
+    protected Timestamp dataCriacaoOrdemServico;
+    protected Boolean fatorCriticidade;
 
     public void setDataCriacaoOrdemServico(Timestamp dataCriacaoOrdemServico) {
         this.dataCriacaoOrdemServico = dataCriacaoOrdemServico == null ? null : new Timestamp(dataCriacaoOrdemServico.getTime());
