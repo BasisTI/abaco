@@ -468,6 +468,10 @@ public class PlanilhaService {
         XSSFSheet excelSheet = excelFile.getSheet("Planilha");
         FormulaEvaluator evaluator = excelFile.getCreationHelper().createFormulaEvaluator();
         int rowNum = 6;
+        this.setarFuncoesEstimadaExcelPadraoBNDES(funcaoDadosList, funcaoTransacaoList, excelSheet, evaluator, rowNum);
+    }
+
+    private void setarFuncoesEstimadaExcelPadraoBNDES(List<FuncaoDados> funcaoDadosList, List<FuncaoTransacao> funcaoTransacaoList, XSSFSheet excelSheet, FormulaEvaluator evaluator, int rowNum) {
         for(int i = 0; i < funcaoDadosList.size(); i++){
             FuncaoDados funcaoDados = funcaoDadosList.get(i);
             String nome = funcaoDados.getFuncionalidade().getNome() + " - " + funcaoDados.getName();
