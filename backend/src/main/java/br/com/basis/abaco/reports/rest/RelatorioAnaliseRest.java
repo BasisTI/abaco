@@ -200,6 +200,7 @@ public class RelatorioAnaliseRest {
         this.popularAjustes();
         this.popularCountsFd();
         this.popularCountsFt();
+        this.popularFatorCriticidade();
         return parametro;
     }
 
@@ -212,6 +213,19 @@ public class RelatorioAnaliseRest {
         }
         if (validarObjetosNulos(analise.getEditedBy())) {
             parametro.put("EDITADOPOR", analise.getEditedBy().getLogin());
+        }
+    }
+
+    /**
+     * POPULAR Fator Criticidade
+     */
+    private void popularFatorCriticidade() {
+        if(analise.getFatorCriticidade() == null || !analise.getFatorCriticidade()){
+            parametro.put("FATORCRITICIDADE", "SEM");
+        }else{
+            parametro.put("FATORCRITICIDADE", "35%");
+            String pfCriticidade = String.format("%.2f",Double.parseDouble(analise.getAdjustPFTotal()) * 1.35);
+            parametro.put("PFCRITICIDADE", pfCriticidade);
         }
     }
 
@@ -1013,6 +1027,9 @@ public class RelatorioAnaliseRest {
         Double valorCalculado = 0.0;
         if (valor1 != null && valor2 != null) {
             valorCalculado = Double.parseDouble(valor1) * valor2;
+            if(analise.getFatorCriticidade() != null && analise.getFatorCriticidade() == true){
+                valorCalculado *= 1.35;
+            }
         }
         DecimalFormat df = new DecimalFormat("#.##");
 

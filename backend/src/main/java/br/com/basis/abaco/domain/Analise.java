@@ -228,6 +228,9 @@ public class Analise implements Serializable, ReportObject {
     @Field(type = FieldType.Nested, ignoreFields = {"analisesComparadas", "manual", "esforcoFases", "escopo", "dataHomologacao", "documentacao", "fronteiras", "users", "analiseClonadaParaEquipe"})
     private Set<Analise> analisesComparadas = new HashSet<>();
 
+    @Column(name = "fator_criticidade")
+    private Boolean fatorCriticidade;
+
 
     public Analise(Analise analise, User user) {
         this.id = null;
@@ -330,5 +333,7 @@ public class Analise implements Serializable, ReportObject {
         }
         return nomeUser;
     }
+
+
 
 }

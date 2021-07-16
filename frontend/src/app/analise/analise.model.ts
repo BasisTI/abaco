@@ -81,9 +81,14 @@ export class Analise implements BaseEntity {
         public analisesComparadas?: Analise[],
         public analiseClonadaParaEquipe?: Analise,
         public analiseClonou?: boolean,
+        public fatorCriticidade?: boolean,
     ) {
         this.inicializaMappables(funcaoDados, funcaoTransacaos);
         this.inicializaResumos();
+
+        if(!fatorCriticidade){
+            this.fatorCriticidade = false;
+        }
 
         // TODO
         if (!baselineImediatamente) {
@@ -305,7 +310,8 @@ export class Analise implements BaseEntity {
             this.status,
             this.analisesComparadas,
             this.analiseClonadaParaEquipe,
-            this.analiseClonou
+            this.analiseClonou,
+            this.fatorCriticidade
             );
     }
 
@@ -370,6 +376,10 @@ class AnaliseCopyFromJSON {
             this._analiseConverted.baselineImediatamente = false;
         }
         this._analiseConverted.users = this._json.users;
+        this._analiseConverted.fatorCriticidade = this._json.fatorCriticidade;
+        if(!this._analiseConverted.fatorCriticidade){
+            this._analiseConverted.fatorCriticidade = false;
+        }
     }
 
     private converteFuncoes() {
