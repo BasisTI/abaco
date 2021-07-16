@@ -148,8 +148,8 @@ export class AnaliseListComponent implements OnInit {
         { label: "Modelo padrão BASIS", value: 1 },
         { label: "Modelo padrão BNDES", value: 2 },
         { label: "Modelo padrão ANAC", value: 3 },
-        { label: "Modelo padrão EB - 1", value: 4 },
-        { label: "Modelo padrão EB - 2", value: 5 },
+        { label: "Modelo padrão EBCOLOG", value: 4 },
+        { label: "Modelo padrão EBDCT", value: 5 },
     ];
     modeloSelecionado: any;
 
