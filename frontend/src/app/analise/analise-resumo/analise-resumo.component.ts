@@ -57,6 +57,9 @@ export class AnaliseResumoComponent implements OnInit {
     public isView: boolean;
     idAnalise: Number;
 
+    fatorCriticidade: boolean = false;
+    pfCriticidade;
+
     constructor(
         private confirmationService: ConfirmationService,
         private router: Router,
@@ -95,6 +98,11 @@ export class AnaliseResumoComponent implements OnInit {
                         this.esforcoFases = this.analiseSharedDataService.analise.esforcoFases;
                         this.pfTotal = analise.pfTotal;
                         this.pfAjustada = analise.adjustPFTotal;
+                        this.fatorCriticidade = analise.fatorCriticidade;
+                        if(this.fatorCriticidade === true){
+                            this.pfCriticidade =  Number(this.pfAjustada) * 1.35;
+                            this.pfCriticidade = this.pfCriticidade.toFixed(2);
+                        }
                         this.analiseService.getResumo(this.idAnalise)
                         .subscribe(res => {
                             const jsonResponse = res;
