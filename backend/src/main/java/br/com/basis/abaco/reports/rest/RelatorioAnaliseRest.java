@@ -81,6 +81,8 @@ public class RelatorioAnaliseRest {
 
     private Boolean isExcel = false;
 
+    private final static String FATOR_CRITICIDADE = "FATORCRITICIDADE";
+
     public RelatorioAnaliseRest(HttpServletResponse response, HttpServletRequest request) {
         this.response = response;
         this.request = request;
@@ -222,13 +224,13 @@ public class RelatorioAnaliseRest {
      */
     private void popularFatorCriticidade() {
         if(analise.getFatorCriticidade() == null || !analise.getFatorCriticidade()){
-            parametro.put("FATORCRITICIDADE", "");
+            parametro.put(FATOR_CRITICIDADE, "");
             parametro.put("PFCRITICIDADE", analise.getAdjustPFTotal());
         }else{
             if(isExcel == true){
-                parametro.put("FATORCRITICIDADE", +analise.getValorCriticidade().intValue()+"%");
+                parametro.put(FATOR_CRITICIDADE, +analise.getValorCriticidade().intValue()+"%");
             }else{
-                parametro.put("FATORCRITICIDADE", "(II + "+analise.getValorCriticidade().intValue()+"%):");
+                parametro.put(FATOR_CRITICIDADE, "(II + "+analise.getValorCriticidade().intValue()+"%):");
             }
             String pfCriticidade = String.format("%.2f", Double.parseDouble(analise.getAdjustPFTotal()) *  (analise.getValorCriticidade() / 100 + 1));
             parametro.put("PFCRITICIDADE", pfCriticidade);
