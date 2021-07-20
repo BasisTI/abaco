@@ -231,6 +231,12 @@ public class Analise implements Serializable, ReportObject {
     @Column(name = "fator_criticidade")
     private Boolean fatorCriticidade;
 
+    @Column(name ="valor_criticidade")
+    private Double valorCriticidade;
+
+    @Column(name = "scope_creep")
+    private Double scopeCreep;
+
 
     public Analise(Analise analise, User user) {
         this.id = null;

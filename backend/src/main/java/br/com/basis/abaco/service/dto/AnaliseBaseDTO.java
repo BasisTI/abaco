@@ -25,6 +25,8 @@ public class AnaliseBaseDTO {
     protected TipoAnalise tipoAnalise;
     protected Timestamp dataCriacaoOrdemServico;
     protected Boolean fatorCriticidade;
+    protected Double valorCriticidade;
+    protected Double scopeCreep;
 
     public void setDataCriacaoOrdemServico(Timestamp dataCriacaoOrdemServico) {
         this.dataCriacaoOrdemServico = dataCriacaoOrdemServico == null ? null : new Timestamp(dataCriacaoOrdemServico.getTime());

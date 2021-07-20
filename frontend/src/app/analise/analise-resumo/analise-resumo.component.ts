@@ -58,6 +58,7 @@ export class AnaliseResumoComponent implements OnInit {
     idAnalise: Number;
 
     fatorCriticidade: boolean = false;
+    valorCriticidade: number = 35;
     pfCriticidade;
 
     constructor(
@@ -99,8 +100,12 @@ export class AnaliseResumoComponent implements OnInit {
                         this.pfTotal = analise.pfTotal;
                         this.pfAjustada = analise.adjustPFTotal;
                         this.fatorCriticidade = analise.fatorCriticidade;
+                        this.valorCriticidade = analise.valorCriticidade;
+                        if(!this.valorCriticidade){
+                            this.valorCriticidade = 35;
+                        }
                         if(this.fatorCriticidade === true){
-                            this.pfCriticidade =  Number(this.pfAjustada) * 1.35;
+                            this.pfCriticidade =  Number(this.pfAjustada) * (this.valorCriticidade/100+1);
                             this.pfCriticidade = this.pfCriticidade.toFixed(2);
                         }
                         this.analiseService.getResumo(this.idAnalise)

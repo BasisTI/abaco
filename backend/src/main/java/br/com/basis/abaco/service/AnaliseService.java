@@ -529,6 +529,8 @@ public class AnaliseService extends BaseService {
         analise.setEsforcoFases(analiseUpdate.getEsforcoFases());
         analise.setStatus(analiseUpdate.getStatus());
         analise.setFatorCriticidade(analiseUpdate.getFatorCriticidade());
+        analise.setValorCriticidade(analiseUpdate.getValorCriticidade());
+        analise.setScopeCreep(analiseUpdate.getScopeCreep());
     }
 
     public BoolQueryBuilder getBoolQueryBuilder(String identificador, Set<Long> sistema, Set<MetodoContagem> metodo, Set<Long> organizacao, Long equipe, Set<Long> usuario, Set<Long> idsStatus) {
