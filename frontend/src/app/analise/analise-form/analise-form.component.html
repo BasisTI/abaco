@@ -275,7 +275,7 @@
                                     </span>
                                 </div>
 
-                                <div class="ui-g-3 ui-md-3 ui-sm-10">
+                                <div class="ui-g-4 ui-md-4 ui-sm-10">
                                     <div class="ui-g-6 ui-md-6 ui-sm-12">
                                         {{this.getLabel('Aguardar prazo de garantia')}} {{diasGarantia > 0 ? this.getLabel('de ') + diasGarantia + this.getLabel(' dias')
                                         : null}}?
@@ -300,7 +300,7 @@
                                     </div>
                                 </div>
 
-                                <div class="ui-g-3 ui-md-3 ui-sm-10">
+                                <div class="ui-g-4 ui-md-4 ui-sm-10">
                                     <div class="ui-g-6 ui-md-6 ui-sm-12">
                                         Incorporar a Baseline
                                     </div>
@@ -323,32 +323,7 @@
                                         </p-radioButton>
                                     </div>
                                 </div>
-
-                                <div class="ui-g-3 ui-md-3 ui-sm-10">
-                                    <div class="ui-g-6 ui-md-6 ui-sm-12">
-                                        Fator Criticidade:
-                                    </div>
-                                    <div class="ui-g-3 ui-md-2 ui-sm-12">
-                                        <p-radioButton
-                                                name="fator_criticidade"
-                                                [label]="this.getLabel('Sim')"
-                                                id="idFatorCriticidadeFormAnalise"
-                                                [value]="true"
-                                                [(ngModel)]="analise.fatorCriticidade">
-                                        </p-radioButton>
-                                    </div>
-                                    <div class="ui-g-3 ui-md-2 ui-sm-12">
-                                        <p-radioButton
-                                                name="fator_criticidade"
-                                                [label]="this.getLabel('Não')"
-                                                id="idFatorCriticidadeFormAnalise"
-                                                [value]="false"
-                                                [(ngModel)]="analise.fatorCriticidade">
-                                        </p-radioButton>
-                                    </div>
-                                </div>
-
-                                <div class="ui-g-3 ui-md-3 ui-sm-10" style="margin-bottom: 05px; margin-top: 05px" >
+                                <div class="ui-g-4 ui-md-4 ui-sm-10" style="margin-bottom: 05px; margin-top: 05px" >
                                     <span class="md-inputfield">
                                         <p-calendar
                                                 [required]="analise.baselineImediatamente"
@@ -403,6 +378,56 @@
                                         </p-table>
                                     </div>
                                 </p-fieldset>
+
+
+                                <div class="ui-g-4 ui-md-4 ui-sm-10">
+                                    <div class="ui-g-6 ui-md-6 ui-sm-12">
+                                        Fator Criticidade:
+                                    </div>
+                                    <div class="ui-g-3 ui-md-2 ui-sm-12">
+                                        <p-radioButton
+                                                name="fator_criticidade"
+                                                [label]="this.getLabel('Sim')"
+                                                id="idFatorCriticidadeFormAnalise"
+                                                [value]="true"
+                                                [(ngModel)]="analise.fatorCriticidade">
+                                        </p-radioButton>
+                                    </div>
+                                    <div class="ui-g-3 ui-md-2 ui-sm-12">
+                                        <p-radioButton
+                                                name="fator_criticidade"
+                                                [label]="this.getLabel('Não')"
+                                                id="idFatorCriticidadeFormAnalise"
+                                                [value]="false"
+                                                [(ngModel)]="analise.fatorCriticidade">
+                                        </p-radioButton>
+                                    </div>
+                                </div>
+                                <div *ngIf="analise.fatorCriticidade === true" class="ui-g-4 ui-md-4 ui-sm-12" style="margin-bottom: 05px">
+                                    <label>Valor Criticidade (%) *: </label>
+                                    <span class="md-inputfield">
+                                        <input
+                                            type="number"
+                                            id="idvalorCriticidadeAnaliseFormAnalise"
+                                            name="valorCriticidadeAnalise"
+                                            [(ngModel)]="analise.valorCriticidade"
+                                            pInputText
+                                        />
+                                    </span>
+                                </div>
+                                <div *ngIf="analise.metodoContagem != 'DETALHADA'" class="ui-g-4 ui-md-4 ui-sm-12" style="margin-bottom: 05px">
+                                    <label>Scope Creep (%): </label>
+                                    <span class="md-inputfield">
+                                        <input
+                                            type="number"
+                                            id="idscopeCreepAnaliseFormAnalise"
+                                            name="scopeCreepAnalise"
+                                            [(ngModel)]="analise.scopeCreep"
+                                            pInputText
+                                        />
+                                    </span>
+                                </div>
+
                                 <div class="ui-g-12 ui-md-12 ui-sm-12" style="margin-bottom: 05px">
                                     <label>Observações</label>
                                     <span class="md-inputfield">

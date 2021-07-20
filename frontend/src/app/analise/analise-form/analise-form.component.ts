@@ -595,6 +595,10 @@ export class AnaliseFormComponent implements OnInit {
             this.pageNotificationService.addErrorMessage(this.getLabel('Informe o Status da Analise para continuar'));
             isValid = false;
         }
+        if (this.analise.fatorCriticidade === true && !this.analise.valorCriticidade) {
+            this.pageNotificationService.addErrorMessage(this.getLabel('Informe o valor da criticidade para continuar'));
+            isValid = false;
+        }
         return isValid;
     }
 

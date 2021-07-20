@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 5.6.1.final using JasperReports Library version 5.6.1  -->
-<!-- 2021-07-15T10:41:44 -->
+<!-- Created with Jaspersoft Studio version 6.6.0.final using JasperReports Library version 6.6.0  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="analise" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="9ac44673-b60e-4209-99b8-14605622790d">
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
 	<property name="ireport.zoom" value="1.1000000000000019"/>
@@ -16,8 +15,8 @@
 	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
 	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
 	<property name="net.sf.jasperreports.print.create.bookmarks" value="true"/>
-	<import value="br.com.basis.abaco.domain.enumeration.MetodoContagem"/>
 	<import value="java.lang.*"/>
+	<import value="br.com.basis.abaco.domain.enumeration.MetodoContagem"/>
 	<style name="Table 2_TH" mode="Opaque" backcolor="#F0F8FF">
 		<box>
 			<pen lineWidth="0.5" lineColor="#000000"/>
@@ -403,6 +402,7 @@
 	<parameter name="CFPS" class="java.lang.String"/>
 	<parameter name="PFCRITICIDADE" class="java.lang.String"/>
 	<parameter name="FATORCRITICIDADE" class="java.lang.String"/>
+	<parameter name="SCOPECREEP" class="java.lang.String"/>
 	<queryString>
 		<![CDATA[]]>
 	</queryString>
@@ -479,7 +479,7 @@
 					<text><![CDATA[Geral]]></text>
 				</staticText>
 				<staticText>
-					<reportElement x="281" y="43" width="44" height="16" uuid="9f992b1f-a79e-4053-b7d9-6627939db0fe">
+					<reportElement x="530" y="59" width="44" height="16" uuid="9f992b1f-a79e-4053-b7d9-6627939db0fe">
 						<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					</reportElement>
 					<textElement verticalAlignment="Middle">
@@ -532,7 +532,7 @@
 					<text><![CDATA[Aguardar prazo de garantia?:]]></text>
 				</staticText>
 				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-					<reportElement x="323" y="42" width="207" height="16" uuid="d5bf219a-9a95-4afa-a019-4511edfccc09"/>
+					<reportElement x="574" y="59" width="220" height="16" uuid="d5bf219a-9a95-4afa-a019-4511edfccc09"/>
 					<textElement verticalAlignment="Middle">
 						<font fontName="SansSerif"/>
 					</textElement>
@@ -700,20 +700,20 @@
 					<textFieldExpression><![CDATA[$P{VERSAOCPM}]]></textFieldExpression>
 				</textField>
 				<staticText>
-					<reportElement x="559" y="14" width="143" height="14" uuid="2bba01ef-7889-43b1-8b1b-26e572f51966">
+					<reportElement x="470" y="14" width="224" height="14" uuid="2bba01ef-7889-43b1-8b1b-26e572f51966">
 						<property name="com.jaspersoft.studio.unit.width" value="px"/>
 						<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					</reportElement>
 					<box>
 						<pen lineWidth="0.25" lineStyle="Solid"/>
 					</box>
-					<textElement textAlignment="Justified" verticalAlignment="Middle">
+					<textElement textAlignment="Justified" verticalAlignment="Middle" markup="none">
 						<font size="11" isBold="true"/>
 					</textElement>
-					<text><![CDATA[Total de PF (Deflação):]]></text>
+					<text><![CDATA[ II. Total de PF (Deflação):]]></text>
 				</staticText>
 				<textField>
-					<reportElement x="702" y="42" width="100" height="14" uuid="15cd80ef-8dc4-4cac-8d08-a8c916f93a07">
+					<reportElement x="694" y="42" width="100" height="14" uuid="15cd80ef-8dc4-4cac-8d08-a8c916f93a07">
 						<property name="com.jaspersoft.studio.unit.width" value="px"/>
 						<property name="com.jaspersoft.studio.unit.y" value="px"/>
 						<property name="com.jaspersoft.studio.unit.height" value="px"/>
@@ -728,7 +728,7 @@
 					<textFieldExpression><![CDATA[$P{PFESCOPESCREEP}]]></textFieldExpression>
 				</textField>
 				<textField>
-					<reportElement x="702" y="14" width="100" height="14" uuid="508fe559-2ee7-43a5-8980-83108e6aa6ee">
+					<reportElement x="694" y="14" width="100" height="14" uuid="508fe559-2ee7-43a5-8980-83108e6aa6ee">
 						<property name="com.jaspersoft.studio.unit.width" value="px"/>
 						<property name="com.jaspersoft.studio.unit.y" value="px"/>
 						<property name="com.jaspersoft.studio.unit.height" value="px"/>
@@ -742,21 +742,7 @@
 					<textFieldExpression><![CDATA[$P{PFAJUSTADO}]]></textFieldExpression>
 				</textField>
 				<staticText>
-					<reportElement x="559" y="42" width="143" height="14" uuid="1f44cd6c-e66d-4275-b107-53f8542f347b">
-						<property name="com.jaspersoft.studio.unit.y" value="px"/>
-						<property name="com.jaspersoft.studio.unit.width" value="px"/>
-						<printWhenExpression><![CDATA[$P{METODOCONTAGEM} !=  MetodoContagem.DETALHADA.toString()]]></printWhenExpression>
-					</reportElement>
-					<box>
-						<pen lineWidth="0.25" lineStyle="Solid"/>
-					</box>
-					<textElement textAlignment="Justified" verticalAlignment="Middle">
-						<font size="11" isBold="true"/>
-					</textElement>
-					<text><![CDATA[Total c/ Scope Creep:]]></text>
-				</staticText>
-				<staticText>
-					<reportElement x="559" y="0" width="143" height="14" uuid="6284182e-c198-49cb-b831-452fefb0c7c7">
+					<reportElement x="470" y="0" width="224" height="14" uuid="6284182e-c198-49cb-b831-452fefb0c7c7">
 						<property name="com.jaspersoft.studio.unit.width" value="px"/>
 						<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					</reportElement>
@@ -766,10 +752,10 @@
 					<textElement textAlignment="Justified" verticalAlignment="Middle">
 						<font size="11" isBold="true"/>
 					</textElement>
-					<text><![CDATA[Total de PF:]]></text>
+					<text><![CDATA[ I. Total de PF:]]></text>
 				</staticText>
 				<textField>
-					<reportElement x="702" y="0" width="100" height="14" uuid="9084a34b-65dd-47f2-b670-99cf6459f7ea">
+					<reportElement x="694" y="0" width="100" height="14" uuid="9084a34b-65dd-47f2-b670-99cf6459f7ea">
 						<property name="com.jaspersoft.studio.unit.width" value="px"/>
 						<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					</reportElement>
@@ -781,40 +767,11 @@
 					</textElement>
 					<textFieldExpression><![CDATA[$P{PFTOTAL}]]></textFieldExpression>
 				</textField>
-				<staticText>
-					<reportElement x="530" y="59" width="126" height="16" uuid="a3ad4f76-2bd2-429b-903d-7f1874199180"/>
-					<textElement verticalAlignment="Middle">
-						<font fontName="SansSerif" isBold="true"/>
-					</textElement>
-					<text><![CDATA[Fator Criticidade:]]></text>
-				</staticText>
-				<textField isStretchWithOverflow="true" pattern="SEM" isBlankWhenNull="false">
-					<reportElement stretchType="RelativeToBandHeight" x="656" y="59" width="138" height="16" uuid="4e9c8a57-b34f-414c-b75e-8925944f16af"/>
-					<textElement textAlignment="Left" verticalAlignment="Middle">
-						<font fontName="SansSerif"/>
-					</textElement>
-					<textFieldExpression><![CDATA[$P{FATORCRITICIDADE}]]></textFieldExpression>
-				</textField>
-				<staticText>
-					<reportElement style="Table 1_TH" x="559" y="28" width="143" height="14" uuid="089b4352-ddb1-43f9-8e8c-cb9e0cda931c">
-						<property name="com.jaspersoft.studio.unit.y" value="px"/>
-						<property name="com.jaspersoft.studio.unit.width" value="px"/>
-						<printWhenExpression><![CDATA[$P{FATORCRITICIDADE} != "SEM"]]></printWhenExpression>
-					</reportElement>
-					<box>
-						<pen lineWidth="0.25" lineStyle="Solid"/>
-					</box>
-					<textElement textAlignment="Justified" verticalAlignment="Middle">
-						<font size="11" isBold="true"/>
-					</textElement>
-					<text><![CDATA[Total c/ Criticidade:]]></text>
-				</staticText>
 				<textField>
-					<reportElement style="Table 1_TH" x="702" y="28" width="100" height="14" uuid="032b802e-d4cf-4f28-ae47-5dc0bdc48198">
+					<reportElement style="Table 1_TH" x="694" y="28" width="100" height="14" uuid="032b802e-d4cf-4f28-ae47-5dc0bdc48198">
 						<property name="com.jaspersoft.studio.unit.width" value="px"/>
 						<property name="com.jaspersoft.studio.unit.y" value="px"/>
 						<property name="com.jaspersoft.studio.unit.height" value="px"/>
-						<printWhenExpression><![CDATA[$P{FATORCRITICIDADE} != "SEM"]]></printWhenExpression>
 					</reportElement>
 					<box>
 						<pen lineWidth="0.25" lineStyle="Solid"/>
@@ -823,6 +780,35 @@
 						<font size="11"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$P{PFCRITICIDADE}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement mode="Transparent" x="470" y="28" width="224" height="14" uuid="46211305-efc8-4d18-8524-68a29cb13a07">
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
+					<box>
+						<pen lineWidth="0.25" lineStyle="Solid"/>
+					</box>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font fontName="SansSerif" size="11" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[" III. Total c/ Criticidade "+$P{FATORCRITICIDADE}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement mode="Transparent" x="470" y="42" width="224" height="14" uuid="c33b347b-dd23-486d-bc92-3dac1a0b2faa">
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<printWhenExpression><![CDATA[$P{METODOCONTAGEM} !=  MetodoContagem.DETALHADA.toString()]]></printWhenExpression>
+					</reportElement>
+					<box>
+						<pen lineWidth="0.25" lineStyle="Solid"/>
+					</box>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font fontName="SansSerif" size="11" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[" IV. Total c/ Scope Creep(III +"+$P{SCOPECREEP}+"):"]]></textFieldExpression>
 				</textField>
 			</frame>
 		</band>
