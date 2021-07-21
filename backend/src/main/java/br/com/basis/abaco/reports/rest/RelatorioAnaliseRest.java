@@ -323,16 +323,22 @@ public class RelatorioAnaliseRest {
     private void popularResumo() {
         parametro.put("PFTOTAL", analise.getPfTotal());
         if(!analise.getMetodoContagem().equals(MetodoContagem.DETALHADA)){
-            String scopeCreep = analise.getFatorCriticidade() != null && analise.getFatorCriticidade() == false ?
-                " III. Total c/ Scope Creep (II +" :
-                " IV. Total c/ Scope Creep (III +";
+            String scopeCreep = "";
+            if(analise.getFatorCriticidade() != null){
+                scopeCreep = !analise.getFatorCriticidade() ?
+                    " III. Total c/ Scope Creep (II +" :
+                    " IV. Total c/ Scope Creep (III +";
+            }else{
+                scopeCreep = " III. Total c/ Scope Creep (II +";
+            }
+
             if (analise.getScopeCreep() != null) {
                 parametro.put("PFESCOPESCREEP", calcularScopeCreep(analise.getAdjustPFTotal(), Double.valueOf(analise.getScopeCreep())/100+1));
-                scopeCreep += analise.getScopeCreep().intValue()+"%) :";
+                scopeCreep += analise.getScopeCreep().intValue()+"%):";
                 parametro.put("SCOPECREEP", scopeCreep);
             }else{
                 parametro.put("PFESCOPESCREEP", calcularScopeCreep(analise.getAdjustPFTotal(), analise.getMetodoContagem().equals(MetodoContagem.ESTIMADA) ? fatorEstimado : fatorIndicativa));
-                scopeCreep += "35%) :";
+                scopeCreep += "35%):";
                 parametro.put("SCOPECREEP", scopeCreep);
             }
         }
