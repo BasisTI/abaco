@@ -224,13 +224,12 @@ public class RelatorioAnaliseRest {
      */
     private void popularFatorCriticidade() {
         if(analise.getFatorCriticidade() == null || !analise.getFatorCriticidade()){
-            parametro.put(FATOR_CRITICIDADE, "");
-            parametro.put("PFCRITICIDADE", analise.getAdjustPFTotal());
+            parametro.put(FATOR_CRITICIDADE, "SEM");
         }else{
             if(isExcel == true){
                 parametro.put(FATOR_CRITICIDADE, +analise.getValorCriticidade().intValue()+"%");
             }else{
-                parametro.put(FATOR_CRITICIDADE, "(II + "+analise.getValorCriticidade().intValue()+"%):");
+                parametro.put(FATOR_CRITICIDADE, " III. Total c/ Criticidade (II + "+analise.getValorCriticidade().intValue()+"%):");
             }
             String pfCriticidade = String.format("%.2f", Double.parseDouble(analise.getAdjustPFTotal()) *  (analise.getValorCriticidade() / 100 + 1));
             parametro.put("PFCRITICIDADE", pfCriticidade);
@@ -324,12 +323,17 @@ public class RelatorioAnaliseRest {
     private void popularResumo() {
         parametro.put("PFTOTAL", analise.getPfTotal());
         if(!analise.getMetodoContagem().equals(MetodoContagem.DETALHADA)){
+            String scopeCreep = analise.getFatorCriticidade() != null && analise.getFatorCriticidade() == false ?
+                " III. Total c/ Scope Creep (II +" :
+                " IV. Total c/ Scope Creep (III +";
             if (analise.getScopeCreep() != null) {
                 parametro.put("PFESCOPESCREEP", calcularScopeCreep(analise.getAdjustPFTotal(), Double.valueOf(analise.getScopeCreep())/100+1));
-                parametro.put("SCOPECREEP", analise.getScopeCreep().intValue()+"%");
+                scopeCreep += analise.getScopeCreep().intValue()+"%) :";
+                parametro.put("SCOPECREEP", scopeCreep);
             }else{
                 parametro.put("PFESCOPESCREEP", calcularScopeCreep(analise.getAdjustPFTotal(), analise.getMetodoContagem().equals(MetodoContagem.ESTIMADA) ? fatorEstimado : fatorIndicativa));
-                parametro.put("SCOPECREEP", 35+"%");
+                scopeCreep += "35%) :";
+                parametro.put("SCOPECREEP", scopeCreep);
             }
         }
         parametro.put("AJUSTESPF", calcularPFsAjustado(analise.getPfTotal(), analise.getAdjustPFTotal()));

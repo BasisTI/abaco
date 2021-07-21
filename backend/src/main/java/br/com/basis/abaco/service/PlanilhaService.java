@@ -481,7 +481,7 @@ public class PlanilhaService {
             row.getCell(0).setCellValue(nome);
             row.getCell(9).setCellValue(this.getImpactoFromFatorAjuste(funcaoTransacao.getFatorAjuste()));
             row.getCell(8).setCellValue(funcaoTransacao.getTipo().equals(TipoFuncaoTransacao.INM) ? "" : funcaoTransacao.getTipo().toString());
-            evaluator.evaluate(row.getCell(8));
+            evaluator.evaluateFormulaCell(row.getCell(8));
             row.getCell(10).setCellValue(funcaoTransacao.getDers().size() != 0 ? String.valueOf(funcaoTransacao.getDers().size()) : "");
             row.getCell(11).setCellValue(funcaoTransacao.getAlrs().size() != 0 ? String.valueOf(funcaoTransacao.getAlrs().size()) : "");
             row.getCell(23).setCellValue(Jsoup.parse(funcaoTransacao.getSustantation() != null ? funcaoTransacao.getSustantation() : "").text());
@@ -495,7 +495,7 @@ public class PlanilhaService {
             XSSFRow row = excelSheet.getRow(rowNum++);
             row.getCell(0).setCellValue(nome);
             row.getCell(8).setCellValue(funcaoDados.getTipo().equals(TipoFuncaoDados.INM) ? "" : funcaoDados.getTipo().toString());
-            evaluator.evaluate(row.getCell(8));
+            evaluator.evaluateFormulaCell(row.getCell(8));
             row.getCell(9).setCellValue(this.getImpactoFromFatorAjuste(funcaoDados.getFatorAjuste()));
             row.getCell(10).setCellValue(funcaoDados.getDers().size() != 0 ? String.valueOf(funcaoDados.getDers().size()) : "");
             row.getCell(11).setCellValue(funcaoDados.getRlrs().size() != 0 ? String.valueOf(funcaoDados.getRlrs().size()) : "");

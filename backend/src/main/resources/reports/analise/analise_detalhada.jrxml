@@ -717,7 +717,7 @@
 						<property name="com.jaspersoft.studio.unit.width" value="px"/>
 						<property name="com.jaspersoft.studio.unit.y" value="px"/>
 						<property name="com.jaspersoft.studio.unit.height" value="px"/>
-						<printWhenExpression><![CDATA[$P{METODOCONTAGEM} !=  MetodoContagem.DETALHADA.toString()]]></printWhenExpression>
+						<printWhenExpression><![CDATA[$P{METODOCONTAGEM} !=  MetodoContagem.DETALHADA.toString() && $P{FATORCRITICIDADE} != "SEM"]]></printWhenExpression>
 					</reportElement>
 					<box>
 						<pen lineWidth="0.25" lineStyle="Solid"/>
@@ -768,10 +768,11 @@
 					<textFieldExpression><![CDATA[$P{PFTOTAL}]]></textFieldExpression>
 				</textField>
 				<textField>
-					<reportElement style="Table 1_TH" x="694" y="28" width="100" height="14" uuid="032b802e-d4cf-4f28-ae47-5dc0bdc48198">
+					<reportElement style="Table 1_TH" positionType="FixRelativeToBottom" x="694" y="28" width="100" height="14" isRemoveLineWhenBlank="true" uuid="032b802e-d4cf-4f28-ae47-5dc0bdc48198">
 						<property name="com.jaspersoft.studio.unit.width" value="px"/>
 						<property name="com.jaspersoft.studio.unit.y" value="px"/>
 						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<printWhenExpression><![CDATA[$P{FATORCRITICIDADE} != "SEM"]]></printWhenExpression>
 					</reportElement>
 					<box>
 						<pen lineWidth="0.25" lineStyle="Solid"/>
@@ -782,10 +783,11 @@
 					<textFieldExpression><![CDATA[$P{PFCRITICIDADE}]]></textFieldExpression>
 				</textField>
 				<textField>
-					<reportElement mode="Transparent" x="450" y="28" width="244" height="14" uuid="46211305-efc8-4d18-8524-68a29cb13a07">
+					<reportElement positionType="FixRelativeToBottom" mode="Transparent" x="450" y="28" width="244" height="14" isRemoveLineWhenBlank="true" uuid="46211305-efc8-4d18-8524-68a29cb13a07">
 						<property name="com.jaspersoft.studio.unit.width" value="px"/>
 						<property name="com.jaspersoft.studio.unit.y" value="px"/>
 						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<printWhenExpression><![CDATA[$P{FATORCRITICIDADE} != "SEM"]]></printWhenExpression>
 					</reportElement>
 					<box>
 						<pen lineWidth="0.25" lineStyle="Solid"/>
@@ -793,14 +795,14 @@
 					<textElement textAlignment="Left" verticalAlignment="Middle">
 						<font fontName="SansSerif" size="11" isBold="true"/>
 					</textElement>
-					<textFieldExpression><![CDATA[" III. Total c/ Criticidade "+$P{FATORCRITICIDADE}]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$P{FATORCRITICIDADE}]]></textFieldExpression>
 				</textField>
 				<textField>
 					<reportElement mode="Transparent" x="450" y="42" width="244" height="14" uuid="c33b347b-dd23-486d-bc92-3dac1a0b2faa">
 						<property name="com.jaspersoft.studio.unit.width" value="px"/>
 						<property name="com.jaspersoft.studio.unit.y" value="px"/>
 						<property name="com.jaspersoft.studio.unit.height" value="px"/>
-						<printWhenExpression><![CDATA[$P{METODOCONTAGEM} !=  MetodoContagem.DETALHADA.toString()]]></printWhenExpression>
+						<printWhenExpression><![CDATA[$P{METODOCONTAGEM} !=  MetodoContagem.DETALHADA.toString() && $P{FATORCRITICIDADE} != "SEM"]]></printWhenExpression>
 					</reportElement>
 					<box>
 						<pen lineWidth="0.25" lineStyle="Solid"/>
@@ -808,7 +810,37 @@
 					<textElement textAlignment="Left" verticalAlignment="Middle">
 						<font fontName="SansSerif" size="11" isBold="true"/>
 					</textElement>
-					<textFieldExpression><![CDATA[" IV. Total c/ Scope Creep(III +"+$P{SCOPECREEP}+"):"]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$P{SCOPECREEP}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement positionType="FixRelativeToBottom" x="694" y="28" width="100" height="14" isRemoveLineWhenBlank="true" uuid="ec3e311b-02a2-4820-b6bd-705acc9d6aff">
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<printWhenExpression><![CDATA[$P{METODOCONTAGEM} !=  MetodoContagem.DETALHADA.toString() && $P{FATORCRITICIDADE} == "SEM"]]></printWhenExpression>
+					</reportElement>
+					<box>
+						<pen lineWidth="0.25" lineStyle="Solid"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="11"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$P{PFESCOPESCREEP}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement positionType="FixRelativeToBottom" mode="Transparent" x="450" y="28" width="244" height="14" isRemoveLineWhenBlank="true" uuid="08baae8c-39fc-4d0a-aeda-d8fe292abcdd">
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<printWhenExpression><![CDATA[$P{METODOCONTAGEM} !=  MetodoContagem.DETALHADA.toString() && $P{FATORCRITICIDADE} == "SEM"]]></printWhenExpression>
+					</reportElement>
+					<box>
+						<pen lineWidth="0.25" lineStyle="Solid"/>
+					</box>
+					<textElement textAlignment="Left" verticalAlignment="Middle" markup="none">
+						<font fontName="SansSerif" size="11" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$P{SCOPECREEP}]]></textFieldExpression>
 				</textField>
 			</frame>
 		</band>
