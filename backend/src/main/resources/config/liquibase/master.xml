@@ -30,4 +30,5 @@
     <include file="classpath:config/liquibase/changelog/20210610180753_add_view_pe_analitico_estimada.xml" relativeToChangelogFile="false"/>
     <include file="classpath:config/liquibase/changelog/20210623192004_alter_view_funcao_add_ordem.xml" relativeToChangelogFile="false"/>
     <include file="classpath:config/liquibase/changelog/20210708185753_add_column_sigla_fator_ajuste.xml" relativeToChangelogFile="false"/>
+    <include file="classpath:config/liquibase/changelog/20210720165637_add_column_fator_criticidade_and_scope_creep_analise.xml" relativeToChangelogFile="false"/>
 </databaseChangeLog>

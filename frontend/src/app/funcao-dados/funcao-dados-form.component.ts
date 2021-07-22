@@ -850,18 +850,9 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
             case 'delete':
                 this.confirmDelete(this.funcaoDadosEditar);
                 break;
-            case 'clone':
-                break;
-            case 'crud':
-                this.createCrud(this.funcaoDadosEditar[0]);
-                break;
             case 'view':
                 this.viewFuncaoDados = true;
                 this.prepararParaVisualizar(this.funcaoDadosEditar[0]);
-                break;
-            case 'filter':
-                break;
-            case 'edicaoLote':
                 break;
         }
     }

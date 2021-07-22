@@ -213,6 +213,7 @@ export class AnaliseFormComponent implements OnInit {
                 this.analiseService.find(params['id']).subscribe(analise => {
                     analise = new  Analise().copyFromJSON(analise);
                     this.loadDataAnalise(analise);
+
                     if (!(this.verifyCanEditAnalise(analise))) {
                         this.pageNotificationService.addErrorMessage('Você não tem permissão para editar esta análise, redirecionando para a tela de visualização...');
                         this.router.navigate(['/analise', analise.id, 'view']);
@@ -231,6 +232,7 @@ export class AnaliseFormComponent implements OnInit {
                 this.analise.status = new Status();
                 this.analise.esforcoFases = [];
                 this.analise.enviarBaseline = true;
+                this.analise.fatorCriticidade = false;
                 this.canEditMetodo = true;
             }
         });
@@ -593,6 +595,10 @@ export class AnaliseFormComponent implements OnInit {
             this.pageNotificationService.addErrorMessage(this.getLabel('Informe o Status da Analise para continuar'));
             isValid = false;
         }
+        if (this.analise.fatorCriticidade === true && !this.analise.valorCriticidade) {
+            this.pageNotificationService.addErrorMessage(this.getLabel('Informe o valor da criticidade para continuar'));
+            isValid = false;
+        }
         return isValid;
     }
 
@@ -726,6 +732,7 @@ export class AnaliseFormComponent implements OnInit {
         this.dataAnalise = this.analise;
         this.aguardarGarantia = this.analise.baselineImediatamente;
         this.enviarParaBaseLine = this.analise.enviarBaseline;
+        this.analise.fatorCriticidade = analise.fatorCriticidade;
         this.setDataHomologacao();
         this.setDataOrdemServico();
         this.diasGarantia = this.getGarantia();
