@@ -11,43 +11,43 @@ export class VisaoPfService {
   }
 
   updateComponent(component:any){
-    return this.http.put('/visaopf/componente', component, {responseType: 'text'})
+    return this.http.put('/visaopf/api/componente', component, {responseType: 'text'})
   }
 
   getListAnalises(){
-    return this.http.get("/visaopf/analise")
+    return this.http.get("/visaopf/api/analise")
   }
 
   getCenario(id:string){
-    return this.http.get(`/visaopf/cenario/${id}`)
+    return this.http.get(`/visaopf/api/cenario/${id}`)
   }
 
   getAnalise(id:string){
-    return this.http.get(`/visaopf/analise/${id}`)
+    return this.http.get(`/visaopf/api/analise/${id}`)
   }
 
   getProcessoContagem(uuid:string){
-    return this.http.get(`/visaopf/processo/${uuid}`)
+    return this.http.get(`/visaopf/api/processo/${uuid}`)
   }
 
   getProcessoContagemByCenario(cenarioId:string){
-    return this.http.get(`/visaopf/processo/cenario/${cenarioId}`)
+    return this.http.get(`/visaopf/api/processo/cenario/${cenarioId}`)
   }
 
   getTela(id:string){
-    return this.http.get(`/visaopf/tela/${id}`)
+    return this.http.get(`/visaopf/api/tela/${id}`)
   }
 
   getComponent(id:string){
-    return this.http.get(`/visaopf/componente/${id}`)
+    return this.http.get(`/visaopf/api/componente/${id}`)
   }
 
   getTiposComponent(){
-    return this.http.get("/visaopf/componente/tipos")
+    return this.http.get("/visaopf/api/componente/tipos")
   }
 
   getTelaByUuid(uuid:string){
-    return this.http.get(`/visaopf/tela/uuid/${uuid}`)
+    return this.http.get(`/visaopf/api/tela/uuid/${uuid}`)
   }
 
   sendComponentDetection(visaopf: any): Observable<any> {
@@ -57,7 +57,7 @@ export class VisaoPfService {
         formData.append('telas', tela.imagem, tela.originalImageName )
     }
 
-    return this.http.post('/visaopf/tela/component/detection', formData, {responseType: 'text'})
+    return this.http.post('/visaopf/api/tela/component/detection', formData, {responseType: 'text'})
   }
 
 }

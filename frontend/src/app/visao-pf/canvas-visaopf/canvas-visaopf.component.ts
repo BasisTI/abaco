@@ -317,7 +317,7 @@ export class CanvasVisaopfComponent implements OnInit {
     startCanvas(){
         this.image = new Image(this.canvasWidth, this.canvasHeight)
         this.image.onload = setTimeout(e => this.draw(), CanvasVisaopfComponent.TIMEOUTCANVAS)
-        this.image.src = `/visaopf/component/detection/image/${this.tela.bucketName}/${this.tela.originalImageName}`
+        this.image.src = `/visaopf/api/component/detection/image/${this.tela.bucketName}/${this.tela.originalImageName}`
         this.proporcaoW = this.tela.width/this.canvasWidth
         this.proporcaoH = this.tela.height/this.canvasHeight
 
