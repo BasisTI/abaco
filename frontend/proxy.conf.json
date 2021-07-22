@@ -6,7 +6,11 @@
 
     "/visaopf": {
         "target": "http://localhost:4444",
-        "secure": false
+        "secure": false,
+        "pathRewrite": {
+          "^/visaopf": ""
+        }
+
     },
 
     "/tfserver": {
