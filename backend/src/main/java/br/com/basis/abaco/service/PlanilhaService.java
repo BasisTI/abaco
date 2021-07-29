@@ -207,7 +207,14 @@ public class PlanilhaService {
         if(analise.getSistema() != null){
             excelSheet.getRow(3).getCell(4).setCellValue(analise.getSistema().getNome());
         }
+        if(analise.getNumeroOs() != null){
+            excelSheet.getRow(6).getCell(4).setCellValue(analise.getNumeroOs());
+        }else{
+            excelSheet.getRow(6).getCell(4).setCellValue(analise.getIdentificadorAnalise());
+        }
+        excelSheet.getRow(8).getCell(4).setCellValue(analise.getDataCriacaoOrdemServico());
         excelSheet.getRow(13).getCell(0).setCellValue(analise.getEscopo());
+
     }
 
     //EB 1
