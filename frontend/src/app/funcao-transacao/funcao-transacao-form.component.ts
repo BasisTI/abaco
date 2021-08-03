@@ -554,6 +554,7 @@ export class FuncaoTransacaoFormComponent implements OnInit {
                     this.currentFuncaoTransacao.funcionalidade.modulo.id)
                     .subscribe(existFuncaoTransaco => {
                         if (!existFuncaoTransaco) {
+                            funcaoTransacaoCalculada.ordem = this.funcoesTransacoes.length+1;
                             this.funcaoTransacaoService.create(funcaoTransacaoCalculada, this.analise.id, funcaoTransacaoCalculada.files?.map(item => item.logo)).subscribe(value => {
                                 funcaoTransacaoCalculada.id = value.id;
                                 this.pageNotificationService.addCreateMsg(funcaoTransacaoCalculada.name);

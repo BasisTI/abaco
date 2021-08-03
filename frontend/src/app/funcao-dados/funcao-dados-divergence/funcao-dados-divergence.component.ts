@@ -599,6 +599,7 @@ export class FuncaoDadosDivergenceComponent implements OnInit {
                 this.seletedFuncaoDados.funcionalidade.id,
                 this.seletedFuncaoDados.funcionalidade.modulo.id).subscribe(value => {
                     if (value === false) {
+                        funcaoDadosCalculada.ordem = this.funcoesDados.length+1;
                         this.funcaoDadosService.createDivergence(funcaoDadosCalculada, this.analise.id, funcaoDadosCalculada.files?.map(item => item.logo)).subscribe(
                             (funcaoDados) => {
                                 this.pageNotificationService.addCreateMsg(funcaoDadosCalculada.name);
