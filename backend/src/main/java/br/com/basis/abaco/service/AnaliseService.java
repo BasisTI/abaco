@@ -1,36 +1,14 @@
 package br.com.basis.abaco.service;
 
-import br.com.basis.abaco.domain.Alr;
-import br.com.basis.abaco.domain.Analise;
-import br.com.basis.abaco.domain.Compartilhada;
-import br.com.basis.abaco.domain.Der;
-import br.com.basis.abaco.domain.EsforcoFase;
-import br.com.basis.abaco.domain.FatorAjuste;
-import br.com.basis.abaco.domain.FuncaoDados;
-import br.com.basis.abaco.domain.FuncaoDadosVersionavel;
-import br.com.basis.abaco.domain.FuncaoTransacao;
-import br.com.basis.abaco.domain.Organizacao;
-import br.com.basis.abaco.domain.Rlr;
-import br.com.basis.abaco.domain.Sistema;
-import br.com.basis.abaco.domain.Status;
-import br.com.basis.abaco.domain.TipoEquipe;
-import br.com.basis.abaco.domain.User;
-import br.com.basis.abaco.domain.VwAnaliseDivergenteSomaPf;
-import br.com.basis.abaco.domain.VwAnaliseSomaPf;
+import br.com.basis.abaco.domain.*;
 import br.com.basis.abaco.domain.enumeration.MetodoContagem;
 import br.com.basis.abaco.domain.enumeration.StatusFuncao;
 import br.com.basis.abaco.domain.enumeration.TipoFatorAjuste;
 import br.com.basis.abaco.domain.enumeration.TipoFuncaoTransacao;
-import br.com.basis.abaco.repository.AnaliseRepository;
-import br.com.basis.abaco.repository.CompartilhadaRepository;
-import br.com.basis.abaco.repository.FuncaoDadosRepository;
-import br.com.basis.abaco.repository.FuncaoDadosVersionavelRepository;
-import br.com.basis.abaco.repository.FuncaoTransacaoRepository;
-import br.com.basis.abaco.repository.TipoEquipeRepository;
-import br.com.basis.abaco.repository.UserRepository;
-import br.com.basis.abaco.repository.VwAnaliseDivergenteSomaPfRepository;
-import br.com.basis.abaco.repository.VwAnaliseSomaPfRepository;
+import br.com.basis.abaco.repository.*;
 import br.com.basis.abaco.repository.search.AnaliseSearchRepository;
+import br.com.basis.abaco.repository.search.FuncaoDadosSearchRepository;
+import br.com.basis.abaco.repository.search.FuncaoTransacaoSearchRepository;
 import br.com.basis.abaco.repository.search.UserSearchRepository;
 import br.com.basis.abaco.security.SecurityUtils;
 import br.com.basis.abaco.service.dto.AnaliseDTO;
@@ -100,6 +78,21 @@ public class AnaliseService extends BaseService {
 
     @Autowired
     private ModelMapper modelMapper;
+
+    @Autowired
+    private OrganizacaoRepository organizacaoRepository;
+    @Autowired
+    private ManualRepository manualRepository;
+    @Autowired
+    private SistemaRepository sistemaRepository;
+    @Autowired
+    private ContratoRepository contratoRepository;
+    @Autowired
+    private StatusRepository statusRepository;
+    @Autowired
+    private FuncaoDadosSearchRepository funcaoDadosSearchRepository;
+    @Autowired
+    private FuncaoTransacaoSearchRepository funcaoTransacaoSearchRepository;
 
 
     public AnaliseService(AnaliseRepository analiseRepository,
@@ -806,5 +799,106 @@ public class AnaliseService extends BaseService {
         BoolQueryBuilder qb = getBoolQueryBuilderDivergence(filter.getIdentificadorAnalise(), sistema, organizacao);
         SearchQuery searchQuery = new NativeSearchQueryBuilder().withQuery(qb).withPageable(pageable).build();
         return searchQuery;
+    }
+
+    public Analise carregarAnaliseJson(Analise analise) {
+        Analise newAnalise = new Analise();
+        if(analise.getOrganizacao().getNome() != null){
+            Optional<Organizacao> organizacao = organizacaoRepository.findByNome(analise.getOrganizacao().getNome());
+            if(organizacao.isPresent()){
+                newAnalise.setOrganizacao(organizacao.get());
+            }
+        }
+        if(analise.getManual().getNome() != null){
+            Optional<Manual> manual = manualRepository.findOneByNome(analise.getManual().getNome());
+            if(manual.isPresent()){
+                newAnalise.setManual(manual.get());
+                newAnalise.setEsforcoFases(manual.get().getEsforcoFases());
+            }
+        }
+        if(analise.getSistema().getSigla() != null){
+            Optional<Sistema> sistema = sistemaRepository.findBySigla(analise.getSistema().getSigla());
+            if(sistema.isPresent()){
+                newAnalise.setSistema(sistema.get());
+            }
+        }
+        if(analise.getContrato().getNumeroContrato() != null){
+            Optional<Contrato> contrato = contratoRepository.findByNumeroContrato(analise.getContrato().getNumeroContrato());
+            if(contrato.isPresent()){
+                newAnalise.setContrato(contrato.get());
+            }
+        }
+        if(analise.getStatus().getNome() != null){
+            Optional<Status> status = statusRepository.findByNome(analise.getStatus().getNome());
+            if(status.isPresent()){
+                newAnalise.setStatus(status.get());
+            }
+        }
+        if(analise.getEquipeResponsavel().getNome() != null){
+            Optional<TipoEquipe> tipoEquipe = tipoEquipeRepository.findByNome(analise.getEquipeResponsavel().getNome());
+            if(tipoEquipe.isPresent()){
+                newAnalise.setEquipeResponsavel(tipoEquipe.get());
+            }
+        }
+        return newAnalise;
+    }
+
+
+    public void carregarDadosJson(Analise newAnalise, Analise analise) {
+        newAnalise.setDocumentacao(analise.getDocumentacao());
+        newAnalise.setTipoAnalise(analise.getTipoAnalise());
+        newAnalise.setPropositoContagem(analise.getPropositoContagem());
+        newAnalise.setObservacoes(analise.getObservacoes());
+        newAnalise.setNumeroOs(analise.getNumeroOs());
+        newAnalise.setMetodoContagem(analise.getMetodoContagem());
+        newAnalise.setIsDivergence(analise.getIsDivergence());
+        newAnalise.setIdentificadorAnalise(analise.getIdentificadorAnalise());
+        newAnalise.setFronteiras(analise.getFronteiras());
+        newAnalise.setEscopo(analise.getEscopo());
+        newAnalise.setFuncaoDados(analise.getFuncaoDados());
+        newAnalise.setFuncaoTransacaos(analise.getFuncaoTransacaos());
+        newAnalise.setDataCriacaoOrdemServico(analise.getDataCriacaoOrdemServico());
+    }
+
+    public void salvarFuncoesJson(Set<FuncaoDados> funcaoDados, Set<FuncaoTransacao> funcaoTransacaos, Analise analise) {
+        if(analise.getSistema().getSigla() != null){
+            Optional<Sistema> sistema = sistemaRepository.findBySigla(analise.getSistema().getSigla());
+            if(sistema.isPresent()){
+                analise.setSistema(sistema.get());
+            }
+        }
+        funcaoDados.forEach(funcaoDado -> {
+            funcaoDado.setId(null);
+            funcaoDado.setAnalise(analise);
+            funcaoDado.getDers().forEach(der -> { der.setFuncaoDados(funcaoDado); der.setId(null);});
+            funcaoDado.getRlrs().forEach(rlr -> { rlr.setFuncaoDados(funcaoDado); rlr.setId(null);});
+            analise.getSistema().getModulos().forEach(modulo -> {
+                modulo.getFuncionalidades().forEach(funcionalidade -> {
+                    if(funcionalidade.getNome().contains(funcaoDado.getFuncionalidade().getNome())){
+                        funcaoDado.setFuncionalidade(funcionalidade);
+                    }
+                });
+            });
+            funcaoDadosRepository.save(funcaoDado);
+            funcaoDadosSearchRepository.save(funcaoDado);
+        });
+        funcaoTransacaos.forEach(funcaoTransacao -> {
+            funcaoTransacao.setId(null);
+            funcaoTransacao.setAnalise(analise);
+            funcaoTransacao.getDers().forEach(der -> {der.setFuncaoTransacao(funcaoTransacao); der.setId(null);});
+            funcaoTransacao.getAlrs().forEach((alr -> {alr.setFuncaoTransacao(funcaoTransacao); alr.setId(null);}));
+            analise.getSistema().getModulos().forEach(modulo -> {
+                modulo.getFuncionalidades().forEach(funcionalidade -> {
+                    if(funcionalidade.getNome().contains(funcaoTransacao.getFuncionalidade().getNome())){
+                        funcaoTransacao.setFuncionalidade(funcionalidade);
+                    }
+                });
+            });
+            funcaoTransacaoRepository.save(funcaoTransacao);
+            funcaoTransacaoSearchRepository.save(funcaoTransacao);
+        });
+        this.updatePf(analise);
+        analiseRepository.save(analise);
+        analiseSearchRepository.save(this.convertToEntity(this.convertToDto(analise)));
     }
 }
