@@ -1,11 +1,41 @@
 package br.com.basis.abaco.service;
 
-import br.com.basis.abaco.domain.*;
+import br.com.basis.abaco.domain.Alr;
+import br.com.basis.abaco.domain.Analise;
+import br.com.basis.abaco.domain.Compartilhada;
+import br.com.basis.abaco.domain.Contrato;
+import br.com.basis.abaco.domain.Der;
+import br.com.basis.abaco.domain.EsforcoFase;
+import br.com.basis.abaco.domain.FuncaoDados;
+import br.com.basis.abaco.domain.FuncaoDadosVersionavel;
+import br.com.basis.abaco.domain.FuncaoTransacao;
+import br.com.basis.abaco.domain.Manual;
+import br.com.basis.abaco.domain.Organizacao;
+import br.com.basis.abaco.domain.Rlr;
+import br.com.basis.abaco.domain.Sistema;
+import br.com.basis.abaco.domain.Status;
+import br.com.basis.abaco.domain.TipoEquipe;
+import br.com.basis.abaco.domain.User;
+import br.com.basis.abaco.domain.VwAnaliseDivergenteSomaPf;
+import br.com.basis.abaco.domain.VwAnaliseSomaPf;
 import br.com.basis.abaco.domain.enumeration.MetodoContagem;
 import br.com.basis.abaco.domain.enumeration.StatusFuncao;
 import br.com.basis.abaco.domain.enumeration.TipoFatorAjuste;
 import br.com.basis.abaco.domain.enumeration.TipoFuncaoTransacao;
-import br.com.basis.abaco.repository.*;
+import br.com.basis.abaco.repository.AnaliseRepository;
+import br.com.basis.abaco.repository.CompartilhadaRepository;
+import br.com.basis.abaco.repository.ContratoRepository;
+import br.com.basis.abaco.repository.FuncaoDadosRepository;
+import br.com.basis.abaco.repository.FuncaoDadosVersionavelRepository;
+import br.com.basis.abaco.repository.FuncaoTransacaoRepository;
+import br.com.basis.abaco.repository.ManualRepository;
+import br.com.basis.abaco.repository.OrganizacaoRepository;
+import br.com.basis.abaco.repository.SistemaRepository;
+import br.com.basis.abaco.repository.StatusRepository;
+import br.com.basis.abaco.repository.TipoEquipeRepository;
+import br.com.basis.abaco.repository.UserRepository;
+import br.com.basis.abaco.repository.VwAnaliseDivergenteSomaPfRepository;
+import br.com.basis.abaco.repository.VwAnaliseSomaPfRepository;
 import br.com.basis.abaco.repository.search.AnaliseSearchRepository;
 import br.com.basis.abaco.repository.search.FuncaoDadosSearchRepository;
 import br.com.basis.abaco.repository.search.FuncaoTransacaoSearchRepository;
@@ -803,12 +833,52 @@ public class AnaliseService extends BaseService {
 
     public Analise carregarAnaliseJson(Analise analise) {
         Analise newAnalise = new Analise();
-        if(analise.getOrganizacao().getNome() != null){
-            Optional<Organizacao> organizacao = organizacaoRepository.findByNome(analise.getOrganizacao().getNome());
-            if(organizacao.isPresent()){
-                newAnalise.setOrganizacao(organizacao.get());
+        this.carregarOrganizacaoAnaliseJson(newAnalise, analise);
+        this.carregarManualAnaliseJson(newAnalise, analise);
+        this.carregarSistemaAnaliseJson(newAnalise, analise);
+        this.carregarContratoAnaliseJson(newAnalise, analise);
+        this.carregarStatusAnaliseJson(newAnalise, analise);
+        this.carregarEquipeAnaliseJson(newAnalise, analise);
+        return newAnalise;
+    }
+
+    private void carregarEquipeAnaliseJson(Analise newAnalise, Analise analise) {
+        if(analise.getEquipeResponsavel().getNome() != null){
+            Optional<TipoEquipe> tipoEquipe = tipoEquipeRepository.findByNome(analise.getEquipeResponsavel().getNome());
+            if(tipoEquipe.isPresent()){
+                newAnalise.setEquipeResponsavel(tipoEquipe.get());
             }
         }
+    }
+
+    private void carregarStatusAnaliseJson(Analise newAnalise, Analise analise) {
+        if(analise.getStatus().getNome() != null){
+            Optional<Status> status = statusRepository.findByNome(analise.getStatus().getNome());
+            if(status.isPresent()){
+                newAnalise.setStatus(status.get());
+            }
+        }
+    }
+
+    private void carregarContratoAnaliseJson(Analise newAnalise, Analise analise) {
+        if(analise.getContrato().getNumeroContrato() != null){
+            Optional<Contrato> contrato = contratoRepository.findByNumeroContrato(analise.getContrato().getNumeroContrato());
+            if(contrato.isPresent()){
+                newAnalise.setContrato(contrato.get());
+            }
+        }
+    }
+
+    private void carregarSistemaAnaliseJson(Analise newAnalise, Analise analise) {
+        if(analise.getSistema().getSigla() != null){
+            Optional<Sistema> sistema = sistemaRepository.findBySigla(analise.getSistema().getSigla());
+            if(sistema.isPresent()){
+                newAnalise.setSistema(sistema.get());
+            }
+        }
+    }
+
+    private void carregarManualAnaliseJson(Analise newAnalise, Analise analise) {
         if(analise.getManual().getNome() != null){
             Optional<Manual> manual = manualRepository.findOneByNome(analise.getManual().getNome());
             if(manual.isPresent()){
@@ -816,31 +886,15 @@ public class AnaliseService extends BaseService {
                 newAnalise.setEsforcoFases(manual.get().getEsforcoFases());
             }
         }
-        if(analise.getSistema().getSigla() != null){
-            Optional<Sistema> sistema = sistemaRepository.findBySigla(analise.getSistema().getSigla());
-            if(sistema.isPresent()){
-                newAnalise.setSistema(sistema.get());
+    }
+
+    private void carregarOrganizacaoAnaliseJson(Analise newAnalise, Analise analise) {
+        if(analise.getOrganizacao().getNome() != null){
+            Optional<Organizacao> organizacao = organizacaoRepository.findByNome(analise.getOrganizacao().getNome());
+            if(organizacao.isPresent()){
+                newAnalise.setOrganizacao(organizacao.get());
             }
         }
-        if(analise.getContrato().getNumeroContrato() != null){
-            Optional<Contrato> contrato = contratoRepository.findByNumeroContrato(analise.getContrato().getNumeroContrato());
-            if(contrato.isPresent()){
-                newAnalise.setContrato(contrato.get());
-            }
-        }
-        if(analise.getStatus().getNome() != null){
-            Optional<Status> status = statusRepository.findByNome(analise.getStatus().getNome());
-            if(status.isPresent()){
-                newAnalise.setStatus(status.get());
-            }
-        }
-        if(analise.getEquipeResponsavel().getNome() != null){
-            Optional<TipoEquipe> tipoEquipe = tipoEquipeRepository.findByNome(analise.getEquipeResponsavel().getNome());
-            if(tipoEquipe.isPresent()){
-                newAnalise.setEquipeResponsavel(tipoEquipe.get());
-            }
-        }
-        return newAnalise;
     }
 
 
