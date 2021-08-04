@@ -83,6 +83,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -749,6 +750,33 @@ public class AnaliseResource {
         headers.setContentType(MediaType.parseMediaType("application/vnd.ms-excel"));
         headers.set(HttpHeaders.CONTENT_DISPOSITION, String.format("attachment; filename=%s.xlsx", RelatorioUtil.pegarNomeRelatorio(analise)));
         return new ResponseEntity<byte[]>(outputStream.toByteArray(),headers, HttpStatus.OK);
+    }
+
+    @PostMapping("/analises/importar-json")
+//    @Secured()
+    public ResponseEntity<AnaliseEditDTO> importarJson(@Valid @RequestBody Analise analise) throws URISyntaxException {
+        analise.setCreatedBy(userRepository.findOneByLogin(SecurityUtils.getCurrentUserLogin()).get());
+        analise.getUsers().add(analise.getCreatedBy());
+        analiseService.salvaNovaData(analise);
+        Set<FuncaoDados> funcaoDados = analise.getFuncaoDados();
+        Set<FuncaoTransacao> funcaoTransacaos = analise.getFuncaoTransacaos();
+        analise.setFuncaoTransacaos(new HashSet<>());
+        analise.setFuncaoDados(new HashSet<>());
+        analiseRepository.save(analise);
+        analiseSearchRepository.save(analiseService.convertToEntity(analiseService.convertToDto(analise)));
+        analiseService.salvarFuncoesJson(funcaoDados, funcaoTransacaos, analise);
+        return ResponseEntity.ok().headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, analise.getId().toString()))
+            .body(analiseService.convertToAnaliseEditDTO(analise));
+    }
+
+    @PostMapping("/analises/carregarAnalise")
+//    @Secured()
+    public ResponseEntity<Analise> carregarAnaliseJson(@Valid @RequestBody Analise analise) throws URISyntaxException {
+
+        Analise newAnalise = analiseService.carregarAnaliseJson(analise);
+        analiseService.carregarDadosJson(newAnalise, analise);
+
+        return new ResponseEntity(newAnalise, HttpStatus.OK);
     }
 }
 
