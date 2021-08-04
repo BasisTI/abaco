@@ -44,6 +44,7 @@ import br.com.basis.abaco.security.SecurityUtils;
 import br.com.basis.abaco.service.dto.AnaliseDTO;
 import br.com.basis.abaco.service.dto.AnaliseDivergenceEditDTO;
 import br.com.basis.abaco.service.dto.AnaliseEditDTO;
+import br.com.basis.abaco.service.dto.AnaliseJsonDTO;
 import br.com.basis.abaco.service.dto.filter.AnaliseFilterDTO;
 import br.com.basis.abaco.utils.StringUtils;
 import br.com.basis.dynamicexports.service.DynamicExportsService;
@@ -534,6 +535,10 @@ public class AnaliseService extends BaseService {
         return modelMapper.map(analiseEditDTO, Analise.class);
     }
 
+    public Analise convertToEntity(AnaliseJsonDTO analiseJsonDTO) {
+        return modelMapper.map(analiseJsonDTO, Analise.class);
+    }
+
     public void bindAnalise(@RequestBody @Valid Analise analiseUpdate, Analise analise) {
         salvaNovaData(analiseUpdate);
         analise.setNumeroOs(analiseUpdate.getNumeroOs());
@@ -852,10 +857,12 @@ public class AnaliseService extends BaseService {
     }
 
     private void carregarStatusAnaliseJson(Analise newAnalise, Analise analise) {
-        if(analise.getStatus().getNome() != null){
-            Optional<Status> status = statusRepository.findByNome(analise.getStatus().getNome());
-            if(status.isPresent()){
-                newAnalise.setStatus(status.get());
+        if(analise.getStatus() != null){
+            if(analise.getStatus().getNome() != null){
+                Optional<Status> status = statusRepository.findByNome(analise.getStatus().getNome());
+                if(status.isPresent()){
+                    newAnalise.setStatus(status.get());
+                }
             }
         }
     }

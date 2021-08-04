@@ -29,6 +29,7 @@ import br.com.basis.abaco.service.PlanilhaService;
 import br.com.basis.abaco.service.dto.AnaliseDTO;
 import br.com.basis.abaco.service.dto.AnaliseDivergenceEditDTO;
 import br.com.basis.abaco.service.dto.AnaliseEditDTO;
+import br.com.basis.abaco.service.dto.AnaliseJsonDTO;
 import br.com.basis.abaco.service.dto.filter.AnaliseFilterDTO;
 import br.com.basis.abaco.service.exception.RelatorioException;
 import br.com.basis.abaco.service.relatorio.RelatorioAnaliseColunas;
@@ -771,7 +772,8 @@ public class AnaliseResource {
 
     @PostMapping("/analises/carregarAnalise")
 //    @Secured()
-    public ResponseEntity<Analise> carregarAnaliseJson(@Valid @RequestBody Analise analise) throws URISyntaxException {
+    public ResponseEntity<Analise> carregarAnaliseJson(@Valid @RequestBody AnaliseJsonDTO analiseDTO) throws URISyntaxException {
+        Analise analise = analiseService.convertToEntity(analiseDTO);
 
         Analise newAnalise = analiseService.carregarAnaliseJson(analise);
         analiseService.carregarDadosJson(newAnalise, analise);
