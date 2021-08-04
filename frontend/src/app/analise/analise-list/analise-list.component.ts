@@ -1,8 +1,9 @@
 import { Component, OnInit, ViewChild, ContentChildren } from '@angular/core';
 import { Router } from '@angular/router';
 import { DatatableClickEvent, DatatableComponent, PageNotificationService, Column } from '@nuvem/primeng-components';
-import { ConfirmationService, BlockUIModule } from 'primeng';
+import { ConfirmationService, BlockUIModule, SelectItem } from 'primeng';
 import { Subscription } from 'rxjs';
+import * as _ from 'lodash';
 import { Organizacao, OrganizacaoService } from 'src/app/organizacao';
 import { Sistema, SistemaService } from 'src/app/sistema';
 import { TipoEquipe, TipoEquipeService } from 'src/app/tipo-equipe';
@@ -21,6 +22,14 @@ import { AuthService } from 'src/app/util/auth.service';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { PerfilOrganizacao } from 'src/app/perfil/perfil-organizacao.model';
 import { PerfilService } from 'src/app/perfil/perfil.service';
+import { Contrato, ContratoService } from 'src/app/contrato';
+import { EsforcoFase } from 'src/app/esforco-fase';
+import { MessageUtil } from 'src/app/util/message.util';
+import { AnaliseSharedDataService } from 'src/app/shared/analise-shared-data.service';
+import { Manual, ManualService } from 'src/app/manual';
+import { ManualContrato } from 'src/app/organizacao/ManualContrato.model';
+import { FatorAjuste } from 'src/app/fator-ajuste';
+import { FatorAjusteLabelGenerator } from 'src/app/shared/fator-ajuste-label-generator';
 
 @Component({
     selector: 'app-analise',
@@ -158,6 +167,40 @@ export class AnaliseListComponent implements OnInit {
     downloadJsonHref;
     analiseFileJson;
     showDialogImportar: boolean;
+    carregadaAnalise: boolean = false;
+    analiseImportar: Analise = new Analise();
+    organizacoes: Organizacao[];
+    contratos: Contrato[];
+    sistemas: Sistema[];
+    esforcoFases: EsforcoFase[] = [];
+    metodosContagem: SelectItem[] = [];
+    fatoresAjuste: SelectItem[] = [];
+    manuaisCombo: SelectItem[] = [];
+    manuais: Manual[] = [];
+    statusCombo: Status[] = [];
+    equipeResponsavel: TipoEquipe[] = [];
+    hideShowSelectEquipe: boolean;
+
+    desabilitarOrg: boolean = false;
+    desabilitarSistema: boolean = false;
+    desabilitarEquipe: boolean = false;
+    desabilitarContrato: boolean = false;
+    desabilitarManual: boolean = false;
+    desabilitarMetodo: boolean = false;
+    desabilitarTipo: boolean = false;
+
+    tiposAnalise: SelectItem[] = [
+        {label: MessageUtil.PROJETO_DESENVOLVIMENTO, value: MessageUtil.DESENVOLVIMENTO},
+        {label: MessageUtil.PROJETO_MELHORIA, value: MessageUtil.MELHORIA},
+        {label: MessageUtil.CONTAGEM_APLICACAO, value: MessageUtil.APLICACAO}
+    ];
+
+
+    metodoContagem: SelectItem[] = [
+        {label: MessageUtil.DETALHADA_IFPUG, value: MessageUtil.DETALHADA_IFPUG},
+        {label: MessageUtil.INDICATIVA_NESMA, value: MessageUtil.INDICATIVA_NESMA},
+        {label: MessageUtil.ESTIMADA_NESMA, value: MessageUtil.ESTIMADA_NESMA}
+    ];
 
     constructor(
         private router: Router,
@@ -175,7 +218,10 @@ export class AnaliseListComponent implements OnInit {
         private divergenceServie: DivergenciaService,
         private authService: AuthService,
         private sanitizer: DomSanitizer,
-        private perfilService: PerfilService
+        private perfilService: PerfilService,
+        private analiseSharedDataService: AnaliseSharedDataService,
+        private contratoService: ContratoService,
+        private manualService: ManualService
     ) {
 
     }
@@ -1000,65 +1046,7 @@ export class AnaliseListComponent implements OnInit {
         this.router.navigate(["/analise/new"])
     }
 
-    exportarAnalise(analise: Analise) {
-        this.analiseService.findWithFuncoesNormal(analise.id).subscribe(response => {
-            let analise: Analise = response[0];
-            analise.funcaoDados = response[1];
-            analise.funcaoTransacaos = response[2];
-
-            let theJSON = JSON.stringify(analise);
-            let blob = new Blob([theJSON], { type: 'text/json' });
-            let url = window.URL.createObjectURL(blob);
-            this.downloadJsonHref = url;
-            const anchor = document.createElement('a');
-            anchor.download = 'analise-' + analise.identificadorAnalise + '.json';
-            anchor.href = this.downloadJsonHref;
-            document.body.appendChild(anchor);
-            anchor.click();
-        })
-    }
-
-    openModalImportAnalise() {
-        this.showDialogImportar = true;
-    }
-
-    closeModalImportAnalise() {
-        this.showDialogImportar = false;
-    }
-
-    selectJsonAnalise(event) {
-        this.analiseFileJson = event.currentFiles[0];
-        this.analisesImportar = [];
-        const reader = new FileReader();
-        let analises = this.analisesImportar;
-        let analise: Analise;
-        reader.onloadend = function () {
-            analise = JSON.parse(reader.result.toString());
-            if (analise.id) {
-                analise.id = null;
-                analises.push(analise);
-            }
-        }
-        reader.readAsText(this.analiseFileJson);
-    }
-
-    importarAnalise() {
-        if (this.analiseFileJson && this.analisesImportar.length > 0) {
-            this.analisesImportar.forEach(analise => {
-                analise.identificadorAnalise = analise.identificadorAnalise + " - Importada";
-                this.analiseService.importarJson(analise).subscribe(r => {
-                    this.pageNotificationService.addCreateMsg("Análise - " + r.identificadorAnalise + " importada com sucesso!");
-                    this.datatable.filter();
-                    this.showDialogImportar = false;
-                    this.analisesImportar = [];
-                });
-            });
-        } else {
-            this.pageNotificationService.addErrorMessage("Selecione uma análise válida para importar!")
-        }
-    }
-
-    openModalImportarExcel(analise: Analise) {
+    openModalExportarExcel(analise: Analise) {
         this.showDialogImportarExcel = true;
         this.analiseImportarExcel = analise;
     }
@@ -1086,5 +1074,269 @@ export class AnaliseListComponent implements OnInit {
                     this.closeModalExportarExcel();
                 });;
         }
+    }
+
+    exportarAnalise(analise: Analise) {
+        this.analiseService.findWithFuncoesNormal(analise.id).subscribe(response => {
+            let analise: Analise = response[0];
+            analise.funcaoDados = response[1];
+            analise.funcaoTransacaos = response[2];
+            let theJSON = JSON.stringify(analise);
+            let blob = new Blob([theJSON], { type: 'text/json' });
+            let url = window.URL.createObjectURL(blob);
+            this.downloadJsonHref = url;
+            const anchor = document.createElement('a');
+            anchor.download = 'analise-' + analise.identificadorAnalise + '.json';
+            anchor.href = this.downloadJsonHref;
+            document.body.appendChild(anchor);
+            anchor.click();
+        })
+    }
+
+
+
+    openModalImportAnalise() {
+        this.showDialogImportar = true;
+        this.getOrganizationsFromActiveLoggedUser();
+    }
+
+    closeModalImportAnalise() {
+        this.showDialogImportar = false;
+        this.analiseImportar = new Analise();
+        this.analiseFileJson = undefined;
+        this.carregadaAnalise = false;
+    }
+
+    removeJsonFiles(){
+        this.analiseFileJson = undefined;
+    }
+
+    selectJsonAnalise(event) {
+        this.analiseFileJson = event.currentFiles[0];
+        this.analisesImportar = [];
+        const reader = new FileReader();
+        let analises = this.analisesImportar;
+        let analise: Analise;
+        reader.onloadend = function () {
+            analise = JSON.parse(reader.result.toString());
+            if (analise.id) {
+                analise.id = null;
+                analises.push(analise);
+            }
+        }
+        reader.readAsText(this.analiseFileJson);
+    }
+
+    importarAnalise() {
+        if (this.analiseFileJson && this.analiseImportar) {
+            this.analiseImportar.identificadorAnalise = this.analiseImportar.identificadorAnalise + " - Importada";
+            this.analiseService.importarJson(this.analiseImportar).subscribe(r => {
+                this.pageNotificationService.addCreateMsg("Análise - " + r.identificadorAnalise + " importada com sucesso!");
+                this.datatable.filter();
+                this.closeModalImportAnalise();
+                this.analisesImportar = [];
+            });
+        } else {
+            this.pageNotificationService.addErrorMessage("Selecione uma análise válida para importar!")
+        }
+    }
+
+    carregarAnalise(){
+        this.carregadaAnalise = true;
+        this.analiseService.carregarAnaliseJson(this.analisesImportar[0]).subscribe(response =>{
+            this.analiseImportar = response;
+            if(this.analiseImportar.organizacao){
+                this.setSistemaOrganizacao(this.analiseImportar.organizacao);
+                this.getLstStatus();
+                if(this.analiseImportar.contrato){
+                    this.contratoSelected(this.analiseImportar.contrato);
+                }
+            }
+            this.desabilitarCamposPreenchidos();
+        })
+        this.analiseImportar = this.analisesImportar[0];
+    }
+
+    desabilitarCamposPreenchidos(){
+        if(this.analiseImportar.organizacao){
+            this.desabilitarOrg = true;
+        }
+        if(this.analiseImportar.sistema){
+            this.desabilitarSistema = true;
+        }
+        if(this.analiseImportar.equipeResponsavel){
+            this.desabilitarEquipe = true;
+        }
+        if(this.analiseImportar.contrato){
+            this.desabilitarContrato = true;
+        }
+        if(this.analiseImportar.manual){
+            this.desabilitarManual = true;
+        }
+        if(this.analiseImportar.metodoContagem){
+            this.desabilitarMetodo = true;
+        }
+        if(this.analiseImportar.tipoAnalise){
+            this.desabilitarTipo = true;
+        }
+    }
+
+    setSistemaOrganizacao(org: Organizacao){
+        this.contratoService.findAllContratoesByOrganization(org).subscribe((contracts) => {
+            this.contratos = contracts;
+        });
+        this.sistemaService.findAllSystemOrg(org.id).subscribe((res: Sistema[]) => {
+            this.sistemas = res;
+        });
+        this.setEquipeOrganizacao(org);
+    }
+
+    setEquipeOrganizacao(org: Organizacao) {
+        this.equipeService.findAllEquipesByOrganizacaoIdAndLoggedUser(org.id).subscribe((res: TipoEquipe[]) => {
+            this.equipeResponsavel = res;
+            if (this.equipeResponsavel !== null) {
+                this.hideShowSelectEquipe = false;
+            }
+        });
+    }
+
+    contratoSelected(contrato: Contrato){
+        if (contrato && contrato.manualContrato) {
+            this.setManuais(contrato);
+            let manualSelected;
+            if ((this.analiseImportar.manual) && (typeof this.analiseImportar.manual.id !== 'undefined')) {
+                manualSelected = this.analiseImportar.manual;
+            } else {
+                manualSelected = contrato.manualContrato[0].manual;
+            }
+            this.setManual(manualSelected);
+            this.analiseImportar.manual = manualSelected;
+            this.carregarMetodosContagem(manualSelected);
+        }
+    }
+
+    private carregarMetodosContagem(manual: Manual) {
+        this.metodosContagem = [
+            {
+                value: MessageUtil.DETALHADA,
+                label: this.getLabel('Detalhada (IFPUG)')
+            },
+            {
+                value: MessageUtil.INDICATIVA,
+                label: this.getLabelValorVariacao(
+                    this.getLabel('Indicativa (NESMA)'),
+                    manual.valorVariacaoIndicativa)
+            },
+            {
+                value: MessageUtil.ESTIMADA,
+                label: this.getLabelValorVariacao(
+                    this.getLabel('Estimada (NESMA)'),
+                    manual.valorVariacaoEstimada)
+            }
+        ];
+    }
+
+    private getLabelValorVariacao(label: string, valorVariacao: number): string {
+        return label + ' - ' + valorVariacao.toLocaleString() + '%';
+    }
+
+    private populaComboManual(contrato: Contrato) {
+        contrato.manualContrato.forEach((item: ManualContrato) => {
+            const entity: Manual = new Manual();
+            const m: Manual = entity.copyFromJSON(item.manual);
+            this.manuais.push(item.manual);
+            this.manuaisCombo.push({
+                label: m.nome,
+                value: this.analiseImportar.manual && m.id === this.analiseImportar.manual.id ? this.analiseImportar.manual : m
+            });
+        });
+    }
+
+    resetManuais() {
+        this.manuais = [];
+        this.manuaisCombo = [];
+    }
+
+    setManuais(contrato: Contrato) {
+        contrato.manualContrato.forEach(item => {
+            item.dataInicioVigencia = new Date(item.dataInicioVigencia);
+            item.dataFimVigencia = new Date(item.dataFimVigencia);
+        });
+        this.resetManuais();
+        this.populaComboManual(contrato);
+    }
+
+    setManual(manualSelected: Manual) {
+        if (manualSelected) {
+            this.manualService.find(manualSelected.id).subscribe((manual) => {
+                this.carregarEsforcoFases(manual);
+                this.carregarMetodosContagem(manual);
+                this.inicializaFatoresAjuste(manual);
+                this.setManuais(this.analiseImportar.contrato);
+                this.carregaFatorAjusteNaEdicao();
+            });
+        }
+    }
+
+
+    private carregarEsforcoFases(manual: Manual) {
+        manual.esforcoFases.forEach(element => {
+            this.esforcoFases.push(new EsforcoFase().copyFromJSON(element));
+        });;
+
+        if (!(this.analiseImportar.esforcoFases)) {
+            // Traz todos esforcos de fases selecionados
+            this.analiseImportar.esforcoFases = _.cloneDeep(manual.esforcoFases);
+        }
+    }
+
+    private inicializaFatoresAjuste(manual: Manual) {
+        this.fatoresAjuste = [];
+        if (manual.fatoresAjuste) {
+            const faS: FatorAjuste[] = _.cloneDeep(manual.fatoresAjuste);
+            faS.forEach(fa => {
+                const label = FatorAjusteLabelGenerator.generate(fa);
+                this.fatoresAjuste.push({label, value: fa});
+            });
+            this.fatoresAjuste.unshift({label: this.getLabel('Nenhum'), value: null});
+        }
+    }
+
+    private carregaFatorAjusteNaEdicao() {
+        if (this.analiseImportar.fatorAjuste) {
+            this.analiseImportar.fatorAjuste = this.fatoresAjuste.find(
+                (f) => f !== null && f.value !== null && f.value.id === this.analiseImportar.fatorAjuste.id
+            ).value;
+        }
+    }
+
+    alterarMetodoContagem(){
+        if (this.analiseImportar.metodoContagem === MetodoContagem.DETALHADA) {
+            this.analiseImportar.enviarBaseline = true;
+        } else {
+            this.analiseImportar.enviarBaseline = false;
+        }
+    }
+
+    totalEsforcoFases(){
+        const initialValue = 0;
+        if (this.analiseImportar.esforcoFases) {
+            return this.analiseImportar.esforcoFases
+                .reduce((val, ef) => val + ef.esforco, initialValue);
+        }
+        return initialValue;
+    }
+
+    getOrganizationsFromActiveLoggedUser() {
+        this.organizacaoService.dropDownActiveLoggedUser().subscribe(res => {
+            this.organizacoes = res;
+        });
+    }
+
+    getLstStatus() {
+        this.statusService.listActive().subscribe(
+        lstStatus => {
+            this.statusCombo = lstStatus;
+        });
     }
 }

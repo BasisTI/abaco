@@ -469,4 +469,9 @@ export class AnaliseService {
             }))
     }
 
+    carregarAnaliseJson(analise: Analise) : Observable<Analise> {
+        return this.http.post<Analise>(this.resourceUrl+"/carregarAnalise", analise);
+    }
+
+
 }

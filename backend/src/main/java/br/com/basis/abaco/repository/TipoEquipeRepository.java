@@ -1,6 +1,7 @@
 package br.com.basis.abaco.repository;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -45,4 +46,5 @@ public interface TipoEquipeRepository extends JpaRepository<TipoEquipe, Long> {
     @EntityGraph(attributePaths = { "organizacoes"})
     TipoEquipe findById(Long id);
 
+    Optional<TipoEquipe> findByNome(String nome);
 }
