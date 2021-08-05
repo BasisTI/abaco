@@ -624,6 +624,6 @@
 <p-dialog [header]="this.getLabel('Importa funções de dados')" [(visible)]="display" [style]="{width: '80vw'}"
     [closable]="false">
     <div *ngIf="analise && analise.id && analise.sistema.modulos">
-        <app-pesquisar-ft [isFuncaoDados]="true"></app-pesquisar-ft>
+        <app-pesquisar-ft [isFuncaoDados]="true" [tamanhoLista]="funcoesDados.length+1"></app-pesquisar-ft>
     </div>
 </p-dialog>

@@ -25,7 +25,7 @@ import java.util.Set;
 @Setter
 @NoArgsConstructor
 public class AnaliseJsonDTO extends AnaliseEditDTO {
-    
+
     private Set<FuncaoDados> funcaoDados = new HashSet<>();
     private Set<FuncaoTransacao> funcaoTransacaos = new HashSet<>();
 
