@@ -79,6 +79,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import javax.ws.rs.Path;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -751,6 +752,12 @@ public class AnaliseResource {
         headers.setContentType(MediaType.parseMediaType("application/vnd.ms-excel"));
         headers.set(HttpHeaders.CONTENT_DISPOSITION, String.format("attachment; filename=%s.xlsx", RelatorioUtil.pegarNomeRelatorio(analise)));
         return new ResponseEntity<byte[]>(outputStream.toByteArray(),headers, HttpStatus.OK);
+    }
+
+    @GetMapping("/analises/analise-json/{id}")
+    public AnaliseJsonDTO analiseJson(@PathVariable Long id){
+        AnaliseJsonDTO analiseJsonDTO = analiseService.convertToAnaliseJsonDTO(analiseRepository.findById(id));
+        return analiseJsonDTO;
     }
 
     @PostMapping("/analises/importar-json")

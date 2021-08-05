@@ -1077,10 +1077,8 @@ export class AnaliseListComponent implements OnInit {
     }
 
     exportarAnalise(analise: Analise) {
-        this.analiseService.findWithFuncoesNormal(analise.id).subscribe(response => {
-            let analise: Analise = response[0];
-            analise.funcaoDados = response[1];
-            analise.funcaoTransacaos = response[2];
+        this.analiseService.findAnaliseByJson(analise.id).subscribe(response => {
+            let analise: Analise = response;
             let theJSON = JSON.stringify(analise);
             let blob = new Blob([theJSON], { type: 'text/json' });
             let url = window.URL.createObjectURL(blob);
