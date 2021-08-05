@@ -847,17 +847,7 @@ public class AnaliseService extends BaseService {
         this.carregarSistemaAnaliseJson(newAnalise, analise);
         this.carregarContratoAnaliseJson(newAnalise, analise);
         this.carregarStatusAnaliseJson(newAnalise, analise);
-        this.carregarEquipeAnaliseJson(newAnalise, analise);
         return newAnalise;
-    }
-
-    private void carregarEquipeAnaliseJson(Analise newAnalise, Analise analise) {
-        if(analise.getEquipeResponsavel().getNome() != null){
-            Optional<TipoEquipe> tipoEquipe = tipoEquipeRepository.findByNome(analise.getEquipeResponsavel().getNome());
-            if(tipoEquipe.isPresent()){
-                newAnalise.setEquipeResponsavel(tipoEquipe.get());
-            }
-        }
     }
 
     private void carregarStatusAnaliseJson(Analise newAnalise, Analise analise) {
