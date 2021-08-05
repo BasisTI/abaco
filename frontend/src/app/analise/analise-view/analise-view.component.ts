@@ -171,10 +171,8 @@ export class AnaliseViewComponent implements OnInit {
     }
 
     listOrganizacoes() {
-        this.organizacaoService.searchActiveOrganizations().subscribe((res) => {
-            this.organizacoes = res.json;
-        }, (error: Response) => {
-            this.pageNotificationService.addErrorMessage(this.getLabel('Ocorreu algum erro'));
+        this.organizacaoService.dropDownActiveLoggedUser().subscribe(res => {
+            this.organizacoes = res;
         });
     }
 
@@ -194,7 +192,9 @@ export class AnaliseViewComponent implements OnInit {
     }
 
     setSistamaOrganizacao(org: Organizacao) {
-        this.contratos = org.contracts;
+        this.contratoService.findAllContratoesByOrganization(org).subscribe((contracts) => {
+            this.contratos = contracts;
+        });
         this.sistemaService.findAllSystemOrg(org.id).subscribe((res: Sistema[]) => {
             this.sistemas = res;
         });
@@ -202,7 +202,6 @@ export class AnaliseViewComponent implements OnInit {
     }
 
     setEquipeOrganizacao(org: Organizacao) {
-        this.contratos = org.contracts;
         this.equipeService.findAllByOrganizacaoId(org.id).subscribe((res: TipoEquipe[]) => {
             this.equipeResponsavel = res;
             if (this.equipeResponsavel !== null) {
