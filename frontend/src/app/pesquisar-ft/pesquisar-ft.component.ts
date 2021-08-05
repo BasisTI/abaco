@@ -39,6 +39,9 @@ export class PesquisarFtComponent implements OnInit {
     @Input()
     isFuncaoDados: Boolean = false;
 
+    @Input()
+    tamanhoLista: number;
+
     translateSubscriptions: Subscription[] = [];
 
     enviarParaBaseLine: boolean;
@@ -531,6 +534,7 @@ export class PesquisarFtComponent implements OnInit {
                             if (this.verificarCamposObrigatorios()) {
                                 this.blockUiService.show();
                                 funcaoDadosResp.sustantation = "";
+                                funcaoDadosResp.ordem = this.tamanhoLista++;
                                 saveFuncaoDados.push(this.funcaoDadosService.create(funcaoDadosResp, this.analise.id));
                             }
                         });
