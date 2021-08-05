@@ -526,6 +526,10 @@ public class AnaliseService extends BaseService {
         return modelMapper.map(analise, AnaliseEditDTO.class);
     }
 
+    public AnaliseJsonDTO convertToAnaliseJsonDTO(Analise analise) {
+        return modelMapper.map(analise, AnaliseJsonDTO.class);
+    }
+
     public AnaliseDivergenceEditDTO convertToAnaliseDivergenceEditDTO(Analise analise) {
         return modelMapper.map(analise, AnaliseDivergenceEditDTO.class);
 
@@ -933,6 +937,7 @@ public class AnaliseService extends BaseService {
             funcaoDado.setAnalise(analise);
             funcaoDado.getDers().forEach(der -> { der.setFuncaoDados(funcaoDado); der.setId(null);});
             funcaoDado.getRlrs().forEach(rlr -> { rlr.setFuncaoDados(funcaoDado); rlr.setId(null);});
+            funcaoDado.setFuncionalidade(analise.getSistema().getModulos().stream().collect(Collectors.toList()).get(0).getFuncionalidades().stream().collect(Collectors.toList()).get(0));
             analise.getSistema().getModulos().forEach(modulo -> {
                 modulo.getFuncionalidades().forEach(funcionalidade -> {
                     if(funcionalidade.getNome().contains(funcaoDado.getFuncionalidade().getNome())){
@@ -948,6 +953,7 @@ public class AnaliseService extends BaseService {
             funcaoTransacao.setAnalise(analise);
             funcaoTransacao.getDers().forEach(der -> {der.setFuncaoTransacao(funcaoTransacao); der.setId(null);});
             funcaoTransacao.getAlrs().forEach((alr -> {alr.setFuncaoTransacao(funcaoTransacao); alr.setId(null);}));
+            funcaoTransacao.setFuncionalidade(analise.getSistema().getModulos().stream().collect(Collectors.toList()).get(0).getFuncionalidades().stream().collect(Collectors.toList()).get(0));
             analise.getSistema().getModulos().forEach(modulo -> {
                 modulo.getFuncionalidades().forEach(funcionalidade -> {
                     if(funcionalidade.getNome().contains(funcaoTransacao.getFuncionalidade().getNome())){
