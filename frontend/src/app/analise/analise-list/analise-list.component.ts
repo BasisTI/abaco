@@ -181,14 +181,6 @@ export class AnaliseListComponent implements OnInit {
     equipeResponsavel: TipoEquipe[] = [];
     hideShowSelectEquipe: boolean;
 
-    desabilitarOrg: boolean = false;
-    desabilitarSistema: boolean = false;
-    desabilitarEquipe: boolean = false;
-    desabilitarContrato: boolean = false;
-    desabilitarManual: boolean = false;
-    desabilitarMetodo: boolean = false;
-    desabilitarTipo: boolean = false;
-
     tiposAnalise: SelectItem[] = [
         {label: MessageUtil.PROJETO_DESENVOLVIMENTO, value: MessageUtil.DESENVOLVIMENTO},
         {label: MessageUtil.PROJETO_MELHORIA, value: MessageUtil.MELHORIA},
@@ -1076,8 +1068,8 @@ export class AnaliseListComponent implements OnInit {
         }
     }
 
-    exportarAnalise(analise: Analise) {
-        this.analiseService.findAnaliseByJson(analise.id).subscribe(response => {
+    exportarAnalise(analiseEx: Analise) {
+        this.analiseService.findAnaliseByJson(analiseEx.id).subscribe(response => {
             let analise: Analise = response;
             let theJSON = JSON.stringify(analise);
             let blob = new Blob([theJSON], { type: 'text/json' });
@@ -1150,33 +1142,8 @@ export class AnaliseListComponent implements OnInit {
                     this.contratoSelected(this.analiseImportar.contrato);
                 }
             }
-            this.desabilitarCamposPreenchidos();
         })
         this.analiseImportar = this.analisesImportar[0];
-    }
-
-    desabilitarCamposPreenchidos(){
-        if(this.analiseImportar.organizacao){
-            this.desabilitarOrg = true;
-        }
-        if(this.analiseImportar.sistema){
-            this.desabilitarSistema = true;
-        }
-        if(this.analiseImportar.equipeResponsavel){
-            this.desabilitarEquipe = true;
-        }
-        if(this.analiseImportar.contrato){
-            this.desabilitarContrato = true;
-        }
-        if(this.analiseImportar.manual){
-            this.desabilitarManual = true;
-        }
-        if(this.analiseImportar.metodoContagem){
-            this.desabilitarMetodo = true;
-        }
-        if(this.analiseImportar.tipoAnalise){
-            this.desabilitarTipo = true;
-        }
     }
 
     setSistemaOrganizacao(org: Organizacao){

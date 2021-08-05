@@ -24,29 +24,9 @@ import java.util.Set;
 @Getter
 @Setter
 @NoArgsConstructor
-public class AnaliseJsonDTO implements Serializable {
-
-    private Long id;
-    private String numeroOs;
-    private MetodoContagem metodoContagem;
-    private String escopo;
-    private String fronteiras;
-    private String documentacao;
-    private TipoAnalise tipoAnalise;
-    private String propositoContagem;
-    private String observacoes;
-    private Timestamp dataCriacaoOrdemServico;
-    private String identificadorAnalise;
-    private Boolean isDivergence = false;
-    private Sistema sistema;
-    private Status status;
-    private Contrato contrato;
-    private Organizacao organizacao;
-    private User createdBy;
+public class AnaliseJsonDTO extends AnaliseEditDTO {
+    
     private Set<FuncaoDados> funcaoDados = new HashSet<>();
     private Set<FuncaoTransacao> funcaoTransacaos = new HashSet<>();
-    private Set<EsforcoFase> esforcoFases;
-    private TipoEquipe equipeResponsavel;
-    private Manual manual;
 
 }
