@@ -22,7 +22,7 @@
                                     [disableView]="selectButtonMultiple || isOrderning" id="idTabelaFuncaoTransacaoFormFuncaoTransacao"
                                     [enableButtonsScroll]="true"
                                     [value]="this.funcoesTransacoes" (buttonClick)="datatableClick($event)"
-                                    (dblclick)="onRowDblclick($event)" (click)="selectFT()" [paginator]="false"
+                                    (dblclick)="onRowDblclick($event)" (click)="selectFT($event)" [paginator]="false"
                                     [rows]="20" [selectionMode]="'multiple'" [filterOnColumn]="true"
                                     [rowsPerPageOptions]="[20,50,100]" [showVisibleColumnsControl]="true" #tables>
                                     <p-column header="Ordem" field="ordem">
