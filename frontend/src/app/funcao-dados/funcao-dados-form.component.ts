@@ -1203,7 +1203,22 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
                 this.blockUiService.hide();
             });
     }
-    public selectFD() {
+    public selectFD(event) {
+        if(event.shiftKey === true){
+            let fim = this.funcoesDados.indexOf(this.tables.selectedRow[0]);
+            let inicio = this.funcoesDados.indexOf(this.funcaoDadosEditar[0]);
+            this.tables.selectedRow = [];
+            if(inicio < fim){
+                for(let i = inicio; i <= fim; i++){
+                    this.tables.selectedRow.push(this.funcoesDados[i]);
+                }
+            }else{
+                for(let i = fim; i <= inicio; i++){
+                    this.tables.selectedRow.push(this.funcoesDados[i]);
+                }
+            }
+        }
+
         this.tables.pDatatableComponent.metaKeySelection = true;
         if (this.tables && this.tables.selectedRow) {
             this.funcaoDadosEditar = this.tables.selectedRow;
