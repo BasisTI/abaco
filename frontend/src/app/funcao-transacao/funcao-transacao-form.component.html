@@ -58,7 +58,7 @@
                                     </basis-datatable-button>
                                     <basis-datatable-button [allowMultipleSelection]="false" name="clone"
                                         (click)="clonar()"
-                                        *ngIf="!isView && !isOrderning"
+                                        *ngIf="!isView && !isOrderning && !selectButtonMultiple"
                                         [bTooltip]="funcaoTransacaoEditar[0] != undefined ? this.getLabel('Criar Clone') : this.getLabel('Escolha um registro para criar Clone.')"
                                         [disabled]="funcaoTransacaoEditar[0] == undefined" class="ui-button-dark"
                                         icon="content-copy">
