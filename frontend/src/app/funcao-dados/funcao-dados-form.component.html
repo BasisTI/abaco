@@ -18,7 +18,7 @@
                                 <basis-datatable type="memory" id="idTabelaFuncaoDados" [disableDelete]="this.isView || isOrderning"
                                     [disableEdit]="this.isView || selectButtonMultiple || isOrderning" [enableButtonsScroll]="true"
                                     [disableView]="selectButtonMultiple || isOrderning" (dblclick)="onRowDblclick($event)"
-                                    [value]="funcoesDados" (buttonClick)="datatableClick($event)" (click)="selectFD()"
+                                    [value]="funcoesDados" (buttonClick)="datatableClick($event)" (click)="selectFD($event)"
                                     [paginator]="false" [rows]="20" [selectionMode]="'multiple'" [filterOnColumn]="true"
                                     [rowsPerPageOptions]="[20,50,100]" [showVisibleColumnsControl]="true" #tables>
                                     <p-column header="Ordem" field="ordem">

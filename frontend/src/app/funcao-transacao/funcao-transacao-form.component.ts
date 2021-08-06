@@ -1006,7 +1006,21 @@ export class FuncaoTransacaoFormComponent implements OnInit {
             this.blockUiService.hide();
         });
     }
-    public selectFT() {
+    public selectFT(event) {
+        if(event.shiftKey === true){
+            let fim = this.funcoesTransacoes.indexOf(this.tables.selectedRow[0]);
+            let inicio = this.funcoesTransacoes.indexOf(this.funcaoTransacaoEditar[0]);
+            this.tables.selectedRow = [];
+            if(inicio < fim){
+                for(let i = inicio; i <= fim; i++){
+                    this.tables.selectedRow.push(this.funcoesTransacoes[i]);
+                }
+            }else{
+                for(let i = fim; i <= inicio; i++){
+                    this.tables.selectedRow.push(this.funcoesTransacoes[i]);
+                }
+            }
+        }
         this.tables.pDatatableComponent.metaKeySelection = true;
         if (this.tables && this.tables.selectedRow) {
             this.funcaoTransacaoEditar = this.tables.selectedRow;
