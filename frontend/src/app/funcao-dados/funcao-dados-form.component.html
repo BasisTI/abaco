@@ -49,13 +49,13 @@
                                         bTooltip="Incluir nova função" class="ui-button-success" icon="add">
                                     </basis-datatable-button>
                                     <basis-datatable-button name="crud" [allowMultipleSelection]="false"
-                                        *ngIf="!isView && !(analise && analise.metodoContagem && analise.metodoContagem === 'INDICATIVA')  && !isOrderning"
+                                        *ngIf="!isView && !(analise && analise.metodoContagem && analise.metodoContagem === 'INDICATIVA')  && !isOrderning && !selectButtonMultiple"
                                         (click)="createCrud(this.funcaoDadosEditar[0])"
                                         [bTooltip]="funcaoDadosEditar[0] != undefined ? this.getLabel('Criar Crud') : this.getLabel('Escolha um registro para criar crud.')"
                                         [disabled]="funcaoDadosEditar[0] == undefined" class="ui-button-success"
                                         icon="input">
                                     </basis-datatable-button>
-                                    <basis-datatable-button *ngIf="!isView && !isOrderning" [allowMultipleSelection]="false"
+                                    <basis-datatable-button *ngIf="!isView && !isOrderning && !selectButtonMultiple" [allowMultipleSelection]="false"
                                         name="clone" (click)="clonar()"
                                         [bTooltip]="funcaoDadosEditar[0] != undefined ? this.getLabel('Criar Clone') : this.getLabel('Escolha um registro para criar Clone.')"
                                         [disabled]="funcaoDadosEditar[0] == undefined" class="ui-button-dark"
