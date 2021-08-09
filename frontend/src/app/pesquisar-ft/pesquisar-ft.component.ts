@@ -434,6 +434,7 @@ export class PesquisarFtComponent implements OnInit {
                     });
                     forkJoin(getFuncaoTransacoes).subscribe(result => {
                         result.forEach(funcaoTransacaoResp => {
+                            funcaoTransacaoResp.ordem = this.tamanhoLista++;
                             funcaoTransacaoResp['id'] = undefined;
                             if (this.analise.metodoContagem === 'ESTIMADA' || this.analise.metodoContagem === 'INDICATIVA') {
                                 funcaoTransacaoResp.ders = [];
@@ -507,6 +508,7 @@ export class PesquisarFtComponent implements OnInit {
 
                     forkJoin(getFuncaoDados).subscribe(result => {
                         result.forEach(funcaoDadosResp => {
+                            console.log(funcaoDadosResp);
                             funcaoDadosResp['id'] = undefined;
                             if (this.analise.metodoContagem === 'ESTIMADA' || this.analise.metodoContagem === 'INDICATIVA') {
                                 funcaoDadosResp.ders = [];
@@ -534,7 +536,6 @@ export class PesquisarFtComponent implements OnInit {
                             if (this.verificarCamposObrigatorios()) {
                                 this.blockUiService.show();
                                 funcaoDadosResp.sustantation = "";
-                                funcaoDadosResp.ordem = this.tamanhoLista++;
                                 saveFuncaoDados.push(this.funcaoDadosService.create(funcaoDadosResp, this.analise.id));
                             }
                         });
