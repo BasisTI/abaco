@@ -434,7 +434,7 @@ export class PesquisarFtComponent implements OnInit {
                     });
                     forkJoin(getFuncaoTransacoes).subscribe(result => {
                         result.forEach(funcaoTransacaoResp => {
-                            funcaoTransacaoResp.ordem = ++this.tamanhoLista;
+                            funcaoTransacaoResp.ordem = this.tamanhoLista++;
                             funcaoTransacaoResp['id'] = undefined;
                             if (this.analise.metodoContagem === 'ESTIMADA' || this.analise.metodoContagem === 'INDICATIVA') {
                                 funcaoTransacaoResp.ders = [];

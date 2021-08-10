@@ -392,7 +392,7 @@
 <div *ngIf="analise && analise.organizacao && analise.sistema.modulos">
     <p-dialog [header]="this.getLabel('Importa funções de transação')" [(visible)]="display" [style]="{width: '80vw'}"
         [closable]="false">
-        <app-pesquisar-ft [tamanhoLista]="funcoesTransacoes.length" ></app-pesquisar-ft>
+        <app-pesquisar-ft [tamanhoLista]="funcoesTransacoes.length+1" ></app-pesquisar-ft>
     </p-dialog>
 </div>
 
