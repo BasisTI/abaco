@@ -925,6 +925,14 @@ public class AnaliseService extends BaseService {
         funcaoDados.forEach(funcaoDado -> {
             funcaoDado.setId(null);
             funcaoDado.setAnalise(analise);
+            if(!analise.getManual().getFatoresAjuste().contains(funcaoDado.getFatorAjuste())){
+                funcaoDado.setFatorAjuste(analise.getManual().getFatoresAjuste().stream().collect(Collectors.toList()).get(0));
+                analise.getManual().getFatoresAjuste().forEach(fatorAjuste ->{
+                    if(funcaoDado.getFatorAjuste().getNome().equals(fatorAjuste.getNome())){
+                        funcaoDado.setFatorAjuste(fatorAjuste);
+                    }
+                });
+            }
             funcaoDado.getDers().forEach(der -> { der.setFuncaoDados(funcaoDado); der.setId(null);});
             funcaoDado.getRlrs().forEach(rlr -> { rlr.setFuncaoDados(funcaoDado); rlr.setId(null);});
             funcaoDado.setFuncionalidade(analise.getSistema().getModulos().stream().collect(Collectors.toList()).get(0).getFuncionalidades().stream().collect(Collectors.toList()).get(0));
@@ -941,6 +949,14 @@ public class AnaliseService extends BaseService {
         funcaoTransacaos.forEach(funcaoTransacao -> {
             funcaoTransacao.setId(null);
             funcaoTransacao.setAnalise(analise);
+            if(!analise.getManual().getFatoresAjuste().contains(funcaoTransacao.getFatorAjuste())){
+                funcaoTransacao.setFatorAjuste(analise.getManual().getFatoresAjuste().stream().collect(Collectors.toList()).get(0));
+                analise.getManual().getFatoresAjuste().forEach(fatorAjuste ->{
+                    if(funcaoTransacao.getFatorAjuste().getNome().equals(fatorAjuste.getNome())){
+                        funcaoTransacao.setFatorAjuste(fatorAjuste);
+                    }
+                });
+            }
             funcaoTransacao.getDers().forEach(der -> {der.setFuncaoTransacao(funcaoTransacao); der.setId(null);});
             funcaoTransacao.getAlrs().forEach((alr -> {alr.setFuncaoTransacao(funcaoTransacao); alr.setId(null);}));
             funcaoTransacao.setFuncionalidade(analise.getSistema().getModulos().stream().collect(Collectors.toList()).get(0).getFuncionalidades().stream().collect(Collectors.toList()).get(0));
