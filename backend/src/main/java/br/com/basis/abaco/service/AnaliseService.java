@@ -922,30 +922,14 @@ public class AnaliseService extends BaseService {
                 analise.setSistema(sistema.get());
             }
         }
-        funcaoDados.forEach(funcaoDado -> {
-            funcaoDado.setId(null);
-            funcaoDado.setAnalise(analise);
-            if(!analise.getManual().getFatoresAjuste().contains(funcaoDado.getFatorAjuste())){
-                funcaoDado.setFatorAjuste(analise.getManual().getFatoresAjuste().stream().collect(Collectors.toList()).get(0));
-                analise.getManual().getFatoresAjuste().forEach(fatorAjuste ->{
-                    if(funcaoDado.getFatorAjuste().getNome().equals(fatorAjuste.getNome())){
-                        funcaoDado.setFatorAjuste(fatorAjuste);
-                    }
-                });
-            }
-            funcaoDado.getDers().forEach(der -> { der.setFuncaoDados(funcaoDado); der.setId(null);});
-            funcaoDado.getRlrs().forEach(rlr -> { rlr.setFuncaoDados(funcaoDado); rlr.setId(null);});
-            funcaoDado.setFuncionalidade(analise.getSistema().getModulos().stream().collect(Collectors.toList()).get(0).getFuncionalidades().stream().collect(Collectors.toList()).get(0));
-            analise.getSistema().getModulos().forEach(modulo -> {
-                modulo.getFuncionalidades().forEach(funcionalidade -> {
-                    if(funcionalidade.getNome().contains(funcaoDado.getFuncionalidade().getNome())){
-                        funcaoDado.setFuncionalidade(funcionalidade);
-                    }
-                });
-            });
-            funcaoDadosRepository.save(funcaoDado);
-            funcaoDadosSearchRepository.save(funcaoDado);
-        });
+        this.salvarFuncaoDadosJson(funcaoDados, analise);
+        this.salvarFuncaoTransacaoJson(funcaoTransacaos, analise);
+        this.updatePf(analise);
+        analiseRepository.save(analise);
+        analiseSearchRepository.save(this.convertToEntity(this.convertToDto(analise)));
+    }
+
+    private void salvarFuncaoTransacaoJson(Set<FuncaoTransacao> funcaoTransacaos, Analise analise) {
         funcaoTransacaos.forEach(funcaoTransacao -> {
             funcaoTransacao.setId(null);
             funcaoTransacao.setAnalise(analise);
@@ -970,8 +954,32 @@ public class AnaliseService extends BaseService {
             funcaoTransacaoRepository.save(funcaoTransacao);
             funcaoTransacaoSearchRepository.save(funcaoTransacao);
         });
-        this.updatePf(analise);
-        analiseRepository.save(analise);
-        analiseSearchRepository.save(this.convertToEntity(this.convertToDto(analise)));
+    }
+
+    private void salvarFuncaoDadosJson(Set<FuncaoDados> funcaoDados, Analise analise) {
+        funcaoDados.forEach(funcaoDado -> {
+            funcaoDado.setId(null);
+            funcaoDado.setAnalise(analise);
+            if(!analise.getManual().getFatoresAjuste().contains(funcaoDado.getFatorAjuste())){
+                funcaoDado.setFatorAjuste(analise.getManual().getFatoresAjuste().stream().collect(Collectors.toList()).get(0));
+                analise.getManual().getFatoresAjuste().forEach(fatorAjuste ->{
+                    if(funcaoDado.getFatorAjuste().getNome().equals(fatorAjuste.getNome())){
+                        funcaoDado.setFatorAjuste(fatorAjuste);
+                    }
+                });
+            }
+            funcaoDado.getDers().forEach(der -> { der.setFuncaoDados(funcaoDado); der.setId(null);});
+            funcaoDado.getRlrs().forEach(rlr -> { rlr.setFuncaoDados(funcaoDado); rlr.setId(null);});
+            funcaoDado.setFuncionalidade(analise.getSistema().getModulos().stream().collect(Collectors.toList()).get(0).getFuncionalidades().stream().collect(Collectors.toList()).get(0));
+            analise.getSistema().getModulos().forEach(modulo -> {
+                modulo.getFuncionalidades().forEach(funcionalidade -> {
+                    if(funcionalidade.getNome().contains(funcaoDado.getFuncionalidade().getNome())){
+                        funcaoDado.setFuncionalidade(funcionalidade);
+                    }
+                });
+            });
+            funcaoDadosRepository.save(funcaoDado);
+            funcaoDadosSearchRepository.save(funcaoDado);
+        });
     }
 }
