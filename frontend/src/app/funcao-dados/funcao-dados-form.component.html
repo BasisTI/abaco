@@ -18,7 +18,7 @@
                                 <basis-datatable type="memory" id="idTabelaFuncaoDados" [disableDelete]="this.isView || isOrderning"
                                     [disableEdit]="this.isView || selectButtonMultiple || isOrderning" [enableButtonsScroll]="true"
                                     [disableView]="selectButtonMultiple || isOrderning" (dblclick)="onRowDblclick($event)"
-                                    [value]="funcoesDados" (buttonClick)="datatableClick($event)" (click)="selectFD()"
+                                    [value]="funcoesDados" (buttonClick)="datatableClick($event)" (click)="selectFD($event)"
                                     [paginator]="false" [rows]="20" [selectionMode]="'multiple'" [filterOnColumn]="true"
                                     [rowsPerPageOptions]="[20,50,100]" [showVisibleColumnsControl]="true" #tables>
                                     <p-column header="Ordem" field="ordem">
@@ -49,13 +49,13 @@
                                         bTooltip="Incluir nova função" class="ui-button-success" icon="add">
                                     </basis-datatable-button>
                                     <basis-datatable-button name="crud" [allowMultipleSelection]="false"
-                                        *ngIf="!isView && !(analise && analise.metodoContagem && analise.metodoContagem === 'INDICATIVA')  && !isOrderning"
+                                        *ngIf="!isView && !(analise && analise.metodoContagem && analise.metodoContagem === 'INDICATIVA')  && !isOrderning && !selectButtonMultiple"
                                         (click)="createCrud(this.funcaoDadosEditar[0])"
                                         [bTooltip]="funcaoDadosEditar[0] != undefined ? this.getLabel('Criar Crud') : this.getLabel('Escolha um registro para criar crud.')"
                                         [disabled]="funcaoDadosEditar[0] == undefined" class="ui-button-success"
                                         icon="input">
                                     </basis-datatable-button>
-                                    <basis-datatable-button *ngIf="!isView && !isOrderning" [allowMultipleSelection]="false"
+                                    <basis-datatable-button *ngIf="!isView && !isOrderning && !selectButtonMultiple" [allowMultipleSelection]="false"
                                         name="clone" (click)="clonar()"
                                         [bTooltip]="funcaoDadosEditar[0] != undefined ? this.getLabel('Criar Clone') : this.getLabel('Escolha um registro para criar Clone.')"
                                         [disabled]="funcaoDadosEditar[0] == undefined" class="ui-button-dark"
@@ -624,6 +624,6 @@
 <p-dialog [header]="this.getLabel('Importa funções de dados')" [(visible)]="display" [style]="{width: '80vw'}"
     [closable]="false">
     <div *ngIf="analise && analise.id && analise.sistema.modulos">
-        <app-pesquisar-ft [isFuncaoDados]="true"></app-pesquisar-ft>
+        <app-pesquisar-ft [isFuncaoDados]="true" [tamanhoLista]="funcoesDados.length+1"></app-pesquisar-ft>
     </div>
 </p-dialog>

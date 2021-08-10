@@ -287,6 +287,10 @@ export class AnaliseService {
             this.funcaoTransacaoService.getFuncaoTransacaoAnalise(id));
     }
 
+    public findAnaliseByJson(id: number): Observable<Analise>{
+        return this.http.get<Analise>(this.resourceUrl+"/analise-json/"+id);
+    }
+
     public clonarAnalise(id: number): Observable<Analise> {
         const url = this.clonarAnaliseUrl + id;
         return this.http.get<Analise>(url);
@@ -468,5 +472,10 @@ export class AnaliseService {
                 }
             }))
     }
+
+    carregarAnaliseJson(analise: Analise) : Observable<Analise> {
+        return this.http.post<Analise>(this.resourceUrl+"/carregarAnalise", analise);
+    }
+
 
 }

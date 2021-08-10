@@ -22,7 +22,7 @@
                                     [disableView]="selectButtonMultiple || isOrderning" id="idTabelaFuncaoTransacaoFormFuncaoTransacao"
                                     [enableButtonsScroll]="true"
                                     [value]="this.funcoesTransacoes" (buttonClick)="datatableClick($event)"
-                                    (dblclick)="onRowDblclick($event)" (click)="selectFT()" [paginator]="false"
+                                    (dblclick)="onRowDblclick($event)" (click)="selectFT($event)" [paginator]="false"
                                     [rows]="20" [selectionMode]="'multiple'" [filterOnColumn]="true"
                                     [rowsPerPageOptions]="[20,50,100]" [showVisibleColumnsControl]="true" #tables>
                                     <p-column header="Ordem" field="ordem">
@@ -58,7 +58,7 @@
                                     </basis-datatable-button>
                                     <basis-datatable-button [allowMultipleSelection]="false" name="clone"
                                         (click)="clonar()"
-                                        *ngIf="!isView && !isOrderning"
+                                        *ngIf="!isView && !isOrderning && !selectButtonMultiple"
                                         [bTooltip]="funcaoTransacaoEditar[0] != undefined ? this.getLabel('Criar Clone') : this.getLabel('Escolha um registro para criar Clone.')"
                                         [disabled]="funcaoTransacaoEditar[0] == undefined" class="ui-button-dark"
                                         icon="content-copy">
@@ -392,7 +392,7 @@
 <div *ngIf="analise && analise.organizacao && analise.sistema.modulos">
     <p-dialog [header]="this.getLabel('Importa funções de transação')" [(visible)]="display" [style]="{width: '80vw'}"
         [closable]="false">
-        <app-pesquisar-ft></app-pesquisar-ft>
+        <app-pesquisar-ft [tamanhoLista]="funcoesTransacoes.length+1" ></app-pesquisar-ft>
     </p-dialog>
 </div>
 
