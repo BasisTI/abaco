@@ -458,10 +458,10 @@ export class AnaliseListComponent implements OnInit {
     }
 
     gerarDivergencia() {
-        if (this.analiseSelecionada.id) {
+        if (this.analisesSelecionadasEmLote.length === 1) {
             this.confirmDivergenceGenerate(this.analiseSelecionada);
         } else {
-            this.openModalDivergence(this.analiseSelecionada);
+            this.openModalDivergence(this.analisesSelecionadasEmLote);
         }
     }
 
@@ -629,7 +629,6 @@ export class AnaliseListComponent implements OnInit {
     }
 
     public selectAnalise() {
-
         if (this.datatable && this.datatable.selectedRow) {
             this.inicial = true;
             if (this.datatable.selectedRow) {
@@ -960,7 +959,6 @@ export class AnaliseListComponent implements OnInit {
     }
 
     public generateDivergence(setMainAnalise: boolean) {
-
         if (setMainAnalise) {
             this.mainAnaliseDivergencia = this.firstAnaliseDivergencia;
             this.auxiliaryAnaliseDivergencia = this.secondAnaliseDivergencia;

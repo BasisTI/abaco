@@ -508,7 +508,6 @@ export class PesquisarFtComponent implements OnInit {
 
                     forkJoin(getFuncaoDados).subscribe(result => {
                         result.forEach(funcaoDadosResp => {
-                            console.log(funcaoDadosResp);
                             funcaoDadosResp['id'] = undefined;
                             if (this.analise.metodoContagem === 'ESTIMADA' || this.analise.metodoContagem === 'INDICATIVA') {
                                 funcaoDadosResp.ders = [];
