@@ -470,7 +470,7 @@ public class AnaliseService extends BaseService {
         Set<Alr> alrs = new HashSet<>();
         Set<Der> ders = new HashSet<>();
         FuncaoTransacao funcaoTransacao = new FuncaoTransacao();
-        funcaoTransacao.bindFuncaoTransacao(ft.getTipo(), ft.getFtrStr(), ft.getQuantidade(), alrs, null, ft.getFtrValues(), ft.getImpacto(), ders, analiseClone, ft.getComplexidade(), ft.getPf(), ft.getGrossPF(), ft.getFuncionalidade(), ft.getDetStr(), ft.getFatorAjuste(), ft.getName(), ft.getSustantation(), ft.getDerValues());
+        funcaoTransacao.bindFuncaoTransacao(ft.getTipo(), ft.getFtrStr(), ft.getQuantidade(), alrs, null, ft.getFtrValues(), ft.getImpacto(), ders, analiseClone, ft.getComplexidade(), ft.getPf(), ft.getGrossPF(), ft.getFuncionalidade(), ft.getDetStr(), ft.getFatorAjuste(), ft.getName(), ft.getSustantation(), ft.getDerValues(), ft.getEquipe());
         funcaoTransacao.setFuncionalidade(ft.getFuncionalidade());
         ft.getAlrs().forEach(alr -> {
             Alr alrClone = new Alr(null, alr.getNome(), alr.getValor(), funcaoTransacao, null);
@@ -497,7 +497,7 @@ public class AnaliseService extends BaseService {
     }
 
     private void bindFuncaoDados(Analise analiseClone, FuncaoDados fd, Set<Rlr> rlrs, Set<Der> ders, FuncaoDados funcaoDado) {
-        funcaoDado.bindFuncaoDados(fd.getComplexidade(), fd.getPf(), fd.getGrossPF(), analiseClone, fd.getFuncionalidade(), fd.getDetStr(), fd.getFatorAjuste(), fd.getName(), fd.getSustantation(), fd.getDerValues(), fd.getTipo(), fd.getRetStr(), fd.getQuantidade(), rlrs, fd.getAlr(), fd.getFiles(), fd.getRlrValues(), ders, fd.getFuncaoDadosVersionavel(), fd.getImpacto());
+        funcaoDado.bindFuncaoDados(fd.getComplexidade(), fd.getPf(), fd.getGrossPF(), analiseClone, fd.getFuncionalidade(), fd.getDetStr(), fd.getFatorAjuste(), fd.getName(), fd.getSustantation(), fd.getDerValues(), fd.getTipo(), fd.getRetStr(), fd.getQuantidade(), rlrs, fd.getAlr(), fd.getFiles(), fd.getRlrValues(), ders, fd.getFuncaoDadosVersionavel(), fd.getImpacto(), fd.getEquipe());
         Optional.ofNullable(fd.getDers()).orElse(Collections.emptySet())
             .forEach(der -> {
                 Rlr rlr = null;
@@ -666,6 +666,8 @@ public class AnaliseService extends BaseService {
         analiseClone.setFronteiras(EMPTY_STRING);
         analiseClone.setPropositoContagem(EMPTY_STRING);
         analiseClone.setEscopo(EMPTY_STRING);
+        analise.getFuncaoDados().forEach(funcao -> funcao.setEquipe(analise.getEquipeResponsavel()));
+        analise.getFuncaoTransacaos().forEach(funcao -> funcao.setEquipe(analise.getEquipeResponsavel()));
         analiseClone.setFuncaoDados(bindDivergenceFuncaoDados(analise, analiseClone));
         analiseClone.setFuncaoTransacaos(bindDivergenceFuncaoTransacaos(analise, analiseClone));
         analiseClone.setEsforcoFases(bindCloneEsforcoFase(analise));
@@ -756,6 +758,10 @@ public class AnaliseService extends BaseService {
     private void unionFuncaoDadosAndFuncaoTransacao(Analise analisePrincipal, Analise analiseSecundaria, Analise analiseDivergenciaPrincipal) {
         Set<FuncaoDados> lstFuncaoDados = new HashSet<>();
         Set<FuncaoTransacao> lstFuncaoTransacaos = new HashSet<>();
+        analisePrincipal.getFuncaoDados().forEach(funcao -> funcao.setEquipe(analisePrincipal.getEquipeResponsavel()));
+        analisePrincipal.getFuncaoTransacaos().forEach(funcao -> funcao.setEquipe(analisePrincipal.getEquipeResponsavel()));
+        analiseSecundaria.getFuncaoDados().forEach(funcao -> funcao.setEquipe(analiseSecundaria.getEquipeResponsavel()));
+        analiseSecundaria.getFuncaoTransacaos().forEach(funcao -> funcao.setEquipe(analiseSecundaria.getEquipeResponsavel()));
         lstFuncaoDados.addAll(analisePrincipal.getFuncaoDados());
         lstFuncaoDados.addAll(analiseSecundaria.getFuncaoDados());
         lstFuncaoTransacaos.addAll(analisePrincipal.getFuncaoTransacaos());

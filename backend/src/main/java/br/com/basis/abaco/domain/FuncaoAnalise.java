@@ -80,12 +80,17 @@ public abstract class FuncaoAnalise implements AbacoAuditable {
     @Column(name="ordem")
     private Long ordem;
 
+    //Responsável por identificar qual equipe criou essa função , campo será utilizado em validação
+    @ManyToOne
+    @JoinColumn(name = "equipe_id")
+    private TipoEquipe equipe;
+
 
     @Embedded
     // XXX deve ter o new() mesmo?
     private AbacoAudit audit = new AbacoAudit();
 
-    protected void bindFuncaoAnalise(Long id, Complexidade complexidade, BigDecimal pf, BigDecimal grossPF, Analise analise, Funcionalidade funcionalidade, String detStr, FatorAjuste fatorAjuste, String name, String sustantation, Set<String> derValues, AbacoAudit audit) {
+    protected void bindFuncaoAnalise(Long id, Complexidade complexidade, BigDecimal pf, BigDecimal grossPF, Analise analise, Funcionalidade funcionalidade, String detStr, FatorAjuste fatorAjuste, String name, String sustantation, Set<String> derValues, AbacoAudit audit, TipoEquipe tipoEquipe) {
         this.id = id;
         this.complexidade = complexidade;
         this.pf = pf;
@@ -99,6 +104,7 @@ public abstract class FuncaoAnalise implements AbacoAuditable {
         this.derValues = derValues == null ? null:Collections.unmodifiableSet(derValues);
         this.audit = audit;
         this.analise = analise;
+        this.equipe = tipoEquipe;
     }
 
     public FuncaoAnalise() {
@@ -216,5 +222,13 @@ public abstract class FuncaoAnalise implements AbacoAuditable {
 
     public void setOrdem(Long ordem) {
         this.ordem = ordem;
+    }
+
+    public TipoEquipe getEquipe() {
+        return equipe;
+    }
+
+    public void setEquipe(TipoEquipe equipe) {
+        this.equipe = equipe;
     }
 }
