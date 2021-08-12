@@ -50,6 +50,12 @@ public class VwFuncao {
     @Column(name = "nome_funcionalidade")
     private String nomeFuncionalidade;
 
+    @Column(name = "equipe_id")
+    private Long equipeId;
+
+    @Column(name = "nome_equipe")
+    private String nomeEquipe;
+
     @Column(name = "id_modulo")
     private Long idModulo;
 

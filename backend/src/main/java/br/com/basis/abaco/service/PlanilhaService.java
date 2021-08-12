@@ -217,7 +217,7 @@ public class PlanilhaService {
 
     }
 
-    //EB 1
+    //EB 1 COLOG
 
     private ByteArrayOutputStream modeloPadraoEB1(Analise analise, List<FuncaoDados> funcaoDadosList, List<FuncaoTransacao> funcaoTransacaoList) throws IOException {
         InputStream stream = getClass().getClassLoader().getResourceAsStream("reports/planilhas/modelo4-eb1.xlsx");
@@ -335,6 +335,7 @@ public class PlanilhaService {
                 break;
         }
         excelSheet.getRow(12).getCell(0).setCellValue(analise.getEscopo());
+        excelSheet.getRow(5).getCell(5).setCellValue(analise.getDataCriacaoOrdemServico());
     }
 
     //ANAC
@@ -530,6 +531,7 @@ public class PlanilhaService {
         if(analise.getSistema() != null){
             excelSheet.getRow(3).getCell(5).setCellValue(analise.getSistema().getNome());
         }
+        excelSheet.getRow(6).getCell(20).setCellValue(analise.getDataCriacaoOrdemServico());
         excelSheet.getRow(22).getCell(0).setCellValue(analise.getEscopo());
         excelSheet.getRow(11).getCell(0).setCellValue(analise.getPropositoContagem());
     }
