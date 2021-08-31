@@ -238,6 +238,10 @@ public class AnaliseResource {
     public ResponseEntity<AnaliseEditDTO> cloneAnaliseToEquipe(@PathVariable Long id, @PathVariable Long idEquipe) {
         Analise analise = analiseService.recuperarAnalise(id);
         TipoEquipe tipoEquipe = tipoEquipeRepository.findById(idEquipe);
+        if(analise.getClonadaParaEquipe() == null){
+            analise.setClonadaParaEquipe(false);
+        }
+        
         if (analise.getId() != null && tipoEquipe.getId() != null && !(analise.getClonadaParaEquipe())) {
             Analise analiseClone = new Analise(analise, userRepository.findOneByLogin(SecurityUtils.getCurrentUserLogin()).get());
             analiseService.bindAnaliseCloneForTipoEquipe(analise, tipoEquipe, analiseClone);
