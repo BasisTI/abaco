@@ -130,7 +130,7 @@ export class PesquisarFtComponent implements OnInit {
 
     metodoContagem = 1;
 
-
+    campoDers: string = "";
 
 
     constructor(
@@ -283,7 +283,6 @@ export class PesquisarFtComponent implements OnInit {
             this.carregaFatorAjusteNaEdicao();
             this.subscribeFuncionalideBaseline();
         }
-
         const isContratoSelected = this.analiseSharedDataService.isContratoSelected();
         if (isContratoSelected) {
             if (this.fatoresAjuste.length === 0) {
@@ -293,12 +292,14 @@ export class PesquisarFtComponent implements OnInit {
         if(this.isFuncaoDados){
             this.classificacoes = [{label: "", value: ""},
                                     {label: "ALI", value: "ALI"},
-                                    {label: "AIE", value: "AIE"}]
+                                    {label: "AIE", value: "AIE"}];
+            this.campoDers = "DERs/RLRs";
         }else{
             this.classificacoes = [{label: "", value: ""},
                                     {label: "CE", value: "CE"},
                                     {label: "EE", value: "EE"},
-                                    {label: "SE", value: "SE"}]
+                                    {label: "SE", value: "SE"}];
+            this.campoDers = "DERs/ALRs";
         }
     }
 
