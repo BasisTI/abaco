@@ -593,10 +593,12 @@ public class PlanilhaService {
     private void setarResumoExcelPadraoBasis(XSSFWorkbook excelFile, Analise analise){
         XSSFSheet excelSheet = excelFile.getSheet(RESUMO);
         FormulaEvaluator evaluator = excelFile.getCreationHelper().createFormulaEvaluator();
-
         if(analise.getNumeroOs() != null){
             excelSheet.getRow(3).getCell(1).setCellValue(analise.getNumeroOs());
         }
+        excelSheet.getRow(4).getCell(5).setCellValue(analise.getSistema().getNome());
+        excelSheet.getRow(5).getCell(5).setCellValue(analise.getDataCriacaoOrdemServico());
+        excelSheet.getRow(12).getCell(0).setCellValue(analise.getEscopo());
         switch(analise.getMetodoContagem()){
             case ESTIMADA:
                 excelSheet.getRow(4).getCell(1).setCellValue(METODO_ESTIMATIVA);
@@ -637,6 +639,7 @@ public class PlanilhaService {
             row.getCell(10).setCellValue(rlrs);
             String ders = funcaoDados.getDers().stream().map(item -> item.getNome()).collect(Collectors.joining(", "));
             row.getCell(8).setCellValue(ders);
+            row.getCell(17).setCellValue(Jsoup.parse(funcaoDados.getSustantation() != null ? funcaoDados.getSustantation() : "").text());
             evaluator.evaluateFormulaCell(row.getCell(16));
         }
 
@@ -657,6 +660,7 @@ public class PlanilhaService {
                 evaluator.evaluateFormulaCell(row.getCell(16));
                 row.getCell(0).setCellValue(idRow++);
                 row.getCell(1).setCellValue(funcaoTransacao.getFatorAjuste().getNome());
+                row.getCell(17).setCellValue(Jsoup.parse(funcaoTransacao.getSustantation() != null ? funcaoTransacao.getSustantation() : "").text());
                 evaluator.evaluateFormulaCell(row.getCell(2));
             }
         }
@@ -681,6 +685,7 @@ public class PlanilhaService {
             row.getCell(5).setCellValue(funcaoDados.getFuncionalidade().getNome());
             row.getCell(6).setCellValue(funcaoDados.getName());
             row.getCell(7).setCellValue(funcaoDados.getTipo().toString());
+            row.getCell(9).setCellValue(Jsoup.parse(funcaoDados.getSustantation() != null ? funcaoDados.getSustantation() : "").text());
             evaluator.evaluateFormulaCell(row.getCell(8));
         }
 
@@ -694,6 +699,7 @@ public class PlanilhaService {
                 row.getCell(4).setCellValue(funcaoTransacao.getFuncionalidade().getModulo().getNome());
                 row.getCell(5).setCellValue(funcaoTransacao.getFuncionalidade().getNome());
                 row.getCell(6).setCellValue(funcaoTransacao.getName());
+                row.getCell(9).setCellValue(Jsoup.parse(funcaoTransacao.getSustantation() != null ? funcaoTransacao.getSustantation() : "").text());
                 row.getCell(7).setCellValue(funcaoTransacao.getTipo().toString());
                 evaluator.evaluateFormulaCell(row.getCell(8));
             }
