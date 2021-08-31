@@ -158,6 +158,11 @@ public class UploadedFile implements Serializable {
     }
 
     public byte[] getLogo() {
+        if(logo == null){
+            byte[] logo2 = new byte[1];
+            
+            return logo2;
+        }
         return logo.clone();
     }
 
