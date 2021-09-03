@@ -75,10 +75,4 @@ public class PEAnalitico implements Serializable {
     @Column(name = "nome_modulo")
     private String nomeModulo;
 
-    @Column(name = "qtd_ders")
-    private Integer qtdDers;
-
-    @Column(name = "qtd_rlrs")
-    private Integer qtdRlrs;
-
 }

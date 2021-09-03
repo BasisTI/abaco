@@ -29,6 +29,9 @@ import { saveAs } from 'file-saver';
 import * as XLSX from 'xlsx';
 import jsPDF from 'jspdf';
 import 'jspdf-autotable';
+import { DerService } from '../der/der.service';
+import { AlrService } from '../alr/alr.service';
+import { RlrService } from '../rlr/rlr.service';
 
 @Component({
     selector: 'app-pesquisar-ft',
@@ -146,6 +149,9 @@ export class PesquisarFtComponent implements OnInit {
         private baselineFT: BaselineService,
         private router: Router,
         private blockUiService: BlockUiService,
+        private derService: DerService,
+        private alrService: AlrService,
+        private rlrService: RlrService
     ) {
     }
 
@@ -563,6 +569,14 @@ export class PesquisarFtComponent implements OnInit {
                 this.funcaoDadosService.getFuncaoDadosByModuloOrFuncionalidade(this.analise.sistema.id, this.nameSearch, this.moduloSelecionado.id, this.funcionalidadeAtual.id).subscribe(value => {
                     this.blockUiService.hide();
                     this.fn = value;
+                    this.fn.forEach(funcao => {
+                        this.derService.dropDownByFuncaoDadosId(funcao.idfuncaodados).subscribe(response => {
+                            funcao.qtdDers = response.length;
+                        })
+                        this.rlrService.dropDownByFuncaoDadosId(funcao.idfuncaodados).subscribe(response => {
+                            funcao.qtdRlrs = response.length;
+                        })
+                    })
                 });
             } else {
                 this.funcaoDadosService.getFuncaoDadosByModuloOrFuncionalidadeEstimada(this.analise.sistema.id, this.nameSearch, this.moduloSelecionado.id, this.funcionalidadeAtual.id).subscribe(value => {
@@ -576,6 +590,14 @@ export class PesquisarFtComponent implements OnInit {
                 this.funcaoTransacaoService.getFuncaoTransacaoByModuloOrFuncionalidade(this.analise.sistema.id, this.nameSearch, this.moduloSelecionado.id, this.funcionalidadeAtual.id).subscribe(value => {
                     this.blockUiService.hide();
                     this.fn = value;
+                    this.fn.forEach(funcao => {
+                        this.derService.dropDownByFuncaoTransacaoId(funcao.idfuncaodados).subscribe(response => {
+                            funcao.qtdDers = response.length;
+                        })
+                        this.alrService.dropDownByFuncaoTransacaoId(funcao.idfuncaodados).subscribe(response => {
+                            funcao.qtdRlrs = response.length;
+                        })
+                    })
                 });
             } else {
                 this.funcaoTransacaoService.getFuncaoTransacaoByModuloOrFuncionalidadeEstimada(this.analise.sistema.id, this.nameSearch, this.moduloSelecionado.id, this.funcionalidadeAtual.id).subscribe(value => {
