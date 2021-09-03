@@ -19,6 +19,4 @@ public class PEAnaliticoDTO {
     private String nomeModulo;
     private Long idFuncionalidade;
     private Long idModulo;
-    private Long qtdDers;
-    private Long qtdRlrs;
 }

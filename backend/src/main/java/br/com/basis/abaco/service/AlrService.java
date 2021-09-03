@@ -1,10 +1,10 @@
 package br.com.basis.abaco.service;
 
+import br.com.basis.abaco.domain.Alr;
+import br.com.basis.abaco.domain.Der;
 import br.com.basis.abaco.domain.VwAlr;
-import br.com.basis.abaco.domain.VwRlr;
 import br.com.basis.abaco.repository.AlrRepository;
-import br.com.basis.abaco.repository.search.AlrSearchRepository;
-import br.com.basis.abaco.repository.search.VwAlrSearchRepository;
+import br.com.basis.abaco.service.dto.DropdownDTO;
 import br.com.basis.dynamicexports.service.DynamicExportsService;
 import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
@@ -15,6 +15,7 @@ import org.springframework.data.elasticsearch.core.query.SearchQuery;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -23,10 +24,12 @@ public class AlrService {
 
     private final ElasticsearchTemplate elasticsearchTemplate;
     private final DynamicExportsService dynamicExportsService;
+    private final AlrRepository alrRepository;
 
-    public AlrService(ElasticsearchTemplate elasticsearchTemplate, DynamicExportsService dynamicExportsService){
+    public AlrService(ElasticsearchTemplate elasticsearchTemplate, DynamicExportsService dynamicExportsService, AlrRepository alrRepository){
         this.elasticsearchTemplate = elasticsearchTemplate;
         this.dynamicExportsService = dynamicExportsService;
+        this.alrRepository = alrRepository;
     }
 
     public List<VwAlr> bindFilterSearchAlrsSistema(String nome, Long idSistema) {
@@ -47,5 +50,21 @@ public class AlrService {
         Page<VwAlr> page = elasticsearchTemplate.queryForPage(searchQuery, VwAlr.class);
 
         return page.getContent();
+    }
+
+    @Transactional(readOnly = true)
+    public List<DropdownDTO> getAlrByFuncaoTransacaoIdDropdown(Long idFuncaoTransacao) {
+        List<DropdownDTO> lstAlrDrop = new ArrayList<>();
+        List<Alr> lstAlrs = alrRepository.getAlrByFuncaoTransacaoIdDropdown(idFuncaoTransacao);
+        lstAlrs.forEach(alr -> {
+            DropdownDTO dropdownAlr;
+            if(alr.getNome() == null || alr.getNome().isEmpty()){
+                dropdownAlr = new br.com.basis.abaco.service.dto.DropdownDTO(alr.getId(),alr.getValor().toString());
+            }else {
+                dropdownAlr = new br.com.basis.abaco.service.dto.DropdownDTO(alr.getId(),alr.getNome());
+            }
+            lstAlrDrop.add(dropdownAlr);
+        });
+        return lstAlrDrop;
     }
 }

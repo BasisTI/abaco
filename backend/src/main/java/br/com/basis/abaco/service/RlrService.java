@@ -1,14 +1,8 @@
 package br.com.basis.abaco.service;
 
-import br.com.basis.abaco.domain.Der;
-import br.com.basis.abaco.domain.VwDer;
+import br.com.basis.abaco.domain.Rlr;
 import br.com.basis.abaco.domain.VwRlr;
-import br.com.basis.abaco.repository.DerRepository;
 import br.com.basis.abaco.repository.RlrRepository;
-import br.com.basis.abaco.repository.search.DerSearchRepository;
-import br.com.basis.abaco.repository.search.RlrSearchRepository;
-import br.com.basis.abaco.repository.search.VwDerSearchRepository;
-import br.com.basis.abaco.repository.search.VwRlrSearchRepository;
 import br.com.basis.abaco.service.dto.DropdownDTO;
 import br.com.basis.dynamicexports.service.DynamicExportsService;
 import org.elasticsearch.index.query.QueryBuilder;
@@ -29,10 +23,12 @@ public class RlrService {
 
     private final ElasticsearchTemplate elasticsearchTemplate;
     private final DynamicExportsService dynamicExportsService;
+    private final RlrRepository rlrRepository;
 
-    public RlrService(ElasticsearchTemplate elasticsearchTemplate, DynamicExportsService dynamicExportsService) {
+    public RlrService(ElasticsearchTemplate elasticsearchTemplate, DynamicExportsService dynamicExportsService, RlrRepository rlrRepository) {
         this.elasticsearchTemplate = elasticsearchTemplate;
         this.dynamicExportsService = dynamicExportsService;
+        this.rlrRepository = rlrRepository;
     }
 
     public List<VwRlr> bindFilterSearchRlrsSistema(String nome, Long idSistema) {
@@ -53,5 +49,21 @@ public class RlrService {
         Page<VwRlr> page = elasticsearchTemplate.queryForPage(searchQuery, VwRlr.class);
 
         return page.getContent();
+    }
+
+    @Transactional(readOnly = true)
+    public List<DropdownDTO> getRlrByFuncaoDadosIdDropdown(Long idFuncaoDados) {
+        List<DropdownDTO> lstRlrsDrop = new ArrayList<>();
+        List<Rlr> lstRlrs = rlrRepository.getRlrByFuncaoDadosIdDropdown(idFuncaoDados);
+        lstRlrs.forEach(rlr -> {
+            DropdownDTO dropdownRlr;
+            if(rlr.getNome() == null || rlr.getNome().isEmpty()){
+                dropdownRlr = new br.com.basis.abaco.service.dto.DropdownDTO(rlr.getId(),rlr.getValor().toString());
+            }else {
+                dropdownRlr = new br.com.basis.abaco.service.dto.DropdownDTO(rlr.getId(),rlr.getNome());
+            }
+            lstRlrsDrop.add(dropdownRlr);
+        });
+        return lstRlrsDrop;
     }
 }

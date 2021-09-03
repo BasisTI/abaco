@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+   <changeSet author="basis (generated)" id="1630599562544-1">
+       <createView fullDefinition="false" viewName="pe_analitico" replaceIfExists="true">
+           SELECT row_number() OVER (ORDER BY fdt.id_funcao_dados) AS row_number,
+           fdt.tipo,
+           fdt.classificacao,
+           fdt.impacto,
+           fdt.analise_id,
+           fdt.data_homologacao_software,
+           fdt.id_sistema,
+           fdt.nome,
+           fdt.sigla,
+           fdt.name,
+           fdt.pf,
+           fdt.id_funcao_dados,
+           fdt.complexidade,
+           fdt.nome_equipe,
+           fdt.equipe_responsavel_id,
+           fdt.id_funcionalidade,
+           fdt.nome_funcionalidade,
+           fdt.id_modulo,
+           fdt.nome_modulo
+           FROM ( SELECT 'fd'::text AS tipo,
+           c.tipo AS classificacao,
+           c.impacto,
+           c.analise_id,
+           a.data_homologacao_software,
+           b.id AS id_sistema,
+           b.nome,
+           b.sigla,
+           c.name,
+           c.grosspf AS pf,
+           c.id AS id_funcao_dados,
+           c.complexidade,
+           f.nome AS nome_equipe,
+           a.equipe_responsavel_id,
+           fc.id AS id_funcionalidade,
+           fc.nome AS nome_funcionalidade,
+           m.id AS id_modulo,
+           m.nome AS nome_modulo
+           FROM analise a
+           JOIN sistema b ON a.sistema_id = b.id
+           JOIN funcao_dados c ON c.analise_id = a.id
+           JOIN tipo_equipe f ON a.equipe_responsavel_id = f.id
+           LEFT JOIN funcionalidade fc ON c.funcionalidade_id = fc.id
+           LEFT JOIN modulo m ON fc.modulo_id = m.id
+           WHERE c.grosspf > 0::numeric AND upper(a.metodo_contagem::text) = 'DETALHADA'::text AND (c.id IN ( SELECT k.id
+           FROM ( SELECT max(fds.id) AS id,
+           fds.name,
+           fds.funcionalidade_id
+           FROM funcao_dados fds
+           JOIN analise ans ON fds.analise_id = ans.id AND upper(ans.metodo_contagem::text) = 'DETALHADA'::text
+           GROUP BY fds.name, fds.funcionalidade_id) k))
+           UNION
+           SELECT 'ft'::text AS tipo,
+           c.tipo AS classificacao,
+           c.impacto,
+           c.analise_id,
+           a.data_homologacao_software,
+           b.id AS id_sistema,
+           b.nome,
+           b.sigla,
+           c.name,
+           c.grosspf AS pf,
+           c.id AS id_funcao_dados,
+           c.complexidade,
+           f.nome AS nome_equipe,
+           a.equipe_responsavel_id,
+           fc.id AS id_funcionalidade,
+           fc.nome AS nome_funcionalidade,
+           m.id AS id_modulo,
+           m.nome AS nome_modulo
+           FROM analise a
+           JOIN sistema b ON a.sistema_id = b.id
+           JOIN funcao_transacao c ON c.analise_id = a.id
+           JOIN tipo_equipe f ON a.equipe_responsavel_id = f.id
+           LEFT JOIN funcionalidade fc ON c.funcionalidade_id = fc.id
+           LEFT JOIN modulo m ON fc.modulo_id = m.id
+           WHERE c.grosspf > 0::numeric AND upper(a.metodo_contagem::text) = 'DETALHADA'::text AND (c.id IN ( SELECT j.id
+           FROM ( SELECT max(fts.id) AS id,
+           fts.name,
+           fts.funcionalidade_id
+           FROM funcao_transacao fts
+           JOIN analise ans ON fts.analise_id = ans.id AND upper(ans.metodo_contagem::text) = 'DETALHADA'::text
+           GROUP BY fts.name, fts.funcionalidade_id) j))) fdt;
+       </createView>
+   </changeSet>
+</databaseChangeLog>
