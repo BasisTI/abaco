@@ -18,12 +18,12 @@ export class VisaoPfExportModelService {
     }
 
     getAllModels(){
-        return this.http.get(`/visaopf/all/models/`)
+        return this.http.get(`/visaopf/api/all/models/`)
     }
 
     updateModelPredict(modelName){
         let formData: FormData = new FormData()
         formData.append('modelName', modelName )
-        return this.http.put('/visaopf/update/modelpredict', formData, {responseType: 'text'})
+        return this.http.put('/visaopf/api/update/modelpredict', formData, {responseType: 'text'})
     }
 }

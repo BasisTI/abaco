@@ -11,7 +11,7 @@ export class VisaoPfListModelsService {
   }
 
   getAllModels(){
-    return this.http.get(`/visaopf/all/models/`)
+    return this.http.get(`/visaopf/api/all/models/`)
   }
 
 }
