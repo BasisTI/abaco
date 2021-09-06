@@ -10,29 +10,29 @@ export class VisaoPfModelService {
   }
 
   getDatasetMetrica(){
-    return this.http.get("/visaopf/get/dataset/metricas/totrain/")
+    return this.http.get("/visaopf/api/get/dataset/metricas/totrain/")
   }
 
   startTrain(){
     var trainSteps = '500'
     let formData: FormData = new FormData()
     formData.append('trainSteps', trainSteps )
-    return this.http.post('/visaopf/train/', formData, {responseType: 'text'})
+    return this.http.post('/visaopf/api/train/', formData, {responseType: 'text'})
   }
 
   getProcessoTreinamento(uuid:string){
-    return this.http.get(`/visaopf/processo/treinamento/${uuid}`)
+    return this.http.get(`/visaopf/api/processo/treinamento/${uuid}`)
   }
 
   getModelTreinado(id:string){
-    return this.http.get(`/visaopf/model/${id}`)
+    return this.http.get(`/visaopf/api/model/${id}`)
   }
 
   getModelTreinadoByUUID(uuid:string){
-    return this.http.get(`/visaopf/model/byuuid/${uuid}`)
+    return this.http.get(`/visaopf/api/model/byuuid/${uuid}`)
   }
 
   getDatasetByUUID(uuid:string){
-    return this.http.get(`/visaopf/get/dataset/metricas/${uuid}/`)
+    return this.http.get(`/visaopf/api/get/dataset/metricas/${uuid}/`)
   }
 }
