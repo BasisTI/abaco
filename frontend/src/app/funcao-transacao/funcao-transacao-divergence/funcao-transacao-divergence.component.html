@@ -30,6 +30,7 @@
                                         (buttonClick)="datatableClick($event)"
                                         (dblclick)="onRowDblclick($event)"
                                         (click)="selectFT($event)"
+                                        [reorderableRows]="isOrderning" (onRowReorder)="updateIndex()"
                                         [paginator]="false"
                                         [rows]="20"
                                         [enableButtonsScroll]="true"
