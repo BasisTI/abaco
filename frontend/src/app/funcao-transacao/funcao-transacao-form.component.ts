@@ -1,33 +1,37 @@
 import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { DomSanitizer } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
+import { BlockUiService } from '@nuvem/angular-base';
 import { DatatableClickEvent, DatatableComponent, PageNotificationService } from '@nuvem/primeng-components';
+import * as _ from 'lodash';
+
+import Quill from 'quill';
 import { ConfirmationService, Editor, FileUpload, SelectItem } from 'primeng';
 import { forkJoin, Observable, Subscription } from 'rxjs';
-import { ResumoFuncoes, CalculadoraTransacao } from 'src/app/analise-shared';
+import { CalculadoraTransacao, ResumoFuncoes } from 'src/app/analise-shared';
+import { AnaliseReferenciavel } from 'src/app/analise-shared/analise-referenciavel';
+import { DerChipConverter } from 'src/app/analise-shared/der-chips/der-chip-converter';
 import { DerChipItem } from 'src/app/analise-shared/der-chips/der-chip-item';
+import { DerTextParser, ParseResult } from 'src/app/analise-shared/der-text/der-text-parser';
+import { Der } from 'src/app/der/der.model';
 import { FatorAjuste } from 'src/app/fator-ajuste';
 import { Funcionalidade } from 'src/app/funcionalidade';
-import { FuncaoTransacao, TipoFuncaoTransacao } from '.';
-import { FuncaoDadosService } from '../funcao-dados/funcao-dados.service';
-import { FuncaoTransacaoService } from './funcao-transacao.service';
-import { ParseResult, DerTextParser } from 'src/app/analise-shared/der-text/der-text-parser';
-import { AnaliseSharedDataService } from 'src/app/shared/analise-shared-data.service';
-import { AnaliseService } from '../analise/analise.service';
-import { Analise } from '../analise/analise.model';
-import { MessageUtil } from 'src/app/util/message.util';
-import { DerChipConverter } from 'src/app/analise-shared/der-chips/der-chip-converter';
-import { Der } from 'src/app/der/der.model';
-import { Modulo } from 'src/app/modulo';
-import { AnaliseReferenciavel } from 'src/app/analise-shared/analise-referenciavel';
-import { FatorAjusteLabelGenerator } from 'src/app/shared/fator-ajuste-label-generator';
 import { Manual } from 'src/app/manual';
-import * as _ from 'lodash';
-import { BlockUiService } from '@nuvem/angular-base';
+import { Modulo } from 'src/app/modulo';
+import { AnaliseSharedDataService } from 'src/app/shared/analise-shared-data.service';
+import { FatorAjusteLabelGenerator } from 'src/app/shared/fator-ajuste-label-generator';
+import { MessageUtil } from 'src/app/util/message.util';
+
+import { FuncaoTransacao, TipoFuncaoTransacao } from '.';
+import { Analise } from '../analise/analise.model';
+import { AnaliseService } from '../analise/analise.service';
+import { FuncaoDadosService } from '../funcao-dados/funcao-dados.service';
 import { Sistema, SistemaService } from '../sistema';
-import { DomSanitizer } from '@angular/platform-browser';
 import { Upload } from '../upload/upload.model';
 import { Utilitarios } from '../util/utilitarios.util';
-import { table } from 'node:console';
+import { FuncaoTransacaoService } from './funcao-transacao.service';
+
+
 @Component({
     selector: 'app-analise-funcao-transacao',
     host: {
@@ -152,6 +156,12 @@ export class FuncaoTransacaoFormComponent implements OnInit {
     private sanitizer: DomSanitizer;
     private lastObjectUrl: string;
     @ViewChild(FileUpload) componenteFile: FileUpload;
+
+
+    //Variável para o p-editor
+    formatsEditor = ["background", "bold", "color", "font", "code", "italic",
+        "link", "size", "strike", "script", "underline", "blockquote",
+        "header", "indent", "list", "align", "direction", "code-block"]
 
 
     constructor(
@@ -554,7 +564,7 @@ export class FuncaoTransacaoFormComponent implements OnInit {
                     this.currentFuncaoTransacao.funcionalidade.modulo.id)
                     .subscribe(existFuncaoTransaco => {
                         if (!existFuncaoTransaco) {
-                            funcaoTransacaoCalculada.ordem = this.funcoesTransacoes.length+1;
+                            funcaoTransacaoCalculada.ordem = this.funcoesTransacoes.length + 1;
                             this.funcaoTransacaoService.create(funcaoTransacaoCalculada, this.analise.id, funcaoTransacaoCalculada.files?.map(item => item.logo)).subscribe(value => {
                                 funcaoTransacaoCalculada.id = value.id;
                                 this.pageNotificationService.addCreateMsg(funcaoTransacaoCalculada.name);
@@ -1007,16 +1017,16 @@ export class FuncaoTransacaoFormComponent implements OnInit {
         });
     }
     public selectFT(event) {
-        if(event.shiftKey === true){
+        if (event.shiftKey === true) {
             let fim = this.funcoesTransacoes.indexOf(this.tables.selectedRow[0]);
             let inicio = this.funcoesTransacoes.indexOf(this.funcaoTransacaoEditar[0]);
             this.tables.selectedRow = [];
-            if(inicio < fim){
-                for(let i = inicio; i <= fim; i++){
+            if (inicio < fim) {
+                for (let i = inicio; i <= fim; i++) {
                     this.tables.selectedRow.push(this.funcoesTransacoes[i]);
                 }
-            }else{
-                for(let i = fim; i <= inicio; i++){
+            } else {
+                for (let i = fim; i <= inicio; i++) {
                     this.tables.selectedRow.push(this.funcoesTransacoes[i]);
                 }
             }
@@ -1202,8 +1212,8 @@ export class FuncaoTransacaoFormComponent implements OnInit {
         uploadFile.logo = new File([event.clipboardData.files[0]], uploadFile.originalName, { type: event.clipboardData.files[0].type });
         uploadFile.sizeOf = event.clipboardData.files[0].size;
         this.currentFuncaoTransacao.files.push(uploadFile);
-    }
 
+    }
 
     private getPastedImage(event: ClipboardEvent): File | null {
         if (
@@ -1309,4 +1319,3 @@ export class FuncaoTransacaoFormComponent implements OnInit {
         this.isOrderning = false;
     }
 }
-
