@@ -762,11 +762,9 @@ public class PlanilhaService {
 
     private void setarFuncoesINMExcelPadraoBasis(XSSFWorkbook excelFile, List<FuncaoTransacao> funcaoTransacaoList, Analise analise, String nomeElaborador) {
         XSSFSheet excelSheet = excelFile.getSheet("AFP - INM");
-
-        excelSheet.getRow(2).getCell(15).setCellValue(nomeElaborador);
-        excelSheet.getRow(3).getCell(15).setCellValue(analise.getDataCriacaoOrdemServico());
-
         if(excelSheet != null){
+            excelSheet.getRow(2).getCell(15).setCellValue(nomeElaborador);
+            excelSheet.getRow(3).getCell(15).setCellValue(analise.getDataCriacaoOrdemServico());
             FormulaEvaluator evaluator = excelFile.getCreationHelper().createFormulaEvaluator();
             int rownum = 10;
             int idRow = 1;
