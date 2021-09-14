@@ -29,7 +29,7 @@ export class VisaopfListModelsComponent implements OnInit {
             this.modelosTreinados = result
 
             for(var modelo of this.modelosTreinados){
-                this.modelosTreinadosView.push( new ModeloTreinadoView(modelo.uuid, modelo.bucketModel ,modelo.processoTreinamento.dataFim, modelo.metricasTreinamento[modelo.metricasTreinamento.length - 1].totalLoss, modelo.metricasTreinamento[modelo.metricasTreinamento.length - 1].step ))
+                this.modelosTreinadosView.push( new ModeloTreinadoView(modelo.uuid, modelo.bucketModel ,modelo.processoTreinamento.dataFim, modelo.metricasTreinamento[modelo.metricasTreinamento.length - 1].totalLoss, modelo.metricasTreinamento[modelo.metricasTreinamento.length - 1].step ,modelo.id))
             }
         })
 

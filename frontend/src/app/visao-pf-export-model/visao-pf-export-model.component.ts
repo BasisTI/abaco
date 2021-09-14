@@ -36,7 +36,7 @@ export class VisaoPfExportModelComponent implements OnInit {
             var modelos = result
             var modelTrain
             for(var modelo of modelos){
-                modelTrain = new ModeloTreinadoView(modelo.uuid, modelo.bucketModel, modelo.processoTreinamento.dataFim, modelo.metricasTreinamento[modelo.metricasTreinamento.length - 1].totalLoss, modelo.metricasTreinamento[modelo.metricasTreinamento.length - 1].step )
+                modelTrain = new ModeloTreinadoView(modelo.uuid, modelo.bucketModel, modelo.processoTreinamento.dataFim, modelo.metricasTreinamento[modelo.metricasTreinamento.length - 1].totalLoss, modelo.metricasTreinamento[modelo.metricasTreinamento.length - 1].step , modelo.id)
                 this.modelos.push( {label: modelTrain.uuid, value: modelTrain} )
             }
         })
