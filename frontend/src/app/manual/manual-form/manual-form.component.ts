@@ -103,8 +103,7 @@ export class ManualFormComponent implements OnInit, OnDestroy {
 
     save(form: any) {
         if (!this.checkRequiredFields()) {
-            this.pageNotificationService.addErrorMessage('Por favor, preencha campos obrigatórios!');
-            return;
+            return this.privateExibirMensagemCamposInvalidos(1);
         }
 
         this.isSaving = true;
@@ -222,9 +221,14 @@ export class ManualFormComponent implements OnInit, OnDestroy {
 
         if (this.manual.fatoresAjuste.length === 0 || this.manual.fatoresAjuste === undefined) {
             document.getElementById('tabela-deflator').setAttribute('style', 'border: 1px dotted red;');
-            this.invalidFields.push('Deflator');
+            this.invalidFields.push('Deflatores');
+        }else{
+            this.manual.fatoresAjuste.forEach(fatorAjuste =>{
+                if(!fatorAjuste.nome || !fatorAjuste.tipoAjuste || !fatorAjuste.fator || !fatorAjuste.descricao || !fatorAjuste.codigo){
+                    this.invalidFields.push("Deflator: "+fatorAjuste.codigo+"\n");
+                }
+            })
         }
-
         isFieldsValid = (this.invalidFields.length === 0);
 
         return isFieldsValid;
