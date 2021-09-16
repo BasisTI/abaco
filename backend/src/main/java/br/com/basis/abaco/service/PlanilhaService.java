@@ -83,7 +83,7 @@ public class PlanilhaService {
     private void setarFuncoesEstimadaExcelPadraoEB2(XSSFWorkbook excelFile, List<FuncaoDados> funcaoDadosList, List<FuncaoTransacao> funcaoTransacaoList, Analise analise) {
         XSSFSheet excelSheet = excelFile.getSheet(ESTIMATIVA);
         excelSheet.getRow(2).getCell(7).setCellValue(analise.getEquipeResponsavel().getCfpsResponsavel() != null ?
-            analise.getEquipeResponsavel().getCfpsResponsavel().getNome() : analise.getEquipeResponsavel().getPreposto());
+            analise.getEquipeResponsavel().getCfpsResponsavel().getFirstName() + " "+ analise.getEquipeResponsavel().getCfpsResponsavel().getLastName() : analise.getEquipeResponsavel().getPreposto());
         excelSheet.getRow(3).getCell(7).setCellValue(analise.getDataCriacaoOrdemServico());
         int rowNum = 10;
         int idFuncao = 1;
@@ -116,7 +116,7 @@ public class PlanilhaService {
     private void setarFuncoesDetalhadaExcelPadraoEB2(XSSFWorkbook excelFile, List<FuncaoDados> funcaoDadosList, List<FuncaoTransacao> funcaoTransacaoList, Analise analise) {
         XSSFSheet excelSheet = excelFile.getSheet(DETALHADA);
         excelSheet.getRow(2).getCell(13).setCellValue(analise.getEquipeResponsavel().getCfpsResponsavel() != null ?
-            analise.getEquipeResponsavel().getCfpsResponsavel().getNome() : analise.getEquipeResponsavel().getPreposto());
+            analise.getEquipeResponsavel().getCfpsResponsavel().getFirstName() + " "+ analise.getEquipeResponsavel().getCfpsResponsavel().getLastName() : analise.getEquipeResponsavel().getPreposto());
         excelSheet.getRow(3).getCell(13).setCellValue(analise.getDataCriacaoOrdemServico());
         int idFuncao = 1;
         int rowNum = 9;
@@ -223,7 +223,7 @@ public class PlanilhaService {
         excelSheet.getRow(8).getCell(4).setCellValue(analise.getDataCriacaoOrdemServico());
         excelSheet.getRow(13).getCell(0).setCellValue(analise.getEscopo());
         excelSheet.getRow(7).getCell(4).setCellValue(analise.getEquipeResponsavel().getCfpsResponsavel() != null ?
-            analise.getEquipeResponsavel().getCfpsResponsavel().getNome() : analise.getEquipeResponsavel().getPreposto());
+            analise.getEquipeResponsavel().getCfpsResponsavel().getFirstName() + " "+ analise.getEquipeResponsavel().getCfpsResponsavel().getLastName() : analise.getEquipeResponsavel().getPreposto());
 
     }
 
@@ -249,7 +249,7 @@ public class PlanilhaService {
         XSSFSheet excelSheet = excelFile.getSheet(DETALHADA);
 
         excelSheet.getRow(2).getCell(15).setCellValue(analise.getEquipeResponsavel().getCfpsResponsavel() != null ?
-            analise.getEquipeResponsavel().getCfpsResponsavel().getNome() : analise.getEquipeResponsavel().getPreposto());
+            analise.getEquipeResponsavel().getCfpsResponsavel().getFirstName() + " "+ analise.getEquipeResponsavel().getCfpsResponsavel().getLastName() : analise.getEquipeResponsavel().getPreposto());
         excelSheet.getRow(3).getCell(15).setCellValue(analise.getDataCriacaoOrdemServico());
 
         int rowNum = 9;
@@ -286,7 +286,7 @@ public class PlanilhaService {
     private void setarFuncoesEstimadaExcelPadraoEB1(XSSFWorkbook excelFile, List<FuncaoDados> funcaoDadosList, List<FuncaoTransacao> funcaoTransacaoList, Analise analise) {
         XSSFSheet excelSheet = excelFile.getSheet(ESTIMATIVA);
         excelSheet.getRow(2).getCell(10).setCellValue(analise.getEquipeResponsavel().getCfpsResponsavel() != null ?
-            analise.getEquipeResponsavel().getCfpsResponsavel().getNome() : analise.getEquipeResponsavel().getPreposto());
+            analise.getEquipeResponsavel().getCfpsResponsavel().getFirstName() + " "+ analise.getEquipeResponsavel().getCfpsResponsavel().getLastName() : analise.getEquipeResponsavel().getPreposto());
         excelSheet.getRow(3).getCell(10).setCellValue(analise.getDataCriacaoOrdemServico());
         int rowNum = 9;
         int idFuncao = 1;
@@ -355,7 +355,7 @@ public class PlanilhaService {
         excelSheet.getRow(12).getCell(0).setCellValue(analise.getEscopo());
         excelSheet.getRow(5).getCell(5).setCellValue(analise.getDataCriacaoOrdemServico());
         excelSheet.getRow(5).getCell(1).setCellValue(analise.getEquipeResponsavel().getCfpsResponsavel() != null ?
-            analise.getEquipeResponsavel().getCfpsResponsavel().getNome() : analise.getEquipeResponsavel().getPreposto());
+            analise.getEquipeResponsavel().getCfpsResponsavel().getFirstName() + " "+ analise.getEquipeResponsavel().getCfpsResponsavel().getLastName() : analise.getEquipeResponsavel().getPreposto());
     }
 
     //ANAC
@@ -552,7 +552,7 @@ public class PlanilhaService {
             excelSheet.getRow(3).getCell(5).setCellValue(analise.getSistema().getNome());
         }
         excelSheet.getRow(6).getCell(5).setCellValue(analise.getEquipeResponsavel().getCfpsResponsavel() != null ?
-            analise.getEquipeResponsavel().getCfpsResponsavel().getNome() : analise.getEquipeResponsavel().getPreposto());
+            analise.getEquipeResponsavel().getCfpsResponsavel().getFirstName() + " "+ analise.getEquipeResponsavel().getCfpsResponsavel().getLastName() : analise.getEquipeResponsavel().getPreposto());
         excelSheet.getRow(6).getCell(20).setCellValue(analise.getDataCriacaoOrdemServico());
         excelSheet.getRow(22).getCell(0).setCellValue(analise.getEscopo());
         excelSheet.getRow(11).getCell(0).setCellValue(analise.getPropositoContagem());
@@ -565,7 +565,7 @@ public class PlanilhaService {
         XSSFWorkbook excelFile = new XSSFWorkbook(stream);
         this.setarDeflatoresExcelPadraoBasis(excelFile, analise);
         String nomeElaborador = analise.getEquipeResponsavel().getCfpsResponsavel() != null ?
-            analise.getEquipeResponsavel().getCfpsResponsavel().getNome() : analise.getEquipeResponsavel().getPreposto();
+            analise.getEquipeResponsavel().getCfpsResponsavel().getFirstName() + " "+ analise.getEquipeResponsavel().getCfpsResponsavel().getLastName() : analise.getEquipeResponsavel().getPreposto();
         this.setarResumoExcelPadraoBasis(excelFile, analise, nomeElaborador);
         if(analise.getMetodoContagem().equals(MetodoContagem.INDICATIVA)){
             this.setarFuncoesIndicativaExcelPadraoBasis(excelFile, funcaoDadosList, analise, nomeElaborador);
