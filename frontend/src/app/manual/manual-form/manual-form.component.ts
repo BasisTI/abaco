@@ -230,7 +230,6 @@ export class ManualFormComponent implements OnInit, OnDestroy {
             })
         }
         isFieldsValid = (this.invalidFields.length === 0);
-
         return isFieldsValid;
     }
 
