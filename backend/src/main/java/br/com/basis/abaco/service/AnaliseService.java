@@ -546,6 +546,7 @@ public class AnaliseService extends BaseService {
     public void bindAnalise(@RequestBody @Valid Analise analiseUpdate, Analise analise) {
         salvaNovaData(analiseUpdate);
         analise.setNumeroOs(analiseUpdate.getNumeroOs());
+        analise.setEquipeResponsavel(analiseUpdate.getEquipeResponsavel()); 
         analise.setIdentificadorAnalise(analiseUpdate.getIdentificadorAnalise());
         analise.setDataCriacaoOrdemServico(analiseUpdate.getDataCriacaoOrdemServico());
         analise.setMetodoContagem(analiseUpdate.getMetodoContagem());

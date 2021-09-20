@@ -17,4 +17,8 @@ export class AlrService {
         return this.http.get<Alr[]>(this.resourceUrl + "/sistema/"+ idSistema + "?nome="+nome);
     }
 
+    dropDownByFuncaoTransacaoId(idFuncaoTransacao: number): Observable<any> {
+        return this.http.get<any>(this.resourceUrl + '/drop-down/' + idFuncaoTransacao);
+    }
+
 }

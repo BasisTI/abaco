@@ -29,6 +29,9 @@ import { saveAs } from 'file-saver';
 import * as XLSX from 'xlsx';
 import jsPDF from 'jspdf';
 import 'jspdf-autotable';
+import { DerService } from '../der/der.service';
+import { AlrService } from '../alr/alr.service';
+import { RlrService } from '../rlr/rlr.service';
 
 @Component({
     selector: 'app-pesquisar-ft',
@@ -130,7 +133,7 @@ export class PesquisarFtComponent implements OnInit {
 
     metodoContagem = 1;
 
-
+    campoDers: string = "";
 
 
     constructor(
@@ -146,6 +149,9 @@ export class PesquisarFtComponent implements OnInit {
         private baselineFT: BaselineService,
         private router: Router,
         private blockUiService: BlockUiService,
+        private derService: DerService,
+        private alrService: AlrService,
+        private rlrService: RlrService
     ) {
     }
 
@@ -283,7 +289,6 @@ export class PesquisarFtComponent implements OnInit {
             this.carregaFatorAjusteNaEdicao();
             this.subscribeFuncionalideBaseline();
         }
-
         const isContratoSelected = this.analiseSharedDataService.isContratoSelected();
         if (isContratoSelected) {
             if (this.fatoresAjuste.length === 0) {
@@ -293,12 +298,14 @@ export class PesquisarFtComponent implements OnInit {
         if(this.isFuncaoDados){
             this.classificacoes = [{label: "", value: ""},
                                     {label: "ALI", value: "ALI"},
-                                    {label: "AIE", value: "AIE"}]
+                                    {label: "AIE", value: "AIE"}];
+            this.campoDers = "DERs/RLRs";
         }else{
             this.classificacoes = [{label: "", value: ""},
                                     {label: "CE", value: "CE"},
                                     {label: "EE", value: "EE"},
-                                    {label: "SE", value: "SE"}]
+                                    {label: "SE", value: "SE"}];
+            this.campoDers = "DERs/ALRs";
         }
     }
 
@@ -562,6 +569,14 @@ export class PesquisarFtComponent implements OnInit {
                 this.funcaoDadosService.getFuncaoDadosByModuloOrFuncionalidade(this.analise.sistema.id, this.nameSearch, this.moduloSelecionado.id, this.funcionalidadeAtual.id).subscribe(value => {
                     this.blockUiService.hide();
                     this.fn = value;
+                    this.fn.forEach(funcao => {
+                        this.derService.dropDownByFuncaoDadosId(funcao.idfuncaodados).subscribe(response => {
+                            funcao.qtdDers = response.length;
+                        })
+                        this.rlrService.dropDownByFuncaoDadosId(funcao.idfuncaodados).subscribe(response => {
+                            funcao.qtdRlrs = response.length;
+                        })
+                    })
                 });
             } else {
                 this.funcaoDadosService.getFuncaoDadosByModuloOrFuncionalidadeEstimada(this.analise.sistema.id, this.nameSearch, this.moduloSelecionado.id, this.funcionalidadeAtual.id).subscribe(value => {
@@ -575,6 +590,14 @@ export class PesquisarFtComponent implements OnInit {
                 this.funcaoTransacaoService.getFuncaoTransacaoByModuloOrFuncionalidade(this.analise.sistema.id, this.nameSearch, this.moduloSelecionado.id, this.funcionalidadeAtual.id).subscribe(value => {
                     this.blockUiService.hide();
                     this.fn = value;
+                    this.fn.forEach(funcao => {
+                        this.derService.dropDownByFuncaoTransacaoId(funcao.idfuncaodados).subscribe(response => {
+                            funcao.qtdDers = response.length;
+                        })
+                        this.alrService.dropDownByFuncaoTransacaoId(funcao.idfuncaodados).subscribe(response => {
+                            funcao.qtdRlrs = response.length;
+                        })
+                    })
                 });
             } else {
                 this.funcaoTransacaoService.getFuncaoTransacaoByModuloOrFuncionalidadeEstimada(this.analise.sistema.id, this.nameSearch, this.moduloSelecionado.id, this.funcionalidadeAtual.id).subscribe(value => {

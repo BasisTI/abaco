@@ -50,6 +50,7 @@ export class DerChipsComponent implements OnChanges, OnInit {
     newValues = '';
 
     registrosDuplicados: string = "";
+    registrosDuplicadosEdit: string = "";
 
     validaMultiplos = false;
     validaMultiplosRegistrados = false;
@@ -194,17 +195,25 @@ export class DerChipsComponent implements OnChanges, OnInit {
         this.mostrarDialogEditarMultiplos = false;
         this.newValues = "";
         this.validaMultiplos = false;
+        this.validaMultiplosRegistrados = false;
     }
 
     editarMultiplos() {
         this.validaMultiplos = false;
         this.validaMultiplosRegistrados = false;
+        let registros: string[] = this.verificaMultiplosCadastradosEdit(this.newValues);
+        this.registrosDuplicadosEdit = this.verificaMultiplosCadastradosEdit(this.newValues).join(", ");
         if (this.verificaMultiplosDuplicados(this.newValues)) {
             this.values = this.converteEditarMultiplos();
             this.valuesChange.emit(this.values);
             this.fecharDialogEditarMultiplos();
             this.validaMultiplos = false;
+            this.validaMultiplosRegistrados = false;
+
         } else {
+            if (registros.length !== 0) {
+                this.validaMultiplosRegistrados = true;
+            }
             this.validaMultiplos = true;
         }
     }
@@ -335,6 +344,23 @@ export class DerChipsComponent implements OnChanges, OnInit {
             }
         }
         return registrosDuplicados;
+    }
+
+    verificaMultiplosCadastradosEdit(nome: string): string[] {
+        let registrosDuplicados: string[] = [];
+
+        let splitString: string[] = nome.split('\n');
+        let valuesEdit: string[] = this.newValues.split('\n');
+
+        for (let indexValues = 0; indexValues < valuesEdit.length; indexValues++) {
+            for (let indexSplitString = 0; indexSplitString < splitString.length; indexSplitString++) {
+                if (valuesEdit[indexValues] === splitString[indexSplitString]) {
+                    registrosDuplicados.push(splitString[indexSplitString]);
+                }
+            }
+        }
+        let novosRegistrosDuplicados = registrosDuplicados.filter((este, i) => registrosDuplicados.indexOf(este) === i);
+        return novosRegistrosDuplicados;
     }
 
     private converteMultiplos(): DerChipItem[] {

@@ -114,6 +114,8 @@
                                             [placeholder]="''" (click)="$event.stopPropagation()" >
                                         </p-dropdown>
                                     </th>
+                                    <th *ngIf="metodoContagem == 1" style="text-align: center; width: 9em;" pSortableColumn="fase.qtdDers">{{campoDers}} <p-sortIcon></p-sortIcon>
+                                    </th>
                                 </tr>
                             </ng-template>
                             <ng-template pTemplate="body" let-funcao>
@@ -132,6 +134,9 @@
                                     </td>
                                     <td style="text-align: center;" >
                                         {{funcao.classificacao}}
+                                    </td>
+                                    <td *ngIf="metodoContagem == 1" style="text-align: center;" >
+                                        {{funcao.qtdDers}}/{{funcao.qtdRlrs}}
                                     </td>
                                 </tr>
                             </ng-template>

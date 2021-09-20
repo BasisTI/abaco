@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.6.0.final using JasperReports Library version 6.6.0  -->
+<!-- Created with Jaspersoft Studio version 6.9.0.final using JasperReports Library version 6.9.0-cb8f9004be492ccc537180b49c026951f4220bf3  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="analise" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="9ac44673-b60e-4209-99b8-14605622790d">
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
 	<property name="ireport.zoom" value="1.1000000000000019"/>
@@ -863,7 +863,7 @@
 					<text><![CDATA[Função de Dados]]></text>
 				</staticText>
 				<componentElement>
-					<reportElement stretchType="RelativeToTallestObject" x="4" y="20" width="802" height="45" uuid="15392a72-08a4-4e5d-a1ec-0c7608f7ac60">
+					<reportElement x="4" y="20" width="802" height="45" uuid="15392a72-08a4-4e5d-a1ec-0c7608f7ac60">
 						<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.FreeLayout"/>
 						<property name="net.sf.jasperreports.export.headertoolbar.table.name" value=""/>
 						<property name="com.jaspersoft.studio.table.style.table_header" value="Table 6_TH"/>
@@ -951,7 +951,7 @@
 								</staticText>
 							</jr:columnHeader>
 							<jr:detailCell style="Table 6_TD" height="15" rowSpan="1">
-								<textField isBlankWhenNull="true">
+								<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 									<reportElement x="0" y="0" width="97" height="15" isRemoveLineWhenBlank="true" uuid="94edeb7d-1017-4d1c-bac8-3f07cf8b82ad"/>
 									<textElement textAlignment="Center" verticalAlignment="Middle">
 										<font size="9"/>
@@ -973,11 +973,11 @@
 								</staticText>
 							</jr:columnHeader>
 							<jr:detailCell style="Table 6_TD" height="15">
-								<textField isBlankWhenNull="true">
+								<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 									<reportElement x="0" y="0" width="129" height="15" isRemoveLineWhenBlank="true" uuid="6a76df89-8d41-44f6-aa1c-95cb544601e6"/>
-									<textElement textAlignment="Center" verticalAlignment="Middle">
+									<textElement textAlignment="Center" verticalAlignment="Middle" markup="styled">
 										<font size="9"/>
-										<paragraph lineSpacing="Proportional"/>
+										<paragraph lineSpacing="Proportional" lineSpacingSize="1.0"/>
 									</textElement>
 									<textFieldExpression><![CDATA[$F{submodulo}]]></textFieldExpression>
 								</textField>
@@ -1246,7 +1246,7 @@
 								</staticText>
 							</jr:columnHeader>
 							<jr:detailCell style="Table 1_TD" height="15" rowSpan="1">
-								<textField isBlankWhenNull="true">
+								<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 									<reportElement x="0" y="0" width="97" height="15" isRemoveLineWhenBlank="true" uuid="51598152-ea1f-4b51-b71d-588662a2ce96"/>
 									<textElement textAlignment="Center" verticalAlignment="Middle">
 										<font size="9"/>
@@ -1268,7 +1268,7 @@
 								</staticText>
 							</jr:columnHeader>
 							<jr:detailCell style="Table 1_TD" height="15">
-								<textField isBlankWhenNull="true">
+								<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 									<reportElement x="0" y="0" width="129" height="15" isRemoveLineWhenBlank="true" uuid="894494b9-9827-4782-b1eb-aa96a3d48702"/>
 									<textElement textAlignment="Center" verticalAlignment="Middle">
 										<font size="9"/>

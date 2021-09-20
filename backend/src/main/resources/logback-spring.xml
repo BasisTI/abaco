@@ -24,7 +24,7 @@
 
     <logger name="br.com.basis.abaco" level="#logback.loglevel#"/>
 
-    <logger name="io.github.jhipster" level="DEBUG"/>
+    <logger name="io.github.jhipster" level="WARN"/>
 
     <logger name="javax.activation" level="WARN"/>
     <logger name="javax.mail" level="WARN"/>

@@ -23,6 +23,7 @@
                                     [enableButtonsScroll]="true"
                                     [value]="this.funcoesTransacoes" (buttonClick)="datatableClick($event)"
                                     (dblclick)="onRowDblclick($event)" (click)="selectFT($event)" [paginator]="false"
+                                    [reorderableRows]="isOrderning" (onRowReorder)="updateIndex()"
                                     [rows]="20" [selectionMode]="'multiple'" [filterOnColumn]="true"
                                     [rowsPerPageOptions]="[20,50,100]" [showVisibleColumnsControl]="true" #tables>
                                     <p-column header="Ordem" field="ordem">
@@ -259,6 +260,7 @@
                                          id="idEvidenciaFormFuncaoTransacao"
                                          [cols]="180"
                                          [disabled]="isDisabled"
+                                         [formats]="formatsEditor"
                                          pInputTextarea name="funcaoDadosSustentacao"
                                          [(ngModel)]="currentFuncaoTransacao.sustantation">
                                            <!-- Inicio configuração toolbar-->

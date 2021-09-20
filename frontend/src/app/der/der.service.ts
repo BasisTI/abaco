@@ -17,6 +17,10 @@ export class DerService {
         return this.http.get<any>(this.resourceUrl + '/drop-down/' + idFuncaoDados);
     }
 
+    dropDownByFuncaoTransacaoId(idFuncaoTransacao: number): Observable<any> {
+        return this.http.get<any>(this.resourceUrl + '/drop-down/ft/' + idFuncaoTransacao);
+    }
+
     getDersFuncaoDadosByNomeSistema(nome: string, idSistema: number): Observable<Der[]>{
         return this.http.get<Der[]>(this.resourceUrl + "/funcao_dados/sistema/"+ idSistema + "?nome="+nome);
     }
