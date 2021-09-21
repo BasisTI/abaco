@@ -416,6 +416,6 @@ public class UserService extends BaseService {
         String encryptedPassword = passwordEncoder.encode(novaSenha);
         user.setPassword(encryptedPassword);
         userRepository.save(user);
-        userSearchRepository.save(user);
+        userSearchRepository.save(bindUserForSaveElatiscSearch(user));
     }
 }
