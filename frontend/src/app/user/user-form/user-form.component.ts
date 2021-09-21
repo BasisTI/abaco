@@ -8,6 +8,7 @@ import { Organizacao, OrganizacaoService } from 'src/app/organizacao';
 import { Perfil, PerfilService } from 'src/app/perfil';
 import { PerfilOrganizacao } from 'src/app/perfil/perfil-organizacao.model';
 import { TipoEquipe, TipoEquipeService } from 'src/app/tipo-equipe';
+import { AuthService } from 'src/app/util/auth.service';
 import { User } from '../user.model';
 import { UserService } from '../user.service';
 
@@ -46,9 +47,15 @@ export class UserFormComponent implements OnInit, OnDestroy {
 
     rowsPerPageOptions: number[] = [5, 10, 20, 100];
 
+    dialogAlterarSenha: boolean = false;
+    novaSenha: String = "";
+    novaSenhaConfirm: String = "";
+
+    canAlterarSenha: boolean = false;
+
     constructor(
         private confirmationService: ConfirmationService,
-        private authService: AuthGuard,
+        private authService: AuthService,
         private route: ActivatedRoute,
         private router: Router,
         private userService: UserService,
@@ -72,6 +79,12 @@ export class UserFormComponent implements OnInit, OnDestroy {
         this.recuperarListaOrganizacao();
         this.recuperarListaPerfis();
         this.recuperarUsuarioPeloId();
+        this.verificarPermissoes();
+    }
+    verificarPermissoes() {
+        if (this.authService.possuiRole(AuthService.PREFIX_ROLE + "USUARIO_ALTERAR_SENHA") == true) {
+            this.canAlterarSenha = true;
+        }
     }
 
     private recuperarListaPerfis() {
@@ -365,6 +378,36 @@ export class UserFormComponent implements OnInit, OnDestroy {
                     this.perfilOrganizacaoEdit = null;
                 }
             })
+        }
+    }
+
+    
+    
+    abrirDialogAlterarSenha(){
+        this.dialogAlterarSenha = true;
+    }
+    fecharDialogAlterarSenha(){
+        this.dialogAlterarSenha = false;
+        this.novaSenha = "";
+        this.novaSenhaConfirm = "";
+    }
+
+    alterarSenha(){
+        if(this.novaSenha && this.novaSenhaConfirm){
+            if(this.novaSenha.length >= 6 && this.novaSenhaConfirm.length >= 6){
+                if(this.novaSenha === this.novaSenhaConfirm){
+                    this.userService.alterarSenha(this.user.id, this.novaSenha).subscribe(r => {
+                        this.pageNotificationService.addSuccessMessage("Senha alterada com sucesso!");
+                        this.fecharDialogAlterarSenha();
+                    });
+                }else{
+                    return this.pageNotificationService.addErrorMessage("As senhas não conferem, por favor revisar!");
+                }
+            }else{
+                return this.pageNotificationService.addErrorMessage("Digite 6 dígitos ou mais!");
+            }
+        }else{
+            return this.pageNotificationService.addErrorMessage("Digite os dois campos corretamente.");
         }
     }
 }
