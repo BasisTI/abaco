@@ -257,6 +257,7 @@ public class UserResource {
         }
     }
 
+    
     private ResponseEntity createBadRequest(String errorKey, String defaultMessage) {
         return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert(ENTITY_NAME, errorKey, defaultMessage))
                 .body(null);
