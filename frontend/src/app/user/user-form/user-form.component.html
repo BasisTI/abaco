@@ -70,21 +70,27 @@
                     </div>
                     <div class="ui-g-6 ui-md-6 ui-sm-12" style="margin-bottom: 25px">
                         <div class="ui-g">
-                            <div class="ui-g-12 ui-md-4">
+                            <div class="ui-g-12 ui-md-3" style="margin-top: 5px;">
                                 <label>Ativo</label>
                             </div>
-                            <div class="ui-g-12 ui-md-4">
+                            <div class="ui-g-12 ui-md-3" style="margin-top: 5px;">
                                 <p-radioButton name="user_ativo" [disabled]="this.desabilitado()" [value]="true"
                                     label="Sim" [(ngModel)]="user.activated">
                                 </p-radioButton>
                             </div>
-                            <div class="ui-g-12 ui-md-4">
+                            <div class="ui-g-12 ui-md-3" style="margin-top: 5px;">
                                 <p-radioButton name="user_ativo" [disabled]="this.desabilitado()" [value]="false"
                                     label="Não" [(ngModel)]="user.activated">
                                 </p-radioButton>
                             </div>
+                            <div *ngIf="canAlterarSenha" class="ui-g-2 ui-md-3">
+                                <app-green-button [buttonLabel]="'Alterar senha'" id="idBtnAlterarSenha"
+                                    (click)="abrirDialogAlterarSenha()">
+                                </app-green-button>
+                            </div>
                         </div>
                     </div>
+
 
                     <div class="ui-g">
                         <h4 style="margin-bottom: 0px; margin-top: 0px;">Organizações e Perfis*</h4>
@@ -96,13 +102,10 @@
                             </div>
                         </div>
                         <!-- Datatable Org-Perfil -->
-                        <basis-datatable type="memory" [value]="user.perfilOrganizacoes" [disableView]="true" (click)="selectColumn()"
-                            (buttonClick)="datatableClickOrgPerfil($event)" [disableEdit]="true"
-                            [enableButtonsScroll]="true"
-                            [enableScroll]="true"
-                            [scrollHeight]="'500px'"
-                            [rowsPerPageOptions]="rowsPerPageOptions"
-                            [rows]="20" #tables>
+                        <basis-datatable type="memory" [value]="user.perfilOrganizacoes" [disableView]="true"
+                            (click)="selectColumn()" (buttonClick)="datatableClickOrgPerfil($event)"
+                            [disableEdit]="true" [enableButtonsScroll]="true" [enableScroll]="true"
+                            [scrollHeight]="'500px'" [rowsPerPageOptions]="rowsPerPageOptions" [rows]="20" #tables>
                             <p-column header="Organização" field="organizacoes" [sortable]="true">
                                 <ng-template let-row="rowData" pTemplate="body">
                                     <li *ngFor="let org of row.organizacoes">
@@ -110,7 +113,7 @@
                                     </li>
                                 </ng-template>
                             </p-column>
-                            <p-column header="Perfil"  field="perfil" [sortable]="true">
+                            <p-column header="Perfil" field="perfil" [sortable]="true">
                                 <ng-template let-row="rowData" pTemplate="body">
                                     {{row.perfil.nome}}
                                 </ng-template>
@@ -155,10 +158,10 @@
     <div class="ui-g-12 ui-md-12 ui-sm-12" style="margin-bottom: 25px">
         <span>
             <h3 class="first">Organização *</h3>
-            <p-multiSelect [appendTo]="dialogPerfilOrg"  [disabled]="this.desabilitado()"
-                name="organizacoesMultiSelect" [options]="organizacoesOptions" [(ngModel)]="organizacoesSelecionada"
-                defaultLabel="Selecione ao menos uma Organização"
-                selectedItemsLabel="{0} organizações selecionadas" #organizacoesMultiSelect='ngModel' required>
+            <p-multiSelect [appendTo]="dialogPerfilOrg" [disabled]="this.desabilitado()" name="organizacoesMultiSelect"
+                [options]="organizacoesOptions" [(ngModel)]="organizacoesSelecionada"
+                defaultLabel="Selecione ao menos uma Organização" selectedItemsLabel="{0} organizações selecionadas"
+                #organizacoesMultiSelect='ngModel' required>
             </p-multiSelect>
         </span>
     </div>
@@ -166,8 +169,7 @@
         <span>
             <h3 class="first">Perfil *</h3>
             <p-dropdown [appendTo]="dialogPerfilOrg" name="perfisDropdown" [options]="perfils" [(ngModel)]="perfilNovo"
-                [placeholder]="'Selecione um perfil'"
-                optionLabel="nome" #perfisDropdown='ngModel' required>
+                [placeholder]="'Selecione um perfil'" optionLabel="nome" #perfisDropdown='ngModel' required>
             </p-dropdown>
         </span>
     </div>
@@ -191,3 +193,33 @@
         <button type="button" pButton icon="fa-check" [label]="this.getLabel('Sim')" (click)="dialog.accept()"></button>
     </p-footer>
 </p-confirmDialog>
+<p-dialog header="Alterar senha" [(visible)]="dialogAlterarSenha" [style]="{width: '15vw'}"
+    [contentStyle]="{'overflow':'visible'}" #dialogSenha>
+    <div class="ui-g-12 ui-md-12 ui-sm-12" style="margin-bottom: 25px">
+        <span class="md-inputfield">
+            <input type="password" name="novaSenha" maxlength="50" [(ngModel)]="novaSenha" pInputText/>
+            <label>Senha *</label>
+        </span>
+
+    </div>
+    <div class="ui-g-12 ui-md-12 ui-sm-12" style="margin-bottom: 25px">
+        <span class="md-inputfield">
+            <input type="password" name="novaSenhaConfirm" maxlength="50" [(ngModel)]="novaSenhaConfirm" pInputText/>
+            <label>Senha Confirmação *</label>
+        </span>
+    </div>
+
+
+    <div class="ui-g ui-md-12" style="padding-top: 25px">
+        <div class="ui-g-2 ui-md-6 ui-sm-12">
+            <app-white-button [buttonLabel]="'Cancelar'" id="idBtnCancelarAlterarSenha"
+                (click)="fecharDialogAlterarSenha()">
+            </app-white-button>
+        </div>
+
+        <div class="ui-g-2 ui-md-6 ui-sm-12">
+            <app-green-button [buttonLabel]="'Alterar'" id="idBtnConfirmarAlterarSenha" (click)="alterarSenha()">
+            </app-green-button>
+        </div>
+    </div>
+</p-dialog>

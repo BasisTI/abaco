@@ -412,4 +412,10 @@ public class UserService extends BaseService {
         return byteArrayOutputStream;
     }
 
+    public void alterarSenha(User user, String novaSenha) {
+        String encryptedPassword = passwordEncoder.encode(novaSenha);
+        user.setPassword(encryptedPassword);
+        userRepository.save(user);
+        userSearchRepository.save(user);
+    }
 }

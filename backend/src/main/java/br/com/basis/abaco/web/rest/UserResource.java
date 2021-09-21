@@ -246,6 +246,17 @@ public class UserResource {
         return lstUserDto;
     }
 
+    @GetMapping("/users/alterarSenha/{id}/{novaSenha}")
+    @Timed
+    @Transactional
+    @Secured("ROLE_ABACO_USUARIO_ALTERAR_SENHA")
+    public void alterarSenhaUsuario(@PathVariable(name="id", required = true) Long id, @PathVariable(name="novaSenha", required = true) String novaSenha){
+        Optional<User> usuario = userRepository.findOneById(id);
+        if(usuario.isPresent()){
+            userService.alterarSenha(usuario.get(), novaSenha);
+        }
+    }
+
     private ResponseEntity createBadRequest(String errorKey, String defaultMessage) {
         return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert(ENTITY_NAME, errorKey, defaultMessage))
                 .body(null);
