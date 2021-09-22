@@ -1265,6 +1265,7 @@ export class FuncaoDadosDivergenceComponent implements OnInit {
                 this.funcaoDadosEmLote.push(new FuncaoDados().copyFromJSON(funcaoDados));
             });
         }
+        this.carregarModuloSistema();
         this.mostrarDialogEditarEmLote = true;
         this.hideShowQuantidade = true;
     }

@@ -17,11 +17,13 @@
                                 </div>
                             </div> -->
                             <div class="ui-g">
-                                <basis-datatable type="memory" id="idTabelaFuncaoDados" [disableDelete]="this.isView  || isOrderning"
-                                    [disableClone]="this.isView || isOrderning" [disableCrud]="this.isView  || isOrderning"
-                                    (dblclick)="onRowDblclick($event)" [value]="funcoesDados" [showCrud]="true"
-                                    (buttonClick)="datatableClick($event)" (click)="selectFD($event)" [paginator]="false"
-                                    [rows]="20" [enableButtonsScroll]="true" [filterOnColumn]="true"
+                                <basis-datatable type="memory" id="idTabelaFuncaoDados"
+                                    [disableDelete]="this.isView  || isOrderning"
+                                    [disableClone]="this.isView || isOrderning"
+                                    [disableCrud]="this.isView  || isOrderning" (dblclick)="onRowDblclick($event)"
+                                    [value]="funcoesDados" [showCrud]="true" (buttonClick)="datatableClick($event)"
+                                    (click)="selectFD($event)" [paginator]="false" [rows]="20"
+                                    [enableButtonsScroll]="true" [filterOnColumn]="true"
                                     [rowsPerPageOptions]="[20,50,100]" [showVisibleColumnsControl]="true"
                                     [reorderableRows]="isOrderning" (onRowReorder)="updateIndex()"
                                     [selectionMode]="'multiple'" [disableDelete]="true"
@@ -29,7 +31,8 @@
                                     [disableView]="selectModeButtonsEditAndView || isOrderning" #tables>
                                     <p-column header="Ordem" field="ordem">
                                         <ng-template let-col let-funcaoDado="rowData" pTemplate="body">
-                                            {{ funcaoDado?.ordem ? funcaoDado?.ordem : funcoesDados?.indexOf(funcaoDado) +
+                                            {{ funcaoDado?.ordem ? funcaoDado?.ordem : funcoesDados?.indexOf(funcaoDado)
+                                            +
                                             1 }}
                                         </ng-template>
                                     </p-column>
@@ -56,8 +59,9 @@
                                     <p-column field="complexidade" header="Complexidade" [sortable]="true"></p-column>
                                     <p-column field="grossPF" header="PF Bruto" [sortable]="true"></p-column>
                                     <p-column field="pf" header="PF Líquido" [sortable]="true"></p-column>
-                                    <basis-datatable-button name="add" *ngIf="!isView && !isOrderning" (click)="openDialog(false)"
-                                        bTooltip="Incluir nova função" class="ui-button-success" icon="add">
+                                    <basis-datatable-button name="add" *ngIf="!isView && !isOrderning"
+                                        (click)="openDialog(false)" bTooltip="Incluir nova função"
+                                        class="ui-button-success" icon="add">
                                     </basis-datatable-button>
                                     <basis-datatable-button name="delete" *ngIf="!isView && !isOrderning"
                                         [bTooltip]="this.getLabel('Excluído')"
@@ -83,36 +87,32 @@
                                         class="ui-button-success" icon="border-color">
                                     </basis-datatable-button>
                                     <basis-datatable-button name="ordernar" (click)="ordernarFuncoes()"
-                                        *ngIf="!isView && !isOrderning"
-                                        bTooltip="Ordernar funções." class="ui-button-success" icon="sort">
+                                        *ngIf="!isView && !isOrderning" bTooltip="Ordernar funções."
+                                        class="ui-button-success" icon="sort">
                                     </basis-datatable-button>
                                     <basis-datatable-button name="refresh" (click)="refreshFuncoes()"
-                                        *ngIf="!isView && isOrderning"
-                                        bTooltip="Ordernar (ID)." class="ui-button-success" icon="refresh">
+                                        *ngIf="!isView && isOrderning" bTooltip="Ordernar (ID)."
+                                        class="ui-button-success" icon="refresh">
                                     </basis-datatable-button>
                                     <basis-datatable-button name="order-up" [bTooltip]="'Mover para cima.'"
-                                        *ngIf="!isView && isOrderning"
-                                        (click)="orderList('order-up')"
+                                        *ngIf="!isView && isOrderning" (click)="orderList('order-up')"
                                         icon="arrow-drop-up">
                                     </basis-datatable-button>
                                     <basis-datatable-button name="order-top" [bTooltip]="'Mover ao topo.'"
-                                        *ngIf="!isView && isOrderning"
-                                        (click)="orderList('order-top')"
+                                        *ngIf="!isView && isOrderning" (click)="orderList('order-top')"
                                         icon="skip-next">
                                     </basis-datatable-button>
                                     <basis-datatable-button name="order-down" [bTooltip]="'Mover para baixo.'"
-                                        *ngIf="!isView && isOrderning"
-                                        (click)="orderList('order-down')"
+                                        *ngIf="!isView && isOrderning" (click)="orderList('order-down')"
                                         icon="arrow-drop-down">
                                     </basis-datatable-button>
                                     <basis-datatable-button style="transform: rotate(-90deg);" name="order-botton"
-                                        *ngIf="!isView && isOrderning"
-                                        (click)="orderList('order-botton')"
+                                        *ngIf="!isView && isOrderning" (click)="orderList('order-botton')"
                                         [bTooltip]="'Mover ao final.'" icon="skip-previous">
                                     </basis-datatable-button>
                                     <basis-datatable-button name="saveOrder" (click)="salvarOrdernacao()"
-                                        *ngIf="!isView && isOrderning"
-                                        bTooltip="Salvar ordenação." class="ui-button-success" icon="save">
+                                        *ngIf="!isView && isOrderning" bTooltip="Salvar ordenação."
+                                        class="ui-button-success" icon="save">
                                     </basis-datatable-button>
                                 </basis-datatable>
                             </div>
@@ -275,9 +275,8 @@
 
                             <span class="md-inputfield">
                                 <p-editor maxlength="5000" [rows]="3" id="idEvidenciaFormFuncaoDados" [cols]="180"
-                                    [formats]="formatsEditor"
-                                    [disabled]="isDisabled" pInputTextarea name="funcaoDadosSustentacao"
-                                    [(ngModel)]="seletedFuncaoDados.sustantation">
+                                    [formats]="formatsEditor" [disabled]="isDisabled" pInputTextarea
+                                    name="funcaoDadosSustentacao" [(ngModel)]="seletedFuncaoDados.sustantation">
                                     <!-- Inicio configuração toolbar-->
                                     <p-header>
                                         <span class="ql-formats">
@@ -553,7 +552,7 @@
 </p-tabView>
 
 <p-dialog [modal]="true" [style]="{width: '55vw'}" [closable]="false" header="Editar em lote"
-    [(visible)]="mostrarDialogEditarEmLote" [contentStyle]="{'height': ['windowHeightDialog']}">
+    [(visible)]="mostrarDialogEditarEmLote" [contentStyle]="{'height': ['windowHeightDialog']}" #pDialogEditLote>
 
 
 
@@ -564,14 +563,14 @@
                     <!-- filtro/pesquisa? -->
                     <label>Módulo: </label>
                     <p-dropdown [filter]="true" optionLabel="nome" name="modulo" datakey="id"
-                        [placeholder]="this.getLabel('Selecione')" [options]="modulos"
+                        [appendTo]="pDialogEditLote" [placeholder]="this.getLabel('Selecione')" [options]="modulos"
                         [(ngModel)]="moduloSelecionadoEmLote">
                     </p-dropdown>
                 </div>
                 <div class="ui-g-6 ui-md-6 ui-sm-12">
                     <!-- filtro/pesquisa? -->
                     <label>Funcionalidade: </label>
-                    <p-dropdown [filter]="true" optionLabel="nome" name="funcionalidade"
+                    <p-dropdown [filter]="true" optionLabel="nome" name="funcionalidade" [appendTo]="pDialogEditLote"
                         [options]="moduloSelecionadoEmLote?.funcionalidades"
                         [(ngModel)]="funcionalidadeSelecionadaEmLote" [placeholder]="'Selecione a funcionalidade'"
                         [disabled]="!moduloSelecionadoEmLote">
@@ -585,8 +584,8 @@
         <div class="ui-g-3 ui-md-12 ui-sm-12">
             <label>Classificação: </label>
             <p-dropdown [filter]="true" [options]="classificacoes" id="idClassificacoesFormEmLoteFuncaoDados"
-                [(ngModel)]="classificacaoEmLote" [placeholder]="this.getLabel('Selecione Classificação')"
-                name="classificacao">
+                [appendTo]="pDialogEditLote" [(ngModel)]="classificacaoEmLote"
+                [placeholder]="this.getLabel('Selecione Classificação')" name="classificacao">
             </p-dropdown>
         </div>
     </div>
@@ -595,15 +594,15 @@
         <div class="ui-g-11 ui-md-11 ui-sm-11">
             <label>Deflator: </label>
             <p-dropdown [filter]="true" [options]="fatoresAjuste" id="idDeflatorFormEmLoteFuncaoDados"
-                [placeholder]="'Selecione um deflator'" name="fatorAjuste" [(ngModel)]="deflatorEmLote"
-                (onChange)="selecionarDeflatorEmLote($event.value)">
+                [appendTo]="pDialogEditLote" [placeholder]="'Selecione um deflator'" name="fatorAjuste"
+                [(ngModel)]="deflatorEmLote" (onChange)="selecionarDeflatorEmLote($event.value)">
             </p-dropdown>
         </div>
 
         <div class="ui-g-3 ui-md-6 ui-sm-12" [hidden]="hideShowQuantidade">
             <label>Quantidade *: </label>
             <input type="number" class="ui-inputtext" min="1" [(ngModel)]="quantidadeEmLote"
-                id="idQuantidadeFormFuncaoDados">
+                [appendTo]="pDialogEditLote" id="idQuantidadeFormFuncaoDados">
         </div>
     </div>
     <div class="ui-g">
@@ -613,7 +612,8 @@
 
             <span class="md-inputfield">
                 <p-editor maxlength="5000" [rows]="3" id="idEvidenciaFormFuncaoDados" [cols]="180"
-                    [disabled]="isDisabled" pInputTextarea name="funcaoDadosSustentacao" [(ngModel)]="evidenciaEmLote">
+                    [appendTo]="pDialogEditLote" [disabled]="isDisabled" pInputTextarea name="funcaoDadosSustentacao"
+                    [(ngModel)]="evidenciaEmLote">
                     <!-- Inicio configuração toolbar-->
                     <p-header>
                         <span class="ql-formats">
