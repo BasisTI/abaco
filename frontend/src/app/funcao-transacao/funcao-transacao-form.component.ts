@@ -541,6 +541,7 @@ export class FuncaoTransacaoFormComponent implements OnInit {
         }
         this.currentFuncaoTransacao.funcionalidade = funcionalidade;
     }
+    
 
 
     adicionar(): boolean {
