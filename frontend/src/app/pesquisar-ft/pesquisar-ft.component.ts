@@ -136,6 +136,11 @@ export class PesquisarFtComponent implements OnInit {
     campoDers: string = "";
 
 
+    analisesFromFuncao: Analise[] = [];
+    mostrarDialogPesquisarAnalises: boolean = false;
+    headerDialog: String = "";
+
+
     constructor(
         private analiseService: AnaliseService,
         private analiseSharedDataService: AnaliseSharedDataService,
@@ -769,4 +774,27 @@ export class PesquisarFtComponent implements OnInit {
         saveAs(data, fileName + '_export_' + new Date().getTime() + EXCEL_EXTENSION);
     }
 
+    pesquisarAnalises(funcao){
+        if(funcao.name && funcao.nomeFuncionalidade && funcao.nomeModulo){
+            this.analiseService.findAnalisesFromFuncao(funcao.name, funcao.nomeModulo, funcao.nomeFuncionalidade, this.isFuncaoDados).subscribe(r => {
+                this.analisesFromFuncao = r;
+                this.abrirDialogPesquisarAnalises(funcao.nomeFuncionalidade+" - "+funcao.name);
+            })
+        }      
+    }
+
+    abrirDialogPesquisarAnalises(nomeFuncao: String){
+        this.mostrarDialogPesquisarAnalises = true;
+        this.headerDialog = "Analises da função "+nomeFuncao;
+    }
+
+    fecharDialogPesquisarAnalises(){
+        this.mostrarDialogPesquisarAnalises = false;
+    }
+
+    abrirAnalise(analise){
+        if(analise){
+            this.router.navigate(["analise", analise.id, "edit"]);
+        }
+    }
 }
