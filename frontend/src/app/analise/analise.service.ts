@@ -480,6 +480,4 @@ export class AnaliseService {
     findAnalisesFromFuncao(nomeFuncao: String, nomeModulo: String, nomeFuncionalidade: String, isFd: Boolean): Observable<Analise[]>{
         return this.http.get<Analise[]>(this.resourceUrl+"/fromFuncao/"+nomeFuncao+"/"+nomeModulo+"/"+nomeFuncionalidade+"/"+isFd);
     }
-
-
 }
