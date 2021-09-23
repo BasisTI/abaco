@@ -70,12 +70,7 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.sql.Timestamp;
 import java.time.Instant;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static org.elasticsearch.index.query.QueryBuilders.boolQuery;
@@ -546,7 +541,7 @@ public class AnaliseService extends BaseService {
     public void bindAnalise(@RequestBody @Valid Analise analiseUpdate, Analise analise) {
         salvaNovaData(analiseUpdate);
         analise.setNumeroOs(analiseUpdate.getNumeroOs());
-        analise.setEquipeResponsavel(analiseUpdate.getEquipeResponsavel()); 
+        analise.setEquipeResponsavel(analiseUpdate.getEquipeResponsavel());
         analise.setIdentificadorAnalise(analiseUpdate.getIdentificadorAnalise());
         analise.setDataCriacaoOrdemServico(analiseUpdate.getDataCriacaoOrdemServico());
         analise.setMetodoContagem(analiseUpdate.getMetodoContagem());
@@ -988,5 +983,17 @@ public class AnaliseService extends BaseService {
             funcaoDadosRepository.save(funcaoDado);
             funcaoDadosSearchRepository.save(funcaoDado);
         });
+    }
+
+    public List<Analise> carregarAnalisesFromFuncao(String nomeFuncao, String nomeModulo, String nomeFuncionalidade, Boolean isFd) {
+        List<Analise> analises = new ArrayList<>();
+        if(isFd){
+            analises = analiseRepository.findAllByFuncoesDados(nomeFuncao, nomeModulo, nomeFuncionalidade);
+        }else{
+            analises = analiseRepository.findAllByFuncoesTransacoes(nomeFuncao, nomeModulo, nomeFuncionalidade);
+        }
+
+        analises.stream().map(analise -> convertToEntity(convertToDto(analise)));
+        return analises;
     }
 }

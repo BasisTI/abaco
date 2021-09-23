@@ -241,7 +241,7 @@ public class AnaliseResource {
         if(analise.getClonadaParaEquipe() == null){
             analise.setClonadaParaEquipe(false);
         }
-        
+
         if (analise.getId() != null && tipoEquipe.getId() != null && !(analise.getClonadaParaEquipe())) {
             Analise analiseClone = new Analise(analise, userRepository.findOneByLogin(SecurityUtils.getCurrentUserLogin()).get());
             analiseService.bindAnaliseCloneForTipoEquipe(analise, tipoEquipe, analiseClone);
@@ -790,6 +790,15 @@ public class AnaliseResource {
         analiseService.carregarDadosJson(newAnalise, analise);
 
         return new ResponseEntity(newAnalise, HttpStatus.OK);
+    }
+
+    @GetMapping("/analises/fromFuncao/{nomeFuncao}/{nomeModulo}/{nomeFuncionalidade}/{isFd}")
+    public ResponseEntity<List<Analise>> carregarAnalisesFromFuncao(@PathVariable(name = "nomeFuncao")String nomeFuncao,
+                                                                    @PathVariable(name = "nomeModulo")String nomeModulo,
+                                                                    @PathVariable(name = "nomeFuncionalidade")String nomeFuncionalidade,
+                                                                    @PathVariable(name = "isFd")Boolean isFd){
+        List<Analise> analises = analiseService.carregarAnalisesFromFuncao(nomeFuncao, nomeModulo, nomeFuncionalidade, isFd);
+        return new ResponseEntity<>(analises, HttpStatus.OK);
     }
 }
 
