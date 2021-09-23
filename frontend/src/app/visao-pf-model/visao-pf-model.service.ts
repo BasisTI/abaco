@@ -14,7 +14,7 @@ export class VisaoPfModelService {
   }
 
   startTrain(){
-    var trainSteps = '500'
+    var trainSteps = '1000'
     let formData: FormData = new FormData()
     formData.append('trainSteps', trainSteps )
     return this.http.post('/visaopf/api/train/', formData, {responseType: 'text'})
