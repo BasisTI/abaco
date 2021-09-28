@@ -6,6 +6,7 @@ import br.com.basis.abaco.domain.VwRlr;
 import br.com.basis.abaco.repository.AlrRepository;
 import br.com.basis.abaco.repository.search.AlrSearchRepository;
 import br.com.basis.abaco.service.AlrService;
+import br.com.basis.abaco.service.dto.DropdownDTO;
 import br.com.basis.abaco.web.rest.util.HeaderUtil;
 import com.codahale.metrics.annotation.Timed;
 import io.github.jhipster.web.util.ResponseUtil;
@@ -165,5 +166,12 @@ public class AlrResource {
 
         List<VwAlr> alrs = alrService.bindFilterSearchAlrsSistema(nome, idSistema);
         return new ResponseEntity<>(alrs, HttpStatus.OK);
+    }
+
+    @GetMapping("/alrs/drop-down/{idFuncaoTransacao}")
+    @Timed
+    public List<DropdownDTO> getAlrByFuncaoTransacaoIdDropdown(@PathVariable Long idFuncaoTransacao) {
+        log.debug("REST request to get dropdown Alr for FuncaoDados {}", idFuncaoTransacao);
+        return alrService.getAlrByFuncaoTransacaoIdDropdown(idFuncaoTransacao);
     }
 }

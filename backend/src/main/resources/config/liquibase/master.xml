@@ -29,4 +29,9 @@
     <include file="classpath:config/liquibase/changelog/20210608164624_add_colum_perfil_organizacoes_in_user.xml" relativeToChangelogFile="false"/>
     <include file="classpath:config/liquibase/changelog/20210610180753_add_view_pe_analitico_estimada.xml" relativeToChangelogFile="false"/>
     <include file="classpath:config/liquibase/changelog/20210623192004_alter_view_funcao_add_ordem.xml" relativeToChangelogFile="false"/>
+    <include file="classpath:config/liquibase/changelog/20210708185753_add_column_sigla_fator_ajuste.xml" relativeToChangelogFile="false"/>
+    <include file="classpath:config/liquibase/changelog/20210720165637_add_column_fator_criticidade_and_scope_creep_analise.xml" relativeToChangelogFile="false"/>
+    <include file="classpath:config/liquibase/changelog/20210811224417_alter_view_funcao_add_nome_equipe.xml" relativeToChangelogFile="false"/>
+    <include file="classpath:config/liquibase/changelog/20210831182550_alter_view_pe_analitico.xml" relativeToChangelogFile="false"/>
+    <include file="classpath:config/liquibase/changelog/20210902161910_reajustar_pe_analitico.xml" relativeToChangelogFile="false"/>
 </databaseChangeLog>

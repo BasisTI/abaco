@@ -5,6 +5,7 @@ import br.com.basis.abaco.domain.VwRlr;
 import br.com.basis.abaco.repository.RlrRepository;
 import br.com.basis.abaco.repository.search.RlrSearchRepository;
 import br.com.basis.abaco.service.RlrService;
+import br.com.basis.abaco.service.dto.DropdownDTO;
 import br.com.basis.abaco.web.rest.util.HeaderUtil;
 import com.codahale.metrics.annotation.Timed;
 import io.github.jhipster.web.util.ResponseUtil;
@@ -165,5 +166,11 @@ public class RlrResource {
         return new ResponseEntity<>(rlrs, HttpStatus.OK);
     }
 
+    @GetMapping("/rlrs/drop-down/{idFuncaoDados}")
+    @Timed
+    public List<DropdownDTO> getRlrByFuncaoDadosIdDropdown(@PathVariable Long idFuncaoDados) {
+        log.debug("REST request to get dropdown Rlrs for FuncaoDados {}", idFuncaoDados);
+        return rlrService.getRlrByFuncaoDadosIdDropdown(idFuncaoDados);
+    }
 
 }

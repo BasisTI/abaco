@@ -176,12 +176,11 @@
                         </basis-datatable-button>
                         <basis-datatable-button name="compartilhar" *ngIf="canCompartilhar"
                             [bTooltip]="compartilharTooltip()" icon="share" class="ui-button-info"
-                            (click)="compartilharAnalise()"
-                            [disabled]="datatable.selectedRow == null">
+                            (click)="compartilharAnalise()" [disabled]="datatable.selectedRow == null">
                         </basis-datatable-button>
                         <basis-datatable-button name="clone" *ngIf="canClonar" [bTooltip]="clonarTooltip()"
-                            (click)="clonar(analiseSelecionada.id)"
-                            icon="content-copy" [disabled]="datatable.selectedRow == null">
+                            (click)="clonar(analiseSelecionada.id)" icon="content-copy"
+                            [disabled]="datatable.selectedRow == null">
                         </basis-datatable-button>
                         <basis-datatable-button name="relatorioBrowserDetalhado" *ngIf="canRelatorioDetalhado"
                             [bTooltip]="relatorioTooltip()" icon="description"
@@ -190,8 +189,8 @@
                         </basis-datatable-button>
                         <basis-datatable-button name="relatorioExcelDetalhado" *ngIf="canRelatorioExcel"
                             [bTooltip]="relatorioExcelTooltip()" icon="description"
-                            (click)="gerarRelatorioExcel(analiseSelecionada)"
-                            [disabled]="datatable.selectedRow == null" class="ui-button-success">
+                            (click)="gerarRelatorioExcel(analiseSelecionada)" [disabled]="datatable.selectedRow == null"
+                            class="ui-button-success">
                         </basis-datatable-button>
                         <basis-datatable-button name="relatorioAnaliseContagem" *ngIf="canRelatorioFundamentacao"
                             [bTooltip]="relatorioContagemTooltip()" icon="description"
@@ -199,8 +198,7 @@
                             [disabled]="datatable.selectedRow == null" class="ui-button-danger">
                         </basis-datatable-button>
                         <basis-datatable-button name="cloneParaEquipe" *ngIf="canClonarEquipe"
-                            [bTooltip]="clonarParaEquipeTooltip()" icon="content-copy"
-                            (click)="clonarEquipe()"
+                            [bTooltip]="clonarParaEquipeTooltip()" icon="content-copy" (click)="clonarEquipe()"
                             [disabled]="datatable.selectedRow == null" class="ui-button-success">
                         </basis-datatable-button>
                         <basis-datatable-button name="changeStatus" *ngIf="canAlterarStatus"
@@ -209,20 +207,20 @@
                             [disabled]="datatable.selectedRow == null" class="ui-button-info">
                         </basis-datatable-button>
                         <basis-datatable-button name="generateDivergence" *ngIf="canGerarValidacao"
-                            [bTooltip]="changeDivergenceTooltip()" icon="compare-arrows"
-                            (click)="gerarDivergencia()"
+                            [bTooltip]="changeDivergenceTooltip()" icon="compare-arrows" (click)="gerarDivergencia()"
                             [disabled]="datatable.selectedRow == null" class="ui-button-info">
                         </basis-datatable-button>
-                        <basis-datatable-button *ngIf="canExportarPlanilha" name="importExcel" [bTooltip]="'Exportar planilha excel'"
-                            (click)="openModalExportarExcel(analiseSelecionada)"
+                        <basis-datatable-button *ngIf="canExportarPlanilha" name="exportExcel"
+                            [bTooltip]="'Exportar planilha excel'" (click)="openModalExportarExcel(analiseSelecionada)"
                             icon="file-upload" class="ui-button-success" [disabled]="datatable.selectedRow == null">
                         </basis-datatable-button> -->
-                        <!-- <basis-datatable-button name="exportJson" [bTooltip]="'Exportar análise'" icon="file-download"
-                            [disabled]="datatable.selectedRow == null" class="ui-button-info">
+                        <basis-datatable-button name="exportJson" [bTooltip]="'Exportar análise'" icon="call-received"
+                            (click)="exportarAnalise(analiseSelecionada);" [disabled]="datatable.selectedRow == null"
+                            class="ui-button-info">
                         </basis-datatable-button>
-                        <basis-datatable-button name="importJson" [bTooltip]="'Importar análise'" icon="file-upload"
-                           class="ui-button-success" (click)="openModalImportAnalise()">
-                        </basis-datatable-button> -->
+                        <basis-datatable-button name="importJson" [bTooltip]="'Importar análise'" icon="call-made"
+                             (click)="openModalImportAnalise()" class="ui-button-info">
+                        </basis-datatable-button>
                     </basis-datatable>
                     <div class="ui-g-12 ui-md-2">
                         <app-export-button [dataTable]="datatable" resourceName="analise"
@@ -400,26 +398,14 @@
     </app-white-button>
 </p-dialog>
 
-<p-dialog header="Importar análise" [(visible)]="showDialogImportar" [style]="{width: '50vw'}" [minHeight]="300"
-    [modal]="true">
 
-    <p-fileUpload name="jsonAnalise" [showCancelButton]="false" [showUploadButton]="false"
-        [chooseLabel]="'Escolha o arquivo'" (onSelect)="selectJsonAnalise($event)" accept="application/json">
-    </p-fileUpload>
-
-
-    <app-green-button buttonLabel="Importar" (click)="importarAnalise()" style="float:right; margin: 5px">
-    </app-green-button>
-    <app-white-button buttonLabel="Cancelar" (click)="closeModalImportAnalise()" style="float:right; margin: 5px">
-    </app-white-button>
-
-</p-dialog>
 
 <p-dialog header="Exportar planilha excel" [(visible)]="showDialogImportarExcel" [style]="{width: '50vw'}"
-    [minHeight]="300" [modal]="true">
+    [minHeight]="300" [modal]="true" #dialogPlanilha>
 
-    <p-dropdown [style]="{'width':'100%', 'margin-bottom': '55px'}" [options]="lstModelosExcel" optionLabel="label"
-        id="idModeloExcel" [(ngModel)]="modeloSelecionado" placeholder="Selecione um modelo">
+    <p-dropdown [style]="{'width':'100%', 'margin-bottom': '55px'}" [appendTo]="dialogPlanilha"
+        [options]="lstModelosExcel" optionLabel="label" id="idModeloExcel" [(ngModel)]="modeloSelecionado"
+        placeholder="Selecione um modelo">
     </p-dropdown>
 
     <app-green-button buttonLabel="Exportar" (click)="exportarPlanilha()" style="float:right; margin: 5px">
@@ -427,4 +413,226 @@
     <app-white-button buttonLabel="Cancelar" (click)="closeModalExportarExcel()" style="float:right; margin: 5px">
     </app-white-button>
 
+</p-dialog>
+
+
+<p-dialog header="Importar análise" [(visible)]="showDialogImportar" [style]="{width: '60vw'}" [minHeight]="300"
+    [modal]="true" #importarDialog>
+
+    <p-fileUpload *ngIf="!carregadaAnalise" name="jsonAnalise" [showCancelButton]="false" [showUploadButton]="false"
+        [chooseLabel]="'Escolha o arquivo'" (onRemove)="removeJsonFiles()" (onSelect)="selectJsonAnalise($event)" accept="application/json">
+    </p-fileUpload>
+    <div *ngIf="carregadaAnalise" class="ui-g ui-fluid">
+        <div class="ui-g-12">
+            <div class="card card-w-title">
+                <form name="editForm" role="form" novalidate (ngSubmit)="importarAnalise()" #editForm="ngForm">
+                    <div>
+                        <div class="ui-g">
+                            <div class="ui-g-4 ui-md-4 ui-sm-12" style="margin-bottom: 05px">
+                                <label>Organização</label>
+                                <p-dropdown [appendTo]="importarDialog" [filter]="true" dataKey="id"
+                                    id="idOrganizacaoSaveFormAnalise" name="organizacao" optionLabel="nome"
+                                    [placeholder]="this.getLabel('Selecione')" [options]="organizacoes"
+                                    [(ngModel)]="analiseImportar.organizacao"
+                                    (onChange)="setSistemaOrganizacao($event.value)">
+                                </p-dropdown>
+                            </div>
+                            <div class="ui-g-4 ui-md-4 ui-sm-12" style="margin-bottom: 05px">
+                                <label>Sistema</label>
+                                <p-dropdown [appendTo]="importarDialog" [filter]="true" dataKey="id"
+                                    id="idSistemaSaveFormAnalise" optionLabel="sigla"
+                                    [placeholder]="this.getLabel('Selecione')"
+                                    name="sistema" [options]="sistemas" [(ngModel)]="analiseImportar.sistema">
+                                </p-dropdown>
+                            </div>
+                            <div class="ui-g-4 ui-md-4 ui-sm-12" style="margin-bottom: 05px">
+                                <label>Equipe Responsável</label>
+                                <p-dropdown [appendTo]="importarDialog" [filter]="true" dataKey="id"
+                                    id="idEquipeResponsavelSaveFormAnalise" name="equipeResponsavel" optionLabel="nome"
+                                    [placeholder]="this.getLabel('Selecione')" [disabled]="hideShowSelectEquipe"
+                                    [options]="equipeResponsavel" [(ngModel)]="analiseImportar.equipeResponsavel">
+                                </p-dropdown>
+                            </div>
+                        </div>
+                    </div>
+                    <div style="margin-bottom: 05px; margin-top: 05px" *ngIf="analiseImportar.equipeResponsavel">
+                        <div class="ui-g">
+                            <div class="ui-g-6 ui-md-6 ui-sm-12" style="margin-bottom: 05px">
+                                <label>Identificador da Analise *</label>
+                                <span class="md-inputfield">
+                                    <input required type="text" maxlength="100" id="idIdentificadorAnaliseFormAnalise"
+                                        name="identificadorAnalise" [(ngModel)]="analiseImportar.identificadorAnalise"
+                                        pInputText />
+                                    <div *ngIf="editForm.controls['identificadorAnalise']
+                            && !editForm.controls['identificadorAnalise'].valid
+                            && (editForm.controls['identificadorAnalise'].touched
+                            || editForm.submitted)" class="ui-message ui-messages-error">
+                                        Campo obrigatório.
+                                    </div>
+                                </span>
+                            </div>
+                            <div class="ui-g-6 ui-md-6 ui-sm-12" style="margin-bottom: 05px">
+                                <label>Número O.S.*</label>
+                                <span class="md-inputfield">
+                                    <input required type="text" maxlength="100" id="idnumeroOsAnaliseFormAnalise"
+                                        name="numeroOsAnalise" [(ngModel)]="analiseImportar.numeroOs" pInputText />
+                                    <div *ngIf="editForm.controls['numeroOsAnalise']
+                            && !editForm.controls['numeroOsAnalise'].valid
+                            && (editForm.controls['numeroOsAnalise'].touched
+                            || editForm.submitted)" class="ui-message ui-messages-error">
+                                        Campo obrigatório.
+                                    </div>
+                                </span>
+                            </div>
+                            <div class="ui-g-4 ui-md-4 ui-sm-12" style="margin-bottom: 05px">
+                                <label>Contrato *</label>
+                                <p-dropdown [filter]="true" required id="idContratoFormAnalise" dataKey="id"
+                                    optionLabel="numeroContrato" [placeholder]="this.getLabel('Selecione')"
+                                    (onChange)="contratoSelected($event.value)" name="contrato" [options]="contratos"
+                                    [(ngModel)]="analiseImportar.contrato">
+                                </p-dropdown>
+                            </div>
+                            <div class="ui-g-4 ui-md-4 ui-sm-12" style="margin-bottom: 05px">
+                                <label>Manual *</label>
+                                <p-dropdown required [filter]="true" id="idManual" name="manual"
+                                    [options]="manuaisCombo" (onChange)="setManual($event.value)"
+                                    [(ngModel)]="analiseImportar.manual" datakey="id">
+                                    <div class="row">
+                                        <ng-template let-manualSelc pTemplate="selectedItem">
+                                            {{manualSelc.label}}
+                                        </ng-template>
+                                    </div>
+                                </p-dropdown>
+                            </div>
+                            <div class="ui-g-4 ui-md-4 ui-sm-12" style="margin-bottom: 05px">
+                                <label>Status *</label>
+                                <p-dropdown [filter]="true" id="idStatusFormAnalise" dataKey="id"
+                                    [placeholder]="this.getLabel('Selecione um status')" name="status"
+                                    optionLabel="nome" [options]="statusCombo" [(ngModel)]="analiseImportar.status">
+                                </p-dropdown>
+                            </div>
+                            <div [ngClass]="'(ui-g-4 ui-md-4 ui-sm-12)'" style="margin-bottom: 05px">
+                                <label>Método de Contagem *</label>
+                                <p-dropdown [filter]="true" required id="idMetodoContagemFormAnalise"
+                                    [placeholder]="this.getLabel('Selecione um contrato')" name="metodoContagem"
+                                    [options]="metodosContagem" [(ngModel)]="analiseImportar.metodoContagem"
+                                    (onChange)="alterarMetodoContagem()">
+                                </p-dropdown>
+                            </div>
+                            <div [ngClass]="'(ui-g-4 ui-md-4 ui-sm-12)'" style="margin-bottom: 05px">
+                                <label>Tipo de Contagem *</label>
+                                <p-dropdown [filter]="true" required id="idTipoContagemFormAnalise" name="tiposAnalise"
+                                    [placeholder]="this.getLabel('Selecione')" [options]="tiposAnalise"
+                                    [(ngModel)]="analiseImportar.tipoAnalise">
+                                </p-dropdown>
+                            </div>
+                            <div class="ui-g-6 ui-md-6 ui-sm-12" style="margin-bottom: 05px">
+                                <label>Propósito da Contagem</label>
+                                <span class="md-inputfield">
+                                    <textarea maxlength="4000" pInputTextarea name="propositoContagem"
+                                        id="idPropositoContagemFormAnalise"
+                                        [(ngModel)]="analiseImportar.propositoContagem">
+                        </textarea>
+                                </span>
+                            </div>
+
+                            <div class="ui-g-6 ui-md-6 ui-sm-12" style="margin-bottom: 05px">
+                                <label>Escopo da Contagem</label>
+                                <span class="md-inputfield">
+                                    <textarea maxlength="4000" pInputTextarea name="escopo"
+                                        id="idEscopoContagemFormAnalise" [(ngModel)]="analiseImportar.escopo">
+                        </textarea>
+                                </span>
+                            </div>
+
+                            <div class="ui-g-6 ui-md-6 ui-sm-12" style="margin-bottom: 05px">
+                                <label>Fronteira</label>
+                                <span class="md-inputfield">
+                                    <textarea maxlength="4000" pInputTextarea name="fronteiras"
+                                        id="idFronteirasFormAnalise" [(ngModel)]="analiseImportar.fronteiras">
+                        </textarea>
+                                </span>
+                            </div>
+
+                            <div class="ui-g-6 ui-md-6 ui-sm-12" style="margin-bottom: 05px">
+                                <label>Documentação</label>
+                                <span class="md-inputfield">
+                                    <textarea maxlength="4000" required pInputTextarea name="documentacao"
+                                        id="idDocumentacaoFormAnalise" [(ngModel)]="analiseImportar.documentacao">
+                        </textarea>
+                                </span>
+                            </div>
+
+                            <p-fieldset [legend]="this.getLabel('Fases')" [toggleable]="true" [collapsed]="true">
+                                <div class="ui-g-12 ui-md-12 ui-sm-12" style="margin-bottom: 05px">
+                                    <p-table dataKey="id" [rowHover]="true"
+                                        [emptyMessage]="this.getLabel('Selecione um Contrato para escolher Fases')"
+                                        [value]="esforcoFases" id="idTabelaFases" [resizableColumns]="true"
+                                        [(selection)]="analiseImportar.esforcoFases">
+                                        <ng-template pTemplate="caption">
+                                            Fase
+                                        </ng-template>
+                                        <ng-template pTemplate="header">
+                                            <tr>
+                                                <th style="text-align:left">
+                                                    <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+                                                </th>
+                                                <th pSortableColumn="fase.nome">Nome <p-sortIcon></p-sortIcon>
+                                                </th>
+                                                <th pSortableColumn="esforco">Esforço <p-sortIcon></p-sortIcon>
+                                                </th>
+                                            </tr>
+                                        </ng-template>
+                                        <ng-template pTemplate="body" let-esforcoFase>
+                                            <tr class="ui-selectable-row">
+                                                <td>
+                                                    <p-tableCheckbox [value]="esforcoFase"></p-tableCheckbox>
+                                                </td>
+                                                <td>
+                                                    {{esforcoFase.fase.nome}}
+                                                </td>
+                                                <td>
+                                                    {{esforcoFase.esforco}}%
+                                                </td>
+                                            </tr>
+                                        </ng-template>
+                                        <ng-template pTemplate="footer">
+                                            <tr>
+                                                <td colspan="3" style="text-align:center">{{this.getLabel('Total')}} {{
+                                                    totalEsforcoFases() }}%</td>
+                                            </tr>
+                                        </ng-template>
+                                    </p-table>
+                                </div>
+                            </p-fieldset>
+                            <div class="ui-g-12 ui-md-12 ui-sm-12" style="margin-bottom: 05px">
+                                <label>Observações</label>
+                                <span class="md-inputfield">
+                                    <textarea [rows]="3" id="idObservacoesFormAnalise" [cols]="180" maxlength="4000"
+                                        autoResize=true pInputTextarea name="observacoes"
+                                        [(ngModel)]="analiseImportar.observacoes">
+                        </textarea>
+                                </span>
+                            </div>
+
+                            <div class="ui-g ui-md-12"
+                                style="justify-content: center; margin-bottom: 05px; margin-top: 05px">
+                                <app-green-button *ngIf="carregadaAnalise" buttonLabel="Importar"
+                                    (click)="importarAnalise()" style="float:right; margin: 5px">
+                                </app-green-button>
+                                <app-white-button buttonLabel="Cancelar" (click)="closeModalImportAnalise()"
+                                    style="float:right; margin: 5px">
+                                </app-white-button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <app-green-button *ngIf="!carregadaAnalise && analiseFileJson" buttonLabel="Carregar" (click)="carregarAnalise()"
+        style="float:right; margin: 5px">
+    </app-green-button>
+    <app-white-button *ngIf="!carregadaAnalise" buttonLabel="Cancelar" (click)="closeModalImportAnalise()" style="float:right; margin: 5px">
+    </app-white-button>
 </p-dialog>

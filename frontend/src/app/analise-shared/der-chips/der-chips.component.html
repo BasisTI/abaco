@@ -142,6 +142,9 @@
             <div *ngIf="validaMultiplos" class="ui-message ui-messages-error">
                 O campo possui valores duplicado!
             </div>
+            <div *ngIf="validaMultiplosRegistrados" class="ui-message ui-messages-error">
+                Registros já cadastrados: {{registrosDuplicadosEdit}}
+            </div>
             <div class="ui-g ui-md-12" style="justify-content: flex-end">
                 <div class="ui-g-2 ui-md-2 ui-sm-12">
                     <button pButton type="button" id="idBtnCancelarDialogComponentDerChips"

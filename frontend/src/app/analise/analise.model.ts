@@ -81,9 +81,20 @@ export class Analise implements BaseEntity {
         public analisesComparadas?: Analise[],
         public analiseClonadaParaEquipe?: Analise,
         public analiseClonou?: boolean,
+        public fatorCriticidade?: boolean,
+        public valorCriticidade?: number,
+        public scopeCreep?: number,
     ) {
         this.inicializaMappables(funcaoDados, funcaoTransacaos);
         this.inicializaResumos();
+
+        if(!fatorCriticidade){
+            this.fatorCriticidade = false;
+            this.valorCriticidade = 35;
+        }
+        if(!scopeCreep){
+            this.scopeCreep = 35;
+        }
 
         // TODO
         if (!baselineImediatamente) {
@@ -305,7 +316,10 @@ export class Analise implements BaseEntity {
             this.status,
             this.analisesComparadas,
             this.analiseClonadaParaEquipe,
-            this.analiseClonou
+            this.analiseClonou,
+            this.fatorCriticidade,
+            this.valorCriticidade,
+            this.scopeCreep,
             );
     }
 
@@ -370,6 +384,16 @@ class AnaliseCopyFromJSON {
             this._analiseConverted.baselineImediatamente = false;
         }
         this._analiseConverted.users = this._json.users;
+        this._analiseConverted.fatorCriticidade = this._json.fatorCriticidade;
+        this._analiseConverted.valorCriticidade = this._json.valorCriticidade;
+        if(!this._analiseConverted.fatorCriticidade){
+            this._analiseConverted.fatorCriticidade = false;
+            this._analiseConverted.valorCriticidade = 35;
+        }
+        this._analiseConverted.scopeCreep = this._json.scopeCreep;
+        if(!this._analiseConverted.scopeCreep){
+            this._analiseConverted.scopeCreep = 35;
+        }
     }
 
     private converteFuncoes() {

@@ -51,7 +51,7 @@ export class ManualFormComponent implements OnInit, OnDestroy {
     showEditOrderDeflator = false;
     fatorAjusteSelected?: FatorAjuste = new FatorAjuste();
     esforcoFaseSelected?: EsforcoFase = new EsforcoFase();
-    esforcoFaseEdit: EsforcoFase[] =  [];
+    esforcoFaseEdit: EsforcoFase[] = [];
 
 
     adjustTypes: Array<any> = [
@@ -141,14 +141,12 @@ export class ManualFormComponent implements OnInit, OnDestroy {
     }
 
     private editar() {
-        this.manualService.find(this.manual.id).subscribe((response) => {
-            if (this.checkRequiredFields()) {
-                this.subscribeToSaveResponse(this.manualService.update(this.manual, this.arquivoManual));
-                this.isEdit = true;
-            } else {
-                this.privateExibirMensagemCamposInvalidos(1);
-            }
-        });
+        if (this.checkRequiredFields()) {
+            this.subscribeToSaveResponse(this.manualService.update(this.manual, this.arquivoManual));
+            this.isEdit = true;
+        } else {
+            this.privateExibirMensagemCamposInvalidos(1);
+        }
     }
 
     public confirmDelete(arquivoId: number, manualId: number) {
@@ -388,14 +386,14 @@ export class ManualFormComponent implements OnInit, OnDestroy {
             this.pageNotificationService.addErrorMessage('Por favor, preencha campos obrigatórios!');
         }
     }
-    checkEsforcoFase(){
+    checkEsforcoFase() {
 
         let total = 0;
         this.esforcoFaseEdit = this.manual.esforcoFases;
-        for(let i =0; i < this.esforcoFaseEdit.length; i++){
-            if(this.esforcoFaseEdit[i].id == this.editedPhaseEffort.id){
+        for (let i = 0; i < this.esforcoFaseEdit.length; i++) {
+            if (this.esforcoFaseEdit[i].id == this.editedPhaseEffort.id) {
                 total += this.editedPhaseEffort.esforco
-            }else {
+            } else {
                 total += this.esforcoFaseEdit[i].esforco;
             }
         }
@@ -639,57 +637,57 @@ export class ManualFormComponent implements OnInit, OnDestroy {
         if (this.dataTableFator && this.dataTableFator.selectedRow) {
             if (this.dataTableFator.selectedRow && this.dataTableFator.selectedRow) {
                 this.editedAdjustFactor = this.dataTableFator.selectedRow;
-              }
-          }
-      }
+            }
+        }
+    }
 
-    public updateIndex(){
-        let temp =1
-        for(let i =0; i < this.manual.fatoresAjuste.length; i++){
+    public updateIndex() {
+        let temp = 1
+        for (let i = 0; i < this.manual.fatoresAjuste.length; i++) {
             this.manual.fatoresAjuste[i].ordem = temp
             temp++
         }
     }
 
-    public orderList(event){
+    public orderList(event) {
 
         let i = this.manual.fatoresAjuste.indexOf(event.selection)
         let del = i
 
         if (event.button == 'order-top' && event.selection != null) {
-            if(i == 0){
+            if (i == 0) {
                 return
-            } else{
+            } else {
                 this.manual.fatoresAjuste.splice(del, 1);
                 this.manual.fatoresAjuste.unshift(event.selection);
             }
         }
 
-        if(event.button == 'order-up' && event.selection != null){
-            if(i == 0){
+        if (event.button == 'order-up' && event.selection != null) {
+            if (i == 0) {
                 return
-            } else{
-                let pos = i -1
+            } else {
+                let pos = i - 1
                 this.manual.fatoresAjuste.splice(del, 1)
-                this.manual.fatoresAjuste.splice( pos,0, event.selection)
+                this.manual.fatoresAjuste.splice(pos, 0, event.selection)
                 this.manual.fatoresAjuste.indexOf(event.selection)
             }
         }
 
         if (event.button == 'order-down' && event.selection != null) {
-            if(i == this.manual.fatoresAjuste.length -1){
+            if (i == this.manual.fatoresAjuste.length - 1) {
                 return
-            } else{
-                let pos = i +1;
+            } else {
+                let pos = i + 1;
                 this.manual.fatoresAjuste.splice(del, 1);
-                this.manual.fatoresAjuste.splice( pos,0, event.selection);
+                this.manual.fatoresAjuste.splice(pos, 0, event.selection);
                 this.manual.fatoresAjuste.indexOf(event.selection);
             }
 
         }
 
-        if(event.button == 'order-botton' && event.selection != null){
-            if(i == this.manual.fatoresAjuste.length-1){
+        if (event.button == 'order-botton' && event.selection != null) {
+            if (i == this.manual.fatoresAjuste.length - 1) {
                 return
             }
             this.manual.fatoresAjuste.splice(del, 1);

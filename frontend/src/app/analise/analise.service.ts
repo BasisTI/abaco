@@ -281,6 +281,16 @@ export class AnaliseService {
             this.funcaoTransacaoService.getFuncaoTransacaoByAnalise(analise));
     }
 
+    public findWithFuncoesNormal(id: number): any {
+        return forkJoin(this.http.get(`${this.resourceUrl}/${id}`),
+            this.funcaoDadosService.getFuncaoDadosAnalise(id),
+            this.funcaoTransacaoService.getFuncaoTransacaoAnalise(id));
+    }
+
+    public findAnaliseByJson(id: number): Observable<Analise>{
+        return this.http.get<Analise>(this.resourceUrl+"/analise-json/"+id);
+    }
+
     public clonarAnalise(id: number): Observable<Analise> {
         const url = this.clonarAnaliseUrl + id;
         return this.http.get<Analise>(url);
@@ -439,8 +449,8 @@ export class AnaliseService {
             }));
     }
 
-    public importar(analise: Analise): Observable<Analise> {
-        return this.http.post<Analise>(this.resourceUrl, analise).pipe(catchError((error: any) => {
+    public importarJson(analise: Analise): Observable<Analise> {
+        return this.http.post<Analise>(this.resourceUrl+"/importar-json", analise).pipe(catchError((error: any) => {
             if (error.status === 403) {
                 this.pageNotificationService.addErrorMessage(this.getLabel('Você não possui permissão!'));
                 return Observable.throw(new Error(error.status));
@@ -448,29 +458,24 @@ export class AnaliseService {
         }));
     }
 
-    public importarModeloExcel(id: number, modelo: number) {
+    public exportarModeloExcel(id: number, modelo: number) {
         this.blockUiService.show();
-        this.http.request('get', this.resourceUrl + "/importar-excel/" + id + "/"+modelo, {responseType: "blob"})
+        return this.http.request('get', this.resourceUrl + "/importar-excel/" + id + "/" + modelo, {
+            observe: "response",
+            responseType: "blob"
+        })
             .pipe(catchError((error: any) => {
                 if (error.status === 500) {
                     this.blockUiService.hide();
                     this.pageNotificationService.addErrorMessage(this.getLabel('Erro ao gerar relatório'));
                     return Observable.throw(new Error(error.status));
                 }
-            })).subscribe(
-                (response) => {
-                    const mediaType = 'application/vnd.ms-excel';
-                    const blob = new Blob([response], { type: mediaType });
-                    const fileURL = window.URL.createObjectURL(blob);
-                    const anchor = document.createElement('a');
-                    anchor.download = 'analise.xlsx';
-                    anchor.href = fileURL;
-                    document.body.appendChild(anchor);
-                    anchor.click();
-                    this.blockUiService.hide();
-                    return null;
-                });
-        return null;
+            }))
     }
+
+    carregarAnaliseJson(analise: Analise) : Observable<Analise> {
+        return this.http.post<Analise>(this.resourceUrl+"/carregarAnalise", analise);
+    }
+
 
 }

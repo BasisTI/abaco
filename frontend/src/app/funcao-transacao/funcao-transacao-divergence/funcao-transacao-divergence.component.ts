@@ -191,8 +191,14 @@ export class FuncaoTransacaoDivergenceComponent implements OnInit {
             this.isView = params['view'] !== undefined;
             this.funcaoTransacaoService.getVwFuncaoTransacaoByIdAnalise(this.idAnalise).subscribe(value => {
                 this.funcoesTransacoes = value;
+                let temp = 1
+                for (let i = 0; i < this.funcoesTransacoes.length; i++) {
+                    if (this.funcoesTransacoes[i].ordem === null) {
+                        this.funcoesTransacoes[i].ordem = temp
+                    }
+                    temp++
+                }
                 this.funcoesTransacoes.sort((a, b) => a.ordem - b.ordem);
-                this.updateIndex();
                 if (!this.isView) {
                     this.divergenciaService.find(this.idAnalise).subscribe(analise => {
                         this.analise = analise;
@@ -515,6 +521,7 @@ export class FuncaoTransacaoDivergenceComponent implements OnInit {
                 this.disableTRDER();
                 this.configurarDialog();
                 this.currentFuncaoTransacao = res;
+                this.currentFuncaoTransacao.ordem = this.funcoesTransacoes.length + 1;
                 this.carregarValoresNaPaginaParaEdicao(this.currentFuncaoTransacao);
                 this.blockUiService.hide();
             });
@@ -565,6 +572,7 @@ export class FuncaoTransacaoDivergenceComponent implements OnInit {
                     this.currentFuncaoTransacao.funcionalidade.modulo.id)
                     .subscribe(existFuncaoTransaco => {
                         if (!existFuncaoTransaco) {
+                            funcaoTransacaoCalculada.ordem = this.funcoesTransacoes.length+1;
                             this.funcaoTransacaoService.create(funcaoTransacaoCalculada, this.analise.id, funcaoTransacaoCalculada.files?.map(item => item.logo)).subscribe(value => {
                                 funcaoTransacaoCalculada.id = value.id;
                                 this.pageNotificationService.addCreateMsg(funcaoTransacaoCalculada.name);
@@ -706,8 +714,7 @@ export class FuncaoTransacaoDivergenceComponent implements OnInit {
     private resetarEstadoPosSalvar() {
         this.currentFuncaoTransacao = this.currentFuncaoTransacao.clone();
 
-        this.funcaoTransacaoEditar = [];
-        this.tables.selectedRow = [];
+        this.funcoesTransacoes.sort((a, b) => a.ordem - b.ordem);
         this.updateIndex();
 
         this.currentFuncaoTransacao.artificialId = undefined;
@@ -764,6 +771,7 @@ export class FuncaoTransacaoDivergenceComponent implements OnInit {
             this.disableTRDER();
             this.currentFuncaoTransacao = new FuncaoTransacao().copyFromJSON(funcaoTransacao);
             this.currentFuncaoTransacao.lstDivergenceComments = funcaoTransacao.lstDivergenceComments;
+            this.currentFuncaoTransacao.ordem = funcaoTransacaoSelecionada.ordem;
             if (this.currentFuncaoTransacao.fatorAjuste !== undefined) {
                 if (this.currentFuncaoTransacao.fatorAjuste.tipoAjuste === 'UNITARIO' && this.faS[0]) {
                     this.hideShowQuantidade = false;
@@ -778,6 +786,7 @@ export class FuncaoTransacaoDivergenceComponent implements OnInit {
     }
 
     private carregarValoresNaPaginaParaEdicao(funcaoTransacaoSelecionada: FuncaoTransacao) {
+        this.updateIndex();
         this.funcaoDadosService.mod.next(funcaoTransacaoSelecionada.funcionalidade);
         this.analiseSharedDataService.funcaoAnaliseCarregada();
         this.analiseSharedDataService.currentFuncaoTransacao = funcaoTransacaoSelecionada;
@@ -1029,7 +1038,21 @@ export class FuncaoTransacaoDivergenceComponent implements OnInit {
             this.blockUiService.hide();
         });
     }
-    public selectFT() {
+    public selectFT(event) {
+        if(event.shiftKey === true){
+            let fim = this.funcoesTransacoes.indexOf(this.tables.selectedRow[0]);
+            let inicio = this.funcoesTransacoes.indexOf(this.funcaoTransacaoEditar[0]);
+            this.tables.selectedRow = [];
+            if(inicio < fim){
+                for(let i = inicio; i <= fim; i++){
+                    this.tables.selectedRow.push(this.funcoesTransacoes[i]);
+                }
+            }else{
+                for(let i = fim; i <= inicio; i++){
+                    this.tables.selectedRow.push(this.funcoesTransacoes[i]);
+                }
+            }
+        }
         this.tables.pDatatableComponent.metaKeySelection = true;
         if (this.tables && this.tables.selectedRow) {
             this.funcaoTransacaoEditar = this.tables.selectedRow;
@@ -1267,8 +1290,15 @@ export class FuncaoTransacaoDivergenceComponent implements OnInit {
 
     public orderList(botao: String) {
 
-        let i = this.funcoesTransacoes.indexOf(this.funcaoTransacaoEditar[0])
-        let del = i
+        let i;
+        let del;
+
+        this.funcoesTransacoes.forEach((item, index) => {
+            if (item.id === this.funcaoTransacaoEditar[0].id) {
+                i = index;
+                del = i
+            }
+        })
 
         if (botao == 'order-top' && this.funcaoTransacaoEditar[0] != null) {
             if (i == 0) {
