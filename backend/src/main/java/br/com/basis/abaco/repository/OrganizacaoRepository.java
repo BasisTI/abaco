@@ -26,6 +26,8 @@ public interface OrganizacaoRepository extends JpaRepository<Organizacao, Long> 
     @EntityGraph(attributePaths = {"sistemas","contracts","tipoEquipe"})
     Optional<Organizacao> findOneByNome(String nome);
 
+    Optional<Organizacao> findByNome(String nome);
+
     @EntityGraph(attributePaths = {"sistemas","contracts","tipoEquipe"})
     Optional<Organizacao> findOneByCnpj(String cnpj);
 

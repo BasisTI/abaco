@@ -20,9 +20,10 @@
                                 <basis-datatable type="memory" id="idTabelaFuncaoDados" [disableDelete]="this.isView  || isOrderning"
                                     [disableClone]="this.isView || isOrderning" [disableCrud]="this.isView  || isOrderning"
                                     (dblclick)="onRowDblclick($event)" [value]="funcoesDados" [showCrud]="true"
-                                    (buttonClick)="datatableClick($event)" (click)="selectFD()" [paginator]="false"
+                                    (buttonClick)="datatableClick($event)" (click)="selectFD($event)" [paginator]="false"
                                     [rows]="20" [enableButtonsScroll]="true" [filterOnColumn]="true"
                                     [rowsPerPageOptions]="[20,50,100]" [showVisibleColumnsControl]="true"
+                                    [reorderableRows]="isOrderning" (onRowReorder)="updateIndex()"
                                     [selectionMode]="'multiple'" [disableDelete]="true"
                                     [disableEdit]="selectModeButtonsEditAndView || isOrderning"
                                     [disableView]="selectModeButtonsEditAndView || isOrderning" #tables>
@@ -42,6 +43,7 @@
                                                 *ngIf="statusFuncao === 'VALIDADO'"></button>
                                         </ng-template>
                                     </p-column>
+                                    <p-column field="nomeEquipe" header="Equipe" sortable="true"></p-column>
                                     <p-column field="nomeModulo" header="Módulo" [filter]="true" [sortable]="true">
                                     </p-column>
                                     <p-column field="nomeFuncionalidade" [filter]="true" header="Funcionalidade"

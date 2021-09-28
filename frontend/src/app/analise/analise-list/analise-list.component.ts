@@ -1,8 +1,9 @@
 import { Component, OnInit, ViewChild, ContentChildren } from '@angular/core';
 import { Router } from '@angular/router';
 import { DatatableClickEvent, DatatableComponent, PageNotificationService, Column } from '@nuvem/primeng-components';
-import { ConfirmationService, BlockUIModule } from 'primeng';
+import { ConfirmationService, BlockUIModule, SelectItem } from 'primeng';
 import { Subscription } from 'rxjs';
+import * as _ from 'lodash';
 import { Organizacao, OrganizacaoService } from 'src/app/organizacao';
 import { Sistema, SistemaService } from 'src/app/sistema';
 import { TipoEquipe, TipoEquipeService } from 'src/app/tipo-equipe';
@@ -21,6 +22,14 @@ import { AuthService } from 'src/app/util/auth.service';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { PerfilOrganizacao } from 'src/app/perfil/perfil-organizacao.model';
 import { PerfilService } from 'src/app/perfil/perfil.service';
+import { Contrato, ContratoService } from 'src/app/contrato';
+import { EsforcoFase } from 'src/app/esforco-fase';
+import { MessageUtil } from 'src/app/util/message.util';
+import { AnaliseSharedDataService } from 'src/app/shared/analise-shared-data.service';
+import { Manual, ManualService } from 'src/app/manual';
+import { ManualContrato } from 'src/app/organizacao/ManualContrato.model';
+import { FatorAjuste } from 'src/app/fator-ajuste';
+import { FatorAjusteLabelGenerator } from 'src/app/shared/fator-ajuste-label-generator';
 
 @Component({
     selector: 'app-analise',
@@ -147,9 +156,9 @@ export class AnaliseListComponent implements OnInit {
     lstModelosExcel = [
         { label: "Modelo padrão BASIS", value: 1 },
         { label: "Modelo padrão BNDES", value: 2 },
-        // { label: "Modelo padrão ANAC", value: 3 },
-        // { label: "Modelo padrão EB - 1", value: 4 },
-        // { label: "Modelo padrão EB - 2", value: 5 },
+        { label: "Modelo padrão ANAC", value: 3 },
+        { label: "Modelo padrão EBCOLOG", value: 4 },
+        { label: "Modelo padrão EBDCT", value: 5 },
     ];
     modeloSelecionado: any;
 
@@ -158,6 +167,32 @@ export class AnaliseListComponent implements OnInit {
     downloadJsonHref;
     analiseFileJson;
     showDialogImportar: boolean;
+    carregadaAnalise: boolean = false;
+    analiseImportar: Analise = new Analise();
+    organizacoes: Organizacao[];
+    contratos: Contrato[];
+    sistemas: Sistema[];
+    esforcoFases: EsforcoFase[] = [];
+    metodosContagem: SelectItem[] = [];
+    fatoresAjuste: SelectItem[] = [];
+    manuaisCombo: SelectItem[] = [];
+    manuais: Manual[] = [];
+    statusCombo: Status[] = [];
+    equipeResponsavel: TipoEquipe[] = [];
+    hideShowSelectEquipe: boolean;
+
+    tiposAnalise: SelectItem[] = [
+        {label: MessageUtil.PROJETO_DESENVOLVIMENTO, value: MessageUtil.DESENVOLVIMENTO},
+        {label: MessageUtil.PROJETO_MELHORIA, value: MessageUtil.MELHORIA},
+        {label: MessageUtil.CONTAGEM_APLICACAO, value: MessageUtil.APLICACAO}
+    ];
+
+
+    metodoContagem: SelectItem[] = [
+        {label: MessageUtil.DETALHADA_IFPUG, value: MessageUtil.DETALHADA_IFPUG},
+        {label: MessageUtil.INDICATIVA_NESMA, value: MessageUtil.INDICATIVA_NESMA},
+        {label: MessageUtil.ESTIMADA_NESMA, value: MessageUtil.ESTIMADA_NESMA}
+    ];
 
     constructor(
         private router: Router,
@@ -175,7 +210,10 @@ export class AnaliseListComponent implements OnInit {
         private divergenceServie: DivergenciaService,
         private authService: AuthService,
         private sanitizer: DomSanitizer,
-        private perfilService: PerfilService
+        private perfilService: PerfilService,
+        private analiseSharedDataService: AnaliseSharedDataService,
+        private contratoService: ContratoService,
+        private manualService: ManualService
     ) {
 
     }
@@ -420,10 +458,10 @@ export class AnaliseListComponent implements OnInit {
     }
 
     gerarDivergencia() {
-        if (this.analiseSelecionada.id) {
+        if (this.analisesSelecionadasEmLote.length === 1) {
             this.confirmDivergenceGenerate(this.analiseSelecionada);
         } else {
-            this.openModalDivergence(this.analiseSelecionada);
+            this.openModalDivergence(this.analisesSelecionadasEmLote);
         }
     }
 
@@ -453,9 +491,6 @@ export class AnaliseListComponent implements OnInit {
             case 'delete':
                 this.confirmDelete(event.selection);
                 break;
-            // case 'exportJson':
-            //     this.exportarAnalise(event.selection);
-            //     break;
         }
     }
 
@@ -527,6 +562,12 @@ export class AnaliseListComponent implements OnInit {
     }
 
     abrirEditar() {
+        if(this.analiseSelecionada.bloqueiaAnalise === true){
+            this.pageNotificationService.addErrorMessage(
+                this.getLabel('Você não tem permissão para editar esta análise, redirecionando para a tela de visualização...')
+            );
+            return this.router.navigate(['/analise', this.analiseSelecionada.id, 'view']);
+        }
         if (!this.canEditar) {
             return false;
         }
@@ -588,7 +629,6 @@ export class AnaliseListComponent implements OnInit {
     }
 
     public selectAnalise() {
-
         if (this.datatable && this.datatable.selectedRow) {
             this.inicial = true;
             if (this.datatable.selectedRow) {
@@ -730,7 +770,7 @@ export class AnaliseListComponent implements OnInit {
             })
             if (mostrarDialogBlock !== false) {
                 this.showDialogAnaliseBlock = true;
-            }else{
+            } else {
                 this.alterAnaliseBlock();
             }
         } else {
@@ -741,7 +781,7 @@ export class AnaliseListComponent implements OnInit {
     public alterAnaliseBlock() {
         if (this.dataHomologacaoAnalises) {
             this.analisesBlocks.forEach(analise => {
-                if(analise.dataHomologacao === undefined || analise.dataHomologacao === null){
+                if (analise.dataHomologacao === undefined || analise.dataHomologacao === null) {
                     analise.dataHomologacao = this.dataHomologacaoAnalises;
                 }
             });
@@ -934,7 +974,6 @@ export class AnaliseListComponent implements OnInit {
     }
 
     public generateDivergence(setMainAnalise: boolean) {
-
         if (setMainAnalise) {
             this.mainAnaliseDivergencia = this.firstAnaliseDivergencia;
             this.auxiliaryAnaliseDivergencia = this.secondAnaliseDivergencia;
@@ -1018,9 +1057,40 @@ export class AnaliseListComponent implements OnInit {
         this.router.navigate(["/analise/new"])
     }
 
-    exportarAnalise(analise: Analise) {
-        this.analiseService.find(analise.id).subscribe(response => {
-            let theJSON = JSON.stringify(response);
+    openModalExportarExcel(analise: Analise) {
+        this.showDialogImportarExcel = true;
+        this.analiseImportarExcel = analise;
+    }
+
+    closeModalExportarExcel() {
+        this.showDialogImportarExcel = false;
+        this.modeloSelecionado = null;
+        this.analiseImportarExcel = null;
+    }
+
+    exportarPlanilha() {
+        if (this.analiseImportarExcel != null) {
+            this.analiseService.exportarModeloExcel(this.analiseImportarExcel.id, this.modeloSelecionado.value).subscribe(
+                (response) => {
+                    let filename = response.headers.get("content-disposition").split("filename=");
+                    const mediaType = 'application/vnd.ms-excel';
+                    const blob = new Blob([response.body], { type: mediaType });
+                    const fileURL = window.URL.createObjectURL(blob);
+                    const anchor = document.createElement('a');
+                    anchor.download = filename[1];
+                    anchor.href = fileURL;
+                    document.body.appendChild(anchor);
+                    anchor.click();
+                    this.blockUiService.hide();
+                    this.closeModalExportarExcel();
+                });;
+        }
+    }
+
+    exportarAnalise(analiseEx: Analise) {
+        this.analiseService.findAnaliseByJson(analiseEx.id).subscribe(response => {
+            let analise: Analise = response;
+            let theJSON = JSON.stringify(analise);
             let blob = new Blob([theJSON], { type: 'text/json' });
             let url = window.URL.createObjectURL(blob);
             this.downloadJsonHref = url;
@@ -1032,12 +1102,22 @@ export class AnaliseListComponent implements OnInit {
         })
     }
 
+
+
     openModalImportAnalise() {
         this.showDialogImportar = true;
+        this.getOrganizationsFromActiveLoggedUser();
     }
 
     closeModalImportAnalise() {
         this.showDialogImportar = false;
+        this.analiseImportar = new Analise();
+        this.analiseFileJson = undefined;
+        this.carregadaAnalise = false;
+    }
+
+    removeJsonFiles(){
+        this.analiseFileJson = undefined;
     }
 
     selectJsonAnalise(event) {
@@ -1048,7 +1128,7 @@ export class AnaliseListComponent implements OnInit {
         let analise: Analise;
         reader.onloadend = function () {
             analise = JSON.parse(reader.result.toString());
-            if (analise.id && analise.identificadorAnalise) {
+            if (analise.id) {
                 analise.id = null;
                 analises.push(analise);
             }
@@ -1057,33 +1137,190 @@ export class AnaliseListComponent implements OnInit {
     }
 
     importarAnalise() {
-        if (this.analiseFileJson && this.analisesImportar.length > 0) {
-            this.analisesImportar.forEach(analise => {
-                analise.identificadorAnalise = analise.identificadorAnalise + " - Importada";
-                this.analiseService.importar(analise).subscribe(r => {
-                    this.pageNotificationService.addCreateMsg("Análise - " + r.identificadorAnalise + " importada com sucesso!");
-                    this.datatable.filter();
-                    this.showDialogImportar = false;
-                    this.analisesImportar = [];
-                });
+        if (this.analiseFileJson && this.analiseImportar) {
+            this.analiseImportar.identificadorAnalise = this.analiseImportar.identificadorAnalise + " - Importada";
+            this.analiseService.importarJson(this.analiseImportar).subscribe(r => {
+                this.pageNotificationService.addCreateMsg("Análise - " + r.identificadorAnalise + " importada com sucesso!");
+                this.datatable.filter();
+                this.closeModalImportAnalise();
+                this.analisesImportar = [];
             });
         } else {
             this.pageNotificationService.addErrorMessage("Selecione uma análise válida para importar!")
         }
     }
 
-    openModalExportarExcel(analise: Analise) {
-        this.showDialogImportarExcel = true;
-        this.analiseImportarExcel = analise;
+    carregarAnalise(){
+        this.carregadaAnalise = true;
+        this.analiseService.carregarAnaliseJson(this.analisesImportar[0]).subscribe(response =>{
+            this.analiseImportar = response;
+            if(this.analiseImportar.organizacao){
+                this.setSistemaOrganizacao(this.analiseImportar.organizacao);
+                this.getLstStatus();
+                if(this.analiseImportar.contrato){
+                    this.contratoSelected(this.analiseImportar.contrato);
+                }
+            }
+        })
+        this.analiseImportar = this.analisesImportar[0];
     }
 
-    closeModalExportarExcel() {
-        this.showDialogImportarExcel = false;
+    setSistemaOrganizacao(org: Organizacao){
+        this.contratoService.findAllContratoesByOrganization(org).subscribe((contracts) => {
+            this.contratos = contracts;
+        });
+        this.sistemaService.findAllSystemOrg(org.id).subscribe((res: Sistema[]) => {
+            this.sistemas = res;
+        });
+        this.setEquipeOrganizacao(org);
     }
 
-    exportarPlanilha() {
-        if (this.analiseImportarExcel != null) {
-            this.analiseService.importarModeloExcel(this.analiseImportarExcel.id, this.modeloSelecionado.value);
+    setEquipeOrganizacao(org: Organizacao) {
+        this.equipeService.findAllEquipesByOrganizacaoIdAndLoggedUser(org.id).subscribe((res: TipoEquipe[]) => {
+            this.equipeResponsavel = res;
+            if (this.equipeResponsavel !== null) {
+                this.hideShowSelectEquipe = false;
+            }
+        });
+    }
+
+    contratoSelected(contrato: Contrato){
+        if (contrato && contrato.manualContrato) {
+            this.setManuais(contrato);
+            let manualSelected;
+            if ((this.analiseImportar.manual) && (typeof this.analiseImportar.manual.id !== 'undefined')) {
+                manualSelected = this.analiseImportar.manual;
+            } else {
+                manualSelected = contrato.manualContrato[0].manual;
+            }
+            this.setManual(manualSelected);
+            this.analiseImportar.manual = manualSelected;
+            this.carregarMetodosContagem(manualSelected);
         }
+    }
+
+    private carregarMetodosContagem(manual: Manual) {
+        this.metodosContagem = [
+            {
+                value: MessageUtil.DETALHADA,
+                label: this.getLabel('Detalhada (IFPUG)')
+            },
+            {
+                value: MessageUtil.INDICATIVA,
+                label: this.getLabelValorVariacao(
+                    this.getLabel('Indicativa (NESMA)'),
+                    manual.valorVariacaoIndicativa)
+            },
+            {
+                value: MessageUtil.ESTIMADA,
+                label: this.getLabelValorVariacao(
+                    this.getLabel('Estimada (NESMA)'),
+                    manual.valorVariacaoEstimada)
+            }
+        ];
+    }
+
+    private getLabelValorVariacao(label: string, valorVariacao: number): string {
+        return label + ' - ' + valorVariacao.toLocaleString() + '%';
+    }
+
+    private populaComboManual(contrato: Contrato) {
+        contrato.manualContrato.forEach((item: ManualContrato) => {
+            const entity: Manual = new Manual();
+            const m: Manual = entity.copyFromJSON(item.manual);
+            this.manuais.push(item.manual);
+            this.manuaisCombo.push({
+                label: m.nome,
+                value: this.analiseImportar.manual && m.id === this.analiseImportar.manual.id ? this.analiseImportar.manual : m
+            });
+        });
+    }
+
+    resetManuais() {
+        this.manuais = [];
+        this.manuaisCombo = [];
+    }
+
+    setManuais(contrato: Contrato) {
+        contrato.manualContrato.forEach(item => {
+            item.dataInicioVigencia = new Date(item.dataInicioVigencia);
+            item.dataFimVigencia = new Date(item.dataFimVigencia);
+        });
+        this.resetManuais();
+        this.populaComboManual(contrato);
+    }
+
+    setManual(manualSelected: Manual) {
+        if (manualSelected) {
+            this.manualService.find(manualSelected.id).subscribe((manual) => {
+                this.carregarEsforcoFases(manual);
+                this.carregarMetodosContagem(manual);
+                this.inicializaFatoresAjuste(manual);
+                this.setManuais(this.analiseImportar.contrato);
+                this.carregaFatorAjusteNaEdicao();
+            });
+        }
+    }
+
+
+    private carregarEsforcoFases(manual: Manual) {
+        manual.esforcoFases.forEach(element => {
+            this.esforcoFases.push(new EsforcoFase().copyFromJSON(element));
+        });;
+
+        if (!(this.analiseImportar.esforcoFases)) {
+            // Traz todos esforcos de fases selecionados
+            this.analiseImportar.esforcoFases = _.cloneDeep(manual.esforcoFases);
+        }
+    }
+
+    private inicializaFatoresAjuste(manual: Manual) {
+        this.fatoresAjuste = [];
+        if (manual.fatoresAjuste) {
+            const faS: FatorAjuste[] = _.cloneDeep(manual.fatoresAjuste);
+            faS.forEach(fa => {
+                const label = FatorAjusteLabelGenerator.generate(fa);
+                this.fatoresAjuste.push({label, value: fa});
+            });
+            this.fatoresAjuste.unshift({label: this.getLabel('Nenhum'), value: null});
+        }
+    }
+
+    private carregaFatorAjusteNaEdicao() {
+        if (this.analiseImportar.fatorAjuste) {
+            this.analiseImportar.fatorAjuste = this.fatoresAjuste.find(
+                (f) => f !== null && f.value !== null && f.value.id === this.analiseImportar.fatorAjuste.id
+            ).value;
+        }
+    }
+
+    alterarMetodoContagem(){
+        if (this.analiseImportar.metodoContagem === MetodoContagem.DETALHADA) {
+            this.analiseImportar.enviarBaseline = true;
+        } else {
+            this.analiseImportar.enviarBaseline = false;
+        }
+    }
+
+    totalEsforcoFases(){
+        const initialValue = 0;
+        if (this.analiseImportar.esforcoFases) {
+            return this.analiseImportar.esforcoFases
+                .reduce((val, ef) => val + ef.esforco, initialValue);
+        }
+        return initialValue;
+    }
+
+    getOrganizationsFromActiveLoggedUser() {
+        this.organizacaoService.dropDownActiveLoggedUser().subscribe(res => {
+            this.organizacoes = res;
+        });
+    }
+
+    getLstStatus() {
+        this.statusService.listActive().subscribe(
+        lstStatus => {
+            this.statusCombo = lstStatus;
+        });
     }
 }

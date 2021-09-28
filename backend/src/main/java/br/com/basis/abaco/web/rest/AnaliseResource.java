@@ -12,6 +12,7 @@ import br.com.basis.abaco.domain.enumeration.MetodoContagem;
 import br.com.basis.abaco.domain.enumeration.StatusFuncao;
 import br.com.basis.abaco.domain.enumeration.TipoRelatorio;
 import br.com.basis.abaco.reports.rest.RelatorioAnaliseRest;
+import br.com.basis.abaco.reports.util.RelatorioUtil;
 import br.com.basis.abaco.repository.AnaliseRepository;
 import br.com.basis.abaco.repository.CompartilhadaRepository;
 import br.com.basis.abaco.repository.FuncaoDadosRepository;
@@ -28,6 +29,7 @@ import br.com.basis.abaco.service.PlanilhaService;
 import br.com.basis.abaco.service.dto.AnaliseDTO;
 import br.com.basis.abaco.service.dto.AnaliseDivergenceEditDTO;
 import br.com.basis.abaco.service.dto.AnaliseEditDTO;
+import br.com.basis.abaco.service.dto.AnaliseJsonDTO;
 import br.com.basis.abaco.service.dto.filter.AnaliseFilterDTO;
 import br.com.basis.abaco.service.exception.RelatorioException;
 import br.com.basis.abaco.service.relatorio.RelatorioAnaliseColunas;
@@ -77,11 +79,13 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import javax.ws.rs.Path;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -234,6 +238,10 @@ public class AnaliseResource {
     public ResponseEntity<AnaliseEditDTO> cloneAnaliseToEquipe(@PathVariable Long id, @PathVariable Long idEquipe) {
         Analise analise = analiseService.recuperarAnalise(id);
         TipoEquipe tipoEquipe = tipoEquipeRepository.findById(idEquipe);
+        if(analise.getClonadaParaEquipe() == null){
+            analise.setClonadaParaEquipe(false);
+        }
+        
         if (analise.getId() != null && tipoEquipe.getId() != null && !(analise.getClonadaParaEquipe())) {
             Analise analiseClone = new Analise(analise, userRepository.findOneByLogin(SecurityUtils.getCurrentUserLogin()).get());
             analiseService.bindAnaliseCloneForTipoEquipe(analise, tipoEquipe, analiseClone);
@@ -739,15 +747,49 @@ public class AnaliseResource {
 
     @GetMapping(value = "/analises/importar-excel/{id}/{modelo}", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
     @Secured("ROLE_ABACO_ANALISE_EXPORTAR_RELATORIO_EXCEL")
-    public ResponseEntity<byte[]> importarExcel(@PathVariable Long id,@PathVariable Long modelo) throws IOException{
+    public ResponseEntity<byte[]> exportarExcel(@PathVariable Long id,@PathVariable Long modelo) throws IOException{
         Analise analise = analiseService.recuperarAnalise(id);
         analise.setFuncaoDados(funcaoDadosRepository.findAllByAnaliseIdOrderByOrdem(id));
         analise.setFuncaoTransacaos(funcaoTransacaoRepository.findAllByAnaliseIdOrderByOrdem(id));
         ByteArrayOutputStream outputStream = planilhaService.selecionarModelo(analise, modelo);
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.parseMediaType("application/vnd.ms-excel"));
-        headers.set(HttpHeaders.CONTENT_DISPOSITION, String.format("attachment; filename=\"%s.xlsx\"", analise.getIdentificadorAnalise().trim()));
+        headers.set(HttpHeaders.CONTENT_DISPOSITION, String.format("attachment; filename=%s.xlsx", RelatorioUtil.pegarNomeRelatorio(analise)));
         return new ResponseEntity<byte[]>(outputStream.toByteArray(),headers, HttpStatus.OK);
+    }
+
+    @GetMapping("/analises/analise-json/{id}")
+    public AnaliseJsonDTO analiseJson(@PathVariable Long id){
+        AnaliseJsonDTO analiseJsonDTO = analiseService.convertToAnaliseJsonDTO(analiseRepository.findById(id));
+        return analiseJsonDTO;
+    }
+
+    @PostMapping("/analises/importar-json")
+//    @Secured()
+    public ResponseEntity<AnaliseEditDTO> importarJson(@Valid @RequestBody Analise analise) throws URISyntaxException {
+        analise.setCreatedBy(userRepository.findOneByLogin(SecurityUtils.getCurrentUserLogin()).get());
+        analise.getUsers().add(analise.getCreatedBy());
+        analiseService.salvaNovaData(analise);
+        Set<FuncaoDados> funcaoDados = analise.getFuncaoDados();
+        Set<FuncaoTransacao> funcaoTransacaos = analise.getFuncaoTransacaos();
+        analise.setFuncaoTransacaos(new HashSet<>());
+        analise.setFuncaoDados(new HashSet<>());
+        analiseRepository.save(analise);
+        analiseSearchRepository.save(analiseService.convertToEntity(analiseService.convertToDto(analise)));
+        analiseService.salvarFuncoesJson(funcaoDados, funcaoTransacaos, analise);
+        return ResponseEntity.ok().headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, analise.getId().toString()))
+            .body(analiseService.convertToAnaliseEditDTO(analise));
+    }
+
+    @PostMapping("/analises/carregarAnalise")
+//    @Secured()
+    public ResponseEntity<Analise> carregarAnaliseJson(@Valid @RequestBody AnaliseJsonDTO analiseDTO) throws URISyntaxException {
+        Analise analise = analiseService.convertToEntity(analiseDTO);
+
+        Analise newAnalise = analiseService.carregarAnaliseJson(analise);
+        analiseService.carregarDadosJson(newAnalise, analise);
+
+        return new ResponseEntity(newAnalise, HttpStatus.OK);
     }
 }
 

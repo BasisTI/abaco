@@ -19,6 +19,8 @@ export class CanvasVisaopfComponent implements OnInit {
     @Input() canvasHeight:any
     @Input() toolbar=false
     @Input() tipos: Array<any>
+    widthImage:any
+    heightImage: any
 
     tela:any
     imageName: string
@@ -36,7 +38,7 @@ export class CanvasVisaopfComponent implements OnInit {
     dialogRLR=false
     isRLR:boolean
     static readonly TIMEOUTCANVAS = 1500
-
+    
     constructor(private service:CanvasService, private renderer: Renderer2, private elementRef: ElementRef ){
 
     }
@@ -118,8 +120,9 @@ export class CanvasVisaopfComponent implements OnInit {
             this.clickPosition = res
             const rect = this.canvas.getBoundingClientRect()
             const initPos = {
-                x: this.clickPosition.clientX - rect.left,
-                y: this.clickPosition.clientY - rect.top
+
+                x: ((this.clickPosition.clientX -  rect.left)/rect.width)*this.canvas.width,
+                y: ((this.clickPosition.clientY -  rect.top)/rect.height)*this.canvas.height
             }
             if(!this.markDisable){
                 this.clickInComponente(initPos)
@@ -289,12 +292,12 @@ export class CanvasVisaopfComponent implements OnInit {
         ).subscribe((res: [MouseEvent, MouseEvent]) => {
             const rect = canvasEl.getBoundingClientRect()
             const initPos = {
-                x: this.clickPosition.clientX - rect.left,
-                y: this.clickPosition.clientY - rect.top
+                x: ((this.clickPosition.clientX -  rect.left)/rect.width)*canvasEl.width,
+                y: ((this.clickPosition.clientY -  rect.top)/rect.height)*canvasEl.height
             }
             const currentPos = {
-                x: res[1].clientX - rect.left,
-                y: res[1].clientY - rect.top
+                x: ((res[1].clientX - rect.left)/rect.width)*canvasEl.width,
+                y: ((res[1].clientY - rect.top )/rect.height)*canvasEl.height
             }
 
             if(this.markDisable){
@@ -309,22 +312,24 @@ export class CanvasVisaopfComponent implements OnInit {
         if (initPos) {
             this.draw()
             this.ctx.strokeStyle = 'black'
-            this.ctx.strokeRect(initPos.x, initPos.y,  (initPos.x-currentPos.x)*-1, (initPos.y-currentPos.y)*-1 )
+            this.ctx.strokeRect(initPos.x, initPos.y,  (initPos.x-currentPos.x)*-1, (initPos.y-currentPos.y)*-1)
             this.componente.coordenada.setCoordenadas(initPos.x*this.proporcaoW, initPos.y*this.proporcaoH , currentPos.x*this.proporcaoW , currentPos.y*this.proporcaoH)
         }
     }
 
     startCanvas(){
-        this.image = new Image(this.canvasWidth, this.canvasHeight)
+        this.image = new Image()
         this.image.onload = setTimeout(e => this.draw(), CanvasVisaopfComponent.TIMEOUTCANVAS)
         this.image.src = `/visaopf/api/component/detection/image/${this.tela.bucketName}/${this.tela.originalImageName}`
-        this.proporcaoW = this.tela.width/this.canvasWidth
-        this.proporcaoH = this.tela.height/this.canvasHeight
+        this.widthImage = this.tela.width
+        this.heightImage = this.tela.height
+        this.proporcaoW = 1
+        this.proporcaoH = 1
 
     }
 
     draw(){
-        this.ctx.drawImage(this.image, 0, 0, this.canvasWidth, this.canvasHeight)
+        this.ctx.drawImage(this.image, 0, 0, this.widthImage, this.heightImage)
         this.drawComponents()
         this.tela.dataUrlResult = this.canvas.toDataURL()
     }

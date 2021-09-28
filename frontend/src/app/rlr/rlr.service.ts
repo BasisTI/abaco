@@ -17,4 +17,8 @@ export class RlrService {
         return this.http.get<Rlr[]>(this.resourceUrl + "/sistema/"+ idSistema + "?nome="+nome);
     }
 
+    dropDownByFuncaoDadosId(idFuncaoDados: number): Observable<any> {
+        return this.http.get<any>(this.resourceUrl + '/drop-down/' + idFuncaoDados);
+    }
+
 }

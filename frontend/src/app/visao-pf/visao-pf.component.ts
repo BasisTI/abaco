@@ -150,6 +150,14 @@ export class VisaoPfComponent implements OnInit {
         }
     }
 
+    deleteFileCadastro(event){
+        for(let x=0; x< this.visaopf.cenario.telas.length; x+=1){
+            if (event.file.name===this.visaopf.cenario.telas[x].originalImageName){
+                this.visaopf.cenario.telas.splice(x,1);
+            }
+        }
+    }
+
     getTipos(){
         this.visaoPfService.getTiposComponent().subscribe( (resp:any) => {
             const tipos = new Array<any>()

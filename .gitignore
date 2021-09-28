@@ -1,4 +1,4 @@
 /.history
 backend/target/
-backend/src/main/docker/postgresql/dump20210113.zip
+frontend/package-lock.json
 .idea/

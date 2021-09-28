@@ -103,8 +103,8 @@ public class FuncaoTransacaoResource {
 
         log.debug("REST request to save FuncaoTransacao : {}", funcaoTransacao);
         Analise analise = analiseRepository.findOne(idAnalise);
-        funcaoTransacao.getDers().forEach(alr -> {alr.setFuncaoTransacao(funcaoTransacao);});
-        funcaoTransacao.getAlrs().forEach((der -> {der.setFuncaoTransacao(funcaoTransacao);}));
+        funcaoTransacao.getDers().forEach(der -> {der.setFuncaoTransacao(funcaoTransacao);});
+        funcaoTransacao.getAlrs().forEach((alr -> {alr.setFuncaoTransacao(funcaoTransacao);}));
         funcaoTransacao.setAnalise(analise);
         if (funcaoTransacao.getId() != null || analise.getId() == null) {
             return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert(ENTITY_NAME, "idexists", "A new funcaoTransacao cannot already have an ID")).body(null);
@@ -146,8 +146,8 @@ public class FuncaoTransacaoResource {
         log.debug("REST request to update FuncaoTransacao : {}", funcaoTransacao);
         FuncaoTransacao funcaoTransacaoOld = funcaoTransacaoRepository.findOne(id);
         Analise analise = analiseRepository.findOne(funcaoTransacaoOld.getAnalise().getId());
-        funcaoTransacao.getDers().forEach(alr -> {alr.setFuncaoTransacao(funcaoTransacao);});
-        funcaoTransacao.getAlrs().forEach((der -> {der.setFuncaoTransacao(funcaoTransacao);}));
+        funcaoTransacao.getDers().forEach(der -> {der.setFuncaoTransacao(funcaoTransacao);});
+        funcaoTransacao.getAlrs().forEach((alr -> {alr.setFuncaoTransacao(funcaoTransacao);}));
         funcaoTransacao.setAnalise(analise);
 
         if (funcaoTransacao.getId() == null) {
@@ -222,6 +222,13 @@ public class FuncaoTransacaoResource {
         funcaoDadosDTO.setDers(ders);
         funcaoDadosDTO.setAlrs(alrs);
         return ResponseUtil.wrapOrNotFound(Optional.ofNullable(funcaoDadosDTO));
+    }
+
+    @GetMapping("/funcao-transacaos/analise/{id}")
+    @Timed
+    public Set<FuncaoTransacao> getFuncaoTransacaoAnalise(@PathVariable Long id) {
+        Set<FuncaoTransacao> lstFuncaoTransacao = funcaoTransacaoRepository.findAllByAnaliseId(id);
+        return lstFuncaoTransacao;
     }
 
     @GetMapping("/funcao-transacaos-dto/analise/{id}")

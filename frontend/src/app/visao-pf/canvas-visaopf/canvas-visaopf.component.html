@@ -20,7 +20,7 @@
 </div>
 
 <div class="ui-g-12" >
-    <canvas #canvas width="{{canvasWidth}}" height="{{canvasHeight}}"></canvas>
+    <canvas #canvas width="{{widthImage}}" height="{{heightImage}}"></canvas>
     <p-paginator [rows]="1" [totalRecords]="telasResult.length" (onPageChange)="paginatorCanvas($event)"
                  [showJumpToPageDropdown]="true" [showPageLinks]="false"></p-paginator>
 </div>

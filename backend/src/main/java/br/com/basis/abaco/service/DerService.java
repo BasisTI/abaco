@@ -59,6 +59,22 @@ public class DerService {
         return lstDersDrop;
     }
 
+    @Transactional(readOnly = true)
+    public List<DropdownDTO> getDerByFuncaoTransacaoIdDropdown(Long idFuncaoTransacao) {
+        List<DropdownDTO> lstDersDrop = new ArrayList<>();
+        List<Der> lstDers = derRepository.getDerByFuncaoTransacaoIdDropdown(idFuncaoTransacao);
+        lstDers.forEach(der -> {
+            DropdownDTO dropdownDer;
+            if(der.getNome() == null || der.getNome().isEmpty()){
+                dropdownDer = new br.com.basis.abaco.service.dto.DropdownDTO(der.getId(),der.getValor().toString());
+            }else {
+                dropdownDer = new br.com.basis.abaco.service.dto.DropdownDTO(der.getId(),der.getNome());
+            }
+            lstDersDrop.add(dropdownDer);
+        });
+        return lstDersDrop;
+    }
+
     public List<VwDer> bindFilterSearchDersSistemaFuncaoDados(String nome, Long idSistema) {
         QueryBuilder queryBuilderNome = QueryBuilders.boolQuery()
             .must(QueryBuilders.wildcardQuery("nome", "*"+nome+"*"));

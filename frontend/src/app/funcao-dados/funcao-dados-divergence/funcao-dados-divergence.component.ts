@@ -174,8 +174,14 @@ export class FuncaoDadosDivergenceComponent implements OnInit {
             this.isView = params['view'] !== undefined;
             this.funcaoDadosService.getVWFuncaoDadosByIdAnalise(this.idAnalise).subscribe(value => {
                 this.funcoesDados = value;
+                let temp = 1
+                for (let i = 0; i < this.funcoesDados.length; i++) {
+                    if (this.funcoesDados[i].ordem === null) {
+                        this.funcoesDados[i].ordem = temp
+                    }
+                    temp++
+                }
                 this.funcoesDados.sort((a, b) => a.ordem - b.ordem);
-                this.updateIndex();
                 if (!this.isView) {
                     this.divergenciaService.find(this.idAnalise).subscribe(analise => {
                         this.analise = analise;
@@ -593,6 +599,7 @@ export class FuncaoDadosDivergenceComponent implements OnInit {
                 this.seletedFuncaoDados.funcionalidade.id,
                 this.seletedFuncaoDados.funcionalidade.modulo.id).subscribe(value => {
                     if (value === false) {
+                        funcaoDadosCalculada.ordem = this.funcoesDados.length+1;
                         this.funcaoDadosService.createDivergence(funcaoDadosCalculada, this.analise.id, funcaoDadosCalculada.files?.map(item => item.logo)).subscribe(
                             (funcaoDados) => {
                                 this.pageNotificationService.addCreateMsg(funcaoDadosCalculada.name);
@@ -750,8 +757,7 @@ export class FuncaoDadosDivergenceComponent implements OnInit {
     private resetarEstadoPosSalvar() {
         this.seletedFuncaoDados = this.seletedFuncaoDados.clone();
 
-        this.funcaoDadosEditar = [];
-        this.tables.selectedRow = [];
+        this.funcoesDados.sort((a, b) => a.ordem - b.ordem);
         this.updateIndex();
 
         this.seletedFuncaoDados.artificialId = undefined;
@@ -788,6 +794,7 @@ export class FuncaoDadosDivergenceComponent implements OnInit {
             .subscribe((res: FuncaoDados) => {
                 this.seletedFuncaoDados = new FuncaoDados().copyFromJSON(res);
                 this.seletedFuncaoDados.id = null;
+                this.seletedFuncaoDados.ordem = this.funcoesDados.length + 1;
                 this.carregarValoresNaPaginaParaEdicao(this.seletedFuncaoDados);
                 this.disableTRDER();
                 this.configurarDialog();
@@ -878,6 +885,7 @@ export class FuncaoDadosDivergenceComponent implements OnInit {
         this.funcaoDadosService.getById(funcaoDadosSelecionada.id).subscribe(funcaoDados => {
             this.seletedFuncaoDados = new FuncaoDados().copyFromJSON(funcaoDados);
             this.seletedFuncaoDados.lstDivergenceComments = funcaoDados.lstDivergenceComments;
+            this.seletedFuncaoDados.ordem = funcaoDadosSelecionada.ordem;
             if (this.seletedFuncaoDados.fatorAjuste.tipoAjuste === 'UNITARIO' && this.faS[0]) {
                 this.hideShowQuantidade = false;
             } else {
@@ -897,6 +905,7 @@ export class FuncaoDadosDivergenceComponent implements OnInit {
             this.seletedFuncaoDados = new FuncaoDados().copyFromJSON(funcaoDados);
             this.seletedFuncaoDados.id = null;
             this.seletedFuncaoDados.name = this.seletedFuncaoDados.name + this.getLabel('- Cópia');
+            this.seletedFuncaoDados.ordem = this.funcoesDados.length+1;
             this.carregarValoresNaPaginaParaEdicao(this.seletedFuncaoDados);
             this.disableTRDER();
             this.configurarDialog();
@@ -909,11 +918,11 @@ export class FuncaoDadosDivergenceComponent implements OnInit {
 
     private carregarValoresNaPaginaParaEdicao(funcaoDadosSelecionada: FuncaoDados) {
         /* Envia os dados para o componente modulo-funcionalidade-component.ts*/
-
+        this.updateIndex();
         this.funcaoDadosService.mod.next(funcaoDadosSelecionada.funcionalidade);
         this.analiseSharedDataService.funcaoAnaliseCarregada();
         this.analiseSharedDataService.currentFuncaoDados = funcaoDadosSelecionada;
-        if(this.analise.metodoContagem !== "ESTIMADA"){
+        if (this.analise.metodoContagem !== "ESTIMADA") {
             this.carregarDerERlr(funcaoDadosSelecionada);
         }
         this.carregarFatorDeAjusteNaEdicao(funcaoDadosSelecionada);
@@ -1016,7 +1025,6 @@ export class FuncaoDadosDivergenceComponent implements OnInit {
                     funcaoDadosSelecionada['statusFuncao'] = value['statusFuncao'];
                     this.pageNotificationService.addSuccessMessage('Status da funcionalidade ' + funcaoDadosSelecionada.name + ' foi alterado.');
                     this.divergenciaService.updateDivergenciaSomaPf(this.analise.id).subscribe();
-                    this.showDialog = false;
                     this.showDialog = false;
                     this.blockUiService.hide();
                 });
@@ -1179,7 +1187,21 @@ export class FuncaoDadosDivergenceComponent implements OnInit {
             this.blockUiService.hide();
         });
     }
-    public selectFD() {
+    public selectFD(event) {
+        if(event.shiftKey === true){
+            let fim = this.funcoesDados.indexOf(this.tables.selectedRow[0]);
+            let inicio = this.funcoesDados.indexOf(this.funcaoDadosEditar[0]);
+            this.tables.selectedRow = [];
+            if(inicio < fim){
+                for(let i = inicio; i <= fim; i++){
+                    this.tables.selectedRow.push(this.funcoesDados[i]);
+                }
+            }else{
+                for(let i = fim; i <= inicio; i++){
+                    this.tables.selectedRow.push(this.funcoesDados[i]);
+                }
+            }
+        }
         this.tables.pDatatableComponent.metaKeySelection = true;
         if (this.tables && this.tables.selectedRow) {
             this.funcaoDadosEditar = this.tables.selectedRow;
@@ -1415,8 +1437,15 @@ export class FuncaoDadosDivergenceComponent implements OnInit {
 
     public orderList(botao: String) {
 
-        let i = this.funcoesDados.indexOf(this.funcaoDadosEditar[0])
-        let del = i
+        let i;
+        let del;
+
+        this.funcoesDados.forEach((item, index) => {
+            if (item.id === this.funcaoDadosEditar[0].id) {
+                i = index;
+                del = i
+            }
+        })
 
         if (botao == 'order-top' && this.funcaoDadosEditar[0] != null) {
             if (i == 0) {
@@ -1478,6 +1507,5 @@ export class FuncaoDadosDivergenceComponent implements OnInit {
         })
         this.pageNotificationService.addSuccessMessage("Ordenação salva com sucesso.");
         this.isOrderning = false;
-        this.resetarEstadoPosSalvar();
     }
 }

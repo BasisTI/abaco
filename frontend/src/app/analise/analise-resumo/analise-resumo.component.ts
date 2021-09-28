@@ -57,6 +57,21 @@ export class AnaliseResumoComponent implements OnInit {
     public isView: boolean;
     idAnalise: Number;
 
+    fatorCriticidade: boolean = false;
+    valorCriticidade: number = 35;
+    pfCriticidade;
+
+    showDialogImportarExcel: boolean = false;
+    analiseImportarExcel: Analise = new Analise();
+    lstModelosExcel = [
+        { label: "Modelo padrão BASIS", value: 1 },
+        { label: "Modelo padrão BNDES", value: 2 },
+        { label: "Modelo padrão ANAC", value: 3 },
+        { label: "Modelo padrão EBCOLOG", value: 4 },
+        { label: "Modelo padrão EBDCT", value: 5 },
+    ];
+    modeloSelecionado: any;
+
     constructor(
         private confirmationService: ConfirmationService,
         private router: Router,
@@ -95,6 +110,15 @@ export class AnaliseResumoComponent implements OnInit {
                         this.esforcoFases = this.analiseSharedDataService.analise.esforcoFases;
                         this.pfTotal = analise.pfTotal;
                         this.pfAjustada = analise.adjustPFTotal;
+                        this.fatorCriticidade = analise.fatorCriticidade;
+                        this.valorCriticidade = analise.valorCriticidade;
+                        if(!this.valorCriticidade){
+                            this.valorCriticidade = 35;
+                        }
+                        if(this.fatorCriticidade === true){
+                            this.pfCriticidade =  Number(this.pfAjustada) * (this.valorCriticidade/100+1);
+                            this.pfCriticidade = this.pfCriticidade.toFixed(2);
+                        }
                         this.analiseService.getResumo(this.idAnalise)
                         .subscribe(res => {
                             const jsonResponse = res;
@@ -362,6 +386,36 @@ export class AnaliseResumoComponent implements OnInit {
         this.equipeService.getEquipesActiveLoggedUser().subscribe(res => {
             this.tipoEquipesLoggedUser = res;
         });
+    }
+
+    openModalImportarExcel(analise: Analise) {
+        this.showDialogImportarExcel = true;
+        this.analiseImportarExcel = analise;
+    }
+
+    closeModalExportarExcel() {
+        this.showDialogImportarExcel = false;
+        this.modeloSelecionado = null;
+        this.analiseImportarExcel = null;
+    }
+
+    exportarPlanilha() {
+        if (this.analiseImportarExcel != null) {
+            this.analiseService.exportarModeloExcel(this.analiseImportarExcel.id, this.modeloSelecionado.value).subscribe(
+                (response) => {
+                    let filename = response.headers.get("content-disposition").split("filename=");
+                    const mediaType = 'application/vnd.ms-excel';
+                    const blob = new Blob([response.body], { type: mediaType });
+                    const fileURL = window.URL.createObjectURL(blob);
+                    const anchor = document.createElement('a');
+                    anchor.download = filename[1];
+                    anchor.href = fileURL;
+                    document.body.appendChild(anchor);
+                    anchor.click();
+                    this.blockUiService.hide();
+                    this.closeModalExportarExcel();
+                });;
+        }
     }
 }
 

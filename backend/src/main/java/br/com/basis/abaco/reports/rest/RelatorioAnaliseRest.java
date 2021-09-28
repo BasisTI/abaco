@@ -79,7 +79,9 @@ public class RelatorioAnaliseRest {
 
     private UploadedFile uploadedFiles;
 
+    private Boolean isExcel = false;
 
+    private final static String FATOR_CRITICIDADE = "FATORCRITICIDADE";
 
     public RelatorioAnaliseRest(HttpServletResponse response, HttpServletRequest request) {
         this.response = response;
@@ -172,6 +174,7 @@ public class RelatorioAnaliseRest {
     ResponseEntity<byte[]> downloadExcel(Analise analise, UploadedFile uploadedFiles) throws FileNotFoundException, JRException {
         init();
         popularObjeto(analise, uploadedFiles);
+        isExcel = true;
         return relatorio.downloadExcel(analise, caminhoAnaliseExcel, popularParametroAnalise());
     }
 
@@ -200,6 +203,7 @@ public class RelatorioAnaliseRest {
         this.popularAjustes();
         this.popularCountsFd();
         this.popularCountsFt();
+        this.popularFatorCriticidade();
         return parametro;
     }
 
@@ -212,6 +216,23 @@ public class RelatorioAnaliseRest {
         }
         if (validarObjetosNulos(analise.getEditedBy())) {
             parametro.put("EDITADOPOR", analise.getEditedBy().getLogin());
+        }
+    }
+
+    /**
+     * POPULAR Fator Criticidade
+     */
+    private void popularFatorCriticidade() {
+        if(analise.getFatorCriticidade() == null || !analise.getFatorCriticidade()){
+            parametro.put(FATOR_CRITICIDADE, "SEM");
+        }else{
+            if(isExcel == true){
+                parametro.put(FATOR_CRITICIDADE, +analise.getValorCriticidade().intValue()+"%");
+            }else{
+                parametro.put(FATOR_CRITICIDADE, " III. Total c/ Criticidade (II + "+analise.getValorCriticidade().intValue()+"%):");
+            }
+            String pfCriticidade = String.format("%.2f", Double.parseDouble(analise.getAdjustPFTotal()) *  (analise.getValorCriticidade() / 100 + 1));
+            parametro.put("PFCRITICIDADE", pfCriticidade);
         }
     }
 
@@ -301,10 +322,25 @@ public class RelatorioAnaliseRest {
      */
     private void popularResumo() {
         parametro.put("PFTOTAL", analise.getPfTotal());
-        if(analise.getMetodoContagem().equals(MetodoContagem.ESTIMADA)){
-            parametro.put("PFESCOPESCREEP", calcularScopeCreep(analise.getAdjustPFTotal(), this.fatorEstimado));
-        }else if(analise.getMetodoContagem().equals(MetodoContagem.INDICATIVA)) {
-            parametro.put("PFESCOPESCREEP", calcularScopeCreep(analise.getAdjustPFTotal(), this.fatorIndicativa));
+        if(!analise.getMetodoContagem().equals(MetodoContagem.DETALHADA)){
+            String scopeCreep = "";
+            if(analise.getFatorCriticidade() != null){
+                scopeCreep = !analise.getFatorCriticidade() ?
+                    " III. Total c/ Scope Creep (II +" :
+                    " IV. Total c/ Scope Creep (III +";
+            }else{
+                scopeCreep = " III. Total c/ Scope Creep (II +";
+            }
+
+            if (analise.getScopeCreep() != null) {
+                parametro.put("PFESCOPESCREEP", calcularScopeCreep(analise.getAdjustPFTotal(), Double.valueOf(analise.getScopeCreep())/100+1));
+                scopeCreep += analise.getScopeCreep().intValue()+"%):";
+                parametro.put("SCOPECREEP", scopeCreep);
+            }else{
+                parametro.put("PFESCOPESCREEP", calcularScopeCreep(analise.getAdjustPFTotal(), analise.getMetodoContagem().equals(MetodoContagem.ESTIMADA) ? fatorEstimado : fatorIndicativa));
+                scopeCreep += "35%):";
+                parametro.put("SCOPECREEP", scopeCreep);
+            }
         }
         parametro.put("AJUSTESPF", calcularPFsAjustado(analise.getPfTotal(), analise.getAdjustPFTotal()));
         parametro.put("PFAJUSTADO", analise.getAdjustPFTotal());
@@ -1004,6 +1040,7 @@ public class RelatorioAnaliseRest {
         if (valor1 != null && valor2 != null) {
             valorCalculado = Double.parseDouble(valor1) - Double.parseDouble(valor2);
         }
+
         DecimalFormat df = new DecimalFormat("#.##");
 
         return df.format(valorCalculado);
@@ -1013,6 +1050,9 @@ public class RelatorioAnaliseRest {
         Double valorCalculado = 0.0;
         if (valor1 != null && valor2 != null) {
             valorCalculado = Double.parseDouble(valor1) * valor2;
+            if(analise.getFatorCriticidade() != null && analise.getFatorCriticidade() == true){
+                valorCalculado *= analise.getValorCriticidade()/100+1;
+            }
         }
         DecimalFormat df = new DecimalFormat("#.##");
 

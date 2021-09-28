@@ -29,7 +29,8 @@
                                         [value]="this.funcoesTransacoes"
                                         (buttonClick)="datatableClick($event)"
                                         (dblclick)="onRowDblclick($event)"
-                                        (click)="selectFT()"
+                                        (click)="selectFT($event)"
+                                        [reorderableRows]="isOrderning" (onRowReorder)="updateIndex()"
                                         [paginator]="false"
                                         [rows]="20"
                                         [enableButtonsScroll]="true"
@@ -53,6 +54,7 @@
                                             <button type="button" pButton icon="ui-icon-check" class="ui-button-success" *ngIf="statusFuncao === 'VALIDADO'" ></button>
                                         </ng-template>
                                     </p-column>
+                                    <p-column field="nomeEquipe" header="Equipe" sortable="true"></p-column>
                                     <p-column field="nomeModulo" header="Módulo" sortable="true"></p-column>
                                     <p-column field="nomeFuncionalidade" header="Funcionalidade" sortable="true"></p-column>
                                     <p-column field="name" header=" Nome" sortable="true"></p-column>
