@@ -364,7 +364,6 @@ public class PlanilhaService {
         InputStream stream = getClass().getClassLoader().getResourceAsStream("reports/planilhas/modelo3-anac.xlsx");
         XSSFWorkbook excelFile = new XSSFWorkbook(stream);
         this.setarResumoExcelPadraoANAC(excelFile, analise);
-        this.setarDeflatoresExcelPadraoANAC(excelFile, analise);
         this.setarFuncoesPadraoANAC(excelFile, funcaoDadosList, funcaoTransacaoList);
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         excelFile.write(outputStream);
@@ -408,24 +407,6 @@ public class PlanilhaService {
         }
     }
 
-    private void setarDeflatoresExcelPadraoANAC(XSSFWorkbook excelFile, Analise analise) {
-        XSSFSheet deflatorSheet = excelFile.getSheet("Lista");
-        int rowNum = 2;
-        List<FatorAjuste> fatorAjusteList = analise.getManual().getFatoresAjuste().stream().collect(Collectors.toList());
-        fatorAjusteList.sort((obj1, obj2) -> obj1.compareTo(obj2));
-        for(int i = 0; i < fatorAjusteList.size(); i++) {
-            FatorAjuste fatorAjuste = fatorAjusteList.get(i);
-            XSSFRow row = deflatorSheet.getRow(rowNum++);
-            row.getCell(0).setCellValue(fatorAjuste.getSigla() == null ? "" : fatorAjuste.getSigla());
-            row.getCell(1).setCellValue(fatorAjuste.getDescricao());
-            row.getCell(2)
-                .setCellValue(fatorAjuste.getTipoAjuste().equals(TipoFatorAjuste.PERCENTUAL) ? fatorAjuste.getFator().doubleValue()/100 : fatorAjuste.getFator().doubleValue());
-            row.getCell(3).setCellValue(fatorAjuste.getNome() + ": "+fatorAjuste.getCodigo());
-            row.getCell(4)
-                .setCellValue(fatorAjuste.getTipoAjuste().equals(TipoFatorAjuste.PERCENTUAL) ? "PC" : "PF");
-        }
-    }
-
     private void setarResumoExcelPadraoANAC(XSSFWorkbook excelFile, Analise analise) {
         XSSFSheet excelSheet = excelFile.getSheet(RESUMO);
         if(analise.getSistema() != null){
@@ -436,6 +417,9 @@ public class PlanilhaService {
         excelSheet.getRow(41).getCell(1).setCellValue(analise.getPropositoContagem());
         excelSheet.getRow(43).getCell(1).setCellValue(analise.getEscopo());
         excelSheet.getRow(45).getCell(1).setCellValue(analise.getFronteiras());
+        excelSheet.getRow(10).getCell(3).setCellValue(analise.getEquipeResponsavel().getCfpsResponsavel() != null ?
+            analise.getEquipeResponsavel().getCfpsResponsavel().getFirstName() + " "+ analise.getEquipeResponsavel().getCfpsResponsavel().getLastName() : analise.getEquipeResponsavel().getPreposto());
+
     }
 
     //BNDES
