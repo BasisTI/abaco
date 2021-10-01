@@ -63,11 +63,27 @@ public interface AnaliseRepository extends JpaRepository<Analise, Long> {
     Analise reportContagem(@Param("id") Long id);
 
     List<Analise> findAll();
-    
+
     @Query(value = "SELECT a FROM Analise a WHERE a.isDivergence = :divergencia")
     Page<Analise> pesquisarPorDivergencia(@Param("divergencia") Boolean divergencia, Pageable pageable);
-    
+
     List<Analise> findAllBySistema(Sistema sistema);
+
+    @Query(value = "SELECT DISTINCT a FROM Analise a " +
+                    "JOIN Sistema s ON s.id = a.sistema.id " +
+                    "JOIN Modulo m ON m.sistema.id = s.id " +
+                    "JOIN Funcionalidade f ON f.modulo.id = m.id " +
+                    "JOIN FuncaoDados fd ON fd.funcionalidade.id = f.id " +
+                    "WHERE m.nome = :nomeModulo AND f.nome = :nomeFuncionalidade AND fd.name = :nomeFuncao")
+    List<Analise> findAllByFuncoesDados(@Param("nomeFuncao")String nomeFuncao, @Param("nomeModulo")String nomeModulo, @Param("nomeFuncionalidade") String nomeFuncionalidade);
+
+    @Query(value = "SELECT DISTINCT a FROM Analise a " +
+        "JOIN Sistema s ON s.id = a.sistema.id " +
+        "JOIN Modulo m ON m.sistema.id = s.id " +
+        "JOIN Funcionalidade f ON f.modulo.id = m.id " +
+        "JOIN FuncaoTransacao ft ON ft.funcionalidade.id = f.id " +
+        "WHERE m.nome = :nomeModulo AND f.nome = :nomeFuncionalidade AND ft.name = :nomeFuncao")
+    List<Analise> findAllByFuncoesTransacoes(@Param("nomeFuncao")String nomeFuncao, @Param("nomeModulo")String nomeModulo, @Param("nomeFuncionalidade") String nomeFuncionalidade);
 
 
 

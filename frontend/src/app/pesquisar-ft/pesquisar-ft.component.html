@@ -1,171 +1,239 @@
 <div class="ui-g ui-fluid">
-        <div class="card card-w-title">
-            <div class="ui-g">
-                <div class="ui-g-4 ui-md-4 ui-sm-12">
-                    <span class="md-inputfield">
-                        <input
-                            type="text"
-                            pInputText class="ui-inputtext"
-                            [(ngModel)]="nameSearch"
-                            id="idNameSearch"
-                            maxlength="50">
-                        <label>Nome da função</label>
-                    </span>
-                </div>
-                <div class="ui-g-4 ui-md-4 ui-sm-12">
-                    <p-dropdown #modDropDown
-                        id="idModuloSelecionado"
-                        [filter]="true"
-                        optionLabel="nome"
-                        name="modulo"
-                        [placeholder]="this.getLabel('Selecione um Módulo')"
-                        (onChange)="moduloSelected($event.value)"
-                        [(ngModel)]="moduloSelecionado"
-                        [options]="modulos"
-                        [autoWidth]="false">
-                    </p-dropdown>
-                </div>
-                <div class="ui-g-4 ui-md-4 ui-sm-12">
-                    <p-dropdown #funcDropDown
-                        [filter]="true"
-                        id="idFuncionalidadeAtual"
-                        name="funcionalidades"
-                        optionLabel="nome"
-                        [placeholder]="this.getLabel('Selecione uma Funcionalidade')"
-                        (onChange)="funcionalidadeSelected($event.value)"
-                        [options]="funcionalidades"
-                        [autoWidth]="false"
-                        [(ngModel)]="funcionalidadeAtual">
-                    </p-dropdown>
-                </div>
-
-                <div class="ui-g-4 ui-md-2 ui-sm-4">
-                    <p-radioButton name="groupname" [value]="1" label="Detalhada" [(ngModel)]="metodoContagem"></p-radioButton>
-                </div>
-                <div class="ui-g-4 ui-md-4 ui-sm-12">
-                    <p-radioButton name="groupname" [value]="2" label="Estimada" [(ngModel)]="metodoContagem"></p-radioButton>
-                </div>
+    <div class="card card-w-title">
+        <div class="ui-g">
+            <div class="ui-g-4 ui-md-4 ui-sm-12">
+                <span class="md-inputfield">
+                    <input type="text" pInputText class="ui-inputtext" [(ngModel)]="nameSearch" id="idNameSearch"
+                        maxlength="50">
+                    <label>Nome da função</label>
+                </span>
             </div>
-            <div class="ui-g ui-md-12" style="justify-content: center; margin-bottom: px; margin-top: 05px">
-                <div class="ui-g-2 ui-md-2 ui-sm-12">
-                    <app-blue-button id="idBtnPesquisarPesquisar-ft" buttonIcon="ui-icon-search"
-                        [buttonLabel]="'Pesquisar'" (click)="performSearch()">
-                    </app-blue-button>
-                </div>
-                <div class="ui-g-2 ui-md-2 ui-sm-12">
-                    <app-white-button [buttonLabel]="'Limpar Pesquisa'"
-                        id="idBtnLimparPesquisaPesquisa-ft" buttonIcon="ui-icon-clear-all"
-                        (click)="limparPesquisa()">
-                    </app-white-button>
-                </div>
+            <div class="ui-g-4 ui-md-4 ui-sm-12">
+                <p-dropdown #modDropDown id="idModuloSelecionado" [filter]="true" optionLabel="nome" name="modulo"
+                    [placeholder]="this.getLabel('Selecione um Módulo')" (onChange)="moduloSelected($event.value)"
+                    [(ngModel)]="moduloSelecionado" [options]="modulos" [autoWidth]="false">
+                </p-dropdown>
             </div>
-            <p-fieldset [legend]="this.getLabel('Funções')" [collapsed]="false">
-                <div class="ui-g">
+            <div class="ui-g-4 ui-md-4 ui-sm-12">
+                <p-dropdown #funcDropDown [filter]="true" id="idFuncionalidadeAtual" name="funcionalidades"
+                    optionLabel="nome" [placeholder]="this.getLabel('Selecione uma Funcionalidade')"
+                    (onChange)="funcionalidadeSelected($event.value)" [options]="funcionalidades" [autoWidth]="false"
+                    [(ngModel)]="funcionalidadeAtual">
+                </p-dropdown>
+            </div>
 
-                    <div class="ui-g-12">
-                        <div class="ui-g-12 ui-md-6 ui-sm-6" style="margin-bottom: 15px;">
-                            <p-dropdown #deflaDropDown [filter]="true" [options]="fatoresAjuste"
-                                [disabled]="!isContratoSelected()"
-                                [placeholder]="this.getLabel('Deflator')" name="fatorAjuste"
-                                [autoWidth]="false" (onChange)="mudarDeflator($event.value)" [(ngModel)]="novoDeflator">
-                            </p-dropdown>
-                            <span class="md-inputfield">
-                                    <div *ngIf="!deflaPesquisa" class="ui-message ui-messages-error">
-                                        Campo obrigatório.
-                                    </div>
-                            </span>
-                        </div>
-                        <div class="ui-g-12 ui-md-6 ui-sm-6" [hidden]="hideShowQuantidade">
-                            <label>Quantidade *</label>
-                            <input type="number" class="ui-inputtext" min="1" name="quantidadeINM" (input)="alterarQuatindade($event.target.value)" >
-                            <span class="md-inputfield">
-                                <div *ngIf="erroUnitario" class="ui-message ui-messages-error">
-                                    Campo obrigatório.
-                                </div>
-                            </span>
-                        </div>
-                    </div>
-                    <div class="ui-g" style="margin-bottom: 05px">
-                        <p-table
-                            [value]="fn"
-                            [paginator]="true" [rows]="10"
-                            [rowsPerPageOptions]="[10,25,50]"
-                            [(selection)]="selections" #table>
-                            <ng-template pTemplate="caption">
-                                {{isFuncaoDados? 'Função de dados':'Função de transação'}}
-                            </ng-template>
-                            <ng-template pTemplate="header">
-                                <tr>
-                                    <th style="text-align:left; width: 3em;"><p-tableHeaderCheckbox></p-tableHeaderCheckbox></th>
-                                    <th pSortableColumn="fase.nome">Módulo <p-sortIcon></p-sortIcon>
-                                        <input class="column-filter-input" (click)="$event.stopPropagation()" pInputText type="text" (input)="table.filter($event.target.value, 'nomeModulo', 'contains')"/>
-                                    </th>
-                                    <th pSortableColumn="fase.nomeFuncionalidade">Funcionalidade <p-sortIcon></p-sortIcon>
-                                        <input class="column-filter-input" (click)="$event.stopPropagation()" pInputText type="text" (input)="table.filter($event.target.value, 'nomeFuncionalidade', 'contains')"/>
-                                    </th>
-                                    <th pSortableColumn="fase.name">Nome <p-sortIcon></p-sortIcon>
-                                        <input class="column-filter-input" (click)="$event.stopPropagation()" pInputText type="text" (input)="table.filter($event.target.value, 'name', 'contains')"/>
-                                    </th>
-                                    <th pSortableColumn="fase.classificacao" style="text-align: center; width: 9em;">Classificação <p-sortIcon></p-sortIcon>
-                                        <p-dropdown  class="column-filter-input" [(options)]="classificacoes"
-                                        name="classificaoFiltro" [(ngModel)]="classificacaoSearch"
-                                        [autoWidth]="false" [style]="{'min-width':'50%'}"
-                                        (onChange)="table.filter(classificacaoSearch, 'classificacao', 'contains')"
-                                            [placeholder]="''" (click)="$event.stopPropagation()" >
-                                        </p-dropdown>
-                                    </th>
-                                    <th *ngIf="metodoContagem == 1" style="text-align: center; width: 9em;" pSortableColumn="fase.qtdDers">{{campoDers}} <p-sortIcon></p-sortIcon>
-                                    </th>
-                                </tr>
-                            </ng-template>
-                            <ng-template pTemplate="body" let-funcao>
-                                <tr class="ui-selectable-row" >
-                                    <td >
-                                        <p-tableCheckbox [value]="funcao"></p-tableCheckbox>
-                                    </td>
-                                    <td>
-                                        {{funcao.nomeModulo}}
-                                    </td>
-                                    <td>
-                                        {{funcao.nomeFuncionalidade}}
-                                    </td>
-                                    <td>
-                                        {{funcao.name}}
-                                    </td>
-                                    <td style="text-align: center;" >
-                                        {{funcao.classificacao}}
-                                    </td>
-                                    <td *ngIf="metodoContagem == 1" style="text-align: center;" >
-                                        {{funcao.qtdDers}}/{{funcao.qtdRlrs}}
-                                    </td>
-                                </tr>
-                            </ng-template>
-                        </p-table>
-                        <div class=" ui-g-12 ui-helper-clearfix" style="text-align: left">
-                            <div class="ui-g-12 ui-md-2 ui-sm-2" >
-                                <button type="button" pButton icon="pi pi-file-excel" iconPos="left" label="EXCEL" (click)="exportExcel()" style="margin-right: 0.5em;"></button>
-                            </div>
-                            <div class="ui-g-12 ui-md-2 ui-sm-2" >
-                                <button type="button" pButton icon="pi pi-file-pdf" iconPos="left" label="PDF" (click)="exportPdf()" ></button>
-                            </div>
-                        </div>
-
-                    </div>
-                </div>
-            </p-fieldset>
+            <div class="ui-g-4 ui-md-2 ui-sm-4">
+                <p-radioButton name="groupname" [value]="1" label="Detalhada" [(ngModel)]="metodoContagem">
+                </p-radioButton>
+            </div>
+            <div class="ui-g-4 ui-md-4 ui-sm-12">
+                <p-radioButton name="groupname" [value]="2" label="Estimada" [(ngModel)]="metodoContagem">
+                </p-radioButton>
+            </div>
         </div>
-
-        <div class="ui-g ui-md-12" style="justify-content: center; margin-bottom: 5px; margin-top: 5px">
+        <div class="ui-g ui-md-12" style="justify-content: center; margin-bottom: px; margin-top: 05px">
             <div class="ui-g-2 ui-md-2 ui-sm-12">
-                <app-white-button [buttonLabel]="'Fechar'"
-                    id="idBtnLimparPesquisaComponentAnalise" buttonIcon="ui-icon-clear-all"
-                    (click)="retornarParaTelaDeFT()">
+                <app-blue-button id="idBtnPesquisarPesquisar-ft" buttonIcon="ui-icon-search" [buttonLabel]="'Pesquisar'"
+                    (click)="performSearch()">
+                </app-blue-button>
+            </div>
+            <div class="ui-g-2 ui-md-2 ui-sm-12">
+                <app-white-button [buttonLabel]="'Limpar Pesquisa'" id="idBtnLimparPesquisaPesquisa-ft"
+                    buttonIcon="ui-icon-clear-all" (click)="limparPesquisa()">
                 </app-white-button>
             </div>
-            <div class="ui-g-2 ui-md-2 ui-sm-12">
-                <app-green-button id="idBtnPesquisarComponentSistema" buttonIcon="ui-icon-arrowstop-1-e"
-                    [buttonLabel]="'Gerar'" (click)="montarFuncoes()">
-                </app-green-button>
-            </div>
         </div>
+        <p-fieldset [legend]="this.getLabel('Funções')" [collapsed]="false">
+            <div class="ui-g">
+
+                <div class="ui-g-12">
+                    <div class="ui-g-12 ui-md-6 ui-sm-6" style="margin-bottom: 15px;">
+                        <p-dropdown #deflaDropDown [filter]="true" [options]="fatoresAjuste"
+                            [disabled]="!isContratoSelected()" [placeholder]="this.getLabel('Deflator')"
+                            name="fatorAjuste" [autoWidth]="false" (onChange)="mudarDeflator($event.value)"
+                            [(ngModel)]="novoDeflator">
+                        </p-dropdown>
+                        <span class="md-inputfield">
+                            <div *ngIf="!deflaPesquisa" class="ui-message ui-messages-error">
+                                Campo obrigatório.
+                            </div>
+                        </span>
+                    </div>
+                    <div class="ui-g-12 ui-md-6 ui-sm-6" [hidden]="hideShowQuantidade">
+                        <label>Quantidade *</label>
+                        <input type="number" class="ui-inputtext" min="1" name="quantidadeINM"
+                            (input)="alterarQuatindade($event.target.value)">
+                        <span class="md-inputfield">
+                            <div *ngIf="erroUnitario" class="ui-message ui-messages-error">
+                                Campo obrigatório.
+                            </div>
+                        </span>
+                    </div>
+                </div>
+                <div class="ui-g" style="margin-bottom: 05px">
+                    <p-table [value]="fn" [paginator]="true" [rows]="10" [rowsPerPageOptions]="[10,25,50]"
+                        [(selection)]="selections" #table>
+                        <ng-template pTemplate="caption">
+                            {{isFuncaoDados? 'Função de dados':'Função de transação'}}
+                        </ng-template>
+                        <ng-template pTemplate="header">
+                            <tr>
+                                <th style="text-align:left; width: 3em;">
+                                    <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+                                </th>
+                                <th pSortableColumn="fase.nome">Módulo <p-sortIcon></p-sortIcon>
+                                    <input class="column-filter-input" (click)="$event.stopPropagation()" pInputText
+                                        type="text"
+                                        (input)="table.filter($event.target.value, 'nomeModulo', 'contains')" />
+                                </th>
+                                <th pSortableColumn="fase.nomeFuncionalidade">Funcionalidade <p-sortIcon></p-sortIcon>
+                                    <input class="column-filter-input" (click)="$event.stopPropagation()" pInputText
+                                        type="text"
+                                        (input)="table.filter($event.target.value, 'nomeFuncionalidade', 'contains')" />
+                                </th>
+                                <th pSortableColumn="fase.name">Nome <p-sortIcon></p-sortIcon>
+                                    <input class="column-filter-input" (click)="$event.stopPropagation()" pInputText
+                                        type="text" (input)="table.filter($event.target.value, 'name', 'contains')" />
+                                </th>
+                                <th pSortableColumn="fase.classificacao" style="text-align: center; width: 9em;">
+                                    Classificação <p-sortIcon></p-sortIcon>
+                                    <p-dropdown class="column-filter-input" [(options)]="classificacoes"
+                                        name="classificaoFiltro" [(ngModel)]="classificacaoSearch" [autoWidth]="false"
+                                        [style]="{'min-width':'50%'}"
+                                        (onChange)="table.filter(classificacaoSearch, 'classificacao', 'contains')"
+                                        [placeholder]="''" (click)="$event.stopPropagation()">
+                                    </p-dropdown>
+                                </th>
+                                <th *ngIf="metodoContagem == 1" style="text-align: center; width: 9em;"
+                                    pSortableColumn="fase.qtdDers">{{campoDers}} <p-sortIcon></p-sortIcon>
+                                </th>
+                                <th style="text-align:left; width: 4em;"></th>
+                            </tr>
+                        </ng-template>
+                        <ng-template pTemplate="body" let-funcao>
+                            <tr class="ui-selectable-row">
+                                <td>
+                                    <p-tableCheckbox [value]="funcao"></p-tableCheckbox>
+                                </td>
+                                <td>
+                                    {{funcao.nomeModulo}}
+                                </td>
+                                <td>
+                                    {{funcao.nomeFuncionalidade}}
+                                </td>
+                                <td>
+                                    {{funcao.name}}
+                                </td>
+                                <td style="text-align: center;">
+                                    {{funcao.classificacao}}
+                                </td>
+                                <td *ngIf="metodoContagem == 1" style="text-align: center;">
+                                    {{funcao.qtdDers}}/{{funcao.qtdRlrs}}
+                                </td>
+                                <td>
+                                    <button style="text-align:left" (click)="pesquisarAnalises(funcao)" pButton
+                                        type="button" class="green-btn" icon="ui-icon-search"></button>
+                                </td>
+                            </tr>
+                        </ng-template>
+                    </p-table>
+                    <div class=" ui-g-12 ui-helper-clearfix" style="text-align: left">
+                        <div class="ui-g-12 ui-md-2 ui-sm-2">
+                            <button type="button" pButton icon="pi pi-file-excel" iconPos="left" label="EXCEL"
+                                (click)="exportExcel()" style="margin-right: 0.5em;"></button>
+                        </div>
+                        <div class="ui-g-12 ui-md-2 ui-sm-2">
+                            <button type="button" pButton icon="pi pi-file-pdf" iconPos="left" label="PDF"
+                                (click)="exportPdf()"></button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </p-fieldset>
+    </div>
+
+    <div class="ui-g ui-md-12" style="justify-content: center; margin-bottom: 5px; margin-top: 5px">
+        <div class="ui-g-2 ui-md-2 ui-sm-12">
+            <app-white-button [buttonLabel]="'Fechar'" id="idBtnLimparPesquisaComponentAnalise"
+                buttonIcon="ui-icon-clear-all" (click)="retornarParaTelaDeFT()">
+            </app-white-button>
+        </div>
+        <div class="ui-g-2 ui-md-2 ui-sm-12">
+            <app-green-button id="idBtnPesquisarComponentSistema" buttonIcon="ui-icon-arrowstop-1-e"
+                [buttonLabel]="'Gerar'" (click)="montarFuncoes()">
+            </app-green-button>
+        </div>
+    </div>
 </div>
+
+<p-dialog [modal]="true" [style]="{width: '55vw'}" [header]="headerDialog" [(visible)]="mostrarDialogPesquisarAnalises"
+    [contentStyle]="{'height': ['windowHeightDialog']}">
+    <p-table [value]="analisesFromFuncao" [paginator]="true" [rows]="10" [rowsPerPageOptions]="[10,25,50]" #tableFuncao>
+        <ng-template pTemplate="header">
+            <tr>
+                <th pSortableColumn="organizacao.nome">Organização<p-sortIcon></p-sortIcon>
+                    <input class="column-filter-input" (click)="$event.stopPropagation()" pInputText type="text"
+                        (input)="tableFuncao.filter($event.target.value, 'organizacao.nome', 'contains')" />
+                </th>
+                <th pSortableColumn="organizacao.nome">Identificador<p-sortIcon></p-sortIcon>
+                    <input class="column-filter-input" (click)="$event.stopPropagation()" pInputText type="text"
+                        (input)="tableFuncao.filter($event.target.value, 'identificadorAnalise', 'contains')" />
+                </th>
+                <th pSortableColumn="numeroOs">Nº OS<p-sortIcon></p-sortIcon>
+                    <input class="column-filter-input" (click)="$event.stopPropagation()" pInputText type="text"
+                        (input)="tableFuncao.filter($event.target.value, 'numeroOs', 'contains')" />
+                </th>
+                <th pSortableColumn="equipeResponsavel.nome">Equipe<p-sortIcon></p-sortIcon>
+                    <input class="column-filter-input" (click)="$event.stopPropagation()" pInputText type="text"
+                        (input)="tableFuncao.filter($event.target.value, 'equipeResponsavel.nome', 'contains')" />
+                </th>
+                <th pSortableColumn="sistema.nome">Sistema<p-sortIcon></p-sortIcon>
+                    <input class="column-filter-input" (click)="$event.stopPropagation()" pInputText type="text"
+                        (input)="tableFuncao.filter($event.target.value, 'sistema.nome', 'contains')" />
+                </th>
+                <th pSortableColumn="metodoContagem">Método Contagem<p-sortIcon></p-sortIcon>
+                </th>
+
+                <th pSortableColumn="pfTotal">PF Total<p-sortIcon></p-sortIcon>
+                </th>
+                <th pSortableColumn="adjustPFTotal">PF Ajustado<p-sortIcon></p-sortIcon>
+                </th>
+                
+                <th style="text-align:left; width: 4em;"></th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-analise>
+            <tr class="ui-selectable-row">
+                <td>
+                    {{analise.organizacao.nome}}
+                </td>
+                <td>
+                    {{analise.identificadorAnalise}}
+                </td>
+                <td>
+                    {{analise.numeroOs}}
+                </td>
+                <td>
+                    {{analise.equipeResponsavel.nome}}
+                </td>
+                <td>
+                    {{analise.sistema.nome}}
+                </td>
+                <td>
+                    {{analise.metodoContagem}}
+                </td>
+                <td>
+                    {{analise.pfTotal}}
+                </td>
+                <td>
+                    {{analise.adjustPFTotal}}
+                </td>
+                <td>
+                    <button style="text-align:left" (click)="abrirAnalise(analise)" pButton type="button"
+                        class="blue-btn" icon="ui-icon-arrowstop-1-e"></button>
+                </td>
+            </tr>
+        </ng-template>
+    </p-table>
+</p-dialog>
