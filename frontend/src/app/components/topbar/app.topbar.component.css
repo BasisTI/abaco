@@ -1,7 +1,7 @@
 .logo {
     width: 100% !important;
     height: inherit !important;
-    background: url("../../../assets/layout/images/basis.png") top left no-repeat !important;
+    background: top left no-repeat !important;
   }
   .topbar-left {
     background-color: #DCDCDC !important;

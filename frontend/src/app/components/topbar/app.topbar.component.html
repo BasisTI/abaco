@@ -1,6 +1,7 @@
 <div class="topbar clearfix">
     <div class="topbar-left">
-        <div class="logo logo2"></div>
+        <img *ngIf="!src" src="../../../assets/layout/images/basis.png" />
+        <img *ngIf="src" [src]="src" style="max-width: 150px; max-height: 50px;" class="logo">
     </div>
     <div class="topbar-right">
         <a id="menu-button" href="#" (click)="app.onMenuButtonClick($event)">
