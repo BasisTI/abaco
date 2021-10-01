@@ -553,9 +553,6 @@
 
 <p-dialog [modal]="true" [style]="{width: '55vw'}" [closable]="false" header="Editar em lote"
     [(visible)]="mostrarDialogEditarEmLote" [contentStyle]="{'height': ['windowHeightDialog']}" #pDialogEditLote>
-
-
-
     <div *ngIf="modulos">
         <div class="ui-g">
             <div class="ui-g-12">
@@ -602,7 +599,7 @@
         <div class="ui-g-3 ui-md-6 ui-sm-12" [hidden]="hideShowQuantidade">
             <label>Quantidade *: </label>
             <input type="number" class="ui-inputtext" min="1" [(ngModel)]="quantidadeEmLote"
-                [appendTo]="pDialogEditLote" id="idQuantidadeFormFuncaoDados">
+                id="idQuantidadeFormFuncaoDados">
         </div>
     </div>
     <div class="ui-g">
