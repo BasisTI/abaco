@@ -992,7 +992,7 @@ public class AnaliseService extends BaseService {
     }
 
     public List<Analise> carregarAnalisesFromFuncao(String nomeFuncao, String nomeModulo, String nomeFuncionalidade, Boolean isFd) {
-        List<Analise> analises = new ArrayList<>();
+        List<Analise> analises;
         if(isFd){
             analises = analiseRepository.findAllByFuncoesDados(nomeFuncao, nomeModulo, nomeFuncionalidade);
         }else{
