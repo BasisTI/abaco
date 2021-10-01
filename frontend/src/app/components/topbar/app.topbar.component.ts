@@ -23,11 +23,9 @@ export class AppTopbarComponent implements OnInit{
     constructor(public app: AppComponent,
         private orgService: OrganizacaoService,
         private uploadService: UploadService,
-        private readonly _authentication:
-
-
-            AuthenticationService<User>) {
+        private readonly _authentication:AuthenticationService<User>) {
     }
+
     ngOnInit(): void {
         this.orgService.searchActiveOrganizations().subscribe(r => {
             if(r.length === 1){
