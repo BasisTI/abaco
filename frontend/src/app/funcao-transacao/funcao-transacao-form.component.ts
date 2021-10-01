@@ -1060,6 +1060,7 @@ export class FuncaoTransacaoFormComponent implements OnInit {
                 this.funcaoTransacaoEmLote.push(new FuncaoTransacao().copyFromJSON(funcaoTransacao));
             });
         }
+        this.carregarModuloSistema();
         this.mostrarDialogEditarEmLote = true;
         this.hideShowQuantidade = true;
         this.arquivosEmLote = [];

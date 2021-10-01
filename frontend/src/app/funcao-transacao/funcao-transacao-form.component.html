@@ -19,16 +19,17 @@
                             <div class="ui-g">
                                 <basis-datatable type="memory" [disableDelete]="this.isView || isOrderning"
                                     [disableEdit]="this.isView || selectButtonMultiple || isOrderning"
-                                    [disableView]="selectButtonMultiple || isOrderning" id="idTabelaFuncaoTransacaoFormFuncaoTransacao"
-                                    [enableButtonsScroll]="true"
+                                    [disableView]="selectButtonMultiple || isOrderning"
+                                    id="idTabelaFuncaoTransacaoFormFuncaoTransacao" [enableButtonsScroll]="true"
                                     [value]="this.funcoesTransacoes" (buttonClick)="datatableClick($event)"
                                     (dblclick)="onRowDblclick($event)" (click)="selectFT($event)" [paginator]="false"
-                                    [reorderableRows]="isOrderning" (onRowReorder)="updateIndex()"
-                                    [rows]="20" [selectionMode]="'multiple'" [filterOnColumn]="true"
+                                    [reorderableRows]="isOrderning" (onRowReorder)="updateIndex()" [rows]="20"
+                                    [selectionMode]="'multiple'" [filterOnColumn]="true"
                                     [rowsPerPageOptions]="[20,50,100]" [showVisibleColumnsControl]="true" #tables>
                                     <p-column header="Ordem" field="ordem">
                                         <ng-template let-col let-funcaoTransacao="rowData" pTemplate="body">
-                                            {{ funcaoTransacao?.ordem ? funcaoTransacao?.ordem : funcoesTransacoes?.indexOf(funcaoTransacao) +1 }}
+                                            {{ funcaoTransacao?.ordem ? funcaoTransacao?.ordem :
+                                            funcoesTransacoes?.indexOf(funcaoTransacao) +1 }}
                                         </ng-template>
                                     </p-column>
                                     <p-column field="nomeModulo" header="Módulo" sortable="true"></p-column>
@@ -58,16 +59,14 @@
                                         class="ui-button-success" icon="add">
                                     </basis-datatable-button>
                                     <basis-datatable-button [allowMultipleSelection]="false" name="clone"
-                                        (click)="clonar()"
-                                        *ngIf="!isView && !isOrderning && !selectButtonMultiple"
+                                        (click)="clonar()" *ngIf="!isView && !isOrderning && !selectButtonMultiple"
                                         [bTooltip]="funcaoTransacaoEditar[0] != undefined ? this.getLabel('Criar Clone') : this.getLabel('Escolha um registro para criar Clone.')"
                                         [disabled]="funcaoTransacaoEditar[0] == undefined" class="ui-button-dark"
                                         icon="content-copy">
                                     </basis-datatable-button>
                                     <basis-datatable-button name="filter" *ngIf="!isView && !isOrderning"
-                                    (click)="this.display=true;"
-                                    bTooltip="Copiar funções de transação." class="ui-button-info"
-                                        icon="import-export">
+                                        (click)="this.display=true;" bTooltip="Copiar funções de transação."
+                                        class="ui-button-info" icon="import-export">
                                     </basis-datatable-button>
                                     <basis-datatable-button name="edicaoLote"
                                         *ngIf="!isView && funcaoTransacaoEditar?.length > 1 && !isOrderning"
@@ -75,36 +74,32 @@
                                         class="ui-button-success" icon="border-color">
                                     </basis-datatable-button>
                                     <basis-datatable-button name="ordernar" (click)="ordernarFuncoes()"
-                                        *ngIf="!isView && !isOrderning"
-                                        bTooltip="Ordernar funções." class="ui-button-success" icon="sort">
+                                        *ngIf="!isView && !isOrderning" bTooltip="Ordernar funções."
+                                        class="ui-button-success" icon="sort">
                                     </basis-datatable-button>
                                     <basis-datatable-button name="refresh" (click)="refreshFuncoes()"
-                                        *ngIf="!isView && isOrderning"
-                                        bTooltip="Ordernar (ID)." class="ui-button-success" icon="refresh">
+                                        *ngIf="!isView && isOrderning" bTooltip="Ordernar (ID)."
+                                        class="ui-button-success" icon="refresh">
                                     </basis-datatable-button>
                                     <basis-datatable-button name="order-up" [bTooltip]="'Mover para cima.'"
-                                        *ngIf="!isView && isOrderning"
-                                        (click)="orderList('order-up')"
+                                        *ngIf="!isView && isOrderning" (click)="orderList('order-up')"
                                         icon="arrow-drop-up">
                                     </basis-datatable-button>
                                     <basis-datatable-button name="order-top" [bTooltip]="'Mover ao topo.'"
-                                        *ngIf="!isView && isOrderning"
-                                        (click)="orderList('order-top')"
+                                        *ngIf="!isView && isOrderning" (click)="orderList('order-top')"
                                         icon="skip-next">
                                     </basis-datatable-button>
                                     <basis-datatable-button name="order-down" [bTooltip]="'Mover para baixo.'"
-                                        *ngIf="!isView && isOrderning"
-                                        (click)="orderList('order-down')"
+                                        *ngIf="!isView && isOrderning" (click)="orderList('order-down')"
                                         icon="arrow-drop-down">
                                     </basis-datatable-button>
                                     <basis-datatable-button style="transform: rotate(-90deg);" name="order-botton"
-                                        *ngIf="!isView && isOrderning"
-                                        (click)="orderList('order-botton')"
+                                        *ngIf="!isView && isOrderning" (click)="orderList('order-botton')"
                                         [bTooltip]="'Mover ao final.'" icon="skip-previous">
                                     </basis-datatable-button>
                                     <basis-datatable-button name="saveOrder" (click)="salvarOrdernacao()"
-                                        *ngIf="!isView && isOrderning"
-                                        bTooltip="Salvar ordenação." class="ui-button-success" icon="save">
+                                        *ngIf="!isView && isOrderning" bTooltip="Salvar ordenação."
+                                        class="ui-button-success" icon="save">
                                     </basis-datatable-button>
                                 </basis-datatable>
                             </div>
@@ -224,8 +219,9 @@
                         <div class="ui-g-6 ui-md-6 ui-sm-12" [hidden]="hideElementTDTR">
                             <h2>FTR (AR)</h2>
                             <div class="ui-g-12" style="padding: 0px">
-                                <app-analise-der-chips [tipoChip]="'ALR'" [idSistema]="this.analise?.sistema?.id" [(values)]="alrsChips" id="idFTRFormFuncaoTransacao"
-                                    [relacionarDers]="true" (dersReferenciadosEvent)="dersReferenciados($event)">
+                                <app-analise-der-chips [tipoChip]="'ALR'" [idSistema]="this.analise?.sistema?.id"
+                                    [(values)]="alrsChips" id="idFTRFormFuncaoTransacao" [relacionarDers]="true"
+                                    (dersReferenciadosEvent)="dersReferenciados($event)">
                                 </app-analise-der-chips>
                             </div>
                             <div class="ui-g-12" style="padding: 0px">
@@ -239,7 +235,9 @@
                         <div class="ui-g-6 ui-md-6 ui-sm-12" [hidden]="hideElementTDTR">
                             <h2>DER (TD)</h2>
                             <div class="ui-g-12" style="padding: 0px">
-                                <app-analise-der-chips [tipoChip]="'DER'" [tipoFuncao]="'FT'" [idSistema]="this.analise?.sistema?.id" id="idDERFormFuncaoTransacao" [(values)]="dersChips">
+                                <app-analise-der-chips [tipoChip]="'DER'" [tipoFuncao]="'FT'"
+                                    [idSistema]="this.analise?.sistema?.id" id="idDERFormFuncaoTransacao"
+                                    [(values)]="dersChips">
                                 </app-analise-der-chips>
                             </div>
                             <div class="ui-g-12" style="padding: 0px">
@@ -255,26 +253,21 @@
                             <label>Evidência</label>
 
                             <span class="md-inputfield">
-                                 <p-editor
-                                         [rows]="3"
-                                         id="idEvidenciaFormFuncaoTransacao"
-                                         [cols]="180"
-                                         [disabled]="isDisabled"
-                                         [formats]="formatsEditor"
-                                         pInputTextarea name="funcaoDadosSustentacao"
-                                         [(ngModel)]="currentFuncaoTransacao.sustantation">
-                                           <!-- Inicio configuração toolbar-->
+                                <p-editor [rows]="3" id="idEvidenciaFormFuncaoTransacao" [cols]="180"
+                                    [disabled]="isDisabled" [formats]="formatsEditor" pInputTextarea
+                                    name="funcaoDadosSustentacao" [(ngModel)]="currentFuncaoTransacao.sustantation">
+                                    <!-- Inicio configuração toolbar-->
                                     <p-header>
                                         <span class="ql-formats">
                                             <select class="ql-header">
-                                              <option value="1">Heading</option>
-                                              <option value="2">Subheading</option>
-                                              <option selected>Normal</option>
+                                                <option value="1">Heading</option>
+                                                <option value="2">Subheading</option>
+                                                <option selected>Normal</option>
                                             </select>
                                             <select class="ql-font">
-                                              <option selected>Sans Serif</option>
-                                              <option value="serif">Serif</option>
-                                              <option value="monospace">Monospace</option>
+                                                <option selected>Sans Serif</option>
+                                                <option value="serif">Serif</option>
+                                                <option value="monospace">Monospace</option>
                                             </select>
                                         </span>
                                         <span class="ql-formats">
@@ -287,8 +280,10 @@
                                             <select class="ql-background"></select>
                                         </span>
                                         <span class="ql-formats">
-                                            <button class="ql-list" value="ordered" aria-label="Ordered List" type="button"></button>
-                                            <button class="ql-list" value="bullet" aria-label="Unordered List" type="button"></button>
+                                            <button class="ql-list" value="ordered" aria-label="Ordered List"
+                                                type="button"></button>
+                                            <button class="ql-list" value="bullet" aria-label="Unordered List"
+                                                type="button"></button>
                                             <select class="ql-align">
                                                 <option selected></option>
                                                 <option value="center"></option>
@@ -298,14 +293,15 @@
                                         </span>
                                         <span class="ql-formats">
                                             <button class="ql-link" aria-label="Insert Link" type="button"></button>
-                                            <button class="ql-code-block" aria-label="Insert Code Block" type="button"></button>
+                                            <button class="ql-code-block" aria-label="Insert Code Block"
+                                                type="button"></button>
                                         </span>
                                         <span class="ql-formats">
                                             <button class="ql-clean" aria-label="Remove Styles" type="button"></button>
                                         </span>
                                     </p-header>
                                     <!-- fim configuração toolbar-->
-                                 </p-editor>
+                                </p-editor>
                             </span>
 
                             <p-fileUpload (onSelect)="onUpload($event)" multiple="multiple" accept="image/*"
@@ -315,7 +311,8 @@
                                     <div *ngIf="currentFuncaoTransacao.files?.length" class="ui-g-12 ui-md-12 ui-sm-12"
                                         style="padding: 0;">
                                         <ul *ngIf="currentFuncaoTransacao.files" style="margin: 0 ;">
-                                            <li *ngFor="let file of currentFuncaoTransacao.files" style="list-style: none;">
+                                            <li *ngFor="let file of currentFuncaoTransacao.files"
+                                                style="list-style: none;">
                                                 <div style="display: flex;">
                                                     <div style="padding: 7px 14px">
                                                         <img style="width: 50px; height: 35px;" [src]="file.safeUrl"
@@ -394,12 +391,12 @@
 <div *ngIf="analise && analise.organizacao && analise.sistema.modulos">
     <p-dialog [header]="this.getLabel('Importa funções de transação')" [(visible)]="display" [style]="{width: '80vw'}"
         [closable]="false">
-        <app-pesquisar-ft [tamanhoLista]="funcoesTransacoes.length+1" ></app-pesquisar-ft>
+        <app-pesquisar-ft [tamanhoLista]="funcoesTransacoes.length+1"></app-pesquisar-ft>
     </p-dialog>
 </div>
 
-<p-dialog [modal]="true" [style]="{width: '55vw'}" [closable]="false" header="Editar em lote" [(visible)]="mostrarDialogEditarEmLote"
-[contentStyle]="{'height': ['windowHeightDialog']}">
+<p-dialog [modal]="true" [style]="{width: '55vw'}" [closable]="false" header="Editar em lote"
+    [(visible)]="mostrarDialogEditarEmLote" [contentStyle]="{'height': ['windowHeightDialog']}" #pDialogEditLote>
 
 
     <div *ngIf="modulos">
@@ -409,7 +406,7 @@
                     <!-- filtro/pesquisa? -->
                     <label>Módulo: </label>
                     <p-dropdown [filter]="true" optionLabel="nome" name="modulo" datakey="id"
-                        [placeholder]="this.getLabel('Selecione')" [options]="modulos"
+                        [appendTo]="pDialogEditLote" [placeholder]="this.getLabel('Selecione')" [options]="modulos"
                         [(ngModel)]="moduloSelecionadoEmLote">
                     </p-dropdown>
                 </div>
@@ -417,7 +414,7 @@
                     <!-- filtro/pesquisa? -->
                     <label>Funcionalidade: </label>
                     <p-dropdown [filter]="true" optionLabel="nome" name="funcionalidade"
-                        [options]="moduloSelecionadoEmLote?.funcionalidades"
+                        [options]="moduloSelecionadoEmLote?.funcionalidades" [appendTo]="pDialogEditLote"
                         [(ngModel)]="funcionalidadeSelecionadaEmLote" [placeholder]="'Selecione a funcionalidade'"
                         [disabled]="!moduloSelecionadoEmLote">
                     </p-dropdown>
@@ -431,8 +428,8 @@
         <div class="ui-g-3 ui-md-12 ui-sm-12">
             <label>Classificação: </label>
             <p-dropdown [filter]="true" [options]="classificacoes" id="idClassificacoesFormEmLoteFuncaoDados"
-                [(ngModel)]="classificacaoEmLote" [placeholder]="this.getLabel('Selecione Classificação')"
-                name="classificacao">
+                [appendTo]="pDialogEditLote" [(ngModel)]="classificacaoEmLote"
+                [placeholder]="this.getLabel('Selecione Classificação')" name="classificacao">
             </p-dropdown>
         </div>
     </div>
@@ -441,14 +438,14 @@
         <div class="ui-g-11 ui-md-11 ui-sm-11">
             <label>Deflator: </label>
             <p-dropdown [filter]="true" [options]="fatoresAjuste" id="idDeflatorFormEmLoteFuncaoDados"
-                [placeholder]="'Selecione um deflator'" name="fatorAjuste" [(ngModel)]="deflatorEmLote"
-                (onChange)="selecionarDeflatorEmLote($event.value)">
+                [appendTo]="pDialogEditLote" [placeholder]="'Selecione um deflator'" name="fatorAjuste"
+                [(ngModel)]="deflatorEmLote" (onChange)="selecionarDeflatorEmLote($event.value)">
             </p-dropdown>
         </div>
         <div class="ui-g-3 ui-md-6 ui-sm-12" [hidden]="hideShowQuantidade">
             <label>Quantidade *</label>
             <input type="number" class="ui-inputtext" min="1" [(ngModel)]="quantidadeEmLote"
-                id="idQuantidadeFormFuncaoDados">
+                [appendTo]="pDialogEditLote" id="idQuantidadeFormFuncaoDados">
         </div>
     </div>
 
@@ -457,7 +454,7 @@
 
         <span class="md-inputfield">
             <p-editor maxlength="5000" [rows]="3" id="idEvidenciaFormFuncaoDados" [cols]="180"
-                [disabled]="isDisabled" pInputTextarea name="funcaoDadosSustentacao"
+                [appendTo]="pDialogEditLote" [disabled]="isDisabled" pInputTextarea name="funcaoDadosSustentacao"
                 [(ngModel)]="evidenciaEmLote">
                 <!-- Inicio configuração toolbar-->
                 <p-header>
@@ -483,10 +480,8 @@
                         <select class="ql-background"></select>
                     </span>
                     <span class="ql-formats">
-                        <button class="ql-list" value="ordered" aria-label="Ordered List"
-                            type="button"></button>
-                        <button class="ql-list" value="bullet" aria-label="Unordered List"
-                            type="button"></button>
+                        <button class="ql-list" value="ordered" aria-label="Ordered List" type="button"></button>
+                        <button class="ql-list" value="bullet" aria-label="Unordered List" type="button"></button>
                         <select class="ql-align">
                             <option selected></option>
                             <option value="center"></option>
@@ -496,8 +491,7 @@
                     </span>
                     <span class="ql-formats">
                         <button class="ql-link" aria-label="Insert Link" type="button"></button>
-                        <button class="ql-code-block" aria-label="Insert Code Block"
-                            type="button"></button>
+                        <button class="ql-code-block" aria-label="Insert Code Block" type="button"></button>
                     </span>
                     <span class="ql-formats">
                         <button class="ql-clean" aria-label="Remove Styles" type="button"></button>
@@ -598,21 +592,17 @@
         <div class="ui-md-12 ui-sm-12">
             <label><b>Evidência: </b></label>
 
-             <div class="ui-g-12 ui-md-12 ui-sm-12">
-                 <span class="md-inputfield">
-                     <p-editor
-                             [rows]="3"
-                             id="idEvidenciaFormFuncaoDados"
-                             [style]="{'height':'auto'}"
-                             [readonly]="true"
-                             pInputTextarea name="funcaoDadosSustentacao"
-                             [(ngModel)]="currentFuncaoTransacao.sustantation">
-                     </p-editor>
-                 </span>
-             </div>
-             <div *ngIf="currentFuncaoTransacao.files?.length" class="ui-g-12 ui-md-12 ui-sm-12">
+            <div class="ui-g-12 ui-md-12 ui-sm-12">
+                <span class="md-inputfield">
+                    <p-editor [rows]="3" id="idEvidenciaFormFuncaoDados" [style]="{'height':'auto'}" [readonly]="true"
+                        pInputTextarea name="funcaoDadosSustentacao" [(ngModel)]="currentFuncaoTransacao.sustantation">
+                    </p-editor>
+                </span>
+            </div>
+            <div *ngIf="currentFuncaoTransacao.files?.length" class="ui-g-12 ui-md-12 ui-sm-12">
                 <ul *ngFor="let file of currentFuncaoTransacao.files">
-                    <li><a  target="_self" href="/api/downloadImage/{{ file?.id }}" [download]="file?.originalName" >{{file?.originalName}}</a></li>
+                    <li><a target="_self" href="/api/downloadImage/{{ file?.id }}"
+                            [download]="file?.originalName">{{file?.originalName}}</a></li>
                 </ul>
             </div>
         </div>
