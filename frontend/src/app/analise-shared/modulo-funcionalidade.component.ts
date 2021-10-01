@@ -381,7 +381,7 @@ export class ModuloFuncionalidadeComponent implements OnInit, OnDestroy {
                 this.sistemaService.find(sistemaId).subscribe((sistemaRecarregado: Sistema) => {
                     this.recarregarSistema(sistemaRecarregado);
                     this.selecionarModulo(moduloId);
-                    this.selecionarFuncionalidadeRecemCriada(funcionalidadeCriada);
+                    // this.selecionarFuncionalidadeRecemCriada(funcionalidadeCriada);
                     this.criarMensagemDeSucessoDaCriacaoDaFuncionalidade(funcionalidadeCriada.nome,
                         this.moduloSelecionado.nome, sistemaRecarregado.nome);
                 });
