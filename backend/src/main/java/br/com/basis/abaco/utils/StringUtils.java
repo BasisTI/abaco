@@ -2,6 +2,8 @@ package br.com.basis.abaco.utils;
 
 import org.apache.commons.io.FilenameUtils;
 
+import java.text.Normalizer;
+
 /**
  * Created by roman on 10/25/17.
  */
@@ -58,5 +60,8 @@ public final class StringUtils {
         return ext.equals(jpg) || ext.equals(png) || ext.equals(bmp) || ext.equals(gif);
     }
 
+    public static String removerAcentos(String str) {
+        return Normalizer.normalize(str, Normalizer.Form.NFD).replaceAll("[^\\p{ASCII}]", "");
+    }
 
 }

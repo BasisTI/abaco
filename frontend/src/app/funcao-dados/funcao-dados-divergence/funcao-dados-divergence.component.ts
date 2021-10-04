@@ -143,6 +143,11 @@ export class FuncaoDadosDivergenceComponent implements OnInit {
 
     @ViewChild(FileUpload) componenteFile: FileUpload;
 
+     //Variável para o p-editor
+     formatsEditor = ["background", "bold", "color", "font", "code", "italic", 
+     "link", "size", "strike", "script", "underline", "blockquote",
+     "header", "indent", "list", "align", "direction", "code-block"]
+
     constructor(
         private analiseSharedDataService: AnaliseSharedDataService,
         private confirmationService: ConfirmationService,

@@ -161,6 +161,11 @@ export class FuncaoTransacaoDivergenceComponent implements OnInit {
     private lastObjectUrl: string;
     @ViewChild(FileUpload) componenteFile: FileUpload;
 
+    //Variável para o p-editor
+    formatsEditor = ["background", "bold", "color", "font", "code", "italic",
+        "link", "size", "strike", "script", "underline", "blockquote",
+        "header", "indent", "list", "align", "direction", "code-block"]
+
 
     constructor(
         private analiseSharedDataService: AnaliseSharedDataService,
@@ -790,7 +795,7 @@ export class FuncaoTransacaoDivergenceComponent implements OnInit {
         this.funcaoDadosService.mod.next(funcaoTransacaoSelecionada.funcionalidade);
         this.analiseSharedDataService.funcaoAnaliseCarregada();
         this.analiseSharedDataService.currentFuncaoTransacao = funcaoTransacaoSelecionada;
-        if(this.analise.metodoContagem !== "ESTIMADA"){
+        if (this.analise.metodoContagem !== "ESTIMADA") {
             this.carregarDerEAlr(funcaoTransacaoSelecionada);
         }
         this.carregarFatorDeAjusteNaEdicao(funcaoTransacaoSelecionada);
@@ -1173,13 +1178,13 @@ export class FuncaoTransacaoDivergenceComponent implements OnInit {
         if (this.deflatorEmLote && this.deflatorEmLote.tipoAjuste === 'UNITARIO' && !this.quantidadeEmLote) {
             return this.pageNotificationService.addErrorMessage("Coloque uma quantidade para o deflator!")
         }
-        if(this.moduloSelecionadoEmLote && !this.funcionalidadeSelecionadaEmLote){
+        if (this.moduloSelecionadoEmLote && !this.funcionalidadeSelecionadaEmLote) {
             return this.pageNotificationService.addErrorMessage("Escolha uma funcionalidade para prosseguir!");
         }
         this.editarCamposEmLote();
         let moduloSelecionado;
-        if(this.moduloSelecionadoEmLote){
-             moduloSelecionado = this.moduloSelecionadoEmLote;
+        if (this.moduloSelecionadoEmLote) {
+            moduloSelecionado = this.moduloSelecionadoEmLote;
         }
         for (let i = 0; i < this.funcaoTransacaoEmLote.length; i++) {
             let funcaoTransacao = this.funcaoTransacaoEmLote[i];
@@ -1188,7 +1193,7 @@ export class FuncaoTransacaoDivergenceComponent implements OnInit {
                 this.analise.metodoContagem, funcaoTransacao, this.analise.contrato.manual);
             this.funcaoTransacaoService.update(funcaoTransacaoCalculada, funcaoTransacao.files?.map(item => item.logo)).subscribe(value => {
                 this.funcoesTransacoes = this.funcoesTransacoes.filter((funcaoTransacao) => (funcaoTransacao.id !== funcaoTransacaoCalculada.id));
-                if(moduloSelecionado){
+                if (moduloSelecionado) {
                     funcaoTransacaoCalculada.funcionalidade.modulo = moduloSelecionado;
                 }
                 this.setFields(funcaoTransacaoCalculada);
@@ -1232,7 +1237,7 @@ export class FuncaoTransacaoDivergenceComponent implements OnInit {
         });
     }
 
-    carregarArquivos(){
+    carregarArquivos() {
         this.currentFuncaoTransacao.files.forEach(file => {
             file.safeUrl = this.sanitizer.bypassSecurityTrustUrl(URL.createObjectURL(Utilitarios.base64toFile(file.logo, "image/png", file.originalName)));
             file.logo = Utilitarios.base64toFile(file.logo, "image/png", file.originalName);
@@ -1252,9 +1257,10 @@ export class FuncaoTransacaoDivergenceComponent implements OnInit {
         uploadFile.safeUrl = this.sanitizer.bypassSecurityTrustUrl(this.lastObjectUrl);
         let num: number = this.currentFuncaoTransacao.files.length + 1
         uploadFile.originalName = "Evidência " + num;
-        uploadFile.logo = new File([event.clipboardData.files[0]], uploadFile.originalName, {type: event.clipboardData.files[0].type});
+        uploadFile.logo = new File([event.clipboardData.files[0]], uploadFile.originalName, { type: event.clipboardData.files[0].type });
         uploadFile.sizeOf = event.clipboardData.files[0].size;
         this.currentFuncaoTransacao.files.push(uploadFile);
+
     }
 
 
@@ -1354,7 +1360,7 @@ export class FuncaoTransacaoDivergenceComponent implements OnInit {
                 func = new FuncaoTransacao().copyFromJSON(funcao);
                 const funcaoTransacao = CalculadoraTransacao.calcular(
                     this.analise.metodoContagem, func, this.analise.contrato.manual);
-                    funcaoTransacao.ordem = index + 1;
+                funcaoTransacao.ordem = index + 1;
                 this.funcaoTransacaoService.update(funcaoTransacao, null).subscribe();
             })
         })
