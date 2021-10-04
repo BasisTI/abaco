@@ -25,11 +25,11 @@ canvas {
     text-indent: 1ch;
 
     &.tipo-campo{
-        background-color: #C8E6C9;
+        background-color: #15C101;
     }
 
     &.tipo-dropdown {
-        background-color: #FFC107;
+        background-color: #ffee02;
     }
 
     &.tipo-incluir {
@@ -41,23 +41,23 @@ canvas {
     }
 
     &.tipo-excluir {
-        background-color: #D2691E;
+        background-color: #f80606;
     }
 
     &.tipo-visualizar {
         background-color: #6495ED;
     }
     &.tipo-exportar {
-        background-color: #BDB76B;
+        background-color: #d2e904;
     }
 
-    &.tipo-radio.button {
+    &.tipo-radiobutton{
 
-        background-color: #91908d;
+        background-color: #EB0089;
     }
 
     &.tipo-checkbox {
-        background-color:#EF7C8E
+        background-color:#e98a98;
     }
 }
 
@@ -71,7 +71,7 @@ canvas {
     width: 50%;
     margin-left: 25%;
     text-indent: 1ch;
-    background-color: #FF5722;
+    background-color: #fba643;
     color: white;
 }
 
@@ -118,7 +118,7 @@ canvas {
     }
 
     &.dropdown {
-        background-color: #FFC300;
+        background-color: #ffee02;
     }
 
     &.incluir {
@@ -130,22 +130,22 @@ canvas {
     }
 
     &.excluir {
-        background-color: #C10101;
+        background-color: #f80606;
     }
 
     &.visualizar {
         background-color: #6495ED;
     }
     &.exportar {
-        background-color: #BDB76B;
+        background-color: #d2e904;
     }
 
     &.radiobutton {
-        background-color: #91908d;
+        background-color: #EB0089;
     }
 
     &.checkbox {
-        background-color:#EF7C8E
+        background-color:#e98a98;
     }
 
 }

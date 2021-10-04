@@ -343,7 +343,7 @@ export class CanvasVisaopfComponent implements OnInit {
         }
 
         if(this.tela.rlrCoordenada){
-            this.ctx.strokeStyle = "#FF5722"
+            this.ctx.strokeStyle = '#fba643'
             this.ctx.strokeRect(this.tela.rlrCoordenada.xmin/this.proporcaoW, this.tela.rlrCoordenada.ymin /this.proporcaoH, (this.tela.rlrCoordenada.xmax - this.tela.rlrCoordenada.xmin )/this.proporcaoW , (this.tela.rlrCoordenada.ymax - this.tela.rlrCoordenada.ymin)/this.proporcaoH)
         }
     }
@@ -351,10 +351,10 @@ export class CanvasVisaopfComponent implements OnInit {
     colorByTipo(tipo){
         switch(tipo.toLowerCase()){
             case "campo":{
-                return '#14f985'
+                return '#15C101'
             }
             case "dropdown":{
-                return'#FFC107'
+                return'#ffee02'
             }
             case "incluir":{
                 return'#73D2FF'
@@ -363,19 +363,19 @@ export class CanvasVisaopfComponent implements OnInit {
                 return'#AD01C1'
             }
             case "excluir":{
-                return'#D2691E'
+                return'#f80606'
             }
             case "visualizar":{
                 return'#6495ED'
             }
             case "exportar":{
-                return'#BDB76B'
+                return'#d2e904'
             }
-            case "radio button":{
-                return'#91908d'
+            case "radiobutton":{
+                return'#EB0089'
             }
             case "checkbox":{
-                return "#EF7C8E"
+                return '#e98a98'
             }
 
         }

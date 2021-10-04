@@ -1,5 +1,6 @@
 package br.com.basis.abaco.domain;
 
+import br.com.basis.abaco.utils.StringUtils;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -47,11 +48,12 @@ public class VwRlr {
         if(vwRlr.nome == null || nome == null) {
             return false;
         }
-        if(Objects.equals(nome, vwRlr.nome) && vwRlr.idSistema != null && idSistema != null){
+        if(Objects.equals(StringUtils.removerAcentos(nome.toLowerCase()), StringUtils.removerAcentos(vwRlr.nome.toLowerCase())) && vwRlr.idSistema != null && idSistema != null){
             return Objects.equals(idSistema, vwRlr.idSistema);
         }
         return false;
     }
+    
 
     @Override
     public int hashCode() {

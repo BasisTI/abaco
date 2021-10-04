@@ -28,9 +28,6 @@ import { BaselineAnalitico } from './../baseline/baseline-analitico.model';
 import { BaselineService } from './../baseline/baseline.service';
 import { Der } from './../der/der.model';
 import { FuncaoTransacao, TipoFuncaoTransacao } from './../funcao-transacao/funcao-transacao.model';
-import { FuncaoDados} from './funcao-dados.model';
-import { FuncaoDadosService } from './funcao-dados.service';
-import { BlockUiService } from '@nuvem/angular-base';
 import { Visaopf } from '../visao-pf/visao-pf.model'
 import { Rlr } from '../rlr/rlr.model';
 import { FuncaoDados, TipoFuncaoDados } from './funcao-dados.model';
