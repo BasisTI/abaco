@@ -804,4 +804,5 @@ export class PesquisarFtComponent implements OnInit {
             this.router.navigate(["analise", analise.id, "edit"]);
         }
     }
+    
 }
