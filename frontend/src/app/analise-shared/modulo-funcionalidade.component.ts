@@ -387,7 +387,6 @@ export class ModuloFuncionalidadeComponent implements OnInit, OnDestroy {
                         this.moduloSelecionado.nome, sistemaRecarregado.nome);
                 });
             });
-
         this.fecharDialogFuncionalidade();
     }
 
