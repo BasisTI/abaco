@@ -24,31 +24,15 @@ import java.util.Objects;
 @AllArgsConstructor
 @NoArgsConstructor
 public class VwAnaliseFD {
-
     @Id
     @Column(name = "id_analise")
     private Long id;
 
-    @Column(name = "numero_os")
-    private String numeroOs;
-
-    @Column(name = "metodo_contagem")
-    private String metodoContagem;
-
-    @Column(name = "pf_total")
-    private String pfTotal;
-
     @Column(name = "pf_ajustado")
     private String pfAjustado;
 
-    @Column(name = "identificador_analise")
-    private String identificadorAnalise;
-
-    @Column(name = "organizacao_nome")
-    private String organizacaoNome;
-
-    @Column(name = "equipe_nome")
-    private String equipeNome;
+    @Column(name = "numero_os")
+    private String numeroOs;
 
     @Column(name = "sistema_nome")
     private String sistemaNome;
@@ -61,4 +45,19 @@ public class VwAnaliseFD {
 
     @Column(name = "funcao_nome")
     private String funcaoNome;
+
+    @Column(name = "metodo_contagem")
+    private String metodoContagem;
+
+    @Column(name = "organizacao_nome")
+    private String organizacaoNome;
+
+    @Column(name = "equipe_nome")
+    private String equipeNome;
+
+    @Column(name = "pf_total")
+    private String pfTotal;
+
+    @Column(name = "identificador_analise")
+    private String identificadorAnalise;
 }
