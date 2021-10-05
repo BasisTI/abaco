@@ -1,6 +1,15 @@
 package br.com.basis.abaco.web.rest;
 
-import br.com.basis.abaco.domain.*;
+import br.com.basis.abaco.domain.Analise;
+import br.com.basis.abaco.domain.Compartilhada;
+import br.com.basis.abaco.domain.FuncaoDados;
+import br.com.basis.abaco.domain.FuncaoTransacao;
+import br.com.basis.abaco.domain.Status;
+import br.com.basis.abaco.domain.TipoEquipe;
+import br.com.basis.abaco.domain.UploadedFile;
+import br.com.basis.abaco.domain.User;
+import br.com.basis.abaco.domain.VwAnaliseFD;
+import br.com.basis.abaco.domain.VwAnaliseFT;
 import br.com.basis.abaco.domain.enumeration.MetodoContagem;
 import br.com.basis.abaco.domain.enumeration.StatusFuncao;
 import br.com.basis.abaco.domain.enumeration.TipoRelatorio;
