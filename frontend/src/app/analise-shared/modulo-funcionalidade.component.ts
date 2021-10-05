@@ -404,8 +404,6 @@ export class ModuloFuncionalidadeComponent implements OnInit, OnDestroy {
     }
 
     private selecionarFuncionalidadeRecemCriada(funcionalidadeCriada: Funcionalidade) {
-        console.log(this.moduloSelecionado);
-        
         for (let index = 0; index < this.moduloSelecionado.funcionalidades.length; index++) {
             const element = this.moduloSelecionado.funcionalidades[index];
             if(element.id == funcionalidadeCriada.id){
