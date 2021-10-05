@@ -378,15 +378,15 @@ export class ModuloFuncionalidadeComponent implements OnInit, OnDestroy {
         // TODO inserir um spinner
         this.funcionalidadeService.create(this.novaFuncionalidade, moduloId)
             .subscribe((funcionalidadeCriada: Funcionalidade) => {
+                this.estadoinicial();
                 this.sistemaService.find(sistemaId).subscribe((sistemaRecarregado: Sistema) => {
                     this.recarregarSistema(sistemaRecarregado);
                     this.selecionarModulo(moduloId);
-                    // this.selecionarFuncionalidadeRecemCriada(funcionalidadeCriada);
+                    this.selecionarFuncionalidadeRecemCriada(funcionalidadeCriada);
                     this.criarMensagemDeSucessoDaCriacaoDaFuncionalidade(funcionalidadeCriada.nome,
                         this.moduloSelecionado.nome, sistemaRecarregado.nome);
                 });
             });
-
         this.fecharDialogFuncionalidade();
     }
 
@@ -404,8 +404,16 @@ export class ModuloFuncionalidadeComponent implements OnInit, OnDestroy {
     }
 
     private selecionarFuncionalidadeRecemCriada(funcionalidadeCriada: Funcionalidade) {
-        this.funcionalidadeSelecionada = _.find(this.moduloSelecionado.funcionalidades,
-            {'id': funcionalidadeCriada.id});
+        console.log(this.moduloSelecionado);
+        
+        for (let index = 0; index < this.moduloSelecionado.funcionalidades.length; index++) {
+            const element = this.moduloSelecionado.funcionalidades[index];
+            if(element.id == funcionalidadeCriada.id){
+                this.funcionalidadeSelecionada = element;
+                this.funcionalidadeSelecionada.modulo = this.moduloSelecionado;
+            }
+        }
+
         this.funcionalidadeSelected(this.funcionalidadeSelecionada);
     }
 
