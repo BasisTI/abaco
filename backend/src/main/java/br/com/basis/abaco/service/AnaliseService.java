@@ -1,41 +1,11 @@
 package br.com.basis.abaco.service;
 
-import br.com.basis.abaco.domain.Alr;
-import br.com.basis.abaco.domain.Analise;
-import br.com.basis.abaco.domain.Compartilhada;
-import br.com.basis.abaco.domain.Contrato;
-import br.com.basis.abaco.domain.Der;
-import br.com.basis.abaco.domain.EsforcoFase;
-import br.com.basis.abaco.domain.FuncaoDados;
-import br.com.basis.abaco.domain.FuncaoDadosVersionavel;
-import br.com.basis.abaco.domain.FuncaoTransacao;
-import br.com.basis.abaco.domain.Manual;
-import br.com.basis.abaco.domain.Organizacao;
-import br.com.basis.abaco.domain.Rlr;
-import br.com.basis.abaco.domain.Sistema;
-import br.com.basis.abaco.domain.Status;
-import br.com.basis.abaco.domain.TipoEquipe;
-import br.com.basis.abaco.domain.User;
-import br.com.basis.abaco.domain.VwAnaliseDivergenteSomaPf;
-import br.com.basis.abaco.domain.VwAnaliseSomaPf;
+import br.com.basis.abaco.domain.*;
 import br.com.basis.abaco.domain.enumeration.MetodoContagem;
 import br.com.basis.abaco.domain.enumeration.StatusFuncao;
 import br.com.basis.abaco.domain.enumeration.TipoFatorAjuste;
 import br.com.basis.abaco.domain.enumeration.TipoFuncaoTransacao;
-import br.com.basis.abaco.repository.AnaliseRepository;
-import br.com.basis.abaco.repository.CompartilhadaRepository;
-import br.com.basis.abaco.repository.ContratoRepository;
-import br.com.basis.abaco.repository.FuncaoDadosRepository;
-import br.com.basis.abaco.repository.FuncaoDadosVersionavelRepository;
-import br.com.basis.abaco.repository.FuncaoTransacaoRepository;
-import br.com.basis.abaco.repository.ManualRepository;
-import br.com.basis.abaco.repository.OrganizacaoRepository;
-import br.com.basis.abaco.repository.SistemaRepository;
-import br.com.basis.abaco.repository.StatusRepository;
-import br.com.basis.abaco.repository.TipoEquipeRepository;
-import br.com.basis.abaco.repository.UserRepository;
-import br.com.basis.abaco.repository.VwAnaliseDivergenteSomaPfRepository;
-import br.com.basis.abaco.repository.VwAnaliseSomaPfRepository;
+import br.com.basis.abaco.repository.*;
 import br.com.basis.abaco.repository.search.AnaliseSearchRepository;
 import br.com.basis.abaco.repository.search.FuncaoDadosSearchRepository;
 import br.com.basis.abaco.repository.search.FuncaoTransacaoSearchRepository;
@@ -125,6 +95,12 @@ public class AnaliseService extends BaseService {
     private FuncaoDadosSearchRepository funcaoDadosSearchRepository;
     @Autowired
     private FuncaoTransacaoSearchRepository funcaoTransacaoSearchRepository;
+
+    @Autowired
+    private VwAnaliseFDRepository vwAnaliseFDRepository;
+
+    @Autowired
+    private VwAnaliseFTRepository vwAnaliseFTRepository;
 
 
     public AnaliseService(AnaliseRepository analiseRepository,
@@ -991,15 +967,12 @@ public class AnaliseService extends BaseService {
         });
     }
 
-    public List<Analise> carregarAnalisesFromFuncao(String nomeFuncao, String nomeModulo, String nomeFuncionalidade, Boolean isFd) {
-        List<Analise> analises;
-        if(isFd){
-            analises = analiseRepository.findAllByFuncoesDados(nomeFuncao, nomeModulo, nomeFuncionalidade);
-        }else{
-            analises = analiseRepository.findAllByFuncoesTransacoes(nomeFuncao, nomeModulo, nomeFuncionalidade);
-        }
-
-        analises.stream().map(analise -> convertToEntity(convertToDto(analise)));
+    public List<VwAnaliseFD> carregarAnalisesFromFuncaoFD(String nomeFuncao, String nomeModulo, String nomeFuncionalidade) {
+        List<VwAnaliseFD> analises = vwAnaliseFDRepository.findAllByFuncaoNomeAndFuncionalidadeNomeAndModuloNome(nomeFuncao, nomeModulo, nomeFuncionalidade);
+        return analises;
+    }
+    public List<VwAnaliseFT> carregarAnalisesFromFuncaoFT(String nomeFuncao, String nomeModulo, String nomeFuncionalidade) {
+        List<VwAnaliseFT> analises = vwAnaliseFTRepository.findAllByFuncaoNomeAndFuncionalidadeNomeAndModuloNome(nomeFuncao, nomeModulo, nomeFuncionalidade);
         return analises;
     }
 }

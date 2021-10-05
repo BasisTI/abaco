@@ -136,7 +136,7 @@ export class PesquisarFtComponent implements OnInit {
     campoDers: string = "";
 
 
-    analisesFromFuncao: Analise[] = [];
+    analisesFromFuncao: any[] = [];
     mostrarDialogPesquisarAnalises: boolean = false;
     headerDialog: String = "";
 
@@ -776,10 +776,17 @@ export class PesquisarFtComponent implements OnInit {
 
     pesquisarAnalises(funcao){
         if(funcao.name && funcao.nomeFuncionalidade && funcao.nomeModulo){
-            this.analiseService.findAnalisesFromFuncao(funcao.name, funcao.nomeModulo, funcao.nomeFuncionalidade, this.isFuncaoDados).subscribe(r => {
-                this.analisesFromFuncao = r;
-                this.abrirDialogPesquisarAnalises(funcao.nomeFuncionalidade+" - "+funcao.name);
-            })
+            if(this.isFuncaoDados){
+                this.analiseService.findAnalisesFromFD(funcao.name, funcao.nomeModulo, funcao.nomeFuncionalidade).subscribe(r => {
+                    this.analisesFromFuncao = r;
+                    this.abrirDialogPesquisarAnalises(funcao.nomeFuncionalidade+" - "+funcao.name);
+                })
+            }else{
+                this.analiseService.findAnalisesFromFT(funcao.name, funcao.nomeModulo, funcao.nomeFuncionalidade).subscribe(r => {
+                    this.analisesFromFuncao = r;
+                    this.abrirDialogPesquisarAnalises(funcao.nomeFuncionalidade+" - "+funcao.name);
+                })
+            }
         }      
     }
 

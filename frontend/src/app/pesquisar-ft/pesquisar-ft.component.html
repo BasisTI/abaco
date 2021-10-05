@@ -174,7 +174,7 @@
             <tr>
                 <th pSortableColumn="organizacao.nome">Organização<p-sortIcon></p-sortIcon>
                     <input class="column-filter-input" (click)="$event.stopPropagation()" pInputText type="text"
-                        (input)="tableFuncao.filter($event.target.value, 'organizacao.nome', 'contains')" />
+                        (input)="tableFuncao.filter($event.target.value, 'organizacaoNome', 'contains')" />
                 </th>
                 <th pSortableColumn="organizacao.nome">Identificador<p-sortIcon></p-sortIcon>
                     <input class="column-filter-input" (click)="$event.stopPropagation()" pInputText type="text"
@@ -186,11 +186,11 @@
                 </th>
                 <th pSortableColumn="equipeResponsavel.nome">Equipe<p-sortIcon></p-sortIcon>
                     <input class="column-filter-input" (click)="$event.stopPropagation()" pInputText type="text"
-                        (input)="tableFuncao.filter($event.target.value, 'equipeResponsavel.nome', 'contains')" />
+                        (input)="tableFuncao.filter($event.target.value, 'equipeNome', 'contains')" />
                 </th>
                 <th pSortableColumn="sistema.nome">Sistema<p-sortIcon></p-sortIcon>
                     <input class="column-filter-input" (click)="$event.stopPropagation()" pInputText type="text"
-                        (input)="tableFuncao.filter($event.target.value, 'sistema.nome', 'contains')" />
+                        (input)="tableFuncao.filter($event.target.value, 'sistemaNome', 'contains')" />
                 </th>
                 <th pSortableColumn="metodoContagem">Método Contagem<p-sortIcon></p-sortIcon>
                 </th>
@@ -206,7 +206,7 @@
         <ng-template pTemplate="body" let-analise>
             <tr class="ui-selectable-row">
                 <td>
-                    {{analise.organizacao.nome}}
+                    {{analise.organizacaoNome}}
                 </td>
                 <td>
                     {{analise.identificadorAnalise}}
@@ -215,10 +215,10 @@
                     {{analise.numeroOs}}
                 </td>
                 <td>
-                    {{analise.equipeResponsavel.nome}}
+                    {{analise.equipeNome}}
                 </td>
                 <td>
-                    {{analise.sistema.nome}}
+                    {{analise.sistemaNome}}
                 </td>
                 <td>
                     {{analise.metodoContagem}}
@@ -227,7 +227,7 @@
                     {{analise.pfTotal}}
                 </td>
                 <td>
-                    {{analise.adjustPFTotal}}
+                    {{analise.pfAjustado}}
                 </td>
                 <td>
                     <button style="text-align:left" (click)="abrirAnalise(analise)" pButton type="button"

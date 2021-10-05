@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+   <changeSet author="basis (generated)" id="1633444423792-1">
+       <createView fullDefinition="false" replaceIfExists="true" viewName="vw_analise_fd">
+           select
+           distinct
+           a.id as id_analise,
+           a.numero_os as numero_os,
+           a.metodo_contagem as metodo_contagem,
+           a.pf_total as pf_total,
+           a.pf_total_adjust as pf_ajustado,
+           a.identificador_analise as identificador_analise,
+           org.nome as organizacao_nome,
+           te.nome as equipe_nome,
+           sis.nome as sistema_nome,
+           m.nome as modulo_nome,
+           fc.nome as funcionalidade_nome,
+           fd.name as funcao_nome
+           from analise a
+           left join organizacao org on a.organizacao_id = org.id
+           left join tipo_equipe te on a.equipe_responsavel_id = te.id
+           left join sistema sis on a.sistema_id = sis.id
+           left join modulo m on m.sistema_id = sis.id
+           left join funcionalidade fc on fc.modulo_id = m.id
+           left join funcao_dados fd on fd.funcionalidade_id = fc.id;
+       </createView>
+   </changeSet>
+   <changeSet author="basis (generated)" id="1633444423792-2">
+       <createView fullDefinition="false" replaceIfExists="true" viewName="vw_analise_ft">
+           select
+           distinct
+           a.id as id_analise,
+           a.numero_os as numero_os,
+           a.metodo_contagem as metodo_contagem,
+           a.pf_total as pf_total,
+           a.pf_total_adjust as pf_ajustado,
+           a.identificador_analise as identificador_analise,
+           org.nome as organizacao_nome,
+           te.nome as equipe_nome,
+           sis.nome as sistema_nome,
+           m.nome as modulo_nome,
+           fc.nome as funcionalidade_nome,
+           ft.name as funcao_nome
+           from analise a
+           left join organizacao org on a.organizacao_id = org.id
+           left join tipo_equipe te on a.equipe_responsavel_id = te.id
+           left join sistema sis on a.sistema_id = sis.id
+           left join modulo m on m.sistema_id = sis.id
+           left join funcionalidade fc on fc.modulo_id = m.id
+           left join funcao_transacao ft on ft.funcionalidade_id = fc.id;
+       </createView>
+   </changeSet>
+
+</databaseChangeLog>

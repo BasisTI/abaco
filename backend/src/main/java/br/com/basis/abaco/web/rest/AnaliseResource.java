@@ -1,13 +1,6 @@
 package br.com.basis.abaco.web.rest;
 
-import br.com.basis.abaco.domain.Analise;
-import br.com.basis.abaco.domain.Compartilhada;
-import br.com.basis.abaco.domain.FuncaoDados;
-import br.com.basis.abaco.domain.FuncaoTransacao;
-import br.com.basis.abaco.domain.Status;
-import br.com.basis.abaco.domain.TipoEquipe;
-import br.com.basis.abaco.domain.UploadedFile;
-import br.com.basis.abaco.domain.User;
+import br.com.basis.abaco.domain.*;
 import br.com.basis.abaco.domain.enumeration.MetodoContagem;
 import br.com.basis.abaco.domain.enumeration.StatusFuncao;
 import br.com.basis.abaco.domain.enumeration.TipoRelatorio;
@@ -792,12 +785,19 @@ public class AnaliseResource {
         return new ResponseEntity(newAnalise, HttpStatus.OK);
     }
 
-    @GetMapping("/analises/fromFuncao/{nomeFuncao}/{nomeModulo}/{nomeFuncionalidade}/{isFd}")
-    public ResponseEntity<List<Analise>> carregarAnalisesFromFuncao(@PathVariable(name = "nomeFuncao")String nomeFuncao,
-                                                                    @PathVariable(name = "nomeModulo")String nomeModulo,
-                                                                    @PathVariable(name = "nomeFuncionalidade")String nomeFuncionalidade,
-                                                                    @PathVariable(name = "isFd")Boolean isFd){
-        List<Analise> analises = analiseService.carregarAnalisesFromFuncao(nomeFuncao, nomeModulo, nomeFuncionalidade, isFd);
+    @GetMapping("/analises/FD/{nomeFuncao}/{nomeModulo}/{nomeFuncionalidade}")
+    public ResponseEntity<List<VwAnaliseFD>> carregarAnalisesFD(@PathVariable(name = "nomeFuncao")String nomeFuncao,
+                                                                @PathVariable(name = "nomeModulo")String nomeModulo,
+                                                                @PathVariable(name = "nomeFuncionalidade")String nomeFuncionalidade){
+        List<VwAnaliseFD> analises = analiseService.carregarAnalisesFromFuncaoFD(nomeFuncao, nomeModulo, nomeFuncionalidade);
+        return new ResponseEntity<>(analises, HttpStatus.OK);
+    }
+
+    @GetMapping("/analises/FT/{nomeFuncao}/{nomeModulo}/{nomeFuncionalidade}")
+    public ResponseEntity<List<VwAnaliseFT>> carregarAnalisesFT(@PathVariable(name = "nomeFuncao")String nomeFuncao,
+                                                                @PathVariable(name = "nomeModulo")String nomeModulo,
+                                                                @PathVariable(name = "nomeFuncionalidade")String nomeFuncionalidade){
+        List<VwAnaliseFT> analises = analiseService.carregarAnalisesFromFuncaoFT(nomeFuncao, nomeModulo, nomeFuncionalidade);
         return new ResponseEntity<>(analises, HttpStatus.OK);
     }
 }
