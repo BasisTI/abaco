@@ -107,7 +107,7 @@
                                 <th *ngIf="metodoContagem == 1" style="text-align: center; width: 9em;"
                                     pSortableColumn="fase.qtdDers">{{campoDers}} <p-sortIcon></p-sortIcon>
                                 </th>
-                                <th style="text-align:left; width: 4em;"></th>
+                                <!-- <th style="text-align:left; width: 4em;"></th> -->
                             </tr>
                         </ng-template>
                         <ng-template pTemplate="body" let-funcao>
@@ -130,10 +130,10 @@
                                 <td *ngIf="metodoContagem == 1" style="text-align: center;">
                                     {{funcao.qtdDers}}/{{funcao.qtdRlrs}}
                                 </td>
-                                <td>
+                                <!-- <td>
                                     <button style="text-align:left" (click)="pesquisarAnalises(funcao)" pButton
                                         type="button" class="green-btn" icon="ui-icon-search"></button>
-                                </td>
+                                </td> -->
                             </tr>
                         </ng-template>
                     </p-table>
