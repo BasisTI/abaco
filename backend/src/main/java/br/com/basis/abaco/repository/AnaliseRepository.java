@@ -63,10 +63,10 @@ public interface AnaliseRepository extends JpaRepository<Analise, Long> {
     Analise reportContagem(@Param("id") Long id);
 
     List<Analise> findAll();
-    
+
     @Query(value = "SELECT a FROM Analise a WHERE a.isDivergence = :divergencia")
     Page<Analise> pesquisarPorDivergencia(@Param("divergencia") Boolean divergencia, Pageable pageable);
-    
+
     List<Analise> findAllBySistema(Sistema sistema);
 
 

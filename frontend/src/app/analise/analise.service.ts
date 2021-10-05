@@ -477,5 +477,10 @@ export class AnaliseService {
         return this.http.post<Analise>(this.resourceUrl+"/carregarAnalise", analise);
     }
 
-
+    findAnalisesFromFD(nomeFuncao: String, nomeModulo: String, nomeFuncionalidade: String): Observable<any[]>{
+        return this.http.get<any[]>(this.resourceUrl+"/FD/"+nomeFuncao+"/"+nomeModulo+"/"+nomeFuncionalidade);
+    }
+    findAnalisesFromFT(nomeFuncao: String, nomeModulo: String, nomeFuncionalidade: String): Observable<any[]>{
+        return this.http.get<any[]>(this.resourceUrl+"/FT/"+nomeFuncao+"/"+nomeModulo+"/"+nomeFuncionalidade);
+    }
 }

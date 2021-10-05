@@ -273,9 +273,8 @@
 
                             <span class="md-inputfield">
                                 <p-editor maxlength="5000" [rows]="3" id="idEvidenciaFormFuncaoDados" [cols]="180"
-                                    [formats]="formatsEditor"
-                                    [disabled]="isDisabled" pInputTextarea name="funcaoDadosSustentacao"
-                                    [(ngModel)]="seletedFuncaoDados.sustantation">
+                                    [formats]="formatsEditor" [disabled]="isDisabled" pInputTextarea
+                                    name="funcaoDadosSustentacao" [(ngModel)]="seletedFuncaoDados.sustantation">
                                     <!-- Inicio configuração toolbar-->
                                     <p-header>
                                         <span class="ql-formats">
@@ -505,7 +504,7 @@
 </p-dialog>
 
 <p-dialog [modal]="true" [style]="{width: '55vw'}" [closable]="false" header="Editar em lote"
-    [(visible)]="mostrarDialogEditarEmLote" [contentStyle]="{'height': ['windowHeightDialog']}">
+    [(visible)]="mostrarDialogEditarEmLote" [contentStyle]="{'height': ['windowHeightDialog']}" #pDialogEditLote>
     <div *ngIf="modulos">
         <div class="ui-g">
             <div class="ui-g-12">
@@ -513,14 +512,14 @@
                     <!-- filtro/pesquisa? -->
                     <label>Módulo: </label>
                     <p-dropdown [filter]="true" optionLabel="nome" name="modulo" datakey="id"
-                        [placeholder]="this.getLabel('Selecione')" [options]="modulos"
+                        [appendTo]="pDialogEditLote" [placeholder]="this.getLabel('Selecione')" [options]="modulos"
                         [(ngModel)]="moduloSelecionadoEmLote">
                     </p-dropdown>
                 </div>
                 <div class="ui-g-6 ui-md-6 ui-sm-12">
                     <!-- filtro/pesquisa? -->
                     <label>Funcionalidade: </label>
-                    <p-dropdown [filter]="true" optionLabel="nome" name="funcionalidade"
+                    <p-dropdown [filter]="true" optionLabel="nome" name="funcionalidade" [appendTo]="pDialogEditLote"
                         [options]="moduloSelecionadoEmLote?.funcionalidades"
                         [(ngModel)]="funcionalidadeSelecionadaEmLote" [placeholder]="'Selecione a funcionalidade'"
                         [disabled]="!moduloSelecionadoEmLote">
@@ -534,8 +533,8 @@
         <div class="ui-g-3 ui-md-12 ui-sm-12">
             <label>Classificação: </label>
             <p-dropdown [filter]="true" [options]="classificacoes" id="idClassificacoesFormEmLoteFuncaoDados"
-                [(ngModel)]="classificacaoEmLote" [placeholder]="this.getLabel('Selecione Classificação')"
-                name="classificacao">
+                [appendTo]="pDialogEditLote" [(ngModel)]="classificacaoEmLote"
+                [placeholder]="this.getLabel('Selecione Classificação')" name="classificacao">
             </p-dropdown>
         </div>
     </div>
@@ -544,15 +543,15 @@
         <div class="ui-g-11 ui-md-11 ui-sm-11">
             <label>Deflator: </label>
             <p-dropdown [filter]="true" [options]="fatoresAjuste" id="idDeflatorFormEmLoteFuncaoDados"
-                [placeholder]="'Selecione um deflator'" name="fatorAjuste" [(ngModel)]="deflatorEmLote"
-                (onChange)="selecionarDeflatorEmLote($event.value)">
+                [appendTo]="pDialogEditLote" [placeholder]="'Selecione um deflator'" name="fatorAjuste"
+                [(ngModel)]="deflatorEmLote" (onChange)="selecionarDeflatorEmLote($event.value)">
             </p-dropdown>
         </div>
 
         <div class="ui-g-3 ui-md-6 ui-sm-12" [hidden]="hideShowQuantidade">
             <label>Quantidade *: </label>
             <input type="number" class="ui-inputtext" min="1" [(ngModel)]="quantidadeEmLote"
-                id="idQuantidadeFormFuncaoDados">
+                 id="idQuantidadeFormFuncaoDados">
         </div>
     </div>
     <div class="ui-g">
@@ -561,7 +560,8 @@
 
             <span class="md-inputfield">
                 <p-editor maxlength="5000" [rows]="3" id="idEvidenciaFormFuncaoDados" [cols]="180"
-                    [disabled]="isDisabled" pInputTextarea name="funcaoDadosSustentacao" [(ngModel)]="evidenciaEmLote">
+                    [appendTo]="pDialogEditLote" [disabled]="isDisabled" pInputTextarea name="funcaoDadosSustentacao"
+                    [(ngModel)]="evidenciaEmLote">
                     <!-- Inicio configuração toolbar-->
                     <p-header>
                         <span class="ql-formats">

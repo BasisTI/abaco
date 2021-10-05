@@ -14,6 +14,7 @@ import { Perfil } from '../perfil/perfil.model';
 
 @Injectable()
 export class UserService {
+    
 
     resourceUrl = environment.apiUrl + '/users/';
 
@@ -100,7 +101,7 @@ export class UserService {
     }
 
     getLoggedUserWithId(): Observable<User> {
-        return this.http.get<User>(this.resourceUrl + '/active-user').pipe(
+        return this.http.get<User>(this.resourceUrl + 'active-user').pipe(
         catchError((error: any) => {
             return this.handlerError(error)}));
     }
@@ -144,7 +145,7 @@ export class UserService {
     }
 
     dropDown(): Observable<User[]> {
-        return this.http.get<User[]>(this.resourceUrl + '/drop-down').pipe(
+        return this.http.get<User[]>(this.resourceUrl + 'drop-down').pipe(
             catchError((error: any) => {
             return this.handlerError(error)}));
     }
@@ -153,5 +154,9 @@ export class UserService {
         return this.http.post<User[]>(this.resourceUrl + 'drop-down/organizacao',organizacoes)
         .pipe(catchError((error: any) => {
             return this.handlerError(error)}));
+    }
+
+    alterarSenha(id: number, novaSenha: String) : Observable<void> {
+        return this.http.post<void>(this.resourceUrl+"alterarSenha/"+id, novaSenha);
     }
 }

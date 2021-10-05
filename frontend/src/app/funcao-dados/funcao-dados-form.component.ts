@@ -1247,6 +1247,7 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
                 this.funcaoDadosEmLote.push(new FuncaoDados().copyFromJSON(funcaoDados));
             });
         }
+        this.carregarModuloSistema();
         this.mostrarDialogEditarEmLote = true;
         this.hideShowQuantidade = true;
     }

@@ -86,9 +86,9 @@ export class OrganizacaoService {
             }));
     }
 
-    searchActiveOrganizations(req?: any): Observable<ResponseWrapper> {
+    searchActiveOrganizations(req?: any): Observable<Organizacao[]> {
         const options = createRequestOption(req);
-        return this.http.get<ResponseWrapper>(this.resourceUrl + '/ativas').pipe(catchError((error: any) => {
+        return this.http.get<Organizacao[]>(this.resourceUrl + '/ativas').pipe(catchError((error: any) => {
             if (error.status === 403) {
                 this.pageNotificationService.addErrorMessage('VoceNaoPossuiPermissao');
                 return Observable.throw(new Error(error.status));

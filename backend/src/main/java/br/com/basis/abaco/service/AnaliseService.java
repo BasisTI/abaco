@@ -17,6 +17,8 @@ import br.com.basis.abaco.domain.Status;
 import br.com.basis.abaco.domain.TipoEquipe;
 import br.com.basis.abaco.domain.User;
 import br.com.basis.abaco.domain.VwAnaliseDivergenteSomaPf;
+import br.com.basis.abaco.domain.VwAnaliseFD;
+import br.com.basis.abaco.domain.VwAnaliseFT;
 import br.com.basis.abaco.domain.VwAnaliseSomaPf;
 import br.com.basis.abaco.domain.enumeration.MetodoContagem;
 import br.com.basis.abaco.domain.enumeration.StatusFuncao;
@@ -35,6 +37,8 @@ import br.com.basis.abaco.repository.StatusRepository;
 import br.com.basis.abaco.repository.TipoEquipeRepository;
 import br.com.basis.abaco.repository.UserRepository;
 import br.com.basis.abaco.repository.VwAnaliseDivergenteSomaPfRepository;
+import br.com.basis.abaco.repository.VwAnaliseFDRepository;
+import br.com.basis.abaco.repository.VwAnaliseFTRepository;
 import br.com.basis.abaco.repository.VwAnaliseSomaPfRepository;
 import br.com.basis.abaco.repository.search.AnaliseSearchRepository;
 import br.com.basis.abaco.repository.search.FuncaoDadosSearchRepository;
@@ -70,6 +74,7 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.sql.Timestamp;
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
@@ -124,6 +129,12 @@ public class AnaliseService extends BaseService {
     private FuncaoDadosSearchRepository funcaoDadosSearchRepository;
     @Autowired
     private FuncaoTransacaoSearchRepository funcaoTransacaoSearchRepository;
+
+    @Autowired
+    private VwAnaliseFDRepository vwAnaliseFDRepository;
+
+    @Autowired
+    private VwAnaliseFTRepository vwAnaliseFTRepository;
 
 
     public AnaliseService(AnaliseRepository analiseRepository,
@@ -546,7 +557,7 @@ public class AnaliseService extends BaseService {
     public void bindAnalise(@RequestBody @Valid Analise analiseUpdate, Analise analise) {
         salvaNovaData(analiseUpdate);
         analise.setNumeroOs(analiseUpdate.getNumeroOs());
-        analise.setEquipeResponsavel(analiseUpdate.getEquipeResponsavel()); 
+        analise.setEquipeResponsavel(analiseUpdate.getEquipeResponsavel());
         analise.setIdentificadorAnalise(analiseUpdate.getIdentificadorAnalise());
         analise.setDataCriacaoOrdemServico(analiseUpdate.getDataCriacaoOrdemServico());
         analise.setMetodoContagem(analiseUpdate.getMetodoContagem());
@@ -988,5 +999,14 @@ public class AnaliseService extends BaseService {
             funcaoDadosRepository.save(funcaoDado);
             funcaoDadosSearchRepository.save(funcaoDado);
         });
+    }
+
+    public List<VwAnaliseFD> carregarAnalisesFromFuncaoFD(String nomeFuncao, String nomeModulo, String nomeFuncionalidade) {
+        List<VwAnaliseFD> analises = vwAnaliseFDRepository.findAllByFuncaoNomeAndFuncionalidadeNomeAndModuloNome(nomeFuncao, nomeModulo, nomeFuncionalidade);
+        return analises;
+    }
+    public List<VwAnaliseFT> carregarAnalisesFromFuncaoFT(String nomeFuncao, String nomeModulo, String nomeFuncionalidade) {
+        List<VwAnaliseFT> analises = vwAnaliseFTRepository.findAllByFuncaoNomeAndFuncionalidadeNomeAndModuloNome(nomeFuncao, nomeModulo, nomeFuncionalidade);
+        return analises;
     }
 }

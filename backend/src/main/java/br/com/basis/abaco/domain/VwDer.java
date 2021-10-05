@@ -1,5 +1,6 @@
 package br.com.basis.abaco.domain;
 
+import br.com.basis.abaco.utils.StringUtils;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -61,7 +62,7 @@ public class VwDer {
         if(idSistemaFD == null && idSistemaFT == null){
             return false;
         }
-        if(Objects.equals(nome, vwDer.nome)){
+        if(Objects.equals(StringUtils.removerAcentos(nome.toLowerCase()), StringUtils.removerAcentos(vwDer.nome.toLowerCase()))){
             if(vwDer.idSistemaFD != null && idSistemaFD != null){
                 return Objects.equals(idSistemaFD, vwDer.idSistemaFD);
             }
