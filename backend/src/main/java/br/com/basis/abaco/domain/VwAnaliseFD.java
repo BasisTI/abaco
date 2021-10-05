@@ -24,7 +24,6 @@ import java.util.Objects;
 @AllArgsConstructor
 @NoArgsConstructor
 public class VwAnaliseFD {
-
     @Id
     @Column(name = "id_analise")
     private Long id;
