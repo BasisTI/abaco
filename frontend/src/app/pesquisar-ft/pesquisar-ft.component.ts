@@ -777,12 +777,12 @@ export class PesquisarFtComponent implements OnInit {
     pesquisarAnalises(funcao){
         if(funcao.name && funcao.nomeFuncionalidade && funcao.nomeModulo){
             if(this.isFuncaoDados){
-                this.analiseService.findAnalisesFromFD(funcao.name, funcao.nomeModulo, funcao.nomeFuncionalidade).subscribe(r => {
+                this.analiseService.findAnalisesFromFD(funcao.name, funcao.nomeModulo, funcao.nomeFuncionalidade, this.analise.sistema.nome, this.analise.equipeResponsavel.nome).subscribe(r => {
                     this.analisesFromFuncao = r;
                     this.abrirDialogPesquisarAnalises(funcao.nomeFuncionalidade+" - "+funcao.name);
                 })
             }else{
-                this.analiseService.findAnalisesFromFT(funcao.name, funcao.nomeModulo, funcao.nomeFuncionalidade).subscribe(r => {
+                this.analiseService.findAnalisesFromFT(funcao.name, funcao.nomeModulo, funcao.nomeFuncionalidade, this.analise.sistema.nome, this.analise.equipeResponsavel.nome).subscribe(r => {
                     this.analisesFromFuncao = r;
                     this.abrirDialogPesquisarAnalises(funcao.nomeFuncionalidade+" - "+funcao.name);
                 })
