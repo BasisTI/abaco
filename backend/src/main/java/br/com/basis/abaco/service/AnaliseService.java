@@ -1001,12 +1001,12 @@ public class AnaliseService extends BaseService {
         });
     }
 
-    public List<VwAnaliseFD> carregarAnalisesFromFuncaoFD(String nomeFuncao, String nomeModulo, String nomeFuncionalidade) {
-        List<VwAnaliseFD> analises = vwAnaliseFDRepository.findAllByFuncaoNomeAndFuncionalidadeNomeAndModuloNome(nomeFuncao, nomeModulo, nomeFuncionalidade);
+    public List<VwAnaliseFD> carregarAnalisesFromFuncaoFD(String nomeFuncao, String nomeModulo, String nomeFuncionalidade, String nomeSistema, String nomeEquipe) {
+        List<VwAnaliseFD> analises = vwAnaliseFDRepository.findAllByFuncao(nomeFuncao, nomeModulo, nomeFuncionalidade, nomeSistema, nomeEquipe);
         return analises;
     }
-    public List<VwAnaliseFT> carregarAnalisesFromFuncaoFT(String nomeFuncao, String nomeModulo, String nomeFuncionalidade) {
-        List<VwAnaliseFT> analises = vwAnaliseFTRepository.findAllByFuncaoNomeAndFuncionalidadeNomeAndModuloNome(nomeFuncao, nomeModulo, nomeFuncionalidade);
+    public List<VwAnaliseFT> carregarAnalisesFromFuncaoFT(String nomeFuncao, String nomeModulo, String nomeFuncionalidade, String nomeSistema, String nomeEquipe) {
+        List<VwAnaliseFT> analises = vwAnaliseFTRepository.findAllByFuncao(nomeFuncao, nomeModulo, nomeFuncionalidade, nomeSistema, nomeEquipe);
         return analises;
     }
 }

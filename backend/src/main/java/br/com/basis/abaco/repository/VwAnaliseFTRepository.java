@@ -11,7 +11,15 @@ import java.util.List;
 @Repository
 public interface VwAnaliseFTRepository extends JpaRepository<VwAnaliseFT, Long> {
 
-    @Query("SELECT vw FROM VwAnaliseFT as vw WHERE vw.funcaoNome = :nomeFuncao AND vw.moduloNome = :nomeModulo AND vw.funcionalidadeNome = :nomeFuncionalidade")
-    List<VwAnaliseFT> findAllByFuncaoNomeAndFuncionalidadeNomeAndModuloNome(@Param("nomeFuncao")String nomeFuncao, @Param("nomeModulo")String nomeModulo, @Param("nomeFuncionalidade")String nomeFuncionalidade);
-
+    @Query("SELECT vw FROM VwAnaliseFT as vw WHERE " +
+        "vw.funcaoNome LIKE :nomeFuncao% AND " +
+        "vw.moduloNome LIKE :nomeModulo% AND " +
+        "vw.funcionalidadeNome LIKE :nomeFuncionalidade% AND " +
+        "vw.sistemaNome LIKE :nomeSistema% AND " +
+        "vw.equipeNome LIKE :nomeEquipe%")
+    List<VwAnaliseFT> findAllByFuncao(@Param("nomeFuncao")String nomeFuncao,
+                                      @Param("nomeModulo")String nomeModulo,
+                                      @Param("nomeFuncionalidade")String nomeFuncionalidade,
+                                      @Param("nomeSistema") String nomeSistema,
+                                      @Param("nomeEquipe") String nomeEquipe);
 }
