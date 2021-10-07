@@ -790,7 +790,6 @@ public class AnaliseResource {
 
         Analise newAnalise = analiseService.carregarAnaliseJson(analise);
         analiseService.carregarDadosJson(newAnalise, analise);
-
         return new ResponseEntity(newAnalise, HttpStatus.OK);
     }
 
@@ -813,7 +812,7 @@ public class AnaliseResource {
         List<VwAnaliseFT> analises = analiseService.carregarAnalisesFromFuncaoFT(nomeFuncao, nomeModulo, nomeFuncionalidade, nomeSistema, nomeEquipe);
         return new ResponseEntity<>(analises, HttpStatus.OK);
     }
-    
+
 }
 
 
