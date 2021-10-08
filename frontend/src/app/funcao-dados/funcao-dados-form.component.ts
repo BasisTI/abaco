@@ -14,9 +14,9 @@ import { DerChipItem } from '../analise-shared/der-chips/der-chip-item';
 import { DerTextParser, ParseResult } from '../analise-shared/der-text/der-text-parser';
 import { ResumoFuncoes } from '../analise-shared/resumo-funcoes';
 import { FatorAjuste } from '../fator-ajuste';
-import { Funcionalidade } from '../funcionalidade/index';
+import { Funcionalidade, FuncionalidadeService } from '../funcionalidade/index';
 import { Manual } from '../manual';
-import { Modulo } from '../modulo';
+import { Modulo, ModuloService } from '../modulo';
 import { ResponseWrapper } from '../shared';
 import { AnaliseSharedDataService } from '../shared/analise-shared-data.service';
 import { FatorAjusteLabelGenerator } from '../shared/fator-ajuste-label-generator';
@@ -145,11 +145,18 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
 
     isOrderning: boolean = false;
 
+    funcionalidades: Funcionalidade[] = [];
+    mostrarDialogAddModulo: boolean = false;
+    mostrarDialogAddFuncionalidade: boolean = false;
+    novoModulo: Modulo = new Modulo();
+    novaFuncionalidade: Funcionalidade = new Funcionalidade();
+    oldModuloId: number;
 
-     //Variável para o p-editor
-     formatsEditor = ["background", "bold", "color", "font", "code", "italic", 
-     "link", "size", "strike", "script", "underline", "blockquote",
-     "header", "indent", "list", "align", "direction", "code-block"]
+
+    //Variável para o p-editor
+    formatsEditor = ["background", "bold", "color", "font", "code", "italic",
+        "link", "size", "strike", "script", "underline", "blockquote",
+        "header", "indent", "list", "align", "direction", "code-block"]
 
     constructor(
         private analiseSharedDataService: AnaliseSharedDataService,
@@ -163,7 +170,8 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
         private router: Router,
         private blockUiService: BlockUiService,
         private sistemaService: SistemaService,
-        private uploadService: UploadService,
+        private funcionalidadeService: FuncionalidadeService,
+        private moduloService: ModuloService,
         sanitizer: DomSanitizer,
     ) {
         this.sanitizer = sanitizer;
@@ -531,15 +539,6 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
         }
     }
 
-    // Funcionalidade Selecionada
-    functionalitySelected(funcionalidade: Funcionalidade) {
-        if (funcionalidade) { // necessario?
-            this.moduloCache = funcionalidade;
-        }
-        this.seletedFuncaoDados.funcionalidade = funcionalidade;
-        this.carregarDadosBaseline();
-    }
-
     multiplos(): Boolean {
         const lstFuncaoDados: FuncaoDados[] = [];
         const lstFuncaoDadosToSave: Observable<any>[] = [];
@@ -633,7 +632,7 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
                 this.seletedFuncaoDados.funcionalidade.id,
                 this.seletedFuncaoDados.funcionalidade.modulo.id).subscribe(value => {
                     if (value === false) {
-                        funcaoDadosCalculada.ordem = this.funcoesDados.length+1;
+                        funcaoDadosCalculada.ordem = this.funcoesDados.length + 1;
                         this.funcaoDadosService.create(funcaoDadosCalculada, this.analise.id, funcaoDadosCalculada.files?.map(item => item.logo)).subscribe(
                             (funcaoDados) => {
                                 this.pageNotificationService.addCreateMsg(funcaoDadosCalculada.name);
@@ -775,6 +774,7 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
         this.dersChips = [];
         this.rlrsChips = [];
         this.componenteFile.files = [];
+        this.oldModuloId = undefined;
     }
 
     limparMensagensErros() {
@@ -1017,6 +1017,12 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
         }
         this.carregarFatorDeAjusteNaEdicao(funcaoDadosSelecionada);
         this.carregarArquivos();
+        this.carregarModuloFuncionalidade(funcaoDadosSelecionada);
+    }
+    carregarModuloFuncionalidade(funcaoDadosSelecionada: FuncaoDados) {
+        //CarregarModulo
+        this.moduloSelected(funcaoDadosSelecionada.funcionalidade.modulo);
+
     }
 
     private carregarFatorDeAjusteNaEdicao(funcaoSelecionada: FuncaoDados) {
@@ -1184,10 +1190,6 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
         this.router.navigate(link);
     }
 
-    moduloSelected(modulo: Modulo) {
-
-    }
-
     showDeflator() {
         if (this.seletedFuncaoDados.fatorAjuste) {
             this.displayDescriptionDeflator = true;
@@ -1210,16 +1212,16 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
             });
     }
     public selectFD(event) {
-        if(event.shiftKey === true){
+        if (event.shiftKey === true) {
             let fim = this.funcoesDados.indexOf(this.tables.selectedRow[0]);
             let inicio = this.funcoesDados.indexOf(this.funcaoDadosEditar[0]);
             this.tables.selectedRow = [];
-            if(inicio < fim){
-                for(let i = inicio; i <= fim; i++){
+            if (inicio < fim) {
+                for (let i = inicio; i <= fim; i++) {
                     this.tables.selectedRow.push(this.funcoesDados[i]);
                 }
-            }else{
-                for(let i = fim; i <= inicio; i++){
+            } else {
+                for (let i = fim; i <= inicio; i++) {
                     this.tables.selectedRow.push(this.funcoesDados[i]);
                 }
             }
@@ -1361,6 +1363,7 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
         this.sistemaService.find(this.analise.sistema.id).subscribe((sistemaRecarregado: Sistema) => {
             this.modulos = sistemaRecarregado.modulos;
             this.analise.sistema = sistemaRecarregado;
+            this.analiseSharedDataService.analise.sistema = sistemaRecarregado;
         });
     }
 
@@ -1534,5 +1537,127 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
         })
         this.pageNotificationService.addSuccessMessage("Ordenação salva com sucesso.");
         this.isOrderning = false;
+    }
+
+    // Funcionalidade Selecionada
+    funcionalidadeSelected(funcionalidade: Funcionalidade) {
+        for (let i = 0; i < this.funcionalidades.length; i++) {
+            const funcionalidadeFor = this.funcionalidades[i];
+            if (funcionalidadeFor.id === funcionalidade.id) {
+                this.seletedFuncaoDados.funcionalidade = funcionalidadeFor;
+                this.seletedFuncaoDados.funcionalidade.modulo = this.seletedFuncaoDados.modulo;
+            }
+        }
+        this.carregarDadosBaseline();
+    }
+
+    moduloSelected(modulo: Modulo) {
+        for (let i = 0; i < this.modulos.length; i++) {
+            const moduloFor = this.modulos[i];
+            if (moduloFor.id === modulo.id) {
+                this.seletedFuncaoDados.modulo = moduloFor;
+            }
+        }
+        this.deselecionaFuncionalidadesSeModuloForDiferente();
+        this.funcionalidadeService.findFuncionalidadesDropdownByModulo(this.seletedFuncaoDados.modulo.id).subscribe((funcionalidades: Funcionalidade[]) => {
+            this.funcionalidades = funcionalidades;
+            this.selecionaFuncionalidadeFromCurrentAnalise(this.seletedFuncaoDados.modulo);
+            this.oldModuloId = modulo.id;
+        });
+    }
+    selecionaFuncionalidadeFromCurrentAnalise(modulo: any) {
+        if (this.seletedFuncaoDados.funcionalidade) {
+            this.funcionalidadeSelected(this.seletedFuncaoDados.funcionalidade);
+        }
+    }
+
+    deselecionaFuncionalidadesSeModuloForDiferente() {
+        if (this.oldModuloId != undefined || this.oldModuloId != null) {
+            if (this.oldModuloId !== this.seletedFuncaoDados.modulo.id) {
+                this.funcionalidades = [];
+                this.seletedFuncaoDados.funcionalidade = undefined;
+            }
+        }
+    }
+    
+    isModuloSelected() {
+        return this.seletedFuncaoDados.modulo != null;
+    }
+
+    private moduloSelecionadoTemFuncionalidade(): boolean {
+        return this.seletedFuncaoDados.modulo.funcionalidades && this.seletedFuncaoDados.modulo.funcionalidades.length > 0;
+    }
+
+    funcionalidadeDropdownPlaceholder() {
+        if (this.isModuloSelected()) {
+            return this.funcionalidadeDropdownPlaceHolderComModuloSelecionado();
+        } else {
+            return this.getLabel('Selecione um Módulo para carregar as Funcionalidades');
+        }
+    }
+
+    private funcionalidadeDropdownPlaceHolderComModuloSelecionado(): string {
+        if (this.moduloSelecionadoTemFuncionalidade()) {
+            return this.getLabel('Selecione uma Funcionalidade');
+        } else {
+            return this.getLabel('Nenhuma Funcionalidade Cadastrada');
+        }
+    }
+    moduloName() {
+        if (this.isModuloSelected()) {
+            return this.seletedFuncaoDados.modulo.nome;
+        }
+    }
+
+    abrirDialogModulo(){
+        this.mostrarDialogAddModulo = true;
+    }
+    abrirDialogFuncionalidade(){
+        this.mostrarDialogAddFuncionalidade = true;
+    }
+    fecharDialogModulo(){
+        this.mostrarDialogAddModulo = false;
+        this.novoModulo = new Modulo();
+    }
+    fecharDialogFuncionalidade(){
+        this.mostrarDialogAddFuncionalidade = false;
+        this.novaFuncionalidade = new Funcionalidade();
+    }
+
+    adicionarModulo(){
+        if (!this.novoModulo.nome) {
+            this.pageNotificationService.addErrorMessage(this.getLabel('Por favor preencher o campo obrigatório!'));
+            return;
+        }
+        this.moduloService.create(this.novoModulo, this.analise.sistema.id).subscribe(moduloCriado => {
+            this.modulos.push(moduloCriado);
+            this.moduloSelected(moduloCriado);
+            this.criarMensagemDeSucessoDaCriacaoDoModulo(moduloCriado.nome, this.analise.sistema.nome);
+            this.fecharDialogModulo();
+            this.carregarModuloSistema();
+        })
+    }
+
+    adicionarFuncionalidade(){
+        if (this.novaFuncionalidade.nome === undefined) {
+            this.pageNotificationService.addErrorMessage(this.getLabel('Por favor preencher o campo obrigatório!'));
+            return;
+        }
+        this.funcionalidadeService.create(this.novaFuncionalidade, this.seletedFuncaoDados.modulo.id).subscribe(funcionalidadeCriada => {
+            this.seletedFuncaoDados.funcionalidade = funcionalidadeCriada;
+            this.moduloSelected(this.seletedFuncaoDados.modulo);
+            this.criarMensagemDeSucessoDaCriacaoDaFuncionalidade(funcionalidadeCriada.nome, this.seletedFuncaoDados.modulo.nome, this.analise.sistema.nome);
+            this.fecharDialogFuncionalidade();
+        })
+    }
+
+    private criarMensagemDeSucessoDaCriacaoDaFuncionalidade(nomeFunc: string, nomeModulo: string, nomeSistema: string) {
+        this.pageNotificationService
+            .addSuccessMessage(`${this.getLabel('Funcionalidade ')} ${nomeFunc} ${this.getLabel(' criado no módulo ')} ${nomeModulo} ${this.getLabel(' do Sistema ')} ${nomeSistema}`);
+    }
+
+    private criarMensagemDeSucessoDaCriacaoDoModulo(nomeModulo: string, nomeSistema: string) {
+        this.pageNotificationService
+            .addSuccessMessage(`${this.getLabel('Módulo ')} ${nomeModulo} ${this.getLabel(' criado para o Sistema')} ${nomeSistema}`);
     }
 }

@@ -227,8 +227,11 @@ export class ModuloFuncionalidadeComponent implements OnInit, OnDestroy {
         const currentFuncionalidade: Funcionalidade = this.currentFuncaoAnalise.funcionalidade;
         if (currentFuncionalidade != null) {
             this.funcionalidadeSelecionada = _.find(this.funcionalidades, {'id': currentFuncionalidade.id});
-            this.funcionalidadeSelecionada.modulo = modulo;
-            this.funcionalidadeSelectedEvent.emit(this.funcionalidadeSelecionada);
+            if(this.funcionalidadeSelecionada != undefined){
+
+                this.funcionalidadeSelecionada.modulo = modulo;
+                this.funcionalidadeSelectedEvent.emit(this.funcionalidadeSelecionada);
+            }
         }
     }
 
@@ -409,6 +412,7 @@ export class ModuloFuncionalidadeComponent implements OnInit, OnDestroy {
             if(element.id == funcionalidadeCriada.id){
                 this.funcionalidadeSelecionada = element;
                 this.funcionalidadeSelecionada.modulo = this.moduloSelecionado;
+                this.funcionalidadeSelecionada.modulo.funcionalidades = [];
             }
         }
 
