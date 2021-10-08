@@ -11,6 +11,7 @@ import {Impacto} from '../analise-shared/impacto-enum';
 import {FuncaoResumivel} from '../analise-shared';
 import { CommentFuncaoTransacao } from './comment.model';
 import { Status } from '../status/status.model';
+import { Modulo } from '../modulo';
 
 export enum TipoFuncaoTransacao {
   'EE' = 'EE',
@@ -50,6 +51,7 @@ export class FuncaoTransacao implements FuncaoResumivel, BaseEntity, FuncaoAnali
     public derValues?: string[],
     public ftrValues?: string[],
     public ders?: Der[],
+    public modulo?: Modulo,
     public impacto?: Impacto,
     public quantidade?: number,
     public statusFuncao?: String,
@@ -128,7 +130,7 @@ export class FuncaoTransacao implements FuncaoResumivel, BaseEntity, FuncaoAnali
       this.complexidade, this.pf, this.analise, this.funcionalidades,
       this.funcionalidade, this.fatorAjuste, this.alrs,
       this.name, this.sustantation, this.der, this.ftr, this.grossPF,
-      this.derValues, this.ftrValues, this.ders, this.impacto, this.quantidade, this.statusFuncao, this.lstDivergenceComments, this.files, this.ordem);
+      this.derValues, this.ftrValues, this.ders, this.modulo, this.impacto, this.quantidade, this.statusFuncao, this.lstDivergenceComments, this.files, this.ordem);
   }
 
 }

@@ -790,25 +790,29 @@ public class AnaliseResource {
 
         Analise newAnalise = analiseService.carregarAnaliseJson(analise);
         analiseService.carregarDadosJson(newAnalise, analise);
-
         return new ResponseEntity(newAnalise, HttpStatus.OK);
     }
 
-    @GetMapping("/analises/FD/{nomeFuncao}/{nomeModulo}/{nomeFuncionalidade}")
+    @GetMapping("/analises/FD/{nomeFuncao}/{nomeModulo}/{nomeFuncionalidade}/{nomeSistema}/{nomeEquipe}")
     public ResponseEntity<List<VwAnaliseFD>> carregarAnalisesFD(@PathVariable(name = "nomeFuncao")String nomeFuncao,
                                                                 @PathVariable(name = "nomeModulo")String nomeModulo,
-                                                                @PathVariable(name = "nomeFuncionalidade")String nomeFuncionalidade){
-        List<VwAnaliseFD> analises = analiseService.carregarAnalisesFromFuncaoFD(nomeFuncao, nomeModulo, nomeFuncionalidade);
+                                                                @PathVariable(name = "nomeFuncionalidade")String nomeFuncionalidade,
+                                                                @PathVariable(name = "nomeSistema") String nomeSistema,
+                                                                @PathVariable(name = "nomeEquipe") String nomeEquipe){
+        List<VwAnaliseFD> analises = analiseService.carregarAnalisesFromFuncaoFD(nomeFuncao, nomeModulo, nomeFuncionalidade, nomeSistema, nomeEquipe);
         return new ResponseEntity<>(analises, HttpStatus.OK);
     }
 
-    @GetMapping("/analises/FT/{nomeFuncao}/{nomeModulo}/{nomeFuncionalidade}")
+    @GetMapping("/analises/FT/{nomeFuncao}/{nomeModulo}/{nomeFuncionalidade}/{nomeSistema}/{nomeEquipe}")
     public ResponseEntity<List<VwAnaliseFT>> carregarAnalisesFT(@PathVariable(name = "nomeFuncao")String nomeFuncao,
                                                                 @PathVariable(name = "nomeModulo")String nomeModulo,
-                                                                @PathVariable(name = "nomeFuncionalidade")String nomeFuncionalidade){
-        List<VwAnaliseFT> analises = analiseService.carregarAnalisesFromFuncaoFT(nomeFuncao, nomeModulo, nomeFuncionalidade);
+                                                                @PathVariable(name = "nomeFuncionalidade")String nomeFuncionalidade,
+                                                                @PathVariable(name = "nomeSistema") String nomeSistema,
+                                                                @PathVariable(name = "nomeEquipe") String nomeEquipe){
+        List<VwAnaliseFT> analises = analiseService.carregarAnalisesFromFuncaoFT(nomeFuncao, nomeModulo, nomeFuncionalidade, nomeSistema, nomeEquipe);
         return new ResponseEntity<>(analises, HttpStatus.OK);
     }
+
 }
 
 
