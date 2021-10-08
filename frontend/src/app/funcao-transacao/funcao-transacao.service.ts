@@ -148,6 +148,9 @@ export class FuncaoTransacaoService {
         const url = `${this.vwFuncaoTransacaoResourceUrl}/${id}`;
         return this.http.get<[]>(url);
     }
+    updateOrdem(funcaoTransacao: FuncaoTransacao) :Observable<void>{
+        return this.http.patch<void>(this.funcaoTransacaoResourceUrl+"/update-ordem", funcaoTransacao);
+    }
 }
 
 enum StatusFunction {

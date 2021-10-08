@@ -1359,14 +1359,8 @@ export class FuncaoTransacaoDivergenceComponent implements OnInit {
 
     salvarOrdernacao() {
         this.funcoesTransacoes.forEach((funcaoTransacao, index) => {
-            this.funcaoTransacaoService.getById(funcaoTransacao.id).subscribe(funcao => {
-                let func: FuncaoTransacao;
-                func = new FuncaoTransacao().copyFromJSON(funcao);
-                const funcaoTransacao = CalculadoraTransacao.calcular(
-                    this.analise.metodoContagem, func, this.analise.contrato.manual);
-                funcaoTransacao.ordem = index + 1;
-                this.funcaoTransacaoService.update(funcaoTransacao, null).subscribe();
-            })
+            funcaoTransacao.ordem = index+1;
+            this.funcaoTransacaoService.updateOrdem(funcaoTransacao).subscribe();
         })
         this.pageNotificationService.addSuccessMessage("Ordenação salva com sucesso.");
         this.isOrderning = false;

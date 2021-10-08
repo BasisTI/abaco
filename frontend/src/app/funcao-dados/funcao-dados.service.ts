@@ -13,10 +13,11 @@ import { Manual } from 'src/app/manual';
 import { Analise } from '../analise';
 import { CommentFuncaoDados } from './comment-funcado-dados.model';
 import { Status } from '../status/status.model';
+import { url } from 'node:inspector';
 
 @Injectable()
 export class FuncaoDadosService {
-
+    
     resourceUrl = environment.apiUrl + '/funcao-dados';
     resourceUrlComment = environment.apiUrl + '/comment/funcao-dados';
     vwresourceUrl = environment.apiUrl + '/vw-funcao-dados';
@@ -236,6 +237,11 @@ export class FuncaoDadosService {
         const url = `${this.resourceUrlPEAnalitico}funcaoDados/estimada/${idSistema}?name=${nome}&idModulo=${idModulo}&idFuncionalidade=${idFuncionalidade}`;
         return this.http.get<[]>(url);
     }
+
+    updateOrdem(funcaoDado: FuncaoDados) :Observable<void>{
+        return this.http.patch<void>(this.resourceUrl+"/update-ordem", funcaoDado);
+    }
+
 }
 enum StatusFunction {
     DIVERGENTE = 'DIVERGENTE',
