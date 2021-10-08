@@ -106,16 +106,66 @@
                             <!-- fim table -->
                         </div>
                     </div>
-                    <p-dialog [closable]="false" [(visible)]="showDialog" [(header)]="textHeader"
+                    <p-dialog [closable]="false" [(visible)]="showDialog" [(header)]="textHeader" #dialogFuncao
                         [contentStyle]="{'height': ['windowHeightDialog']}" [style]="{width: '80vw'}">
+
                         <div *ngIf="showDialog && modulos">
-                            <app-analise-modulo-funcionalidade [(analise)]="analise" [erroModulo]="erroModulo"
-                                [isFuncaoDados]="false" (moduloSelectedEvent)="moduloSelected($event)"
-                                [(funcionalidade)]="currentFuncaoTransacao.funcionalidade"
-                                (funcionalidadeSelectedEvent)="functionalitySelected($event)"
-                                [(modulosSistema)]="modulos">
-                            </app-analise-modulo-funcionalidade>
+                            <div class="ui-g">
+                                <div class="ui-g-12" style="margin-bottom: 05px">
+                                    <div class="ui-g-6 ui-md-6 ui-sm-12">
+                                        <div class="ui-g-10 ui-md-10 ui-sm-10">
+                                            <!-- filtro/pesquisa? -->
+                                            <label>Módulo*</label>
+                                            <p-dropdown [filter]="true" optionLabel="nome" name="modulo" datakey="id"
+                                                [placeholder]="this.getLabel('Selecione um módulo')" [options]="modulos"
+                                                [(ngModel)]="currentFuncaoTransacao.modulo"
+                                                (onChange)="moduloSelected($event.value)">
+                                            </p-dropdown>
+                                            <span class="md-inputfield">
+                                                <div *ngIf="erroModulo"
+                                                    class="ui-message ui-messages-error">
+                                                    Campo Obrigatório.
+                                                </div>
+                                            </span>
+                                        </div>
+
+                                        <div class="ui-g-2 ui-md-2 ui-sm-2">
+                                            <app-blue-button buttonIcon="ui-icon-add" (click)="abrirDialogModulo()">
+                                            </app-blue-button>
+                                        </div>
+                                    </div>
+
+
+                                    <div class="ui-g-6 ui-md-6 ui-sm-12">
+                                        <div class="ui-g-10 ui-md-10 ui-sm-10">
+                                            <!-- filtro/pesquisa? -->
+                                            <label>Funcionalidade *</label>
+                                            <p-dropdown [filter]="true" optionLabel="nome" name="funcionalidade"
+                                                [options]="funcionalidades"
+                                                [(ngModel)]="currentFuncaoTransacao.funcionalidade"
+                                                (onChange)="funcionalidadeSelected($event.value)"
+                                                [placeholder]="funcionalidadeDropdownPlaceholder()"
+                                                [disabled]="!isModuloSelected()">
+                                            </p-dropdown>
+                                            <span class="md-inputfield">
+                                                <div *ngIf="erroModulo"
+                                                    class="ui-message ui-messages-error">
+                                                    Campo Obrigatório.
+                                                </div>
+                                            </span>
+                                        </div>
+
+                                        <div class="ui-g-2 ui-md-2 ui-sm-2">
+                                            <app-blue-button buttonIcon="ui-icon-add"
+                                                (click)="abrirDialogFuncionalidade()"
+                                                [isDisabled]="!isModuloSelected()">
+                                            </app-blue-button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
+
                         <div *ngIf="!isEdit">
                             <div class="ui-g" *ngIf="!showMultiplos">
                                 <div class="ui-g-9">
@@ -615,3 +665,59 @@
         </div>
     </p-footer>
 </p-dialog>
+
+
+<div class="ui-g">
+    <p-dialog [header]="this.getLabel('Módulo')" [(visible)]="mostrarDialogAddModulo" [style]="{width: '50vw'}" [appendTo]="dialogFuncao">
+        <div class="ui-g">
+            <div class="ui-g-12" style="margin-bottom: 05px">
+                <span class="md-inputfield">
+                    <input type="text" name="nomeModulo" [(ngModel)]="novoModulo.nome" pInputText
+                        (keydown.enter)="adicionarModulo()" />
+                    <label>Nome *</label>
+                </span>
+            </div>
+        </div>
+
+        <div class="ui-g ui-md-12" style="justify-content: flex-end">
+            <div class="ui-g-2">
+                <app-white-button [buttonLabel]="this.getLabel('Cancelar')" (click)="fecharDialogModulo()">
+                </app-white-button>
+            </div>
+
+            <div class="ui-g-2">
+                <app-green-button [buttonLabel]="this.getLabel('Salvar')" (click)="adicionarModulo()">
+                </app-green-button>
+            </div>
+        </div>
+
+    </p-dialog>
+
+    <!-- Dialog Funcionalidade -->
+    <p-dialog [header]="this.getLabel('Funcionalidade')" [(visible)]="mostrarDialogAddFuncionalidade" [appendTo]="dialogFuncao"
+        [style]="{width: '50vw'}">
+
+        <div class="ui-g">
+            <div class="ui-g-12" style="margin-bottom: 05px">
+                <span>{{ moduloName() }}</span>
+            </div>
+            <div class="ui-g-12" style="margin-bottom: 05px">
+                <span class="md-inputfield">
+                    <input type="text" name="nomeFuncionalidade" [(ngModel)]="novaFuncionalidade.nome" pInputText />
+                    <label translate="Analise.Analise.Nome*">Nome *</label>
+                </span>
+            </div>
+        </div>
+
+        <div class="ui-g ui-md-12" style="justify-content: flex-end">
+            <div class="ui-g-2">
+                <app-white-button [buttonLabel]="this.getLabel('Cancelar')" (click)="fecharDialogFuncionalidade()">
+                </app-white-button>
+            </div>
+            <div class="ui-g-2">
+                <app-green-button [buttonLabel]="this.getLabel('Salvar')" (click)="adicionarFuncionalidade()">
+                </app-green-button>
+            </div>
+        </div>
+    </p-dialog>
+</div>

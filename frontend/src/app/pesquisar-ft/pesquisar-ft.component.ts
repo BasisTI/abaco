@@ -360,14 +360,14 @@ export class PesquisarFtComponent implements OnInit {
     private recarregarSistema(sistemaRecarregado: Sistema) {
         this.analiseSharedDataService.analise.sistema = sistemaRecarregado;
         this.modulos = sistemaRecarregado.modulos;
-        this.funcionalidades = sistemaRecarregado.modulos[0].funcionalidades
+        this.funcionalidades = sistemaRecarregado.modulos[0].funcionalidades;
     }
 
     private subscribeFuncionalideBaseline() {
         this.funcaoDadosService.dataModd$.subscribe(
             (data: Funcionalidade) => {
                 this.funcionalidades = data.modulo.funcionalidades;
-                this.selecionarModuloBaseline(data.modulo.id, data.id);
+                // this.selecionarModuloBaseline(data.modulo.id, data.id); //Seleciona módulo
             });
     }
 

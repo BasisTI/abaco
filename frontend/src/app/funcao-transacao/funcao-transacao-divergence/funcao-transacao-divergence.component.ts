@@ -6,7 +6,7 @@ import { forkJoin, Observable, Subscription } from 'rxjs';
 import { ResumoFuncoes, CalculadoraTransacao } from 'src/app/analise-shared';
 import { DerChipItem } from 'src/app/analise-shared/der-chips/der-chip-item';
 import { FatorAjuste } from 'src/app/fator-ajuste';
-import { Funcionalidade } from 'src/app/funcionalidade';
+import { Funcionalidade, FuncionalidadeService } from 'src/app/funcionalidade';
 import { FuncaoTransacao, TipoFuncaoTransacao } from '../';
 import { FuncaoDadosService } from '../../funcao-dados/funcao-dados.service';
 import { FuncaoTransacaoService } from '../funcao-transacao.service';
@@ -17,7 +17,7 @@ import { Analise } from '../../analise/analise.model';
 import { MessageUtil } from 'src/app/util/message.util';
 import { DerChipConverter } from 'src/app/analise-shared/der-chips/der-chip-converter';
 import { Der } from 'src/app/der/der.model';
-import { Modulo } from 'src/app/modulo';
+import { Modulo, ModuloService } from 'src/app/modulo';
 import { AnaliseReferenciavel } from 'src/app/analise-shared/analise-referenciavel';
 import { FatorAjusteLabelGenerator } from 'src/app/shared/fator-ajuste-label-generator';
 import { Manual } from 'src/app/manual';
@@ -166,6 +166,13 @@ export class FuncaoTransacaoDivergenceComponent implements OnInit {
         "link", "size", "strike", "script", "underline", "blockquote",
         "header", "indent", "list", "align", "direction", "code-block"]
 
+    funcionalidades: Funcionalidade[] = [];
+    mostrarDialogAddModulo: boolean = false;
+    mostrarDialogAddFuncionalidade: boolean = false;
+    novoModulo: Modulo = new Modulo();
+    novaFuncionalidade: Funcionalidade = new Funcionalidade();
+    oldModuloId: number;
+
 
     constructor(
         private analiseSharedDataService: AnaliseSharedDataService,
@@ -179,6 +186,8 @@ export class FuncaoTransacaoDivergenceComponent implements OnInit {
         private route: ActivatedRoute,
         private blockUiService: BlockUiService,
         private sistemaService: SistemaService,
+        private funcionalidadeService: FuncionalidadeService,
+        private moduloService: ModuloService,
         sanitizer: DomSanitizer
     ) {
         this.sanitizer = sanitizer;
@@ -544,17 +553,6 @@ export class FuncaoTransacaoDivergenceComponent implements OnInit {
         }
     }
 
-
-    // Funcionalidade Selecionada
-    functionalitySelected(funcionalidade: Funcionalidade) {
-        if (!funcionalidade) {
-        } else {
-            this.moduloCache = funcionalidade;
-        }
-        this.currentFuncaoTransacao.funcionalidade = funcionalidade;
-    }
-
-
     adicionar(): boolean {
         const retorno: boolean = this.verifyDataRequire();
 
@@ -704,6 +702,7 @@ export class FuncaoTransacaoDivergenceComponent implements OnInit {
         this.dersChips = [];
         this.alrsChips = [];
         this.componenteFile.files = [];
+        this.oldModuloId = undefined;
     }
 
     limparMensagensErros() {
@@ -800,6 +799,12 @@ export class FuncaoTransacaoDivergenceComponent implements OnInit {
         }
         this.carregarFatorDeAjusteNaEdicao(funcaoTransacaoSelecionada);
         this.carregarArquivos();
+        this.carregarModuloFuncionalidade(funcaoTransacaoSelecionada);
+    }
+    carregarModuloFuncionalidade(funcaoTransacaoSelecionada: FuncaoTransacao) {
+        //CarregarModulo
+        this.moduloSelected(funcaoTransacaoSelecionada.funcionalidade.modulo);
+
     }
 
     private carregarFatorDeAjusteNaEdicao(funcaoSelecionada: FuncaoTransacao) {
@@ -818,9 +823,6 @@ export class FuncaoTransacaoDivergenceComponent implements OnInit {
     private carregarDerEAlr(ft: FuncaoTransacao) {
         this.dersChips = this.loadReference(ft.ders, ft.derValues);
         this.alrsChips = this.loadReference(ft.alrs, ft.ftrValues);
-    }
-
-    moduloSelected(modulo: Modulo) {
     }
 
     private loadReference(referenciaveis: AnaliseReferenciavel[],
@@ -1104,6 +1106,7 @@ export class FuncaoTransacaoDivergenceComponent implements OnInit {
         this.sistemaService.find(this.analise.sistema.id).subscribe((sistemaRecarregado: Sistema) => {
             this.modulos = sistemaRecarregado.modulos;
             this.analise.sistema = sistemaRecarregado;
+            this.analiseSharedDataService.analise.sistema = sistemaRecarregado;
         });
     }
 
@@ -1368,6 +1371,128 @@ export class FuncaoTransacaoDivergenceComponent implements OnInit {
         this.pageNotificationService.addSuccessMessage("Ordenação salva com sucesso.");
         this.isOrderning = false;
         this.resetarEstadoPosSalvar();
+    }
+    
+
+    // Funcionalidade Selecionada
+    funcionalidadeSelected(funcionalidade: Funcionalidade) {
+        for (let i = 0; i < this.funcionalidades.length; i++) {
+            const funcionalidadeFor = this.funcionalidades[i];
+            if (funcionalidadeFor.id === funcionalidade.id) {
+                this.currentFuncaoTransacao.funcionalidade = funcionalidadeFor;
+                this.currentFuncaoTransacao.funcionalidade.modulo = this.currentFuncaoTransacao.modulo;
+            }
+        }
+    }
+
+    moduloSelected(modulo: Modulo) {
+        for (let i = 0; i < this.modulos.length; i++) {
+            const moduloFor = this.modulos[i];
+            if (moduloFor.id === modulo.id) {
+                this.currentFuncaoTransacao.modulo = moduloFor;
+            }
+        }
+        this.deselecionaFuncionalidadesSeModuloForDiferente();
+        this.funcionalidadeService.findFuncionalidadesDropdownByModulo(this.currentFuncaoTransacao.modulo.id).subscribe((funcionalidades: Funcionalidade[]) => {
+            this.funcionalidades = funcionalidades;
+            this.selecionaFuncionalidadeFromCurrentAnalise(this.currentFuncaoTransacao.modulo);
+            this.oldModuloId = modulo.id;
+        });
+    }
+    selecionaFuncionalidadeFromCurrentAnalise(modulo: any) {
+        if (this.currentFuncaoTransacao.funcionalidade) {
+            this.funcionalidadeSelected(this.currentFuncaoTransacao.funcionalidade);
+        }
+    }
+
+    deselecionaFuncionalidadesSeModuloForDiferente() {
+        if (this.oldModuloId != undefined || this.oldModuloId != null) {
+            if (this.oldModuloId !== this.currentFuncaoTransacao.modulo.id) {
+                this.funcionalidades = [];
+                this.currentFuncaoTransacao.funcionalidade = undefined;
+            }
+        }
+    }
+    
+    isModuloSelected() {
+        return this.currentFuncaoTransacao.modulo != null;
+    }
+
+    private moduloSelecionadoTemFuncionalidade(): boolean {
+        return this.currentFuncaoTransacao.modulo.funcionalidades && this.currentFuncaoTransacao.modulo.funcionalidades.length > 0;
+    }
+
+    funcionalidadeDropdownPlaceholder() {
+        if (this.isModuloSelected()) {
+            return this.funcionalidadeDropdownPlaceHolderComModuloSelecionado();
+        } else {
+            return this.getLabel('Selecione um Módulo para carregar as Funcionalidades');
+        }
+    }
+
+    private funcionalidadeDropdownPlaceHolderComModuloSelecionado(): string {
+        if (this.moduloSelecionadoTemFuncionalidade()) {
+            return this.getLabel('Selecione uma Funcionalidade');
+        } else {
+            return this.getLabel('Nenhuma Funcionalidade Cadastrada');
+        }
+    }
+    moduloName() {
+        if (this.isModuloSelected()) {
+            return this.currentFuncaoTransacao.modulo.nome;
+        }
+    }
+
+    abrirDialogModulo(){
+        this.mostrarDialogAddModulo = true;
+    }
+    abrirDialogFuncionalidade(){
+        this.mostrarDialogAddFuncionalidade = true;
+    }
+    fecharDialogModulo(){
+        this.mostrarDialogAddModulo = false;
+        this.novoModulo = new Modulo();
+    }
+    fecharDialogFuncionalidade(){
+        this.mostrarDialogAddFuncionalidade = false;
+        this.novaFuncionalidade = new Funcionalidade();
+    }
+
+    adicionarModulo(){
+        if (!this.novoModulo.nome) {
+            this.pageNotificationService.addErrorMessage(this.getLabel('Por favor preencher o campo obrigatório!'));
+            return;
+        }
+        this.moduloService.create(this.novoModulo, this.analise.sistema.id).subscribe(moduloCriado => {
+            this.modulos.push(moduloCriado);
+            this.moduloSelected(moduloCriado);
+            this.criarMensagemDeSucessoDaCriacaoDoModulo(moduloCriado.nome, this.analise.sistema.nome);
+            this.fecharDialogModulo();
+            this.carregarModuloSistema();
+        })
+    }
+
+    adicionarFuncionalidade(){
+        if (this.novaFuncionalidade.nome === undefined) {
+            this.pageNotificationService.addErrorMessage(this.getLabel('Por favor preencher o campo obrigatório!'));
+            return;
+        }
+        this.funcionalidadeService.create(this.novaFuncionalidade, this.currentFuncaoTransacao.modulo.id).subscribe(funcionalidadeCriada => {
+            this.currentFuncaoTransacao.funcionalidade = funcionalidadeCriada;
+            this.moduloSelected(this.currentFuncaoTransacao.modulo);
+            this.criarMensagemDeSucessoDaCriacaoDaFuncionalidade(funcionalidadeCriada.nome, this.currentFuncaoTransacao.modulo.nome, this.analise.sistema.nome);
+            this.fecharDialogFuncionalidade();
+        })
+    }
+
+    private criarMensagemDeSucessoDaCriacaoDaFuncionalidade(nomeFunc: string, nomeModulo: string, nomeSistema: string) {
+        this.pageNotificationService
+            .addSuccessMessage(`${this.getLabel('Funcionalidade ')} ${nomeFunc} ${this.getLabel(' criado no módulo ')} ${nomeModulo} ${this.getLabel(' do Sistema ')} ${nomeSistema}`);
+    }
+
+    private criarMensagemDeSucessoDaCriacaoDoModulo(nomeModulo: string, nomeSistema: string) {
+        this.pageNotificationService
+            .addSuccessMessage(`${this.getLabel('Módulo ')} ${nomeModulo} ${this.getLabel(' criado para o Sistema')} ${nomeSistema}`);
     }
 }
 
