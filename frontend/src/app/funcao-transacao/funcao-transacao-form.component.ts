@@ -838,7 +838,6 @@ export class FuncaoTransacaoFormComponent implements OnInit {
     carregarModuloFuncionalidade(funcaoTransacaoSelecionada: FuncaoTransacao) {
         //CarregarModulo
         this.moduloSelected(funcaoTransacaoSelecionada.funcionalidade.modulo);
-
     }
 
     private carregarFatorDeAjusteNaEdicao(funcaoSelecionada: FuncaoTransacao) {
