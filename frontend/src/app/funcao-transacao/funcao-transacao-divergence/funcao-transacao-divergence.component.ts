@@ -1367,7 +1367,6 @@ export class FuncaoTransacaoDivergenceComponent implements OnInit {
         this.resetarEstadoPosSalvar();
     }
     
-
     // Funcionalidade Selecionada
     funcionalidadeSelected(funcionalidade: Funcionalidade) {
         for (let i = 0; i < this.funcionalidades.length; i++) {
