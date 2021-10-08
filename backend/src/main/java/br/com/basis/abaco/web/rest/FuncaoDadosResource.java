@@ -21,17 +21,21 @@ import br.com.basis.abaco.service.dto.FuncaoDadoAnaliseDTO;
 import br.com.basis.abaco.service.dto.FuncaoDadoApiDTO;
 import br.com.basis.abaco.service.dto.FuncaoDadosEditDTO;
 import br.com.basis.abaco.service.dto.FuncaoDadosSaveDTO;
+import br.com.basis.abaco.service.dto.FuncaoOrdemDTO;
 import br.com.basis.abaco.service.dto.RlrFdDTO;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
@@ -314,6 +318,17 @@ public class FuncaoDadosResource {
         FuncaoDados result = funcaoDadosRepository.save(funcaoDados);
         FuncaoDadoApiDTO funcaoDadosDTO = getFuncaoDadoApiDTO(result);
         return ResponseUtil.wrapOrNotFound(Optional.ofNullable(funcaoDadosDTO));
+    }
+
+    @PatchMapping("/funcao-dados/update-ordem")
+    public ResponseEntity<Void> updateOrdemFuncao(@RequestBody FuncaoOrdemDTO funcaoOrdemDTO){
+        if(funcaoOrdemDTO != null){
+            log.debug("REST request to update ordem FUNCAO: {}", funcaoOrdemDTO.getId());
+            FuncaoDados funcaoDados = funcaoDadosRepository.findById(funcaoOrdemDTO.getId());
+            funcaoDados.setOrdem(funcaoOrdemDTO.getOrdem());
+            funcaoDadosRepository.save(funcaoDados);
+        }
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
 

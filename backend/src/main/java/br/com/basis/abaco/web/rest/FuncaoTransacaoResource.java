@@ -1,6 +1,50 @@
 package br.com.basis.abaco.web.rest;
 
-import static org.elasticsearch.index.query.QueryBuilders.queryStringQuery;
+import br.com.basis.abaco.domain.Alr;
+import br.com.basis.abaco.domain.Analise;
+import br.com.basis.abaco.domain.Der;
+import br.com.basis.abaco.domain.FuncaoTransacao;
+import br.com.basis.abaco.domain.UploadedFile;
+import br.com.basis.abaco.domain.VwAlr;
+import br.com.basis.abaco.domain.VwDer;
+import br.com.basis.abaco.domain.enumeration.Complexidade;
+import br.com.basis.abaco.domain.enumeration.MetodoContagem;
+import br.com.basis.abaco.domain.enumeration.StatusFuncao;
+import br.com.basis.abaco.repository.AnaliseRepository;
+import br.com.basis.abaco.repository.DerRepository;
+import br.com.basis.abaco.repository.FuncaoTransacaoRepository;
+import br.com.basis.abaco.repository.search.FuncaoTransacaoSearchRepository;
+import br.com.basis.abaco.repository.search.VwAlrSearchRepository;
+import br.com.basis.abaco.repository.search.VwDerSearchRepository;
+import br.com.basis.abaco.service.FuncaoDadosService;
+import br.com.basis.abaco.service.dto.AlrDTO;
+import br.com.basis.abaco.service.dto.DerFtDTO;
+import br.com.basis.abaco.service.dto.FuncaoOrdemDTO;
+import br.com.basis.abaco.service.dto.FuncaoTransacaoAnaliseDTO;
+import br.com.basis.abaco.service.dto.FuncaoTransacaoApiDTO;
+import br.com.basis.abaco.service.dto.FuncaoTransacaoSaveDTO;
+import br.com.basis.abaco.web.rest.util.HeaderUtil;
+import com.codahale.metrics.annotation.Timed;
+import io.github.jhipster.web.util.ResponseUtil;
+import org.jetbrains.annotations.NotNull;
+import org.modelmapper.ModelMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.lang.reflect.InvocationTargetException;
 import java.net.URI;
@@ -13,52 +57,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
-import br.com.basis.abaco.domain.Alr;
-import br.com.basis.abaco.domain.Analise;
-import br.com.basis.abaco.domain.Der;
-import br.com.basis.abaco.domain.FuncaoTransacao;
-import br.com.basis.abaco.domain.UploadedFile;
-import br.com.basis.abaco.domain.VwAlr;
-import br.com.basis.abaco.domain.VwDer;
-import br.com.basis.abaco.domain.enumeration.Complexidade;
-import br.com.basis.abaco.domain.enumeration.MetodoContagem;
-import br.com.basis.abaco.service.FuncaoDadosService;
-import br.com.basis.abaco.service.dto.AlrDTO;
-import br.com.basis.abaco.service.dto.DerFtDTO;
-import br.com.basis.abaco.service.dto.FuncaoTransacaoAnaliseDTO;
-import br.com.basis.abaco.service.dto.FuncaoTransacaoApiDTO;
-import br.com.basis.abaco.service.dto.FuncaoTransacaoSaveDTO;
-import org.jetbrains.annotations.NotNull;
-import org.modelmapper.ModelMapper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RequestPart;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
-
-import com.codahale.metrics.annotation.Timed;
-
-import br.com.basis.abaco.domain.enumeration.StatusFuncao;
-import br.com.basis.abaco.repository.AnaliseRepository;
-import br.com.basis.abaco.repository.DerRepository;
-import br.com.basis.abaco.repository.FuncaoTransacaoRepository;
-import br.com.basis.abaco.repository.UploadedFilesRepository;
-import br.com.basis.abaco.repository.search.FuncaoTransacaoSearchRepository;
-import br.com.basis.abaco.repository.search.VwAlrSearchRepository;
-import br.com.basis.abaco.repository.search.VwDerSearchRepository;
-import br.com.basis.abaco.service.FuncaoTransacaoService;
-import br.com.basis.abaco.web.rest.util.HeaderUtil;
-import io.github.jhipster.web.util.ResponseUtil;
+import static org.elasticsearch.index.query.QueryBuilders.queryStringQuery;
 
 /**
  * REST controller for managing FuncaoTransacao.
@@ -319,6 +318,17 @@ public class FuncaoTransacaoResource {
         funcaoTransacaoRepository.save(funcaoTransacao);
         FuncaoTransacaoApiDTO funcaoDadosDTO = modelMapper.map(funcaoTransacao, FuncaoTransacaoApiDTO.class);
         return ResponseUtil.wrapOrNotFound(Optional.ofNullable(funcaoDadosDTO));
+    }
+
+    @PatchMapping("/funcao-transacaos/update-ordem")
+    public ResponseEntity<Void> updateOrdemFuncao(@RequestBody FuncaoOrdemDTO funcaoOrdemDTO){
+        if(funcaoOrdemDTO != null){
+            log.debug("REST request to update ordem FUNCAO T: {}", funcaoOrdemDTO.getId());
+            FuncaoTransacao funcaoTransacao = funcaoTransacaoRepository.findOne(funcaoOrdemDTO.getId());
+            funcaoTransacao.setOrdem(funcaoOrdemDTO.getOrdem());
+            funcaoTransacaoRepository.save(funcaoTransacao);
+        }
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
 
