@@ -25,7 +25,8 @@
            left join sistema sis on a.sistema_id = sis.id
            left join modulo m on m.sistema_id = sis.id
            left join funcionalidade fc on fc.modulo_id = m.id
-           left join funcao_dados fd on fd.funcionalidade_id = fc.id AND fd.analise_id = a.id;
+           left join funcao_dados fd on fd.funcionalidade_id = fc.id AND fd.analise_id = a.id
+           WHERE a.metodo_contagem = 'DETALHADA';
        </createView>
    </changeSet>
    <changeSet author="basis (generated)" id="1633444423792-2">
@@ -50,7 +51,8 @@
            left join sistema sis on a.sistema_id = sis.id
            left join modulo m on m.sistema_id = sis.id
            left join funcionalidade fc on fc.modulo_id = m.id
-           left join funcao_transacao ft on ft.funcionalidade_id = fc.id AND ft.analise_id = a.id;
+           left join funcao_transacao ft on ft.funcionalidade_id = fc.id AND ft.analise_id = a.id
+           WHERE a.metodo_contagem = 'DETALHADA';
        </createView>
    </changeSet>
 
