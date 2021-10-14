@@ -797,12 +797,5 @@ export class PesquisarFtComponent implements OnInit {
 
     fecharDialogPesquisarAnalises(){
         this.mostrarDialogPesquisarAnalises = false;
-    }
-
-    abrirAnalise(analise){
-        if(analise){
-            this.router.navigate(["analise", analise.id, "edit"]);
-        }
-    }
-    
+    }    
 }
