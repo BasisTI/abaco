@@ -589,6 +589,7 @@ export class PesquisarFtComponent implements OnInit {
                     this.fn = value;
                 });
             }
+            
         } else {
             this.blockUiService.show();
             if (this.metodoContagem === 1) {
