@@ -484,8 +484,6 @@ export class PesquisarFtComponent implements OnInit {
                                 });
                                 this.analiseService.updateSomaPf(this.analise.id).subscribe();
                                 this.blockUiService.hide();
-                                this.selections = [];
-                                
                             });
                     });
                 });
@@ -559,7 +557,6 @@ export class PesquisarFtComponent implements OnInit {
                                 });
                                 this.analiseService.updateSomaPf(this.analise.id).subscribe();
                                 this.blockUiService.hide();
-                                this.selections = [];
                             });
                     });
                 });
@@ -577,6 +574,14 @@ export class PesquisarFtComponent implements OnInit {
                 this.funcaoDadosService.getFuncaoDadosByModuloOrFuncionalidade(this.analise.sistema.id, this.nameSearch, this.moduloSelecionado.id, this.funcionalidadeAtual.id).subscribe(value => {
                     this.blockUiService.hide();
                     this.fn = value;
+                    this.fn.forEach(funcao => {
+                        this.derService.getDersByFuncaoDadosId(funcao.idfuncaodados).subscribe(response => {
+                            funcao.qtdDers = response.length;
+                        })
+                        this.rlrService.getRlrsByFuncaoDadosId(funcao.idfuncaodados).subscribe(response => {
+                            funcao.qtdRlrs = response.length;
+                        })
+                    })
                 });
             } else {
                 this.funcaoDadosService.getFuncaoDadosByModuloOrFuncionalidadeEstimada(this.analise.sistema.id, this.nameSearch, this.moduloSelecionado.id, this.funcionalidadeAtual.id).subscribe(value => {
@@ -590,6 +595,14 @@ export class PesquisarFtComponent implements OnInit {
                 this.funcaoTransacaoService.getFuncaoTransacaoByModuloOrFuncionalidade(this.analise.sistema.id, this.nameSearch, this.moduloSelecionado.id, this.funcionalidadeAtual.id).subscribe(value => {
                     this.blockUiService.hide();
                     this.fn = value;
+                    this.fn.forEach(funcao => {
+                        this.derService.getDersByFuncaoDadosId(funcao.idfuncaodados).subscribe(response => {
+                            funcao.qtdDers = response.length;
+                        })
+                        this.alrService.getAlrsByFuncaoTransacaoId(funcao.idfuncaodados).subscribe(response => {
+                            funcao.qtdRlrs = response.length;
+                        })
+                    })
                 });
             } else {
                 this.funcaoTransacaoService.getFuncaoTransacaoByModuloOrFuncionalidadeEstimada(this.analise.sistema.id, this.nameSearch, this.moduloSelecionado.id, this.funcionalidadeAtual.id).subscribe(value => {
@@ -599,7 +612,6 @@ export class PesquisarFtComponent implements OnInit {
             }
         }
     }
-    
 
     public limparPesquisa() {
         if (this.moduloSelecionado && this.moduloSelecionado.id) {

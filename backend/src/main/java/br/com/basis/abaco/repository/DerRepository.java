@@ -20,6 +20,9 @@ public interface DerRepository extends JpaRepository<Der, Long> {
     @Query(value = "SELECT d FROM Der d  WHERE d.funcaoTransacao.id = :idFuncaoTransacao ORDER BY d.nome")
     List<Der> getDerByFuncaoTransacaoIdDropdown(@Param("idFuncaoTransacao") Long idFuncaoTransacao);
 
+    List<Der> getDerByFuncaoDadosId(Long idFuncaoDados);
+    List<Der> getDerByFuncaoTransacaoId(Long idFuncaoTransacao);
+
     @Query(value = "SELECT distinct d.nome FROM Der d " +
         "WHERE d.funcaoTransacao.funcionalidade.modulo.sistema.id = :idSistema")
     List<String> getDerBySistemaAndFuncaoTransacao(@Param("idSistema") Long idSistema);

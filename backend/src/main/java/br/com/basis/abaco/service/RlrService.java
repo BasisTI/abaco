@@ -66,4 +66,9 @@ public class RlrService {
         });
         return lstRlrsDrop;
     }
+
+    @Transactional(readOnly = true)
+    public List<Rlr> getRlrByFuncaoDados(Long idFuncaoDados){
+        return rlrRepository.getRlrByFuncaoDadosId(idFuncaoDados);
+    }
 }

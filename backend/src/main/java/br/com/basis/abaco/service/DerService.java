@@ -75,6 +75,16 @@ public class DerService {
         return lstDersDrop;
     }
 
+    @Transactional(readOnly = true)
+    public List<Der> getDerByFuncaoDados(Long idFuncaoDados){
+        return derRepository.getDerByFuncaoDadosId(idFuncaoDados);
+    }
+
+    @Transactional(readOnly = true)
+    public List<Der> getDerByFuncaoTransacao(Long idFuncaoTransacao){
+        return derRepository.getDerByFuncaoTransacaoId(idFuncaoTransacao);
+    }
+
     public List<VwDer> bindFilterSearchDersSistemaFuncaoDados(String nome, Long idSistema) {
         QueryBuilder queryBuilderNome = QueryBuilders.boolQuery()
             .must(QueryBuilders.wildcardQuery("nome", "*"+nome+"*"));
