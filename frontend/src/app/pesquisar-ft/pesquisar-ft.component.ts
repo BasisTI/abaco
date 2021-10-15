@@ -484,6 +484,7 @@ export class PesquisarFtComponent implements OnInit {
                                 });
                                 this.analiseService.updateSomaPf(this.analise.id).subscribe();
                                 this.blockUiService.hide();
+                                this.selections = [];
                             });
                     });
                 });
@@ -557,6 +558,7 @@ export class PesquisarFtComponent implements OnInit {
                                 });
                                 this.analiseService.updateSomaPf(this.analise.id).subscribe();
                                 this.blockUiService.hide();
+                                this.selections = [];
                             });
                     });
                 });
