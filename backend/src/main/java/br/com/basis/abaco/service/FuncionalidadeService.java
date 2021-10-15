@@ -62,5 +62,4 @@ public class FuncionalidadeService {
             funcaoTransacaoRepository.save(funcaoTransacaos.get());
         }
     }
-    
 }
