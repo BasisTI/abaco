@@ -15,4 +15,6 @@ import java.util.List;
 public interface AlrRepository extends JpaRepository<Alr, Long> {
     @Query(value = "SELECT a FROM Alr a  WHERE a.funcaoTransacao.id = :idFuncaoTransacao ORDER BY a.nome")
     List<Alr> getAlrByFuncaoTransacaoIdDropdown(@Param("idFuncaoTransacao") Long idFuncaoTransacao);
+
+    List<Alr> getAlrByFuncaoTransacaoId(Long idFuncaoTransacao);
 }

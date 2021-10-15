@@ -67,4 +67,9 @@ public class AlrService {
         });
         return lstAlrDrop;
     }
+
+    @Transactional(readOnly = true)
+    public List<Alr> getAlrByFuncaoTransacao(Long idFuncaoTransacao){
+        return alrRepository.getAlrByFuncaoTransacaoId(idFuncaoTransacao);
+    }
 }

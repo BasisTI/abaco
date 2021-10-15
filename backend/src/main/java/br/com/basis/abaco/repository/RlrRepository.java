@@ -16,4 +16,6 @@ public interface RlrRepository extends JpaRepository<Rlr, Long> {
 
     @Query(value = "SELECT r FROM Rlr r  WHERE r.funcaoDados.id = :idFuncaoDados ORDER BY r.nome")
     List<Rlr> getRlrByFuncaoDadosIdDropdown(@Param("idFuncaoDados") Long idFuncaoDados);
+
+    List<Rlr> getRlrByFuncaoDadosId(Long idFuncaoDados);
 }

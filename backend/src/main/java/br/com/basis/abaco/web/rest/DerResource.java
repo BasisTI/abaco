@@ -174,6 +174,18 @@ public class DerResource {
         return derService.getDerByFuncaoTransacaoIdDropdown(idFuncaoTransacao);
     }
 
+    @GetMapping("/ders/fd/{idFuncaoDados}")
+    public List<Der> getDerByFuncaoDados(@PathVariable Long idFuncaoDados){
+        log.debug("REST request to get ders for funcaoDados {}", idFuncaoDados);
+        return derService.getDerByFuncaoDados(idFuncaoDados);
+    }
+
+    @GetMapping("/ders/ft/{idFuncaoTransacao}")
+    public List<Der> getDerByFuncaoTransacao(@PathVariable Long idFuncaoTransacao){
+        log.debug("REST request to get ders for FuncaoTransacao {}", idFuncaoTransacao);
+        return derService.getDerByFuncaoTransacao(idFuncaoTransacao);
+    }
+
     @GetMapping("/ders/funcao_dados/sistema/{idSistema}")
     @Timed
     public ResponseEntity<List<VwDer>> getDerByNomeSistemaFuncaoDados(@RequestParam("nome") String nome, @PathVariable Long idSistema){

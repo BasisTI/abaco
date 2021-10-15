@@ -21,4 +21,7 @@ export class RlrService {
         return this.http.get<any>(this.resourceUrl + '/drop-down/' + idFuncaoDados);
     }
 
+    getRlrsByFuncaoDadosId(idFuncaoDados: number): Observable<any> {
+        return this.http.get<any>(this.resourceUrl + '/fd/' + idFuncaoDados);
+    }
 }

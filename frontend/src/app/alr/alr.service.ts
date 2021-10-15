@@ -21,4 +21,7 @@ export class AlrService {
         return this.http.get<any>(this.resourceUrl + '/drop-down/' + idFuncaoTransacao);
     }
 
+    getAlrsByFuncaoTransacaoId(idFuncaoTransacao: number): Observable<any> {
+        return this.http.get<any>(this.resourceUrl + '/ft/' + idFuncaoTransacao);
+    }
 }

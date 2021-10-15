@@ -173,4 +173,10 @@ public class RlrResource {
         return rlrService.getRlrByFuncaoDadosIdDropdown(idFuncaoDados);
     }
 
+    @GetMapping("/rlrs/fd/{idFuncaoDados}")
+    @Timed
+    public List<Rlr> getRlrByFuncaoDados(@PathVariable Long idFuncaoDados) {
+        log.debug("REST request to get Rlrs for FuncaoDados {}", idFuncaoDados);
+        return rlrService.getRlrByFuncaoDados(idFuncaoDados);
+    }
 }

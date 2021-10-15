@@ -23,9 +23,7 @@
            fdt.id_funcionalidade,
            fdt.nome_funcionalidade,
            fdt.id_modulo,
-           fdt.nome_modulo,
-           fdt.qtd_ders,
-           fdt.qtd_rlrs
+           fdt.nome_modulo
            FROM ( SELECT 'fd'::text AS tipo,
            c.tipo AS classificacao,
            c.impacto,
@@ -43,9 +41,7 @@
            fc.id AS id_funcionalidade,
            fc.nome AS nome_funcionalidade,
            m.id AS id_modulo,
-           m.nome AS nome_modulo,
-           (SELECT count(id) FROM DER WHERE funcao_dados_id = c.id) as qtd_ders,
-           (SELECT count(id) FROM RLR WHERE funcao_dados_id = c.id) as qtd_rlrs
+           m.nome AS nome_modulo
            FROM analise a
            JOIN sistema b ON a.sistema_id = b.id
            JOIN funcao_dados c ON c.analise_id = a.id
@@ -77,9 +73,7 @@
            fc.id AS id_funcionalidade,
            fc.nome AS nome_funcionalidade,
            m.id AS id_modulo,
-           m.nome AS nome_modulo,
-           (SELECT count(id) FROM DER WHERE funcao_transacao_id = c.id) as qtd_ders,
-           (SELECT count(id) FROM ALR WHERE funcao_transacao_id = c.id) as qtd_rlrs
+           m.nome AS nome_modulo
            FROM analise a
            JOIN sistema b ON a.sistema_id = b.id
            JOIN funcao_transacao c ON c.analise_id = a.id

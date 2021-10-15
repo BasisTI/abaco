@@ -28,4 +28,13 @@ export class DerService {
     getDersFuncaoTransacaoByNomeSistema(nome: string, idSistema: number): Observable<Der[]>{
         return this.http.get<Der[]>(this.resourceUrl + "/funcao_transacao/sistema/"+ idSistema + "?nome="+nome);
     }
+
+    
+    getDersByFuncaoDadosId(idFuncaoDados: number): Observable<any> {
+        return this.http.get<any>(this.resourceUrl + '/fd/' + idFuncaoDados);
+    }
+
+    getDersByFuncaoTransacaoId(idFuncaoTransacao: number): Observable<any> {
+        return this.http.get<any>(this.resourceUrl + '/ft/' + idFuncaoTransacao);
+    }
 }
