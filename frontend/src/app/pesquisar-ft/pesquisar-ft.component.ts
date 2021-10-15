@@ -577,14 +577,6 @@ export class PesquisarFtComponent implements OnInit {
                 this.funcaoDadosService.getFuncaoDadosByModuloOrFuncionalidade(this.analise.sistema.id, this.nameSearch, this.moduloSelecionado.id, this.funcionalidadeAtual.id).subscribe(value => {
                     this.blockUiService.hide();
                     this.fn = value;
-                    this.fn.forEach(funcao => {
-                        this.derService.dropDownByFuncaoDadosId(funcao.idfuncaodados).subscribe(response => {
-                            funcao.qtdDers = response.length;
-                        })
-                        this.rlrService.dropDownByFuncaoDadosId(funcao.idfuncaodados).subscribe(response => {
-                            funcao.qtdRlrs = response.length;
-                        })
-                    })
                 });
             } else {
                 this.funcaoDadosService.getFuncaoDadosByModuloOrFuncionalidadeEstimada(this.analise.sistema.id, this.nameSearch, this.moduloSelecionado.id, this.funcionalidadeAtual.id).subscribe(value => {
@@ -598,14 +590,6 @@ export class PesquisarFtComponent implements OnInit {
                 this.funcaoTransacaoService.getFuncaoTransacaoByModuloOrFuncionalidade(this.analise.sistema.id, this.nameSearch, this.moduloSelecionado.id, this.funcionalidadeAtual.id).subscribe(value => {
                     this.blockUiService.hide();
                     this.fn = value;
-                    this.fn.forEach(funcao => {
-                        this.derService.dropDownByFuncaoTransacaoId(funcao.idfuncaodados).subscribe(response => {
-                            funcao.qtdDers = response.length;
-                        })
-                        this.alrService.dropDownByFuncaoTransacaoId(funcao.idfuncaodados).subscribe(response => {
-                            funcao.qtdRlrs = response.length;
-                        })
-                    })
                 });
             } else {
                 this.funcaoTransacaoService.getFuncaoTransacaoByModuloOrFuncionalidadeEstimada(this.analise.sistema.id, this.nameSearch, this.moduloSelecionado.id, this.funcionalidadeAtual.id).subscribe(value => {
@@ -615,6 +599,7 @@ export class PesquisarFtComponent implements OnInit {
             }
         }
     }
+    
 
     public limparPesquisa() {
         if (this.moduloSelecionado && this.moduloSelecionado.id) {
