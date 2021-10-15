@@ -54,14 +54,13 @@ public class FuncionalidadeService {
                 funcao.setFuncionalidade(funcionalidadeMigrar);
             });
             funcaoDadosRepository.save(funcaoDados.get());
-            funcaoDadosSearchRepository.save(funcaoDados.get());
         }
         if(funcaoTransacaos.isPresent()){
             funcaoTransacaos.get().forEach(funcao -> {
                 funcao.setFuncionalidade(funcionalidadeMigrar);
             });
             funcaoTransacaoRepository.save(funcaoTransacaos.get());
-            funcaoTransacaoSearchRepository.save((funcaoTransacaos.get()));
         }
     }
+    
 }
