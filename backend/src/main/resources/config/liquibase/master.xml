@@ -36,5 +36,5 @@
     <include file="classpath:config/liquibase/changelog/20210902161910_reajustar_pe_analitico.xml" relativeToChangelogFile="false"/>
     <include file="classpath:config/liquibase/changelog/20210921015831_add_permissao_alterar_senha.xml" relativeToChangelogFile="false"/>
     <include file="classpath:config/liquibase/changelog/20211005143334_add_view_analise_funcoes.xml" relativeToChangelogFile="false"/>
-    <include file="classpath:config/liquibase/changelog/20211018162654_reajuste_pe_analitico.xml" relativeToChangelogFile="false"/>
+    
 </databaseChangeLog>
