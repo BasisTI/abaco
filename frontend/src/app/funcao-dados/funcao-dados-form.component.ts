@@ -1469,7 +1469,6 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
     }
 
     public orderList(botao: String) {
-
         let i;
         let del;
 
@@ -1516,8 +1515,8 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
             this.funcoesDados.splice(del, 1);
             this.funcoesDados.push(this.funcaoDadosEditar[0]);
         }
-
         this.updateIndex()
+        
     }
 
     ordernarFuncoes() {
@@ -1526,14 +1525,8 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
 
     salvarOrdernacao() {
         this.funcoesDados.forEach((funcaoDado, index) => {
-            this.funcaoDadosService.getById(funcaoDado.id).subscribe(funcao => {
-                let func: FuncaoDados;
-                func = new FuncaoDados().copyFromJSON(funcao);
-                const funcaoDadosCalculada = Calculadora.calcular(
-                    this.analise.metodoContagem, func, this.analise.contrato.manual);
-                funcaoDadosCalculada.ordem = index + 1;
-                this.funcaoDadosService.update(funcaoDadosCalculada, null).subscribe();
-            })
+            funcaoDado.ordem = index+1;
+            this.funcaoDadosService.updateOrdem(funcaoDado).subscribe();
         })
         this.pageNotificationService.addSuccessMessage("Ordenação salva com sucesso.");
         this.isOrderning = false;

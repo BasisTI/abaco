@@ -171,7 +171,14 @@ public class AlrResource {
     @GetMapping("/alrs/drop-down/{idFuncaoTransacao}")
     @Timed
     public List<DropdownDTO> getAlrByFuncaoTransacaoIdDropdown(@PathVariable Long idFuncaoTransacao) {
-        log.debug("REST request to get dropdown Alr for FuncaoDados {}", idFuncaoTransacao);
+        log.debug("REST request to get dropdown Alr for FuncaoTransacao {}", idFuncaoTransacao);
         return alrService.getAlrByFuncaoTransacaoIdDropdown(idFuncaoTransacao);
+    }
+
+    @GetMapping("/alrs/ft/{idFuncaoTransacao}")
+    @Timed
+    public List<Alr> getAlrByFuncaoTransacao(@PathVariable Long idFuncaoTransacao) {
+        log.debug("REST request to get dropdown Alr for FuncaoTransacao {}", idFuncaoTransacao);
+        return alrService.getAlrByFuncaoTransacao(idFuncaoTransacao);
     }
 }

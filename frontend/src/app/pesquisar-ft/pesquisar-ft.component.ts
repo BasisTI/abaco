@@ -575,10 +575,10 @@ export class PesquisarFtComponent implements OnInit {
                     this.blockUiService.hide();
                     this.fn = value;
                     this.fn.forEach(funcao => {
-                        this.derService.dropDownByFuncaoDadosId(funcao.idfuncaodados).subscribe(response => {
+                        this.derService.getDersByFuncaoDadosId(funcao.idfuncaodados).subscribe(response => {
                             funcao.qtdDers = response.length;
                         })
-                        this.rlrService.dropDownByFuncaoDadosId(funcao.idfuncaodados).subscribe(response => {
+                        this.rlrService.getRlrsByFuncaoDadosId(funcao.idfuncaodados).subscribe(response => {
                             funcao.qtdRlrs = response.length;
                         })
                     })
@@ -589,6 +589,7 @@ export class PesquisarFtComponent implements OnInit {
                     this.fn = value;
                 });
             }
+            
         } else {
             this.blockUiService.show();
             if (this.metodoContagem === 1) {
@@ -596,10 +597,10 @@ export class PesquisarFtComponent implements OnInit {
                     this.blockUiService.hide();
                     this.fn = value;
                     this.fn.forEach(funcao => {
-                        this.derService.dropDownByFuncaoTransacaoId(funcao.idfuncaodados).subscribe(response => {
+                        this.derService.getDersByFuncaoDadosId(funcao.idfuncaodados).subscribe(response => {
                             funcao.qtdDers = response.length;
                         })
-                        this.alrService.dropDownByFuncaoTransacaoId(funcao.idfuncaodados).subscribe(response => {
+                        this.alrService.getAlrsByFuncaoTransacaoId(funcao.idfuncaodados).subscribe(response => {
                             funcao.qtdRlrs = response.length;
                         })
                     })
@@ -797,12 +798,5 @@ export class PesquisarFtComponent implements OnInit {
 
     fecharDialogPesquisarAnalises(){
         this.mostrarDialogPesquisarAnalises = false;
-    }
-
-    abrirAnalise(analise){
-        if(analise){
-            this.router.navigate(["analise", analise.id, "edit"]);
-        }
-    }
-    
+    }    
 }

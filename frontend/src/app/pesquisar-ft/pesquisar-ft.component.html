@@ -197,8 +197,8 @@
                     {{analise.pfAjustado}}
                 </td>
                 <td>
-                    <button style="text-align:left" (click)="abrirAnalise(analise)" pButton type="button"
-                        class="blue-btn" icon="ui-icon-arrowstop-1-e"></button>
+                    <a target="_blank" [routerLink]="'/analise/'+analise.id+'/edit'" style="text-align:left" pButton type="button"
+                        class="blue-btn" icon="ui-icon-arrowstop-1-e"></a>
                 </td>
             </tr>
         </ng-template>
