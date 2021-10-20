@@ -84,7 +84,7 @@ export class SistemaFormComponent implements OnInit, OnDestroy {
                         this.sistema = Sistema.fromJSON(sistema);
                         this.listModulos = Sistema.fromJSON(sistema).modulos;
                         this.blockUiService.hide();
-                });
+                    });
             }
         });
     }
@@ -154,9 +154,9 @@ export class SistemaFormComponent implements OnInit, OnDestroy {
                     this.moduloEmEdicao = new Modulo();
                 } else {
                     this.pageNotificationService.addErrorMessage('O '
-                            + this.moduloEmEdicao.nome
-                            + ' não pode ser excluído porque existem funcionalidades atribuídas.'
-                        );
+                        + this.moduloEmEdicao.nome
+                        + ' não pode ser excluído porque existem funcionalidades atribuídas.'
+                    );
                 }
             }
         });
@@ -194,6 +194,12 @@ export class SistemaFormComponent implements OnInit, OnDestroy {
             this.valido = true;
             this.pageNotificationService.addErrorMessage('Por favor preencher o campo obrigatório!');
             return;
+        }
+        for(let modulo of this.sistema.modulos){
+            if (modulo.nome === this.novoModulo.nome) {
+                this.valido = true;
+                return this.pageNotificationService.addErrorMessage('Nome de módulo já existente!');
+            }
         }
         this.valido = false;
         this.sistema.addModulo(this.novoModulo);
@@ -260,7 +266,7 @@ export class SistemaFormComponent implements OnInit, OnDestroy {
                     if (totalFuncoes <= 0) {
                         this.confirmationService.confirm({
                             message: 'Tem certeza que deseja excluir a funcionalidade ' + this.funcionalidadeEmEdicao.nome +
-                             ' do módulo ' + this.funcionalidadeEmEdicao.modulo.nome + ' ?',
+                                ' do módulo ' + this.funcionalidadeEmEdicao.modulo.nome + ' ?',
                             accept: () => {
                                 this.sistema.deleteFuncionalidade(this.funcionalidadeEmEdicao);
                                 this.moduloEmEdicao = new Modulo();
@@ -281,7 +287,7 @@ export class SistemaFormComponent implements OnInit, OnDestroy {
         } else {
             this.confirmationService.confirm({
                 message: 'Tem certeza que deseja excluir a funcionalidade ' + this.funcionalidadeEmEdicao.nome +
-                 ' do módulo ' + this.funcionalidadeEmEdicao.modulo.nome + ' ?',
+                    ' do módulo ' + this.funcionalidadeEmEdicao.modulo.nome + ' ?',
                 accept: () => {
                     this.sistema.deleteFuncionalidade(this.funcionalidadeEmEdicao);
                     this.moduloEmEdicao = new Modulo();
@@ -418,7 +424,7 @@ export class SistemaFormComponent implements OnInit, OnDestroy {
 
             switch (error.status) {
                 case 404: {
-                    this.pageNotificationService.addErrorMessage('Campos inválidos: ' +  error['body']);
+                    this.pageNotificationService.addErrorMessage('Campos inválidos: ' + error['body']);
                     break;
                 }
                 default: {
@@ -430,33 +436,33 @@ export class SistemaFormComponent implements OnInit, OnDestroy {
     }
 
 
-    abrirDialogMigrarFuncionalidade(){
+    abrirDialogMigrarFuncionalidade() {
         this.mostrarDialogMigrarFuncionalidade = true;
     }
 
-    fecharDialogMigrarFuncionalidade(){
+    fecharDialogMigrarFuncionalidade() {
         this.mostrarDialogMigrarFuncionalidade = false;
     }
 
-    migrarFuncoes(){
-        if(this.funcionalidadeMigracao == null || this.funcionalidadeMigracao == undefined){
+    migrarFuncoes() {
+        if (this.funcionalidadeMigracao == null || this.funcionalidadeMigracao == undefined) {
             return this.pageNotificationService.addErrorMessage("Escolha uma funcionalidade para fazer a migração.");
         }
-        if(this.funcionalidadeEmEdicao.id === this.funcionalidadeMigracao.id){
+        if (this.funcionalidadeEmEdicao.id === this.funcionalidadeMigracao.id) {
             return this.pageNotificationService.addErrorMessage("Você não pode migrar para a funcionalidade que irá excluir.");
         }
-        if(this.funcionalidadeMigracao.id == undefined || this.funcionalidadeMigracao.id == null){
+        if (this.funcionalidadeMigracao.id == undefined || this.funcionalidadeMigracao.id == null) {
             return this.pageNotificationService.addErrorMessage("Escolha uma funcionalidade salva para fazer a migração.");
         }
         this.funcionalidadeService.migrarFuncoes(this.funcionalidadeEmEdicao.id, this.funcionalidadeMigracao.id).subscribe(response => {
             this.sistema.deleteFuncionalidade(this.funcionalidadeEmEdicao);
             this.pageNotificationService.addSuccessMessage("Migração de funções concluída!");
             this.fecharDialogMigrarFuncionalidade();
-        }, error => {this.pageNotificationService.addErrorMessage("Erro: Migração de funções não concluída.")});
+        }, error => { this.pageNotificationService.addErrorMessage("Erro: Migração de funções não concluída.") });
 
     }
 
-    mudarModulo(modulo){
+    mudarModulo(modulo) {
         this.moduloMigracao = modulo.value;
         this.funcionalidadeMigracao = null;
     }

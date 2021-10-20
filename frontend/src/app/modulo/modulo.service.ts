@@ -28,6 +28,11 @@ export class ModuloService {
         this.pageNotificationService.addErrorMessage(this.getLabel('Você não possui permissão!'));
         return Observable.throw(new Error(error.status));
       }
+      switch (error.headers.get('x-abacoapp-error')) {
+        case 'error.moduloexists':
+          this.pageNotificationService.addErrorMessage(this.getLabel('Este módulo já existe neste sistema.'));
+          return Observable.throw(new Error(error.status));
+      }
     }));
   }
 

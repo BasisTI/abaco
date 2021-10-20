@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.swing.text.html.Option;
 import javax.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -64,6 +65,11 @@ public class ModuloResource {
         if (modulo.getId() != null) {
             return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert(ENTITY_NAME, "idexists", "A new modulo cannot already have an ID")).body(null);
         }
+        Optional<Modulo> findModulo = moduloRepository.findAllByNomeAndSistemaId(modulo.getNome(), modulo.getSistema().getId());
+        if(findModulo.isPresent()){
+            return ResponseEntity.badRequest()
+                .headers(HeaderUtil.createFailureAlert(ENTITY_NAME, "moduloexists", "Modulo name and system already in use")).body(null);
+        }
         Modulo result = moduloRepository.save(modulo);
         moduloSearchRepository.save(result);
         return ResponseEntity.created(new URI("/api/modulos/" + result.getId()))
@@ -71,6 +77,7 @@ public class ModuloResource {
             .body(result);
     }
 
+    
     /**
      * PUT  /modulos : Updates an existing modulo.
      *
