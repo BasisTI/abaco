@@ -77,6 +77,7 @@ public class ModuloResource {
             .body(result);
     }
 
+    
     /**
      * PUT  /modulos : Updates an existing modulo.
      *
