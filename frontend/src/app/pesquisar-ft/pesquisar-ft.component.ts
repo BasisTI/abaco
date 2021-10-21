@@ -609,6 +609,7 @@ export class PesquisarFtComponent implements OnInit {
             }
         }
     }
+    
 
     public limparPesquisa() {
         if (this.moduloSelecionado && this.moduloSelecionado.id) {
