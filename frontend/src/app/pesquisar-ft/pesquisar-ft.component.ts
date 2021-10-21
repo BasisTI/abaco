@@ -575,11 +575,9 @@ export class PesquisarFtComponent implements OnInit {
                     this.blockUiService.hide();
                     this.fn = value;
                     this.fn.forEach(funcao => {
-                        this.derService.getDersByFuncaoDadosId(funcao.idfuncaodados).subscribe(response => {
-                            funcao.qtdDers = response.length;
-                        })
-                        this.rlrService.getRlrsByFuncaoDadosId(funcao.idfuncaodados).subscribe(response => {
-                            funcao.qtdRlrs = response.length;
+                        this.funcaoDadosService.findByID(funcao.idfuncaodados).subscribe(funcaoDados =>{
+                            funcao.qtdDers = funcaoDados.totalDers
+                            funcao.qtdRlrs = funcaoDados.totalRlrs;
                         })
                     })
                 });
@@ -597,11 +595,9 @@ export class PesquisarFtComponent implements OnInit {
                     this.blockUiService.hide();
                     this.fn = value;
                     this.fn.forEach(funcao => {
-                        this.derService.getDersByFuncaoDadosId(funcao.idfuncaodados).subscribe(response => {
-                            funcao.qtdDers = response.length;
-                        })
-                        this.alrService.getAlrsByFuncaoTransacaoId(funcao.idfuncaodados).subscribe(response => {
-                            funcao.qtdRlrs = response.length;
+                        this.funcaoTransacaoService.findByID(funcao.idfuncaodados).subscribe(funcaoTransacao => {
+                            funcao.qtdDers = funcaoTransacao.totalDers;
+                            funcao.qtdRlrs = funcaoTransacao.totalAlrs;
                         })
                     })
                 });
