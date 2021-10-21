@@ -105,7 +105,7 @@ export class Sistema implements BaseEntity {
   }
 
   private updateFuncionalidadeWithDifferentModulo(func: Funcionalidade, oldFunc: Funcionalidade) {
-    this.doDeleteFuncionalidade(oldFunc.modulo);
+    this.doDeleteFuncionalidade(oldFunc);
     this.addFuncionalidadeAsNew(func);
   }
 
@@ -126,6 +126,8 @@ export class Sistema implements BaseEntity {
   }
 
   private doDeleteFuncionalidade(funcionalidade: Funcionalidade) {
+    console.log(funcionalidade);
+    
     const modulo: Modulo = this.mappableModulos.get(funcionalidade.modulo);
     modulo.deleteFuncionalidade(funcionalidade);
   }
