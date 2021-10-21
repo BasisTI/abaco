@@ -26,4 +26,9 @@ public class VwFuncaoDadosResource {
         return vwFuncaoDadosRepository.findByAnaliseIdOrderById(analiseId);
     }
 
+    @GetMapping("/vw-funcao-dados/id/{id}")
+    @Timed
+    public VwFuncaoDados getFuncaoDadosById(@PathVariable Long id){
+        return vwFuncaoDadosRepository.findOne(id);
+    }
 }

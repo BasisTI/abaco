@@ -242,6 +242,10 @@ export class FuncaoDadosService {
         return this.http.patch<void>(this.resourceUrl+"/update-ordem", funcaoDado);
     }
 
+    findByID(id: number): Observable<any>{
+        return this.http.get<any>(this.vwresourceUrl+"/id/"+id);
+    }
+
 }
 enum StatusFunction {
     DIVERGENTE = 'DIVERGENTE',

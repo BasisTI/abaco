@@ -195,8 +195,8 @@ export class SistemaFormComponent implements OnInit, OnDestroy {
             this.pageNotificationService.addErrorMessage('Por favor preencher o campo obrigatório!');
             return;
         }
-        for(let modulo of this.sistema.modulos){
-            if (modulo.nome === this.novoModulo.nome) {
+        for (let modulo of this.sistema.modulos) {
+            if (modulo.nome.toLocaleLowerCase() === this.novoModulo.nome.toLocaleLowerCase()) {
                 this.valido = true;
                 return this.pageNotificationService.addErrorMessage('Nome de módulo já existente!');
             }
@@ -233,6 +233,12 @@ export class SistemaFormComponent implements OnInit, OnDestroy {
             this.pageNotificationService.addErrorMessage('Por favor preencher o campo obrigatório!');
             return;
         }
+        for (let funcionalidade of this.novaFuncionalidade.modulo.funcionalidades) {
+            if (funcionalidade.nome.toLocaleLowerCase() === this.novaFuncionalidade.nome.toLocaleLowerCase()) {
+                this.valido = true;
+                return this.pageNotificationService.addErrorMessage('Nome de funcionalidade já existente!');
+            }
+        }
         this.valido = false;
         this.sistema.addFuncionalidade(this.novaFuncionalidade);
         this.doFecharDialogFuncionalidade();
@@ -243,7 +249,7 @@ export class SistemaFormComponent implements OnInit, OnDestroy {
     }
 
     fecharDialogEditarFuncionalidade() {
-        this.funcionalidadeEmEdicao = new Modulo();
+        this.funcionalidadeEmEdicao = new Funcionalidade();
         this.mostrarDialogEditarFuncionalidade = false;
     }
 
@@ -255,8 +261,19 @@ export class SistemaFormComponent implements OnInit, OnDestroy {
             return;
         }
         this.valido = false;
-        this.sistema.updateFuncionalidade(this.funcionalidadeEmEdicao, this.oldFuncionalidade);
-        this.fecharDialogEditarFuncionalidade();
+        if (this.funcionalidadeEmEdicao.modulo.nome !== this.oldFuncionalidade.modulo.nome) {
+            this.funcionalidadeService.getTotalFunction(this.oldFuncionalidade.id).subscribe(totalFuncoes => {
+                if (totalFuncoes > 0) {
+                    return this.pageNotificationService.addErrorMessage('Não é possível editar o módulo da funcionalidade selecionada. Existem funções ligadas a ela.');
+                } else {
+                    this.sistema.updateFuncionalidade(this.funcionalidadeEmEdicao, this.oldFuncionalidade);
+                    this.fecharDialogEditarFuncionalidade();
+                }
+            })
+        } else {
+            this.sistema.updateFuncionalidade(this.funcionalidadeEmEdicao, this.oldFuncionalidade);
+            this.fecharDialogEditarFuncionalidade();
+        }
     }
 
     confirmDeleteFuncionalidade() {
@@ -306,7 +323,6 @@ export class SistemaFormComponent implements OnInit, OnDestroy {
         let sistemas: Array<Sistema>;
         this.sistemaService.dropDown().subscribe(response => {
             sistemas = response;
-
             if (this.sistema.id !== undefined) {
                 (this.checkRequiredFields() && !this.checkDuplicity(sistemas)
                     && this.checkSystemName())

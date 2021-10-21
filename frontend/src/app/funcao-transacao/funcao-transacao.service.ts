@@ -151,6 +151,10 @@ export class FuncaoTransacaoService {
     updateOrdem(funcaoTransacao: FuncaoTransacao) :Observable<void>{
         return this.http.patch<void>(this.funcaoTransacaoResourceUrl+"/update-ordem", funcaoTransacao);
     }
+
+    findByID(id: number): Observable<any>{
+        return this.http.get<any>(this.vwFuncaoTransacaoResourceUrl+"/id/"+id);
+    }
 }
 
 enum StatusFunction {

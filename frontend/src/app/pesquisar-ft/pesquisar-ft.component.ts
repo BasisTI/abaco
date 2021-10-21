@@ -300,16 +300,16 @@ export class PesquisarFtComponent implements OnInit {
                 this.inicializaFatoresAjuste();
             }
         }
-        if(this.isFuncaoDados){
-            this.classificacoes = [{label: "", value: ""},
-                                    {label: "ALI", value: "ALI"},
-                                    {label: "AIE", value: "AIE"}];
+        if (this.isFuncaoDados) {
+            this.classificacoes = [{ label: "", value: "" },
+            { label: "ALI", value: "ALI" },
+            { label: "AIE", value: "AIE" }];
             this.campoDers = "DERs/RLRs";
-        }else{
-            this.classificacoes = [{label: "", value: ""},
-                                    {label: "CE", value: "CE"},
-                                    {label: "EE", value: "EE"},
-                                    {label: "SE", value: "SE"}];
+        } else {
+            this.classificacoes = [{ label: "", value: "" },
+            { label: "CE", value: "CE" },
+            { label: "EE", value: "EE" },
+            { label: "SE", value: "SE" }];
             this.campoDers = "DERs/ALRs";
         }
     }
@@ -444,6 +444,8 @@ export class PesquisarFtComponent implements OnInit {
                                 '" na funcionalidade "' + ft.nomeFuncionalidade + '".');
                         }
                     });
+                    
+                    this.selections = [];
                     forkJoin(getFuncaoTransacoes).subscribe(result => {
                         result.forEach(funcaoTransacaoResp => {
                             funcaoTransacaoResp.ordem = this.tamanhoLista++;
@@ -517,7 +519,7 @@ export class PesquisarFtComponent implements OnInit {
                                 '" na funcionalidade "' + ft.nomeFuncionalidade + '".');
                         }
                     });
-
+                    this.selections = [];
                     forkJoin(getFuncaoDados).subscribe(result => {
                         result.forEach(funcaoDadosResp => {
                             funcaoDadosResp['id'] = undefined;
@@ -575,11 +577,9 @@ export class PesquisarFtComponent implements OnInit {
                     this.blockUiService.hide();
                     this.fn = value;
                     this.fn.forEach(funcao => {
-                        this.derService.getDersByFuncaoDadosId(funcao.idfuncaodados).subscribe(response => {
-                            funcao.qtdDers = response.length;
-                        })
-                        this.rlrService.getRlrsByFuncaoDadosId(funcao.idfuncaodados).subscribe(response => {
-                            funcao.qtdRlrs = response.length;
+                        this.funcaoDadosService.findByID(funcao.idfuncaodados).subscribe(funcaoDados =>{
+                            funcao.qtdDers = funcaoDados.totalDers
+                            funcao.qtdRlrs = funcaoDados.totalRlrs;
                         })
                     })
                 });
@@ -589,7 +589,7 @@ export class PesquisarFtComponent implements OnInit {
                     this.fn = value;
                 });
             }
-            
+
         } else {
             this.blockUiService.show();
             if (this.metodoContagem === 1) {
@@ -597,11 +597,9 @@ export class PesquisarFtComponent implements OnInit {
                     this.blockUiService.hide();
                     this.fn = value;
                     this.fn.forEach(funcao => {
-                        this.derService.getDersByFuncaoDadosId(funcao.idfuncaodados).subscribe(response => {
-                            funcao.qtdDers = response.length;
-                        })
-                        this.alrService.getAlrsByFuncaoTransacaoId(funcao.idfuncaodados).subscribe(response => {
-                            funcao.qtdRlrs = response.length;
+                        this.funcaoTransacaoService.findByID(funcao.idfuncaodados).subscribe(funcaoTransacao => {
+                            funcao.qtdDers = funcaoTransacao.totalDers;
+                            funcao.qtdRlrs = funcaoTransacao.totalAlrs;
                         })
                     })
                 });
@@ -613,6 +611,7 @@ export class PesquisarFtComponent implements OnInit {
             }
         }
     }
+    
 
     public limparPesquisa() {
         if (this.moduloSelecionado && this.moduloSelecionado.id) {
@@ -741,7 +740,7 @@ export class PesquisarFtComponent implements OnInit {
 
     }
 
-    puxarFuncoes(): any[]{
+    puxarFuncoes(): any[] {
         let funcoes: any[] = [];
         this.fn.forEach(item => {
             item.idfuncaodados = undefined;
@@ -755,9 +754,9 @@ export class PesquisarFtComponent implements OnInit {
     exportExcel() {
         if (this.fn && this.fn.length > 0) {
             let funcoes = this.puxarFuncoes();
-            let heading: any = {nomeModulo: "Módulo", nomeFuncionalidade: "Funcionalidade", name: "Nome", classificacao: "Classificação", complexidade: "Complexidade", };
+            let heading: any = { nomeModulo: "Módulo", nomeFuncionalidade: "Funcionalidade", name: "Nome", classificacao: "Classificação", complexidade: "Complexidade", };
             funcoes.unshift(heading);
-            const worksheet = XLSX.utils.json_to_sheet(funcoes, {skipHeader: true});
+            const worksheet = XLSX.utils.json_to_sheet(funcoes, { skipHeader: true });
             const workbook = { Sheets: { 'data': worksheet }, SheetNames: ['data'] };
             const excelBuffer: any = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
             this.saveAsExcelFile(excelBuffer, 'funcoes');
@@ -775,28 +774,28 @@ export class PesquisarFtComponent implements OnInit {
         saveAs(data, fileName + '_export_' + new Date().getTime() + EXCEL_EXTENSION);
     }
 
-    pesquisarAnalises(funcao){
-        if(funcao.name && funcao.nomeFuncionalidade && funcao.nomeModulo){
-            if(this.isFuncaoDados){
+    pesquisarAnalises(funcao) {
+        if (funcao.name && funcao.nomeFuncionalidade && funcao.nomeModulo) {
+            if (this.isFuncaoDados) {
                 this.analiseService.findAnalisesFromFD(funcao.name, funcao.nomeModulo, funcao.nomeFuncionalidade, this.analise.sistema.nome, this.analise.equipeResponsavel.nome).subscribe(r => {
                     this.analisesFromFuncao = r;
-                    this.abrirDialogPesquisarAnalises(funcao.nomeFuncionalidade+" - "+funcao.name);
+                    this.abrirDialogPesquisarAnalises(funcao.nomeFuncionalidade + " - " + funcao.name);
                 })
-            }else{
+            } else {
                 this.analiseService.findAnalisesFromFT(funcao.name, funcao.nomeModulo, funcao.nomeFuncionalidade, this.analise.sistema.nome, this.analise.equipeResponsavel.nome).subscribe(r => {
                     this.analisesFromFuncao = r;
-                    this.abrirDialogPesquisarAnalises(funcao.nomeFuncionalidade+" - "+funcao.name);
+                    this.abrirDialogPesquisarAnalises(funcao.nomeFuncionalidade + " - " + funcao.name);
                 })
             }
-        }      
+        }
     }
 
-    abrirDialogPesquisarAnalises(nomeFuncao: String){
+    abrirDialogPesquisarAnalises(nomeFuncao: String) {
         this.mostrarDialogPesquisarAnalises = true;
-        this.headerDialog = "Analises da função "+nomeFuncao;
+        this.headerDialog = "Analises da função " + nomeFuncao;
     }
 
-    fecharDialogPesquisarAnalises(){
+    fecharDialogPesquisarAnalises() {
         this.mostrarDialogPesquisarAnalises = false;
-    }    
+    }
 }
