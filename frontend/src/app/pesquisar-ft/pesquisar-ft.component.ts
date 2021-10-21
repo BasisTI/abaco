@@ -444,6 +444,7 @@ export class PesquisarFtComponent implements OnInit {
                                 '" na funcionalidade "' + ft.nomeFuncionalidade + '".');
                         }
                     });
+                    
                     this.selections = [];
                     forkJoin(getFuncaoTransacoes).subscribe(result => {
                         result.forEach(funcaoTransacaoResp => {
