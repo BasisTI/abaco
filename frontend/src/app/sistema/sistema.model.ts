@@ -100,7 +100,6 @@ export class Sistema implements BaseEntity {
     } else {
       this.doUpdateFuncionalidadeWithSameModule(funcionalidade);
     }
-
     this.modulos = this.mappableModulos.values();
   }
 
