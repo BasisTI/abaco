@@ -26,4 +26,10 @@ public class VwFuncaoTransacaoResource {
         return vwFuncaoTransacaoRepository.findByAnaliseIdOrderById(analiseId);
     }
 
+    @GetMapping("/vw-funcao-transacaos/id/{id}")
+    @Timed
+    public VwFuncaoTransacao getFuncaoDadosById(@PathVariable Long id){
+        return vwFuncaoTransacaoRepository.findOne(id);
+    }
+
 }
