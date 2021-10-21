@@ -322,7 +322,6 @@ export class SistemaFormComponent implements OnInit, OnDestroy {
         let sistemas: Array<Sistema>;
         this.sistemaService.dropDown().subscribe(response => {
             sistemas = response;
-
             if (this.sistema.id !== undefined) {
                 (this.checkRequiredFields() && !this.checkDuplicity(sistemas)
                     && this.checkSystemName())
