@@ -249,7 +249,7 @@ export class SistemaFormComponent implements OnInit, OnDestroy {
     }
 
     fecharDialogEditarFuncionalidade() {
-        this.funcionalidadeEmEdicao = new Modulo();
+        this.funcionalidadeEmEdicao = new Funcionalidade();
         this.mostrarDialogEditarFuncionalidade = false;
     }
 
@@ -267,12 +267,13 @@ export class SistemaFormComponent implements OnInit, OnDestroy {
                     return this.pageNotificationService.addErrorMessage('Não é possível editar o módulo da funcionalidade selecionada. Existem funções ligadas a ela.');
                 } else {
                     this.sistema.updateFuncionalidade(this.funcionalidadeEmEdicao, this.oldFuncionalidade);
+                    this.fecharDialogEditarFuncionalidade();
                 }
             })
         } else {
             this.sistema.updateFuncionalidade(this.funcionalidadeEmEdicao, this.oldFuncionalidade);
+            this.fecharDialogEditarFuncionalidade();
         }
-        this.fecharDialogEditarFuncionalidade();
     }
 
     confirmDeleteFuncionalidade() {
