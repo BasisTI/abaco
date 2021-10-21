@@ -196,7 +196,7 @@ export class SistemaFormComponent implements OnInit, OnDestroy {
             return;
         }
         for(let modulo of this.sistema.modulos){
-            if (modulo.nome === this.novoModulo.nome) {
+            if (modulo.nome.toLocaleLowerCase() === this.novoModulo.nome.toLocaleLowerCase()) {
                 this.valido = true;
                 return this.pageNotificationService.addErrorMessage('Nome de módulo já existente!');
             }
@@ -232,6 +232,12 @@ export class SistemaFormComponent implements OnInit, OnDestroy {
             this.valido = true;
             this.pageNotificationService.addErrorMessage('Por favor preencher o campo obrigatório!');
             return;
+        }
+        for(let funcionalidade of this.novaFuncionalidade.modulo.funcionalidades){
+            if (funcionalidade.nome.toLocaleLowerCase() === this.novaFuncionalidade.nome.toLocaleLowerCase()) {
+                this.valido = true;
+                return this.pageNotificationService.addErrorMessage('Nome de funcionalidade já existente!');
+            }
         }
         this.valido = false;
         this.sistema.addFuncionalidade(this.novaFuncionalidade);
