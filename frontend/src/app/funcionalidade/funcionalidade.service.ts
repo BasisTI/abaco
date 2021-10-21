@@ -27,6 +27,11 @@ export class FuncionalidadeService {
               this.pageNotificationService.addErrorMessage('Você não possui permissão!');
               return Observable.throw(new Error(error.status));
             }
+            switch (error.headers.get('x-abacoapp-error')) {
+              case 'error.funcionalidadeexists':
+                this.pageNotificationService.addErrorMessage("Esta funcionalidade já existe neste módulo.");
+                return Observable.throw(new Error(error.status));
+            }
           }));
     }
 

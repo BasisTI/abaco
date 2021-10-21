@@ -3,6 +3,7 @@ package br.com.basis.abaco.web.rest;
 import br.com.basis.abaco.domain.FuncaoDados;
 import br.com.basis.abaco.domain.FuncaoTransacao;
 import br.com.basis.abaco.domain.Funcionalidade;
+import br.com.basis.abaco.domain.Modulo;
 import br.com.basis.abaco.repository.FuncaoDadosRepository;
 import br.com.basis.abaco.repository.FuncaoTransacaoRepository;
 import br.com.basis.abaco.repository.FuncionalidadeRepository;
@@ -73,6 +74,13 @@ public class FuncionalidadeResource {
         log.debug("REST request to save Funcionalidade : {}", funcionalidade);
         if (funcionalidade.getId() != null) {
             return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert(ENTITY_NAME, "idexists", "A new funcionalidade cannot already have an ID")).body(null);
+        }
+        if (funcionalidade.getModulo() != null) {
+            Optional<List<Funcionalidade>> findFuncionalidade = funcionalidadeRepository.findAllByNomeAndModuloId(funcionalidade.getNome().toLowerCase(), funcionalidade.getModulo().getId());
+            if(findFuncionalidade.isPresent() && !findFuncionalidade.get().isEmpty()){
+                return ResponseEntity.badRequest()
+                    .headers(HeaderUtil.createFailureAlert(ENTITY_NAME, "funcionalidadeexists", "Funcionalidade name and Modulo already in use")).body(null);
+            }
         }
         Funcionalidade result = funcionalidadeRepository.save(funcionalidade);
         funcionalidadeSearchRepository.save(result);
