@@ -2,11 +2,14 @@ package br.com.basis.abaco.service;
 
 import br.com.basis.abaco.domain.Rlr;
 import br.com.basis.abaco.domain.VwRlr;
+import br.com.basis.abaco.domain.VwRlrAll;
 import br.com.basis.abaco.repository.RlrRepository;
+import br.com.basis.abaco.repository.search.VwRlrAllSearchRepository;
 import br.com.basis.abaco.service.dto.DropdownDTO;
 import br.com.basis.dynamicexports.service.DynamicExportsService;
 import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.elasticsearch.core.ElasticsearchTemplate;
 import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
@@ -24,6 +27,9 @@ public class RlrService {
     private final ElasticsearchTemplate elasticsearchTemplate;
     private final DynamicExportsService dynamicExportsService;
     private final RlrRepository rlrRepository;
+
+    @Autowired
+    private VwRlrAllSearchRepository vwRlrAllSearchRepository;
 
     public RlrService(ElasticsearchTemplate elasticsearchTemplate, DynamicExportsService dynamicExportsService, RlrRepository rlrRepository) {
         this.elasticsearchTemplate = elasticsearchTemplate;
@@ -68,7 +74,8 @@ public class RlrService {
     }
 
     @Transactional(readOnly = true)
-    public List<Rlr> getRlrByFuncaoDados(Long idFuncaoDados){
-        return rlrRepository.getRlrByFuncaoDadosId(idFuncaoDados);
+    public List<VwRlrAll> getRlrByFuncaoDados(Long idFuncaoDados){
+        List<VwRlrAll> vwRlrAllList = vwRlrAllSearchRepository.findByFuncaoId(idFuncaoDados);
+        return vwRlrAllList;
     }
 }

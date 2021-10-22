@@ -1,13 +1,15 @@
 package br.com.basis.abaco.service;
 
 import br.com.basis.abaco.domain.Alr;
-import br.com.basis.abaco.domain.Der;
 import br.com.basis.abaco.domain.VwAlr;
+import br.com.basis.abaco.domain.VwAlrAll;
 import br.com.basis.abaco.repository.AlrRepository;
+import br.com.basis.abaco.repository.search.VwAlrAllSearchRepository;
 import br.com.basis.abaco.service.dto.DropdownDTO;
 import br.com.basis.dynamicexports.service.DynamicExportsService;
 import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.elasticsearch.core.ElasticsearchTemplate;
 import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
@@ -25,6 +27,9 @@ public class AlrService {
     private final ElasticsearchTemplate elasticsearchTemplate;
     private final DynamicExportsService dynamicExportsService;
     private final AlrRepository alrRepository;
+
+    @Autowired
+    private VwAlrAllSearchRepository vwAlrAllSearchRepository;
 
     public AlrService(ElasticsearchTemplate elasticsearchTemplate, DynamicExportsService dynamicExportsService, AlrRepository alrRepository){
         this.elasticsearchTemplate = elasticsearchTemplate;
@@ -69,7 +74,8 @@ public class AlrService {
     }
 
     @Transactional(readOnly = true)
-    public List<Alr> getAlrByFuncaoTransacao(Long idFuncaoTransacao){
-        return alrRepository.getAlrByFuncaoTransacaoId(idFuncaoTransacao);
+    public List<VwAlrAll> getAlrByFuncaoTransacao(Long idFuncaoTransacao){
+        List<VwAlrAll> vwAlrAlls = vwAlrAllSearchRepository.findByFuncaoId(idFuncaoTransacao);
+        return vwAlrAlls;
     }
 }

@@ -1,21 +1,15 @@
 package br.com.basis.abaco.service;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import br.com.basis.abaco.domain.Der;
 import br.com.basis.abaco.domain.VwDer;
-import br.com.basis.abaco.repository.search.DerSearchRepository;
-import br.com.basis.abaco.repository.search.VwDerSearchRepository;
+import br.com.basis.abaco.domain.VwDerAll;
+import br.com.basis.abaco.repository.DerRepository;
+import br.com.basis.abaco.repository.search.VwDerAllSearchRepository;
+import br.com.basis.abaco.service.dto.DropdownDTO;
 import br.com.basis.dynamicexports.service.DynamicExportsService;
 import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
-import org.elasticsearch.search.aggregations.AggregationBuilder;
-import org.elasticsearch.search.aggregations.AggregationBuilders;
-import org.elasticsearch.search.aggregations.bucket.histogram.Histogram;
-import org.elasticsearch.search.aggregations.bucket.terms.Terms;
-import org.elasticsearch.search.aggregations.bucket.terms.TermsBuilder;
-import org.hibernate.criterion.Order;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.elasticsearch.core.ElasticsearchTemplate;
 import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
@@ -23,11 +17,8 @@ import org.springframework.data.elasticsearch.core.query.SearchQuery;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import br.com.basis.abaco.repository.DerRepository;
-import br.com.basis.abaco.service.dto.DropdownDTO;
-
-import static org.elasticsearch.index.query.QueryBuilders.matchQuery;
-import static org.elasticsearch.index.query.QueryBuilders.termsQuery;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @Transactional
@@ -36,6 +27,9 @@ public class DerService {
     private final DerRepository derRepository;
     private final ElasticsearchTemplate elasticsearchTemplate;
     private final DynamicExportsService dynamicExportsService;
+
+    @Autowired
+    private VwDerAllSearchRepository vwDerAllSearchRepository;
 
     public DerService(DerRepository derRepository, ElasticsearchTemplate elasticsearchTemplate, DynamicExportsService dynamicExportsService) {
         this.derRepository = derRepository;
@@ -76,13 +70,8 @@ public class DerService {
     }
 
     @Transactional(readOnly = true)
-    public List<Der> getDerByFuncaoDados(Long idFuncaoDados){
-        return derRepository.getDerByFuncaoDadosId(idFuncaoDados);
-    }
-
-    @Transactional(readOnly = true)
-    public List<Der> getDerByFuncaoTransacao(Long idFuncaoTransacao){
-        return derRepository.getDerByFuncaoTransacaoId(idFuncaoTransacao);
+    public List<VwDerAll> getDerByFuncao(Long idFuncaoDados){
+        return vwDerAllSearchRepository.findByFuncaoId(idFuncaoDados);
     }
 
     public List<VwDer> bindFilterSearchDersSistemaFuncaoDados(String nome, Long idSistema) {
