@@ -24,8 +24,11 @@ import br.com.basis.abaco.domain.Status;
 import br.com.basis.abaco.domain.TipoEquipe;
 import br.com.basis.abaco.domain.User;
 import br.com.basis.abaco.domain.VwAlr;
+import br.com.basis.abaco.domain.VwAlrAll;
 import br.com.basis.abaco.domain.VwDer;
+import br.com.basis.abaco.domain.VwDerAll;
 import br.com.basis.abaco.domain.VwRlr;
+import br.com.basis.abaco.domain.VwRlrAll;
 import br.com.basis.abaco.domain.enumeration.IndexadoresUtil;
 import br.com.basis.abaco.repository.AlrRepository;
 import br.com.basis.abaco.repository.AnaliseRepository;
@@ -70,8 +73,11 @@ import br.com.basis.abaco.repository.search.SistemaSearchRepository;
 import br.com.basis.abaco.repository.search.StatusSearchRepository;
 import br.com.basis.abaco.repository.search.TipoEquipeSearchRepository;
 import br.com.basis.abaco.repository.search.UserSearchRepository;
+import br.com.basis.abaco.repository.search.VwAlrAllSearchRepository;
 import br.com.basis.abaco.repository.search.VwAlrSearchRepository;
+import br.com.basis.abaco.repository.search.VwDerAllSearchRepository;
 import br.com.basis.abaco.repository.search.VwDerSearchRepository;
+import br.com.basis.abaco.repository.search.VwRlrAllSearchRepository;
 import br.com.basis.abaco.repository.search.VwRlrSearchRepository;
 import br.com.basis.abaco.service.Indexador;
 import br.com.basis.abaco.service.IndexadorComMapper;
@@ -80,9 +86,12 @@ import br.com.basis.abaco.service.dto.AnaliseDTO;
 import br.com.basis.abaco.service.dto.SistemaListDTO;
 import br.com.basis.abaco.service.dto.TipoEquipeDTO;
 import br.com.basis.abaco.service.dto.UserEditDTO;
+import br.com.basis.abaco.service.mapper.AlrAllMapper;
 import br.com.basis.abaco.service.mapper.AlrMapper;
 import br.com.basis.abaco.service.mapper.AnaliseMapper;
+import br.com.basis.abaco.service.mapper.DerAllMapper;
 import br.com.basis.abaco.service.mapper.DerMapper;
+import br.com.basis.abaco.service.mapper.RlrAllMapper;
 import br.com.basis.abaco.service.mapper.RlrMapper;
 import br.com.basis.abaco.service.mapper.SistemaElasticSearchMapper;
 import br.com.basis.abaco.service.mapper.TipoEquipeMapper;
@@ -147,6 +156,9 @@ public class IndexadorConfiguration {
     private StatusSearchRepository statusSearchRepository;
     private NomenclaturaSearchRepository nomenclaturaSearchRepository;
     private PerfilSearchRepository perfilSearchRepository;
+    private VwAlrAllSearchRepository vwAlrAllSearchRepository;
+    private VwDerAllSearchRepository vwDerAllSearchRepository;
+    private VwRlrAllSearchRepository vwRlrAllSearchRepository;
 
     @Bean
     public Indexador indexadorUser() {
@@ -215,6 +227,39 @@ public class IndexadorConfiguration {
             , elasticsearchTemplate);
         indexador.setCodigo(IndexadoresUtil.DER.name());
         indexador.setDescricao(IndexadoresUtil.DER.label);
+        return indexador;
+    }
+
+    @Bean
+    public Indexador indexadorAlrAll() {
+        AlrAllMapper alrAllMapper = new AlrAllMapper(alrRepository);
+        IndexadorComMapper<VwAlrAll, VwAlrAll, Long, Alr> indexador = new IndexadorComMapper<>(vwAlrAllSearchRepository,
+            alrAllMapper,
+            elasticsearchTemplate);
+        indexador.setCodigo(IndexadoresUtil.ALR_ALL.name());
+        indexador.setDescricao(IndexadoresUtil.ALR_ALL.label);
+        return indexador;
+    }
+
+    @Bean
+    public Indexador indexadorDerAll() {
+        DerAllMapper derAllMapper = new DerAllMapper(derRepository);
+        IndexadorComMapper<VwDerAll, VwDerAll, Long, Der> indexador = new IndexadorComMapper<>(vwDerAllSearchRepository
+            , derAllMapper
+            , elasticsearchTemplate);
+        indexador.setCodigo(IndexadoresUtil.DER_ALL.name());
+        indexador.setDescricao(IndexadoresUtil.DER_ALL.label);
+        return indexador;
+    }
+
+    @Bean
+    public Indexador indexadorRlrAll() {
+        RlrAllMapper rlrAllMapper = new RlrAllMapper(rlrRepository);
+        IndexadorComMapper<VwRlrAll, VwRlrAll, Long, Rlr> indexador = new IndexadorComMapper<>(vwRlrAllSearchRepository,
+            rlrAllMapper,
+            elasticsearchTemplate);
+        indexador.setCodigo(IndexadoresUtil.RLR_ALL.name());
+        indexador.setDescricao(IndexadoresUtil.RLR_ALL.label);
         return indexador;
     }
 

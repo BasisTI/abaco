@@ -2,7 +2,9 @@ package br.com.basis.abaco.service;
 
 import br.com.basis.abaco.domain.Rlr;
 import br.com.basis.abaco.domain.VwRlr;
+import br.com.basis.abaco.domain.VwRlrAll;
 import br.com.basis.abaco.repository.RlrRepository;
+import br.com.basis.abaco.repository.search.VwRlrAllSearchRepository;
 import br.com.basis.abaco.service.dto.DropdownDTO;
 import br.com.basis.dynamicexports.service.DynamicExportsService;
 import org.elasticsearch.index.query.QueryBuilder;
@@ -25,10 +27,13 @@ public class RlrService {
     private final DynamicExportsService dynamicExportsService;
     private final RlrRepository rlrRepository;
 
-    public RlrService(ElasticsearchTemplate elasticsearchTemplate, DynamicExportsService dynamicExportsService, RlrRepository rlrRepository) {
+    private final VwRlrAllSearchRepository vwRlrAllSearchRepository;
+
+    public RlrService(ElasticsearchTemplate elasticsearchTemplate, DynamicExportsService dynamicExportsService, RlrRepository rlrRepository, VwRlrAllSearchRepository vwRlrAllSearchRepository) {
         this.elasticsearchTemplate = elasticsearchTemplate;
         this.dynamicExportsService = dynamicExportsService;
         this.rlrRepository = rlrRepository;
+        this.vwRlrAllSearchRepository = vwRlrAllSearchRepository;
     }
 
     public List<VwRlr> bindFilterSearchRlrsSistema(String nome, Long idSistema) {
@@ -68,7 +73,8 @@ public class RlrService {
     }
 
     @Transactional(readOnly = true)
-    public List<Rlr> getRlrByFuncaoDados(Long idFuncaoDados){
-        return rlrRepository.getRlrByFuncaoDadosId(idFuncaoDados);
+    public List<VwRlrAll> getRlrByFuncaoDados(Long idFuncaoDados){
+        List<VwRlrAll> vwRlrAllList = vwRlrAllSearchRepository.findByFuncaoId(idFuncaoDados);
+        return vwRlrAllList;
     }
 }

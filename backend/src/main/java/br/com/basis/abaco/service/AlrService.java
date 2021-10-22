@@ -1,9 +1,10 @@
 package br.com.basis.abaco.service;
 
 import br.com.basis.abaco.domain.Alr;
-import br.com.basis.abaco.domain.Der;
 import br.com.basis.abaco.domain.VwAlr;
+import br.com.basis.abaco.domain.VwAlrAll;
 import br.com.basis.abaco.repository.AlrRepository;
+import br.com.basis.abaco.repository.search.VwAlrAllSearchRepository;
 import br.com.basis.abaco.service.dto.DropdownDTO;
 import br.com.basis.dynamicexports.service.DynamicExportsService;
 import org.elasticsearch.index.query.QueryBuilder;
@@ -26,10 +27,13 @@ public class AlrService {
     private final DynamicExportsService dynamicExportsService;
     private final AlrRepository alrRepository;
 
-    public AlrService(ElasticsearchTemplate elasticsearchTemplate, DynamicExportsService dynamicExportsService, AlrRepository alrRepository){
+    private final VwAlrAllSearchRepository vwAlrAllSearchRepository;
+
+    public AlrService(ElasticsearchTemplate elasticsearchTemplate, DynamicExportsService dynamicExportsService, AlrRepository alrRepository, VwAlrAllSearchRepository vwAlrAllSearchRepository){
         this.elasticsearchTemplate = elasticsearchTemplate;
         this.dynamicExportsService = dynamicExportsService;
         this.alrRepository = alrRepository;
+        this.vwAlrAllSearchRepository = vwAlrAllSearchRepository;
     }
 
     public List<VwAlr> bindFilterSearchAlrsSistema(String nome, Long idSistema) {
@@ -69,7 +73,8 @@ public class AlrService {
     }
 
     @Transactional(readOnly = true)
-    public List<Alr> getAlrByFuncaoTransacao(Long idFuncaoTransacao){
-        return alrRepository.getAlrByFuncaoTransacaoId(idFuncaoTransacao);
+    public List<VwAlrAll> getAlrByFuncaoTransacao(Long idFuncaoTransacao){
+        List<VwAlrAll> vwAlrAlls = vwAlrAllSearchRepository.findByFuncaoId(idFuncaoTransacao);
+        return vwAlrAlls;
     }
 }

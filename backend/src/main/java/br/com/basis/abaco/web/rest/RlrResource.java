@@ -2,6 +2,7 @@ package br.com.basis.abaco.web.rest;
 
 import br.com.basis.abaco.domain.Rlr;
 import br.com.basis.abaco.domain.VwRlr;
+import br.com.basis.abaco.domain.VwRlrAll;
 import br.com.basis.abaco.repository.RlrRepository;
 import br.com.basis.abaco.repository.search.RlrSearchRepository;
 import br.com.basis.abaco.service.RlrService;
@@ -175,7 +176,7 @@ public class RlrResource {
 
     @GetMapping("/rlrs/fd/{idFuncaoDados}")
     @Timed
-    public List<Rlr> getRlrByFuncaoDados(@PathVariable Long idFuncaoDados) {
+    public List<VwRlrAll> getRlrByFuncaoDados(@PathVariable Long idFuncaoDados) {
         log.debug("REST request to get Rlrs for FuncaoDados {}", idFuncaoDados);
         return rlrService.getRlrByFuncaoDados(idFuncaoDados);
     }

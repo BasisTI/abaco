@@ -2,6 +2,7 @@ package br.com.basis.abaco.web.rest;
 
 import br.com.basis.abaco.domain.Der;
 import br.com.basis.abaco.domain.VwDer;
+import br.com.basis.abaco.domain.VwDerAll;
 import br.com.basis.abaco.repository.DerRepository;
 import br.com.basis.abaco.repository.search.DerSearchRepository;
 import br.com.basis.abaco.service.DerService;
@@ -175,15 +176,15 @@ public class DerResource {
     }
 
     @GetMapping("/ders/fd/{idFuncaoDados}")
-    public List<Der> getDerByFuncaoDados(@PathVariable Long idFuncaoDados){
+    public List<VwDerAll> getDerByFuncaoDados(@PathVariable Long idFuncaoDados){
         log.debug("REST request to get ders for funcaoDados {}", idFuncaoDados);
-        return derService.getDerByFuncaoDados(idFuncaoDados);
+        return derService.getDerByFuncao(idFuncaoDados);
     }
 
     @GetMapping("/ders/ft/{idFuncaoTransacao}")
-    public List<Der> getDerByFuncaoTransacao(@PathVariable Long idFuncaoTransacao){
+    public List<VwDerAll> getDerByFuncaoTransacao(@PathVariable Long idFuncaoTransacao){
         log.debug("REST request to get ders for FuncaoTransacao {}", idFuncaoTransacao);
-        return derService.getDerByFuncaoTransacao(idFuncaoTransacao);
+        return derService.getDerByFuncao(idFuncaoTransacao);
     }
 
     @GetMapping("/ders/funcao_dados/sistema/{idSistema}")
