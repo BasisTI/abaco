@@ -35,6 +35,7 @@ public class RlrAllMapper implements EntityMapper<Rlr, VwRlrAll>{
         return rlr;
     }
 
+    
     @Override
     public List<VwRlrAll> toEntity(List<Rlr> dtoList) {
         List<VwRlrAll> vwRlrsAlls = new ArrayList<>();
