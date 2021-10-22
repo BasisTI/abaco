@@ -1,21 +1,13 @@
 package br.com.basis.abaco.web.rest;
 
-import br.com.basis.abaco.domain.Alr;
-import br.com.basis.abaco.domain.Analise;
-import br.com.basis.abaco.domain.Der;
-import br.com.basis.abaco.domain.FuncaoTransacao;
-import br.com.basis.abaco.domain.UploadedFile;
-import br.com.basis.abaco.domain.VwAlr;
-import br.com.basis.abaco.domain.VwDer;
+import br.com.basis.abaco.domain.*;
 import br.com.basis.abaco.domain.enumeration.Complexidade;
 import br.com.basis.abaco.domain.enumeration.MetodoContagem;
 import br.com.basis.abaco.domain.enumeration.StatusFuncao;
 import br.com.basis.abaco.repository.AnaliseRepository;
 import br.com.basis.abaco.repository.DerRepository;
 import br.com.basis.abaco.repository.FuncaoTransacaoRepository;
-import br.com.basis.abaco.repository.search.FuncaoTransacaoSearchRepository;
-import br.com.basis.abaco.repository.search.VwAlrSearchRepository;
-import br.com.basis.abaco.repository.search.VwDerSearchRepository;
+import br.com.basis.abaco.repository.search.*;
 import br.com.basis.abaco.service.FuncaoDadosService;
 import br.com.basis.abaco.service.dto.AlrDTO;
 import br.com.basis.abaco.service.dto.DerFtDTO;
@@ -77,6 +69,10 @@ public class FuncaoTransacaoResource {
     private DerRepository derRepository;
     @Autowired
     private ModelMapper modelMapper;
+    @Autowired
+    private VwDerAllSearchRepository vwDerAllSearchRepository;
+    @Autowired
+    private VwAlrAllSearchRepository vwAlrAllSearchRepository;
 
     public FuncaoTransacaoResource(FuncaoTransacaoRepository funcaoTransacaoRepository, FuncaoTransacaoSearchRepository funcaoTransacaoSearchRepository, AnaliseRepository analiseRepository, VwDerSearchRepository vwDerSearchRepository, VwAlrSearchRepository vwAlrSearchRepository, FuncaoDadosService funcaoDadosService) {
         this.funcaoTransacaoRepository = funcaoTransacaoRepository;
@@ -121,7 +117,7 @@ public class FuncaoTransacaoResource {
 
         FuncaoTransacao result = funcaoTransacaoRepository.save(funcaoTransacao);
 
-        saveVwDersAndVwAlrs(result.getDers(), result.getAlrs(), analise.getSistema().getId());
+        saveVwDersAndVwAlrs(result.getDers(), result.getAlrs(), analise.getSistema().getId(), result.getId());
 
         return ResponseEntity.created(new URI("/api/funcao-transacaos/" + result.getId()))
                 .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString()))
@@ -166,7 +162,7 @@ public class FuncaoTransacaoResource {
 
         FuncaoTransacao result = funcaoTransacaoRepository.save(funcaoTransacao);
 
-        saveVwDersAndVwAlrs(result.getDers(), result.getAlrs(), analise.getSistema().getId());
+        saveVwDersAndVwAlrs(result.getDers(), result.getAlrs(), analise.getSistema().getId(), result.getId());
 
         return ResponseEntity.ok().headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, funcaoTransacao.getId().toString())).body(result);
     }
@@ -404,50 +400,77 @@ public class FuncaoTransacaoResource {
         return map;
     }
 
-    private void saveVwDersAndVwAlrs(Set<Der> ders, Set<Alr> alrs, Long idSistema) {
+    private void saveVwDersAndVwAlrs(Set<Der> ders, Set<Alr> alrs, Long idSistema, Long idFuncao) {
         List<VwDer> vwDerList = vwDerSearchRepository.findAllByIdSistemaFT(idSistema);
         List<VwAlr> vwAlrList = vwAlrSearchRepository.findAllByIdSistema(idSistema);
 
-        saveVwDers(ders, vwDerList, idSistema);
-        saveVwAlrs(alrs, vwAlrList, idSistema);
+        List<VwDerAll> vwDerAllList = vwDerAllSearchRepository.findByFuncaoId(idFuncao);
+        List<VwAlrAll> vwAlrAllList = vwAlrAllSearchRepository.findByFuncaoId(idFuncao);
+
+        saveVwDers(ders, vwDerList, idSistema, idFuncao, vwDerAllList);
+        saveVwAlrs(alrs, vwAlrList, idSistema, idFuncao, vwAlrAllList);
     }
 
-    private void saveVwAlrs(Set<Alr> alrs, List<VwAlr> vwAlrList, Long idSistema) {
+    private void saveVwAlrs(Set<Alr> alrs, List<VwAlr> vwAlrList, Long idSistema, Long idFuncao, List<VwAlrAll> vwAlrAllList) {
         List<VwAlr> vwAlrs = new ArrayList<>();
+        List<VwAlrAll> vwAlrAlls = new ArrayList<>();
         if(!alrs.isEmpty()){
             alrs.forEach(item -> {
                 VwAlr vwAlr = new VwAlr();
+                VwAlrAll vwAlrAll = new VwAlrAll();
                 if(item.getId() != null){
                     vwAlr.setId(item.getId());
+                    vwAlrAll.setId(item.getId());
                 }
                 vwAlr.setNome(item.getNome());
                 vwAlr.setIdSistema(idSistema);
                 if(!vwAlrList.contains(vwAlr)){
                     vwAlrs.add(vwAlr);
                 }
+
+                vwAlrAll.setNome(item.getNome());
+                vwAlrAll.setFuncaoId(idFuncao);
+                if(!vwAlrAllList.contains(vwAlrAll)){
+                    vwAlrAlls.add(vwAlrAll);
+                }
             });
             if(!vwAlrs.isEmpty()){
                 vwAlrSearchRepository.save(vwAlrs);
             }
+            if(!vwAlrAlls.isEmpty()){
+                vwAlrAllSearchRepository.save(vwAlrAlls);
+            }
         }
     }
 
-    private void saveVwDers(Set<Der> ders, List<VwDer> vwDerList, Long idSistema) {
+    private void saveVwDers(Set<Der> ders, List<VwDer> vwDerList, Long idSistema, Long idFuncao, List<VwDerAll> vwDerAllList) {
         List<VwDer> vwDers = new ArrayList<>();
+        List<VwDerAll> vwDerAlls = new ArrayList<>();
         if(!ders.isEmpty()){
             ders.forEach(item -> {
                 VwDer vwDer = new VwDer();
+                VwDerAll vwDerAll = new VwDerAll();
                 if(item.getId() != null){
                     vwDer.setId(item.getId());
+                    vwDerAll.setId(item.getId());
                 }
                 vwDer.setNome(item.getNome());
                 vwDer.setIdSistemaFT(idSistema);
                 if(!vwDerList.contains(vwDer)){
                     vwDers.add(vwDer);
                 }
+
+                vwDerAll.setFuncaoId(idFuncao);
+                vwDerAll.setNome(item.getNome());
+                if(!vwDerAllList.contains(vwDerAll)){
+                    vwDerAlls.add(vwDerAll);
+                }
             });
             if(!vwDers.isEmpty()){
                 vwDerSearchRepository.save(vwDers);
+            }
+            if(!vwDerAlls.isEmpty()){
+                vwDerAllSearchRepository.save(vwDerAlls);
             }
         }
     }

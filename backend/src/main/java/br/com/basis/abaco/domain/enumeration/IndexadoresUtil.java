@@ -23,7 +23,10 @@ public enum IndexadoresUtil {
     FUNCAO_TRANSACAO("função_transação"),
     STATUS("status"),
     NOMENCLATURA("nomenclatura"),
-    PERFIL("perfil");
+    PERFIL("perfil"),
+    ALR_ALL("alr_all"),
+    DER_ALL("der_all"),
+    RLR_ALL("rlr_all");
 
     public final String label;
 

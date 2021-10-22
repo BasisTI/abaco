@@ -15,6 +15,7 @@ export class IndexadorComponent {
     indexList = [
         { value: 'ALR', label: 'Alr' },//Adicionei
         { value: 'ANALISE', label: 'Analise' },
+        { value: ['ALR_ALL', 'DER_ALL', 'RLR_ALL'], label: 'Campos ALL'},
         //{value: 'BASELINE_ANALITICO_FD', label: 'Baseline Analítico FD'},// (NPE) NullPointerException
         //{value: 'BASELINE_ANALITICO_FT', label: 'Baseline Analítico FT'},// (NPE)
         //{value: 'BASELINE_SINTETICO', label: 'Baseline Sintético'},// (NPE)
