@@ -9,7 +9,6 @@ import br.com.basis.abaco.service.dto.DropdownDTO;
 import br.com.basis.dynamicexports.service.DynamicExportsService;
 import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.elasticsearch.core.ElasticsearchTemplate;
 import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
@@ -28,13 +27,13 @@ public class RlrService {
     private final DynamicExportsService dynamicExportsService;
     private final RlrRepository rlrRepository;
 
-    @Autowired
-    private VwRlrAllSearchRepository vwRlrAllSearchRepository;
+    private final VwRlrAllSearchRepository vwRlrAllSearchRepository;
 
-    public RlrService(ElasticsearchTemplate elasticsearchTemplate, DynamicExportsService dynamicExportsService, RlrRepository rlrRepository) {
+    public RlrService(ElasticsearchTemplate elasticsearchTemplate, DynamicExportsService dynamicExportsService, RlrRepository rlrRepository, VwRlrAllSearchRepository vwRlrAllSearchRepository) {
         this.elasticsearchTemplate = elasticsearchTemplate;
         this.dynamicExportsService = dynamicExportsService;
         this.rlrRepository = rlrRepository;
+        this.vwRlrAllSearchRepository = vwRlrAllSearchRepository;
     }
 
     public List<VwRlr> bindFilterSearchRlrsSistema(String nome, Long idSistema) {

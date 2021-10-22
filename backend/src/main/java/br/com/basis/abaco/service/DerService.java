@@ -9,7 +9,6 @@ import br.com.basis.abaco.service.dto.DropdownDTO;
 import br.com.basis.dynamicexports.service.DynamicExportsService;
 import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.elasticsearch.core.ElasticsearchTemplate;
 import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
@@ -28,27 +27,27 @@ public class DerService {
     private final ElasticsearchTemplate elasticsearchTemplate;
     private final DynamicExportsService dynamicExportsService;
 
-    @Autowired
-    private VwDerAllSearchRepository vwDerAllSearchRepository;
+    private final VwDerAllSearchRepository vwDerAllSearchRepository;
 
-    public DerService(DerRepository derRepository, ElasticsearchTemplate elasticsearchTemplate, DynamicExportsService dynamicExportsService) {
+    public DerService(DerRepository derRepository, ElasticsearchTemplate elasticsearchTemplate, DynamicExportsService dynamicExportsService, VwDerAllSearchRepository vwDerAllSearchRepository) {
         this.derRepository = derRepository;
         this.elasticsearchTemplate = elasticsearchTemplate;
         this.dynamicExportsService = dynamicExportsService;
+        this.vwDerAllSearchRepository = vwDerAllSearchRepository;
     }
 
     @Transactional(readOnly = true)
     public List<DropdownDTO> getDerByFuncaoDadosIdDropdown(Long idFuncaoDados) {
        List<DropdownDTO> lstDersDrop = new ArrayList<>();
-        List<Der> lstDers = derRepository.getDerByFuncaoDadosIdDropdown(idFuncaoDados);
-        lstDers.forEach(der -> {
-            DropdownDTO dropdownDer;
+        List<Der> lstDersFD = derRepository.getDerByFuncaoDadosIdDropdown(idFuncaoDados);
+        lstDersFD.forEach(der -> {
+            DropdownDTO dropdownDerFD;
             if(der.getNome() == null || der.getNome().isEmpty()){
-                dropdownDer = new br.com.basis.abaco.service.dto.DropdownDTO(der.getId(),der.getValor().toString());
+                dropdownDerFD = new br.com.basis.abaco.service.dto.DropdownDTO(der.getId(),der.getValor().toString());
             }else {
-                dropdownDer = new br.com.basis.abaco.service.dto.DropdownDTO(der.getId(),der.getNome());
+                dropdownDerFD = new br.com.basis.abaco.service.dto.DropdownDTO(der.getId(),der.getNome());
             }
-            lstDersDrop.add(dropdownDer);
+            lstDersDrop.add(dropdownDerFD);
         });
         return lstDersDrop;
     }
