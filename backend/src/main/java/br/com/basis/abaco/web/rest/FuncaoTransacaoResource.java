@@ -443,6 +443,7 @@ public class FuncaoTransacaoResource {
         }
     }
 
+    
     private void saveVwDers(Set<Der> ders, List<VwDer> vwDerList, Long idSistema, Long idFuncao, List<VwDerAll> vwDerAllList) {
         List<VwDer> vwDers = new ArrayList<>();
         List<VwDerAll> vwDerAlls = new ArrayList<>();
