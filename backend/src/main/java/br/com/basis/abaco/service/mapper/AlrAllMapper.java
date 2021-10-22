@@ -42,7 +42,7 @@ public class AlrAllMapper implements EntityMapper<Alr, VwAlrAll>{
             if(item.getFuncaoTransacao() != null){
                 funcaoId = item.getFuncaoTransacao().getId();
             }
-            VwAlrAll vwAlrAll = new VwAlrAll(item.getId(), item.getNome(), funcaoId);
+            VwAlrAll vwAlrAll = new VwAlrAll(funcaoId, item.getId(), item.getNome());
             vwAlrsAll.add(vwAlrAll);
         });
         return vwAlrsAll;

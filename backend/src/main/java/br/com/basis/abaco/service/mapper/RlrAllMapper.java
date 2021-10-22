@@ -43,7 +43,7 @@ public class RlrAllMapper implements EntityMapper<Rlr, VwRlrAll>{
             if( item.getFuncaoDados() != null){
                 idFuncao = item.getFuncaoDados().getId();
             }
-            VwRlrAll vwRlrAll = new VwRlrAll(item.getId(), item.getNome(), idFuncao);
+            VwRlrAll vwRlrAll = new VwRlrAll(item.getId(), idFuncao, item.getNome());
             vwRlrsAlls.add(vwRlrAll);
         });
         return vwRlrsAlls;

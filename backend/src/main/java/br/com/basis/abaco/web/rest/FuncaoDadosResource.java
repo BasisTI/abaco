@@ -531,7 +531,7 @@ public class FuncaoDadosResource {
                     vwDer.setId(item.getId());
                     vwDerAll.setId(item.getId());
                 }
-                
+
                 vwDerAll.setFuncaoId(idFuncao);
                 vwDerAll.setNome(item.getNome());
                 if(!vwDerAllList.contains(vwDerAll)){
