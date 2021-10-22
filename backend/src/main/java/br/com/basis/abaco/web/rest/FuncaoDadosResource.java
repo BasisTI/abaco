@@ -2,7 +2,6 @@ package br.com.basis.abaco.web.rest;
 
 import static org.elasticsearch.index.query.QueryBuilders.queryStringQuery;
 
-import java.lang.reflect.InvocationTargetException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
@@ -24,7 +23,11 @@ import br.com.basis.abaco.domain.VwRlr;
 import br.com.basis.abaco.domain.VwRlrAll;
 import br.com.basis.abaco.domain.enumeration.Complexidade;
 import br.com.basis.abaco.domain.enumeration.MetodoContagem;
-import br.com.basis.abaco.repository.search.*;
+import br.com.basis.abaco.repository.search.FuncaoDadosSearchRepository;
+import br.com.basis.abaco.repository.search.VwDerAllSearchRepository;
+import br.com.basis.abaco.repository.search.VwDerSearchRepository;
+import br.com.basis.abaco.repository.search.VwRlrAllSearchRepository;
+import br.com.basis.abaco.repository.search.VwRlrSearchRepository;
 import br.com.basis.abaco.service.dto.DerFdDTO;
 import br.com.basis.abaco.service.dto.DropdownDTO;
 import br.com.basis.abaco.service.dto.FuncaoDadoAnaliseDTO;
@@ -523,27 +526,28 @@ public class FuncaoDadosResource {
             ders.forEach(item -> {
                 VwDer vwDer = new VwDer();
                 VwDerAll vwDerAll = new VwDerAll();
+                
                 if(item.getId() != null){
                     vwDer.setId(item.getId());
                     vwDerAll.setId(item.getId());
                 }
-                vwDer.setNome(item.getNome());
-                vwDer.setIdSistemaFD(idSistema);
-                if(!vwDerList.contains(vwDer)){
-                    vwDers.add(vwDer);
-                }
-
                 vwDerAll.setFuncaoId(idFuncao);
                 vwDerAll.setNome(item.getNome());
                 if(!vwDerAllList.contains(vwDerAll)){
                     vwDerAlls.add(vwDerAll);
                 }
+
+                vwDer.setNome(item.getNome());
+                vwDer.setIdSistemaFD(idSistema);
+                if(!vwDerList.contains(vwDer)){
+                    vwDers.add(vwDer);
+                }
             });
-            if(!vwDers.isEmpty()){
-                vwDerSearchRepository.save(vwDers);
-            }
             if(!vwDerAlls.isEmpty()){
                 vwDerAllSearchRepository.save(vwDerAlls);
+            }
+            if(!vwDers.isEmpty()){
+                vwDerSearchRepository.save(vwDers);
             }
         }
     }

@@ -28,17 +28,21 @@ public class VwRlrAll {
     @Column(name = "id")
     private Long id;
 
+    @Column(name = "funcao_id")
+    private Long funcaoId;
+
     @Column(name = "nome")
     @Field(index = FieldIndex.not_analyzed, type = FieldType.String)
     private String nome;
 
-    @Column(name = "funcao_id")
-    private Long funcaoId;
-
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         VwRlrAll vwRlrAll = (VwRlrAll) o;
         return Objects.equals(nome, vwRlrAll.nome) && Objects.equals(funcaoId, vwRlrAll.funcaoId);
     }

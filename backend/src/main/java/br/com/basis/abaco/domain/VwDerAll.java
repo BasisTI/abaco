@@ -37,8 +37,12 @@ public class VwDerAll {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()){
+            return false;
+        }
         VwDerAll vwDerAll = (VwDerAll) o;
         return Objects.equals(nome, vwDerAll.nome) && Objects.equals(funcaoId, vwDerAll.funcaoId);
     }

@@ -24,6 +24,9 @@ import java.util.Objects;
 @NoArgsConstructor
 public class VwAlrAll {
 
+    @Column(name = "funcao_id")
+    private Long funcaoId;
+
     @Id
     @Column(name = "id")
     private Long id;
@@ -31,14 +34,14 @@ public class VwAlrAll {
     @Column(name = "nome")
     @Field(index = FieldIndex.not_analyzed, type = FieldType.String)
     private String nome;
-
-    @Column(name = "funcao_id")
-    private Long funcaoId;
-
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         VwAlrAll vwAlrAll = (VwAlrAll) o;
         return Objects.equals(nome, vwAlrAll.nome) && Objects.equals(funcaoId, vwAlrAll.funcaoId);
     }

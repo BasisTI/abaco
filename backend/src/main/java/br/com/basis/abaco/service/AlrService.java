@@ -9,7 +9,6 @@ import br.com.basis.abaco.service.dto.DropdownDTO;
 import br.com.basis.dynamicexports.service.DynamicExportsService;
 import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.elasticsearch.core.ElasticsearchTemplate;
 import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
@@ -28,13 +27,13 @@ public class AlrService {
     private final DynamicExportsService dynamicExportsService;
     private final AlrRepository alrRepository;
 
-    @Autowired
-    private VwAlrAllSearchRepository vwAlrAllSearchRepository;
+    private final VwAlrAllSearchRepository vwAlrAllSearchRepository;
 
-    public AlrService(ElasticsearchTemplate elasticsearchTemplate, DynamicExportsService dynamicExportsService, AlrRepository alrRepository){
+    public AlrService(ElasticsearchTemplate elasticsearchTemplate, DynamicExportsService dynamicExportsService, AlrRepository alrRepository, VwAlrAllSearchRepository vwAlrAllSearchRepository){
         this.elasticsearchTemplate = elasticsearchTemplate;
         this.dynamicExportsService = dynamicExportsService;
         this.alrRepository = alrRepository;
+        this.vwAlrAllSearchRepository = vwAlrAllSearchRepository;
     }
 
     public List<VwAlr> bindFilterSearchAlrsSistema(String nome, Long idSistema) {
