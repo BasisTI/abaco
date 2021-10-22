@@ -526,11 +526,12 @@ public class FuncaoDadosResource {
             ders.forEach(item -> {
                 VwDer vwDer = new VwDer();
                 VwDerAll vwDerAll = new VwDerAll();
-                
+
                 if(item.getId() != null){
                     vwDer.setId(item.getId());
                     vwDerAll.setId(item.getId());
                 }
+                
                 vwDerAll.setFuncaoId(idFuncao);
                 vwDerAll.setNome(item.getNome());
                 if(!vwDerAllList.contains(vwDerAll)){
