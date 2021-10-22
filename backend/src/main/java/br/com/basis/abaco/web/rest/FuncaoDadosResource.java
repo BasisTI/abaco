@@ -13,7 +13,15 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
-import br.com.basis.abaco.domain.*;
+import br.com.basis.abaco.domain.Analise;
+import br.com.basis.abaco.domain.Der;
+import br.com.basis.abaco.domain.FuncaoDados;
+import br.com.basis.abaco.domain.Rlr;
+import br.com.basis.abaco.domain.UploadedFile;
+import br.com.basis.abaco.domain.VwDer;
+import br.com.basis.abaco.domain.VwDerAll;
+import br.com.basis.abaco.domain.VwRlr;
+import br.com.basis.abaco.domain.VwRlrAll;
 import br.com.basis.abaco.domain.enumeration.Complexidade;
 import br.com.basis.abaco.domain.enumeration.MetodoContagem;
 import br.com.basis.abaco.repository.search.*;

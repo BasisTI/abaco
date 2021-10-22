@@ -1,7 +1,6 @@
 package br.com.basis.abaco.service;
 
 import br.com.basis.abaco.domain.Alr;
-import br.com.basis.abaco.domain.Der;
 import br.com.basis.abaco.domain.VwAlr;
 import br.com.basis.abaco.domain.VwAlrAll;
 import br.com.basis.abaco.repository.AlrRepository;

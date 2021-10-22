@@ -1,23 +1,14 @@
 package br.com.basis.abaco.service;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import br.com.basis.abaco.domain.Der;
 import br.com.basis.abaco.domain.VwDer;
 import br.com.basis.abaco.domain.VwDerAll;
-import br.com.basis.abaco.repository.search.DerSearchRepository;
+import br.com.basis.abaco.repository.DerRepository;
 import br.com.basis.abaco.repository.search.VwDerAllSearchRepository;
-import br.com.basis.abaco.repository.search.VwDerSearchRepository;
+import br.com.basis.abaco.service.dto.DropdownDTO;
 import br.com.basis.dynamicexports.service.DynamicExportsService;
 import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
-import org.elasticsearch.search.aggregations.AggregationBuilder;
-import org.elasticsearch.search.aggregations.AggregationBuilders;
-import org.elasticsearch.search.aggregations.bucket.histogram.Histogram;
-import org.elasticsearch.search.aggregations.bucket.terms.Terms;
-import org.elasticsearch.search.aggregations.bucket.terms.TermsBuilder;
-import org.hibernate.criterion.Order;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.elasticsearch.core.ElasticsearchTemplate;
@@ -26,11 +17,8 @@ import org.springframework.data.elasticsearch.core.query.SearchQuery;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import br.com.basis.abaco.repository.DerRepository;
-import br.com.basis.abaco.service.dto.DropdownDTO;
-
-import static org.elasticsearch.index.query.QueryBuilders.matchQuery;
-import static org.elasticsearch.index.query.QueryBuilders.termsQuery;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @Transactional

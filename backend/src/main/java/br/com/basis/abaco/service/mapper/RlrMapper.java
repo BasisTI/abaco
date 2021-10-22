@@ -1,11 +1,8 @@
 package br.com.basis.abaco.service.mapper;
 
 
-import br.com.basis.abaco.domain.Der;
 import br.com.basis.abaco.domain.Rlr;
-import br.com.basis.abaco.domain.VwDer;
 import br.com.basis.abaco.domain.VwRlr;
-import br.com.basis.abaco.repository.DerRepository;
 import br.com.basis.abaco.repository.RlrRepository;
 import br.com.basis.abaco.service.EntityMapper;
 import lombok.AllArgsConstructor;

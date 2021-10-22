@@ -1,13 +1,25 @@
 package br.com.basis.abaco.web.rest;
 
-import br.com.basis.abaco.domain.*;
+import br.com.basis.abaco.domain.Alr;
+import br.com.basis.abaco.domain.Analise;
+import br.com.basis.abaco.domain.Der;
+import br.com.basis.abaco.domain.FuncaoTransacao;
+import br.com.basis.abaco.domain.UploadedFile;
+import br.com.basis.abaco.domain.VwAlr;
+import br.com.basis.abaco.domain.VwAlrAll;
+import br.com.basis.abaco.domain.VwDer;
+import br.com.basis.abaco.domain.VwDerAll;
 import br.com.basis.abaco.domain.enumeration.Complexidade;
 import br.com.basis.abaco.domain.enumeration.MetodoContagem;
 import br.com.basis.abaco.domain.enumeration.StatusFuncao;
 import br.com.basis.abaco.repository.AnaliseRepository;
 import br.com.basis.abaco.repository.DerRepository;
 import br.com.basis.abaco.repository.FuncaoTransacaoRepository;
-import br.com.basis.abaco.repository.search.*;
+import br.com.basis.abaco.repository.search.FuncaoTransacaoSearchRepository;
+import br.com.basis.abaco.repository.search.VwAlrAllSearchRepository;
+import br.com.basis.abaco.repository.search.VwAlrSearchRepository;
+import br.com.basis.abaco.repository.search.VwDerAllSearchRepository;
+import br.com.basis.abaco.repository.search.VwDerSearchRepository;
 import br.com.basis.abaco.service.FuncaoDadosService;
 import br.com.basis.abaco.service.dto.AlrDTO;
 import br.com.basis.abaco.service.dto.DerFtDTO;
@@ -443,7 +455,7 @@ public class FuncaoTransacaoResource {
         }
     }
 
-    
+
     private void saveVwDers(Set<Der> ders, List<VwDer> vwDerList, Long idSistema, Long idFuncao, List<VwDerAll> vwDerAllList) {
         List<VwDer> vwDers = new ArrayList<>();
         List<VwDerAll> vwDerAlls = new ArrayList<>();

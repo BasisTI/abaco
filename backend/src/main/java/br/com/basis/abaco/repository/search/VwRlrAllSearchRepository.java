@@ -1,7 +1,5 @@
 package br.com.basis.abaco.repository.search;
 
-import br.com.basis.abaco.domain.VwAlrAll;
-import br.com.basis.abaco.domain.VwRlr;
 import br.com.basis.abaco.domain.VwRlrAll;
 import org.springframework.data.elasticsearch.repository.ElasticsearchRepository;
 

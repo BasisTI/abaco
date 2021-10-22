@@ -3,7 +3,6 @@ package br.com.basis.abaco.web.rest;
 import br.com.basis.abaco.domain.Alr;
 import br.com.basis.abaco.domain.VwAlr;
 import br.com.basis.abaco.domain.VwAlrAll;
-import br.com.basis.abaco.domain.VwRlr;
 import br.com.basis.abaco.repository.AlrRepository;
 import br.com.basis.abaco.repository.search.AlrSearchRepository;
 import br.com.basis.abaco.service.AlrService;

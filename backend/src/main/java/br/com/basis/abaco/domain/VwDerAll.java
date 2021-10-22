@@ -1,6 +1,5 @@
 package br.com.basis.abaco.domain;
 
-import br.com.basis.abaco.utils.StringUtils;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
