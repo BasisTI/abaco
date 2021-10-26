@@ -20,3 +20,4 @@ public interface ModuloRepository extends JpaRepository<Modulo, Long> {
     @Query(value = "SELECT m FROM Modulo m WHERE lower(m.nome) = :nome AND m.sistema.id = :sistemaId")
     Optional<List<Modulo>> findAllByNomeAndSistemaId(@Param("nome") String nome, @Param("sistemaId") Long sistemaId);
 }
+
