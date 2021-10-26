@@ -3,6 +3,7 @@ package br.com.basis.abaco.repository;
 import br.com.basis.abaco.domain.Modulo;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 import java.util.Optional;
@@ -17,5 +18,6 @@ public interface ModuloRepository extends JpaRepository<Modulo, Long> {
     public Modulo findByFuncionalidade(Long id);
 
     @Query(value = "SELECT m FROM Modulo m WHERE lower(m.nome) = :nome AND m.sistema.id = :sistemaId")
-    Optional<List<Modulo>> findAllByNomeAndSistemaId(String nome, Long sistemaId);
+    Optional<List<Modulo>> findAllByNomeAndSistemaId(@Param("nome") String nome, @Param("sistemaId") Long sistemaId);
 }
+
