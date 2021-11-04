@@ -124,6 +124,7 @@
                     <basis-datatable
                             type="memory"
                             disableClone="true"
+                            [filterOnColumn]="true"
                             [value]="sistema.modulos"
                             disableView="true"
                             (buttonClick)="datatableClickModulo($event)"
@@ -150,11 +151,13 @@
                         </div>
                     </div>
 
+                    
                     <!-- Datatable Funcionalidades -->
                     <basis-datatable
                             id="idFuncionalidadeTable"
                             type="memory"
                             disableClone="true"
+                            [filterOnColumn]="true"
                             [value]="sistema.funcionalidades"
                             (buttonClick)="datatableClickFuncionalidade($event)"
                             disableView="true"
