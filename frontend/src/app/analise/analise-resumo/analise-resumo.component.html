@@ -95,6 +95,16 @@
               (click)="openModalImportarExcel(this.analise)">
             </app-green-button>
           </div>
+          <div class="ui-g-2 ui-md-2 ui-sm-12" *ngIf="this.analise.bloqueiaAnalise === true">
+            <app-blue-button [buttonLabel]="this.getLabel('Desbloquear Análise')"
+              (click)="desbloquearAnalise()">
+            </app-blue-button>
+          </div>
+          <div class="ui-g-2 ui-md-2 ui-sm-12" *ngIf="this.analise.bloqueiaAnalise === false && this.isView">
+            <app-blue-button [buttonLabel]="this.getLabel('Editar Análise')"
+              (click)="editarAnalise()">
+            </app-blue-button>
+          </div>
         <div class="ui-g-2 ui-md-2 ui-sm-12">
           <app-red-button *ngIf="!this.isView" [buttonLabel]="this.getLabel('Bloquear Análise')"
             (click)="bloquearAnalise()">

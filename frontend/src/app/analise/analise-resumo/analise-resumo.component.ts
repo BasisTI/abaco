@@ -103,7 +103,7 @@ export class AnaliseResumoComponent implements OnInit {
                 if (!this.isView) {
                     this.analiseService.find(this.idAnalise).subscribe(analise => {
                         this.analiseSharedDataService.analise = new Analise().copyFromJSON(analise);
-                        this.analise =  new Analise().copyFromJSON(analise);
+                        this.analise = new Analise().copyFromJSON(analise);
                         this.disableAba = analise.metodoContagem === MessageUtil.INDICATIVA;
                         this.complexidades = AnaliseSharedUtils.complexidades;
                         this.resumoTotal = this.analiseSharedDataService.analise.resumoTotal;
@@ -112,20 +112,20 @@ export class AnaliseResumoComponent implements OnInit {
                         this.pfAjustada = analise.adjustPFTotal;
                         this.fatorCriticidade = analise.fatorCriticidade;
                         this.valorCriticidade = analise.valorCriticidade;
-                        if(!this.valorCriticidade){
+                        if (!this.valorCriticidade) {
                             this.valorCriticidade = 35;
                         }
-                        if(this.fatorCriticidade === true){
-                            this.pfCriticidade =  Number(this.pfAjustada) * (this.valorCriticidade/100+1);
+                        if (this.fatorCriticidade === true) {
+                            this.pfCriticidade = Number(this.pfAjustada) * (this.valorCriticidade / 100 + 1);
                             this.pfCriticidade = this.pfCriticidade.toFixed(2);
                         }
                         this.analiseService.getResumo(this.idAnalise)
-                        .subscribe(res => {
-                            const jsonResponse = res;
+                            .subscribe(res => {
+                                const jsonResponse = res;
                                 const lstResumo: Resumo[] = [];
                                 jsonResponse.forEach(
                                     elem => {
-                                        lstResumo.push( new Resumo(
+                                        lstResumo.push(new Resumo(
                                             elem.pfAjustada,
                                             elem.pfTotal,
                                             elem.quantidadeTipo,
@@ -135,16 +135,16 @@ export class AnaliseResumoComponent implements OnInit {
                                             elem.inm,
                                             elem.tipo
                                         ).clone());
-                                });
+                                    });
                                 this.linhaResumo = lstResumo;
                                 this.linhaResumo = Resumo.addTotalLine(this.linhaResumo);
-                        });
+                            });
                     },
                         err => {
                             this.pageNotificationService.addErrorMessage(
                                 this.getLabel('Você não tem permissão para editar esta análise, redirecionando para a tela de visualização...')
                             );
-                    });
+                        });
                 } else {
                     this.analiseService.findView(this.idAnalise).subscribe(analise => {
                         this.analiseSharedDataService.analise = analise;
@@ -162,7 +162,7 @@ export class AnaliseResumoComponent implements OnInit {
                             this.pageNotificationService.addErrorMessage(
                                 this.getLabel('Você não tem permissão para editar esta análise, redirecionando para a tela de visualização...')
                             );
-                    });
+                        });
 
                 }
                 this.blockUiService.hide();
@@ -266,6 +266,44 @@ export class AnaliseResumoComponent implements OnInit {
 
     }
 
+    editarAnalise(){
+        if (this.authService.possuiRole(AuthService.PREFIX_ROLE + "ANALISE_EDITAR") == false) {
+            return false;
+        }
+        this.router.navigate(['/analise/' + this.idAnalise + '/edit']);
+    }
+
+    public desbloquearAnalise() {
+        if (this.authService.possuiRole(AuthService.PREFIX_ROLE + "ANALISE_BLOQUEAR_DESBLOQUEAR") == false) {
+            return false;
+        }
+        this.confirmationService.confirm({
+            message: this.getLabel('Tem certeza que deseja desbloquear o registro ?')
+                .concat(this.analise.identificadorAnalise)
+                .concat('?'),
+            accept: () => {
+                this.analiseService.block(this.analise).subscribe(() => {
+                    this.pageNotificationService.addSuccessMessage("Análise: "+this.analise.identificadorAnalise+" desbloqueada com sucesso.");
+                    window.location.reload();
+                }, (error: Response) => {
+                    switch (error.status) {
+                        case 400: {
+                            if (error) {
+                                this.pageNotificationService.addErrorMessage(
+                                    this.getLabel('Somente administradores podem bloquear/desbloquear análises!')
+                                );
+                            } else {
+                                this.pageNotificationService
+                                    .addErrorMessage(
+                                        this.getLabel('Somente membros da equipe responsável podem bloquear esta análise!'));
+                            }
+                        }
+                    }
+                });
+            }
+        });
+    }
+
     public openCompartilharDialog() {
         if (this.authService.possuiRole(AuthService.PREFIX_ROLE + "ANALISE_COMPARTILHAR") == false) {
             return false;
@@ -274,20 +312,20 @@ export class AnaliseResumoComponent implements OnInit {
             this.equipeService.findAllCompartilhaveis(this.analise.organizacao.id,
                 this.analise.id,
                 this.analise.equipeResponsavel.id).subscribe((equipes) => {
-                if (equipes) {
-                    equipes.forEach((equipe) => {
-                        const entity: AnaliseShareEquipe = Object.assign(new AnaliseShareEquipe(),
-                            {
-                                id: undefined,
-                                equipeId: equipe.id,
-                                analiseId: this.analise.id,
-                                viewOnly: false,
-                                nomeEquipe: equipe.nome
-                            });
-                        this.equipeShare.push(entity);
-                    });
-                }
-            });
+                    if (equipes) {
+                        equipes.forEach((equipe) => {
+                            const entity: AnaliseShareEquipe = Object.assign(new AnaliseShareEquipe(),
+                                {
+                                    id: undefined,
+                                    equipeId: equipe.id,
+                                    analiseId: this.analise.id,
+                                    viewOnly: false,
+                                    nomeEquipe: equipe.nome
+                                });
+                            this.equipeShare.push(entity);
+                        });
+                    }
+                });
             this.analiseService.findAllCompartilhadaByAnalise(this.analise.id).subscribe((shared) => {
                 this.analiseShared = shared;
             });
@@ -302,7 +340,7 @@ export class AnaliseResumoComponent implements OnInit {
             this.analiseService.salvarCompartilhar(this.selectedEquipes).subscribe((res) => {
                 this.mostrarDialog = false;
                 this.analise.compartilhadas = this.analise.compartilhadas.concat(this.selectedEquipes);
-                this.selectedEquipes.forEach( item => {
+                this.selectedEquipes.forEach(item => {
                     this.equipeShare = this.equipeShare.filter(
                         compartilha => {
                             return compartilha.id !== item.id ? true : false;
@@ -322,7 +360,7 @@ export class AnaliseResumoComponent implements OnInit {
             this.analiseService.deletarCompartilhar(this.selectedToDelete.id).subscribe((res) => {
                 this.analise.compartilhadas = this.analise.compartilhadas.filter(
                     compartilha => {
-                       return compartilha.id !== this.selectedToDelete.id ? true : false;
+                        return compartilha.id !== this.selectedToDelete.id ? true : false;
                     });
                 this.mostrarDialog = false;
                 this.pageNotificationService.addSuccessMessage(this.getLabel('Compartilhamento removido com sucesso!'));
