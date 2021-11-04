@@ -1078,7 +1078,6 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit, OnChange
         this.fecharDialog();
     }
 
-
     confirmDelete(funcaoDadosSelecionada: FuncaoDados[]) {
         this.confirmationService.confirm({
             message: 'Tem certeza que deseja excluir as funções de dados selecionada?',
