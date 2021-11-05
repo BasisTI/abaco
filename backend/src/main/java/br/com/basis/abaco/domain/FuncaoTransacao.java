@@ -102,6 +102,7 @@ public class FuncaoTransacao extends FuncaoAnalise implements Serializable {
         this.setOrdem(ordem);
         bindFuncaoAnalise(null, complexidade, pf, grossPF, analise, funcionalidade, detStr, fatorAjuste, name, sustantation, derValues, null, equipe);
     }
+    
     public void addFiles(UploadedFile file){
         this.files.add(file);
         file.setFuncaoTransacao(this);
