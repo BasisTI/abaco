@@ -104,7 +104,7 @@ public class FuncaoDados extends FuncaoAnalise implements Serializable {
 
     }
 
-    public void bindFuncaoDados(Complexidade complexidade, BigDecimal pf, BigDecimal grossPF, Analise analise, Funcionalidade funcionalidade, String detStr, FatorAjuste fatorAjuste, String name, String sustantation, Set<String> derValues, TipoFuncaoDados tipo, String retStr, Integer quantidade, Set<Rlr> rlrs, Alr alr, List<UploadedFile> files, Set<String> rlrValues, Set<Der> ders, FuncaoDadosVersionavel funcaoDadosVersionavel, ImpactoFatorAjuste impacto, TipoEquipe equipe) {
+    public void bindFuncaoDados(Complexidade complexidade, BigDecimal pf, BigDecimal grossPF, Analise analise, Funcionalidade funcionalidade, String detStr, FatorAjuste fatorAjuste, String name, String sustantation, Set<String> derValues, TipoFuncaoDados tipo, String retStr, Integer quantidade, Set<Rlr> rlrs, Alr alr, List<UploadedFile> files, Set<String> rlrValues, Set<Der> ders, FuncaoDadosVersionavel funcaoDadosVersionavel, ImpactoFatorAjuste impacto, TipoEquipe equipe, Long ordem) {
         this.tipo = tipo;
         this.funcionalidade = funcionalidade;
         this.retStr = retStr;
@@ -116,6 +116,7 @@ public class FuncaoDados extends FuncaoAnalise implements Serializable {
         this.ders = ders == null ? null : Collections.unmodifiableSet(ders);
         this.funcaoDadosVersionavel = funcaoDadosVersionavel;
         this.impacto = impacto;
+        this.setOrdem(ordem);
         bindFuncaoAnalise(null, complexidade, pf, grossPF, analise, funcionalidade, detStr, fatorAjuste, name, sustantation, derValues, null, equipe);
     }
 
