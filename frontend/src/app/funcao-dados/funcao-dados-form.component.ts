@@ -1,4 +1,4 @@
-import { AfterViewInit, ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output, QueryList, ViewChildren, ViewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output, QueryList, ViewChildren, ViewChild, OnDestroy, OnChanges } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Column, DatatableClickEvent, DatatableComponent, DatatableModule, PageNotificationService } from '@nuvem/primeng-components';
 import * as _ from 'lodash';
@@ -48,7 +48,7 @@ import { Utilitarios } from '../util/utilitarios.util';
     templateUrl: './funcao-dados-form.component.html',
     providers: [ConfirmationService]
 })
-export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
+export class FuncaoDadosFormComponent implements OnInit, AfterViewInit, OnChanges {
     emptySustantion = '<p><br></p>';
     @Output()
     valueChange: EventEmitter<string> = new EventEmitter<string>();
@@ -152,6 +152,8 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
     novaFuncionalidade: Funcionalidade = new Funcionalidade();
     oldModuloId: number;
 
+    numberPages = 20;
+
 
     //Variável para o p-editor
     formatsEditor = ["background", "bold", "color", "font", "code", "italic",
@@ -176,6 +178,8 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
     ) {
         this.sanitizer = sanitizer;
         this.lastObjectUrl = "";
+    }
+    ngOnChanges(): void {
     }
 
 
@@ -231,6 +235,9 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
         this.traduzirClassificacoes();
         this.traduzirImpactos();
         this.inicializaFatoresAjuste(this.analise.manual);
+        if (localStorage.getItem("numberPagesFD") != null) {
+            this.tables.pDatatableComponent._rows = Number.parseInt(localStorage.getItem("numberPagesFD"));
+        }
     }
 
     public onRowDblclick(event) {
@@ -800,6 +807,8 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
             this.rlrsChips.forEach(c => c.id = undefined);
         }
 
+        this.tables.selectedRow = [];
+        this.selectButtonMultiple = false;
     }
 
     public verificarModulo() {
@@ -1069,7 +1078,6 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
         this.fecharDialog();
     }
 
-
     confirmDelete(funcaoDadosSelecionada: FuncaoDados[]) {
         this.confirmationService.confirm({
             message: 'Tem certeza que deseja excluir as funções de dados selecionada?',
@@ -1079,6 +1087,7 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
                         this.funcoesDados = this.funcoesDados.filter((funcaoDadosEdit) => (funcaoDadosEdit.id !== funcaoDados.id));
                         this.analiseService.updateSomaPf(this.analise.id).subscribe();
                         this.updateIndex();
+                        this.resetarEstadoPosSalvar();
                     });
                 })
                 this.pageNotificationService.addDeleteMsg("Funções deletadas com sucesso!");
@@ -1212,6 +1221,7 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
             });
     }
     public selectFD(event) {
+        localStorage.setItem("numberPagesFD", this.tables.pDatatableComponent._rows.toString());
         if (event.shiftKey === true) {
             let fim = this.funcoesDados.indexOf(this.tables.selectedRow[0]);
             let inicio = this.funcoesDados.indexOf(this.funcaoDadosEditar[0]);
@@ -1226,7 +1236,6 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
                 }
             }
         }
-
         this.tables.pDatatableComponent.metaKeySelection = true;
         if (this.tables && this.tables.selectedRow) {
             this.funcaoDadosEditar = this.tables.selectedRow;
@@ -1516,7 +1525,7 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
             this.funcoesDados.push(this.funcaoDadosEditar[0]);
         }
         this.updateIndex()
-        
+
     }
 
     ordernarFuncoes() {
@@ -1525,7 +1534,7 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
 
     salvarOrdernacao() {
         this.funcoesDados.forEach((funcaoDado, index) => {
-            funcaoDado.ordem = index+1;
+            funcaoDado.ordem = index + 1;
             this.funcaoDadosService.updateOrdem(funcaoDado).subscribe();
         })
         this.pageNotificationService.addSuccessMessage("Ordenação salva com sucesso.");
@@ -1572,7 +1581,7 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
             }
         }
     }
-    
+
     isModuloSelected() {
         return this.seletedFuncaoDados.modulo != null;
     }
@@ -1602,22 +1611,22 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
         }
     }
 
-    abrirDialogModulo(){
+    abrirDialogModulo() {
         this.mostrarDialogAddModulo = true;
     }
-    abrirDialogFuncionalidade(){
+    abrirDialogFuncionalidade() {
         this.mostrarDialogAddFuncionalidade = true;
     }
-    fecharDialogModulo(){
+    fecharDialogModulo() {
         this.mostrarDialogAddModulo = false;
         this.novoModulo = new Modulo();
     }
-    fecharDialogFuncionalidade(){
+    fecharDialogFuncionalidade() {
         this.mostrarDialogAddFuncionalidade = false;
         this.novaFuncionalidade = new Funcionalidade();
     }
 
-    adicionarModulo(){
+    adicionarModulo() {
         if (!this.novoModulo.nome) {
             this.pageNotificationService.addErrorMessage(this.getLabel('Por favor preencher o campo obrigatório!'));
             return;
@@ -1631,7 +1640,7 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
         })
     }
 
-    adicionarFuncionalidade(){
+    adicionarFuncionalidade() {
         if (this.novaFuncionalidade.nome === undefined) {
             this.pageNotificationService.addErrorMessage(this.getLabel('Por favor preencher o campo obrigatório!'));
             return;

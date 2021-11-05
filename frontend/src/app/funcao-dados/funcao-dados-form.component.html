@@ -21,7 +21,7 @@
                                     [enableButtonsScroll]="true" [disableView]="selectButtonMultiple || isOrderning"
                                     (dblclick)="onRowDblclick($event)" [value]="funcoesDados"
                                     (buttonClick)="datatableClick($event)" (click)="selectFD($event)"
-                                    [paginator]="false" [rows]="20" [selectionMode]="'multiple'" [filterOnColumn]="true"
+                                    [paginator]="false" [rows]="numberPages" [selectionMode]="'multiple'" [filterOnColumn]="true"
                                     [reorderableRows]="isOrderning" (onRowReorder)="updateIndex()"
                                     [rowsPerPageOptions]="[20,50,100]" [showVisibleColumnsControl]="true" #tables>
                                     <p-column header="Ordem" field="ordem">

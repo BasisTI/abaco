@@ -164,6 +164,8 @@ export class FuncaoTransacaoFormComponent implements OnInit {
     novaFuncionalidade: Funcionalidade = new Funcionalidade();
     oldModuloId: number;
 
+    numberPages = 20;
+
 
     //Variável para o p-editor
     formatsEditor = ["background", "bold", "color", "font", "code", "italic",
@@ -234,6 +236,9 @@ export class FuncaoTransacaoFormComponent implements OnInit {
         this.traduzirImpactos();
         this.subscribeDisplay();
         this.inicializaFatoresAjuste(this.analise.manual);
+        if (localStorage.getItem("numberPagesFT") != null) {
+            this.tables.pDatatableComponent._rows = Number.parseInt(localStorage.getItem("numberPagesFT"));
+        }
     }
 
     sortColumn(event: any) {
@@ -729,6 +734,8 @@ export class FuncaoTransacaoFormComponent implements OnInit {
             this.alrsChips.forEach(c => c.id = undefined);
         }
 
+        this.tables.selectedRow = [];
+        this.selectButtonMultiple = false;
     }
 
     public verificarModulo() {
@@ -894,6 +901,7 @@ export class FuncaoTransacaoFormComponent implements OnInit {
                         ));
                         this.analiseService.updateSomaPf(this.analise.id).subscribe();
                         this.updateIndex();
+                        this.resetarEstadoPosSalvar();
                     });
                 })
                 this.pageNotificationService.addDeleteMsg("Funções deletadas com sucesso!");
@@ -1018,6 +1026,7 @@ export class FuncaoTransacaoFormComponent implements OnInit {
         });
     }
     public selectFT(event) {
+        localStorage.setItem("numberPagesFT", this.tables.pDatatableComponent._rows.toString());
         if (event.shiftKey === true) {
             let fim = this.funcoesTransacoes.indexOf(this.tables.selectedRow[0]);
             let inicio = this.funcoesTransacoes.indexOf(this.funcaoTransacaoEditar[0]);
