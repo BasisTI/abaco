@@ -9,6 +9,8 @@ import { HttpClient } from '@angular/common/http';
 import { FuncaoDados } from '../funcao-dados';
 import { BlockUiService } from '@nuvem/angular-base';
 import { TipoEquipe } from '../tipo-equipe';
+import { catchError } from 'rxjs/internal/operators/catchError';
+import { PageNotificationService } from '@nuvem/primeng-components';
 
 
 @Injectable()
@@ -22,7 +24,7 @@ export class BaselineService {
     relatoriosBaselineUrl = this.resourceUrl + '/downloadPdfBaselineBrowser/';
 
 
-    constructor(private http: HttpClient, private blockUiService: BlockUiService, ) {
+    constructor(private http: HttpClient, private blockUiService: BlockUiService, private pageNotificationService: PageNotificationService) {
     }
 
     allBaselineSintetico(sistema: Sistema): Observable<BaselineSintetico[]> {
@@ -130,5 +132,20 @@ export class BaselineService {
             url = url + 'update/' + sistema.id.valueOf() + '/' + equipe.id.valueOf();
         }
         return this.http.get<BaselineSintetico>(url);
+    }
+
+    public exportarModeloExcel(id: number, modelo: number) {
+        this.blockUiService.show();
+        return this.http.request('get', this.resourceUrl + "exportar-excel/" + id + "/" + modelo, {
+            observe: "response",
+            responseType: "blob"
+        })
+            .pipe(catchError((error: any) => {
+                if (error.status === 500) {
+                    this.blockUiService.hide();
+                    this.pageNotificationService.addErrorMessage("Erro ao gerar o relatório");
+                    return Observable.throw(new Error(error.status));
+                }
+            }))
     }
 }

@@ -69,6 +69,7 @@ public interface AnaliseRepository extends JpaRepository<Analise, Long> {
 
     List<Analise> findAllBySistema(Sistema sistema);
 
-
+    @Query(value = "SELECT a FROM Analise a WHERE a.equipeResponsavel.id = :equipeId AND a.sistema.id = :sistemaId")
+    List<Analise> findBySistemaAndEquipe(@Param("equipeId") Long equipeId, @Param("sistemaId") Long sistemaId);
 
 }
