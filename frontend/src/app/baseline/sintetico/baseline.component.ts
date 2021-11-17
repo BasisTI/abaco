@@ -37,6 +37,18 @@ export class BaselineComponent implements OnInit {
     canConsultar: boolean = false;
     canExportar: boolean = false;
 
+    showDialogImportarExcel: boolean = false;
+
+    baselineExportar: any;
+    lstModelosExcel = [
+        { label: "Modelo padrão BASIS", value: 1 },
+        { label: "Modelo padrão BNDES", value: 2 },
+        { label: "Modelo padrão ANAC", value: 3 },
+        { label: "Modelo padrão EBCOLOG", value: 4 },
+        { label: "Modelo padrão EBDCT", value: 5 },
+    ];
+    modeloSelecionado: any;
+
     constructor(
         private router: Router,
         private baselineService: BaselineService,
@@ -95,6 +107,10 @@ export class BaselineComponent implements OnInit {
                 break;
             case 'geraBaselinePdfBrowser':
                 this.geraBaselinePdfBrowser(event.selection.idsistema);
+                break;
+            case 'exportExcel':
+                this.baselineExportar = event.selection;
+                this.openModalExportarExcel();
                 break;
         }
     }
@@ -180,6 +196,34 @@ export class BaselineComponent implements OnInit {
                     console.log(error.message);
                     this.showUpdateBaseline = false;
             });
+        }
+    }
+
+    openModalExportarExcel() {
+        this.showDialogImportarExcel = true;
+    }
+
+    closeModalExportarExcel() {
+        this.showDialogImportarExcel = false;
+        this.modeloSelecionado = null;
+        this.baselineExportar = null;
+    }
+
+    exportarPlanilha() {
+        if (this.baselineExportar != null) {
+            this.baselineService.exportarModeloExcel(this.baselineExportar.idsistema, this.modeloSelecionado.value).subscribe(
+                (response) => {
+                    let filename = response.headers.get("content-disposition").split("filename=");
+                    const mediaType = 'application/vnd.ms-excel';
+                    const blob = new Blob([response.body], { type: mediaType });
+                    const fileURL = window.URL.createObjectURL(blob);
+                    const anchor = document.createElement('a');
+                    anchor.download = filename[1];
+                    anchor.href = fileURL;
+                    document.body.appendChild(anchor);
+                    anchor.click();
+                    this.closeModalExportarExcel();
+                });;
         }
     }
 }

@@ -1,10 +1,8 @@
 package br.com.basis.abaco.web.rest;
 
-import br.com.basis.abaco.domain.BaseLineAnaliticoFD;
-import br.com.basis.abaco.domain.BaseLineAnaliticoFT;
-import br.com.basis.abaco.domain.BaseLineSintetico;
-import br.com.basis.abaco.domain.FuncaoDados;
+import br.com.basis.abaco.domain.*;
 import br.com.basis.abaco.reports.rest.RelatorioBaselineRest;
+import br.com.basis.abaco.reports.util.RelatorioUtil;
 import br.com.basis.abaco.repository.FuncaoDadosRepository;
 import br.com.basis.abaco.repository.FuncaoTransacaoRepository;
 import br.com.basis.abaco.repository.search.BaseLineAnaliticoFDSearchRepository;
@@ -28,6 +26,10 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.elasticsearch.core.ElasticsearchTemplate;
 import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
 import org.springframework.data.elasticsearch.core.query.SearchQuery;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -38,6 +40,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
@@ -222,5 +225,14 @@ public class BaseLineAnaliticoResource {
         SearchQuery searchQuery = new NativeSearchQueryBuilder().withQuery(qb).withPageable(pageable).build();
         Page<BaseLineAnaliticoFT> lstPage = elasticsearchTemplate.queryForPage(searchQuery, BaseLineAnaliticoFT.class);
         return new PageImpl(lstPage.getContent(), pageable, lstPage.getTotalElements());
+    }
+
+    @GetMapping(value = "/exportar-excel/{id}/{modelo}", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
+    @Secured("ROLE_ABACO_BASELINE_EXPORTAR")
+    public ResponseEntity<byte[]> exportarExcel(@PathVariable Long id, @PathVariable Long modelo) throws IOException{
+        BaseLineSintetico baseLineSintetico = recuperarBaselinePorSistema(id);
+        List<BaseLineAnaliticoFD> baseLineAnaliticoFD = getBaseLineAnaliticoFD(id);
+        List<BaseLineAnaliticoFT> baseLineAnaliticoFT = getBaseLineAnaliticoFT(id);
+        return baselineAnaliseService.exportarExcel(baseLineSintetico, baseLineAnaliticoFD, baseLineAnaliticoFT, modelo);
     }
 }
