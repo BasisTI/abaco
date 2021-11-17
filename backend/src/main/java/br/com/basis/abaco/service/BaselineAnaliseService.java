@@ -56,7 +56,6 @@ public class BaselineAnaliseService extends BaseService{
 
         List<FuncaoDados> fds = new ArrayList<>();
         List<FuncaoTransacao> fts = new ArrayList<>();
-
         for (BaseLineAnaliticoFD blFD : baseLineAnaliticoFD) {
             FuncaoDados fd = funcaoDadosRepository.findById(blFD.getIdfuncaodados());
             fds.add(fd);
