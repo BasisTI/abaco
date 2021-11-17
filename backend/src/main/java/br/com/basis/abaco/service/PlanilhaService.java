@@ -406,7 +406,7 @@ public class PlanilhaService {
             row.getCell(17).setCellValue(Jsoup.parse(funcaoTransacao.getSustantation()  != null ? funcaoTransacao.getSustantation() : "").text());
         }
     }
-    
+
 
     private void setarResumoExcelPadraoANAC(XSSFWorkbook excelFile, Analise analise) {
         XSSFSheet excelSheet = excelFile.getSheet(RESUMO);
@@ -597,6 +597,7 @@ public class PlanilhaService {
             }
         }
     }
+    
 
     private void setarResumoExcelPadraoBasis(XSSFWorkbook excelFile, Analise analise, String nomeElaborador){
         XSSFSheet excelSheet = excelFile.getSheet(RESUMO);
