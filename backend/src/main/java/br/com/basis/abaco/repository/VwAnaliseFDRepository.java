@@ -12,7 +12,7 @@ import java.util.List;
 public interface VwAnaliseFDRepository extends JpaRepository<VwAnaliseFD, Long> {
 
     @Query("SELECT vw FROM VwAnaliseFD as vw WHERE " +
-        "vw.funcaoNome LIKE :nomeFuncao% AND " +
+        "vw.funcaoNome = :nomeFuncao AND " +
         "vw.moduloNome LIKE :nomeModulo% AND " +
         "vw.funcionalidadeNome LIKE :nomeFuncionalidade% AND " +
         "vw.sistemaNome LIKE :nomeSistema% AND " +

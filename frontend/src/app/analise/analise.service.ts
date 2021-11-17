@@ -478,9 +478,9 @@ export class AnaliseService {
     }
 
     findAnalisesFromFD(nomeFuncao: String, nomeModulo: String, nomeFuncionalidade: String, nomeSistema: String, nomeEquipe: String): Observable<any[]>{
-        return this.http.get<any[]>(this.resourceUrl+"/FD/"+nomeFuncao+"/"+nomeModulo+"/"+nomeFuncionalidade+"/"+nomeSistema+"/"+nomeEquipe);
+        return this.http.get<any[]>(this.resourceUrl+"/FD?nomeFuncao="+nomeFuncao+"&nomeModulo="+nomeModulo+"&nomeFuncionalidade="+nomeFuncionalidade+"&nomeSistema="+nomeSistema+"&nomeEquipe="+nomeEquipe);
     }
     findAnalisesFromFT(nomeFuncao: String, nomeModulo: String, nomeFuncionalidade: String, nomeSistema: String, nomeEquipe: String): Observable<any[]>{
-        return this.http.get<any[]>(this.resourceUrl+"/FT/"+nomeFuncao+"/"+nomeModulo+"/"+nomeFuncionalidade+"/"+nomeSistema+"/"+nomeEquipe);
+        return this.http.get<any[]>(this.resourceUrl+"/FT?nomeFuncao="+nomeFuncao+"&nomeModulo="+nomeModulo+"&nomeFuncionalidade="+nomeFuncionalidade+"&nomeSistema="+nomeSistema+"&nomeEquipe="+nomeEquipe);
     }
 }

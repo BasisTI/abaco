@@ -793,22 +793,22 @@ public class AnaliseResource {
         return new ResponseEntity(newAnalise, HttpStatus.OK);
     }
 
-    @GetMapping("/analises/FD/{nomeFuncao}/{nomeModulo}/{nomeFuncionalidade}/{nomeSistema}/{nomeEquipe}")
-    public ResponseEntity<List<VwAnaliseFD>> carregarAnalisesFD(@PathVariable(name = "nomeFuncao")String nomeFuncao,
-                                                                @PathVariable(name = "nomeModulo")String nomeModulo,
-                                                                @PathVariable(name = "nomeFuncionalidade")String nomeFuncionalidade,
-                                                                @PathVariable(name = "nomeSistema") String nomeSistema,
-                                                                @PathVariable(name = "nomeEquipe") String nomeEquipe){
+    @GetMapping("/analises/FD")
+    public ResponseEntity<List<VwAnaliseFD>> carregarAnalisesFD(@RequestParam(name = "nomeFuncao")String nomeFuncao,
+                                                                @RequestParam(name = "nomeModulo")String nomeModulo,
+                                                                @RequestParam(name = "nomeFuncionalidade")String nomeFuncionalidade,
+                                                                @RequestParam(name = "nomeSistema") String nomeSistema,
+                                                                @RequestParam(name = "nomeEquipe") String nomeEquipe){
         List<VwAnaliseFD> analises = analiseService.carregarAnalisesFromFuncaoFD(nomeFuncao, nomeModulo, nomeFuncionalidade, nomeSistema, nomeEquipe);
         return new ResponseEntity<>(analises, HttpStatus.OK);
     }
 
-    @GetMapping("/analises/FT/{nomeFuncao}/{nomeModulo}/{nomeFuncionalidade}/{nomeSistema}/{nomeEquipe}")
-    public ResponseEntity<List<VwAnaliseFT>> carregarAnalisesFT(@PathVariable(name = "nomeFuncao")String nomeFuncao,
-                                                                @PathVariable(name = "nomeModulo")String nomeModulo,
-                                                                @PathVariable(name = "nomeFuncionalidade")String nomeFuncionalidade,
-                                                                @PathVariable(name = "nomeSistema") String nomeSistema,
-                                                                @PathVariable(name = "nomeEquipe") String nomeEquipe){
+    @GetMapping("/analises/FT")
+    public ResponseEntity<List<VwAnaliseFT>> carregarAnalisesFT(@RequestParam(name = "nomeFuncao")String nomeFuncao,
+                                                                @RequestParam(name = "nomeModulo")String nomeModulo,
+                                                                @RequestParam(name = "nomeFuncionalidade")String nomeFuncionalidade,
+                                                                @RequestParam(name = "nomeSistema") String nomeSistema,
+                                                                @RequestParam(name = "nomeEquipe") String nomeEquipe){
         List<VwAnaliseFT> analises = analiseService.carregarAnalisesFromFuncaoFT(nomeFuncao, nomeModulo, nomeFuncionalidade, nomeSistema, nomeEquipe);
         return new ResponseEntity<>(analises, HttpStatus.OK);
     }
