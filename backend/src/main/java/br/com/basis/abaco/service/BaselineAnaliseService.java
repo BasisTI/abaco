@@ -1,6 +1,11 @@
 package br.com.basis.abaco.service;
 
-import br.com.basis.abaco.domain.*;
+import br.com.basis.abaco.domain.Analise;
+import br.com.basis.abaco.domain.BaseLineAnaliticoFD;
+import br.com.basis.abaco.domain.BaseLineAnaliticoFT;
+import br.com.basis.abaco.domain.BaseLineSintetico;
+import br.com.basis.abaco.domain.FuncaoDados;
+import br.com.basis.abaco.domain.FuncaoTransacao;
 import br.com.basis.abaco.reports.util.RelatorioUtil;
 import br.com.basis.abaco.repository.AnaliseRepository;
 import br.com.basis.abaco.repository.FuncaoDadosRepository;
@@ -18,6 +23,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+
 
 @Service
 public class BaselineAnaliseService extends BaseService{
