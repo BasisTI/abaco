@@ -23,3 +23,4 @@ public interface VwAnaliseFTRepository extends JpaRepository<VwAnaliseFT, Long> 
                                       @Param("nomeSistema") String nomeSistema,
                                       @Param("nomeEquipe") String nomeEquipe);
 }
+
