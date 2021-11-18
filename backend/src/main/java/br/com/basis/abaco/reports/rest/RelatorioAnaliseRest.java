@@ -238,7 +238,6 @@ public class RelatorioAnaliseRest {
         }
         parametro.put("LISTAPFFUNC", pfFuncionalidadeDTOS);
     }
-
     
     /**
      *
