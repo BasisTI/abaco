@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.6.0.final using JasperReports Library version 6.6.0  -->
+<!-- Created with Jaspersoft Studio version 6.9.0.final using JasperReports Library version 6.9.0-cb8f9004be492ccc537180b49c026951f4220bf3  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="analise" pageWidth="2000" pageHeight="740" orientation="Landscape" columnWidth="1960" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" isIgnorePagination="true" uuid="da469e8b-002f-485f-b9dc-ddf66121e4c3">
 	<property name="net.sf.jasperreports.export.xls.one.page.per.sheet" value="true"/>
 	<property name="net.sf.jasperreports.export.xls.sheet.names.1" value="Função de Dados"/>
 	<property name="net.sf.jasperreports.export.xls.sheet.names.2" value="Função de Transação"/>
+	<property name="net.sf.jasperreports.export.xls.sheet.names.3" value="PF por Funcionalidade"/>
 	<property name="net.sf.jasperreports.page.break.no.pagination" value="apply"/>
 	<import value="java.lang.*"/>
 	<style name="Table 2_TH" mode="Opaque" backcolor="#F0F8FF">
@@ -216,6 +217,15 @@
 		<field name="alrtr" class="java.lang.String"/>
 		<field name="der" class="java.lang.String"/>
 	</subDataset>
+	<subDataset name="LISTAPFFUNC" whenResourceMissingType="Empty" uuid="2dd325fb-9fc1-402e-82de-dc69da8c3508">
+		<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
+		<queryString>
+			<![CDATA[]]>
+		</queryString>
+		<field name="num" class="java.lang.Integer"/>
+		<field name="nomeFuncionalidade" class="java.lang.String"/>
+		<field name="total" class="java.lang.Double"/>
+	</subDataset>
 	<parameter name="PROPOSITO" class="java.lang.String"/>
 	<parameter name="ESCOPO" class="java.lang.String"/>
 	<parameter name="FRONTEIRA" class="java.lang.String"/>
@@ -339,6 +349,7 @@
 	<parameter name="LISTAFT" class="java.util.List"/>
 	<parameter name="PFCRITICIDADE" class="java.lang.String"/>
 	<parameter name="FATORCRITICIDADE" class="java.lang.String"/>
+	<parameter name="LISTAPFFUNC" class="java.util.List"/>
 	<queryString>
 		<![CDATA[]]>
 	</queryString>
@@ -1240,6 +1251,104 @@
 			</textField>
 			<break>
 				<reportElement x="0" y="0" width="1959" height="1" uuid="97a09b44-15be-4ba3-a7e5-63f1487016c2"/>
+			</break>
+		</band>
+		<band height="72">
+			<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.FreeLayout"/>
+			<staticText>
+				<reportElement x="0" y="8" width="986" height="19" uuid="a644e012-dbae-4319-bb33-0f26b65b7687"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="SansSerif" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[PF por Funcionalidade]]></text>
+			</staticText>
+			<componentElement>
+				<reportElement stretchType="ElementGroupHeight" x="0" y="27" width="300" height="45" uuid="e6386e3f-3018-4649-bbdd-fb06083de442">
+					<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.FreeLayout"/>
+					<property name="com.jaspersoft.studio.table.style.table_header" value="Table_TH"/>
+					<property name="com.jaspersoft.studio.table.style.column_header" value="Table_CH"/>
+					<property name="com.jaspersoft.studio.table.style.detail" value="Table_TD"/>
+					<property name="net.sf.jasperreports.export.headertoolbar.table.name" value="FD"/>
+				</reportElement>
+				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" whenNoDataType="AllSectionsNoDetail">
+					<datasetRun subDataset="LISTAPFFUNC" uuid="953a4277-146e-42d5-b2c7-619cc23a6e2b">
+						<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.data.JRBeanCollectionDataSource($P{LISTAPFFUNC})]]></dataSourceExpression>
+					</datasetRun>
+					<jr:column width="20" uuid="da007c04-70a4-4756-8229-7de005072246">
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column1"/>
+						<jr:columnHeader style="Table_CH" height="30" rowSpan="1">
+							<staticText>
+								<reportElement key="" x="0" y="0" width="20" height="30" isRemoveLineWhenBlank="true" uuid="f5005353-39c2-4427-9092-591c8fc63ade"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font isBold="true"/>
+								</textElement>
+								<text><![CDATA[Nº]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell style="Table_TD" height="15" rowSpan="1">
+							<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.VerticalRowLayout"/>
+							<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+								<reportElement stretchType="RelativeToBandHeight" x="0" y="0" width="20" height="15" isRemoveLineWhenBlank="true" uuid="88dad3eb-0dde-43c7-bbe1-ed15e3390493"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<paragraph lineSpacing="Proportional"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$F{num}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="220" uuid="8907ce40-7361-49ac-8ff3-c22068001968">
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column2"/>
+						<jr:columnHeader style="Table_CH" height="30" rowSpan="1">
+							<staticText>
+								<reportElement x="0" y="0" width="220" height="30" isRemoveLineWhenBlank="true" uuid="92287da9-f089-4aaf-95f4-e39a295e2d58"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font size="9" isBold="true"/>
+								</textElement>
+								<text><![CDATA[Funcionalidade]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell style="Table_TD" height="15" rowSpan="1">
+							<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+								<reportElement stretchType="RelativeToBandHeight" x="0" y="0" width="220" height="15" isRemoveLineWhenBlank="true" uuid="856e0005-c204-46dc-a7d3-fc5689e4f47c"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<paragraph lineSpacing="Proportional"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$F{nomeFuncionalidade}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="60" uuid="84f37fd3-4de9-4316-b91d-f89fd2a5eb03">
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column3"/>
+						<jr:columnHeader style="Table_CH" height="30" rowSpan="1">
+							<staticText>
+								<reportElement x="0" y="0" width="60" height="30" isRemoveLineWhenBlank="true" uuid="b57e3ffe-878b-4410-bfcb-53e64455ed58"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font isBold="true"/>
+								</textElement>
+								<text><![CDATA[PF Ajustado]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell style="Table_TD" height="15" rowSpan="1">
+							<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+								<reportElement stretchType="RelativeToBandHeight" x="0" y="0" width="60" height="15" isRemoveLineWhenBlank="true" uuid="b6c1b9ac-bc35-4f89-8eca-08c68193dc6b"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font size="9"/>
+									<paragraph lineSpacing="Proportional"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$F{total}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+				</jr:table>
+			</componentElement>
+			<break>
+				<reportElement x="0" y="0" width="1959" height="1" uuid="69f29b20-ffe0-4018-8da3-b2924bed71f8"/>
 			</break>
 		</band>
 	</detail>
