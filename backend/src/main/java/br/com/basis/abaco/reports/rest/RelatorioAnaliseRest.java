@@ -222,7 +222,6 @@ public class RelatorioAnaliseRest {
                     .setTotal(pfFuncionalidadeDTOS.stream().filter(pf -> pf.getNomeFuncionalidade() == funcaoDados.getFuncionalidade().getNome())
                         .collect(Collectors.toList()).get(0).getTotal() + funcaoDados.getPf().doubleValue());
             }
-
         }
         for (int i = 0; i < analise.getFuncaoTransacaos().size(); i++) {
             FuncaoTransacao funcaoTransacao = analise.getFuncaoTransacaos().stream().collect(Collectors.toList()).get(i);
