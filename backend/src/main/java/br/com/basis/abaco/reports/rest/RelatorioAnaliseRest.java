@@ -214,23 +214,25 @@ public class RelatorioAnaliseRest {
         List<PfFuncionalidadeDTO> pfFuncionalidadeDTOS = new ArrayList<>();
         for (int i = 0; i < analise.getFuncaoDados().size(); i++) {
             FuncaoDados funcaoDados = analise.getFuncaoDados().stream().collect(Collectors.toList()).get(i);
-            if(pfFuncionalidadeDTOS.stream().filter(pf -> pf.getNomeFuncionalidade() == funcaoDados.getFuncionalidade().getNome()).collect(Collectors.toList()).isEmpty()){
+            if(pfFuncionalidadeDTOS.stream().filter(pf -> pf.getNomeFuncionalidade().equals(funcaoDados.getFuncionalidade().getNome()))
+                .collect(Collectors.toList()).isEmpty()){
                 pfFuncionalidadeDTOS.add(new PfFuncionalidadeDTO(i+1, funcaoDados.getFuncionalidade().getNome(), funcaoDados.getPf().doubleValue()));
             }else{
-                pfFuncionalidadeDTOS.stream().filter(pf -> pf.getNomeFuncionalidade() == funcaoDados.getFuncionalidade().getNome())
+                pfFuncionalidadeDTOS.stream().filter(pf -> pf.getNomeFuncionalidade().equals(funcaoDados.getFuncionalidade().getNome()))
                     .collect(Collectors.toList()).get(0)
-                    .setTotal(pfFuncionalidadeDTOS.stream().filter(pf -> pf.getNomeFuncionalidade() == funcaoDados.getFuncionalidade().getNome())
+                    .setTotal(pfFuncionalidadeDTOS.stream().filter(pf -> pf.getNomeFuncionalidade().equals(funcaoDados.getFuncionalidade().getNome()))
                         .collect(Collectors.toList()).get(0).getTotal() + funcaoDados.getPf().doubleValue());
             }
         }
         for (int i = 0; i < analise.getFuncaoTransacaos().size(); i++) {
             FuncaoTransacao funcaoTransacao = analise.getFuncaoTransacaos().stream().collect(Collectors.toList()).get(i);
-            if(pfFuncionalidadeDTOS.stream().filter(pf -> pf.getNomeFuncionalidade() == funcaoTransacao.getFuncionalidade().getNome()).collect(Collectors.toList()).isEmpty()){
+            if(pfFuncionalidadeDTOS.stream().filter(pf -> pf.getNomeFuncionalidade().equals(funcaoTransacao.getFuncionalidade().getNome()))
+                .collect(Collectors.toList()).isEmpty()){
                 pfFuncionalidadeDTOS.add(new PfFuncionalidadeDTO(i+1, funcaoTransacao.getFuncionalidade().getNome(), funcaoTransacao.getPf().doubleValue()));
             }else{
-                pfFuncionalidadeDTOS.stream().filter(pf -> pf.getNomeFuncionalidade() == funcaoTransacao.getFuncionalidade().getNome())
+                pfFuncionalidadeDTOS.stream().filter(pf -> pf.getNomeFuncionalidade().equals(funcaoTransacao.getFuncionalidade().getNome()))
                     .collect(Collectors.toList()).get(0)
-                    .setTotal(pfFuncionalidadeDTOS.stream().filter(pf -> pf.getNomeFuncionalidade() == funcaoTransacao.getFuncionalidade().getNome())
+                    .setTotal(pfFuncionalidadeDTOS.stream().filter(pf -> pf.getNomeFuncionalidade().equals(funcaoTransacao.getFuncionalidade().getNome()))
                         .collect(Collectors.toList()).get(0).getTotal() + funcaoTransacao.getPf().doubleValue());
             }
         }
