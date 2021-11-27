@@ -1,0 +1,27 @@
+name: Publicar imagens no Docker Hub
+
+on:
+  push:
+    tags:        
+    - "[0-9]+.[0-9]+.[0-9]+"  
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set env
+      run: echo "RELEASE_VERSION=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
+    - uses: actions/setup-java@v2.3.1
+      name: Construir War
+      with:
+        java-version: 8
+        distribution: 'adopt'
+        run: |
+          cd backend/
+          ./mvnw package -DskipTests
+          cp target/abaco*.war src/main/docker
+    - name: Build the Docker image
+      run: |
+        cd src/main/docker
+        docker build . --file Dockerfile --tag basisti/abaco:$RELEASE_VERSION
